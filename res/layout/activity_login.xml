@@ -1,0 +1,112 @@
+<!--
+/**
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#202022"
+    tools:context=".LoginActivity" >
+
+    <LinearLayout
+        android:id="@+id/login_header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#d80c16"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/login_header_logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/login_header_logo_contentdescription"
+            android:src="@drawable/digipost_white_header" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/login_content_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/login_disclaimer_layout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/login_header_layout"
+        android:background="#292a2d"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/login_loginButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@drawable/login_loginbutton_style"
+            android:drawableRight="@drawable/login_loginbutton_lock"
+            android:padding="10sp"
+            android:text="@string/login_loginbutton_text"
+            android:textColor="#ffffff"
+            android:textSize="25sp" >
+        </Button>
+
+        <ImageView
+            android:id="@+id/login_unlocked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/unlocked_big"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/login_disclaimer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#202022"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/login_registrationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/login_otherbuttons_style"
+            android:padding="10dp"
+            android:text="@string/login_registrationbutton_text"
+            android:textColor="#afafaf"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/login_privacyButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/login_otherbuttons_style"
+            android:padding="10dp"
+            android:text="@string/login_privacybutton_text"
+            android:textColor="#afafaf"
+            android:textSize="15sp" />
+    </LinearLayout>
+
+</RelativeLayout>
