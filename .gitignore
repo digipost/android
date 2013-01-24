@@ -16,4 +16,4 @@ gen/
 # Local configuration file (sdk path, etc)
 local.properties
 
-Secret.java
+src/no/digipost/android/authentication/Secret.java
