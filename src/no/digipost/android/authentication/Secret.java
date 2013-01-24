@@ -17,7 +17,7 @@
 package no.digipost.android.authentication;
 
 public class Secret {
-	public static final String CLIENT_ID = "";
+	public static final String CLIENT_ID = "hei";
 	public static final String CLIENT_SECRET = "";
 	public static final String REDIRECT_URI = "";
 	public static String ACCESS_TOKEN = "";
