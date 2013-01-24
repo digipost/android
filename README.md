@@ -10,7 +10,7 @@ First commit
 Viktig:
 ------
 For å få tilgang til Digipost sitt api vil du trenge client id og client secret. Hvordan du får tak i det kan du lese mer om på https://www.digipost.no/plattform/privat/ 
-Når du har fått client id og client secret er du nødt til å opprette en fil kalt Secret.java og legge den i mappen src/no/digipost/android/authentication og gi den følgende innhold:
+Når du har fått client id og client secret er du nødt til å opprette en fil kalt Secret.java,legge den i mappen src/no/digipost/android/authentication og gi den følgende innhold:
 
 package no.digipost.android.authentication;
 
