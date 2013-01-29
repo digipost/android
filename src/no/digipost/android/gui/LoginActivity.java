@@ -80,9 +80,9 @@ public class LoginActivity extends Activity {
 			if (msg.what == ErrorHandling.OK) {
 				startBaseActivity();
 			} else if (msg.what == ErrorHandling.NETWORK_ERROR) {
-				showMessage("Nettverksfeil. \nSjekk internetforbindelsen og prøv igjen.");
+				showMessage("Nettverksfeil. \nSjekk internetforbindelsen og proov igjen.");
 			} else if (msg.what == ErrorHandling.UNKNOWN_ERROR) {
-				showMessage("Innlogging feilet, prøv igjen.");
+				showMessage("Innlogging feilet, proov igjen.");
 
 			}
 		}
@@ -98,7 +98,7 @@ public class LoginActivity extends Activity {
 		AlertDialog registrationDialog = new AlertDialog.Builder(this).create();
 		registrationDialog.setTitle("Beklager");
 		registrationDialog
-				.setMessage("Foreløpig kan man dessverre ikke registrere seg på Android, registerer deg på en PC for å ta i bruk Digipost.");
+				.setMessage("Foreloopig kan man dessverre ikke registrere seg paa Android, registerer deg paa en PC for aa ta i bruk Digipost.");
 		registrationDialog.show();
 
 	}

@@ -168,7 +168,7 @@ public class BaseActivity extends FragmentActivity {
 			} else if (number == 2) {
 				View v = inflater.inflate(R.layout.fragment_layout_kitchenbench, container, false);
 				TextView kt = (TextView) v.findViewById(R.id.kitchenbench_text);
-				kt.setText("hei fra kjøkkenet");
+				kt.setText("hei fra kjookkenet");
 				return v;
 			} else if (number == 3) {
 				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
