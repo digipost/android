@@ -105,7 +105,6 @@ public class LoginActivity extends Activity {
 
 	private class ButtonListener implements OnClickListener {
 
-		@Override
 		public void onClick(final View v) {
 			if (v == loginButton) {
 				openWebView();
