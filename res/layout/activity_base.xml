@@ -26,7 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#d80c16"
-        android:gravity="center_vertical"
         android:orientation="horizontal" >
 
         <ImageButton
@@ -46,25 +45,19 @@
             android:background="#00000000"
             android:contentDescription="options drawer logo"
             android:src="@drawable/digipost_white_header" />
-
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFF"
-        tools:context=".BaseActivity" >
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#FFF">
 
         <android.support.v4.view.PagerTitleStrip
-            android:id="@+id/pager_title_strip"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#404245"
-            android:paddingBottom="4dp"
-            android:textColor="#fff" />
+            android:layout_gravity="top" 
+            android:background="#474747"/>
     </android.support.v4.view.ViewPager>
 
 </LinearLayout>

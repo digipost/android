@@ -70,7 +70,6 @@ public class BaseActivity extends FragmentActivity {
 		System.out.println(settings.getString("baseview" + ApiConstants.REFRESH_TOKEN, "null"));
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
 		optionsButton.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(final View arg0) {
 				openOptionsMenu();
 			}

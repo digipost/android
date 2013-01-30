@@ -19,7 +19,7 @@
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>support-v4</artifactId>
-			<version>r6</version>
+			<version>r7</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
