@@ -24,7 +24,9 @@ import no.digipost.android.api.Letter;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -35,14 +37,18 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class BaseActivity extends FragmentActivity {
 
 	SectionsPagerAdapter mSectionsPagerAdapter;
+	ImageButton optionsButton;
 	static String access_token = "";
 	int REQUEST_CODE = 1;
 	ViewPager mViewPager;
@@ -59,6 +65,16 @@ public class BaseActivity extends FragmentActivity {
 		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		context = this;
+
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		System.out.println(settings.getString("baseview" + ApiConstants.REFRESH_TOKEN, "null"));
+		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
+		optionsButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(final View arg0) {
+				openOptionsMenu();
+			}
+		});
 	}
 
 	@Override
@@ -72,6 +88,23 @@ public class BaseActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_base, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.base_logoutOption:
+			logOut();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void logOut() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		settings.edit().clear().commit();
+		finish();
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
