@@ -41,7 +41,6 @@ import android.preference.PreferenceManager;
 public class MainActivity extends Activity {
 
 	public static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
-	public static final String RESET_ACTION = "com.android.credentials.RESET";
 	Context context;
 	KeyStore ks;
 
