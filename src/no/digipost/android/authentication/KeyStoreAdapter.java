@@ -25,9 +25,8 @@ public class KeyStoreAdapter {
 
 	public String encrypt(final String plaintext) {
 		SecretKey key = Crypto.generateKey();
-		boolean success = ks.put(ApiConstants.REFRESH_TOKEN, key.getEncoded());
+		ks.put(ApiConstants.REFRESH_TOKEN, key.getEncoded());
 		String ciphertext = Crypto.encrypt(plaintext, key);
 		return ciphertext;
-
 	}
 }

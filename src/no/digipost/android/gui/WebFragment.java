@@ -42,6 +42,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
+import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -136,6 +137,7 @@ public class WebFragment extends DialogFragment {
 		webViewOauth.loadUrl(url);
 		WebSettings settings = webViewOauth.getSettings();
 		settings.setJavaScriptEnabled(true);
+		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webViewOauth.setWebViewClient(new MyWebViewClient());
 
 	}
