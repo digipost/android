@@ -16,25 +16,54 @@
 
 package no.digipost.android;
 
+import java.util.concurrent.ExecutionException;
+
+import no.digipost.android.api.ApiConstants;
+import no.digipost.android.authentication.KeyStoreAdapter;
+import no.digipost.android.authentication.OAuth2;
+import no.digipost.android.authentication.Secret;
 import no.digipost.android.gui.BaseActivity;
 import no.digipost.android.gui.LoginActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
+import android.preference.PreferenceManager;
 
-public class MainActivity extends Activity implements Runnable {
+public class MainActivity extends Activity {
 
-	@SuppressWarnings("unused")
-	private static boolean threadRunning;
-	private volatile Thread runner;
-	private final Handler mHandler = new Handler();
+	CheckTokenTask task = new CheckTokenTask();
+	Context context;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		startThread();
+		context = this;
+		checkTokenStatus();
+	}
+
+	private void checkTokenStatus() {
+		boolean hasValidToken = false;
+
+		try {
+			hasValidToken = task.execute().get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		if (hasValidToken) {
+			startBaseActivity();
+		} else {
+			startLoginActivity();
+		}
 	}
 
 	@Override
@@ -54,51 +83,36 @@ public class MainActivity extends Activity implements Runnable {
 		finish();
 	}
 
-	private boolean hasToken() {
-		// TODO Check if token exist,splash while networkconnection are
-		// refreshing token.
-		return false;
-	}
+	private class CheckTokenTask extends AsyncTask<String, Void, Boolean> {
 
-	public synchronized void startThread() {
-		if (runner == null) {
-			runner = new Thread(this);
-			runner.start();
-		}
-	}
-
-	public synchronized void stopThread() {
-		threadRunning = false;
-		if (runner != null) {
-			Thread old = runner;
-			runner = null;
-			old.interrupt();
-			if (hasToken()) {
-				startBaseActivity();
-			} else {
-				startLoginActivity();
-			}
-		}
-	}
-
-	@Override
-	public void run() {
-		threadRunning = true;
-		while (Thread.currentThread() == runner) {
+		@Override
+		protected Boolean doInBackground(final String... params) {
 			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e1) {
-			}
-			try {
-				mHandler.post(new Runnable() {
-					public void run() {
-						stopThread();
+				SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+				String encrypted_refresh_token = settings.getString(ApiConstants.REFRESH_TOKEN, "");
+				if (encrypted_refresh_token.equals("")) {
+					return false;
+				} else {
+
+					KeyStoreAdapter ksa = new KeyStoreAdapter();
+					String refresh_token = ksa.decrypt(encrypted_refresh_token);
+					JSONObject data;
+					try {
+						data = OAuth2.getRefreshAccessToken(refresh_token);
+						Secret.ACCESS_TOKEN = data.getString(ApiConstants.ACCESS_TOKEN);
+						return true;
+
+					} catch (JSONException e) {
+						e.printStackTrace();
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				});
+				}
+				return false;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			return false;
 		}
 	}
-
 }

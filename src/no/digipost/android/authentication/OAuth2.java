@@ -74,23 +74,22 @@ public class OAuth2 {
 		} else if (!verifyAuth(id_token, Secret.CLIENT_SECRET)) {
 			throw new Exception("Signature verification failed.");
 		}
-		// TODO SAVE DATA SECURE HERE!
-
 		return data;
 	}
 
 	public static JSONObject getRefreshAccessToken(final String refresh_token) throws Exception {
+
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN));
 		params.add(new BasicNameValuePair(ApiConstants.REFRESH_TOKEN, refresh_token));
-
 		JSONObject data = JSONConverter.getJSONObjectFromInputStream(getAccessData(params));
-		String id_token = data.getString(ApiConstants.ID_TOKEN);
 
-		if (!verifyAuth(id_token, Secret.CLIENT_SECRET)) {
-			throw new Exception("Signature verification failed.");
-		}
-
+		/*
+		 * String id_token = data.getString(ApiConstants.ID_TOKEN);
+		 * 
+		 * if (!verifyAuth(id_token, Secret.CLIENT_SECRET)) { throw new
+		 * Exception("Signature verification failed."); }
+		 */
 		return data;
 	}
 

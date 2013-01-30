@@ -24,7 +24,9 @@ import no.digipost.android.api.Letter;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -59,6 +61,9 @@ public class BaseActivity extends FragmentActivity {
 		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		context = this;
+
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		System.out.println(settings.getString("baseview" + ApiConstants.REFRESH_TOKEN, "null"));
 	}
 
 	@Override
