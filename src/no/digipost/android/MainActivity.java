@@ -19,6 +19,7 @@ package no.digipost.android;
 import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.api.ApiConstants;
+import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.KeyStoreAdapter;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.authentication.Secret;
@@ -29,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,22 +40,50 @@ import android.preference.PreferenceManager;
 
 public class MainActivity extends Activity {
 
-	CheckTokenTask task = new CheckTokenTask();
+	public static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
+	public static final String RESET_ACTION = "com.android.credentials.RESET";
 	Context context;
+	KeyStore ks;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		context = this;
-		checkTokenStatus();
+		ks = KeyStore.getInstance();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		checkKeyStoreStatus();
+
+	}
+
+	private void checkKeyStoreStatus() {
+		if (ks.state() != KeyStore.State.UNLOCKED) {
+			unlockKeyStore();
+		} else {
+			checkTokenStatus();
+		}
+	}
+
+	private void unlockKeyStore() {
+		if (ks.state() == KeyStore.State.UNLOCKED) {
+			return;
+		}
+
+		try {
+			startActivity(new Intent(UNLOCK_ACTION));
+		} catch (ActivityNotFoundException e) {
+			return;
+		}
 	}
 
 	private void checkTokenStatus() {
-
-		boolean hasValidToken = false;
 		try {
-			hasValidToken = task.execute().get();
+			CheckTokenTask task = new CheckTokenTask();
+			boolean hasValidToken = task.execute().get();
 			if (hasValidToken) {
 				startBaseActivity();
 			} else {
