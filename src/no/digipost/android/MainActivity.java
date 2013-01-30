@@ -50,25 +50,20 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkTokenStatus() {
-		boolean hasValidToken = false;
 
+		boolean hasValidToken = false;
 		try {
 			hasValidToken = task.execute().get();
+			if (hasValidToken) {
+				startBaseActivity();
+			} else {
+				startLoginActivity();
+			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
-		if (hasValidToken) {
-			startBaseActivity();
-		} else {
-			startLoginActivity();
-		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
 	}
 
 	private void startBaseActivity() {
