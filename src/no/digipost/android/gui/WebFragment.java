@@ -97,7 +97,6 @@ public class WebFragment extends DialogFragment {
 					Editor editor = settings.edit();
 					editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
 					editor.commit();
-					System.out.println("refresh decrypted" + ksa.decrypt(cipher));
 
 				} catch (InterruptedException e) {
 					e.printStackTrace();
