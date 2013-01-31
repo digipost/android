@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="list_pressed">#636363</color>
+    <color name="list_pressed">#E0E0E0</color>
     <color name="list_focused">#6F7275</color>
     <color name="list_even">#ffffff</color>
     <color name="list_odd">#f9f9fa</color>
