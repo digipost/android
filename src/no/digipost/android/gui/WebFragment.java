@@ -68,7 +68,7 @@ public class WebFragment extends DialogFragment {
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = getActivity();
-	}
+setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Light);	}
 
 	private class MyWebViewClient extends WebViewClient {
 		@Override
@@ -130,7 +130,7 @@ public class WebFragment extends DialogFragment {
 	public void onViewCreated(final View v, final Bundle arg1) {
 		super.onViewCreated(v, arg1);
 		webViewOauth = (WebView) v.findViewById(R.id.web_oauth);
-		getDialog().setTitle("Logg inn paa Digipost");
+		getDialog().setTitle("Innlogging");
 		task = new GetAccessTokenTask();
 		String url = OAuth2.getAuthorizeURL();
 		webViewOauth.loadUrl(url);
