@@ -16,32 +16,25 @@
 
 package no.digipost.android.authentication;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.ws.rs.core.MultivaluedMap;
 
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.JSONConverter;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import android.util.Base64;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class OAuth2 {
 
@@ -60,13 +53,14 @@ public class OAuth2 {
 	public static JSONObject getInitialAccessTokenData(final String url_state, final String url_code) throws Exception {
 		nonce = generateSecureRandom(20);
 
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair(ApiConstants.GRANT_TYPE, ApiConstants.CODE));
-		params.add(new BasicNameValuePair(ApiConstants.CODE, url_code));
-		params.add(new BasicNameValuePair(ApiConstants.REDIRECT_URI, Secret.REDIRECT_URI));
-		params.add(new BasicNameValuePair(ApiConstants.NONCE, nonce));
+		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+		params.add(ApiConstants.GRANT_TYPE, ApiConstants.CODE);
+		params.add(ApiConstants.CODE, url_code);
+		params.add(ApiConstants.REDIRECT_URI, Secret.REDIRECT_URI);
+		params.add(ApiConstants.NONCE, nonce);
 
 		JSONObject data = JSONConverter.getJSONObjectFromInputStream(getAccessData(params));
+
 		String id_token = data.getString(ApiConstants.ID_TOKEN);
 
 		if (!state.equals(url_state)) {
@@ -74,14 +68,15 @@ public class OAuth2 {
 		} else if (!verifyAuth(id_token, Secret.CLIENT_SECRET)) {
 			throw new Exception("Signature verification failed.");
 		}
+
 		return data;
 	}
 
 	public static JSONObject getRefreshAccessToken(final String refresh_token) throws Exception {
 
-		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN));
-		params.add(new BasicNameValuePair(ApiConstants.REFRESH_TOKEN, refresh_token));
+		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
+		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
 		JSONObject data = JSONConverter.getJSONObjectFromInputStream(getAccessData(params));
 
 		/*
@@ -93,18 +88,18 @@ public class OAuth2 {
 		return data;
 	}
 
-	public static InputStream getAccessData(final List<NameValuePair> params) throws URISyntaxException, ClientProtocolException,
-			IOException {
-		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost();
-		post.setURI(new URI(ApiConstants.URL_API_OAUTH_ACCESSTOKEN));
-		post.setHeader(ApiConstants.POST, ApiConstants.POST_API_ACCESSTOKEN_HTTP);
-		post.setHeader(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_FORM_URLENCODED);
-		post.setHeader(ApiConstants.AUTHORIZATION, getB64Auth(Secret.CLIENT_ID, Secret.CLIENT_SECRET));
-		post.setEntity(new UrlEncodedFormEntity(params));
-		HttpResponse response = client.execute(post);
+	public static InputStream getAccessData(final MultivaluedMap<String, String> params) {
+		Client c = Client.create();
+		WebResource r = c.resource(ApiConstants.URL_API_OAUTH_ACCESSTOKEN);
 
-		return response.getEntity().getContent();
+		ClientResponse response = r
+				.queryParams(params)
+				.header(ApiConstants.POST, ApiConstants.POST_API_ACCESSTOKEN_HTTP)
+				.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_FORM_URLENCODED)
+				.header(ApiConstants.AUTHORIZATION, getB64Auth(Secret.CLIENT_ID, Secret.CLIENT_SECRET))
+				.post(ClientResponse.class);
+
+		return response.getEntityInputStream();
 	}
 
 	public static boolean verifyAuth(final String id_token, final String client_secret) throws Exception {
