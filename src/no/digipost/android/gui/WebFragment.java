@@ -68,7 +68,8 @@ public class WebFragment extends DialogFragment {
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		context = getActivity();
-setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Light);	}
+		setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Light);
+	}
 
 	private class MyWebViewClient extends WebViewClient {
 		@Override
@@ -106,9 +107,9 @@ setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Light);	}
 					e.printStackTrace();
 				}
 				if (!Secret.ACCESS_TOKEN.equals("")) {
-					handler.sendEmptyMessage(ErrorHandling.OK);
+					handler.sendEmptyMessage(ErrorHandling.ERROR_OK);
 				} else {
-					handler.sendEmptyMessage(ErrorHandling.UNKNOWN_ERROR);
+					handler.sendEmptyMessage(ErrorHandling.ERROR_GENERAL);
 				}
 				dismiss();
 				return true;
@@ -120,7 +121,7 @@ setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Light);	}
 		@Override
 		public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
-			handler.sendEmptyMessage(ErrorHandling.NETWORK_ERROR);
+			handler.sendEmptyMessage(ErrorHandling.ERROR_DEVICE);
 			dismiss();
 		}
 	}

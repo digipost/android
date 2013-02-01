@@ -77,11 +77,11 @@ public class LoginActivity extends Activity {
 		@Override
 		public void handleMessage(final Message msg) {
 			super.handleMessage(msg);
-			if (msg.what == ErrorHandling.OK) {
+			if (msg.what == ErrorHandling.ERROR_OK) {
 				startBaseActivity();
-			} else if (msg.what == ErrorHandling.NETWORK_ERROR) {
+			} else if (msg.what == ErrorHandling.ERROR_DEVICE) {
 				showMessage("Nettverksfeil. \nSjekk internetforbindelsen og proov igjen.");
-			} else if (msg.what == ErrorHandling.UNKNOWN_ERROR) {
+			} else if (msg.what == ErrorHandling.ERROR_GENERAL) {
 				showMessage("Innlogging feilet, proov igjen.");
 
 			}

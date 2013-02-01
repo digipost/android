@@ -17,11 +17,25 @@
 package no.digipost.android.api;
 
 public class ErrorHandling {
-	public static final int OK = 0;
-	public static final int NETWORK_ERROR = 1;
-	public static final int UNKNOWN_ERROR = 3;
+	public static final int ERROR_SERVER = 0;
+	public static final int ERROR_CLIENT = 1;
+	public static final int ERROR_DEVICE = 3;
+	public static final int ERROR_GENERAL = 4;
+	public static final int ERROR_OK = 5;
 
-	public static void LogError(final String message) {
-		// TODO Log error
+	public static String LogError(final int error_type, final String error_message) {
+
+		switch (error_type) {
+		case ERROR_SERVER:
+			return "";
+		case ERROR_CLIENT:
+			return "";
+		case ERROR_DEVICE:
+			return "";
+		case ERROR_GENERAL:
+			return "";
+		default:
+			return null;
+		}
 	}
 }
