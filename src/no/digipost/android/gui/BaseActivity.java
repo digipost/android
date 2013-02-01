@@ -67,9 +67,6 @@ public class BaseActivity extends FragmentActivity {
 		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		context = this;
-
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		System.out.println(settings.getString("baseview" + ApiConstants.REFRESH_TOKEN, "null"));
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
 		optionsButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View arg0) {
