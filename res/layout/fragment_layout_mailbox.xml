@@ -20,12 +20,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ListView
+    <no.digipost.android.gui.PullToRefreshListView
         android:id="@+id/listview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="#eee"
         android:dividerHeight="1sp" >
-    </ListView>
+    </no.digipost.android.gui.PullToRefreshListView>
 
 </LinearLayout>

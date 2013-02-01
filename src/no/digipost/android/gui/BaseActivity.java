@@ -23,6 +23,7 @@ import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.Letter;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
+import no.digipost.android.gui.PullToRefreshListView.OnRefreshListener;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -42,7 +43,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class BaseActivity extends FragmentActivity {
@@ -53,6 +53,8 @@ public class BaseActivity extends FragmentActivity {
 	int REQUEST_CODE = 1;
 	ViewPager mViewPager;
 	Context context;
+
+	static PullToRefreshListView lv;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -192,7 +194,25 @@ public class BaseActivity extends FragmentActivity {
 
 			if (number == 1) {
 				View v = inflater.inflate(R.layout.fragment_layout_mailbox, container, false);
-				ListView lv = (ListView) v.findViewById(R.id.listview);
+				lv = (PullToRefreshListView) v.findViewById(R.id.listview);
+				lv.setOnRefreshListener(new OnRefreshListener() {
+
+					public void onRefresh() {
+						System.out.println("refresh");
+						new Thread(new Runnable() {
+
+							public void run() {
+								// TODO Auto-generated method stub
+								for (int i = 0; i < 1000000; i++)
+									;
+
+								System.out.println("refresh done");
+								lv.onRefreshComplete();
+							}
+						}).start();
+
+					}
+				});
 				lv.setAdapter(listadapter);
 				registerForContextMenu(lv);
 				return v;
