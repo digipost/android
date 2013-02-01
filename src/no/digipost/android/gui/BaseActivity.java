@@ -76,6 +76,12 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		System.out.println("BaseAcitivty onDestroy");
@@ -200,8 +206,9 @@ public class BaseActivity extends FragmentActivity {
 
 							public void run() {
 								// TODO Auto-generated method stub
-								for (int i = 0; i < 1000000; i++)
+								for (int i = 0; i < 1000000; i++) {
 									;
+								}
 
 								System.out.println("refresh done");
 								lv.onRefreshComplete();

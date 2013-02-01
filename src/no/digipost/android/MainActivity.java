@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
 
 	public static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
 	Context context;
+	CheckTokenTask task;
 	KeyStore ks;
 
 	@Override
@@ -50,13 +51,14 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		context = this;
 		ks = KeyStore.getInstance();
+		checkKeyStoreStatus();
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-		checkKeyStoreStatus();
-
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		finish();
 	}
 
 	private void checkKeyStoreStatus() {
@@ -81,7 +83,7 @@ public class MainActivity extends Activity {
 
 	private void checkTokenStatus() {
 		try {
-			CheckTokenTask task = new CheckTokenTask();
+			task = new CheckTokenTask();
 			boolean hasValidToken = task.execute().get();
 			if (hasValidToken) {
 				startBaseActivity();

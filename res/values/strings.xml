@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Digipost</string>
-    <string name="menu_settings">Settings</string>
+    <string name="menu_settings">Innstillinger</string>
     <string name="title_activity_login_view">LoginView</string>
     <string name="title_section3">Arkiv</string>
     <string name="title_section2">Kjøkkenbenk</string>
