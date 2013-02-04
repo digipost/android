@@ -26,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#d80c16"
+        android:gravity="center"
         android:orientation="horizontal" >
 
         <ImageButton
@@ -34,8 +35,7 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:contentDescription="Options button"
-            android:paddingLeft="5dp"
-            android:src="@drawable/digipost_white_list_48" />
+            android:src="@drawable/options_button" />
 
         <ImageButton
             android:id="@+id/options_drawer_logo"
@@ -45,19 +45,27 @@
             android:background="#00000000"
             android:contentDescription="options drawer logo"
             android:src="@drawable/digipost_white_header" />
+
+        <ImageButton
+            android:id="@+id/base_refreshButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:contentDescription="Refresh button"
+            android:src="@drawable/refresh_button" />
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#FFF">
+        android:background="#FFF" >
 
         <android.support.v4.view.PagerTitleStrip
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top" 
-            android:background="#474747"/>
+            android:layout_gravity="top"
+            android:background="#474747" />
     </android.support.v4.view.ViewPager>
 
 </LinearLayout>
