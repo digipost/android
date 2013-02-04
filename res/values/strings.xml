@@ -19,10 +19,4 @@
     <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
-    
-    <string name="ptr_pull_to_refresh">Dra ned for å oppdatere</string>
-    <string name="ptr_release_to_refresh">Slipp for å oppdatere</string>
-    <string name="ptr_refreshing">Oppdaterer</string>
-    <string name="ptr_last_updated">Updated: %1$s</string>
-
 </resources>
