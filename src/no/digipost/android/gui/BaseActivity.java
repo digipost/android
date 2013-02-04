@@ -166,6 +166,9 @@ public class BaseActivity extends FragmentActivity {
 
 			lo = new LetterOperations();
 			list = getMailBoxLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			if(list == null) {
+				System.out.println("list er null");
+			}
 			listadapter = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list);
 		}
 
