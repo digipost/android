@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/postkasse_hvit_big" />
+        android:src="@drawable/postbox_white_big" />
 
     <ProgressBar
         android:id="@+id/main_loading_spinner"
