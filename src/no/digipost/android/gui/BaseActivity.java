@@ -33,15 +33,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -84,7 +85,7 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		System.out.println("BaseAcitivty onDestroy");
+		System.out.println("BaseAcitivty onDestroy.");
 
 	}
 
@@ -154,27 +155,18 @@ public class BaseActivity extends FragmentActivity {
 		private LetterOperations lo;
 		private LetterListAdapter listadapter;
 		private ArrayList<Letter> list;
-		private boolean loaded;
+		private String[] seleced_checkboxes;
 
 		public DigipostSectionFragment() {
-			loaded = false;
 		}
 
 		@Override
 		public void onCreate(final Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 
-			if (loaded) {
-				return;
-			}
-
 			lo = new LetterOperations();
 			list = getMailBoxLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
 			listadapter = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list);
-
-			System.out.println("oncreate Fraggg");
-			loaded = true;
-
 		}
 
 		@Override
@@ -214,11 +206,32 @@ public class BaseActivity extends FragmentActivity {
 								lv.onRefreshComplete();
 							}
 						}).start();
-
 					}
 				});
 				lv.setAdapter(listadapter);
-				registerForContextMenu(lv);
+				lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+					public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int arg2, final long arg3) {
+						LetterListAdapter.showboxes = true;
+						seleced_checkboxes = new String[list.size()];
+						listadapter.notifyDataSetChanged();
+						return true;
+					}
+				});
+				lv.setOnKeyListener(new OnKeyListener() {
+					public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
+						if (keyCode == KeyEvent.KEYCODE_BACK) {
+							if (LetterListAdapter.showboxes == true) {
+								LetterListAdapter.showboxes = false;
+								seleced_checkboxes = null;
+								listadapter.notifyDataSetChanged();
+								return true;
+							}
+							return false;
+						}
+						return false;
+					}
+				});
 				return v;
 
 			} else if (number == 2) {
@@ -238,13 +251,5 @@ public class BaseActivity extends FragmentActivity {
 				return v;
 			}
 		}
-
-		@Override
-		public void onCreateContextMenu(final ContextMenu menu, final View v, final ContextMenuInfo menuInfo) {
-			super.onCreateContextMenu(menu, v, menuInfo);
-			MenuInflater mi = getActivity().getMenuInflater();
-			mi.inflate(R.menu.context_menu_letterlist, menu);
-		}
 	}
-
 }
