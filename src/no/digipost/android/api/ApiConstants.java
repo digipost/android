@@ -1,6 +1,6 @@
 /**
  * Copyright (C) Posten Norge AS
- *	
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,6 +34,9 @@ public class ApiConstants {
 	public static final String TYPE = "type";
 	public static final String MEDIA_TYPE = "media-type";
 	public static final String PRIMARY_ACCOUNT = "primaryAccount";
+
+	public static final String LOCATION_ARCHIVE = "ARCHIVE";
+	public static final String LOCATION_INBOX = "INBOX";
 
 	public static final String GRANT_TYPE = "grant_type";
 	public static final String AUD = "aud";
