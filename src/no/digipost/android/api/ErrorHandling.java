@@ -27,7 +27,7 @@ public class ErrorHandling {
 
 		switch (error_type) {
 		case ERROR_SERVER:
-			return "";
+			return "En feil oppstod under oppkoblingen mot Digipost.";
 		case ERROR_CLIENT:
 			return "";
 		case ERROR_DEVICE:
