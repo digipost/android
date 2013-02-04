@@ -1,6 +1,6 @@
 /**
  * Copyright (C) Posten Norge AS
- *	
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -31,11 +31,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 public class LetterListAdapter extends ArrayAdapter<Letter> {
 	private final Context con;
 	private final ArrayList<Letter> letters;
+	public static boolean showboxes = false;
 
 	public LetterListAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects) {
 		super(context, textViewResourceId, objects);
@@ -64,6 +66,11 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
 		creator.setText(letters.get(position).getCreatorName());
 
+		CheckBox checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
+
+		if (showboxes) {
+			checkbox.setVisibility(View.VISIBLE);
+		}
 		return row;
 	}
 
@@ -81,9 +88,4 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 
 		return calendar;
 	}
-
-	private boolean isRead(final String read) {
-		return (read.equals("true")) ? true : false;
-	}
-
 }
