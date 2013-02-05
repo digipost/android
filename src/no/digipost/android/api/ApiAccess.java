@@ -18,6 +18,9 @@ package no.digipost.android.api;
 import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 
+import no.digipost.android.model.Account;
+import no.digipost.android.model.Documents;
+
 import android.os.AsyncTask;
 
 import com.sun.jersey.api.client.Client;

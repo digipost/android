@@ -2,6 +2,11 @@ package no.digipost.android.api;
 
 import java.util.ArrayList;
 
+import no.digipost.android.model.Account;
+import no.digipost.android.model.Documents;
+import no.digipost.android.model.Letter;
+import no.digipost.android.model.PrimaryAccount;
+
 public class LetterOperations {
 	private final ApiAccess apiAcess;
 

@@ -27,6 +27,8 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.JSONConverter;
+import no.digipost.android.model.Access;
+import no.digipost.android.model.TokenValue;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;

@@ -1,4 +1,4 @@
-package no.digipost.android.authentication;
+package no.digipost.android.model;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;

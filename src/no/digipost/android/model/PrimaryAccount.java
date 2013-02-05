@@ -1,6 +1,8 @@
-package no.digipost.android.api;
+package no.digipost.android.model;
 
 import java.util.ArrayList;
+
+import no.digipost.android.api.ApiConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
