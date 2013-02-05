@@ -16,28 +16,16 @@
 
 package no.digipost.android.gui;
 
-import java.util.concurrent.ExecutionException;
-
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.ErrorHandling;
-import no.digipost.android.authentication.KeyStoreAdapter;
 import no.digipost.android.authentication.OAuth2;
-import no.digipost.android.authentication.Secret;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,10 +37,8 @@ import android.webkit.WebViewClient;
 public class WebFragment extends DialogFragment {
 
 	private WebView webViewOauth;
-	private static GetAccessTokenTask task;
-	Handler handler;
-	Context context;
-	String cipher;
+	private final Handler handler;
+	private Context context;
 
 	public WebFragment(final Handler handler) {
 		this.handler = handler;
@@ -84,29 +70,7 @@ public class WebFragment extends DialogFragment {
 				String state = url.substring(state_start + state_fragment.length(), code_start);
 				String code = url.substring(code_start + code_fragment.length(), url.length());
 
-				try {
-
-					JSONObject data = task.execute(state, code).get();
-					String access_token = data.getString(ApiConstants.ACCESS_TOKEN);
-					Secret.ACCESS_TOKEN = access_token;
-
-					String refresh_token = data.getString(ApiConstants.REFRESH_TOKEN);
-					KeyStoreAdapter ksa = new KeyStoreAdapter();
-					cipher = ksa.encrypt(refresh_token);
-					refresh_token = null;
-					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-					Editor editor = settings.edit();
-					editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
-					editor.commit();
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				if (!Secret.ACCESS_TOKEN.equals("")) {
+				if (OAuth2.retriveAccessTokenSuccess(state, code, context)) {
 					handler.sendEmptyMessage(ErrorHandling.ERROR_OK);
 				} else {
 					handler.sendEmptyMessage(ErrorHandling.ERROR_GENERAL);
@@ -132,7 +96,6 @@ public class WebFragment extends DialogFragment {
 		super.onViewCreated(v, arg1);
 		webViewOauth = (WebView) v.findViewById(R.id.web_oauth);
 		getDialog().setTitle("Innlogging");
-		task = new GetAccessTokenTask();
 		String url = OAuth2.getAuthorizeURL();
 		webViewOauth.loadUrl(url);
 		WebSettings settings = webViewOauth.getSettings();
@@ -147,21 +110,4 @@ public class WebFragment extends DialogFragment {
 		View v = inflater.inflate(R.layout.fragment_web, container, false);
 		return v;
 	}
-
-	private class GetAccessTokenTask extends AsyncTask<String, Void, JSONObject> {
-
-		@Override
-		protected JSONObject doInBackground(final String... params) {
-			try {
-				String state = params[0];
-				String code = params[1];
-				JSONObject data = OAuth2.getInitialAccessTokenData(state, code);
-				return data;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-
 }

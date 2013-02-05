@@ -15,16 +15,17 @@
  */
 package no.digipost.android.api;
 
-public class Link {
-	private String rel;
-	private String uri;
-	private String media_type;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
-	public Link(final String rel, final String uri, final String media_type) {
-		this.rel = rel;
-		this.uri = uri;
-		this.media_type = media_type;
-	}
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Link {
+	@JsonProperty
+	private String rel;
+	@JsonProperty
+	private String uri;
+	@JsonProperty
+	private String media_type;
 
 	public String getRel() {
 		return rel;

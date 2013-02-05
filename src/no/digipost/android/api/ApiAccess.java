@@ -15,61 +15,59 @@
  */
 package no.digipost.android.api;
 
-import java.net.URI;
+import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
 
 import android.os.AsyncTask;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource.Builder;
+
 public class ApiAccess {
-	GetJSONfromUriTASK task;
 
 	public ApiAccess() {
 	}
 
-	public JSONObject getJSONfromURI(final String access_token, final String uri) {
-		task = new GetJSONfromUriTASK();
-		JSONObject uri_json_response = null;
-		try {
-			uri_json_response = task.execute(access_token, uri, "GET").get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-		task.cancel(true);
-		return uri_json_response;
+	public Account getPrimaryAccount(final String access_token) {
+		return (Account) getApiObject(Account.class, access_token, ApiConstants.URL_API);
 	}
 
-	private class GetJSONfromUriTASK extends AsyncTask<String, Void, JSONObject> {
+	public Documents getDokuments(final String access_token, final String uri) {
+		return (Documents) getApiObject(Documents.class, access_token, uri);
+	}
 
+	public <T> Object getApiObject(final Class<T> type, final String access_token, final String uri) {
+		Client client = Client.create();
+
+		Builder builder = client
+				.resource(uri)
+				.header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
+				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token);
+
+		GetApiJsonStringTask apiJsonStringTask = new GetApiJsonStringTask();
+		Object apiObject = null;
+
+		try {
+			String jsonString = apiJsonStringTask.execute(builder).get();
+			apiObject = JSONConverter.processJackson(type, jsonString);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return apiObject;
+	}
+
+	private class GetApiJsonStringTask extends AsyncTask<Builder, Void, String> {
 		@Override
-		protected JSONObject doInBackground(final String... params) {
-			try {
-				String access_token = params[0];
-				JSONObject json = null;
-				String uri = params[1];
-				HttpClient client = new DefaultHttpClient();
-				if (params[2].equals("GET")) {
-					HttpGet request = new HttpGet();
-					request.setURI(new URI(uri));
-					request.setHeader(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
-					request.setHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token);
-					HttpResponse response = client.execute(request);
-					json = JSONConverter.getJSONObjectFromInputStream(response.getEntity().getContent());
-				} else if (params[2].equals("POST")) {
+		protected String doInBackground(final Builder... params) {
+			InputStream is = params[0].get(ClientResponse.class).getEntityInputStream();
+			return JSONConverter.getJsonStringFromInputStream(is);
 
-				}
-				return json;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
 		}
 	}
 }
