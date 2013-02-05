@@ -17,16 +17,20 @@
 package no.digipost.android.api;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.json.JSONObject;
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class JSONConverter {
-	public static JSONObject getJSONObjectFromInputStream(final InputStream inputStream) throws Exception {
+	public static String getJsonStringFromInputStream(final InputStream inputStream) {
 		String content = "";
 
 		if (inputStream != null) {
@@ -41,12 +45,43 @@ public class JSONConverter {
 				while ((n = reader.read(buffer)) != -1) {
 					writer.write(buffer, 0, n);
 				}
-			} finally {
+
 				inputStream.close();
+				reader.close();
+				writer.close();
+			} catch (Exception e) {
+				// TODO Feilhåndtering
 			}
+
 			content = writer.toString();
 		}
 
-		return new JSONObject(content);
+		return content;
+	}
+
+	public static <T> Object processJackson(final Class<T> type, final String data) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonFactory fact = new JsonFactory();
+		Object jacksonObject = null;
+
+		try {
+			JsonParser jp = fact.createJsonParser(data);
+			jacksonObject = objectMapper.readValue(jp, type);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return jacksonObject;
+	}
+
+	public static <T> Object processJackson(final Class<T> type, final InputStream data) {
+		return processJackson(type, getJsonStringFromInputStream(data));
 	}
 }
