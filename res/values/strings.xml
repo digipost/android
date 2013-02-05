@@ -15,7 +15,7 @@
     <string name="context_letterlist_move">Flytt til arkiv</string>
     <string name="title_activity_web_fragment">WebFragment</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="login_loginbutton_text">Logg inn</string>
+    <string name="login_loginbutton_text">Logg inn i Digipost</string>
     <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
