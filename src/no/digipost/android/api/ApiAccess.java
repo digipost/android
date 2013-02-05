@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
-
 import android.os.AsyncTask;
 
 import com.sun.jersey.api.client.Client;
@@ -33,14 +32,14 @@ public class ApiAccess {
 	}
 
 	public Account getPrimaryAccount(final String access_token) {
-		return (Account) getApiObject(Account.class, access_token, ApiConstants.URL_API);
+		return (Account) JSONConverter.processJackson(Account.class, getApiJsonString(access_token, ApiConstants.URL_API));
 	}
 
 	public Documents getDokuments(final String access_token, final String uri) {
-		return (Documents) getApiObject(Documents.class, access_token, uri);
+		return (Documents) JSONConverter.processJackson(Documents.class, getApiJsonString(access_token, uri));
 	}
 
-	public <T> Object getApiObject(final Class<T> type, final String access_token, final String uri) {
+	public String getApiJsonString(final String access_token, final String uri) {
 		Client client = Client.create();
 
 		Builder builder = client
@@ -49,11 +48,10 @@ public class ApiAccess {
 				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token);
 
 		GetApiJsonStringTask apiJsonStringTask = new GetApiJsonStringTask();
-		Object apiObject = null;
+		String jsonString = null;
 
 		try {
-			String jsonString = apiJsonStringTask.execute(builder).get();
-			apiObject = JSONConverter.processJackson(type, jsonString);
+			jsonString = apiJsonStringTask.execute(builder).get();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,7 +60,7 @@ public class ApiAccess {
 			e.printStackTrace();
 		}
 
-		return apiObject;
+		return jsonString;
 	}
 
 	private class GetApiJsonStringTask extends AsyncTask<Builder, Void, String> {
