@@ -78,8 +78,7 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		try {
 			formatted = guiFormat.format(fromApi.parse(date_substring));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Ignore
 		}
 		return formatted;
 	}
