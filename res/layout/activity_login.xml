@@ -23,14 +23,6 @@
     tools:context=".LoginActivity" >
 
     <LinearLayout
-        android:id="@+id/login_header_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#d80c16"
-        android:gravity="center" >
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/login_content_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -63,17 +55,21 @@
             android:id="@+id/login_loginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableBottom="#aa0000"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/login_loginbutton_style"
-            android:drawableLeft="@drawable/lock_white_50"
-            android:padding="5sp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:drawableLeft="@drawable/lock_white_35"
+            android:drawablePadding="8dip"
+            android:paddingTop="5dp"
+            android:paddingBottom="0dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:text="@string/login_loginbutton_text"
             android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -98,7 +94,8 @@
             android:padding="5dp"
             android:text="@string/login_registrationbutton_text"
             android:textColor="#afafaf"
-            android:textSize="15sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/login_privacyButton"
@@ -112,7 +109,8 @@
             android:padding="5dp"
             android:text="@string/login_privacybutton_text"
             android:textColor="#afafaf"
-            android:textSize="15sp" />
+            android:textSize="12sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </RelativeLayout>
