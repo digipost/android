@@ -19,6 +19,7 @@ package no.digipost.android.authentication;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.concurrent.ExecutionException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -26,14 +27,19 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.JSONConverter;
-
-import org.json.JSONObject;
-
+import no.digipost.android.model.Access;
+import no.digipost.android.model.TokenValue;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Base64;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class OAuth2 {
@@ -50,7 +56,7 @@ public class OAuth2 {
 				+ ApiConstants.STATE + "=" + state;
 	}
 
-	public static JSONObject getInitialAccessTokenData(final String url_state, final String url_code) throws Exception {
+	public static boolean retriveAccessTokenSuccess(final String url_state, final String url_code, final Context context) {
 		nonce = generateSecureRandom(20);
 
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
@@ -59,50 +65,76 @@ public class OAuth2 {
 		params.add(ApiConstants.REDIRECT_URI, Secret.REDIRECT_URI);
 		params.add(ApiConstants.NONCE, nonce);
 
-		JSONObject data = JSONConverter.getJSONObjectFromInputStream(getAccessData(params));
+		Access data = getAccessData(params);
 
-		String id_token = data.getString(ApiConstants.ID_TOKEN);
+		if (!state.equals(url_state) || !verifyAuth(data.getId_token(), Secret.CLIENT_SECRET)) {
+			return false;
+		}
 
-		if (!state.equals(url_state)) {
-			throw new Exception("State verification failed.");
-		} else if (!verifyAuth(id_token, Secret.CLIENT_SECRET)) {
-			throw new Exception("Signature verification failed.");
+		encryptAndStoreRefreshToken(data, context);
+		return true;
+	}
+
+	public static boolean retriveAccessTokenSuccess(final String refresh_token) {
+		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
+		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
+
+		// TODO Sjekk om verifisering av signatur ernødvendig
+
+		Secret.ACCESS_TOKEN = getAccessData(params).getAccess_token();
+		return true;
+	}
+
+	public static void encryptAndStoreRefreshToken(final Access data, final Context context) {
+		Secret.ACCESS_TOKEN = data.getAccess_token();
+
+		String refresh_token = data.getRefresh_token();
+		KeyStoreAdapter ksa = new KeyStoreAdapter();
+		String cipher = ksa.encrypt(refresh_token);
+		refresh_token = null;
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor editor = settings.edit();
+		editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
+		editor.commit();
+	}
+
+	public static Access getAccessData(final MultivaluedMap<String, String> params) {
+		Client c = Client.create();
+		WebResource r = c.resource(ApiConstants.URL_API_OAUTH_ACCESSTOKEN);
+
+		Builder builder = r
+				.queryParams(params)
+				.header(ApiConstants.POST, ApiConstants.POST_API_ACCESSTOKEN_HTTP)
+				.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_FORM_URLENCODED)
+				.header(ApiConstants.AUTHORIZATION, getB64Auth(Secret.CLIENT_ID, Secret.CLIENT_SECRET));
+
+		Access data = null;
+		GetTokenDataTask tokenDataTask = new GetTokenDataTask();
+
+		try {
+			data = tokenDataTask.execute(builder).get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		return data;
 	}
 
-	public static JSONObject getRefreshAccessToken(final String refresh_token) throws Exception {
+	private static class GetTokenDataTask extends AsyncTask<Builder, Void, Access> {
+		@Override
+		protected Access doInBackground(final Builder... params) {
+			InputStream is = params[0].post(ClientResponse.class).getEntityInputStream();
+			return (Access) JSONConverter.processJackson(Access.class, is);
+		}
 
-		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
-		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
-		JSONObject data = JSONConverter.getJSONObjectFromInputStream(getAccessData(params));
-
-		/*
-		 * String id_token = data.getString(ApiConstants.ID_TOKEN);
-		 * 
-		 * if (!verifyAuth(id_token, Secret.CLIENT_SECRET)) { throw new
-		 * Exception("Signature verification failed."); }
-		 */
-		return data;
 	}
 
-	public static InputStream getAccessData(final MultivaluedMap<String, String> params) {
-		Client c = Client.create();
-		WebResource r = c.resource(ApiConstants.URL_API_OAUTH_ACCESSTOKEN);
-
-		ClientResponse response = r
-				.queryParams(params)
-				.header(ApiConstants.POST, ApiConstants.POST_API_ACCESSTOKEN_HTTP)
-				.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_FORM_URLENCODED)
-				.header(ApiConstants.AUTHORIZATION, getB64Auth(Secret.CLIENT_ID, Secret.CLIENT_SECRET))
-				.post(ClientResponse.class);
-
-		return response.getEntityInputStream();
-	}
-
-	public static boolean verifyAuth(final String id_token, final String client_secret) throws Exception {
+	public static boolean verifyAuth(final String id_token, final String client_secret) {
 		String split_by = ".";
 		int splitindex = id_token.indexOf(split_by);
 
@@ -114,8 +146,9 @@ public class OAuth2 {
 			return false;
 		}
 
-		JSONObject data = new JSONObject(new String(Base64.decode(token_value_enc.getBytes(), Base64.DEFAULT)));
-		String aud = data.getString(ApiConstants.AUD);
+		TokenValue data = (TokenValue) JSONConverter.processJackson(TokenValue.class,
+				new String(Base64.decode(token_value_enc.getBytes(), Base64.DEFAULT)));
+		String aud = data.getAud();
 
 		if (!aud.equals(Secret.CLIENT_ID)) {
 			return false;
@@ -131,10 +164,17 @@ public class OAuth2 {
 		return new BigInteger(130, random).toString(32);
 	}
 
-	public static String encryptHmacSHA256(final String data, final String key) throws Exception {
+	public static String encryptHmacSHA256(final String data, final String key) {
 		SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), ApiConstants.HMACSHA256);
-		Mac mac = Mac.getInstance(ApiConstants.HMACSHA256);
-		mac.init(secretKey);
+		Mac mac = null;
+		try {
+			mac = Mac.getInstance(ApiConstants.HMACSHA256);
+			mac.init(secretKey);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		byte[] hmacData = mac.doFinal(data.getBytes());
 
 		return new String(hmacData);

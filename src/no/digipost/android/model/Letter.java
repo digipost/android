@@ -13,46 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.digipost.android.api;
+package no.digipost.android.model;
 
 import java.util.ArrayList;
 
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Letter {
 
+	@JsonProperty
 	private String subject;
+	@JsonProperty
 	private String creatorName;
+	@JsonProperty
 	private String created;
+	@JsonProperty
 	private String fileType;
+	@JsonProperty
 	private String fileSize;
+	@JsonProperty
 	private String origin;
+	@JsonProperty
 	private String authenticationLevel;
+	@JsonProperty
 	private String location;
+	@JsonProperty
 	private String read;
+	@JsonProperty
 	private String type;
-	private String download_url;
-	private ArrayList<Link> links;
-
-	public Letter(final String subject, final String creatorName, final String created, final String fileType, final String fileSize,
-			final String origin, final String authenticationLevel, final String location, final String read, final String type,
-			final String download_url, final ArrayList<Link> links) {
-		super();
-		this.subject = subject;
-		this.creatorName = creatorName;
-		this.created = created;
-		this.fileType = fileType;
-		this.fileSize = fileSize;
-		this.origin = origin;
-		this.authenticationLevel = authenticationLevel;
-		this.location = location;
-		this.read = read;
-		this.type = type;
-		this.download_url = download_url;
-		this.links = links;
-	}
-
-	public Letter() {
-
-	}
+	@JsonProperty
+	private ArrayList<Link> link;
 
 	public String getSubject() {
 		return subject;
@@ -132,28 +125,5 @@ public class Letter {
 
 	public void setType(final String type) {
 		this.type = type;
-	}
-
-	public String getDownload_url() {
-		return download_url;
-	}
-
-	public void setDownload_url(final String download_url) {
-		this.download_url = download_url;
-	}
-
-	public ArrayList<Link> getLinks() {
-		return links;
-	}
-
-	public void setLinks(final ArrayList<Link> links) {
-		this.links = links;
-	}
-
-	@Override
-	public String toString() {
-		return "Letter [subject=" + subject + ", creatorName=" + creatorName + ", created=" + created + ", fileType=" + fileType
-				+ ", fileSize=" + fileSize + ", origin=" + origin + ", authenticationLevel=" + authenticationLevel + ", location="
-				+ location + ", read=" + read + ", type=" + type + ", download_url=" + download_url + ", links=" + links + "]";
 	}
 }

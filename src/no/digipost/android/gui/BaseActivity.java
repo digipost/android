@@ -20,9 +20,9 @@ import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
-import no.digipost.android.api.Letter;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
+import no.digipost.android.model.Letter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;

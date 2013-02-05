@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import no.digipost.android.R;
-import no.digipost.android.api.Letter;
+import no.digipost.android.model.Letter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;

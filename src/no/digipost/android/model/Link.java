@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package no.digipost.android.api;
+package no.digipost.android.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Link {
+	@JsonProperty
 	private String rel;
+	@JsonProperty
 	private String uri;
+	@JsonProperty
 	private String media_type;
-
-	public Link(final String rel, final String uri, final String media_type) {
-		this.rel = rel;
-		this.uri = uri;
-		this.media_type = media_type;
-	}
 
 	public String getRel() {
 		return rel;
