@@ -20,8 +20,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+<<<<<<< Updated upstream
     <no.digipost.android.gui.PullToRefreshListView
         android:id="@+id/listview"
+=======
+    <ListView
+        android:id="@+id/listview_mailbox"
+>>>>>>> Stashed changes
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="#eee"

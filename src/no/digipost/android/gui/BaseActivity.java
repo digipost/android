@@ -192,6 +192,7 @@ public class BaseActivity extends FragmentActivity {
 
 			if (number == 1) {
 				View v = inflater.inflate(R.layout.fragment_layout_mailbox, container, false);
+<<<<<<< Updated upstream
 				lv = (PullToRefreshListView) v.findViewById(R.id.listview);
 				lv.setOnRefreshListener(new OnRefreshListener() {
 
@@ -211,6 +212,9 @@ public class BaseActivity extends FragmentActivity {
 						}).start();
 					}
 				});
+=======
+				ListView lv = (ListView) v.findViewById(R.id.listview_mailbox);
+>>>>>>> Stashed changes
 				lv.setAdapter(listadapter);
 				lv.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -235,6 +239,7 @@ public class BaseActivity extends FragmentActivity {
 						return false;
 					}
 				});
+
 				return v;
 
 			} else if (number == 2) {
@@ -246,6 +251,8 @@ public class BaseActivity extends FragmentActivity {
 				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
 				TextView at = (TextView) v.findViewById(R.id.archive_text);
 				at.setText("hei fra arkivet");
+				ListView lw_archive = (ListView)v.findViewById(R.id.listview_archive);
+
 				return v;
 			} else {
 				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
