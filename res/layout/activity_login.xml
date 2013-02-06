@@ -19,7 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4d4f53"
+    android:background="#323538"
     tools:context=".LoginActivity" >
 
     <LinearLayout
@@ -29,19 +29,11 @@
         android:layout_above="@+id/login_disclaimer_layout"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/login_header_layout"
         android:layout_marginBottom="52dp"
-        android:background="#4d4f53"
+        android:background="#323538"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="20sp" >
-
-        <ImageView
-            android:id="@+id/login_unlocked"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/unlocked_big"
-            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/login_logo"
@@ -55,17 +47,17 @@
             android:id="@+id/login_loginButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableBottom="#aa0000"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/login_loginbutton_style"
+            android:drawableBottom="#aa0000"
             android:drawableLeft="@drawable/lock_white_35"
-            android:drawablePadding="8dip"
+            android:drawablePadding="2dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:paddingTop="5dp"
-            android:paddingBottom="0dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
             android:text="@string/login_loginbutton_text"
             android:textColor="#ffffff"
             android:textSize="14sp"
@@ -78,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="#323538"
+        android:background="#292b2d"
         android:gravity="center"
         android:orientation="vertical" >
 
@@ -93,7 +85,7 @@
             android:background="@drawable/login_otherbuttons_style"
             android:padding="5dp"
             android:text="@string/login_registrationbutton_text"
-            android:textColor="#afafaf"
+            android:textColor="#8c8c8c"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -108,7 +100,7 @@
             android:background="@drawable/login_otherbuttons_style"
             android:padding="5dp"
             android:text="@string/login_privacybutton_text"
-            android:textColor="#afafaf"
+            android:textColor="#8c8c8c"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
