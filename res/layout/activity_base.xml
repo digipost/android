@@ -27,7 +27,8 @@
         android:layout_height="wrap_content"
         android:background="#d80c16"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:padding="5dp">
 
         <ImageButton
             android:id="@+id/base_optionsButton"
@@ -64,6 +65,7 @@
         <android.support.v4.view.PagerTitleStrip
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="5dp"
             android:layout_gravity="top"
             android:background="#474747" />
     </android.support.v4.view.ViewPager>
