@@ -54,6 +54,7 @@ public class JSONConverter {
 			}
 
 			content = writer.toString();
+			System.out.println(content + "");
 		}
 
 		return content;
@@ -84,4 +85,29 @@ public class JSONConverter {
 	public static <T> Object processJackson(final Class<T> type, final InputStream data) {
 		return processJackson(type, getJsonStringFromInputStream(data));
 	}
+
+	/*public static <T> StringEntity createJsonFromJackson(final Class<T> type, final Letter letter) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonFactory factory = new JsonFactory();
+		Object jsonObject = null;
+		StringEntity se = null;
+		String jsonstring = null;
+
+		try {
+			jsonstring = objectMapper.writeValueAsString(letter, type);
+
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+
+	} */
 }

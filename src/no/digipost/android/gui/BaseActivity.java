@@ -22,6 +22,7 @@ import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
+import no.digipost.android.model.Letter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -216,6 +217,26 @@ public class BaseActivity extends FragmentActivity {
 						return false;
 					}
 				});
+
+			/*	lv.setOnItemClickListener(new OnItemClickListener() {
+
+					public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+						Letter mletter = list.get(position);
+						mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
+
+						boolean moved = lo.moveLetter(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+
+						if(moved) {
+							Toast.makeText(getActivity(),"Brev flyttet til arkiv",3000).show();
+							return;
+						}
+						else {
+							Toast.makeText(getActivity(),"Noe gikk galt",3000).show();
+							return;
+						}
+					}
+
+				}); */
 
 				return v;
 

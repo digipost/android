@@ -2,7 +2,6 @@ package no.digipost.android.model;
 
 import java.util.ArrayList;
 
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -11,7 +10,7 @@ public class Documents {
 	@JsonProperty
 	private ArrayList<Letter> document;
 
-	public ArrayList<Letter> getDokument() {
+	public ArrayList<Letter> getDocument() {
 		return document;
 	}
 }
