@@ -20,6 +20,10 @@ import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
+import no.digipost.android.model.Letter;
+
+import org.apache.http.entity.StringEntity;
+
 import android.os.AsyncTask;
 
 import com.sun.jersey.api.client.Client;
@@ -35,7 +39,7 @@ public class ApiAccess {
 		return (Account) JSONConverter.processJackson(Account.class, getApiJsonString(access_token, ApiConstants.URL_API));
 	}
 
-	public Documents getDokuments(final String access_token, final String uri) {
+	public Documents getDocuments(final String access_token, final String uri) {
 		return (Documents) JSONConverter.processJackson(Documents.class, getApiJsonString(access_token, uri));
 	}
 
@@ -47,7 +51,7 @@ public class ApiAccess {
 				.header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
 				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token);
 
-		GetApiJsonStringTask apiJsonStringTask = new GetApiJsonStringTask();
+		ApiGetJsonStringTask apiJsonStringTask = new ApiGetJsonStringTask();
 		String jsonString = null;
 
 		try {
@@ -63,12 +67,52 @@ public class ApiAccess {
 		return jsonString;
 	}
 
-	private class GetApiJsonStringTask extends AsyncTask<Builder, Void, String> {
+	public Letter getMovedLetter(final String access_token, final String uri, final StringEntity se) {
+		return (Letter) JSONConverter.processJackson(Letter.class, moveLetter(access_token, uri, se));
+	}
+
+	public String moveLetter(final String access_token, final String uri, final StringEntity se) {
+		Client client = Client.create();
+
+		Builder builder = client
+				.resource(uri)
+				.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
+				.header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
+				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token)
+				.entity(se);
+
+		ApiPostTask postapi = new ApiPostTask();
+		String jsonString = null;
+
+		try {
+			jsonString = postapi.execute(builder).get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return jsonString;
+	}
+
+	private class ApiGetJsonStringTask extends AsyncTask<Builder, Void, String> {
 		@Override
 		protected String doInBackground(final Builder... params) {
 			InputStream is = params[0].get(ClientResponse.class).getEntityInputStream();
 			return JSONConverter.getJsonStringFromInputStream(is);
 
 		}
+	}
+
+	private class ApiPostTask extends AsyncTask<Builder, Void, String> {
+		@Override
+		protected String doInBackground(final Builder... params) {
+			// TODO Auto-generated method stub
+			InputStream is = params[0].post(ClientResponse.class).getEntityInputStream();
+			return JSONConverter.getJsonStringFromInputStream(is);
+		}
+
 	}
 }

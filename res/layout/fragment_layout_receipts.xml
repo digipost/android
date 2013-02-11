@@ -21,26 +21,26 @@
     android:orientation="vertical" >
 
     <ListView
-        android:id="@+id/listview_archive"
+        android:id="@+id/listview_receipts"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="#eee"
         android:dividerHeight="1sp" >
     </ListView>
-
+    
     <LinearLayout
-        android:id="@+id/empty_listview_archive"
+        android:id="@+id/empty_listview_receipts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:visibility="gone"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:gravity="center">
 
         <ImageView
             android:layout_width="100sp"
             android:layout_height="100sp"
-            android:paddingBottom="40sp"
-            android:src="@drawable/kjokkenbenk4" />
+            android:src="@drawable/kvittering"
+            android:paddingBottom="40sp" />
 
         <TextView
             android:layout_width="wrap_content"

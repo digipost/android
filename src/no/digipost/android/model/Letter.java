@@ -1,6 +1,6 @@
 /**
  * Copyright (C) Posten Norge AS
- *	
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,7 +16,6 @@
 package no.digipost.android.model;
 
 import java.util.ArrayList;
-
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -125,5 +124,9 @@ public class Letter {
 
 	public void setType(final String type) {
 		this.type = type;
+	}
+
+	public ArrayList<Link> getLink () {
+		return link;
 	}
 }

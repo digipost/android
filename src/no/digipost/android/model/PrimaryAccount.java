@@ -38,9 +38,39 @@ public class PrimaryAccount {
 		return link;
 	}
 
-	public String getDokumentsUri() {
+	public String getInboxUri() {
 		for (Link l : link) {
 			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_INBOX)) {
+				return l.getUri();
+			}
+		}
+
+		return null;
+	}
+
+	public String getArchiveUri() {
+		for (Link l : link) {
+			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_ARCHIVE)) {
+				return l.getUri();
+			}
+		}
+
+		return null;
+	}
+
+	public String getWorkareaUri() {
+		for (Link l : link) {
+			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_KITCHENBENCH)) {
+				return l.getUri();
+			}
+		}
+
+		return null;
+	}
+
+	public String getReceiptsUri() {
+		for (Link l : link) {
+			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_RECEIPTS)) {
 				return l.getUri();
 			}
 		}

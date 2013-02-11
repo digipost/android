@@ -25,7 +25,7 @@ public class Documents {
 	@JsonProperty
 	private ArrayList<Letter> document;
 
-	public ArrayList<Letter> getDokument() {
+	public ArrayList<Letter> getDocument() {
 		return document;
 	}
 }

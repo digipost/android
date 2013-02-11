@@ -16,14 +16,38 @@
  */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_kitchen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/kitchenbench_text"
+    <ListView
+        android:id="@+id/listview_kitchen"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp" />
+        android:divider="#eee"
+        android:dividerHeight="1sp" >
+    </ListView>
+
+    <LinearLayout
+        android:id="@+id/empty_listview_workarea"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="100sp"
+            android:layout_height="100sp"
+            android:src="@drawable/kjokkenbenk4"
+            android:paddingBottom="40sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_listview_text"
+            android:textSize="30sp" />
+    </LinearLayout>
 
 </LinearLayout>
