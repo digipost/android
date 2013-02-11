@@ -83,11 +83,11 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/login_otherbuttons_style"
-            android:padding="5dp"
+            android:padding="10dp"
             android:text="@string/login_registrationbutton_text"
             android:textColor="#8c8c8c"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textSize="14sp"
+            />
 
         <Button
             android:id="@+id/login_privacyButton"
@@ -98,11 +98,11 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/login_otherbuttons_style"
-            android:padding="5dp"
+            android:padding="10dp"
             android:text="@string/login_privacybutton_text"
             android:textColor="#8c8c8c"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textSize="14sp"
+             />
     </LinearLayout>
 
 </RelativeLayout>
