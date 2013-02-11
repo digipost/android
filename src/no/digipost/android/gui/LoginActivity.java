@@ -29,12 +29,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 	Button loginButton, privacyButton, registrationButton;
-	ImageView unlocked;
 	ButtonListener listener;
 	Context context;
 
@@ -43,9 +41,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		context = this;
-		unlocked = (ImageView) findViewById(R.id.login_unlocked);
 		listener = new ButtonListener();
-
 		loginButton = (Button) findViewById(R.id.login_loginButton);
 		loginButton.setOnClickListener(listener);
 		privacyButton = (Button) findViewById(R.id.login_privacyButton);
@@ -67,7 +63,6 @@ public class LoginActivity extends Activity {
 
 	private void startBaseActivity() {
 		loginButton.setVisibility(View.INVISIBLE);
-		unlocked.setVisibility(View.VISIBLE);
 		Intent i = new Intent(LoginActivity.this, BaseActivity.class);
 		startActivity(i);
 		finish();
@@ -78,6 +73,7 @@ public class LoginActivity extends Activity {
 		public void handleMessage(final Message msg) {
 			super.handleMessage(msg);
 			if (msg.what == ErrorHandling.ERROR_OK) {
+				showMessage("Innlogging vellykket, laster innhold..");
 				startBaseActivity();
 			} else if (msg.what == ErrorHandling.ERROR_DEVICE) {
 				showMessage("Nettverksfeil. \nSjekk internetforbindelsen og proov igjen.");

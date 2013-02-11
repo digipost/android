@@ -19,9 +19,7 @@ package no.digipost.android.gui;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import no.digipost.android.R;
 import no.digipost.android.model.Letter;
@@ -59,10 +57,8 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		TextView subject = (TextView) row.findViewById(R.id.mail_subject);
 		subject.setText(letters.get(position).getSubject());
 
-		Calendar calendar = getCalendarFromString(letters.get(position).getCreated());
-
 		TextView date = (TextView) row.findViewById(R.id.mail_date);
-		date.setText(calendar.get(Calendar.DATE) + "." + calendar.get(Calendar.MONTH) + "." + calendar.get(Calendar.YEAR));
+		date.setText(getDateFormatted(letters.get(position).getCreated()));
 		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
 		creator.setText(letters.get(position).getCreatorName());
 
@@ -74,18 +70,16 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		return row;
 	}
 
-	private Calendar getCalendarFromString(final String date) {
-		String date_substring = date.substring(0, 9);
-
-		Date date_object = null;
+	private String getDateFormatted(final String date) {
+		String date_substring = date.substring(0, 10);
+		SimpleDateFormat fromApi = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat guiFormat = new SimpleDateFormat("d MMM yyyy", Locale.getDefault());
+		String formatted = null;
 		try {
-			date_object = new SimpleDateFormat("yyyy-MM-dd").parse(date_substring);
+			formatted = guiFormat.format(fromApi.parse(date_substring));
 		} catch (ParseException e) {
-			e.printStackTrace();
+			// Ignore
 		}
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(date_object);
-
-		return calendar;
+		return formatted;
 	}
 }

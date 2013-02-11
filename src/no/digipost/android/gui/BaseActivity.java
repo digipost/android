@@ -47,12 +47,12 @@ import android.widget.TextView;
 
 public class BaseActivity extends FragmentActivity {
 
-	SectionsPagerAdapter mSectionsPagerAdapter;
-	ImageButton optionsButton;
-	static String access_token = "";
-	int REQUEST_CODE = 1;
-	ViewPager mViewPager;
-	Context context;
+	private SectionsPagerAdapter mSectionsPagerAdapter;
+	private ImageButton optionsButton;
+	private static String access_token = "";
+	private final int REQUEST_CODE = 1;
+	private ViewPager mViewPager;
+	private Context context;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {

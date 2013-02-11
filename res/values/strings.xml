@@ -4,9 +4,9 @@
     <string name="app_name">Digipost</string>
     <string name="menu_settings">Innstillinger</string>
     <string name="title_activity_login_view">LoginView</string>
-    <string name="title_section3">Arkiv</string>
-    <string name="title_section2">Kjøkkenbenk</string>
-    <string name="title_section1">Postkasse</string>
+    <string name="title_section3">Arkivet</string>
+    <string name="title_section2">Kjøkkenbenken</string>
+    <string name="title_section1">Postkassen</string>
     <string name="title_activity_base">BaseActivity</string>
     <string name="title_section4">Kvitteringer</string>
     <string name="context_letterlist_show">Vis brev</string>
@@ -15,7 +15,7 @@
     <string name="context_letterlist_move">Flytt til arkiv</string>
     <string name="title_activity_web_fragment">WebFragment</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="login_loginbutton_text">Logg inn</string>
+    <string name="login_loginbutton_text">Logg inn i Digipost</string>
     <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
