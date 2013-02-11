@@ -24,6 +24,9 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import no.digipost.android.model.Letter;
+
+import org.apache.http.entity.StringEntity;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
@@ -86,7 +89,7 @@ public class JSONConverter {
 		return processJackson(type, getJsonStringFromInputStream(data));
 	}
 
-	/*public static <T> StringEntity createJsonFromJackson(final Class<T> type, final Letter letter) {
+	public static <T> StringEntity createJsonFromJackson(final Letter letter) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonFactory factory = new JsonFactory();
 		Object jsonObject = null;
@@ -94,8 +97,8 @@ public class JSONConverter {
 		String jsonstring = null;
 
 		try {
-			jsonstring = objectMapper.writeValueAsString(letter, type);
-
+			jsonstring = objectMapper.writeValueAsString(letter);
+			System.out.println("JSON OUT " + jsonstring +"");
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -109,5 +112,5 @@ public class JSONConverter {
 
 		return null;
 
-	} */
+	}
 }

@@ -41,9 +41,11 @@ import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity {
 
@@ -95,7 +97,7 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.base_logoutOption:
+		case R.id.basemenu_logoutOption:
 			logOut();
 			return true;
 		default:
@@ -234,26 +236,25 @@ public class BaseActivity extends FragmentActivity {
 					}
 				});
 
-				/*
-				 * lv.setOnItemClickListener(new OnItemClickListener() {
-				 *
-				 * public void onItemClick(final AdapterView<?> arg0, final View
-				 * arg1, final int position, final long arg3) { Letter mletter =
-				 * list.get(position);
-				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
-				 *
-				 * boolean moved =
-				 * lo.moveLetter(getArguments().getString(ApiConstants
-				 * .ACCESS_TOKEN), mletter);
-				 *
-				 * if(moved) {
-				 * Toast.makeText(getActivity(),"Brev flyttet til arkiv"
-				 * ,3000).show(); return; } else {
-				 * Toast.makeText(getActivity(),"Noe gikk galt",3000).show();
-				 * return; } }
-				 *
-				 * });
-				 */
+				lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
+
+					public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+						Letter mletter = list_mailbox.get(position);
+						mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
+
+						//StringEntity se = JSONConverter.createJsonFromJackson(mletter);
+						//boolean moved = lo.moveDocument(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+						boolean moved = true;
+						if (moved) {
+							Toast.makeText(getActivity(), "Brev flyttet til arkiv", 3000).show();
+							return;
+						} else {
+							Toast.makeText(getActivity(), "Noe gikk galt", 3000).show();
+							return;
+						}
+					}
+
+				});
 
 				return v;
 

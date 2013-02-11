@@ -67,7 +67,7 @@ public class ApiAccess {
 		return jsonString;
 	}
 
-	public Letter getMovedLetter(final String access_token, final String uri, final StringEntity se) {
+	public Letter getMovedDocument(final String access_token, final String uri, final StringEntity se) {
 		return (Letter) JSONConverter.processJackson(Letter.class, moveLetter(access_token, uri, se));
 	}
 
