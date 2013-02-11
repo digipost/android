@@ -20,7 +20,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-
     <ListView
         android:id="@+id/listview_mailbox"
         android:layout_width="fill_parent"
@@ -28,5 +27,26 @@
         android:divider="#eee"
         android:dividerHeight="1sp" >
     </ListView>
+
+    <LinearLayout
+        android:id="@+id/empty_listview_mailbox"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="100sp"
+            android:layout_height="100sp" 
+            android:paddingBottom="40sp"
+            android:src="@drawable/kjokkenbenk4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_listview_text"
+            android:textSize="30sp" />
+    </LinearLayout>
 
 </LinearLayout>

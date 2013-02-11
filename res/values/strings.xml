@@ -2,7 +2,11 @@
 <resources>
 
     <string name="app_name">Digipost</string>
-    <string name="menu_settings">Innstillinger</string>
+    <string name="optionsmenu_settings">Innstillinger</string>
+    <string name="optionsmenu_logout">Logg ut</string>
+    <string name="optionsmenu_moveToArchive">Flytt til arkiv</string>
+    <string name="optionsmenu_moveToWorkarea">Flytt til kjøkkenbenk</string>
+    <string name="optionsmenu_deleteselected">Slett</string>
     <string name="title_activity_login_view">LoginView</string>
     <string name="title_section3">Arkiv</string>
     <string name="title_section2">Kjøkkenbenk</string>
@@ -19,4 +23,5 @@
     <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
+    <string name="empty_listview_text">Ingen elementer...</string>
 </resources>

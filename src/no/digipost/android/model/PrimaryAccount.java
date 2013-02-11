@@ -52,4 +52,14 @@ public class PrimaryAccount {
 
 		return null;
 	}
+
+	public String getReceiptsUri() {
+		for (Link l : link) {
+			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_RECEIPTS)) {
+				return l.getUri();
+			}
+		}
+
+		return null;
+	}
 }

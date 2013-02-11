@@ -44,7 +44,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class BaseActivity extends FragmentActivity {
 
@@ -152,11 +151,13 @@ public class BaseActivity extends FragmentActivity {
 		public static final String ARG_SECTION_NUMBER = "section_number";
 		private LetterOperations lo;
 		private LetterListAdapter adapter_mailbox;
-		private LetterListAdapter adapter_kitchenbench;
+		private LetterListAdapter adapter_workarea;
 		private LetterListAdapter adapter_archive;
+		private LetterListAdapter adapter_receipts;
 		private ArrayList<Letter> list_mailbox;
 		private ArrayList<Letter> list_archive;
-		private ArrayList<Letter> list_kitchenbench;
+		private ArrayList<Letter> list_workarea;
+		private ArrayList<Letter> list_receipts;
 		private String[] seleced_checkboxes;
 
 		public DigipostSectionFragment() {
@@ -167,22 +168,22 @@ public class BaseActivity extends FragmentActivity {
 			super.onCreate(savedInstanceState);
 
 			lo = new LetterOperations();
+
 			list_mailbox = getMailBoxLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
 			list_archive = getArchiveLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			list_kitchenbench = getWorkareaLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			list_workarea = getWorkareaLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			// list_receipts =
+			// getReceiptsLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
 
 			adapter_mailbox = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_mailbox);
 			adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_archive);
-			adapter_kitchenbench = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_kitchenbench);
-		}
-
-		@Override
-		public void onResume() {
-			super.onResume();
+			adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_workarea);
+			// adapter_receipts = new LetterListAdapter(getActivity(),
+			// R.layout.mailbox_list_item, list_receipts);
 		}
 
 		public ArrayList<Letter> getMailBoxLetters(final String at) {
-			return lo.getLetterList(at);
+			return lo.getMailboxList(at);
 		}
 
 		public ArrayList<Letter> getArchiveLetters(final String at) {
@@ -193,6 +194,10 @@ public class BaseActivity extends FragmentActivity {
 			return lo.getWorkareaList(at);
 		}
 
+		public ArrayList<Letter> getReceiptsLetters(final String at) {
+			return lo.getReceiptsList(at);
+		}
+
 		@Override
 		public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 			int number = getArguments().getInt(ARG_SECTION_NUMBER);
@@ -201,8 +206,10 @@ public class BaseActivity extends FragmentActivity {
 				View v = inflater.inflate(R.layout.fragment_layout_mailbox, container, false);
 
 				ListView lv_mailbox = (ListView) v.findViewById(R.id.listview_mailbox);
-
 				lv_mailbox.setAdapter(adapter_mailbox);
+				View emptyView = v.findViewById(R.id.empty_listview_mailbox);
+				lv_mailbox.setEmptyView(emptyView);
+
 				lv_mailbox.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 					public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int arg2, final long arg3) {
@@ -227,45 +234,52 @@ public class BaseActivity extends FragmentActivity {
 					}
 				});
 
-			/*	lv.setOnItemClickListener(new OnItemClickListener() {
-
-					public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-						Letter mletter = list.get(position);
-						mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
-
-						boolean moved = lo.moveLetter(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
-
-						if(moved) {
-							Toast.makeText(getActivity(),"Brev flyttet til arkiv",3000).show();
-							return;
-						}
-						else {
-							Toast.makeText(getActivity(),"Noe gikk galt",3000).show();
-							return;
-						}
-					}
-
-				}); */
+				/*
+				 * lv.setOnItemClickListener(new OnItemClickListener() {
+				 *
+				 * public void onItemClick(final AdapterView<?> arg0, final View
+				 * arg1, final int position, final long arg3) { Letter mletter =
+				 * list.get(position);
+				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
+				 *
+				 * boolean moved =
+				 * lo.moveLetter(getArguments().getString(ApiConstants
+				 * .ACCESS_TOKEN), mletter);
+				 *
+				 * if(moved) {
+				 * Toast.makeText(getActivity(),"Brev flyttet til arkiv"
+				 * ,3000).show(); return; } else {
+				 * Toast.makeText(getActivity(),"Noe gikk galt",3000).show();
+				 * return; } }
+				 *
+				 * });
+				 */
 
 				return v;
 
 			} else if (number == 2) {
 				View v = inflater.inflate(R.layout.fragment_layout_kitchenbench, container, false);
 				ListView lv_kitchenbench = (ListView) v.findViewById(R.id.listview_kitchen);
-				lv_kitchenbench.setAdapter(adapter_kitchenbench);
-				//lv_kitchenbench.setEmptyView(findViewById(R.id.emptyview));
+				lv_kitchenbench.setAdapter(adapter_workarea);
+				View emptyView = v.findViewById(R.id.empty_listview_workarea);
+				lv_kitchenbench.setEmptyView(emptyView);
 
 				return v;
 			} else if (number == 3) {
 				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
-				ListView lv_archive = (ListView)v.findViewById(R.id.listview_archive);
+				ListView lv_archive = (ListView) v.findViewById(R.id.listview_archive);
 				lv_archive.setAdapter(adapter_archive);
+				View emptyView = v.findViewById(R.id.empty_listview_archive);
+				lv_archive.setEmptyView(emptyView);
 
 				return v;
 			} else {
 				View v = inflater.inflate(R.layout.fragment_layout_receipts, container, false);
-				TextView at = (TextView) v.findViewById(R.id.receipts_text);
-				at.setText("hei fra kvitteringer");
+				ListView lv_receipts = (ListView) v.findViewById(R.id.listview_receipts);
+				// lv_receipts.setAdapter(adapter_receipts);
+				View emptyView = v.findViewById(R.id.empty_listview_receipts);
+				lv_receipts.setEmptyView(emptyView);
+
 				return v;
 			}
 		}

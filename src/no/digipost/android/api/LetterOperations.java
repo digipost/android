@@ -14,7 +14,7 @@ public class LetterOperations {
 		apiAccess = new ApiAccess();
 	}
 
-	public ArrayList<Letter> getLetterList(final String access_token) {
+	public ArrayList<Letter> getMailboxList(final String access_token) {
 		Account account = apiAccess.getPrimaryAccount(access_token);
 		PrimaryAccount primaryAccount = account.getPrimaryAccount();
 		Documents documents = apiAccess.getDocuments(access_token, primaryAccount.getInboxUri());
@@ -37,17 +37,23 @@ public class LetterOperations {
 
 		return documents.getDocument();
 	}
+
+	public ArrayList<Letter> getReceiptsList(final String access_token) {
+		Account account = apiAccess.getPrimaryAccount(access_token);
+		PrimaryAccount primaryaccount = account.getPrimaryAccount();
+		Documents documents = apiAccess.getDocuments(access_token, primaryaccount.getReceiptsUri());
+
+		return documents.getDocument();
+	}
+
 	/*
-	public boolean moveLetter(final String access_token, final Letter letter) {
-		ArrayList<Link> links = letter.getLink();
-		String update_uri = "";
-		for(Link l : links) {
-			if(l.getRel().equals("https://www.digipost.no/post/relations/update_document")) {
-				update_uri = l.getUri();
-				break;
-			}
-		}
-		String s = null;
-		Letter movedletter = apiAccess.getMovedLetter(access_token, update_uri, letter);
-	} */
+	 * public boolean moveDocument(final String access_token, final Letter
+	 * letter) { ArrayList<Link> links = letter.getLink(); String update_uri =
+	 * ""; for (Link l : links) { if
+	 * (l.getRel().equals("https://www.digipost.no/post/relations/update_document"
+	 * )) { update_uri = l.getUri(); break; } } String s = null; Letter
+	 * movedletter = apiAccess.getMovedDocument(access_token, update_uri,
+	 * letter); }
+	 */
+
 }
