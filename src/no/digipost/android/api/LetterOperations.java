@@ -17,7 +17,23 @@ public class LetterOperations {
 	public ArrayList<Letter> getLetterList(final String access_token) {
 		Account account = apiAccess.getPrimaryAccount(access_token);
 		PrimaryAccount primaryAccount = account.getPrimaryAccount();
-		Documents documents = apiAccess.getDocuments(access_token, primaryAccount.getDokumentsUri());
+		Documents documents = apiAccess.getDocuments(access_token, primaryAccount.getInboxUri());
+
+		return documents.getDocument();
+	}
+
+	public ArrayList<Letter> getArchiveList(final String access_token) {
+		Account account = apiAccess.getPrimaryAccount(access_token);
+		PrimaryAccount primaryaccount = account.getPrimaryAccount();
+		Documents documents = apiAccess.getDocuments(access_token, primaryaccount.getArchiveUri());
+
+		return documents.getDocument();
+	}
+
+	public ArrayList<Letter> getWorkareaList(final String access_token) {
+		Account account = apiAccess.getPrimaryAccount(access_token);
+		PrimaryAccount primaryaccount = account.getPrimaryAccount();
+		Documents documents = apiAccess.getDocuments(access_token, primaryaccount.getWorkareaUri());
 
 		return documents.getDocument();
 	}

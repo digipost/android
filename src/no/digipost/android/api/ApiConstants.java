@@ -62,6 +62,9 @@ public class ApiConstants {
 
 	public static final String URL_API = "https://www.digipost.no/post/api";
 	public static final String URL_RELATIONS_DOCUMENT_INBOX = "https://www.digipost.no/post/relations/document_inbox";
+	public static final String URL_RELATIONS_DOCUMENT_ARCHIVE = "https://www.digipost.no/post/relations/document_archive";
+	public static final String URL_RELATIONS_DOCUMENT_KITCHENBENCH = "https://www.digipost.no/post/relations/document_workarea";
+	public static final String URL_RELATIONS_DOCUMENT_RECEIPTS = "https://www.digipost.no/post/relations/document_workarea";
 	public static final String URL_API_OAUTH_AUTHORIZE_NEW = "https://www.digipost.no/post/api/oauth/authorize/new";
 	public static final String URL_API_OAUTH_ACCESSTOKEN = "https://www.digipost.no/post/api/oauth/accesstoken";
 

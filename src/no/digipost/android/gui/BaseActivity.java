@@ -151,8 +151,12 @@ public class BaseActivity extends FragmentActivity {
 
 		public static final String ARG_SECTION_NUMBER = "section_number";
 		private LetterOperations lo;
-		private LetterListAdapter listadapter;
-		private ArrayList<Letter> list;
+		private LetterListAdapter adapter_mailbox;
+		private LetterListAdapter adapter_kitchenbench;
+		private LetterListAdapter adapter_archive;
+		private ArrayList<Letter> list_mailbox;
+		private ArrayList<Letter> list_archive;
+		private ArrayList<Letter> list_kitchenbench;
 		private String[] seleced_checkboxes;
 
 		public DigipostSectionFragment() {
@@ -163,11 +167,13 @@ public class BaseActivity extends FragmentActivity {
 			super.onCreate(savedInstanceState);
 
 			lo = new LetterOperations();
-			list = getMailBoxLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			if(list == null) {
-				System.out.println("list er null");
-			}
-			listadapter = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list);
+			list_mailbox = getMailBoxLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			list_archive = getArchiveLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			list_kitchenbench = getWorkareaLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+
+			adapter_mailbox = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_mailbox);
+			adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_archive);
+			adapter_kitchenbench = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_kitchenbench);
 		}
 
 		@Override
@@ -179,9 +185,12 @@ public class BaseActivity extends FragmentActivity {
 			return lo.getLetterList(at);
 		}
 
-		public void updateMailList() {
-			list = getMailBoxLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			listadapter.notifyDataSetChanged();
+		public ArrayList<Letter> getArchiveLetters(final String at) {
+			return lo.getArchiveList(at);
+		}
+
+		public ArrayList<Letter> getWorkareaLetters(final String at) {
+			return lo.getWorkareaList(at);
 		}
 
 		@Override
@@ -191,25 +200,25 @@ public class BaseActivity extends FragmentActivity {
 			if (number == 1) {
 				View v = inflater.inflate(R.layout.fragment_layout_mailbox, container, false);
 
-				ListView lv = (ListView) v.findViewById(R.id.listview);
+				ListView lv_mailbox = (ListView) v.findViewById(R.id.listview_mailbox);
 
-				lv.setAdapter(listadapter);
-				lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+				lv_mailbox.setAdapter(adapter_mailbox);
+				lv_mailbox.setOnItemLongClickListener(new OnItemLongClickListener() {
 
 					public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int arg2, final long arg3) {
 						LetterListAdapter.showboxes = true;
-						seleced_checkboxes = new String[list.size()];
-						listadapter.notifyDataSetChanged();
+						seleced_checkboxes = new String[list_mailbox.size()];
+						adapter_mailbox.notifyDataSetChanged();
 						return true;
 					}
 				});
-				lv.setOnKeyListener(new OnKeyListener() {
+				lv_mailbox.setOnKeyListener(new OnKeyListener() {
 					public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
 						if (keyCode == KeyEvent.KEYCODE_BACK) {
 							if (LetterListAdapter.showboxes == true) {
 								LetterListAdapter.showboxes = false;
 								seleced_checkboxes = null;
-								listadapter.notifyDataSetChanged();
+								adapter_mailbox.notifyDataSetChanged();
 								return true;
 							}
 							return false;
@@ -242,19 +251,20 @@ public class BaseActivity extends FragmentActivity {
 
 			} else if (number == 2) {
 				View v = inflater.inflate(R.layout.fragment_layout_kitchenbench, container, false);
-				TextView kt = (TextView) v.findViewById(R.id.kitchenbench_text);
-				kt.setText("hei fra kjookkenet");
+				ListView lv_kitchenbench = (ListView) v.findViewById(R.id.listview_kitchen);
+				lv_kitchenbench.setAdapter(adapter_kitchenbench);
+				//lv_kitchenbench.setEmptyView(findViewById(R.id.emptyview));
+
 				return v;
 			} else if (number == 3) {
 				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
-				TextView at = (TextView) v.findViewById(R.id.archive_text);
-				at.setText("hei fra arkivet");
-				ListView lw_archive = (ListView)v.findViewById(R.id.listview_archive);
+				ListView lv_archive = (ListView)v.findViewById(R.id.listview_archive);
+				lv_archive.setAdapter(adapter_archive);
 
 				return v;
 			} else {
-				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
-				TextView at = (TextView) v.findViewById(R.id.archive_text);
+				View v = inflater.inflate(R.layout.fragment_layout_receipts, container, false);
+				TextView at = (TextView) v.findViewById(R.id.receipts_text);
 				at.setText("hei fra kvitteringer");
 				return v;
 			}

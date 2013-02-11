@@ -18,12 +18,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/kitchenbench_text"
+    android:orientation="vertical"
+    android:id="@+id/layout_kitchen" >
+    
+    <ListView
+        android:id="@+id/listview_kitchen"	
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp" />
+        android:divider="#eee"
+        android:dividerHeight="1sp" >
+    </ListView>
 
 </LinearLayout>
