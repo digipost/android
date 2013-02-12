@@ -24,6 +24,7 @@ import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -107,6 +108,8 @@ public class BaseActivity extends FragmentActivity {
 	private void logOut() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		settings.edit().clear().commit();
+		Intent i = new Intent(BaseActivity.this, LoginActivity.class);
+		startActivity(i);
 		finish();
 	}
 
@@ -259,6 +262,7 @@ public class BaseActivity extends FragmentActivity {
 
 					public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 						Letter mletter = list_mailbox.get(position);
+
 						lo.getDocumentContent(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
 					}
 
