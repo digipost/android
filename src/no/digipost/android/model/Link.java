@@ -1,6 +1,6 @@
 /**
  * Copyright (C) Posten Norge AS
- *	
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,7 +24,7 @@ public class Link {
 	private String rel;
 	@JsonProperty
 	private String uri;
-	@JsonProperty
+	@JsonProperty("media-type")
 	private String media_type;
 
 	public String getRel() {

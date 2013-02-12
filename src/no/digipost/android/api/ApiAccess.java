@@ -21,9 +21,6 @@ import java.util.concurrent.ExecutionException;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
-
-import org.apache.http.entity.StringEntity;
-
 import android.os.AsyncTask;
 
 import com.sun.jersey.api.client.Client;
@@ -67,11 +64,11 @@ public class ApiAccess {
 		return jsonString;
 	}
 
-	public Letter getMovedDocument(final String access_token, final String uri, final StringEntity se) {
+	public Letter getMovedDocument(final String access_token, final String uri, final String se) {
 		return (Letter) JSONConverter.processJackson(Letter.class, moveLetter(access_token, uri, se));
 	}
 
-	public String moveLetter(final String access_token, final String uri, final StringEntity se) {
+	public String moveLetter(final String access_token, final String uri, final String se) {
 		Client client = Client.create();
 
 		Builder builder = client
@@ -97,6 +94,25 @@ public class ApiAccess {
 		return jsonString;
 	}
 
+	/*
+	 * public String getDocumentContent(final String access_token, final String
+	 * uri) { Client client = Client.create();
+	 *
+	 * Builder builder = client .resource(uri) .header(ApiConstants.ACCEPT,
+	 * ApiConstants.CONTENT_ACCEPT) .header(ApiConstants.AUTHORIZATION,
+	 * ApiConstants.BEARER + access_token);
+	 *
+	 * ApiGetDocumentContentTask apiGetContent = new
+	 * ApiGetDocumentContentTask(); String jsonString = null;
+	 *
+	 * try { jsonString = apiGetContent.execute(builder).get(); } catch
+	 * (InterruptedException e) { // TODO Auto-generated catch block
+	 * e.printStackTrace(); } catch (ExecutionException e) { // TODO
+	 * Auto-generated catch block e.printStackTrace(); }
+	 *
+	 * //return jsonString; return null; }
+	 */
+
 	private class ApiGetJsonStringTask extends AsyncTask<Builder, Void, String> {
 		@Override
 		protected String doInBackground(final Builder... params) {
@@ -105,6 +121,20 @@ public class ApiAccess {
 
 		}
 	}
+
+	/*
+	 * private class ApiGetDocumentContentTask extends AsyncTask<Builder, Void,
+	 * InputStream> {
+	 *
+	 * @Override protected String doInBackground(final Builder... params) {
+	 * //InputStream is =
+	 * params[0].get(ClientResponse.class).getEntityInputStream();
+	 * System.out.println("FØR REQUEST"); File f =
+	 * params[0].get(ClientResponse.class).getEntity(File.class);
+	 * System.out.println("FILSTI: " + f.getPath()); return null;
+	 *
+	 * } }
+	 */
 
 	private class ApiPostTask extends AsyncTask<Builder, Void, String> {
 		@Override

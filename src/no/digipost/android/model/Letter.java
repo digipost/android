@@ -17,6 +17,8 @@ package no.digipost.android.model;
 
 import java.util.ArrayList;
 
+import no.digipost.android.api.ApiConstants;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -35,7 +37,7 @@ public class Letter {
 	private String fileSize;
 	@JsonProperty
 	private String origin;
-	@JsonProperty
+	@JsonProperty("authentication-level")
 	private String authenticationLevel;
 	@JsonProperty
 	private String location;
@@ -128,5 +130,41 @@ public class Letter {
 
 	public ArrayList<Link> getLink () {
 		return link;
+	}
+
+	public String getContentUri() {
+		for (Link l : link) {
+			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_GET_CONTENT)) {
+				return l.getUri();
+			}
+		}
+		return null;
+	}
+
+	public String getUpdateUri() {
+		for (Link l : link) {
+			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_UPDATE)) {
+				return l.getUri();
+			}
+		}
+		return null;
+	}
+
+	public String getDeleteUri() {
+		for (Link l : link) {
+			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_DELETE)) {
+				return l.getUri();
+			}
+		}
+		return null;
+	}
+
+	public String getOrganizationLogo() {
+		for (Link l : link) {
+			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_GET_ORGANIZATION_LOGO)) {
+				return l.getUri();
+			}
+		}
+		return null;
 	}
 }

@@ -89,10 +89,8 @@ public class JSONConverter {
 		return processJackson(type, getJsonStringFromInputStream(data));
 	}
 
-	public static <T> StringEntity createJsonFromJackson(final Letter letter) {
+	public static <T> String createJsonFromJackson(final Letter letter) {
 		ObjectMapper objectMapper = new ObjectMapper();
-		JsonFactory factory = new JsonFactory();
-		Object jsonObject = null;
 		StringEntity se = null;
 		String jsonstring = null;
 
@@ -110,7 +108,7 @@ public class JSONConverter {
 			e.printStackTrace();
 		}
 
-		return null;
+		return jsonstring;
 
 	}
 }

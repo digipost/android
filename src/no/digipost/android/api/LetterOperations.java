@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
-import no.digipost.android.model.Link;
 import no.digipost.android.model.PrimaryAccount;
 
 public class LetterOperations {
@@ -63,20 +62,19 @@ public class LetterOperations {
 	}
 
 	public boolean moveDocument(final String access_token, final Letter letter) {
-		ArrayList<Link> links = letter.getLink();
-		String update_uri = "";
-		for (Link l : links) {
-			if (l.getRel().equals("https://www.digipost.no/post/relations/update_document")) {
-				update_uri = l.getUri();
-				break;
-			}
+		Letter movedletter = apiAccess.getMovedDocument(access_token, letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
+		if (movedletter == null) {
+			System.out.println("movedletter er null");
 		}
-		Letter movedletter = apiAccess.getMovedDocument(access_token, update_uri, JSONConverter.createJsonFromJackson(letter));
-		if(movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE)) {
+		if (movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE)) {
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	public boolean getDocumentContent(final String access_token, final Letter letter) {
+		return false;
 	}
 
 }
