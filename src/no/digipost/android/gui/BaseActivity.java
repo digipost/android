@@ -24,6 +24,7 @@ import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -108,6 +109,8 @@ public class BaseActivity extends FragmentActivity {
 	private void logOut() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		settings.edit().clear().commit();
+		Intent i = new Intent(BaseActivity.this, LoginActivity.class);
+		startActivity(i);
 		finish();
 	}
 
@@ -242,8 +245,11 @@ public class BaseActivity extends FragmentActivity {
 						Letter mletter = list_mailbox.get(position);
 						mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
 
-						//StringEntity se = JSONConverter.createJsonFromJackson(mletter);
-						//boolean moved = lo.moveDocument(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+						// StringEntity se =
+						// JSONConverter.createJsonFromJackson(mletter);
+						// boolean moved =
+						// lo.moveDocument(getArguments().getString(ApiConstants.ACCESS_TOKEN),
+						// mletter);
 						boolean moved = true;
 						if (moved) {
 							Toast.makeText(getActivity(), "Brev flyttet til arkiv", 3000).show();
