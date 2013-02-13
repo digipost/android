@@ -51,7 +51,7 @@
                 android:id="@+id/mail_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#BDBDBD"
+                android:textColor="#757575"
                 android:textSize="13sp" />
         </LinearLayout>
 

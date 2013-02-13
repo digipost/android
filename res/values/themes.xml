@@ -2,9 +2,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.Digipost" parent="android:Theme">
-        <item name="android:windowBackground">@drawable/splash_bg</item>
+        <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:scaleType">fitCenter</item>
+        <item name="android:scaleType">center</item>
     </style>
 
 </resources>

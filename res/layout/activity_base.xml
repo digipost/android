@@ -28,21 +28,23 @@
         android:background="#d80c16"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="5dp" >
+        >
 
         <ImageButton
             android:id="@+id/base_optionsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#00000000"
             android:contentDescription="Options button"
-            android:src="@drawable/options_button" />
+            android:padding="15dp"
+            android:background="#00000000"
+            android:src="@drawable/base_optionbutton_style" />
 
         <ImageView
             android:id="@+id/options_drawer_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
+             android:padding="10dp"
             android:background="#00000000"
             android:contentDescription="options drawer logo"
             android:src="@drawable/digipost_white_header_medium" />
@@ -51,9 +53,10 @@
             android:id="@+id/base_refreshButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="15dp"
             android:background="#00000000"
             android:contentDescription="Refresh button"
-            android:src="@drawable/refresh_button" />
+            android:src="@drawable/base_refreshbutton_style" />
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
