@@ -15,6 +15,9 @@
  */
 package no.digipost.android.api;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import no.digipost.android.model.Account;
@@ -64,7 +67,8 @@ public class LetterOperations {
 	public boolean moveDocument(final String access_token, final Letter letter) {
 		Letter movedletter = apiAccess.getMovedDocument(access_token, letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
 		if (movedletter == null) {
-			System.out.println("movedletter er null");
+			System.out.println("flyttet brev er null");
+			return false;
 		}
 		if (movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE)) {
 			return true;
@@ -73,8 +77,24 @@ public class LetterOperations {
 		}
 	}
 
-	public boolean getDocumentContent(final String access_token, final Letter letter) {
-		return false;
+	public byte[] getDocumentContent(final String access_token, final Letter letter) {
+		InputStream is = apiAccess.getDocumentContent(access_token, letter.getContentUri());
+
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+		int nRead;
+		byte[] data = new byte[1048576];
+
+		try {
+			while ((nRead = is.read(data, 0, data.length)) != -1) {
+				buffer.write(data, 0, nRead);
+			}
+			buffer.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return buffer.toByteArray();
 	}
 
 }

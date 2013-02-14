@@ -21,8 +21,9 @@ import no.digipost.android.api.ApiConstants;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonFilter;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true) @JsonFilter("toJSON")
 public class Letter {
 
 	@JsonProperty
@@ -167,4 +168,13 @@ public class Letter {
 		}
 		return null;
 	}
+
+	/*@Override
+	public String toString() {
+		return "Letter [subject=" + subject + ", creatorName=" + creatorName + ", created=" + created + ", fileType=" + fileType
+				+ ", fileSize=" + fileSize + ", origin=" + origin + ", authenticationLevel=" + authenticationLevel + ", location="
+				+ location + ", read=" + read + ", type=" + type + "]";
+	} */
+
+
 }

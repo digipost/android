@@ -68,7 +68,7 @@ public class ApiAccess {
 		return (Letter) JSONConverter.processJackson(Letter.class, moveLetter(access_token, uri, se));
 	}
 
-	public String moveLetter(final String access_token, final String uri, final String se) {
+	public String moveLetter(final String access_token, final String uri, final String json) {
 		Client client = Client.create();
 
 		Builder builder = client
@@ -76,7 +76,10 @@ public class ApiAccess {
 				.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
 				.header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
 				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token)
-				.entity(se);
+				.entity(json);
+
+		System.out.println("JSON: " + json);
+		System.out.println("URI: " + uri);
 
 		ApiPostTask postapi = new ApiPostTask();
 		String jsonString = null;
@@ -94,47 +97,48 @@ public class ApiAccess {
 		return jsonString;
 	}
 
-	/*
-	 * public String getDocumentContent(final String access_token, final String
-	 * uri) { Client client = Client.create();
-	 *
-	 * Builder builder = client .resource(uri) .header(ApiConstants.ACCEPT,
-	 * ApiConstants.CONTENT_ACCEPT) .header(ApiConstants.AUTHORIZATION,
-	 * ApiConstants.BEARER + access_token);
-	 *
-	 * ApiGetDocumentContentTask apiGetContent = new
-	 * ApiGetDocumentContentTask(); String jsonString = null;
-	 *
-	 * try { jsonString = apiGetContent.execute(builder).get(); } catch
-	 * (InterruptedException e) { // TODO Auto-generated catch block
-	 * e.printStackTrace(); } catch (ExecutionException e) { // TODO
-	 * Auto-generated catch block e.printStackTrace(); }
-	 *
-	 * //return jsonString; return null; }
-	 */
+	public InputStream getDocumentContent(final String access_token, final String uri) {
+		Client client = Client.create();
+
+		Builder builder = client
+				.resource(uri)
+				.header(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM)
+				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token);
+
+		ApiGetDocumentContentTask apiGetContent = new ApiGetDocumentContentTask();
+		InputStream is = null;
+		try {
+			is = apiGetContent.execute(builder).get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return is;
+	}
 
 	private class ApiGetJsonStringTask extends AsyncTask<Builder, Void, String> {
 		@Override
 		protected String doInBackground(final Builder... params) {
 			InputStream is = params[0].get(ClientResponse.class).getEntityInputStream();
 			return JSONConverter.getJsonStringFromInputStream(is);
-
 		}
 	}
 
-	/*
-	 * private class ApiGetDocumentContentTask extends AsyncTask<Builder, Void,
-	 * InputStream> {
-	 *
-	 * @Override protected String doInBackground(final Builder... params) {
-	 * //InputStream is =
-	 * params[0].get(ClientResponse.class).getEntityInputStream();
-	 * System.out.println("FØR REQUEST"); File f =
-	 * params[0].get(ClientResponse.class).getEntity(File.class);
-	 * System.out.println("FILSTI: " + f.getPath()); return null;
-	 *
-	 * } }
-	 */
+	private class ApiGetDocumentContentTask extends AsyncTask<Builder, Void, InputStream> {
+
+		@Override
+		protected InputStream doInBackground(final Builder... params) {
+			ClientResponse cr = params[0].get(ClientResponse.class);
+			if (cr.getStatus() != 200) {
+				System.out.println("Feil: " + cr.getStatus());
+				System.out.println("Json error: " + JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream()));
+			}
+			return cr.getEntityInputStream();
+		}
+	}
 
 	private class ApiPostTask extends AsyncTask<Builder, Void, String> {
 		@Override
@@ -143,6 +147,5 @@ public class ApiAccess {
 			InputStream is = params[0].post(ClientResponse.class).getEntityInputStream();
 			return JSONConverter.getJsonStringFromInputStream(is);
 		}
-
 	}
 }

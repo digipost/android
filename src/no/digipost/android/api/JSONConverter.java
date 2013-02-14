@@ -26,11 +26,15 @@ import java.io.Writer;
 
 import no.digipost.android.model.Letter;
 
-import org.apache.http.entity.StringEntity;
 import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ser.FilterProvider;
+import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
+import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 
 public class JSONConverter {
 	public static String getJsonStringFromInputStream(final InputStream inputStream) {
@@ -57,7 +61,6 @@ public class JSONConverter {
 			}
 
 			content = writer.toString();
-			System.out.println(content + "");
 		}
 
 		return content;
@@ -90,25 +93,27 @@ public class JSONConverter {
 	}
 
 	public static <T> String createJsonFromJackson(final Letter letter) {
-		ObjectMapper objectMapper = new ObjectMapper();
-		StringEntity se = null;
-		String jsonstring = null;
 
+		//ignore-test
+		String [] ignore = {"link","contentUri","deleteUri","updateUri","organizationLogo"};
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		FilterProvider filters = new SimpleFilterProvider().addFilter("toJSON",
+				SimpleBeanPropertyFilter.serializeAllExcept(ignore));
+
+		Writer strWriter = new StringWriter();
 		try {
-			jsonstring = objectMapper.writeValueAsString(letter);
-			System.out.println("JSON OUT " + jsonstring +"");
-		} catch (JsonParseException e) {
+			objectMapper.filteredWriter(filters).writeValue(strWriter, letter);
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
-		return jsonstring;
-
+		return strWriter.toString();
 	}
 }
