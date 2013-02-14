@@ -42,7 +42,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -162,7 +161,6 @@ public class BaseActivity extends FragmentActivity {
 		private ArrayList<Letter> list_archive;
 		private ArrayList<Letter> list_workarea;
 		private ArrayList<Letter> list_receipts;
-		private String[] seleced_checkboxes;
 
 		public DigipostSectionFragment() {
 		}
@@ -216,9 +214,9 @@ public class BaseActivity extends FragmentActivity {
 
 				lv_mailbox.setOnItemLongClickListener(new OnItemLongClickListener() {
 
-					public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int arg2, final long arg3) {
+					public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 						LetterListAdapter.showboxes = true;
-						seleced_checkboxes = new String[list_mailbox.size()];
+						adapter_mailbox.setInitialcheck(position);
 						adapter_mailbox.notifyDataSetChanged();
 						return true;
 					}
@@ -228,7 +226,7 @@ public class BaseActivity extends FragmentActivity {
 						if (keyCode == KeyEvent.KEYCODE_BACK) {
 							if (LetterListAdapter.showboxes == true) {
 								LetterListAdapter.showboxes = false;
-								seleced_checkboxes = null;
+								adapter_mailbox.clearCheckboxes();
 								adapter_mailbox.notifyDataSetChanged();
 								return true;
 							}
@@ -247,7 +245,6 @@ public class BaseActivity extends FragmentActivity {
 				 *
 				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
 				 *
-				 *
 				 * boolean moved =
 				 * lo.moveDocument(getArguments().getString(ApiConstants
 				 * .ACCESS_TOKEN), mletter); if (moved) {
@@ -258,15 +255,16 @@ public class BaseActivity extends FragmentActivity {
 				 * });
 				 */
 
-				lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-
-					public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-						Letter mletter = list_mailbox.get(position);
-
-						lo.getDocumentContent(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
-					}
-
-				});
+				/*
+				 * lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
+				 *
+				 * public void onItemClick(final AdapterView<?> arg0, final View
+				 * arg1, final int position, final long arg3) { Letter mletter =
+				 * list_mailbox.get(position); byte[] data =
+				 * lo.getDocumentContent
+				 * (getArguments().getString(ApiConstants.ACCESS_TOKEN),
+				 * mletter); } });
+				 */
 
 				return v;
 

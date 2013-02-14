@@ -36,7 +36,7 @@ public class ApiConstants {
 	public static final String PRIMARY_ACCOUNT = "primaryAccount";
 
 	public static final String LOCATION_ARCHIVE = "ARCHIVE";
-	public static final String LOCATION_INBOX = "INBOX";
+	public static final String LOCATION_WORKAREA = "WORKAREA";
 
 	public static final String GRANT_TYPE = "grant_type";
 	public static final String AUD = "aud";
@@ -59,7 +59,7 @@ public class ApiConstants {
 	public static final String BEARER = "Bearer ";
 	public static final String BASIC = "Basic ";
 	public static final String APPLICATION_VND_DIGIPOST_V2_JSON = "application/vnd.digipost-v2+json";
-	public static final String CONTENT_ACCEPT ="application/octet-stream";
+	public static final String CONTENT_OCTET_STREAM ="application/octet-stream";
 
 	public static final String URL_API = "https://www.digipost.no/post/api";
 	public static final String URL_RELATIONS_DOCUMENT_INBOX = "https://www.digipost.no/post/relations/document_inbox";

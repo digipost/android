@@ -30,12 +30,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 public class LetterListAdapter extends ArrayAdapter<Letter> {
 	private final Context con;
 	private final ArrayList<Letter> letters;
 	public static boolean showboxes = false;
+	public boolean[] checked;
+	CheckBox checkbox;
 
 	public LetterListAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects) {
 		super(context, textViewResourceId, objects);
@@ -62,12 +66,39 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
 		creator.setText(letters.get(position).getCreatorName());
 
-		CheckBox checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
+		checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
 
-		if (showboxes) {
-			checkbox.setVisibility(View.VISIBLE);
+		if (checked != null) {
+
+			if (checked[position]) {
+				checkbox.setChecked(true);
+			}
+
+			checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				public void onCheckedChanged(final CompoundButton arg0, final boolean state) {
+					// TODO Auto-generated method stub
+					checked[position] = state;
+				}
+			});
+
+			if (showboxes) {
+				checkbox.setVisibility(View.VISIBLE);
+			}
 		}
 		return row;
+	}
+
+	public void setInitialcheck(final int position) {
+		checked = new boolean[letters.size()];
+		checked[position] = true;
+	}
+
+	public void clearCheckboxes() {
+		checked = null;
+	}
+
+	public boolean[] getCheckedDocuments() {
+		return checked;
 	}
 
 	private String getDateFormatted(final String date) {
