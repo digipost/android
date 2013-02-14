@@ -256,9 +256,8 @@ public class BaseActivity extends FragmentActivity {
 				 * arg1, final int position, final long arg3) { Letter mletter =
 				 * list_mailbox.get(position);
 				 *
-				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
-				 * boolean moved =
-				 * lo.moveDocument(getArguments().getString(ApiConstants
+				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE); boolean
+				 * moved = lo.moveDocument(getArguments().getString(ApiConstants
 				 * .ACCESS_TOKEN), mletter); if (moved) {
 				 * Toast.makeText(getActivity(), "Brev flyttet til arkiv",
 				 * 3000).show(); return; } else { Toast.makeText(getActivity(),
