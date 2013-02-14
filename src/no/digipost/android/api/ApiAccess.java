@@ -97,19 +97,19 @@ public class ApiAccess {
 	/*
 	 * public String getDocumentContent(final String access_token, final String
 	 * uri) { Client client = Client.create();
-	 *
+	 * 
 	 * Builder builder = client .resource(uri) .header(ApiConstants.ACCEPT,
 	 * ApiConstants.CONTENT_ACCEPT) .header(ApiConstants.AUTHORIZATION,
 	 * ApiConstants.BEARER + access_token);
-	 *
+	 * 
 	 * ApiGetDocumentContentTask apiGetContent = new
 	 * ApiGetDocumentContentTask(); String jsonString = null;
-	 *
+	 * 
 	 * try { jsonString = apiGetContent.execute(builder).get(); } catch
 	 * (InterruptedException e) { // TODO Auto-generated catch block
 	 * e.printStackTrace(); } catch (ExecutionException e) { // TODO
 	 * Auto-generated catch block e.printStackTrace(); }
-	 *
+	 * 
 	 * //return jsonString; return null; }
 	 */
 
@@ -125,14 +125,14 @@ public class ApiAccess {
 	/*
 	 * private class ApiGetDocumentContentTask extends AsyncTask<Builder, Void,
 	 * InputStream> {
-	 *
+	 * 
 	 * @Override protected String doInBackground(final Builder... params) {
 	 * //InputStream is =
 	 * params[0].get(ClientResponse.class).getEntityInputStream();
 	 * System.out.println("FØR REQUEST"); File f =
 	 * params[0].get(ClientResponse.class).getEntity(File.class);
 	 * System.out.println("FILSTI: " + f.getPath()); return null;
-	 *
+	 * 
 	 * } }
 	 */
 
