@@ -47,7 +47,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity {
 
@@ -251,39 +250,47 @@ public class BaseActivity extends FragmentActivity {
 					}
 				});
 
-				lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-
-					public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-						Letter mletter = list_mailbox.get(position);
-
-						mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
-						boolean moved = lo.moveDocument(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
-						if (moved) {
-							Toast.makeText(getActivity(), "Brev flyttet til arkiv", 3000).show();
-							return;
-						} else {
-							Toast.makeText(getActivity(), "Noe gikk galt", 3000).show();
-							return;
-						}
-					}
-
-				});
-
 				/*
 				 * lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
 				 *
 				 * public void onItemClick(final AdapterView<?> arg0, final View
 				 * arg1, final int position, final long arg3) { Letter mletter =
-				 * list_mailbox.get(position); byte[] data =
-				 * lo.getDocumentContent
-				 * (getArguments().getString(ApiConstants.ACCESS_TOKEN),
-				 * mletter); } });
+				 * list_mailbox.get(position);
+				 *
+				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE); boolean
+				 * moved =
+				 * lo.moveDocument(getArguments().getString(ApiConstants.
+				 * ACCESS_TOKEN), mletter); if (moved) {
+				 * Toast.makeText(getActivity(), "Brev flyttet til arkiv",
+				 * 3000).show(); return; } else { Toast.makeText(getActivity(),
+				 * "Noe gikk galt", 3000).show(); return; } }
+				 *
+				 * });
 				 */
+
+				lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
+
+					public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+						Letter mletter = list_mailbox.get(position);
+
+						String filetype = mletter.getFileType();
+
+						if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
+							// PDF byte-array
+							byte[] data = lo.getDocumentContentPDF(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+						} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
+							String html = lo.getDocumentContentHTML(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+							Intent i = new Intent(getActivity(), Html_WebViewTest.class);
+							i.putExtra(ApiConstants.FILETYPE_HTML, html);
+							startActivity(i);
+						}
+					}
+				});
 
 				return v;
 
 			} else if (number == 2) {
-				View v = inflater.inflate(R.layout.fragment_layout_kitchenbench, container, false);
+				View v = inflater.inflate(R.layout.fragment_layout_workarea, container, false);
 				ListView lv_kitchenbench = (ListView) v.findViewById(R.id.listview_kitchen);
 				lv_kitchenbench.setAdapter(adapter_workarea);
 				View emptyView = v.findViewById(R.id.empty_listview_workarea);

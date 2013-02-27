@@ -15,9 +15,6 @@
  */
 package no.digipost.android.api;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import no.digipost.android.model.Account;
@@ -64,37 +61,21 @@ public class LetterOperations {
 		return documents.getDocument();
 	}
 
-	public boolean moveDocument(final String access_token, final Letter letter) {
-		Letter movedletter = apiAccess.getMovedDocument(access_token, letter.getUpdateUri(), JSONConverter.createJson(letter));
-		if (movedletter == null) {
-			System.out.println("flyttet brev er null");
-			return false;
-		}
-		if (movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE)) {
-			return true;
-		} else {
-			return false;
-		}
+	/*
+	 * public boolean moveDocument(final String access_token, final Letter
+	 * letter) { Letter movedletter = apiAccess.getMovedDocument(access_token,
+	 * letter.getUpdateUri(), JSONConverter.createJson(letter)); if (movedletter
+	 * == null) { System.out.println("flyttet brev er null"); return false; } if
+	 * (movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE)) {
+	 * return true; } else { return false; } }
+	 */
+
+	public byte[] getDocumentContentPDF(final String access_token, final Letter letter) {
+		ApiAccess.filesize = Integer.parseInt(letter.getFileSize());
+		return apiAccess.getDocumentContent(access_token, letter.getContentUri());
 	}
 
-	public byte[] getDocumentContent(final String access_token, final Letter letter) {
-		InputStream is = apiAccess.getDocumentContent(access_token, letter.getContentUri());
-
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
-		int nRead;
-		byte[] data = new byte[1048576];
-
-		try {
-			while ((nRead = is.read(data, 0, data.length)) != -1) {
-				buffer.write(data, 0, nRead);
-			}
-			buffer.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return buffer.toByteArray();
+	public String getDocumentContentHTML(final String access_token, final Letter letter) {
+		return apiAccess.getDocumentHTML(access_token, letter.getContentUri());
 	}
-
 }

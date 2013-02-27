@@ -38,6 +38,9 @@ public class ApiConstants {
 	public static final String LOCATION_ARCHIVE = "ARCHIVE";
 	public static final String LOCATION_WORKAREA = "WORKAREA";
 
+	public static final String FILETYPE_PDF = "pdf";
+	public static final String FILETYPE_HTML = "html";
+
 	public static final String GRANT_TYPE = "grant_type";
 	public static final String AUD = "aud";
 	public static final String CODE = "code";

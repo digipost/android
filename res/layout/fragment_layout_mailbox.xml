@@ -27,7 +27,7 @@
         android:divider="#eee"
         android:dividerHeight="1sp" >
     </ListView>
-
+    
     <LinearLayout
         android:id="@+id/empty_listview_mailbox"
         android:layout_width="match_parent"

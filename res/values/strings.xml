@@ -24,4 +24,8 @@
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
     <string name="empty_listview_text">Ingen elementer...</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_html_veb_view">HtmlVebView</string>
+
 </resources>

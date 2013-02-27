@@ -34,6 +34,7 @@ import com.sun.jersey.api.client.WebResource.Builder;
 public class ApiAccess {
 	private String json;
 	private JSONObject jsonob;
+	static int filesize = 0;
 
 	public ApiAccess() {
 
@@ -77,7 +78,8 @@ public class ApiAccess {
 
 	public String moveLetter(final String access_token, final String uri, final JSONObject json) {
 		jsonob = json;
-		//ServiceFinder.setIteratorProvider(new AndroidServiceIteratorProvider());
+		// ServiceFinder.setIteratorProvider(new
+		// AndroidServiceIteratorProvider());
 		Client client = Client.create();
 		WebResource r = client.resource(uri);
 
@@ -105,7 +107,7 @@ public class ApiAccess {
 		return jsonString;
 	}
 
-	public InputStream getDocumentContent(final String access_token, final String uri) {
+	public byte[] getDocumentContent(final String access_token, final String uri) {
 		Client client = Client.create();
 
 		Builder builder = client
@@ -113,10 +115,10 @@ public class ApiAccess {
 				.header(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM)
 				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token);
 
-		ApiGetDocumentContentTask apiGetContent = new ApiGetDocumentContentTask();
-		InputStream is = null;
+		ApiGetDocumentContentPDFTask apiGetContent = new ApiGetDocumentContentPDFTask();
+		byte[] data = null;
 		try {
-			is = apiGetContent.execute(builder).get();
+			data = apiGetContent.execute(builder).get();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,7 +126,29 @@ public class ApiAccess {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return is;
+		return data;
+	}
+
+	public String getDocumentHTML(final String access_token, final String uri) {
+		Client client = Client.create();
+
+		Builder builder = client
+				.resource(uri)
+				.header(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM)
+				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token);
+
+		ApiGetDocumentHTMLContentTask apiGetContentHTML = new ApiGetDocumentHTMLContentTask();
+		String data = null;
+		try {
+			data = apiGetContentHTML.execute(builder).get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return data;
 	}
 
 	private class ApiGetJsonStringTask extends AsyncTask<Builder, Void, String> {
@@ -135,16 +159,16 @@ public class ApiAccess {
 		}
 	}
 
-	private class ApiGetDocumentContentTask extends AsyncTask<Builder, Void, InputStream> {
+	private class ApiGetDocumentContentPDFTask extends AsyncTask<Builder, Void, byte[]> {
 
 		@Override
-		protected InputStream doInBackground(final Builder... params) {
+		protected byte[] doInBackground(final Builder... params) {
 			ClientResponse cr = params[0].get(ClientResponse.class);
 			if (cr.getStatus() != 200) {
 				System.out.println("Feil: " + cr.getStatus());
 				System.out.println("Json error: " + JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream()));
 			}
-			return cr.getEntityInputStream();
+			return JSONConverter.inputStreamtoByteArray(filesize, cr.getEntityInputStream());
 		}
 	}
 
@@ -152,8 +176,20 @@ public class ApiAccess {
 		@Override
 		protected String doInBackground(final Builder... params) {
 			// TODO Auto-generated method stub
-			InputStream is = params[0].post(ClientResponse.class,jsonob.toString()).getEntityInputStream();
+			InputStream is = params[0].post(ClientResponse.class, jsonob.toString()).getEntityInputStream();
 			return JSONConverter.getJsonStringFromInputStream(is);
+		}
+	}
+
+	private class ApiGetDocumentHTMLContentTask extends AsyncTask<Builder, Void, String> {
+		@Override
+		protected String doInBackground(final Builder... params) {
+			ClientResponse cr = params[0].get(ClientResponse.class);
+			if (cr.getStatus() != 200) {
+				System.out.println("Feil: " + cr.getStatus());
+				System.out.println("Json error: " + JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream()));
+			}
+			return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());
 		}
 	}
 }

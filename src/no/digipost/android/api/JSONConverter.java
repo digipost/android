@@ -17,14 +17,13 @@
 package no.digipost.android.api;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-
-import javax.ws.rs.core.MultivaluedMap;
 
 import no.digipost.android.model.Letter;
 
@@ -37,10 +36,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ser.FilterProvider;
 import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class JSONConverter {
 	public static String getJsonStringFromInputStream(final InputStream inputStream) {
@@ -67,6 +62,7 @@ public class JSONConverter {
 			}
 
 			content = writer.toString();
+			System.out.println("HTML? " + content);
 		}
 
 		return content;
@@ -123,41 +119,22 @@ public class JSONConverter {
 		return strWriter.toString();
 	}
 
-	public static JSONObject createJson (final Letter letter) {
-		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-		params.add("subject", letter.getSubject());
-		params.add("creatorName", letter.getCreatorName());
-		params.add("created", letter.getCreated());
-		params.add("fileType", letter.getType());
-		params.add("fileSize", letter.getFileSize());
-		params.add("origin", letter.getOrigin());
-		params.add("authentication-level", letter.getAuthenticationLevel());
-		params.add("location", letter.getLocation());
-		params.add("read", letter.getRead());
-		params.add("type", letter.getType());
+	public static byte [] inputStreamtoByteArray(final int size, final InputStream data) {
+		InputStream is = data;
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-		//return params;
-
-		JSONObject json = new JSONObject();
+		int nRead;
+		byte[] byteArray = new byte[size];
 
 		try {
-			json.put("subject", letter.getSubject());
-
-		json.put("creatorName", letter.getCreatorName());
-		json.put("created", letter.getCreated());
-		json.put("fileType", letter.getType());
-		json.put("fileSize", letter.getFileSize());
-		json.put("origin", letter.getOrigin());
-		json.put("authentication-level", letter.getAuthenticationLevel());
-		json.put("location", letter.getLocation());
-		json.put("read", letter.getRead());
-		json.put("type", letter.getType());
-
-		} catch (JSONException e) {
+			while ((nRead = is.read(byteArray, 0, byteArray.length)) != -1) {
+				buffer.write(byteArray, 0, nRead);
+			}
+			buffer.flush();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		return json;
+		return buffer.toByteArray();
 	}
 }
