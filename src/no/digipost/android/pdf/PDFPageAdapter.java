@@ -3,7 +3,6 @@ package no.digipost.android.pdf;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.os.AsyncTask;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ public class PDFPageAdapter extends BaseAdapter {
 	private final PDFCore mCore;
 	private final SparseArray<PointF> mPageSizes = new SparseArray<PointF>();
 
-	public PDFPageAdapter(Context c, PDFCore core) {
+	public PDFPageAdapter(final Context c, final PDFCore core) {
 		mContext = c;
 		mCore = core;
 	}
@@ -23,15 +22,15 @@ public class PDFPageAdapter extends BaseAdapter {
 		return mCore.countPages();
 	}
 
-	public Object getItem(int position) {
+	public Object getItem(final int position) {
 		return null;
 	}
 
-	public long getItemId(int position) {
+	public long getItemId(final int position) {
 		return 0;
 	}
 
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, final View convertView, final ViewGroup parent) {
 		final PDFPageView pageView;
 		if (convertView == null) {
 			pageView = new PDFPageView(mContext, mCore, new Point(parent.getWidth(), parent.getHeight()));
@@ -48,14 +47,14 @@ public class PDFPageAdapter extends BaseAdapter {
 			// Page size as yet unknown. Blank it for now, and
 			// start a background task to find the size
 			pageView.blank(position);
-			SafeAsyncTask<Void,Void,PointF> sizingTask = new SafeAsyncTask<Void,Void,PointF>() {
+			SafeAsyncTask<Void, Void, PointF> sizingTask = new SafeAsyncTask<Void, Void, PointF>() {
 				@Override
-				protected PointF doInBackground(Void... arg0) {
+				protected PointF doInBackground(final Void... arg0) {
 					return mCore.getPageSize(position);
 				}
 
 				@Override
-				protected void onPostExecute(PointF result) {
+				protected void onPostExecute(final PointF result) {
 					super.onPostExecute(result);
 					// We now know the page size
 					mPageSizes.put(position, result);
@@ -66,7 +65,7 @@ public class PDFPageAdapter extends BaseAdapter {
 				}
 			};
 
-			sizingTask.safeExecute((Void)null);
+			sizingTask.safeExecute((Void) null);
 		}
 		return pageView;
 	}
