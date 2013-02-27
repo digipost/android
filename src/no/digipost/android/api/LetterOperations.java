@@ -65,7 +65,7 @@ public class LetterOperations {
 	}
 
 	public boolean moveDocument(final String access_token, final Letter letter) {
-		Letter movedletter = apiAccess.getMovedDocument(access_token, letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
+		Letter movedletter = apiAccess.getMovedDocument(access_token, letter.getUpdateUri(), JSONConverter.createJson(letter));
 		if (movedletter == null) {
 			System.out.println("flyttet brev er null");
 			return false;

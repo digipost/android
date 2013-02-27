@@ -21,15 +21,22 @@ import java.util.concurrent.ExecutionException;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
+
+import org.codehaus.jettison.json.JSONObject;
+
 import android.os.AsyncTask;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.WebResource.Builder;
 
 public class ApiAccess {
+	private String json;
+	private JSONObject jsonob;
 
 	public ApiAccess() {
+
 	}
 
 	public Account getPrimaryAccount(final String access_token) {
@@ -64,21 +71,22 @@ public class ApiAccess {
 		return jsonString;
 	}
 
-	public Letter getMovedDocument(final String access_token, final String uri, final String se) {
-		return (Letter) JSONConverter.processJackson(Letter.class, moveLetter(access_token, uri, se));
+	public Letter getMovedDocument(final String access_token, final String uri, final JSONObject json) {
+		return (Letter) JSONConverter.processJackson(Letter.class, moveLetter(access_token, uri, json));
 	}
 
-	public String moveLetter(final String access_token, final String uri, final String json) {
+	public String moveLetter(final String access_token, final String uri, final JSONObject json) {
+		jsonob = json;
+		//ServiceFinder.setIteratorProvider(new AndroidServiceIteratorProvider());
 		Client client = Client.create();
+		WebResource r = client.resource(uri);
 
-		Builder builder = client
-				.resource(uri)
+		Builder builder = r
 				.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
 				.header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
-				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token)
-				.entity(json);
+				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token);
 
-		System.out.println("JSON: " + json);
+		System.out.println("JSON: " + jsonob.toString());
 		System.out.println("URI: " + uri);
 
 		ApiPostTask postapi = new ApiPostTask();
@@ -144,7 +152,7 @@ public class ApiAccess {
 		@Override
 		protected String doInBackground(final Builder... params) {
 			// TODO Auto-generated method stub
-			InputStream is = params[0].post(ClientResponse.class).getEntityInputStream();
+			InputStream is = params[0].post(ClientResponse.class,jsonob.toString()).getEntityInputStream();
 			return JSONConverter.getJsonStringFromInputStream(is);
 		}
 	}

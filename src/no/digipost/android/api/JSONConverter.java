@@ -24,6 +24,8 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import javax.ws.rs.core.MultivaluedMap;
+
 import no.digipost.android.model.Letter;
 
 import org.codehaus.jackson.JsonFactory;
@@ -35,6 +37,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ser.FilterProvider;
 import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class JSONConverter {
 	public static String getJsonStringFromInputStream(final InputStream inputStream) {
@@ -115,5 +121,43 @@ public class JSONConverter {
 			e.printStackTrace();
 		}
 		return strWriter.toString();
+	}
+
+	public static JSONObject createJson (final Letter letter) {
+		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+		params.add("subject", letter.getSubject());
+		params.add("creatorName", letter.getCreatorName());
+		params.add("created", letter.getCreated());
+		params.add("fileType", letter.getType());
+		params.add("fileSize", letter.getFileSize());
+		params.add("origin", letter.getOrigin());
+		params.add("authentication-level", letter.getAuthenticationLevel());
+		params.add("location", letter.getLocation());
+		params.add("read", letter.getRead());
+		params.add("type", letter.getType());
+
+		//return params;
+
+		JSONObject json = new JSONObject();
+
+		try {
+			json.put("subject", letter.getSubject());
+
+		json.put("creatorName", letter.getCreatorName());
+		json.put("created", letter.getCreated());
+		json.put("fileType", letter.getType());
+		json.put("fileSize", letter.getFileSize());
+		json.put("origin", letter.getOrigin());
+		json.put("authentication-level", letter.getAuthenticationLevel());
+		json.put("location", letter.getLocation());
+		json.put("read", letter.getRead());
+		json.put("type", letter.getType());
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return json;
 	}
 }
