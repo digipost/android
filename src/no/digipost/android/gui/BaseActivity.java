@@ -23,6 +23,8 @@ import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
+import no.digipost.android.pdf.PDFActivity;
+import no.digipost.android.pdf.PdfStore;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -252,11 +254,11 @@ public class BaseActivity extends FragmentActivity {
 
 				/*
 				 * lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-				 *
+				 * 
 				 * public void onItemClick(final AdapterView<?> arg0, final View
 				 * arg1, final int position, final long arg3) { Letter mletter =
 				 * list_mailbox.get(position);
-				 *
+				 * 
 				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE); boolean
 				 * moved =
 				 * lo.moveDocument(getArguments().getString(ApiConstants.
@@ -264,7 +266,7 @@ public class BaseActivity extends FragmentActivity {
 				 * Toast.makeText(getActivity(), "Brev flyttet til arkiv",
 				 * 3000).show(); return; } else { Toast.makeText(getActivity(),
 				 * "Noe gikk galt", 3000).show(); return; } }
-				 *
+				 * 
 				 * });
 				 */
 
@@ -278,6 +280,10 @@ public class BaseActivity extends FragmentActivity {
 						if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
 							// PDF byte-array
 							byte[] data = lo.getDocumentContentPDF(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+							PdfStore.pdf = data;
+							Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+							i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
+							startActivity(i);
 						} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 							String html = lo.getDocumentContentHTML(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
 							Intent i = new Intent(getActivity(), Html_WebViewTest.class);

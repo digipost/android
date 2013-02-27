@@ -1,0 +1,175 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/pdf_topbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#323538"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/pdf_backbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingRight="-5dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_back_32" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_postbox_48" />
+        </LinearLayout>
+
+        <ViewSwitcher
+            android:id="@+id/pdf_switcher"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#323538"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/pdf_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:padding="8dp" />
+
+                <ImageButton
+                    android:id="@+id/pdf_searchbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:padding="8dp"
+                    android:src="@drawable/white_search_48" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/pdf_searchtext"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:padding="8dp"
+                    android:singleLine="true" />
+
+                <ImageButton
+                    android:id="@+id/pdf_search_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:padding="8dp"
+                    android:src="@drawable/white_leftarrow_48" />
+
+                <ImageButton
+                    android:id="@+id/pdf_search_forward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:padding="8dp"
+                    android:src="@drawable/white_rightarrow_48" />
+            </LinearLayout>
+        </ViewSwitcher>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/pdf_bottombar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#323538" >
+
+        <LinearLayout
+            android:id="@+id/pdf_bottombar_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+			
+            <ImageButton
+                android:id="@+id/pdf_toMailbox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_message_48" />
+            
+            <ImageButton
+                android:id="@+id/pdf_toWorkarea"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_workarea_48" />
+
+            <ImageButton
+                android:id="@+id/pdf_toArchive"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_archive_48" />
+
+            <ImageButton
+                android:id="@+id/pdf_delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_delete_48" />
+
+            <ImageButton
+                android:id="@+id/pdf_share"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_share_48" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/pdf_pageNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/pdf_bottombar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/page_num"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

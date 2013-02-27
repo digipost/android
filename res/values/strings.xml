@@ -27,5 +27,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_html_veb_view">HtmlVebView</string>
+    <string name="no_further_occurences_found">Ingen flere treff funnet</string>
+    <string name="text_not_found">Fant ingen treff</string>
+    <string name="open_failed">Kunne ikke åpne dokumentet</string>
+    <string name="searching_">Søker...</string>
 
 </resources>
