@@ -22,7 +22,6 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#d80c16"
@@ -40,11 +39,10 @@
             android:src="@drawable/base_optionbutton_style" />
 
         <ImageView
-            android:id="@+id/options_drawer_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
-             android:padding="10dp"
+            android:padding="10dp"
             android:background="#00000000"
             android:contentDescription="options drawer logo"
             android:src="@drawable/digipost_white_header_medium" />
@@ -57,6 +55,7 @@
             android:background="#00000000"
             android:contentDescription="Refresh button"
             android:src="@drawable/base_refreshbutton_style" />
+        
     </LinearLayout>
 
     <android.support.v4.view.ViewPager
