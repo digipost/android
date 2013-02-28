@@ -74,7 +74,7 @@
         <activity
             android:name="no.digipost.android.pdf.PDFActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.Holo.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package no.digipost.android.pdf;
 
 import android.content.Context;
@@ -27,7 +42,6 @@ class PatchInfo {
 	}
 }
 
-// Make our ImageViews opaque to optimize redraw
 class OpaqueImageView extends ImageView {
 
 	public OpaqueImageView(final Context context) {
@@ -48,15 +62,14 @@ public abstract class PageView extends ViewGroup {
 	private final Context mContext;
 	protected int mPageNumber;
 	private final Point mParentSize;
-	protected Point mSize; // Size of page at minimum zoom
+	protected Point mSize;
 	protected float mSourceScale;
 
-	private ImageView mEntire; // Image rendered at minimum zoom
+	private ImageView mEntire;
 	private Bitmap mEntireBm;
 	private SafeAsyncTask<Void, Void, LinkInfo[]> mDrawEntire;
 
-	private Point mPatchViewSize; // View size on the basis of which the patch
-									// was created
+	private Point mPatchViewSize;
 	private Rect mPatchArea;
 	private ImageView mPatch;
 	private SafeAsyncTask<PatchInfo, Void, PatchInfo> mDrawPatch;
@@ -83,7 +96,6 @@ public abstract class PageView extends ViewGroup {
 	protected abstract LinkInfo[] getLinkInfo();
 
 	public void releaseResources() {
-		// Cancel pending render task
 		if (mDrawEntire != null) {
 			mDrawEntire.cancel(true);
 			mDrawEntire = null;
@@ -113,7 +125,6 @@ public abstract class PageView extends ViewGroup {
 	}
 
 	public void blank(final int page) {
-		// Cancel pending render task
 		if (mDrawEntire != null) {
 			mDrawEntire.cancel(true);
 			mDrawEntire = null;
@@ -144,7 +155,6 @@ public abstract class PageView extends ViewGroup {
 	}
 
 	public void setPage(final int page, final PointF size) {
-		// Cancel pending render task
 		if (mDrawEntire != null) {
 			mDrawEntire.cancel(true);
 			mDrawEntire = null;
@@ -159,16 +169,11 @@ public abstract class PageView extends ViewGroup {
 			addView(mEntire);
 		}
 
-		// Calculate scaled size that fits within the screen limits
-		// This is the size at minimum zoom
 		mSourceScale = Math.min(mParentSize.x / size.x, mParentSize.y / size.y);
 		Point newSize = new Point((int) (size.x * mSourceScale), (int) (size.y * mSourceScale));
 		mSize = newSize;
 
 		if (mUsingHardwareAcceleration) {
-			// When hardware accelerated, updates to the bitmap seem to be
-			// ignored, so we recreate it. There may be another way around this
-			// that we are yet to find.
 			mEntire.setImageBitmap(null);
 			mEntireBm = null;
 		}
@@ -177,7 +182,6 @@ public abstract class PageView extends ViewGroup {
 			mEntireBm = Bitmap.createBitmap(mSize.x, mSize.y, Bitmap.Config.ARGB_8888);
 		}
 
-		// Render the page in the background
 		mDrawEntire = new SafeAsyncTask<Void, Void, LinkInfo[]>() {
 			@Override
 			protected LinkInfo[] doInBackground(final Void... v) {
@@ -224,16 +228,12 @@ public abstract class PageView extends ViewGroup {
 					Paint paint = new Paint();
 
 					if (!mIsBlank && mSearchBoxes != null) {
-						// Work out current total scale factor
-						// from source to view
 						paint.setColor(HIGHLIGHT_COLOR);
 						for (RectF rect : mSearchBoxes)
 							canvas.drawRect(rect.left * scale, rect.top * scale, rect.right * scale, rect.bottom * scale, paint);
 					}
 
 					if (!mIsBlank && mLinks != null && mHighlightLinks) {
-						// Work out current total scale factor
-						// from source to view
 						paint.setColor(LINK_COLOR);
 						for (RectF rect : mLinks)
 							canvas.drawRect(rect.left * scale, rect.top * scale, rect.right * scale, rect.bottom * scale, paint);
@@ -299,7 +299,6 @@ public abstract class PageView extends ViewGroup {
 
 		if (mPatchViewSize != null) {
 			if (mPatchViewSize.x != w || mPatchViewSize.y != h) {
-				// Zoomed since patch was created
 				mPatchViewSize = null;
 				mPatchArea = null;
 				if (mPatch != null)
@@ -319,30 +318,23 @@ public abstract class PageView extends ViewGroup {
 
 	public void addHq() {
 		Rect viewArea = new Rect(getLeft(), getTop(), getRight(), getBottom());
-		// If the viewArea's size matches the unzoomed size, there is no need
-		// for an hq patch
 		if (viewArea.width() != mSize.x || viewArea.height() != mSize.y) {
 			Point patchViewSize = new Point(viewArea.width(), viewArea.height());
 			Rect patchArea = new Rect(0, 0, mParentSize.x, mParentSize.y);
 
-			// Intersect and test that there is an intersection
 			if (!patchArea.intersect(viewArea))
 				return;
 
-			// Offset patch area to be relative to the view top left
 			patchArea.offset(-viewArea.left, -viewArea.top);
 
-			// If being asked for the same area as last time, nothing to do
 			if (patchArea.equals(mPatchArea) && patchViewSize.equals(mPatchViewSize))
 				return;
 
-			// Stop the drawing of previous patch if still going
 			if (mDrawPatch != null) {
 				mDrawPatch.cancel(true);
 				mDrawPatch = null;
 			}
 
-			// Create and add the image view if not already done
 			if (mPatch == null) {
 				mPatch = new OpaqueImageView(mContext);
 				mPatch.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -365,10 +357,6 @@ public abstract class PageView extends ViewGroup {
 					mPatchViewSize = v.patchViewSize;
 					mPatchArea = v.patchArea;
 					mPatch.setImageBitmap(v.bm);
-					// requestLayout();
-					// Calling requestLayout here doesn't lead to a later call
-					// to layout. No idea
-					// why, but apparently others have run into the problem.
 					mPatch.layout(mPatchArea.left, mPatchArea.top, mPatchArea.right, mPatchArea.bottom);
 					invalidate();
 				}
@@ -379,13 +367,11 @@ public abstract class PageView extends ViewGroup {
 	}
 
 	public void removeHq() {
-		// Stop the drawing of the patch if still going
 		if (mDrawPatch != null) {
 			mDrawPatch.cancel(true);
 			mDrawPatch = null;
 		}
 
-		// And get rid of it
 		mPatchViewSize = null;
 		mPatchArea = null;
 		if (mPatch != null)

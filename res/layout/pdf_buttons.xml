@@ -20,11 +20,12 @@
                 android:layout_height="wrap_content"
                 android:background="#00000000"
                 android:paddingBottom="8dp"
-                android:paddingRight="-5dp"
+                android:layout_marginRight="-5dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_back_32" />
 
             <ImageButton
+                android:id="@+id/pdf_digipost_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00000000"
@@ -75,6 +76,7 @@
                     android:gravity="center_vertical"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
+                    android:hint="@string/pdf_search_document"
                     android:padding="8dp"
                     android:singleLine="true" />
 

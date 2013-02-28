@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package no.digipost.android.pdf;
 
 import no.digipost.android.R;
@@ -56,21 +71,20 @@ class ProgressDialogX extends ProgressDialog {
 		super(context);
 	}
 
-	private boolean mCancelled = false;
+	private boolean cancelled = false;
 
 	public boolean isCancelled() {
-		return mCancelled;
+		return cancelled;
 	}
 
 	@Override
 	public void cancel() {
-		mCancelled = true;
+		cancelled = true;
 		super.cancel();
 	}
 }
 
 public class PDFActivity extends Activity {
-	/* The core rendering instance */
 	private enum LinkState {
 		DEFAULT,
 		HIGHLIGHT,
@@ -86,30 +100,31 @@ public class PDFActivity extends Activity {
 	private final int TAP_PAGE_MARGIN = 5;
 	private static final int SEARCH_PROGRESS_DELAY = 200;
 	private PDFCore core;
-	private String mFileName;
-	private ReaderView mDocView;
-	private View mButtonsView;
-	private boolean mButtonsVisible;
-	private TextView mFilenameView;
-	private TextView mPageNumberView;
-	private ImageButton mSearchButton;
-	private ImageButton mBackButton;
-	private ViewSwitcher mTopBarSwitcher;
-	private LinearLayout mTopbar;
-	private RelativeLayout mBottombar;
-	private boolean mTopBarIsSearch;
-	private ImageButton mSearchBack;
-	private ImageButton mSearchFwd;
-	private EditText mSearchText;
+	private String fileName;
+	private ReaderView docView;
+	private View buttonsView;
+	private boolean buttonsVisible;
+	private TextView filenameView;
+	private TextView pageNumberView;
+	private ImageButton searchButton;
+	private ImageButton backButton;
+	private ViewSwitcher topBarSwitcher;
+	private LinearLayout topbar;
+	private RelativeLayout bottombar;
+	private boolean topBarIsSearch;
+	private ImageButton searchBack;
+	private ImageButton searchFwd;
+	private EditText searchText;
 	private ImageButton toMailbox;
 	private ImageButton toArchive;
 	private ImageButton toWorkarea;
 	private ImageButton delete;
 	private ImageButton share;
-	private SafeAsyncTask<Void, Integer, SearchTaskResult> mSearchTask;
-	private AlertDialog.Builder mAlertBuilder;
-	private final LinkState mLinkState = LinkState.HIGHLIGHT;
-	private final Handler mHandler = new Handler();
+	private ImageButton digipostIcon;
+	private SafeAsyncTask<Void, Integer, SearchTaskResult> searchTask;
+	private AlertDialog.Builder alertBuilder;
+	private final LinkState linkState = LinkState.HIGHLIGHT;
+	private final Handler handler = new Handler();
 	private Intent intent;
 
 	private PDFCore openFile(final byte b[], final char type) {
@@ -122,12 +137,11 @@ public class PDFActivity extends Activity {
 		return core;
 	}
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mAlertBuilder = new AlertDialog.Builder(this);
+		alertBuilder = new AlertDialog.Builder(this);
 		intent = getIntent();
 
 		if (core == null) {
@@ -139,9 +153,9 @@ public class PDFActivity extends Activity {
 
 		}
 		if (core == null) {
-			AlertDialog alert = mAlertBuilder.create();
-			alert.setTitle(R.string.open_failed);
-			alert.setButton(AlertDialog.BUTTON_POSITIVE, "Dismiss", new DialogInterface.OnClickListener() {
+			AlertDialog alert = alertBuilder.create();
+			alert.setTitle(R.string.pdf_open_failed);
+			alert.setButton(AlertDialog.BUTTON_POSITIVE, "Lukk", new DialogInterface.OnClickListener() {
 				public void onClick(final DialogInterface dialog, final int which) {
 					finish();
 				}
@@ -157,7 +171,7 @@ public class PDFActivity extends Activity {
 		if (core == null)
 			return;
 
-		mDocView = new ReaderView(this) {
+		docView = new ReaderView(this) {
 			private boolean showButtonsDisabled;
 
 			@Override
@@ -168,17 +182,17 @@ public class PDFActivity extends Activity {
 					super.moveToNext();
 				} else if (!showButtonsDisabled) {
 					int linkPage = -1;
-					if (mLinkState != LinkState.INHIBIT) {
-						PDFPageView pageView = (PDFPageView) mDocView.getDisplayedView();
+					if (linkState != LinkState.INHIBIT) {
+						PDFPageView pageView = (PDFPageView) docView.getDisplayedView();
 						if (pageView != null) {
 							linkPage = pageView.hitLinkPage(e.getX(), e.getY());
 						}
 					}
 
 					if (linkPage != -1) {
-						mDocView.setDisplayedViewIndex(linkPage);
+						docView.setDisplayedViewIndex(linkPage);
 					} else {
-						if (!mButtonsVisible) {
+						if (!buttonsVisible) {
 							showButtons();
 						} else {
 							hideButtons();
@@ -217,17 +231,17 @@ public class PDFActivity extends Activity {
 				else
 					((PageView) v).setSearchBoxes(null);
 
-				((PageView) v).setLinkHighlighting(mLinkState == LinkState.HIGHLIGHT);
+				((PageView) v).setLinkHighlighting(linkState == LinkState.HIGHLIGHT);
 			}
 
 			@Override
 			protected void onMoveToChild(final int i) {
 				if (core == null)
 					return;
-				mPageNumberView.setText(String.format("%d/%d", i + 1, core.countPages()));
+				pageNumberView.setText(String.format("%d/%d", i + 1, core.countPages()));
 				if (SearchTaskResult.get() != null && SearchTaskResult.get().pageNumber != i) {
 					SearchTaskResult.set(null);
-					mDocView.resetupChildren();
+					docView.resetupChildren();
 				}
 			}
 
@@ -246,7 +260,7 @@ public class PDFActivity extends Activity {
 				((PageView) v).releaseResources();
 			}
 		};
-		mDocView.setAdapter(new PDFPageAdapter(this, core));
+		docView.setAdapter(new PDFPageAdapter(this, core));
 
 		makeButtonsView();
 
@@ -260,32 +274,27 @@ public class PDFActivity extends Activity {
 			makeArchiveToolbar();
 		}
 
-		// Set the file-name text
-		mFilenameView.setText(mFileName);
+		filenameView.setText(fileName);
 
-		// Activate the search-preparing button
-		mSearchButton.setOnClickListener(new View.OnClickListener() {
+		searchButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(final View v) {
 				searchModeOn();
 			}
 		});
 
-		// Search invoking buttons are disabled while there is no text specified
-		mSearchBack.setEnabled(false);
-		mSearchFwd.setEnabled(false);
+		searchBack.setEnabled(false);
+		searchFwd.setEnabled(false);
 
-		// React to interaction with the text widget
-		mSearchText.addTextChangedListener(new TextWatcher() {
+		searchText.addTextChangedListener(new TextWatcher() {
 
 			public void afterTextChanged(final Editable s) {
 				boolean haveText = s.toString().length() > 0;
-				mSearchBack.setEnabled(haveText);
-				mSearchFwd.setEnabled(haveText);
+				searchBack.setEnabled(haveText);
+				searchFwd.setEnabled(haveText);
 
-				// Remove any previous search results
-				if (SearchTaskResult.get() != null && !mSearchText.getText().toString().equals(SearchTaskResult.get().txt)) {
+				if (SearchTaskResult.get() != null && !searchText.getText().toString().equals(SearchTaskResult.get().txt)) {
 					SearchTaskResult.set(null);
-					mDocView.resetupChildren();
+					docView.resetupChildren();
 				}
 			}
 
@@ -296,8 +305,7 @@ public class PDFActivity extends Activity {
 			}
 		});
 
-		// React to Done button on keyboard
-		mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+		searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			public boolean onEditorAction(final TextView v, final int actionId, final KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_SEARCH)
 					search(1);
@@ -306,22 +314,21 @@ public class PDFActivity extends Activity {
 			}
 		});
 
-		// Activate search invoking buttons
-		mSearchBack.setOnClickListener(new View.OnClickListener() {
+		searchBack.setOnClickListener(new View.OnClickListener() {
 			public void onClick(final View v) {
 				search(-1);
 			}
 		});
-		mSearchFwd.setOnClickListener(new View.OnClickListener() {
+		searchFwd.setOnClickListener(new View.OnClickListener() {
 			public void onClick(final View v) {
 				search(1);
 			}
 		});
 
-		mBackButton.setOnClickListener(new View.OnClickListener() {
+		backButton.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(final View v) {
-				if (mTopBarIsSearch) {
+				if (topBarIsSearch) {
 					searchModeOff();
 				} else {
 					finish();
@@ -329,9 +336,19 @@ public class PDFActivity extends Activity {
 			}
 		});
 
-		// Reenstate last state if it was recorded
+		digipostIcon.setOnClickListener(new View.OnClickListener() {
+
+			public void onClick(final View v) {
+				if (topBarIsSearch) {
+					searchModeOff();
+				} else {
+					finish();
+				}
+			}
+		});
+
 		SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-		mDocView.setDisplayedViewIndex(prefs.getInt("page" + mFileName, 0));
+		docView.setDisplayedViewIndex(prefs.getInt("page" + fileName, 0));
 
 		if (savedInstanceState == null || !savedInstanceState.getBoolean("ButtonsHidden", false))
 			showButtons();
@@ -339,19 +356,17 @@ public class PDFActivity extends Activity {
 		if (savedInstanceState != null && savedInstanceState.getBoolean("SearchMode", false))
 			searchModeOn();
 
-		// Stick the document view and the buttons overlay into a parent view
 		RelativeLayout layout = new RelativeLayout(this);
-		layout.addView(mDocView);
-		layout.addView(mButtonsView);
+		layout.addView(docView);
+		layout.addView(buttonsView);
 		layout.setBackgroundColor(Color.BLACK);
-		// layout.setBackgroundResource(R.color.canvas);
 		setContentView(layout);
 	}
 
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		if (resultCode >= 0)
-			mDocView.setDisplayedViewIndex(resultCode);
+			docView.setDisplayedViewIndex(resultCode);
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -367,13 +382,6 @@ public class PDFActivity extends Activity {
 		super.onPause();
 
 		killSearch();
-
-		if (mFileName != null && mDocView != null) {
-			SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
-			SharedPreferences.Editor edit = prefs.edit();
-			edit.putInt("page" + mFileName, mDocView.getDisplayedViewIndex());
-			edit.commit();
-		}
 	}
 
 	@Override
@@ -387,21 +395,21 @@ public class PDFActivity extends Activity {
 	void showButtons() {
 		if (core == null)
 			return;
-		if (!mButtonsVisible) {
-			mButtonsVisible = true;
+		if (!buttonsVisible) {
+			buttonsVisible = true;
 			// Update page number text and slider
-			int index = mDocView.getDisplayedViewIndex();
+			int index = docView.getDisplayedViewIndex();
 			updatePageNumView(index);
-			if (mTopBarIsSearch) {
-				mSearchText.requestFocus();
+			if (topBarIsSearch) {
+				searchText.requestFocus();
 				showKeyboard();
 			}
 
-			Animation anim = new TranslateAnimation(0, 0, -mTopbar.getHeight(), 0);
+			Animation anim = new TranslateAnimation(0, 0, -topbar.getHeight(), 0);
 			anim.setDuration(200);
 			anim.setAnimationListener(new Animation.AnimationListener() {
 				public void onAnimationStart(final Animation animation) {
-					mTopbar.setVisibility(View.VISIBLE);
+					topbar.setVisibility(View.VISIBLE);
 				}
 
 				public void onAnimationRepeat(final Animation animation) {
@@ -410,32 +418,32 @@ public class PDFActivity extends Activity {
 				public void onAnimationEnd(final Animation animation) {
 				}
 			});
-			mTopbar.startAnimation(anim);
+			topbar.startAnimation(anim);
 
-			anim = new TranslateAnimation(0, 0, mBottombar.getHeight(), 0);
+			anim = new TranslateAnimation(0, 0, bottombar.getHeight(), 0);
 			anim.setDuration(200);
 			anim.setAnimationListener(new Animation.AnimationListener() {
 				public void onAnimationStart(final Animation animation) {
-					mBottombar.setVisibility(View.VISIBLE);
+					bottombar.setVisibility(View.VISIBLE);
 				}
 
 				public void onAnimationRepeat(final Animation animation) {
 				}
 
 				public void onAnimationEnd(final Animation animation) {
-					mPageNumberView.setVisibility(View.VISIBLE);
+					pageNumberView.setVisibility(View.VISIBLE);
 				}
 			});
-			mBottombar.startAnimation(anim);
+			bottombar.startAnimation(anim);
 		}
 	}
 
 	void hideButtons() {
-		if (mButtonsVisible) {
-			mButtonsVisible = false;
+		if (buttonsVisible) {
+			buttonsVisible = false;
 			hideKeyboard();
 
-			Animation anim = new TranslateAnimation(0, 0, 0, -mTopbar.getHeight());
+			Animation anim = new TranslateAnimation(0, 0, 0, -topbar.getHeight());
 			anim.setDuration(200);
 			anim.setAnimationListener(new Animation.AnimationListener() {
 				public void onAnimationStart(final Animation animation) {
@@ -445,78 +453,77 @@ public class PDFActivity extends Activity {
 				}
 
 				public void onAnimationEnd(final Animation animation) {
-					mTopbar.setVisibility(View.INVISIBLE);
+					topbar.setVisibility(View.INVISIBLE);
 				}
 			});
-			mTopbar.startAnimation(anim);
+			topbar.startAnimation(anim);
 
-			anim = new TranslateAnimation(0, 0, 0, mBottombar.getHeight());
+			anim = new TranslateAnimation(0, 0, 0, bottombar.getHeight());
 			anim.setDuration(200);
 			anim.setAnimationListener(new Animation.AnimationListener() {
 				public void onAnimationStart(final Animation animation) {
-					mPageNumberView.setVisibility(View.INVISIBLE);
+					pageNumberView.setVisibility(View.INVISIBLE);
 				}
 
 				public void onAnimationRepeat(final Animation animation) {
 				}
 
 				public void onAnimationEnd(final Animation animation) {
-					mBottombar.setVisibility(View.INVISIBLE);
+					bottombar.setVisibility(View.INVISIBLE);
 				}
 			});
-			mBottombar.startAnimation(anim);
+			bottombar.startAnimation(anim);
 		}
 	}
 
 	void searchModeOn() {
-		if (!mTopBarIsSearch) {
-			mTopBarIsSearch = true;
+		if (!topBarIsSearch) {
+			topBarIsSearch = true;
 			// Focus on EditTextWidget
-			mSearchText.requestFocus();
+			searchText.requestFocus();
 			showKeyboard();
-			mTopBarSwitcher.showNext();
+			topBarSwitcher.showNext();
 		}
 	}
 
 	void searchModeOff() {
-		if (mTopBarIsSearch) {
-			mTopBarIsSearch = false;
+		if (topBarIsSearch) {
+			topBarIsSearch = false;
 			hideKeyboard();
-			mTopBarSwitcher.showPrevious();
+			topBarSwitcher.showPrevious();
 			SearchTaskResult.set(null);
-			// Make the ReaderView act on the change to mSearchTaskResult
-			// via overridden onChildSetup method.
-			mDocView.resetupChildren();
+			docView.resetupChildren();
 		}
 	}
 
 	void updatePageNumView(final int index) {
 		if (core == null)
 			return;
-		mPageNumberView.setText(String.format("%d/%d", index + 1, core.countPages()));
+		pageNumberView.setText(String.format("%d/%d", index + 1, core.countPages()));
 	}
 
 	void makeButtonsView() {
-		mButtonsView = getLayoutInflater().inflate(R.layout.pdf_buttons, null);
-		mFilenameView = (TextView) mButtonsView.findViewById(R.id.pdf_name);
-		mPageNumberView = (TextView) mButtonsView.findViewById(R.id.pdf_pageNumber);
-		mSearchButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_searchbtn);
-		mTopBarSwitcher = (ViewSwitcher) mButtonsView.findViewById(R.id.pdf_switcher);
-		mSearchBack = (ImageButton) mButtonsView.findViewById(R.id.pdf_search_back);
-		mSearchFwd = (ImageButton) mButtonsView.findViewById(R.id.pdf_search_forward);
-		mSearchText = (EditText) mButtonsView.findViewById(R.id.pdf_searchtext);
-		mBackButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_backbtn);
-		mBottombar = (RelativeLayout) mButtonsView.findViewById(R.id.pdf_bottombar);
-		mTopbar = (LinearLayout) mButtonsView.findViewById(R.id.pdf_topbar);
-		toMailbox = (ImageButton) mButtonsView.findViewById(R.id.pdf_toMailbox);
-		toWorkarea = (ImageButton) mButtonsView.findViewById(R.id.pdf_toWorkarea);
-		toArchive = (ImageButton) mButtonsView.findViewById(R.id.pdf_toArchive);
-		delete = (ImageButton) mButtonsView.findViewById(R.id.pdf_delete);
-		share = (ImageButton) mButtonsView.findViewById(R.id.pdf_share);
+		buttonsView = getLayoutInflater().inflate(R.layout.pdf_buttons, null);
+		filenameView = (TextView) buttonsView.findViewById(R.id.pdf_name);
+		pageNumberView = (TextView) buttonsView.findViewById(R.id.pdf_pageNumber);
+		searchButton = (ImageButton) buttonsView.findViewById(R.id.pdf_searchbtn);
+		topBarSwitcher = (ViewSwitcher) buttonsView.findViewById(R.id.pdf_switcher);
+		searchBack = (ImageButton) buttonsView.findViewById(R.id.pdf_search_back);
+		searchFwd = (ImageButton) buttonsView.findViewById(R.id.pdf_search_forward);
+		searchText = (EditText) buttonsView.findViewById(R.id.pdf_searchtext);
+		backButton = (ImageButton) buttonsView.findViewById(R.id.pdf_backbtn);
+		bottombar = (RelativeLayout) buttonsView.findViewById(R.id.pdf_bottombar);
+		topbar = (LinearLayout) buttonsView.findViewById(R.id.pdf_topbar);
+		toMailbox = (ImageButton) buttonsView.findViewById(R.id.pdf_toMailbox);
+		toWorkarea = (ImageButton) buttonsView.findViewById(R.id.pdf_toWorkarea);
+		toArchive = (ImageButton) buttonsView.findViewById(R.id.pdf_toArchive);
+		delete = (ImageButton) buttonsView.findViewById(R.id.pdf_delete);
+		share = (ImageButton) buttonsView.findViewById(R.id.pdf_share);
+		digipostIcon = (ImageButton) buttonsView.findViewById(R.id.pdf_digipost_icon);
 
-		mPageNumberView.setVisibility(View.INVISIBLE);
-		mBottombar.setVisibility(View.INVISIBLE);
-		mTopbar.setVisibility(View.VISIBLE);
+		pageNumberView.setVisibility(View.INVISIBLE);
+		bottombar.setVisibility(View.INVISIBLE);
+		topbar.setVisibility(View.VISIBLE);
 	}
 
 	private void makeMailboxToolbar() {
@@ -534,19 +541,19 @@ public class PDFActivity extends Activity {
 	void showKeyboard() {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm != null)
-			imm.showSoftInput(mSearchText, 0);
+			imm.showSoftInput(searchText, 0);
 	}
 
 	void hideKeyboard() {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm != null)
-			imm.hideSoftInputFromWindow(mSearchText.getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
 	}
 
 	void killSearch() {
-		if (mSearchTask != null) {
-			mSearchTask.cancel(true);
-			mSearchTask = null;
+		if (searchTask != null) {
+			searchTask.cancel(true);
+			searchTask = null;
 		}
 	}
 
@@ -557,12 +564,12 @@ public class PDFActivity extends Activity {
 		killSearch();
 
 		final int increment = direction;
-		final int startIndex = SearchTaskResult.get() == null ? mDocView.getDisplayedViewIndex() : SearchTaskResult.get().pageNumber
+		final int startIndex = SearchTaskResult.get() == null ? docView.getDisplayedViewIndex() : SearchTaskResult.get().pageNumber
 				+ increment;
 
 		final ProgressDialogX progressDialog = new ProgressDialogX(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setTitle(getString(R.string.searching_));
+		progressDialog.setTitle(getString(R.string.pdf_searching_));
 		progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			public void onCancel(final DialogInterface dialog) {
 				killSearch();
@@ -570,17 +577,17 @@ public class PDFActivity extends Activity {
 		});
 		progressDialog.setMax(core.countPages());
 
-		mSearchTask = new SafeAsyncTask<Void, Integer, SearchTaskResult>() {
+		searchTask = new SafeAsyncTask<Void, Integer, SearchTaskResult>() {
 			@Override
 			protected SearchTaskResult doInBackground(final Void... params) {
 				int index = startIndex;
 
 				while (0 <= index && index < core.countPages() && !isCancelled()) {
 					publishProgress(index);
-					RectF searchHits[] = core.searchPage(index, mSearchText.getText().toString());
+					RectF searchHits[] = core.searchPage(index, searchText.getText().toString());
 
 					if (searchHits != null && searchHits.length > 0)
-						return new SearchTaskResult(mSearchText.getText().toString(), index, searchHits);
+						return new SearchTaskResult(searchText.getText().toString(), index, searchHits);
 
 					index += increment;
 				}
@@ -591,17 +598,14 @@ public class PDFActivity extends Activity {
 			protected void onPostExecute(final SearchTaskResult result) {
 				progressDialog.cancel();
 				if (result != null) {
-					// Ask the ReaderView to move to the resulting page
-					mDocView.setDisplayedViewIndex(result.pageNumber);
+					docView.setDisplayedViewIndex(result.pageNumber);
 					SearchTaskResult.set(result);
-					// Make the ReaderView act on the change to
-					// mSearchTaskResult
-					// via overridden onChildSetup method.
-					mDocView.resetupChildren();
+					docView.resetupChildren();
 				} else {
-					mAlertBuilder.setTitle(SearchTaskResult.get() == null ? R.string.text_not_found : R.string.no_further_occurences_found);
-					AlertDialog alert = mAlertBuilder.create();
-					alert.setButton(AlertDialog.BUTTON_POSITIVE, "Dismiss", (DialogInterface.OnClickListener) null);
+					alertBuilder.setTitle(SearchTaskResult.get() == null ? R.string.pdf_text_not_found
+							: R.string.pdf_no_further_occurences_found);
+					AlertDialog alert = alertBuilder.create();
+					alert.setButton(AlertDialog.BUTTON_POSITIVE, "Lukk", (DialogInterface.OnClickListener) null);
 					alert.show();
 				}
 			}
@@ -621,7 +625,7 @@ public class PDFActivity extends Activity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				mHandler.postDelayed(new Runnable() {
+				handler.postDelayed(new Runnable() {
 					public void run() {
 						if (!progressDialog.isCancelled()) {
 							progressDialog.show();
@@ -632,12 +636,12 @@ public class PDFActivity extends Activity {
 			}
 		};
 
-		mSearchTask.safeExecute();
+		searchTask.safeExecute();
 	}
 
 	@Override
 	public void onBackPressed() {
-		if (mTopBarIsSearch) {
+		if (topBarIsSearch) {
 			searchModeOff();
 		} else {
 			super.onBackPressed();
@@ -646,7 +650,7 @@ public class PDFActivity extends Activity {
 
 	@Override
 	public boolean onSearchRequested() {
-		if (mButtonsVisible && mTopBarIsSearch) {
+		if (buttonsVisible && topBarIsSearch) {
 			hideButtons();
 		} else {
 			showButtons();
@@ -657,7 +661,7 @@ public class PDFActivity extends Activity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(final Menu menu) {
-		if (mButtonsVisible && !mTopBarIsSearch) {
+		if (buttonsVisible && !topBarIsSearch) {
 			hideButtons();
 		} else {
 			showButtons();

@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package no.digipost.android.pdf;
 
 import java.util.LinkedList;
@@ -32,17 +47,15 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 	private static final float MAX_SCALE = 5.0f;
 
 	private Adapter mAdapter;
-	private int mCurrent; // Adapter's index for the current view
+	private int mCurrent;
 	private boolean mResetLayout;
 	private final SparseArray<View> mChildViews = new SparseArray<View>(3);
-	// Shadows the children of the adapter view
-	// but with more sensible indexing
 	private final LinkedList<View> mViewCache = new LinkedList<View>();
-	private boolean mUserInteracting; // Whether the user is interacting
-	private boolean mScaling; // Whether the user is currently pinch zooming
+	private boolean mUserInteracting;
+	private boolean mScaling;
 	private float mScale = 1.0f;
-	private int mXScroll; // Scroll amounts recorded from events.
-	private int mYScroll; // and then accounted for in onLayout
+	private int mXScroll;
+	private int mYScroll;
 	private final GestureDetector mGestureDetector;
 	private final ScaleGestureDetector mScaleGestureDetector;
 	private final Scroller mScroller;
@@ -132,8 +145,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 			requestLayout();
 			post(this);
 		} else if (!mUserInteracting) {
-			// End of an inertial scroll and the user is not interacting.
-			// The layout is stable
 			View v = mChildViews.get(mCurrent);
 			postSettle(v);
 		}
@@ -154,7 +165,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 			switch (directionOfTravel(velocityX, velocityY)) {
 			case MOVING_LEFT:
 				if (bounds.left >= 0) {
-					// Fling off to the left bring next view onto screen
 					View vl = mChildViews.get(mCurrent + 1);
 
 					if (vl != null) {
@@ -165,7 +175,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 				break;
 			case MOVING_RIGHT:
 				if (bounds.right <= 0) {
-					// Fling off to the right bring previous view onto screen
 					View vr = mChildViews.get(mCurrent - 1);
 
 					if (vr != null) {
@@ -176,21 +185,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 				break;
 			}
 			mScrollerLastX = mScrollerLastY = 0;
-			// If the page has been dragged out of bounds then we want to spring
-			// back
-			// nicely. fling jumps back into bounds instantly, so we don't want
-			// to use
-			// fling in that case. On the other hand, we don't want to forgo a
-			// fling
-			// just because of a slightly off-angle drag taking us out of bounds
-			// other
-			// than in the direction of the drag, so we test for out of bounds
-			// only
-			// in the direction of travel.
-			//
-			// Also don't fling if out of bounds in any direction by more than
-			// fling
-			// margin
 			Rect expandedBounds = new Rect(bounds);
 			expandedBounds.inset(-FLING_MARGIN, -FLING_MARGIN);
 
@@ -229,10 +223,8 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 
 		View v = mChildViews.get(mCurrent);
 		if (v != null) {
-			// Work out the focus point relative to the view top left
 			int viewFocusX = (int) detector.getFocusX() - (v.getLeft() + mXScroll);
 			int viewFocusY = (int) detector.getFocusY() - (v.getTop() + mYScroll);
-			// Scroll to maintain the focus point
 			mXScroll += viewFocusX - viewFocusX * factor;
 			mYScroll += viewFocusY - viewFocusY * factor;
 			requestLayout();
@@ -242,12 +234,7 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 
 	public boolean onScaleBegin(final ScaleGestureDetector detector) {
 		mScaling = true;
-		// Ignore any scroll amounts yet to be accounted for: the
-		// screen is not showing the effect of them, so they can
-		// only confuse the user
 		mXScroll = mYScroll = 0;
-		// Avoid jump at end of scaling by disabling scrolling
-		// until the next start of gesture
 		mScrollDisabled = true;
 		return true;
 	}
@@ -273,15 +260,10 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 			View v = mChildViews.get(mCurrent);
 			if (v != null) {
 				if (mScroller.isFinished()) {
-					// If, at the end of user interaction, there is no
-					// current inertial scroll in operation then animate
-					// the view onto screen if necessary
 					slideViewOntoScreen(v);
 				}
 
 				if (mScroller.isFinished()) {
-					// If still there is no inertial scroll in operation
-					// then the layout is stable
 					postSettle(v);
 				}
 			}
@@ -308,16 +290,11 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 		Point cvOffset;
 
 		if (!mResetLayout) {
-			// Move to next or previous if current is sufficiently off center
 			if (cv != null) {
 				cvOffset = subScreenSizeOffset(cv);
-				// cv.getRight() may be out of date with the current scale
-				// so add left to the measured width for the correct position
 				if (cv.getLeft() + cv.getMeasuredWidth() + cvOffset.x + GAP / 2 + mXScroll < getWidth() / 2
 						&& mCurrent + 1 < mAdapter.getCount()) {
 					postUnsettle(cv);
-					// post to invoke test for end of animation
-					// where we must set hq area for the new current view
 					post(this);
 
 					mCurrent++;
@@ -326,8 +303,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 
 				if (cv.getLeft() - cvOffset.x - GAP / 2 + mXScroll >= getWidth() / 2 && mCurrent > 0) {
 					postUnsettle(cv);
-					// post to invoke test for end of animation
-					// where we must set hq area for the new current view
 					post(this);
 
 					mCurrent--;
@@ -335,7 +310,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 				}
 			}
 
-			// Remove not needed children and hold them for reuse
 			int numChildren = mChildViews.size();
 			int childIndices[] = new int[numChildren];
 			for (int i = 0; i < numChildren; i++)
@@ -355,7 +329,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 			mResetLayout = false;
 			mXScroll = mYScroll = 0;
 
-			// Remove all children and hold them for reuse
 			int numChildren = mChildViews.size();
 			for (int i = 0; i < numChildren; i++) {
 				View v = mChildViews.valueAt(i);
@@ -364,28 +337,20 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 				removeViewInLayout(v);
 			}
 			mChildViews.clear();
-			// post to ensure generation of hq area
 			post(this);
 		}
 
-		// Ensure current view is present
 		int cvLeft, cvRight, cvTop, cvBottom;
 		boolean notPresent = (mChildViews.get(mCurrent) == null);
 		cv = getOrCreateChild(mCurrent);
-		// When the view is sub-screen-size in either dimension we
-		// offset it to center within the screen area, and to keep
-		// the views spaced out
 		cvOffset = subScreenSizeOffset(cv);
 		if (notPresent) {
-			// Main item not already present. Just place it top left
 			cvLeft = cvOffset.x;
 			cvTop = cvOffset.y;
 		} else {
-			// Main item already present. Adjust by scroll offsets
 			cvLeft = cv.getLeft() + mXScroll;
 			cvTop = cv.getTop() + mYScroll;
 		}
-		// Scroll values have been accounted for
 		mXScroll = mYScroll = 0;
 		cvRight = cvLeft + cv.getMeasuredWidth();
 		cvBottom = cvTop + cv.getMeasuredHeight();
@@ -397,8 +362,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 			cvTop += corr.y;
 			cvBottom += corr.y;
 		} else if (cv.getMeasuredHeight() <= getHeight()) {
-			// When the current view is as small as the screen in height, clamp
-			// it vertically
 			Point corr = getCorrection(getScrollBounds(cvLeft, cvTop, cvRight, cvBottom));
 			cvTop += corr.y;
 			cvBottom += corr.y;
@@ -472,16 +435,13 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 			params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		}
 		addViewInLayout(v, 0, params, true);
-		mChildViews.append(i, v); // Record the view against it's adapter index
+		mChildViews.append(i, v);
 		measureView(v);
 	}
 
 	private void measureView(final View v) {
-		// See what size the view wants to be
 		v.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-		// Work out a scale that will fit it to this view
 		float scale = Math.min((float) getWidth() / (float) v.getMeasuredWidth(), (float) getHeight() / (float) v.getMeasuredHeight());
-		// Use the fitting values scaled by our current scale factor
 		v.measure(View.MeasureSpec.EXACTLY | (int) (v.getMeasuredWidth() * scale * mScale),
 				View.MeasureSpec.EXACTLY | (int) (v.getMeasuredHeight() * scale * mScale));
 	}
@@ -492,8 +452,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 		int ymin = getHeight() - bottom;
 		int ymax = -top;
 
-		// In either dimension, if view smaller than screen then
-		// constrain it to be central
 		if (xmin > xmax)
 			xmin = xmax = (xmin + xmax) / 2;
 		if (ymin > ymax)
@@ -503,9 +461,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 	}
 
 	private Rect getScrollBounds(final View v) {
-		// There can be scroll amounts not yet accounted for in
-		// onLayout, so add mXScroll and mYScroll to the current
-		// positions when calculating the bounds.
 		return getScrollBounds(v.getLeft() + mXScroll, v.getTop() + mYScroll, v.getLeft() + v.getMeasuredWidth() + mXScroll,
 				v.getTop() + v.getMeasuredHeight() + mYScroll);
 	}
@@ -515,9 +470,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 	}
 
 	private void postSettle(final View v) {
-		// onSettle and onUnsettle are posted so that the calls
-		// wont be executed until after the system has performed
-		// layout.
 		post(new Runnable() {
 			public void run() {
 				onSettle(v);
