@@ -31,6 +31,6 @@
     <string name="pdf_text_not_found">Fant ingen treff</string>
     <string name="pdf_open_failed">Kunne ikke åpne dokumentet</string>
     <string name="pdf_searching_">Søker...</string>
-    <string name="pdf_search_document"></string>
+    <string name="pdf_search_document">Søk i dokumentet...</string>
 
 </resources>
