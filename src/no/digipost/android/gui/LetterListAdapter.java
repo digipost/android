@@ -88,6 +88,11 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		return row;
 	}
 
+	@Override
+	public Letter getItem(final int position) {
+		return letters.get(position);
+	}
+
 	public void setInitialcheck(final int position) {
 		checked = new boolean[letters.size()];
 		checked[position] = true;

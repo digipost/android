@@ -198,13 +198,6 @@ public class BaseActivity extends FragmentActivity {
 			super.onCreate(savedInstanceState);
 
 			lo = new LetterOperations();
-
-			// new
-			// GetAccountMetaTask().execute(getArguments().getString(ApiConstants.ACCESS_TOKEN),
-			// LetterOperations.RECEIPTS);
-
-			// adapter_receipts = new LetterListAdapter(getActivity(),
-			// R.layout.mailbox_list_item, list_receipts);
 		}
 
 		@Override
@@ -261,15 +254,12 @@ public class BaseActivity extends FragmentActivity {
 				 * });
 				 */
 
-				lv_mailbox.setOnItemClickListener(new ListListener(list_mailbox));
-
 				return v;
 
 			} else if (number == 2) {
 				View v = inflater.inflate(R.layout.fragment_layout_workarea, container, false);
 				lv_workarea = (ListView) v.findViewById(R.id.listview_kitchen);
 				System.out.println("1st: " + lv_workarea);
-				lv_workarea.setOnItemClickListener(new ListListener(list_workarea));
 				View emptyView = v.findViewById(R.id.empty_listview_workarea);
 				lv_workarea.setEmptyView(emptyView);
 
@@ -277,7 +267,6 @@ public class BaseActivity extends FragmentActivity {
 			} else if (number == 3) {
 				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
 				lv_archive = (ListView) v.findViewById(R.id.listview_archive);
-				lv_archive.setOnItemClickListener(new ListListener(list_archive));
 				View emptyView = v.findViewById(R.id.empty_listview_archive);
 				lv_archive.setEmptyView(emptyView);
 
@@ -285,8 +274,6 @@ public class BaseActivity extends FragmentActivity {
 			} else {
 				View v = inflater.inflate(R.layout.fragment_layout_receipts, container, false);
 				lv_receipts = (ListView) v.findViewById(R.id.listview_receipts);
-				lv_receipts.setAdapter(adapter_receipts);
-				lv_receipts.setOnItemClickListener(new ListListener(list_receipts));
 				View emptyView = v.findViewById(R.id.empty_listview_receipts);
 				lv_receipts.setEmptyView(emptyView);
 
@@ -308,6 +295,11 @@ public class BaseActivity extends FragmentActivity {
 
 			if (lv_archive != null) {
 				new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			}
+
+			if (lv_receipts != null) {
+				// new
+				// GetAccountMetaTask(LetterOperations.RECEIPTS).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
 			}
 		}
 
@@ -343,16 +335,22 @@ public class BaseActivity extends FragmentActivity {
 				case LetterOperations.INBOX:
 					adapter_mailbox = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, result);
 					lv_mailbox.setAdapter(adapter_mailbox);
+					lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
 					break;
 				case LetterOperations.WORKAREA:
 					adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, result);
 					lv_workarea.setAdapter(adapter_workarea);
+					lv_workarea.setOnItemClickListener(new ListListener(adapter_workarea));
 					break;
 				case LetterOperations.ARCHIVE:
 					adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, result);
 					lv_archive.setAdapter(adapter_archive);
+					lv_archive.setOnItemClickListener(new ListListener(adapter_archive));
 					break;
 				case LetterOperations.RECEIPTS:
+					adapter_receipts = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, result);
+					lv_receipts.setAdapter(adapter_receipts);
+					lv_receipts.setOnItemClickListener(new ListListener(adapter_receipts));
 					break;
 				}
 
@@ -439,14 +437,14 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private class ListListener implements OnItemClickListener {
-			ArrayList<Letter> list;
+			LetterListAdapter adapter;
 
-			public ListListener(final ArrayList<Letter> list) {
-				this.list = list;
+			public ListListener(final LetterListAdapter adapter) {
+				this.adapter = adapter;
 			}
 
 			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-				Letter mletter = list.get(position);
+				Letter mletter = adapter.getItem(position);
 
 				String filetype = mletter.getFileType();
 
