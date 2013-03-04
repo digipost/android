@@ -212,36 +212,11 @@ public class BaseActivity extends FragmentActivity {
 				e.printStackTrace();
 			}
 
-			// list_mailbox =
-			// getMailBoxLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			// list_archive =
-			// getArchiveLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			// list_workarea =
-			// getWorkareaLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			// list_receipts =
-			// getReceiptsLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-
 			adapter_mailbox = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_mailbox);
 			adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_archive);
 			adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_workarea);
 			// adapter_receipts = new LetterListAdapter(getActivity(),
 			// R.layout.mailbox_list_item, list_receipts);
-		}
-
-		public ArrayList<Letter> getMailBoxLetters(final String at) {
-			return lo.getMailboxList(at);
-		}
-
-		public ArrayList<Letter> getArchiveLetters(final String at) {
-			return lo.getArchiveList(at);
-		}
-
-		public ArrayList<Letter> getWorkareaLetters(final String at) {
-			return lo.getWorkareaList(at);
-		}
-
-		public ArrayList<Letter> getReceiptsLetters(final String at) {
-			return lo.getReceiptsList(at);
 		}
 
 		@Override
