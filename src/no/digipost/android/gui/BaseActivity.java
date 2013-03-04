@@ -156,6 +156,7 @@ public class BaseActivity extends FragmentActivity {
 			return 4;
 		}
 
+
 		@Override
 		public CharSequence getPageTitle(final int position) {
 			switch (position) {
@@ -280,11 +281,11 @@ public class BaseActivity extends FragmentActivity {
 
 				/*
 				 * lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-				 * 
+				 *
 				 * public void onItemClick(final AdapterView<?> arg0, final View
 				 * arg1, final int position, final long arg3) { Letter mletter =
 				 * list_mailbox.get(position);
-				 * 
+				 *
 				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE); boolean
 				 * moved =
 				 * lo.moveDocument(getArguments().getString(ApiConstants.
@@ -292,7 +293,7 @@ public class BaseActivity extends FragmentActivity {
 				 * Toast.makeText(getActivity(), "Brev flyttet til arkiv",
 				 * 3000).show(); return; } else { Toast.makeText(getActivity(),
 				 * "Noe gikk galt", 3000).show(); return; } }
-				 * 
+				 *
 				 * });
 				 */
 
@@ -305,23 +306,9 @@ public class BaseActivity extends FragmentActivity {
 
 						if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
 							GetPDFTask pdfTask = new GetPDFTask();
-							byte[] data = null;
-							try {
-								data = pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter).get();
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (ExecutionException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							// byte[] data =
-							// lo.getDocumentContentPDF(getArguments().getString(ApiConstants.ACCESS_TOKEN),
-							// mletter);
-							PdfStore.pdf = data;
-							Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-							i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
-							startActivity(i);
+							pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+
+
 						} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 							GetHTMLTask htmlTask = new GetHTMLTask();
 							String html = null;
@@ -394,11 +381,16 @@ public class BaseActivity extends FragmentActivity {
 					}
 				});
 				progressDialog.show();
+
 			}
 
 			@Override
 			protected byte[] doInBackground(final Object... params) {
-				return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+				PdfStore.pdf = lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);;
+				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
+				startActivity(i);
+				return null;
 			}
 
 			@Override

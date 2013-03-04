@@ -22,6 +22,11 @@ public class Html_WebViewTest extends Activity {
 
 		webView = (WebView) findViewById(R.id.web_html);
 		webView.getSettings().setJavaScriptEnabled(true);
+		webView.getSettings().setUseWideViewPort(true);
+		webView.getSettings().setSupportZoom(true);
+		webView.getSettings().setBuiltInZoomControls(true);
+		webView.getSettings().setDisplayZoomControls(true);
+		webView.getSettings().setLoadWithOverviewMode(true);
 		webView.loadDataWithBaseURL(null, html, mime, encoding, null);
 	}
 
@@ -31,5 +36,4 @@ public class Html_WebViewTest extends Activity {
 		getMenuInflater().inflate(R.menu.activity_html_veb_view, menu);
 		return true;
 	}
-
 }
