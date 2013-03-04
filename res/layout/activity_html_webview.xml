@@ -1,63 +1,58 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/pdf_topbar"
+        android:id="@+id/html_topbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="#323538"
         android:orientation="horizontal" >
 
-        <LinearLayout
+        <ImageButton
+            android:id="@+id/html_backbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="-5dp"
+            android:background="#00000000"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:src="@drawable/white_back_32" />
 
-            <ImageButton
-                android:id="@+id/pdf_backbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#00000000"
-                android:paddingBottom="8dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="-5dp"
-                android:paddingTop="8dp"
-                android:src="@drawable/white_back_32" />
-
-            <ImageButton
-                android:id="@+id/pdf_digipost_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#00000000"
-                android:paddingBottom="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp"
-                android:src="@drawable/white_postbox_48" />
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/html_digipost_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:paddingBottom="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:src="@drawable/white_postbox_48" />
     </LinearLayout>
 
-    <WebView 
+    <WebView
+        android:id="@+id/web_html"
         android:layout_width="fill_parent"
-        android:layout_height="200sp"
-        android:id="@+id/web_html"/>
-    
-    <RelativeLayout
-        android:id="@+id/pdf_bottombar"
+        android:layout_height="0sp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:id="@+id/html_bottombar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#323538" >
+        android:background="#323538"
+        android:gravity="bottom" >
 
         <LinearLayout
-            android:id="@+id/pdf_bottombar_linearlayout"
+            android:id="@+id/html_bottombar_linearlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-			
+
             <ImageButton
-                android:id="@+id/pdf_toMailbox"
+                android:id="@+id/html_toMailbox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
@@ -65,9 +60,9 @@
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_message_48" />
-            
+
             <ImageButton
-                android:id="@+id/pdf_toWorkarea"
+                android:id="@+id/html_toWorkarea"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
@@ -77,7 +72,7 @@
                 android:src="@drawable/white_workarea_48" />
 
             <ImageButton
-                android:id="@+id/pdf_toArchive"
+                android:id="@+id/html_toArchive"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
@@ -87,7 +82,7 @@
                 android:src="@drawable/white_archive_48" />
 
             <ImageButton
-                android:id="@+id/pdf_delete"
+                android:id="@+id/html_delete"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
@@ -97,7 +92,7 @@
                 android:src="@drawable/white_delete_48" />
 
             <ImageButton
-                android:id="@+id/pdf_share"
+                android:id="@+id/html_share"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
@@ -106,5 +101,6 @@
                 android:paddingTop="8dp"
                 android:src="@drawable/white_share_48" />
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
+
 </LinearLayout>
