@@ -62,7 +62,6 @@ public class JSONConverter {
 			}
 
 			content = writer.toString();
-			System.out.println("HTML? " + content);
 		}
 
 		return content;
@@ -96,12 +95,11 @@ public class JSONConverter {
 
 	public static <T> String createJsonFromJackson(final Letter letter) {
 
-		//ignore-test
-		String [] ignore = {"link","contentUri","deleteUri","updateUri","organizationLogo"};
+		// ignore-test
+		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo" };
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		FilterProvider filters = new SimpleFilterProvider().addFilter("toJSON",
-				SimpleBeanPropertyFilter.serializeAllExcept(ignore));
+		FilterProvider filters = new SimpleFilterProvider().addFilter("toJSON", SimpleBeanPropertyFilter.serializeAllExcept(ignore));
 
 		Writer strWriter = new StringWriter();
 		try {
@@ -119,7 +117,7 @@ public class JSONConverter {
 		return strWriter.toString();
 	}
 
-	public static byte [] inputStreamtoByteArray(final int size, final InputStream data) {
+	public static byte[] inputStreamtoByteArray(final int size, final InputStream data) {
 		InputStream is = data;
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 

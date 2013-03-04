@@ -32,5 +32,7 @@
     <string name="pdf_open_failed">Kunne ikke åpne dokumentet</string>
     <string name="pdf_searching_">Søker...</string>
     <string name="pdf_search_document">Søk i dokumentet...</string>
+    <string name="error_your_network">Nettverksfeil, \nSjekk din internetforbindelse og Prøv igjen.</string>
+    <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.<string /></string>
 
 </resources>
