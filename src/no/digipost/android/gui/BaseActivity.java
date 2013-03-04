@@ -273,37 +273,24 @@ public class BaseActivity extends FragmentActivity {
 				 * });
 				 */
 
-				lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-
-					public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-						Letter mletter = list_mailbox.get(position);
-
-						String filetype = mletter.getFileType();
-
-						if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
-							GetPDFTask pdfTask = new GetPDFTask();
-							pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
-						} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
-							GetHTMLTask htmlTask = new GetHTMLTask();
-							htmlTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
-						}
-					}
-				});
+				lv_mailbox.setOnItemClickListener(new ListListener(list_mailbox));
 
 				return v;
 
 			} else if (number == 2) {
 				View v = inflater.inflate(R.layout.fragment_layout_workarea, container, false);
-				ListView lv_kitchenbench = (ListView) v.findViewById(R.id.listview_kitchen);
-				lv_kitchenbench.setAdapter(adapter_workarea);
+				ListView lv_workarea = (ListView) v.findViewById(R.id.listview_kitchen);
+				lv_workarea.setAdapter(adapter_workarea);
+				lv_workarea.setOnItemClickListener(new ListListener(list_workarea));
 				View emptyView = v.findViewById(R.id.empty_listview_workarea);
-				lv_kitchenbench.setEmptyView(emptyView);
+				lv_workarea.setEmptyView(emptyView);
 
 				return v;
 			} else if (number == 3) {
 				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
 				ListView lv_archive = (ListView) v.findViewById(R.id.listview_archive);
 				lv_archive.setAdapter(adapter_archive);
+				lv_archive.setOnItemClickListener(new ListListener(list_archive));
 				View emptyView = v.findViewById(R.id.empty_listview_archive);
 				lv_archive.setEmptyView(emptyView);
 
@@ -396,6 +383,28 @@ public class BaseActivity extends FragmentActivity {
 			protected void onPostExecute(final String result) {
 				super.onPostExecute(result);
 				progressDialog.dismiss();
+			}
+		}
+
+		private class ListListener implements OnItemClickListener {
+			ArrayList<Letter> list;
+
+			public ListListener(final ArrayList<Letter> list) {
+				this.list = list;
+			}
+
+			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+				Letter mletter = list.get(position);
+
+				String filetype = mletter.getFileType();
+
+				if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
+					GetPDFTask pdfTask = new GetPDFTask();
+					pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
+					GetHTMLTask htmlTask = new GetHTMLTask();
+					htmlTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+				}
 			}
 		}
 	}
