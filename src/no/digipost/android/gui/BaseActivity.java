@@ -148,6 +148,7 @@ public class BaseActivity extends FragmentActivity {
 			return 4;
 		}
 
+
 		@Override
 		public CharSequence getPageTitle(final int position) {
 			switch (position) {
@@ -246,11 +247,11 @@ public class BaseActivity extends FragmentActivity {
 
 				/*
 				 * lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-				 * 
+				 *
 				 * public void onItemClick(final AdapterView<?> arg0, final View
 				 * arg1, final int position, final long arg3) { Letter mletter =
 				 * list_mailbox.get(position);
-				 * 
+				 *
 				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE); boolean
 				 * moved =
 				 * lo.moveDocument(getArguments().getString(ApiConstants.
@@ -258,10 +259,12 @@ public class BaseActivity extends FragmentActivity {
 				 * Toast.makeText(getActivity(), "Brev flyttet til arkiv",
 				 * 3000).show(); return; } else { Toast.makeText(getActivity(),
 				 * "Noe gikk galt", 3000).show(); return; } }
-				 * 
+				 *
 				 * });
 				 */
 				loadMailbox();
+
+				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
 
 				return v;
 
@@ -377,15 +380,18 @@ public class BaseActivity extends FragmentActivity {
 					}
 				});
 				progressDialog.show();
+
 			}
 
 			@Override
 			protected byte[] doInBackground(final Object... params) {
+
 				PdfStore.pdf = lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
 
 				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
 				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
 				startActivity(i);
+
 
 				return null;
 			}

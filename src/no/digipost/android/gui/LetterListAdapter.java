@@ -65,6 +65,8 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		date.setText(getDateFormatted(letters.get(position).getCreated()));
 		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
 		creator.setText(letters.get(position).getCreatorName());
+		TextView size = (TextView) row.findViewById(R.id.mail_size);
+		size.setText(getSizeFormatted(letters.get(position).getFileSize()));
 
 		checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
 
@@ -122,5 +124,18 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 			// Ignore
 		}
 		return formatted;
+	}
+
+	private String getSizeFormatted(final String byteString) {
+		long bytes = Long.parseLong(byteString);
+		String[] units = new String[]{"", "KB", "MB", "GB", "TB", "PB", "EB"};
+		for (int i = 6; i > 0; i--)
+	    {
+	        double exp = Math.pow(1024, i);
+	        if (bytes > exp) {
+				return String.format("%3.1f %s", bytes / exp, units[i]);
+			}
+	    }
+	    return Long.toString(bytes);
 	}
 }
