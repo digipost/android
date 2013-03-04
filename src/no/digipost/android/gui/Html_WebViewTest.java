@@ -22,6 +22,10 @@ public class Html_WebViewTest extends Activity {
 
 		webView = (WebView) findViewById(R.id.web_html);
 		webView.getSettings().setJavaScriptEnabled(true);
+
+		//Teste dette for bedre skjermstorrelse
+		//webView.getSettings().setLoadWithOverviewMode(true);
+		//webView.getSettings().setUseWideViewPort(true);
 		webView.loadDataWithBaseURL(null, html, mime, encoding, null);
 	}
 
