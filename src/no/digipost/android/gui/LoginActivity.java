@@ -92,7 +92,6 @@ public class LoginActivity extends Activity {
 		public void handleMessage(final Message msg) {
 			super.handleMessage(msg);
 			if (msg.what == ErrorHandling.ERROR_OK) {
-				showMessage("Innlogging vellykket, laster innhold..");
 				startBaseActivity();
 			} else if (msg.what == ErrorHandling.ERROR_DEVICE) {
 				showMessage(getString(R.string.error_your_network));
