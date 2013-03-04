@@ -72,6 +72,8 @@ public class BaseActivity extends FragmentActivity {
 		access_token = Secret.ACCESS_TOKEN;
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("Laster innhold...");
+		progressDialog.setCancelable(false);
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setOffscreenPageLimit(3);
@@ -305,40 +307,10 @@ public class BaseActivity extends FragmentActivity {
 
 						if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
 							GetPDFTask pdfTask = new GetPDFTask();
-							byte[] data = null;
-							try {
-								data = pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter).get();
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (ExecutionException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							// byte[] data =
-							// lo.getDocumentContentPDF(getArguments().getString(ApiConstants.ACCESS_TOKEN),
-							// mletter);
-							PdfStore.pdf = data;
-							Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-							i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
-							startActivity(i);
+							pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
 						} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 							GetHTMLTask htmlTask = new GetHTMLTask();
-							String html = null;
-
-							try {
-								html = htmlTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter).get();
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (ExecutionException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
-							Intent i = new Intent(getActivity(), Html_WebViewTest.class);
-							i.putExtra(ApiConstants.FILETYPE_HTML, html);
-							startActivity(i);
+							htmlTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
 						}
 					}
 				});
@@ -384,9 +356,6 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-
-				progressDialog.setMessage("Laster innhold...");
-				progressDialog.setCancelable(false);
 				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int which) {
 						dialog.dismiss();
@@ -398,7 +367,13 @@ public class BaseActivity extends FragmentActivity {
 
 			@Override
 			protected byte[] doInBackground(final Object... params) {
-				return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+				PdfStore.pdf = lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+
+				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
+				startActivity(i);
+
+				return null;
 			}
 
 			@Override
@@ -415,10 +390,37 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private class GetHTMLTask extends AsyncTask<Object, Void, String> {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.show();
+			}
 
 			@Override
 			protected String doInBackground(final Object... params) {
-				return lo.getDocumentContentHTML((String) params[0], (Letter) params[1]);
+				Intent i = new Intent(getActivity(), Html_WebViewTest.class);
+				i.putExtra(ApiConstants.FILETYPE_HTML, lo.getDocumentContentHTML((String) params[0], (Letter) params[1]));
+				startActivity(i);
+
+				return null;
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				progressDialog.dismiss();
+			}
+
+			@Override
+			protected void onPostExecute(final String result) {
+				super.onPostExecute(result);
+				progressDialog.dismiss();
 			}
 		}
 	}
