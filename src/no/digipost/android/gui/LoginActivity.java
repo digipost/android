@@ -87,7 +87,6 @@ public class LoginActivity extends Activity {
 	private void openPrivayBrowser() {
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/juridisk/"));
 		startActivity(browserIntent);
-		finish();
 	}
 
 	public void openRegistrationDialog() {
