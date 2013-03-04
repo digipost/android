@@ -41,13 +41,17 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		context = this;
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 		ks = KeyStore.getInstance();
 		checkKeyStoreStatus();
 	}
 
 	@Override
 	protected void onStop() {
-		// TODO Auto-generated method stub
 		super.onStop();
 		finish();
 	}
@@ -64,7 +68,6 @@ public class MainActivity extends Activity {
 		if (ks.state() == KeyStore.State.UNLOCKED) {
 			return;
 		}
-
 		try {
 			startActivity(new Intent(UNLOCK_ACTION));
 		} catch (ActivityNotFoundException e) {
