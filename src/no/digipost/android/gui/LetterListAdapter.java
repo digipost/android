@@ -123,12 +123,12 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 
 	private String getSizeFormatted(final String byteString) {
 		long bytes = Long.parseLong(byteString);
-		String[] Q = new String[]{"", "KB", "MB", "GB", "TB", "PB", "EB"};
+		String[] units = new String[]{"", "KB", "MB", "GB", "TB", "PB", "EB"};
 		for (int i = 6; i > 0; i--)
 	    {
-	        double step = Math.pow(1024, i);
-	        if (bytes > step) {
-				return String.format("%3.1f %s", bytes / step, Q[i]);
+	        double exp = Math.pow(1024, i);
+	        if (bytes > exp) {
+				return String.format("%3.1f %s", bytes / exp, units[i]);
 			}
 	    }
 	    return Long.toString(bytes);
