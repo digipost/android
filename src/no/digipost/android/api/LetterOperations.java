@@ -23,6 +23,11 @@ import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 
 public class LetterOperations {
+	public static final int INBOX = 0;
+	public static final int ARCHIVE = 1;
+	public static final int WORKAREA = 2;
+	public static final int RECEIPTS = 3;
+
 	private final ApiAccess apiAccess;
 
 	public LetterOperations() {
@@ -59,6 +64,24 @@ public class LetterOperations {
 		Documents documents = apiAccess.getDocuments(access_token, primaryaccount.getReceiptsUri());
 
 		return documents.getDocument();
+	}
+
+	public ArrayList<Letter> getAccountContentMeta(final String access_token, final int type) {
+		Account account = apiAccess.getPrimaryAccount(access_token);
+		PrimaryAccount primaryaccount = account.getPrimaryAccount();
+
+		switch (type) {
+		case INBOX:
+			return apiAccess.getDocuments(access_token, primaryaccount.getInboxUri()).getDocument();
+		case ARCHIVE:
+			return apiAccess.getDocuments(access_token, primaryaccount.getArchiveUri()).getDocument();
+		case WORKAREA:
+			return apiAccess.getDocuments(access_token, primaryaccount.getWorkareaUri()).getDocument();
+		case RECEIPTS:
+			return apiAccess.getDocuments(access_token, primaryaccount.getReceiptsUri()).getDocument();
+		default:
+			return null;
+		}
 	}
 
 	/*

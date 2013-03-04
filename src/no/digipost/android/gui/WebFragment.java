@@ -47,7 +47,6 @@ public class WebFragment extends DialogFragment {
 	@Override
 	public void onDismiss(final DialogInterface dialog) {
 		super.onDismiss(dialog);
-
 	}
 
 	@Override

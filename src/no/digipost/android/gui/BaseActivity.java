@@ -17,6 +17,7 @@
 package no.digipost.android.gui;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
@@ -25,9 +26,12 @@ import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
 import no.digipost.android.pdf.PDFActivity;
 import no.digipost.android.pdf.PdfStore;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -58,6 +62,7 @@ public class BaseActivity extends FragmentActivity {
 	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
+	private static ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -65,6 +70,8 @@ public class BaseActivity extends FragmentActivity {
 		System.out.println("BaseActivity OnCreate");
 		setContentView(R.layout.activity_base);
 		access_token = Secret.ACCESS_TOKEN;
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setOffscreenPageLimit(3);
@@ -187,9 +194,28 @@ public class BaseActivity extends FragmentActivity {
 
 			lo = new LetterOperations();
 
-			list_mailbox = getMailBoxLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			list_archive = getArchiveLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			list_workarea = getWorkareaLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			try {
+				list_mailbox = new GetAccountMetaTask()
+						.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), LetterOperations.INBOX)
+						.get();
+				list_archive = new GetAccountMetaTask().execute(getArguments().getString(ApiConstants.ACCESS_TOKEN),
+						LetterOperations.ARCHIVE).get();
+				list_workarea = new GetAccountMetaTask().execute(getArguments().getString(ApiConstants.ACCESS_TOKEN),
+						LetterOperations.WORKAREA).get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// list_mailbox =
+			// getMailBoxLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			// list_archive =
+			// getArchiveLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			// list_workarea =
+			// getWorkareaLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
 			// list_receipts =
 			// getReceiptsLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
 
@@ -278,14 +304,38 @@ public class BaseActivity extends FragmentActivity {
 						String filetype = mletter.getFileType();
 
 						if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
-							// PDF byte-array
-							byte[] data = lo.getDocumentContentPDF(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+							GetPDFTask pdfTask = new GetPDFTask();
+							byte[] data = null;
+							try {
+								data = pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter).get();
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (ExecutionException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							// byte[] data =
+							// lo.getDocumentContentPDF(getArguments().getString(ApiConstants.ACCESS_TOKEN),
+							// mletter);
 							PdfStore.pdf = data;
 							Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
 							i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
 							startActivity(i);
 						} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
-							String html = lo.getDocumentContentHTML(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+							GetHTMLTask htmlTask = new GetHTMLTask();
+							String html = null;
+
+							try {
+								html = htmlTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter).get();
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (ExecutionException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
 							Intent i = new Intent(getActivity(), Html_WebViewTest.class);
 							i.putExtra(ApiConstants.FILETYPE_HTML, html);
 							startActivity(i);
@@ -319,6 +369,56 @@ public class BaseActivity extends FragmentActivity {
 				lv_receipts.setEmptyView(emptyView);
 
 				return v;
+			}
+		}
+
+		private class GetAccountMetaTask extends AsyncTask<Object, Void, ArrayList<Letter>> {
+
+			@Override
+			protected ArrayList<Letter> doInBackground(final Object... params) {
+				return lo.getAccountContentMeta((String) params[0], (Integer) params[1]);
+			}
+		}
+
+		private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+
+				progressDialog.setMessage("Laster innhold...");
+				progressDialog.setCancelable(false);
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.show();
+			}
+
+			@Override
+			protected byte[] doInBackground(final Object... params) {
+				return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				progressDialog.dismiss();
+			}
+
+			@Override
+			protected void onPostExecute(final byte[] result) {
+				super.onPostExecute(result);
+				progressDialog.dismiss();
+			}
+		}
+
+		private class GetHTMLTask extends AsyncTask<Object, Void, String> {
+
+			@Override
+			protected String doInBackground(final Object... params) {
+				return lo.getDocumentContentHTML((String) params[0], (Letter) params[1]);
 			}
 		}
 	}
