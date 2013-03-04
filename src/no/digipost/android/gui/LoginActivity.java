@@ -15,6 +15,8 @@
  */
 package no.digipost.android.gui;
 
+import java.util.concurrent.ExecutionException;
+
 import no.digipost.android.R;
 import no.digipost.android.api.ErrorHandling;
 import android.app.Activity;
@@ -51,8 +53,25 @@ public class LoginActivity extends Activity {
 	}
 
 	private void openWebView() {
-		WebFragment webView = new WebFragment(new WebFragmentHandler());
-		webView.show(getFragmentManager(), "webView");
+		if (isOnline()) {
+			WebFragment webView = new WebFragment(new WebFragmentHandler());
+			webView.show(getFragmentManager(), "webView");
+		} else {
+			showMessage(getString(R.string.error_your_network));
+		}
+
+	}
+
+	public boolean isOnline() {
+		IsOnlineTask task = new IsOnlineTask();
+		try {
+			return task.execute().get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 	private void showMessage(final String message) {
@@ -76,9 +95,9 @@ public class LoginActivity extends Activity {
 				showMessage("Innlogging vellykket, laster innhold..");
 				startBaseActivity();
 			} else if (msg.what == ErrorHandling.ERROR_DEVICE) {
-				showMessage("Nettverksfeil. \nSjekk internetforbindelsen og proov igjen.");
+				showMessage(getString(R.string.error_your_network));
 			} else if (msg.what == ErrorHandling.ERROR_GENERAL) {
-				showMessage("Innlogging feilet, proov igjen.");
+				showMessage(getString(R.string.error_wrong_credentials));
 
 			}
 		}
