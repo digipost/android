@@ -79,23 +79,14 @@ public class BaseActivity extends FragmentActivity {
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		context = this;
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
-		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
+		// refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
 		optionsButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View arg0) {
 				openOptionsMenu();
-				refreshButton.clearAnimation();
+				// refreshButton.clearAnimation();
 			}
 		});
-		refreshButton.setOnClickListener(new OnClickListener() {
-			public void onClick(final View arg0) {
-				final float centerX = refreshButton.getWidth() / 2.0f;
-				final float centerY = refreshButton.getHeight() / 2.0f;
-				RotateAnimation a = new RotateAnimation(0, 360, centerX, centerY);
-				a.setDuration(800);
-				a.setRepeatCount(RotateAnimation.INFINITE);
-				refreshButton.startAnimation(a);
-			}
-		});
+
 	}
 
 	@Override
@@ -189,6 +180,7 @@ public class BaseActivity extends FragmentActivity {
 		private ListView lv_workarea;
 		private ListView lv_archive;
 		private ListView lv_receipts;
+		private ImageButton refreshButton;
 
 		public DigipostSectionFragment() {
 		}
@@ -197,13 +189,26 @@ public class BaseActivity extends FragmentActivity {
 		public void onCreate(final Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 
+			refreshButton = (ImageButton) ((BaseActivity) getActivity()).findViewById(R.id.base_refreshButton);
+			refreshButton.setOnClickListener(new OnClickListener() {
+				public void onClick(final View arg0) {
+					final float centerX = refreshButton.getWidth() / 2.0f;
+					final float centerY = refreshButton.getHeight() / 2.0f;
+					RotateAnimation a = new RotateAnimation(0, 360, centerX, centerY);
+					a.setDuration(800);
+					a.setRepeatCount(RotateAnimation.INFINITE);
+					refreshButton.startAnimation(a);
+				}
+			});
+
 			lo = new LetterOperations();
 		}
 
 		@Override
 		public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-
+			System.out.println("onCreateView");
 			int number = getArguments().getInt(ARG_SECTION_NUMBER);
+			System.out.println("number: " + number);
 
 			if (number == 1) {
 				View v = inflater.inflate(R.layout.fragment_layout_mailbox, container, false);
@@ -211,6 +216,9 @@ public class BaseActivity extends FragmentActivity {
 				lv_mailbox = (ListView) v.findViewById(R.id.listview_mailbox);
 				View emptyView = v.findViewById(R.id.empty_listview_mailbox);
 				lv_mailbox.setEmptyView(emptyView);
+				adapter_mailbox = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+				lv_mailbox.setAdapter(adapter_mailbox);
+				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
 
 				lv_mailbox.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -253,6 +261,7 @@ public class BaseActivity extends FragmentActivity {
 				 * 
 				 * });
 				 */
+				loadMailbox();
 
 				return v;
 
@@ -262,6 +271,10 @@ public class BaseActivity extends FragmentActivity {
 				System.out.println("1st: " + lv_workarea);
 				View emptyView = v.findViewById(R.id.empty_listview_workarea);
 				lv_workarea.setEmptyView(emptyView);
+				adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+				lv_workarea.setAdapter(adapter_workarea);
+				lv_workarea.setOnItemClickListener(new ListListener(adapter_workarea));
+				loadWorkbench();
 
 				return v;
 			} else if (number == 3) {
@@ -269,6 +282,10 @@ public class BaseActivity extends FragmentActivity {
 				lv_archive = (ListView) v.findViewById(R.id.listview_archive);
 				View emptyView = v.findViewById(R.id.empty_listview_archive);
 				lv_archive.setEmptyView(emptyView);
+				adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+				lv_archive.setAdapter(adapter_archive);
+				lv_archive.setOnItemClickListener(new ListListener(adapter_archive));
+				loadArchive();
 
 				return v;
 			} else {
@@ -276,31 +293,24 @@ public class BaseActivity extends FragmentActivity {
 				lv_receipts = (ListView) v.findViewById(R.id.listview_receipts);
 				View emptyView = v.findViewById(R.id.empty_listview_receipts);
 				lv_receipts.setEmptyView(emptyView);
+				adapter_receipts = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+				lv_receipts.setAdapter(adapter_receipts);
+				lv_receipts.setOnItemClickListener(new ListListener(adapter_receipts));
 
 				return v;
 			}
 		}
 
-		@Override
-		public void onActivityCreated(final Bundle savedInstanceState) {
-			super.onActivityCreated(savedInstanceState);
+		private void loadMailbox() {
+			new GetAccountMetaTask(LetterOperations.INBOX).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+		}
 
-			if (lv_mailbox != null) {
-				new GetAccountMetaTask(LetterOperations.INBOX).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			}
+		private void loadWorkbench() {
+			new GetAccountMetaTask(LetterOperations.WORKAREA).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+		}
 
-			if (lv_workarea != null) {
-				new GetAccountMetaTask(LetterOperations.WORKAREA).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			}
-
-			if (lv_archive != null) {
-				new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			}
-
-			if (lv_receipts != null) {
-				// new
-				// GetAccountMetaTask(LetterOperations.RECEIPTS).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			}
+		private void loadArchive() {
+			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
 		}
 
 		private class GetAccountMetaTask extends AsyncTask<String, Void, ArrayList<Letter>> {
@@ -333,24 +343,16 @@ public class BaseActivity extends FragmentActivity {
 
 				switch (type) {
 				case LetterOperations.INBOX:
-					adapter_mailbox = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, result);
-					lv_mailbox.setAdapter(adapter_mailbox);
-					lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
+					adapter_mailbox.updateList(result);
 					break;
 				case LetterOperations.WORKAREA:
-					adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, result);
-					lv_workarea.setAdapter(adapter_workarea);
-					lv_workarea.setOnItemClickListener(new ListListener(adapter_workarea));
+					adapter_workarea.updateList(result);
 					break;
 				case LetterOperations.ARCHIVE:
-					adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, result);
-					lv_archive.setAdapter(adapter_archive);
-					lv_archive.setOnItemClickListener(new ListListener(adapter_archive));
+					adapter_archive.updateList(result);
 					break;
 				case LetterOperations.RECEIPTS:
-					adapter_receipts = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, result);
-					lv_receipts.setAdapter(adapter_receipts);
-					lv_receipts.setOnItemClickListener(new ListListener(adapter_receipts));
+					adapter_receipts.updateList(result);
 					break;
 				}
 

@@ -93,6 +93,11 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		return letters.get(position);
 	}
 
+	public void updateList(final ArrayList<Letter> list) {
+		letters.addAll(list);
+		notifyDataSetChanged();
+	}
+
 	public void setInitialcheck(final int position) {
 		checked = new boolean[letters.size()];
 		checked[position] = true;
