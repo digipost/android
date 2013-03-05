@@ -56,7 +56,8 @@ import android.widget.ListView;
 public class BaseActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
-	private ImageButton optionsButton, refreshButton;
+	private ImageButton optionsButton;
+	private static ImageButton refreshButton;
 	private ButtonListener listener;
 	private static String access_token = "";
 	private final int REQUEST_CODE = 1;
@@ -98,6 +99,7 @@ public class BaseActivity extends FragmentActivity {
 				a.setDuration(800);
 				a.setRepeatCount(RotateAnimation.INFINITE);
 				refreshButton.startAnimation(a);
+				mViewPager.setAdapter(mSectionsPagerAdapter);
 			}
 		}
 	}
@@ -125,6 +127,10 @@ public class BaseActivity extends FragmentActivity {
 		Intent i = new Intent(BaseActivity.this, LoginActivity.class);
 		startActivity(i);
 		finish();
+	}
+
+	public static void stopUpdateAnimation() {
+		refreshButton.clearAnimation();
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -346,12 +352,15 @@ public class BaseActivity extends FragmentActivity {
 				}
 
 				progressDialog.dismiss();
+				stopUpdateAnimation();
+
 			}
 
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 		}
 
@@ -385,12 +394,14 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 
 			@Override
 			protected void onPostExecute(final byte[] result) {
 				super.onPostExecute(result);
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 		}
 
@@ -420,12 +431,14 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 
 			@Override
 			protected void onPostExecute(final String result) {
 				super.onPostExecute(result);
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 		}
 
