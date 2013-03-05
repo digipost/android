@@ -31,6 +31,7 @@ public class MainActivity extends Activity {
 
 	public static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
 	private Context context;
+	private boolean pinQuestion;
 	private KeyStore ks;
 
 	@Override
@@ -47,12 +48,6 @@ public class MainActivity extends Activity {
 		checkKeyStoreStatus();
 	}
 
-	@Override
-	protected void onStop() {
-		super.onStop();
-		finish();
-	}
-
 	private void checkKeyStoreStatus() {
 		if (ks.state() != KeyStore.State.UNLOCKED) {
 			unlockKeyStore();
@@ -66,7 +61,12 @@ public class MainActivity extends Activity {
 			return;
 		}
 		try {
-			startActivity(new Intent(UNLOCK_ACTION));
+			if (!pinQuestion) {
+				pinQuestion = true;
+				startActivity(new Intent(UNLOCK_ACTION));
+			} else {
+				finish();
+			}
 		} catch (ActivityNotFoundException e) {
 			return;
 		}

@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutionException;
 import no.digipost.android.R;
 import no.digipost.android.api.ErrorHandling;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -108,12 +107,8 @@ public class LoginActivity extends Activity {
 	}
 
 	public void openRegistrationDialog() {
-		AlertDialog registrationDialog = new AlertDialog.Builder(this).create();
-		registrationDialog.setTitle("Beklager");
-		registrationDialog
-				.setMessage("Foreloopig kan man dessverre ikke registrere seg paa Android, registerer deg paa en PC for aa ta i bruk Digipost.");
-		registrationDialog.show();
-
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/app/registrering#/"));
+		startActivity(browserIntent);
 	}
 
 	private class ButtonListener implements OnClickListener {
