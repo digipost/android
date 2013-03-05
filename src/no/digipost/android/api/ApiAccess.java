@@ -18,6 +18,7 @@ package no.digipost.android.api;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
+import no.digipost.android.model.Receipts;
 
 import org.codehaus.jettison.json.JSONObject;
 
@@ -40,6 +41,10 @@ public class ApiAccess {
 
 	public Documents getDocuments(final String access_token, final String uri) {
 		return (Documents) JSONConverter.processJackson(Documents.class, getApiJsonString(access_token, uri));
+	}
+
+	public Receipts getReceipts(final String access_token, final String uri) {
+		return (Receipts) JSONConverter.processJackson(Receipts.class,getApiJsonString(access_token, uri));
 	}
 
 	public String getApiJsonString(final String access_token, final String uri) {

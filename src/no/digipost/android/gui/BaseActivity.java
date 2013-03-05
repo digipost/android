@@ -23,6 +23,7 @@ import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
+import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
 import no.digipost.android.pdf.PdfStore;
 import android.app.ProgressDialog;
@@ -171,11 +172,11 @@ public class BaseActivity extends FragmentActivity {
 		private LetterListAdapter adapter_mailbox;
 		private LetterListAdapter adapter_workarea;
 		private LetterListAdapter adapter_archive;
-		private LetterListAdapter adapter_receipts;
+		private ReceiptListAdapter adapter_receipts;
 		private ArrayList<Letter> list_mailbox;
 		private ArrayList<Letter> list_archive;
 		private ArrayList<Letter> list_workarea;
-		private ArrayList<Letter> list_receipts;
+		private ArrayList<Receipt> list_receipts;
 		private ListView lv_mailbox;
 		private ListView lv_workarea;
 		private ListView lv_archive;
@@ -233,11 +234,11 @@ public class BaseActivity extends FragmentActivity {
 
 				/*
 				 * lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-				 * 
+				 *
 				 * public void onItemClick(final AdapterView<?> arg0, final View
 				 * arg1, final int position, final long arg3) { Letter mletter =
 				 * list_mailbox.get(position);
-				 * 
+				 *
 				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE); boolean
 				 * moved =
 				 * lo.moveDocument(getArguments().getString(ApiConstants.
@@ -245,7 +246,7 @@ public class BaseActivity extends FragmentActivity {
 				 * Toast.makeText(getActivity(), "Brev flyttet til arkiv",
 				 * 3000).show(); return; } else { Toast.makeText(getActivity(),
 				 * "Noe gikk galt", 3000).show(); return; } }
-				 * 
+				 *
 				 * });
 				 */
 				loadMailbox();
@@ -282,9 +283,10 @@ public class BaseActivity extends FragmentActivity {
 				lv_receipts = (ListView) v.findViewById(R.id.listview_receipts);
 				View emptyView = v.findViewById(R.id.empty_listview_receipts);
 				lv_receipts.setEmptyView(emptyView);
-				adapter_receipts = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+				adapter_receipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
 				lv_receipts.setAdapter(adapter_receipts);
-				lv_receipts.setOnItemClickListener(new ListListener(adapter_receipts));
+				lv_receipts.setOnItemClickListener(new ReceiptListListener(adapter_receipts));
+				//loadReceipts();
 
 				return v;
 			}
@@ -301,6 +303,10 @@ public class BaseActivity extends FragmentActivity {
 		private void loadArchive() {
 			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
 		}
+
+		/*private void loadReceipts() {
+			new GetAccountMetaTask(LetterOperations.RECEIPTS).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+		} */
 
 		private class GetAccountMetaTask extends AsyncTask<String, Void, ArrayList<Letter>> {
 			private final int type;
@@ -340,9 +346,9 @@ public class BaseActivity extends FragmentActivity {
 				case LetterOperations.ARCHIVE:
 					adapter_archive.updateList(result);
 					break;
-				case LetterOperations.RECEIPTS:
-					adapter_receipts.updateList(result);
-					break;
+				//case LetterOperations.RECEIPTS:
+				//	adapter_receipts.updateList(result);
+				//	break;
 				}
 
 				progressDialog.dismiss();
@@ -448,6 +454,21 @@ public class BaseActivity extends FragmentActivity {
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
 				}
+			}
+		}
+
+		private class ReceiptListListener implements OnItemClickListener {
+			ReceiptListAdapter adapter;
+
+			public ReceiptListListener(final ReceiptListAdapter adapter) {
+				this.adapter = adapter;
+			}
+
+			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+				Receipt mReceipt = adapter.getItem(position);
+
+				GetPDFTask pdfTask = new GetPDFTask();
+				pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mReceipt);
 			}
 		}
 	}

@@ -68,7 +68,7 @@
 
         <TextView
             android:paddingLeft="5sp"
-            android:id="@+id/mail_size"
+            android:id="@+id/mail_size_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="13sp"

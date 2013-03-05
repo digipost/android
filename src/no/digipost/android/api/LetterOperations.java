@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
+import no.digipost.android.model.Receipt;
 
 public class LetterOperations {
 	public static final int INBOX = 0;
@@ -44,11 +45,18 @@ public class LetterOperations {
 			return apiAccess.getDocuments(access_token, primaryaccount.getArchiveUri()).getDocument();
 		case WORKAREA:
 			return apiAccess.getDocuments(access_token, primaryaccount.getWorkareaUri()).getDocument();
-		case RECEIPTS:
-			return apiAccess.getDocuments(access_token, primaryaccount.getReceiptsUri()).getDocument();
+		//case RECEIPTS:
+			//return apiAccess.getReceipts(access_token, primaryaccount.getReceiptsUri()).getReceipt();
 		default:
 			return null;
 		}
+	}
+
+	public ArrayList<Receipt> getAccountContentMetaReceipt(final String access_token) {
+		Account account = apiAccess.getPrimaryAccount(access_token);
+		PrimaryAccount primaryaccount = account.getPrimaryAccount();
+
+		return apiAccess.getReceipts(access_token, primaryaccount.getReceiptsUri()).getReceipt();
 	}
 
 	/*
@@ -67,5 +75,9 @@ public class LetterOperations {
 
 	public String getDocumentContentHTML(final String access_token, final Letter letter) {
 		return apiAccess.getDocumentHTML(access_token, letter.getContentUri());
+	}
+
+	public byte[] getReceiptContentPDF(final String access_token, final Receipt receipt) {
+		return apiAccess.getDocumentContent(access_token, receipt.getContentAsPDFUri());
 	}
 }
