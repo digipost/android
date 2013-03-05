@@ -24,6 +24,7 @@ import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -69,12 +70,8 @@ public class WebFragment extends DialogFragment {
 				String state = url.substring(state_start + state_fragment.length(), code_start);
 				String code = url.substring(code_start + code_fragment.length(), url.length());
 
-				if (OAuth2.retriveAccessTokenSuccess(state, code, context)) {
-					handler.sendEmptyMessage(ErrorHandling.ERROR_OK);
-				} else {
-					handler.sendEmptyMessage(ErrorHandling.ERROR_GENERAL);
-				}
-				dismiss();
+				new GetAccessTokenTask().execute(state, code);
+
 				return true;
 			}
 
@@ -87,6 +84,27 @@ public class WebFragment extends DialogFragment {
 			handler.sendEmptyMessage(ErrorHandling.ERROR_DEVICE);
 			dismiss();
 		}
+	}
+
+	private class GetAccessTokenTask extends AsyncTask<String, Void, Void> {
+
+		@Override
+		protected Void doInBackground(final String... params) {
+			if (OAuth2.retriveAccessTokenSuccess(params[0], params[1], context)) {
+				handler.sendEmptyMessage(ErrorHandling.ERROR_OK);
+			} else {
+				handler.sendEmptyMessage(ErrorHandling.ERROR_GENERAL);
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(final Void result) {
+			super.onPostExecute(result);
+			dismiss();
+		}
+
 	}
 
 	@SuppressLint("SetJavaScriptEnabled")

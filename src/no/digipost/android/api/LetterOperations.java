@@ -21,6 +21,9 @@ import no.digipost.android.model.Account;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
+import android.accounts.NetworkErrorException;
+import android.content.Context;
+
 
 public class LetterOperations {
 	public static final int INBOX = 0;
@@ -30,11 +33,11 @@ public class LetterOperations {
 
 	private final ApiAccess apiAccess;
 
-	public LetterOperations() {
-		apiAccess = new ApiAccess();
+	public LetterOperations(final Context context) {
+		apiAccess = new ApiAccess(context);
 	}
 
-	public ArrayList<Letter> getAccountContentMeta(final String access_token, final int type) {
+	public ArrayList<Letter> getAccountContentMeta(final String access_token, final int type) throws NetworkErrorException {
 		Account account = apiAccess.getPrimaryAccount(access_token);
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
 
@@ -52,7 +55,7 @@ public class LetterOperations {
 		}
 	}
 
-	public ArrayList<Receipt> getAccountContentMetaReceipt(final String access_token) {
+	public ArrayList<Receipt> getAccountContentMetaReceipt(final String access_token) throws NetworkErrorException {
 		Account account = apiAccess.getPrimaryAccount(access_token);
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
 
@@ -68,16 +71,16 @@ public class LetterOperations {
 	 * return true; } else { return false; } }
 	 */
 
-	public byte[] getDocumentContentPDF(final String access_token, final Letter letter) {
+	public byte[] getDocumentContentPDF(final String access_token, final Letter letter) throws NetworkErrorException {
 		ApiAccess.filesize = Integer.parseInt(letter.getFileSize());
 		return apiAccess.getDocumentContent(access_token, letter.getContentUri());
 	}
 
-	public String getDocumentContentHTML(final String access_token, final Letter letter) {
+	public String getDocumentContentHTML(final String access_token, final Letter letter) throws NetworkErrorException {
 		return apiAccess.getDocumentHTML(access_token, letter.getContentUri());
 	}
 
-	public byte[] getReceiptContentPDF(final String access_token, final Receipt receipt) {
+	public byte[] getReceiptContentPDF(final String access_token, final Receipt receipt) throws NetworkErrorException {
 		return apiAccess.getDocumentContent(access_token, receipt.getContentAsPDFUri());
 	}
 }

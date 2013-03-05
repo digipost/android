@@ -16,9 +16,7 @@
 
 package no.digipost.android;
 
-import no.digipost.android.api.ApiConstants;
 import no.digipost.android.authentication.KeyStore;
-import no.digipost.android.authentication.KeyStoreAdapter;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.gui.BaseActivity;
 import no.digipost.android.gui.LoginActivity;
@@ -26,14 +24,16 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class MainActivity extends Activity {
 
 	public static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
 	private Context context;
+	private boolean pinQuestion;
 	private KeyStore ks;
 
 	@Override
@@ -41,6 +41,14 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		context = this;
+		EasyTracker.getInstance().activityStart(this);
+		EasyTracker.getTracker().getAppId();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop(this);
 	}
 
 	@Override
@@ -48,12 +56,6 @@ public class MainActivity extends Activity {
 		super.onResume();
 		ks = KeyStore.getInstance();
 		checkKeyStoreStatus();
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		finish();
 	}
 
 	private void checkKeyStoreStatus() {
@@ -69,18 +71,19 @@ public class MainActivity extends Activity {
 			return;
 		}
 		try {
-			startActivity(new Intent(UNLOCK_ACTION));
+			if (!pinQuestion) {
+				pinQuestion = true;
+				startActivity(new Intent(UNLOCK_ACTION));
+			} else {
+				finish();
+			}
 		} catch (ActivityNotFoundException e) {
 			return;
 		}
 	}
 
 	private void checkTokenStatus() {
-		if (checkToken()) {
-			startBaseActivity();
-		} else {
-			startLoginActivity();
-		}
+		new CheckTokenTask().execute();
 	}
 
 	private void startBaseActivity() {
@@ -95,16 +98,25 @@ public class MainActivity extends Activity {
 		finish();
 	}
 
-	private boolean checkToken() {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		String encrypted_refresh_token = settings.getString(ApiConstants.REFRESH_TOKEN, "");
-		if (encrypted_refresh_token.equals("")) {
-			return false;
-		} else {
-			KeyStoreAdapter ksa = new KeyStoreAdapter();
-			String refresh_token = ksa.decrypt(encrypted_refresh_token);
-			OAuth2.retriveAccessTokenSuccess(refresh_token);
-			return true;
+	private class CheckTokenTask extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(final Void... params) {
+			try {
+				OAuth2.updateRefreshTokenSuccess(context);
+				return true;
+			} catch (IllegalStateException e) {
+				return false;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean result) {
+			if (result) {
+				startBaseActivity();
+			} else {
+				startLoginActivity();
+			}
 		}
 	}
 }

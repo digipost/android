@@ -16,10 +16,8 @@
 
 package no.digipost.android.authentication;
 
-import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.concurrent.ExecutionException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -32,14 +30,13 @@ import no.digipost.android.model.TokenValue;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 public class OAuth2 {
@@ -75,7 +72,7 @@ public class OAuth2 {
 		return true;
 	}
 
-	public static boolean retriveAccessTokenSuccess(final String refresh_token) {
+	public static boolean retriveAccessTokenSuccess(final String refresh_token, final Context context) {
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
 		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
@@ -88,7 +85,6 @@ public class OAuth2 {
 
 	public static void encryptAndStoreRefreshToken(final Access data, final Context context) {
 		Secret.ACCESS_TOKEN = data.getAccess_token();
-
 		String refresh_token = data.getRefresh_token();
 		KeyStoreAdapter ksa = new KeyStoreAdapter();
 		String cipher = ksa.encrypt(refresh_token);
@@ -99,39 +95,31 @@ public class OAuth2 {
 		editor.commit();
 	}
 
+	public static void updateRefreshTokenSuccess(final Context context) throws IllegalStateException {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+		String encrypted_refresh_token = settings.getString(ApiConstants.REFRESH_TOKEN, "");
+		if (encrypted_refresh_token.equals("")) {
+			throw new IllegalStateException("Ingen access token lagret");
+		} else {
+			KeyStoreAdapter ksa = new KeyStoreAdapter();
+			String refresh_token = ksa.decrypt(encrypted_refresh_token);
+			retriveAccessTokenSuccess(refresh_token, context);
+			EasyTracker.getTracker().sendEvent("Token", "Refreshing Accesstoken", "MainActivity", (long) 1);
+		}
+	}
+
 	public static Access getAccessData(final MultivaluedMap<String, String> params) {
 		Client c = Client.create();
 		WebResource r = c.resource(ApiConstants.URL_API_OAUTH_ACCESSTOKEN);
 
-		Builder builder = r
+		ClientResponse cr = r
 				.queryParams(params)
 				.header(ApiConstants.POST, ApiConstants.POST_API_ACCESSTOKEN_HTTP)
 				.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_FORM_URLENCODED)
-				.header(ApiConstants.AUTHORIZATION, getB64Auth(Secret.CLIENT_ID, Secret.CLIENT_SECRET));
+				.header(ApiConstants.AUTHORIZATION, getB64Auth(Secret.CLIENT_ID, Secret.CLIENT_SECRET))
+				.post(ClientResponse.class);
 
-		Access data = null;
-		GetTokenDataTask tokenDataTask = new GetTokenDataTask();
-
-		try {
-			data = tokenDataTask.execute(builder).get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return data;
-	}
-
-	private static class GetTokenDataTask extends AsyncTask<Builder, Void, Access> {
-		@Override
-		protected Access doInBackground(final Builder... params) {
-			InputStream is = params[0].post(ClientResponse.class).getEntityInputStream();
-			return (Access) JSONConverter.processJackson(Access.class, is);
-		}
-
+		return (Access) JSONConverter.processJackson(Access.class, cr.getEntityInputStream());
 	}
 
 	public static boolean verifyAuth(final String id_token, final String client_secret) {

@@ -96,6 +96,7 @@ public class PDFActivity extends Activity {
 	public static final int FROM_MAILBOX = 0;
 	public static final int FROM_ARCHIVE = 1;
 	public static final int FROM_WORKAREA = 2;
+	public static final int FROM_RECEIPS = 3;
 
 	private final int TAP_PAGE_MARGIN = 5;
 	private static final int SEARCH_PROGRESS_DELAY = 200;

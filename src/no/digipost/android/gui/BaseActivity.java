@@ -26,6 +26,7 @@ import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
 import no.digipost.android.pdf.PdfStore;
+import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,12 +55,14 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class BaseActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
-	private ImageButton optionsButton, refreshButton;
+	private ImageButton optionsButton;
+	private static ImageButton refreshButton;
 	private ButtonListener listener;
-	private static String access_token = "";
 	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
@@ -70,7 +73,6 @@ public class BaseActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		System.out.println("BaseActivity OnCreate");
 		setContentView(R.layout.activity_base);
-		access_token = Secret.ACCESS_TOKEN;
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setMessage("Laster innhold...");
@@ -85,6 +87,7 @@ public class BaseActivity extends FragmentActivity {
 		listener = new ButtonListener();
 		optionsButton.setOnClickListener(listener);
 		refreshButton.setOnClickListener(listener);
+		EasyTracker.getTracker().trackView("BaseActivity");
 	}
 
 	private class ButtonListener implements OnClickListener {
@@ -99,6 +102,7 @@ public class BaseActivity extends FragmentActivity {
 				a.setDuration(800);
 				a.setRepeatCount(RotateAnimation.INFINITE);
 				refreshButton.startAnimation(a);
+				mViewPager.setAdapter(mSectionsPagerAdapter);
 			}
 		}
 	}
@@ -128,6 +132,10 @@ public class BaseActivity extends FragmentActivity {
 		finish();
 	}
 
+	public static void stopUpdateAnimation() {
+		refreshButton.clearAnimation();
+	}
+
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
 		public SectionsPagerAdapter(final FragmentManager fm) {
@@ -139,7 +147,6 @@ public class BaseActivity extends FragmentActivity {
 			DigipostSectionFragment fragment = new DigipostSectionFragment();
 			Bundle args = new Bundle();
 			args.putInt(DigipostSectionFragment.ARG_SECTION_NUMBER, position + 1);
-			args.putString(ApiConstants.ACCESS_TOKEN, access_token);
 			fragment.setArguments(args);
 			return fragment;
 		}
@@ -189,7 +196,7 @@ public class BaseActivity extends FragmentActivity {
 		@Override
 		public void onCreate(final Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			lo = new LetterOperations();
+			lo = new LetterOperations(getActivity().getApplicationContext());
 		}
 
 		@Override
@@ -293,15 +300,15 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private void loadMailbox() {
-			new GetAccountMetaTask(LetterOperations.INBOX).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			new GetAccountMetaTask(LetterOperations.INBOX).execute(Secret.ACCESS_TOKEN);
 		}
 
 		private void loadWorkbench() {
-			new GetAccountMetaTask(LetterOperations.WORKAREA).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			new GetAccountMetaTask(LetterOperations.WORKAREA).execute(Secret.ACCESS_TOKEN);
 		}
 
 		private void loadArchive() {
-			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(Secret.ACCESS_TOKEN);
 		}
 
 		/*private void loadReceipts() {
@@ -329,7 +336,12 @@ public class BaseActivity extends FragmentActivity {
 
 			@Override
 			protected ArrayList<Letter> doInBackground(final String... params) {
-				return lo.getAccountContentMeta(params[0], type);
+				try {
+					return lo.getAccountContentMeta(params[0], type);
+				} catch (NetworkErrorException e) {
+					System.out.println(e.getMessage());
+					return null;
+				}
 			}
 
 			@Override
@@ -352,12 +364,15 @@ public class BaseActivity extends FragmentActivity {
 				}
 
 				progressDialog.dismiss();
+				stopUpdateAnimation();
+
 			}
 
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 		}
 
@@ -378,7 +393,12 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected byte[] doInBackground(final Object... params) {
 
-				PdfStore.pdf = lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+				try {
+					PdfStore.pdf = lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+				} catch (NetworkErrorException e) {
+					System.out.println(e.getMessage());
+					return null;
+				}
 
 				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
 				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
@@ -391,12 +411,14 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 
 			@Override
 			protected void onPostExecute(final byte[] result) {
 				super.onPostExecute(result);
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 		}
 
@@ -415,8 +437,17 @@ public class BaseActivity extends FragmentActivity {
 
 			@Override
 			protected String doInBackground(final Object... params) {
+				String html = null;
+
+				try {
+					html = lo.getDocumentContentHTML((String) params[0], (Letter) params[1]);
+				} catch (NetworkErrorException e) {
+					System.out.println(e.getMessage());
+					return null;
+				}
+
 				Intent i = new Intent(getActivity(), Html_WebViewTest.class);
-				i.putExtra(ApiConstants.FILETYPE_HTML, lo.getDocumentContentHTML((String) params[0], (Letter) params[1]));
+				i.putExtra(ApiConstants.FILETYPE_HTML, html);
 				startActivity(i);
 
 				return null;
@@ -426,12 +457,14 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 
 			@Override
 			protected void onPostExecute(final String result) {
 				super.onPostExecute(result);
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 		}
 
@@ -449,10 +482,10 @@ public class BaseActivity extends FragmentActivity {
 
 				if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
 					GetPDFTask pdfTask = new GetPDFTask();
-					pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+					pdfTask.execute(Secret.ACCESS_TOKEN, mletter);
 				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 					GetHTMLTask htmlTask = new GetHTMLTask();
-					htmlTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+					htmlTask.execute(Secret.ACCESS_TOKEN, mletter);
 				}
 			}
 		}
