@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import no.digipost.android.R;
-import no.digipost.android.model.Letter;
+import no.digipost.android.model.Receipt;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -34,17 +34,17 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
-public class LetterListAdapter extends ArrayAdapter<Letter> {
+public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	private final Context con;
-	private final ArrayList<Letter> letters;
+	private final ArrayList<Receipt> receipts;
 	public static boolean showboxes = false;
 	public boolean[] checked;
 	CheckBox checkbox;
 
-	public LetterListAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects) {
+	public ReceiptListAdapter(final Context context, final int textViewResourceId, final ArrayList<Receipt> objects) {
 		super(context, textViewResourceId, objects);
 		con = context;
-		letters = objects;
+		receipts = objects;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -59,14 +59,13 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		row.setBackgroundDrawable((position % 2 == 0) ? even : odd);
 
 		TextView subject = (TextView) row.findViewById(R.id.mail_subject);
-		subject.setText(letters.get(position).getSubject());
-
+		subject.setText(receipts.get(position).getStoreName());
 		TextView date = (TextView) row.findViewById(R.id.mail_date);
-		date.setText(getDateFormatted(letters.get(position).getCreated()));
+		date.setText(getDateFormatted(receipts.get(position).getTimeOfPurchase()));
 		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
-		creator.setText(letters.get(position).getCreatorName());
-		TextView size = (TextView) row.findViewById(R.id.mail_size_price);
-		size.setText(getSizeFormatted(letters.get(position).getFileSize()));
+		creator.setText(receipts.get(position).getFranchiceName());
+		TextView price = (TextView) row.findViewById(R.id.mail_size_price);
+		price.setText(receipts.get(position).getAmount() + " " + receipts.get(position).getCurrency() );
 
 		checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
 
@@ -91,17 +90,17 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	}
 
 	@Override
-	public Letter getItem(final int position) {
-		return letters.get(position);
+	public Receipt getItem(final int position) {
+		return receipts.get(position);
 	}
 
-	public void updateList(final ArrayList<Letter> list) {
-		letters.addAll(list);
+	public void updateList(final ArrayList<Receipt> list) {
+		receipts.addAll(list);
 		notifyDataSetChanged();
 	}
 
 	public void setInitialcheck(final int position) {
-		checked = new boolean[letters.size()];
+		checked = new boolean[receipts.size()];
 		checked[position] = true;
 	}
 
@@ -124,18 +123,5 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 			// Ignore
 		}
 		return formatted;
-	}
-
-	private String getSizeFormatted(final String byteString) {
-		long bytes = Long.parseLong(byteString);
-		String[] units = new String[]{"", "KB", "MB", "GB"};
-		for (int i = 3; i > 0; i--)
-	    {
-	        double exp = Math.pow(1024, i);
-	        if (bytes > exp) {
-				return String.format("%3.1f %s", bytes / exp, units[i]);
-			}
-	    }
-	    return Long.toString(bytes);
 	}
 }

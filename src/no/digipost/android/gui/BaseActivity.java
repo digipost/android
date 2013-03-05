@@ -23,11 +23,15 @@ import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
+import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
 import no.digipost.android.pdf.PdfStore;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -54,10 +58,12 @@ public class BaseActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ImageButton optionsButton, refreshButton;
+	private ButtonListener listener;
 	private static String access_token = "";
 	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
+	private static ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -65,6 +71,10 @@ public class BaseActivity extends FragmentActivity {
 		System.out.println("BaseActivity OnCreate");
 		setContentView(R.layout.activity_base);
 		access_token = Secret.ACCESS_TOKEN;
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setMessage("Laster innhold...");
+		progressDialog.setCancelable(false);
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setOffscreenPageLimit(3);
@@ -72,14 +82,17 @@ public class BaseActivity extends FragmentActivity {
 		context = this;
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
 		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
-		optionsButton.setOnClickListener(new OnClickListener() {
-			public void onClick(final View arg0) {
+		listener = new ButtonListener();
+		optionsButton.setOnClickListener(listener);
+		refreshButton.setOnClickListener(listener);
+	}
+
+	private class ButtonListener implements OnClickListener {
+
+		public void onClick(final View v) {
+			if (v == optionsButton) {
 				openOptionsMenu();
-				refreshButton.clearAnimation();
-			}
-		});
-		refreshButton.setOnClickListener(new OnClickListener() {
-			public void onClick(final View arg0) {
+			} else if (v == refreshButton) {
 				final float centerX = refreshButton.getWidth() / 2.0f;
 				final float centerY = refreshButton.getHeight() / 2.0f;
 				RotateAnimation a = new RotateAnimation(0, 360, centerX, centerY);
@@ -87,20 +100,7 @@ public class BaseActivity extends FragmentActivity {
 				a.setRepeatCount(RotateAnimation.INFINITE);
 				refreshButton.startAnimation(a);
 			}
-		});
-	}
-
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		System.out.println("BaseAcitivty onDestroy.");
-
+		}
 	}
 
 	@Override
@@ -172,11 +172,16 @@ public class BaseActivity extends FragmentActivity {
 		private LetterListAdapter adapter_mailbox;
 		private LetterListAdapter adapter_workarea;
 		private LetterListAdapter adapter_archive;
-		private LetterListAdapter adapter_receipts;
+		private ReceiptListAdapter adapter_receipts;
 		private ArrayList<Letter> list_mailbox;
 		private ArrayList<Letter> list_archive;
 		private ArrayList<Letter> list_workarea;
-		private ArrayList<Letter> list_receipts;
+		private ArrayList<Receipt> list_receipts;
+		private ListView lv_mailbox;
+		private ListView lv_workarea;
+		private ListView lv_archive;
+		private ListView lv_receipts;
+		private ImageButton refreshButton;
 
 		public DigipostSectionFragment() {
 		}
@@ -184,49 +189,24 @@ public class BaseActivity extends FragmentActivity {
 		@Override
 		public void onCreate(final Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-
 			lo = new LetterOperations();
-
-			list_mailbox = getMailBoxLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			list_archive = getArchiveLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			list_workarea = getWorkareaLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-			// list_receipts =
-			// getReceiptsLetters(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-
-			adapter_mailbox = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_mailbox);
-			adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_archive);
-			adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, list_workarea);
-			// adapter_receipts = new LetterListAdapter(getActivity(),
-			// R.layout.mailbox_list_item, list_receipts);
-		}
-
-		public ArrayList<Letter> getMailBoxLetters(final String at) {
-			return lo.getMailboxList(at);
-		}
-
-		public ArrayList<Letter> getArchiveLetters(final String at) {
-			return lo.getArchiveList(at);
-		}
-
-		public ArrayList<Letter> getWorkareaLetters(final String at) {
-			return lo.getWorkareaList(at);
-		}
-
-		public ArrayList<Letter> getReceiptsLetters(final String at) {
-			return lo.getReceiptsList(at);
 		}
 
 		@Override
 		public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+			System.out.println("onCreateView");
 			int number = getArguments().getInt(ARG_SECTION_NUMBER);
+			System.out.println("number: " + number);
 
 			if (number == 1) {
 				View v = inflater.inflate(R.layout.fragment_layout_mailbox, container, false);
 
-				ListView lv_mailbox = (ListView) v.findViewById(R.id.listview_mailbox);
-				lv_mailbox.setAdapter(adapter_mailbox);
+				lv_mailbox = (ListView) v.findViewById(R.id.listview_mailbox);
 				View emptyView = v.findViewById(R.id.empty_listview_mailbox);
 				lv_mailbox.setEmptyView(emptyView);
+				adapter_mailbox = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+				lv_mailbox.setAdapter(adapter_mailbox);
+				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
 
 				lv_mailbox.setOnItemLongClickListener(new OnItemLongClickListener() {
 
@@ -254,11 +234,11 @@ public class BaseActivity extends FragmentActivity {
 
 				/*
 				 * lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-				 * 
+				 *
 				 * public void onItemClick(final AdapterView<?> arg0, final View
 				 * arg1, final int position, final long arg3) { Letter mletter =
 				 * list_mailbox.get(position);
-				 * 
+				 *
 				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE); boolean
 				 * moved =
 				 * lo.moveDocument(getArguments().getString(ApiConstants.
@@ -266,59 +246,229 @@ public class BaseActivity extends FragmentActivity {
 				 * Toast.makeText(getActivity(), "Brev flyttet til arkiv",
 				 * 3000).show(); return; } else { Toast.makeText(getActivity(),
 				 * "Noe gikk galt", 3000).show(); return; } }
-				 * 
+				 *
 				 * });
 				 */
+				loadMailbox();
 
-				lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-
-					public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-						Letter mletter = list_mailbox.get(position);
-
-						String filetype = mletter.getFileType();
-
-						if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
-							// PDF byte-array
-							byte[] data = lo.getDocumentContentPDF(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
-							PdfStore.pdf = data;
-							Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-							i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
-							startActivity(i);
-						} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
-							String html = lo.getDocumentContentHTML(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
-							Intent i = new Intent(getActivity(), Html_WebViewTest.class);
-							i.putExtra(ApiConstants.FILETYPE_HTML, html);
-							startActivity(i);
-						}
-					}
-				});
+				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
 
 				return v;
 
 			} else if (number == 2) {
 				View v = inflater.inflate(R.layout.fragment_layout_workarea, container, false);
-				ListView lv_kitchenbench = (ListView) v.findViewById(R.id.listview_kitchen);
-				lv_kitchenbench.setAdapter(adapter_workarea);
+				lv_workarea = (ListView) v.findViewById(R.id.listview_kitchen);
+				System.out.println("1st: " + lv_workarea);
 				View emptyView = v.findViewById(R.id.empty_listview_workarea);
-				lv_kitchenbench.setEmptyView(emptyView);
+				lv_workarea.setEmptyView(emptyView);
+				adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+				lv_workarea.setAdapter(adapter_workarea);
+				lv_workarea.setOnItemClickListener(new ListListener(adapter_workarea));
+				loadWorkbench();
 
 				return v;
 			} else if (number == 3) {
 				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
-				ListView lv_archive = (ListView) v.findViewById(R.id.listview_archive);
-				lv_archive.setAdapter(adapter_archive);
+				lv_archive = (ListView) v.findViewById(R.id.listview_archive);
 				View emptyView = v.findViewById(R.id.empty_listview_archive);
 				lv_archive.setEmptyView(emptyView);
+				adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+				lv_archive.setAdapter(adapter_archive);
+				lv_archive.setOnItemClickListener(new ListListener(adapter_archive));
+				loadArchive();
 
 				return v;
 			} else {
 				View v = inflater.inflate(R.layout.fragment_layout_receipts, container, false);
-				ListView lv_receipts = (ListView) v.findViewById(R.id.listview_receipts);
-				// lv_receipts.setAdapter(adapter_receipts);
+				lv_receipts = (ListView) v.findViewById(R.id.listview_receipts);
 				View emptyView = v.findViewById(R.id.empty_listview_receipts);
 				lv_receipts.setEmptyView(emptyView);
+				adapter_receipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
+				lv_receipts.setAdapter(adapter_receipts);
+				lv_receipts.setOnItemClickListener(new ReceiptListListener(adapter_receipts));
+				//loadReceipts();
 
 				return v;
+			}
+		}
+
+		private void loadMailbox() {
+			new GetAccountMetaTask(LetterOperations.INBOX).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+		}
+
+		private void loadWorkbench() {
+			new GetAccountMetaTask(LetterOperations.WORKAREA).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+		}
+
+		private void loadArchive() {
+			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+		}
+
+		/*private void loadReceipts() {
+			new GetAccountMetaTask(LetterOperations.RECEIPTS).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+		} */
+
+		private class GetAccountMetaTask extends AsyncTask<String, Void, ArrayList<Letter>> {
+			private final int type;
+
+			public GetAccountMetaTask(final int type) {
+				this.type = type;
+			}
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.show();
+			}
+
+			@Override
+			protected ArrayList<Letter> doInBackground(final String... params) {
+				return lo.getAccountContentMeta(params[0], type);
+			}
+
+			@Override
+			protected void onPostExecute(final ArrayList<Letter> result) {
+				super.onPostExecute(result);
+
+				switch (type) {
+				case LetterOperations.INBOX:
+					adapter_mailbox.updateList(result);
+					break;
+				case LetterOperations.WORKAREA:
+					adapter_workarea.updateList(result);
+					break;
+				case LetterOperations.ARCHIVE:
+					adapter_archive.updateList(result);
+					break;
+				//case LetterOperations.RECEIPTS:
+				//	adapter_receipts.updateList(result);
+				//	break;
+				}
+
+				progressDialog.dismiss();
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				progressDialog.dismiss();
+			}
+		}
+
+		private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.show();
+
+			}
+
+			@Override
+			protected byte[] doInBackground(final Object... params) {
+
+				PdfStore.pdf = lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+
+				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
+				startActivity(i);
+
+				return null;
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				progressDialog.dismiss();
+			}
+
+			@Override
+			protected void onPostExecute(final byte[] result) {
+				super.onPostExecute(result);
+				progressDialog.dismiss();
+			}
+		}
+
+		private class GetHTMLTask extends AsyncTask<Object, Void, String> {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.show();
+			}
+
+			@Override
+			protected String doInBackground(final Object... params) {
+				Intent i = new Intent(getActivity(), Html_WebViewTest.class);
+				i.putExtra(ApiConstants.FILETYPE_HTML, lo.getDocumentContentHTML((String) params[0], (Letter) params[1]));
+				startActivity(i);
+
+				return null;
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				progressDialog.dismiss();
+			}
+
+			@Override
+			protected void onPostExecute(final String result) {
+				super.onPostExecute(result);
+				progressDialog.dismiss();
+			}
+		}
+
+		private class ListListener implements OnItemClickListener {
+			LetterListAdapter adapter;
+
+			public ListListener(final LetterListAdapter adapter) {
+				this.adapter = adapter;
+			}
+
+			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+				Letter mletter = adapter.getItem(position);
+
+				String filetype = mletter.getFileType();
+
+				if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
+					GetPDFTask pdfTask = new GetPDFTask();
+					pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
+					GetHTMLTask htmlTask = new GetHTMLTask();
+					htmlTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+				}
+			}
+		}
+
+		private class ReceiptListListener implements OnItemClickListener {
+			ReceiptListAdapter adapter;
+
+			public ReceiptListListener(final ReceiptListAdapter adapter) {
+				this.adapter = adapter;
+			}
+
+			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+				Receipt mReceipt = adapter.getItem(position);
+
+				GetPDFTask pdfTask = new GetPDFTask();
+				pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mReceipt);
 			}
 		}
 	}

@@ -18,47 +18,45 @@ package no.digipost.android.api;
 import java.util.ArrayList;
 
 import no.digipost.android.model.Account;
-import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
+import no.digipost.android.model.Receipt;
 
 public class LetterOperations {
+	public static final int INBOX = 0;
+	public static final int ARCHIVE = 1;
+	public static final int WORKAREA = 2;
+	public static final int RECEIPTS = 3;
+
 	private final ApiAccess apiAccess;
 
 	public LetterOperations() {
 		apiAccess = new ApiAccess();
 	}
 
-	public ArrayList<Letter> getMailboxList(final String access_token) {
-		Account account = apiAccess.getPrimaryAccount(access_token);
-		PrimaryAccount primaryAccount = account.getPrimaryAccount();
-		Documents documents = apiAccess.getDocuments(access_token, primaryAccount.getInboxUri());
-
-		return documents.getDocument();
-	}
-
-	public ArrayList<Letter> getArchiveList(final String access_token) {
+	public ArrayList<Letter> getAccountContentMeta(final String access_token, final int type) {
 		Account account = apiAccess.getPrimaryAccount(access_token);
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
-		Documents documents = apiAccess.getDocuments(access_token, primaryaccount.getArchiveUri());
 
-		return documents.getDocument();
+		switch (type) {
+		case INBOX:
+			return apiAccess.getDocuments(access_token, primaryaccount.getInboxUri()).getDocument();
+		case ARCHIVE:
+			return apiAccess.getDocuments(access_token, primaryaccount.getArchiveUri()).getDocument();
+		case WORKAREA:
+			return apiAccess.getDocuments(access_token, primaryaccount.getWorkareaUri()).getDocument();
+		//case RECEIPTS:
+			//return apiAccess.getReceipts(access_token, primaryaccount.getReceiptsUri()).getReceipt();
+		default:
+			return null;
+		}
 	}
 
-	public ArrayList<Letter> getWorkareaList(final String access_token) {
+	public ArrayList<Receipt> getAccountContentMetaReceipt(final String access_token) {
 		Account account = apiAccess.getPrimaryAccount(access_token);
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
-		Documents documents = apiAccess.getDocuments(access_token, primaryaccount.getWorkareaUri());
 
-		return documents.getDocument();
-	}
-
-	public ArrayList<Letter> getReceiptsList(final String access_token) {
-		Account account = apiAccess.getPrimaryAccount(access_token);
-		PrimaryAccount primaryaccount = account.getPrimaryAccount();
-		Documents documents = apiAccess.getDocuments(access_token, primaryaccount.getReceiptsUri());
-
-		return documents.getDocument();
+		return apiAccess.getReceipts(access_token, primaryaccount.getReceiptsUri()).getReceipt();
 	}
 
 	/*
@@ -77,5 +75,9 @@ public class LetterOperations {
 
 	public String getDocumentContentHTML(final String access_token, final Letter letter) {
 		return apiAccess.getDocumentHTML(access_token, letter.getContentUri());
+	}
+
+	public byte[] getReceiptContentPDF(final String access_token, final Receipt receipt) {
+		return apiAccess.getDocumentContent(access_token, receipt.getContentAsPDFUri());
 	}
 }

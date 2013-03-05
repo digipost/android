@@ -10,20 +10,4 @@
         android:showAsAction="never"
         android:title="@string/optionsmenu_logout">
     </item>
-    <item
-        android:id="@+id/basemenu_moveToWorkarea"
-        android:showAsAction="never"
-        android:title="@string/optionsmenu_moveToWorkarea">
-    </item>
-    <item
-        android:id="@+id/basemenu_moveToArchive"
-        android:showAsAction="never"
-        android:title="@string/optionsmenu_moveToArchive">
-    </item>
-    <item
-        android:id="@+id/basemenu_deleteselected"
-        android:showAsAction="never"
-        android:title="@string/optionsmenu_deleteselected">
-    </item>
-    
 </menu>
