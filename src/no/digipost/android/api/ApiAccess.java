@@ -57,7 +57,11 @@ public class ApiAccess {
 				.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token)
 				.get(ClientResponse.class);
 
-		checkHttpStatusCode(cr.getStatus());
+		try {
+			checkHttpStatusCode(cr.getStatus());
+		} catch (IllegalStateException e) {
+			return getApiJsonString(Secret.ACCESS_TOKEN, uri);
+		}
 		Secret.ACCESS_TOKEN = "gfjhgjhfhj4f4h4f4==";
 
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());
@@ -86,7 +90,7 @@ public class ApiAccess {
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());
 	}
 
-	public byte[] getDocumentContent(final String access_token, final String uri) throws NetworkErrorException, IllegalStateException {
+	public byte[] getDocumentContent(final String access_token, final String uri) throws NetworkErrorException {
 		Client client = Client.create();
 
 		ClientResponse cr = client
@@ -123,9 +127,11 @@ public class ApiAccess {
 	}
 
 	private void checkHttpStatusCode(final int statusCode) throws NetworkErrorException, IllegalStateException {
+		System.out.println(statusCode);
 		if (statusCode == 200) {
 			return;
 		} else if (statusCode == 401) {
+			System.out.println("Illegal state");
 			OAuth2.updateRefreshTokenSuccess(context);
 			throw new IllegalStateException("Ny access token");
 		} else {
