@@ -293,7 +293,7 @@ public class BaseActivity extends FragmentActivity {
 				adapter_receipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
 				lv_receipts.setAdapter(adapter_receipts);
 				lv_receipts.setOnItemClickListener(new ReceiptListListener(adapter_receipts));
-				//loadReceipts();
+				loadReceipts();
 
 				return v;
 			}
@@ -311,9 +311,48 @@ public class BaseActivity extends FragmentActivity {
 			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(Secret.ACCESS_TOKEN);
 		}
 
-		/*private void loadReceipts() {
-			new GetAccountMetaTask(LetterOperations.RECEIPTS).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
-		} */
+		private void loadReceipts() {
+			new getAccountReceiptMetaTask(LetterOperations.RECEIPTS).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+		}
+
+		private class getAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
+			private final int type;
+
+			public getAccountReceiptMetaTask(final int type) {
+				this.type = type;
+			}
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.show();
+			}
+
+			@Override
+			protected ArrayList<Receipt> doInBackground(final String... params) {
+				return lo.getAccountContentMetaReceipt(params[0]);
+			}
+
+			@Override
+			protected void onPostExecute(final ArrayList<Receipt> result) {
+				super.onPostExecute(result);
+				adapter_receipts.updateList(result);
+
+				progressDialog.dismiss();
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				progressDialog.dismiss();
+			}
+		}
 
 		private class GetAccountMetaTask extends AsyncTask<String, Void, ArrayList<Letter>> {
 			private final int type;
