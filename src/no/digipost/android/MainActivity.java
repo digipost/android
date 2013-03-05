@@ -16,9 +16,7 @@
 
 package no.digipost.android;
 
-import no.digipost.android.api.ApiConstants;
 import no.digipost.android.authentication.KeyStore;
-import no.digipost.android.authentication.KeyStoreAdapter;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.gui.BaseActivity;
 import no.digipost.android.gui.LoginActivity;
@@ -26,9 +24,8 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 public class MainActivity extends Activity {
 
@@ -76,11 +73,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkTokenStatus() {
-		if (checkToken()) {
-			startBaseActivity();
-		} else {
-			startLoginActivity();
-		}
+		new CheckTokenTask().execute();
 	}
 
 	private void startBaseActivity() {
@@ -95,16 +88,25 @@ public class MainActivity extends Activity {
 		finish();
 	}
 
-	private boolean checkToken() {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		String encrypted_refresh_token = settings.getString(ApiConstants.REFRESH_TOKEN, "");
-		if (encrypted_refresh_token.equals("")) {
-			return false;
-		} else {
-			KeyStoreAdapter ksa = new KeyStoreAdapter();
-			String refresh_token = ksa.decrypt(encrypted_refresh_token);
-			OAuth2.retriveAccessTokenSuccess(refresh_token);
-			return true;
+	private class CheckTokenTask extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(final Void... params) {
+			try {
+				OAuth2.updateRefreshTokenSuccess(context);
+				return true;
+			} catch (IllegalStateException e) {
+				return false;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean result) {
+			if (result) {
+				startBaseActivity();
+			} else {
+				startLoginActivity();
+			}
 		}
 	}
 }
