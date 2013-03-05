@@ -30,6 +30,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class MainActivity extends Activity {
 
 	public static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
@@ -42,6 +44,14 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		context = this;
+		EasyTracker.getInstance().activityStart(this);
+		EasyTracker.getTracker().getAppId();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop(this);
 	}
 
 	@Override
@@ -104,6 +114,7 @@ public class MainActivity extends Activity {
 			KeyStoreAdapter ksa = new KeyStoreAdapter();
 			String refresh_token = ksa.decrypt(encrypted_refresh_token);
 			OAuth2.retriveAccessTokenSuccess(refresh_token);
+			EasyTracker.getTracker().sendEvent("Token", "Refreshing Accesstoken", "MainActivity", (long) 1);
 			return true;
 		}
 	}

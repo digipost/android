@@ -36,11 +36,11 @@
 			<artifactId>jersey-json</artifactId>
 			<version>1.17</version>
 			<exclusions>
-			    <exclusion>
-			        <artifactId>jaxb-impl</artifactId>
-			        <groupId>com.sun.xml.bind</groupId>
-			    </exclusion>
-			    
+				<exclusion>
+					<artifactId>jaxb-impl</artifactId>
+					<groupId>com.sun.xml.bind</groupId>
+				</exclusion>
+
 			</exclusions>
 		</dependency>
 	</dependencies>
