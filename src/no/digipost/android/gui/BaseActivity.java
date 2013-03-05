@@ -95,15 +95,19 @@ public class BaseActivity extends FragmentActivity {
 			if (v == optionsButton) {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
-				final float centerX = refreshButton.getWidth() / 2.0f;
-				final float centerY = refreshButton.getHeight() / 2.0f;
-				RotateAnimation a = new RotateAnimation(0, 360, centerX, centerY);
-				a.setDuration(800);
-				a.setRepeatCount(RotateAnimation.INFINITE);
-				refreshButton.startAnimation(a);
+				spinRefreshButton();
 				mViewPager.setAdapter(mSectionsPagerAdapter);
 			}
 		}
+	}
+
+	private void spinRefreshButton() {
+		final float centerX = refreshButton.getWidth() / 2.0f;
+		final float centerY = refreshButton.getHeight() / 2.0f;
+		RotateAnimation a = new RotateAnimation(0, 360, centerX, centerY);
+		a.setDuration(800);
+		a.setRepeatCount(RotateAnimation.INFINITE);
+		refreshButton.startAnimation(a);
 	}
 
 	@Override

@@ -23,7 +23,7 @@
     <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
-    <string name="empty_listview_text">Ingen elementer...</string>
+    <string name="empty_listview_text">Ingen elementer.</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_html_veb_view">HtmlVebView</string>
@@ -33,6 +33,5 @@
     <string name="pdf_searching_">Søker...</string>
     <string name="pdf_search_document">Søk i dokumentet...</string>
     <string name="error_your_network">Nettverksfeil, \nSjekk din internetforbindelse og Prøv igjen.</string>
-    <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.<string /></string>
-
+    <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.</string>
 </resources>
