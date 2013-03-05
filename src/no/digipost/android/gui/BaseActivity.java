@@ -57,6 +57,7 @@ public class BaseActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ImageButton optionsButton, refreshButton;
+	private ButtonListener listener;
 	private static String access_token = "";
 	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
@@ -79,27 +80,26 @@ public class BaseActivity extends FragmentActivity {
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		context = this;
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
-		// refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
-		optionsButton.setOnClickListener(new OnClickListener() {
-			public void onClick(final View arg0) {
+		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
+		listener = new ButtonListener();
+		optionsButton.setOnClickListener(listener);
+		refreshButton.setOnClickListener(listener);
+	}
+
+	private class ButtonListener implements OnClickListener {
+
+		public void onClick(final View v) {
+			if (v == optionsButton) {
 				openOptionsMenu();
-				// refreshButton.clearAnimation();
+			} else if (v == refreshButton) {
+				final float centerX = refreshButton.getWidth() / 2.0f;
+				final float centerY = refreshButton.getHeight() / 2.0f;
+				RotateAnimation a = new RotateAnimation(0, 360, centerX, centerY);
+				a.setDuration(800);
+				a.setRepeatCount(RotateAnimation.INFINITE);
+				refreshButton.startAnimation(a);
 			}
-		});
-
-	}
-
-	@Override
-	protected void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		System.out.println("BaseAcitivty onDestroy.");
-
+		}
 	}
 
 	@Override
@@ -148,7 +148,6 @@ public class BaseActivity extends FragmentActivity {
 			return 4;
 		}
 
-
 		@Override
 		public CharSequence getPageTitle(final int position) {
 			switch (position) {
@@ -189,19 +188,6 @@ public class BaseActivity extends FragmentActivity {
 		@Override
 		public void onCreate(final Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-
-			refreshButton = (ImageButton) ((BaseActivity) getActivity()).findViewById(R.id.base_refreshButton);
-			refreshButton.setOnClickListener(new OnClickListener() {
-				public void onClick(final View arg0) {
-					final float centerX = refreshButton.getWidth() / 2.0f;
-					final float centerY = refreshButton.getHeight() / 2.0f;
-					RotateAnimation a = new RotateAnimation(0, 360, centerX, centerY);
-					a.setDuration(800);
-					a.setRepeatCount(RotateAnimation.INFINITE);
-					refreshButton.startAnimation(a);
-				}
-			});
-
 			lo = new LetterOperations();
 		}
 
@@ -247,11 +233,11 @@ public class BaseActivity extends FragmentActivity {
 
 				/*
 				 * lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-				 *
+				 * 
 				 * public void onItemClick(final AdapterView<?> arg0, final View
 				 * arg1, final int position, final long arg3) { Letter mletter =
 				 * list_mailbox.get(position);
-				 *
+				 * 
 				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE); boolean
 				 * moved =
 				 * lo.moveDocument(getArguments().getString(ApiConstants.
@@ -259,7 +245,7 @@ public class BaseActivity extends FragmentActivity {
 				 * Toast.makeText(getActivity(), "Brev flyttet til arkiv",
 				 * 3000).show(); return; } else { Toast.makeText(getActivity(),
 				 * "Noe gikk galt", 3000).show(); return; } }
-				 *
+				 * 
 				 * });
 				 */
 				loadMailbox();
@@ -391,7 +377,6 @@ public class BaseActivity extends FragmentActivity {
 				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
 				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
 				startActivity(i);
-
 
 				return null;
 			}
