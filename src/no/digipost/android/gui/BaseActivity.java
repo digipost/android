@@ -54,8 +54,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 public class BaseActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -86,7 +84,6 @@ public class BaseActivity extends FragmentActivity {
 		listener = new ButtonListener();
 		optionsButton.setOnClickListener(listener);
 		refreshButton.setOnClickListener(listener);
-		EasyTracker.getTracker().trackView("BaseActivity");
 	}
 
 	private class ButtonListener implements OnClickListener {
