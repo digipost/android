@@ -33,6 +33,7 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -103,6 +104,7 @@ public class OAuth2 {
 			KeyStoreAdapter ksa = new KeyStoreAdapter();
 			String refresh_token = ksa.decrypt(encrypted_refresh_token);
 			retriveAccessTokenSuccess(refresh_token, context);
+			EasyTracker.getTracker().sendEvent("Token", "Refreshing Accesstoken", "MainActivity", (long) 1);
 		}
 	}
 
