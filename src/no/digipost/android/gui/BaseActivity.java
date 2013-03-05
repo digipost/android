@@ -476,10 +476,10 @@ public class BaseActivity extends FragmentActivity {
 
 				if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
 					GetPDFTask pdfTask = new GetPDFTask();
-					pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+					pdfTask.execute(Secret.ACCESS_TOKEN, mletter);
 				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 					GetHTMLTask htmlTask = new GetHTMLTask();
-					htmlTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mletter);
+					htmlTask.execute(Secret.ACCESS_TOKEN, mletter);
 				}
 			}
 		}

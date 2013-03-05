@@ -62,7 +62,6 @@ public class ApiAccess {
 		} catch (IllegalStateException e) {
 			return getApiJsonString(Secret.ACCESS_TOKEN, uri);
 		}
-		Secret.ACCESS_TOKEN = "gfjhgjhfhj4f4h4f4==";
 
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());
 	}
