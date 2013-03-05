@@ -55,8 +55,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 public class BaseActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -87,7 +85,6 @@ public class BaseActivity extends FragmentActivity {
 		listener = new ButtonListener();
 		optionsButton.setOnClickListener(listener);
 		refreshButton.setOnClickListener(listener);
-		EasyTracker.getTracker().trackView("BaseActivity");
 	}
 
 	private class ButtonListener implements OnClickListener {
@@ -312,7 +309,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private void loadReceipts() {
-			new getAccountReceiptMetaTask(LetterOperations.RECEIPTS).execute(getArguments().getString(ApiConstants.ACCESS_TOKEN));
+			new getAccountReceiptMetaTask(LetterOperations.RECEIPTS).execute(Secret.ACCESS_TOKEN);
 		}
 
 		private class getAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
@@ -336,14 +333,18 @@ public class BaseActivity extends FragmentActivity {
 
 			@Override
 			protected ArrayList<Receipt> doInBackground(final String... params) {
-				return lo.getAccountContentMetaReceipt(params[0]);
+				try {
+					return lo.getAccountContentMetaReceipt(params[0]);
+				} catch (NetworkErrorException e) {
+					System.out.println(e.getMessage());
+					return null;
+				}
 			}
 
 			@Override
 			protected void onPostExecute(final ArrayList<Receipt> result) {
 				super.onPostExecute(result);
 				adapter_receipts.updateList(result);
-
 				progressDialog.dismiss();
 			}
 
@@ -397,9 +398,9 @@ public class BaseActivity extends FragmentActivity {
 				case LetterOperations.ARCHIVE:
 					adapter_archive.updateList(result);
 					break;
-				//case LetterOperations.RECEIPTS:
-				//	adapter_receipts.updateList(result);
-				//	break;
+				// case LetterOperations.RECEIPTS:
+				// adapter_receipts.updateList(result);
+				// break;
 				}
 
 				progressDialog.dismiss();
@@ -431,7 +432,6 @@ public class BaseActivity extends FragmentActivity {
 
 			@Override
 			protected byte[] doInBackground(final Object... params) {
-
 				try {
 					PdfStore.pdf = lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
 				} catch (NetworkErrorException e) {
