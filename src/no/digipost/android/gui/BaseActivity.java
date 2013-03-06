@@ -389,17 +389,11 @@ public class BaseActivity extends FragmentActivity {
 			protected byte[] doInBackground(final Object... params) {
 
 				try {
-					PdfStore.pdf = lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+					return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
 				} catch (NetworkErrorException e) {
 					System.out.println(e.getMessage());
 					return null;
 				}
-
-				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
-				startActivity(i);
-
-				return null;
 			}
 
 			@Override
@@ -412,6 +406,11 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPostExecute(final byte[] result) {
 				super.onPostExecute(result);
+				PdfStore.pdf = result;
+				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
+				startActivity(i);
+
 				progressDialog.dismiss();
 				stopUpdateAnimation();
 			}
@@ -432,20 +431,12 @@ public class BaseActivity extends FragmentActivity {
 
 			@Override
 			protected String doInBackground(final Object... params) {
-				String html = null;
-
 				try {
-					html = lo.getDocumentContentHTML((String) params[0], (Letter) params[1]);
+					return lo.getDocumentContentHTML((String) params[0], (Letter) params[1]);
 				} catch (NetworkErrorException e) {
 					System.out.println(e.getMessage());
 					return null;
 				}
-
-				Intent i = new Intent(getActivity(), Html_WebViewTest.class);
-				i.putExtra(ApiConstants.FILETYPE_HTML, html);
-				startActivity(i);
-
-				return null;
 			}
 
 			@Override
@@ -458,6 +449,11 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPostExecute(final String result) {
 				super.onPostExecute(result);
+
+				Intent i = new Intent(getActivity(), Html_WebViewTest.class);
+				i.putExtra(ApiConstants.FILETYPE_HTML, result);
+				startActivity(i);
+
 				progressDialog.dismiss();
 				stopUpdateAnimation();
 			}
