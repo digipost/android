@@ -62,20 +62,23 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
+
 
 public class BaseActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ImageButton optionsButton;
-	private static ImageButton refreshButton;
+	private ImageButton refreshButton;
 	private ButtonListener listener;
 	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
-	private static ProgressDialog progressDialog;
+	private ProgressDialog progressDialog;
+	private NetworkConnection networkConnection;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -96,6 +99,8 @@ public class BaseActivity extends FragmentActivity {
 		listener = new ButtonListener();
 		optionsButton.setOnClickListener(listener);
 		refreshButton.setOnClickListener(listener);
+		networkConnection = new NetworkConnection(this);
+
 	}
 
 	private class ButtonListener implements OnClickListener {
@@ -104,8 +109,12 @@ public class BaseActivity extends FragmentActivity {
 			if (v == optionsButton) {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
-				spinRefreshButton();
-				mViewPager.setAdapter(mSectionsPagerAdapter);
+				if (networkConnection.isNetworkAvailable()) {
+					spinRefreshButton();
+					mViewPager.setAdapter(mSectionsPagerAdapter);
+				} else {
+					showMessage(getString(R.string.error_your_network));
+				}
 			}
 		}
 	}
@@ -144,8 +153,13 @@ public class BaseActivity extends FragmentActivity {
 		finish();
 	}
 
-	public static void stopUpdateAnimation() {
+	public void stopUpdateAnimation() {
 		refreshButton.clearAnimation();
+	}
+
+	public void showMessage(final String message) {
+		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+		toast.show();
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -184,7 +198,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	public static class DigipostSectionFragment extends Fragment {
+	public class DigipostSectionFragment extends Fragment {
 
 		public static final String ARG_SECTION_NUMBER = "section_number";
 		private LetterOperations lo;
@@ -292,18 +306,25 @@ public class BaseActivity extends FragmentActivity {
 
 				return v;
 			}
+
 		}
 
-		private void loadMailbox() {
-			new GetAccountMetaTask(LetterOperations.INBOX).execute(Secret.ACCESS_TOKEN);
+		public void loadMailbox() {
+			if (networkConnection.isNetworkAvailable()) {
+				new GetAccountMetaTask(LetterOperations.INBOX).execute(Secret.ACCESS_TOKEN);
+			}
 		}
 
 		private void loadWorkbench() {
-			new GetAccountMetaTask(LetterOperations.WORKAREA).execute(Secret.ACCESS_TOKEN);
+			if (networkConnection.isNetworkAvailable()) {
+				new GetAccountMetaTask(LetterOperations.WORKAREA).execute(Secret.ACCESS_TOKEN);
+			}
 		}
 
 		private void loadArchive() {
-			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(Secret.ACCESS_TOKEN);
+			if (networkConnection.isNetworkAvailable()) {
+				new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(Secret.ACCESS_TOKEN);
+			}
 		}
 
 		private void loadReceipts() {
@@ -360,13 +381,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int which) {
-						dialog.dismiss();
-						cancel(true);
-					}
-				});
-				progressDialog.show();
+				spinRefreshButton();
 			}
 
 			@Override
@@ -486,17 +501,11 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected byte[] doInBackground(final Object... params) {
 				try {
-					PdfStore.pdf = lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+					return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
 				} catch (NetworkErrorException e) {
 					System.out.println(e.getMessage());
 					return null;
 				}
-
-				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
-				startActivity(i);
-
-				return null;
 			}
 
 			@Override
@@ -509,6 +518,11 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPostExecute(final byte[] result) {
 				super.onPostExecute(result);
+				PdfStore.pdf = result;
+				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
+				startActivity(i);
+
 				progressDialog.dismiss();
 				stopUpdateAnimation();
 			}
@@ -529,6 +543,7 @@ public class BaseActivity extends FragmentActivity {
 
 			@Override
 			protected String doInBackground(final Object... params) {
+
 				String html = null;
 
 				if(params[1].equals(ApiConstants.GET_RECEIPT)) {
@@ -538,6 +553,7 @@ public class BaseActivity extends FragmentActivity {
 						System.out.println(e.getMessage());
 						return null;
 					}
+					return html;
 				}
 
 				else {
@@ -548,12 +564,7 @@ public class BaseActivity extends FragmentActivity {
 						return null;
 					}
 				}
-
-				Intent i = new Intent(getActivity(), Html_WebViewTest.class);
-				i.putExtra(ApiConstants.FILETYPE_HTML, html);
-				startActivity(i);
-
-				return null;
+				return html;
 			}
 
 			@Override
@@ -566,6 +577,11 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPostExecute(final String result) {
 				super.onPostExecute(result);
+
+				Intent i = new Intent(getActivity(), Html_WebViewTest.class);
+				i.putExtra(ApiConstants.FILETYPE_HTML, result);
+				startActivity(i);
+
 				progressDialog.dismiss();
 				stopUpdateAnimation();
 			}
@@ -596,17 +612,16 @@ public class BaseActivity extends FragmentActivity {
 
 				String filetype = mletter.getFileType();
 
-				if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
-					GetPDFTask pdfTask = new GetPDFTask();
-					pdfTask.execute(Secret.ACCESS_TOKEN, mletter);
-
-					/*MoveDocumentsTask moveTask = new MoveDocumentsTask();
-					mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
-					moveTask.execute(Secret.ACCESS_TOKEN,mletter); */
-
-				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
-					GetHTMLTask htmlTask = new GetHTMLTask();
-					htmlTask.execute(Secret.ACCESS_TOKEN,ApiConstants.GET_DOCUMENT, mletter);
+				if (networkConnection.isNetworkAvailable()) {
+					if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
+						GetPDFTask pdfTask = new GetPDFTask();
+						pdfTask.execute(Secret.ACCESS_TOKEN, mletter);
+					} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
+						GetHTMLTask htmlTask = new GetHTMLTask();
+						htmlTask.execute(Secret.ACCESS_TOKEN,ApiConstants.GET_DOCUMENT, mletter);
+					}
+				} else {
+					showMessage(getString(R.string.error_your_network));
 				}
 			}
 		}

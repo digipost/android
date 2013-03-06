@@ -15,8 +15,6 @@
  */
 package no.digipost.android.gui;
 
-import java.util.concurrent.ExecutionException;
-
 import no.digipost.android.R;
 import no.digipost.android.api.ErrorHandling;
 import android.app.Activity;
@@ -33,9 +31,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
-	Button loginButton, privacyButton, registrationButton;
-	ButtonListener listener;
-	Context context;
+	private Button loginButton, privacyButton, registrationButton;
+	private ButtonListener listener;
+	private Context context;
+	private NetworkConnection networkConnection;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -49,28 +48,17 @@ public class LoginActivity extends Activity {
 		privacyButton.setOnClickListener(listener);
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
+		networkConnection = new NetworkConnection(this);
 	}
 
 	private void openWebView() {
-		if (isOnline()) {
+		if (networkConnection.isOnline()) {
 			WebFragment webView = new WebFragment(new WebFragmentHandler());
 			webView.show(getFragmentManager(), "webView");
 		} else {
 			showMessage(getString(R.string.error_your_network));
 		}
 
-	}
-
-	public boolean isOnline() {
-		IsOnlineTask task = new IsOnlineTask();
-		try {
-			return task.execute().get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 
 	private void showMessage(final String message) {
