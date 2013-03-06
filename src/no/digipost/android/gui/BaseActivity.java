@@ -58,12 +58,13 @@ public class BaseActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ImageButton optionsButton;
-	private static ImageButton refreshButton;
+	private ImageButton refreshButton;
 	private ButtonListener listener;
 	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
-	private static ProgressDialog progressDialog;
+	private ProgressDialog progressDialog;
+	private NetworkConnection networkConnection;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -84,6 +85,7 @@ public class BaseActivity extends FragmentActivity {
 		listener = new ButtonListener();
 		optionsButton.setOnClickListener(listener);
 		refreshButton.setOnClickListener(listener);
+		networkConnection = new NetworkConnection(this);
 	}
 
 	private class ButtonListener implements OnClickListener {
@@ -92,8 +94,12 @@ public class BaseActivity extends FragmentActivity {
 			if (v == optionsButton) {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
-				spinRefreshButton();
-				mViewPager.setAdapter(mSectionsPagerAdapter);
+				if (networkConnection.isNetworkAvailable()) {
+					spinRefreshButton();
+					mViewPager.setAdapter(mSectionsPagerAdapter);
+				} else {
+					networkConnection.showNoNetworkDialog();
+				}
 			}
 		}
 	}
@@ -132,7 +138,7 @@ public class BaseActivity extends FragmentActivity {
 		finish();
 	}
 
-	public static void stopUpdateAnimation() {
+	public void stopUpdateAnimation() {
 		refreshButton.clearAnimation();
 	}
 
@@ -172,7 +178,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	public static class DigipostSectionFragment extends Fragment {
+	public class DigipostSectionFragment extends Fragment {
 
 		public static final String ARG_SECTION_NUMBER = "section_number";
 		private LetterOperations lo;
@@ -296,6 +302,7 @@ public class BaseActivity extends FragmentActivity {
 
 				return v;
 			}
+
 		}
 
 		private void loadMailbox() {
@@ -470,13 +477,16 @@ public class BaseActivity extends FragmentActivity {
 				Letter mletter = adapter.getItem(position);
 
 				String filetype = mletter.getFileType();
-
-				if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
-					GetPDFTask pdfTask = new GetPDFTask();
-					pdfTask.execute(Secret.ACCESS_TOKEN, mletter);
-				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
-					GetHTMLTask htmlTask = new GetHTMLTask();
-					htmlTask.execute(Secret.ACCESS_TOKEN, mletter);
+				if (networkConnection.isNetworkAvailable()) {
+					if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
+						GetPDFTask pdfTask = new GetPDFTask();
+						pdfTask.execute(Secret.ACCESS_TOKEN, mletter);
+					} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
+						GetHTMLTask htmlTask = new GetHTMLTask();
+						htmlTask.execute(Secret.ACCESS_TOKEN, mletter);
+					}
+				} else {
+					networkConnection.showNoNetworkDialog();
 				}
 			}
 		}
