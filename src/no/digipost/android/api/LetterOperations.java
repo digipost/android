@@ -15,15 +15,23 @@
  */
 package no.digipost.android.api;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
+
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+
 import android.accounts.NetworkErrorException;
 import android.content.Context;
 
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 
 public class LetterOperations {
 	public static final int INBOX = 0;
@@ -32,6 +40,7 @@ public class LetterOperations {
 	public static final int RECEIPTS = 3;
 
 	private final ApiAccess apiAccess;
+	static String temp;
 
 	public LetterOperations(final Context context) {
 		apiAccess = new ApiAccess(context);
@@ -41,6 +50,8 @@ public class LetterOperations {
 		Account account = apiAccess.getPrimaryAccount(access_token);
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
 
+		temp = primaryaccount.getInboxUri().substring(50, 56);
+
 		switch (type) {
 		case INBOX:
 			return apiAccess.getDocuments(access_token, primaryaccount.getInboxUri()).getDocument();
@@ -48,28 +59,25 @@ public class LetterOperations {
 			return apiAccess.getDocuments(access_token, primaryaccount.getArchiveUri()).getDocument();
 		case WORKAREA:
 			return apiAccess.getDocuments(access_token, primaryaccount.getWorkareaUri()).getDocument();
-		//case RECEIPTS:
-			//return apiAccess.getReceipts(access_token, primaryaccount.getReceiptsUri()).getReceipt();
+			// case RECEIPTS:
+			// return apiAccess.getReceipts(access_token,
+			// primaryaccount.getReceiptsUri()).getReceipt();
 		default:
 			return null;
 		}
 	}
 
 	public ArrayList<Receipt> getAccountContentMetaReceipt(final String access_token) throws NetworkErrorException {
-		Account account = apiAccess.getPrimaryAccount(access_token);
-		PrimaryAccount primaryaccount = account.getPrimaryAccount();
-
-		return apiAccess.getReceipts(access_token, primaryaccount.getReceiptsUri()).getReceipt();
+		String uri = "https://www.digipost.no/post/api/private/accounts/" + temp + "/receipts";
+		return apiAccess.getReceipts(access_token, uri).getReceipt();
 	}
 
-	/*
-	 * public boolean moveDocument(final String access_token, final Letter
-	 * letter) { Letter movedletter = apiAccess.getMovedDocument(access_token,
-	 * letter.getUpdateUri(), JSONConverter.createJson(letter)); if (movedletter
-	 * == null) { System.out.println("flyttet brev er null"); return false; } if
-	 * (movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE)) {
-	 * return true; } else { return false; } }
-	 */
+	public boolean moveDocument(final String access_token, final Letter letter) throws ClientProtocolException, UniformInterfaceException,
+			ClientHandlerException, ParseException, IOException, URISyntaxException {
+		Letter movedletter = apiAccess.getMovedDocument(access_token, letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
+
+		return movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE);
+	}
 
 	public byte[] getDocumentContentPDF(final String access_token, final Letter letter) throws NetworkErrorException {
 		ApiAccess.filesize = Integer.parseInt(letter.getFileSize());
@@ -82,5 +90,9 @@ public class LetterOperations {
 
 	public byte[] getReceiptContentPDF(final String access_token, final Receipt receipt) throws NetworkErrorException {
 		return apiAccess.getDocumentContent(access_token, receipt.getContentAsPDFUri());
+	}
+
+	public String getReceiptContentHTML(final String access_token, final Receipt receipt) throws NetworkErrorException {
+		return apiAccess.getReceiptHTML(access_token, receipt.getContentAsHTMLUri());
 	}
 }

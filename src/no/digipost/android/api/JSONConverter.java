@@ -27,6 +27,8 @@ import java.io.Writer;
 
 import no.digipost.android.model.Letter;
 
+import org.apache.http.ParseException;
+import org.apache.http.entity.StringEntity;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
@@ -93,7 +95,7 @@ public class JSONConverter {
 		return processJackson(type, getJsonStringFromInputStream(data));
 	}
 
-	public static <T> String createJsonFromJackson(final Letter letter) {
+	public static StringEntity createJsonFromJackson(final Letter letter) throws ParseException, IOException {
 
 		// ignore-test
 		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo" };
@@ -103,6 +105,7 @@ public class JSONConverter {
 
 		Writer strWriter = new StringWriter();
 		try {
+
 			objectMapper.filteredWriter(filters).writeValue(strWriter, letter);
 		} catch (JsonGenerationException e) {
 			// TODO Auto-generated catch block
@@ -114,7 +117,7 @@ public class JSONConverter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return strWriter.toString();
+		return new StringEntity(strWriter.toString());
 	}
 
 	public static byte[] inputStreamtoByteArray(final int size, final InputStream data) {

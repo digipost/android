@@ -41,6 +41,9 @@ public class ApiConstants {
 	public static final String FILETYPE_PDF = "pdf";
 	public static final String FILETYPE_HTML = "html";
 
+	public static final String GET_DOCUMENT = "document";
+	public static final String GET_RECEIPT = "receipt";
+
 	public static final String GRANT_TYPE = "grant_type";
 	public static final String AUD = "aud";
 	public static final String CODE = "code";
@@ -63,6 +66,7 @@ public class ApiConstants {
 	public static final String BASIC = "Basic ";
 	public static final String APPLICATION_VND_DIGIPOST_V2_JSON = "application/vnd.digipost-v2+json";
 	public static final String CONTENT_OCTET_STREAM ="application/octet-stream";
+	public static final String TEXT_HTML ="text/html";
 
 	public static final String URL_API = "https://www.digipost.no/post/api";
 	public static final String URL_RELATIONS_DOCUMENT_INBOX = "https://www.digipost.no/post/relations/document_inbox";

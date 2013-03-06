@@ -16,16 +16,24 @@
 
 package no.digipost.android.gui;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
+import no.digipost.android.api.JSONConverter;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
 import no.digipost.android.pdf.PdfStore;
+
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+
 import android.accounts.NetworkErrorException;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -54,6 +62,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
+
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.UniformInterfaceException;
 
 public class BaseActivity extends FragmentActivity {
 
@@ -240,23 +251,6 @@ public class BaseActivity extends FragmentActivity {
 					}
 				});
 
-				/*
-				 * lv_mailbox.setOnItemClickListener(new OnItemClickListener() {
-				 *
-				 * public void onItemClick(final AdapterView<?> arg0, final View
-				 * arg1, final int position, final long arg3) { Letter mletter =
-				 * list_mailbox.get(position);
-				 *
-				 * mletter.setLocation(ApiConstants.LOCATION_ARCHIVE); boolean
-				 * moved =
-				 * lo.moveDocument(getArguments().getString(ApiConstants.
-				 * ACCESS_TOKEN), mletter); if (moved) {
-				 * Toast.makeText(getActivity(), "Brev flyttet til arkiv",
-				 * 3000).show(); return; } else { Toast.makeText(getActivity(),
-				 * "Noe gikk galt", 3000).show(); return; } }
-				 *
-				 * });
-				 */
 				loadMailbox();
 
 				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
@@ -313,15 +307,10 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private void loadReceipts() {
-			new getAccountReceiptMetaTask(LetterOperations.RECEIPTS).execute(Secret.ACCESS_TOKEN);
+			new GetAccountReceiptMetaTask().execute(Secret.ACCESS_TOKEN);
 		}
 
-		private class getAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
-			private final int type;
-
-			public getAccountReceiptMetaTask(final int type) {
-				this.type = type;
-			}
+		private class GetAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
 
 			@Override
 			protected void onPreExecute() {
@@ -350,6 +339,8 @@ public class BaseActivity extends FragmentActivity {
 				super.onPostExecute(result);
 				adapter_receipts.updateList(result);
 				progressDialog.dismiss();
+				stopUpdateAnimation();
+
 			}
 
 			@Override
@@ -420,6 +411,64 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 
+		private class MoveDocumentsTask extends AsyncTask<Object,Void, Boolean> {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.show();
+
+			}
+
+			@Override
+			protected Boolean doInBackground(final Object... params) {
+				boolean moved = false;
+				try {
+					moved = lo.moveDocument((String) params[0], (Letter) params[1]);
+				} catch (ClientProtocolException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UniformInterfaceException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClientHandlerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				return moved;
+
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				progressDialog.dismiss();
+				stopUpdateAnimation();
+			}
+
+			@Override
+			protected void onPostExecute(final Boolean result) {
+				super.onPostExecute(result);
+				progressDialog.dismiss();
+				stopUpdateAnimation();
+			}
+		}
+
 		private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
 			@Override
 			protected void onPreExecute() {
@@ -482,11 +531,22 @@ public class BaseActivity extends FragmentActivity {
 			protected String doInBackground(final Object... params) {
 				String html = null;
 
-				try {
-					html = lo.getDocumentContentHTML((String) params[0], (Letter) params[1]);
-				} catch (NetworkErrorException e) {
-					System.out.println(e.getMessage());
-					return null;
+				if(params[1].equals(ApiConstants.GET_RECEIPT)) {
+					try {
+						html = lo.getReceiptContentHTML((String) params[0], (Receipt) params[2]);
+					} catch (NetworkErrorException e) {
+						System.out.println(e.getMessage());
+						return null;
+					}
+				}
+
+				else {
+					try {
+						html = lo.getDocumentContentHTML((String) params[0], (Letter) params[2]);
+					} catch (NetworkErrorException e) {
+						System.out.println(e.getMessage());
+						return null;
+					}
 				}
 
 				Intent i = new Intent(getActivity(), Html_WebViewTest.class);
@@ -521,14 +581,32 @@ public class BaseActivity extends FragmentActivity {
 			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 				Letter mletter = adapter.getItem(position);
 
+				try {
+					JSONConverter.createJsonFromJackson(mletter);
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 				String filetype = mletter.getFileType();
 
 				if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
 					GetPDFTask pdfTask = new GetPDFTask();
 					pdfTask.execute(Secret.ACCESS_TOKEN, mletter);
+
+					/*MoveDocumentsTask moveTask = new MoveDocumentsTask();
+					mletter.setLocation(ApiConstants.LOCATION_ARCHIVE);
+					moveTask.execute(Secret.ACCESS_TOKEN,mletter); */
+
 				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 					GetHTMLTask htmlTask = new GetHTMLTask();
-					htmlTask.execute(Secret.ACCESS_TOKEN, mletter);
+					htmlTask.execute(Secret.ACCESS_TOKEN,ApiConstants.GET_DOCUMENT, mletter);
 				}
 			}
 		}
@@ -543,8 +621,8 @@ public class BaseActivity extends FragmentActivity {
 			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 				Receipt mReceipt = adapter.getItem(position);
 
-				GetPDFTask pdfTask = new GetPDFTask();
-				pdfTask.execute(getArguments().getString(ApiConstants.ACCESS_TOKEN), mReceipt);
+				GetHTMLTask htmlTask = new GetHTMLTask();
+				htmlTask.execute(Secret.ACCESS_TOKEN,ApiConstants.GET_RECEIPT, mReceipt);
 			}
 		}
 	}

@@ -82,4 +82,13 @@ public class Receipt {
 		}
 		return null;
 	}
+
+	public String getContentAsHTMLUri() {
+		for (Link l : link) {
+			if (l.getRel().equals("https://www.digipost.no/post/relations/get_receipt_as_html")) {
+				return l.getUri();
+			}
+		}
+		return null;
+	}
 }

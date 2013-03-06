@@ -24,6 +24,7 @@ import java.util.Locale;
 import no.digipost.android.R;
 import no.digipost.android.model.Letter;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LetterListAdapter extends ArrayAdapter<Letter> {
@@ -59,6 +61,9 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		row.setBackgroundDrawable((position % 2 == 0) ? even : odd);
 
 		TextView subject = (TextView) row.findViewById(R.id.mail_subject);
+		if(letters.get(position).getRead().equals("false")) {
+			subject.setTypeface(null, Typeface.BOLD);
+		}
 		subject.setText(letters.get(position).getSubject());
 
 		TextView date = (TextView) row.findViewById(R.id.mail_date);
@@ -66,7 +71,14 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
 		creator.setText(letters.get(position).getCreatorName());
 		TextView size = (TextView) row.findViewById(R.id.mail_size_price);
-		size.setText(getSizeFormatted(letters.get(position).getFileSize()));
+		ImageView locked = (ImageView) row.findViewById(R.id.document_locked);
+		if(letters.get(position).getAuthenticationLevel().equals("TWO_FACTOR")) {
+			locked.setVisibility(View.VISIBLE);
+			size.setVisibility(View.INVISIBLE);
+		}
+		else {
+			size.setText(getSizeFormatted(letters.get(position).getFileSize()));
+		}
 
 		checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
 
