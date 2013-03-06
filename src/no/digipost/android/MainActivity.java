@@ -27,6 +27,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -84,8 +85,14 @@ public class MainActivity extends Activity {
 		if (networkConnection.isNetworkAvailable()) {
 			new CheckTokenTask().execute();
 		} else {
-			startLoginActivity();
+			showMessage(getString(R.string.error_your_network));
+			startBaseActivity();
 		}
+	}
+
+	public void showMessage(final String message) {
+		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+		toast.show();
 	}
 
 	private void startBaseActivity() {

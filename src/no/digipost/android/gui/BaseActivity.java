@@ -53,6 +53,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity {
 
@@ -98,7 +99,7 @@ public class BaseActivity extends FragmentActivity {
 					spinRefreshButton();
 					mViewPager.setAdapter(mSectionsPagerAdapter);
 				} else {
-					networkConnection.showNoNetworkDialog();
+					showMessage(getString(R.string.error_your_network));
 				}
 			}
 		}
@@ -140,6 +141,11 @@ public class BaseActivity extends FragmentActivity {
 
 	public void stopUpdateAnimation() {
 		refreshButton.clearAnimation();
+	}
+
+	public void showMessage(final String message) {
+		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+		toast.show();
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -305,16 +311,22 @@ public class BaseActivity extends FragmentActivity {
 
 		}
 
-		private void loadMailbox() {
-			new GetAccountMetaTask(LetterOperations.INBOX).execute(Secret.ACCESS_TOKEN);
+		public void loadMailbox() {
+			if (networkConnection.isNetworkAvailable()) {
+				new GetAccountMetaTask(LetterOperations.INBOX).execute(Secret.ACCESS_TOKEN);
+			}
 		}
 
 		private void loadWorkbench() {
-			new GetAccountMetaTask(LetterOperations.WORKAREA).execute(Secret.ACCESS_TOKEN);
+			if (networkConnection.isNetworkAvailable()) {
+				new GetAccountMetaTask(LetterOperations.WORKAREA).execute(Secret.ACCESS_TOKEN);
+			}
 		}
 
 		private void loadArchive() {
-			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(Secret.ACCESS_TOKEN);
+			if (networkConnection.isNetworkAvailable()) {
+				new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(Secret.ACCESS_TOKEN);
+			}
 		}
 
 		private class GetAccountMetaTask extends AsyncTask<String, Void, ArrayList<Letter>> {
@@ -327,13 +339,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int which) {
-						dialog.dismiss();
-						cancel(true);
-					}
-				});
-				progressDialog.show();
+				spinRefreshButton();
 			}
 
 			@Override
@@ -486,7 +492,7 @@ public class BaseActivity extends FragmentActivity {
 						htmlTask.execute(Secret.ACCESS_TOKEN, mletter);
 					}
 				} else {
-					networkConnection.showNoNetworkDialog();
+					showMessage(getString(R.string.error_your_network));
 				}
 			}
 		}
