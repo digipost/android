@@ -29,7 +29,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Toast;
 
-
 public class MainActivity extends Activity {
 
 	public static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
@@ -85,11 +84,19 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkTokenStatus() {
-		if (networkConnection.isNetworkAvailable()) {
-			new CheckTokenTask().execute();
+		if (OAuth2.getEncryptedRefreshToken(this) != "") {
+			if (networkConnection.isNetworkAvailable()) {
+				new CheckTokenTask().execute();
+			} else {
+				showMessage(getString(R.string.error_your_network));
+				startBaseActivity();
+			}
 		} else {
-			showMessage(getString(R.string.error_your_network));
-			startBaseActivity();
+			if (!networkConnection.isNetworkAvailable()) {
+				showMessage(getString(R.string.error_your_network));
+			}
+
+			startLoginActivity();
 		}
 	}
 

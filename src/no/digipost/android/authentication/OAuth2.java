@@ -71,7 +71,7 @@ public class OAuth2 {
 		return true;
 	}
 
-	public static boolean retriveAccessTokenSuccess(final String refresh_token, final Context context) {
+	public static boolean retriveAccessTokenSuccess(final String refresh_token) {
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
 		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
@@ -95,15 +95,16 @@ public class OAuth2 {
 	}
 
 	public static void updateRefreshTokenSuccess(final Context context) throws IllegalStateException {
+		String encrypted_refresh_token = getEncryptedRefreshToken(context);
+
+		KeyStoreAdapter ksa = new KeyStoreAdapter();
+		String refresh_token = ksa.decrypt(encrypted_refresh_token);
+		retriveAccessTokenSuccess(refresh_token);
+	}
+
+	public static String getEncryptedRefreshToken(final Context context) {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		String encrypted_refresh_token = settings.getString(ApiConstants.REFRESH_TOKEN, "");
-		if (encrypted_refresh_token.equals("")) {
-			throw new IllegalStateException("Ingen access token lagret");
-		} else {
-			KeyStoreAdapter ksa = new KeyStoreAdapter();
-			String refresh_token = ksa.decrypt(encrypted_refresh_token);
-			retriveAccessTokenSuccess(refresh_token, context);
-		}
+		return settings.getString(ApiConstants.REFRESH_TOKEN, "");
 	}
 
 	public static Access getAccessData(final MultivaluedMap<String, String> params) {
