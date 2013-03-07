@@ -4,10 +4,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.ExecutionException;
 
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -51,18 +48,5 @@ public class NetworkConnection {
 				return false;
 			}
 		}
-	}
-
-	public void showNoNetworkDialog() {
-		Builder alertBuilder = new AlertDialog.Builder(context);
-		final AlertDialog alert = alertBuilder.create();
-		alert.setTitle("Nettverksfeil");
-		alert.setMessage("Nettverk ikke tilgjengelig");
-		alert.setButton(AlertDialog.BUTTON_POSITIVE, "Lukk", new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int which) {
-				alert.dismiss();
-			}
-		});
-		alert.show();
 	}
 }

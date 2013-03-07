@@ -19,4 +19,6 @@ local.properties
 src/no/digipost/android/authentication/Secret.java
 target/
 
+obj
+
 # libs/android-support-v4.jar

@@ -67,7 +67,6 @@ import android.widget.Toast;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 
-
 public class BaseActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -328,7 +327,9 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private void loadReceipts() {
-			new GetAccountReceiptMetaTask().execute(Secret.ACCESS_TOKEN);
+			if (networkConnection.isNetworkAvailable()) {
+				new GetAccountReceiptMetaTask().execute(Secret.ACCESS_TOKEN);
+			}
 		}
 
 		private class GetAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
@@ -336,13 +337,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int which) {
-						dialog.dismiss();
-						cancel(true);
-					}
-				});
-				progressDialog.show();
+				spinRefreshButton();
 			}
 
 			@Override
@@ -368,6 +363,7 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
+				stopUpdateAnimation();
 			}
 		}
 
@@ -426,7 +422,7 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 
-		private class MoveDocumentsTask extends AsyncTask<Object,Void, Boolean> {
+		private class MoveDocumentsTask extends AsyncTask<Object, Void, Boolean> {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
@@ -546,7 +542,7 @@ public class BaseActivity extends FragmentActivity {
 
 				String html = null;
 
-				if(params[1].equals(ApiConstants.GET_RECEIPT)) {
+				if (params[1].equals(ApiConstants.GET_RECEIPT)) {
 					try {
 						html = lo.getReceiptContentHTML((String) params[0], (Receipt) params[2]);
 					} catch (NetworkErrorException e) {
@@ -618,7 +614,7 @@ public class BaseActivity extends FragmentActivity {
 						pdfTask.execute(Secret.ACCESS_TOKEN, mletter);
 					} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 						GetHTMLTask htmlTask = new GetHTMLTask();
-						htmlTask.execute(Secret.ACCESS_TOKEN,ApiConstants.GET_DOCUMENT, mletter);
+						htmlTask.execute(Secret.ACCESS_TOKEN, ApiConstants.GET_DOCUMENT, mletter);
 					}
 				} else {
 					showMessage(getString(R.string.error_your_network));
@@ -637,7 +633,7 @@ public class BaseActivity extends FragmentActivity {
 				Receipt mReceipt = adapter.getItem(position);
 
 				GetHTMLTask htmlTask = new GetHTMLTask();
-				htmlTask.execute(Secret.ACCESS_TOKEN,ApiConstants.GET_RECEIPT, mReceipt);
+				htmlTask.execute(Secret.ACCESS_TOKEN, ApiConstants.GET_RECEIPT, mReceipt);
 			}
 		}
 	}
