@@ -34,4 +34,5 @@
     <string name="pdf_search_document">Søk i dokumentet...</string>
     <string name="error_your_network">Nettverksfeil. \nSjekk din internetforbindelse og prøv igjen.</string>
     <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.</string>
+    <string name="error_digipos_api">En feil oppstod under oppkoblingen mot Digipost.</string>
 </resources>

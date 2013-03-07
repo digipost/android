@@ -73,7 +73,7 @@ public class LetterOperations {
 	}
 
 	public boolean moveDocument(final String access_token, final Letter letter) throws ClientProtocolException, UniformInterfaceException,
-			ClientHandlerException, ParseException, IOException, URISyntaxException {
+			ClientHandlerException, ParseException, IOException, URISyntaxException, IllegalStateException, NetworkErrorException {
 		Letter movedletter = apiAccess.getMovedDocument(access_token, letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
 
 		return movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE);

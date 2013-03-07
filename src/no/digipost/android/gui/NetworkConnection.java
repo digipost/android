@@ -4,6 +4,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.ExecutionException;
 
+import no.digipost.android.R;
+import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -20,6 +22,16 @@ public class NetworkConnection {
 		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null;
+	}
+
+	public void checkHttpStatusCode(final int statusCode) throws NetworkErrorException, IllegalStateException {
+		if (statusCode == 200) {
+			return;
+		} else if (statusCode == 401) {
+			throw new IllegalStateException();
+		} else {
+			throw new NetworkErrorException(context.getString(R.string.error_digipos_api));
+		}
 	}
 
 	public boolean isOnline() {

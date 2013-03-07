@@ -84,7 +84,8 @@ public class LoginActivity extends Activity {
 				showMessage(getString(R.string.error_your_network));
 			} else if (msg.what == ErrorHandling.ERROR_GENERAL) {
 				showMessage(getString(R.string.error_wrong_credentials));
-
+			} else if (msg.what == ErrorHandling.ERROR_SERVER) {
+				showMessage(getString(R.string.error_digipos_api));
 			}
 		}
 	}

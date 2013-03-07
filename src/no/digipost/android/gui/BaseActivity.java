@@ -345,7 +345,7 @@ public class BaseActivity extends FragmentActivity {
 				try {
 					return lo.getAccountContentMetaReceipt(params[0]);
 				} catch (NetworkErrorException e) {
-					System.out.println(e.getMessage());
+					showMessage(e.getMessage());
 					return null;
 				}
 			}
@@ -385,7 +385,7 @@ public class BaseActivity extends FragmentActivity {
 				try {
 					return lo.getAccountContentMeta(params[0], type);
 				} catch (NetworkErrorException e) {
-					System.out.println(e.getMessage());
+					showMessage(e.getMessage());
 					return null;
 				}
 			}
@@ -459,6 +459,15 @@ public class BaseActivity extends FragmentActivity {
 				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NetworkErrorException e) {
+					showMessage(e.getMessage());
+					return null;
 				}
 
 				return moved;
@@ -491,7 +500,6 @@ public class BaseActivity extends FragmentActivity {
 					}
 				});
 				progressDialog.show();
-
 			}
 
 			@Override
@@ -499,7 +507,7 @@ public class BaseActivity extends FragmentActivity {
 				try {
 					return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
 				} catch (NetworkErrorException e) {
-					System.out.println(e.getMessage());
+					showMessage(e.getMessage());
 					return null;
 				}
 			}
@@ -507,6 +515,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
+				System.out.println("cancel pdf");
 				progressDialog.dismiss();
 				stopUpdateAnimation();
 			}
@@ -514,10 +523,13 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPostExecute(final byte[] result) {
 				super.onPostExecute(result);
-				PdfStore.pdf = result;
-				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-				i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
-				startActivity(i);
+
+				if (result != null) {
+					PdfStore.pdf = result;
+					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+					i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
+					startActivity(i);
+				}
 
 				progressDialog.dismiss();
 				stopUpdateAnimation();
@@ -546,17 +558,15 @@ public class BaseActivity extends FragmentActivity {
 					try {
 						html = lo.getReceiptContentHTML((String) params[0], (Receipt) params[2]);
 					} catch (NetworkErrorException e) {
-						System.out.println(e.getMessage());
+						showMessage(e.getMessage());
 						return null;
 					}
 					return html;
-				}
-
-				else {
+				} else {
 					try {
 						html = lo.getDocumentContentHTML((String) params[0], (Letter) params[2]);
 					} catch (NetworkErrorException e) {
-						System.out.println(e.getMessage());
+						showMessage(e.getMessage());
 						return null;
 					}
 				}
@@ -566,6 +576,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
+				System.out.println("cancel html");
 				progressDialog.dismiss();
 				stopUpdateAnimation();
 			}
@@ -574,9 +585,11 @@ public class BaseActivity extends FragmentActivity {
 			protected void onPostExecute(final String result) {
 				super.onPostExecute(result);
 
-				Intent i = new Intent(getActivity(), Html_WebViewTest.class);
-				i.putExtra(ApiConstants.FILETYPE_HTML, result);
-				startActivity(i);
+				if (result != null) {
+					Intent i = new Intent(getActivity(), Html_WebViewTest.class);
+					i.putExtra(ApiConstants.FILETYPE_HTML, result);
+					startActivity(i);
+				}
 
 				progressDialog.dismiss();
 				stopUpdateAnimation();

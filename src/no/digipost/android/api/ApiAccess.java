@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.authentication.Secret;
+import no.digipost.android.gui.NetworkConnection;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
@@ -47,9 +48,11 @@ public class ApiAccess {
 	private JSONObject jsonob;
 	static int filesize = 0;
 	private final Context context;
+	private final NetworkConnection networkConnection;
 
 	public ApiAccess(final Context context) {
 		this.context = context;
+		networkConnection = new NetworkConnection(context);
 	}
 
 	public Account getPrimaryAccount(final String access_token) throws NetworkErrorException {
@@ -75,8 +78,9 @@ public class ApiAccess {
 				.get(ClientResponse.class);
 
 		try {
-			checkHttpStatusCode(cr.getStatus());
+			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
+			OAuth2.updateRefreshTokenSuccess(context);
 			return getApiJsonString(Secret.ACCESS_TOKEN, uri);
 		}
 
@@ -84,12 +88,14 @@ public class ApiAccess {
 	}
 
 	public Letter getMovedDocument(final String access_token, final String uri, final StringEntity json) throws ClientProtocolException,
-			IOException, UniformInterfaceException, ClientHandlerException, URISyntaxException {
+			IOException, UniformInterfaceException, ClientHandlerException, URISyntaxException, IllegalStateException,
+			NetworkErrorException {
 		return (Letter) JSONConverter.processJackson(Letter.class, moveLetter(access_token, uri, json));
 	}
 
 	public String moveLetter(final String access_token, final String uri, final StringEntity json) throws ClientProtocolException,
-			IOException, UniformInterfaceException, ClientHandlerException, URISyntaxException, IllegalStateException {
+			IOException, UniformInterfaceException, ClientHandlerException, URISyntaxException, IllegalStateException,
+			NetworkErrorException {
 
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost post = new HttpPost();
@@ -100,6 +106,14 @@ public class ApiAccess {
 		post.setEntity(json);
 
 		HttpResponse response = httpClient.execute(post);
+
+		try {
+			networkConnection.checkHttpStatusCode(response.getStatusLine().getStatusCode());
+		} catch (IllegalStateException e) {
+			OAuth2.updateRefreshTokenSuccess(context);
+			return moveLetter(Secret.ACCESS_TOKEN, uri, json);
+		}
+
 		return JSONConverter.getJsonStringFromInputStream(response.getEntity().getContent());
 
 	}
@@ -114,8 +128,9 @@ public class ApiAccess {
 				.get(ClientResponse.class);
 
 		try {
-			checkHttpStatusCode(cr.getStatus());
+			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
+			OAuth2.updateRefreshTokenSuccess(context);
 			return getDocumentContent(Secret.ACCESS_TOKEN, uri);
 		}
 
@@ -132,8 +147,9 @@ public class ApiAccess {
 				.get(ClientResponse.class);
 
 		try {
-			checkHttpStatusCode(cr.getStatus());
+			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
+			OAuth2.updateRefreshTokenSuccess(context);
 			return getDocumentHTML(Secret.ACCESS_TOKEN, uri);
 		}
 
@@ -150,24 +166,12 @@ public class ApiAccess {
 				.get(ClientResponse.class);
 
 		try {
-			checkHttpStatusCode(cr.getStatus());
+			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
+			OAuth2.updateRefreshTokenSuccess(context);
 			return getDocumentHTML(Secret.ACCESS_TOKEN, uri);
 		}
 
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());
-	}
-
-	private void checkHttpStatusCode(final int statusCode) throws NetworkErrorException, IllegalStateException {
-		System.out.println(statusCode);
-		if (statusCode == 200) {
-			return;
-		} else if (statusCode == 401) {
-			System.out.println("Illegal state");
-			OAuth2.updateRefreshTokenSuccess(context);
-			throw new IllegalStateException("Ny access token");
-		} else {
-			throw new NetworkErrorException("Nettverksfeil");
-		}
 	}
 }

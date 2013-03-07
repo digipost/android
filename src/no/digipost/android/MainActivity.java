@@ -21,6 +21,7 @@ import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.gui.BaseActivity;
 import no.digipost.android.gui.LoginActivity;
 import no.digipost.android.gui.NetworkConnection;
+import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -101,7 +102,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void showMessage(final String message) {
-		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+		Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
 		toast.show();
 	}
 
@@ -117,23 +118,26 @@ public class MainActivity extends Activity {
 		finish();
 	}
 
-	private class CheckTokenTask extends AsyncTask<Void, Void, Boolean> {
+	private class CheckTokenTask extends AsyncTask<Void, Void, String> {
 
 		@Override
-		protected Boolean doInBackground(final Void... params) {
+		protected String doInBackground(final Void... params) {
 			try {
 				OAuth2.updateRefreshTokenSuccess(context);
-				return true;
+				return null;
 			} catch (IllegalStateException e) {
-				return false;
+				return e.getMessage();
+			} catch (NetworkErrorException e) {
+				return e.getMessage();
 			}
 		}
 
 		@Override
-		protected void onPostExecute(final Boolean result) {
-			if (result) {
+		protected void onPostExecute(final String result) {
+			if (result == null) {
 				startBaseActivity();
 			} else {
+				showMessage(result);
 				startLoginActivity();
 			}
 		}

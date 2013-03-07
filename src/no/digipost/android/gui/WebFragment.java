@@ -20,6 +20,10 @@ import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.ErrorHandling;
 import no.digipost.android.authentication.OAuth2;
+
+import org.apache.http.auth.AuthenticationException;
+
+import android.accounts.NetworkErrorException;
 import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -90,10 +94,15 @@ public class WebFragment extends DialogFragment {
 
 		@Override
 		protected Void doInBackground(final String... params) {
-			if (OAuth2.retriveAccessTokenSuccess(params[0], params[1], context)) {
+			try {
+				OAuth2.retriveAccessTokenSuccess(params[0], params[1], context);
 				handler.sendEmptyMessage(ErrorHandling.ERROR_OK);
-			} else {
-				handler.sendEmptyMessage(ErrorHandling.ERROR_GENERAL);
+			} catch (AuthenticationException e) {
+				handler.sendEmptyMessage(ErrorHandling.ERROR_SERVER);
+			} catch (NetworkErrorException e) {
+				handler.sendEmptyMessage(ErrorHandling.ERROR_SERVER);
+			} catch (IllegalStateException e) {
+				handler.sendEmptyMessage(ErrorHandling.ERROR_SERVER);
 			}
 
 			return null;

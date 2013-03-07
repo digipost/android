@@ -23,10 +23,16 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.core.MultivaluedMap;
 
+import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.JSONConverter;
+import no.digipost.android.gui.NetworkConnection;
 import no.digipost.android.model.Access;
 import no.digipost.android.model.TokenValue;
+
+import org.apache.http.auth.AuthenticationException;
+
+import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -52,7 +58,8 @@ public class OAuth2 {
 				+ ApiConstants.STATE + "=" + state;
 	}
 
-	public static boolean retriveAccessTokenSuccess(final String url_state, final String url_code, final Context context) {
+	public static void retriveAccessTokenSuccess(final String url_state, final String url_code, final Context context)
+			throws NetworkErrorException, IllegalStateException, AuthenticationException {
 		nonce = generateSecureRandom(20);
 
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
@@ -61,25 +68,26 @@ public class OAuth2 {
 		params.add(ApiConstants.REDIRECT_URI, Secret.REDIRECT_URI);
 		params.add(ApiConstants.NONCE, nonce);
 
-		Access data = getAccessData(params);
+		Access data = getAccessData(params, context);
 
-		if (!state.equals(url_state) || !verifyAuth(data.getId_token(), Secret.CLIENT_SECRET)) {
-			return false;
+		if (!state.equals(url_state)) {
+			throw new IllegalStateException(context.getString(R.string.error_digipos_api));
+		} else if (!verifyAuth(data.getId_token(), Secret.CLIENT_SECRET)) {
+			throw new AuthenticationException(context.getString(R.string.error_digipos_api));
 		}
 
 		encryptAndStoreRefreshToken(data, context);
-		return true;
 	}
 
-	public static boolean retriveAccessTokenSuccess(final String refresh_token) {
+	public static void retriveAccessTokenSuccess(final String refresh_token, final Context context) throws NetworkErrorException,
+			IllegalStateException {
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
 		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
 
 		// TODO Sjekk om verifisering av signatur ernødvendig
 
-		Secret.ACCESS_TOKEN = getAccessData(params).getAccess_token();
-		return true;
+		Secret.ACCESS_TOKEN = getAccessData(params, context).getAccess_token();
 	}
 
 	public static void encryptAndStoreRefreshToken(final Access data, final Context context) {
@@ -94,12 +102,12 @@ public class OAuth2 {
 		editor.commit();
 	}
 
-	public static void updateRefreshTokenSuccess(final Context context) throws IllegalStateException {
+	public static void updateRefreshTokenSuccess(final Context context) throws IllegalStateException, NetworkErrorException {
 		String encrypted_refresh_token = getEncryptedRefreshToken(context);
 
 		KeyStoreAdapter ksa = new KeyStoreAdapter();
 		String refresh_token = ksa.decrypt(encrypted_refresh_token);
-		retriveAccessTokenSuccess(refresh_token);
+		retriveAccessTokenSuccess(refresh_token, context);
 	}
 
 	public static String getEncryptedRefreshToken(final Context context) {
@@ -107,7 +115,8 @@ public class OAuth2 {
 		return settings.getString(ApiConstants.REFRESH_TOKEN, "");
 	}
 
-	public static Access getAccessData(final MultivaluedMap<String, String> params) {
+	public static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws NetworkErrorException,
+			IllegalStateException {
 		Client c = Client.create();
 		WebResource r = c.resource(ApiConstants.URL_API_OAUTH_ACCESSTOKEN);
 
@@ -117,6 +126,9 @@ public class OAuth2 {
 				.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_FORM_URLENCODED)
 				.header(ApiConstants.AUTHORIZATION, getB64Auth(Secret.CLIENT_ID, Secret.CLIENT_SECRET))
 				.post(ClientResponse.class);
+
+		NetworkConnection networkConnection = new NetworkConnection(context);
+		networkConnection.checkHttpStatusCode(cr.getStatus());
 
 		return (Access) JSONConverter.processJackson(Access.class, cr.getEntityInputStream());
 	}
