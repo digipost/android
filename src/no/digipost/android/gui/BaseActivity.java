@@ -48,7 +48,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -63,7 +62,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -347,13 +345,9 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 
-		private void twoFactorErrorDialog() {
+		private void unsupportedActionDialog(final int resource) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			TextView dialogtext = new TextView(getActivity());
-			dialogtext.setGravity(Gravity.CENTER_HORIZONTAL);
-			dialogtext.setText(R.string.dialog_error_two_factor);
-			//builder.setMessage(R.string.dialog_error_two_factor)
-			builder.setView(dialogtext)
+			builder.setMessage(resource)
 			       .setCancelable(false)
 			       .setNeutralButton("Lukk", new DialogInterface.OnClickListener() {
 			           public void onClick(final DialogInterface dialog, final int id) {
@@ -648,7 +642,7 @@ public class BaseActivity extends FragmentActivity {
 			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 				Letter mletter = adapter.getItem(position);
 				if(mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-					twoFactorErrorDialog();
+					unsupportedActionDialog(R.string.dialog_error_two_factor);
 					return;
 				}
 				String filetype = mletter.getFileType();
@@ -660,6 +654,9 @@ public class BaseActivity extends FragmentActivity {
 					} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 						GetHTMLTask htmlTask = new GetHTMLTask();
 						htmlTask.execute(Secret.ACCESS_TOKEN, ApiConstants.GET_DOCUMENT, mletter);
+					} else {
+						unsupportedActionDialog(R.string.dialog_error_not_supported_filetype);
+						return;
 					}
 				} else {
 					showMessage(getString(R.string.error_your_network));
