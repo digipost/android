@@ -6,5 +6,7 @@
     <color name="list_even">#ffffff</color>
     <color name="list_odd">#f9f9fa</color>
     <color name="splash_bg_color">#e2251b</color>
-   
+    <color name="green_price">#7bc144</color>
+    <color name="blue_date">#56b4ef</color>
+
 </resources>

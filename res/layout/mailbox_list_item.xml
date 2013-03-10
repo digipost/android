@@ -40,6 +40,28 @@
             android:orientation="horizontal" >
 
             <TextView
+                android:id="@+id/mail_subject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:lines="1"
+                android:textColor="#383435"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/mail_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue_date"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
                 android:id="@+id/mail_creator"
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
@@ -49,41 +71,22 @@
                 android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/mail_date"
+                android:id="@+id/mail_size_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#757575"
+                android:gravity="right"
+                android:paddingLeft="5sp"
                 android:textSize="13sp" />
-        </LinearLayout>
-		<LinearLayout
-		    android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-        <TextView
-            android:id="@+id/mail_subject"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#383435"
-            android:lines="1"
-            android:textSize="18sp"
-            android:layout_weight="1" />
 
-        <TextView
-            android:paddingLeft="5sp"
-            android:id="@+id/mail_size_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:gravity="right" />
-        
-        <ImageView
-            android:paddingTop="10sp"
-            android:visibility="gone"
-            android:id="@+id/document_locked"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:src="@drawable/list_padlock_grey_16"/>
+            <ImageView
+                android:id="@+id/document_locked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:paddingTop="10sp"
+                android:src="@drawable/list_padlock_grey_16"
+                android:visibility="gone" />
+        </LinearLayout>
     </LinearLayout>
-	</LinearLayout>
+
 </LinearLayout>
