@@ -345,9 +345,9 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 
-		private void unsupportedActionDialog(final int resource) {
+		private void unsupportedActionDialog(final int resourceString) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage(resource)
+			builder.setMessage(resourceString)
 			       .setCancelable(false)
 			       .setNeutralButton("Lukk", new DialogInterface.OnClickListener() {
 			           public void onClick(final DialogInterface dialog, final int id) {
