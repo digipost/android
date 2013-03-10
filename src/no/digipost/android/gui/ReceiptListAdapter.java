@@ -62,8 +62,6 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 		subject.setText(receipts.get(position).getStoreName());
 		TextView date = (TextView) row.findViewById(R.id.mail_date);
 		date.setText(getDateFormatted(receipts.get(position).getTimeOfPurchase()));
-		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
-		creator.setText(receipts.get(position).getFranchiceName());
 		TextView price = (TextView) row.findViewById(R.id.mail_size_price);
 		price.setTextColor(con.getResources().getColor(R.color.green_price));
 		price.setText(receipts.get(position).getAmount() + " " + receipts.get(position).getCurrency());
