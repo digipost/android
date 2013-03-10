@@ -35,4 +35,5 @@
     <string name="error_your_network">Nettverksfeil. \nSjekk din internetforbindelse og prøv igjen.</string>
     <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.</string>
     <string name="error_digipos_api">En feil oppstod under oppkoblingen mot Digipost.</string>
+    <string name="dialog_error_two_factor">Beklager! \nDette brevet krever autentisering med Bank ID. \nLogg inn på Digipost.no for å se innholdet</string>
 </resources>

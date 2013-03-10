@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
-import no.digipost.android.api.JSONConverter;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
@@ -35,6 +34,7 @@ import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 
 import android.accounts.NetworkErrorException;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -48,6 +48,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,6 +63,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -200,6 +202,7 @@ public class BaseActivity extends FragmentActivity {
 	public class DigipostSectionFragment extends Fragment {
 
 		public static final String ARG_SECTION_NUMBER = "section_number";
+		public static final int DIALOG_ID_NOT_AUTHENTICATED = 1;
 		private LetterOperations lo;
 		private LetterListAdapter adapter_mailbox;
 		private LetterListAdapter adapter_workarea;
@@ -214,6 +217,7 @@ public class BaseActivity extends FragmentActivity {
 		private ListView lv_archive;
 		private ListView lv_receipts;
 		private ImageButton refreshButton;
+
 
 		public DigipostSectionFragment() {
 		}
@@ -330,6 +334,23 @@ public class BaseActivity extends FragmentActivity {
 			if (networkConnection.isNetworkAvailable()) {
 				new GetAccountReceiptMetaTask().execute(Secret.ACCESS_TOKEN);
 			}
+		}
+
+		private void twoFactorErrorDialog() {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			TextView dialogtext = new TextView(getActivity());
+			dialogtext.setGravity(Gravity.CENTER_HORIZONTAL);
+			dialogtext.setText(R.string.dialog_error_two_factor);
+			//builder.setMessage(R.string.dialog_error_two_factor)
+			builder.setView(dialogtext)
+			       .setCancelable(false)
+			       .setNeutralButton("Lukk", new DialogInterface.OnClickListener() {
+			           public void onClick(final DialogInterface dialog, final int id) {
+			                dialog.cancel();
+			           }
+			       });
+			AlertDialog alert = builder.create();
+			alert.show();
 		}
 
 		private class GetAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
@@ -605,20 +626,10 @@ public class BaseActivity extends FragmentActivity {
 
 			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 				Letter mletter = adapter.getItem(position);
-
-				try {
-					JSONConverter.createJsonFromJackson(mletter);
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+					twoFactorErrorDialog();
+					return;
 				}
-
 				String filetype = mletter.getFileType();
 
 				if (networkConnection.isNetworkAvailable()) {

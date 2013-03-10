@@ -35,6 +35,8 @@ public class ApiConstants {
 	public static final String MEDIA_TYPE = "media-type";
 	public static final String PRIMARY_ACCOUNT = "primaryAccount";
 
+	public static final String AUTHENTICATION_LEVEL_TWO_FACTOR = "TWO_FACTOR";
+
 	public static final String LOCATION_ARCHIVE = "ARCHIVE";
 	public static final String LOCATION_WORKAREA = "WORKAREA";
 

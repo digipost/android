@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import no.digipost.android.R;
+import no.digipost.android.api.ApiConstants;
 import no.digipost.android.model.Letter;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -72,7 +73,7 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		creator.setText(letters.get(position).getCreatorName());
 		TextView size = (TextView) row.findViewById(R.id.mail_size_price);
 		ImageView locked = (ImageView) row.findViewById(R.id.document_locked);
-		if(letters.get(position).getAuthenticationLevel().equals("TWO_FACTOR")) {
+		if(letters.get(position).getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
 			locked.setVisibility(View.VISIBLE);
 			size.setVisibility(View.INVISIBLE);
 		}
