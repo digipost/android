@@ -85,8 +85,8 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println("BaseActivity OnCreate");
 		setContentView(R.layout.activity_base);
+		context = this;
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setMessage(getString(R.string.loading_content));
@@ -95,7 +95,6 @@ public class BaseActivity extends FragmentActivity {
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		context = this;
 		refreshSpinner = (ProgressBar) findViewById(R.id.base_refreshSpinner);
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
 		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
@@ -592,7 +591,6 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
-				System.out.println("cancel html");
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
