@@ -57,12 +57,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
-import android.view.animation.RotateAnimation;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,12 +74,15 @@ public class BaseActivity extends FragmentActivity {
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ImageButton optionsButton;
 	private ImageButton refreshButton;
+	private ProgressBar refreshSpinner;
 	private ButtonListener listener;
 	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
 	private ProgressDialog progressDialog;
 	private NetworkConnection networkConnection;
+
+	private boolean[] updatingView = new boolean[4];
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -95,6 +98,7 @@ public class BaseActivity extends FragmentActivity {
 		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		context = this;
+		refreshSpinner = (ProgressBar) findViewById(R.id.base_refreshSpinner);
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
 		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
 		listener = new ButtonListener();
@@ -111,7 +115,9 @@ public class BaseActivity extends FragmentActivity {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
 				if (networkConnection.isNetworkAvailable()) {
-					spinRefreshButton();
+					updatingView = new boolean[4];
+					updatingView[LetterOperations.RECEIPTS] = true;
+					toggleRefreshButton();
 					mViewPager.setAdapter(mSectionsPagerAdapter);
 				} else {
 					showMessage(getString(R.string.error_your_network));
@@ -120,13 +126,22 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	private void spinRefreshButton() {
-		final float centerX = refreshButton.getWidth() / 2.0f;
-		final float centerY = refreshButton.getHeight() / 2.0f;
-		RotateAnimation a = new RotateAnimation(0, 360, centerX, centerY);
-		a.setDuration(800);
-		a.setRepeatCount(RotateAnimation.INFINITE);
-		refreshButton.startAnimation(a);
+	private void toggleRefreshButton() {
+		boolean updating = false;
+		for (boolean i : updatingView) {
+			if (i) {
+				updating = true;
+				break;
+			}
+		}
+		if (updating) {
+			refreshButton.setVisibility(View.GONE);
+			refreshSpinner.setVisibility(View.VISIBLE);
+		} else {
+			refreshSpinner.setVisibility(View.GONE);
+			refreshButton.setVisibility(View.VISIBLE);
+
+		}
 	}
 
 	@Override
@@ -152,10 +167,6 @@ public class BaseActivity extends FragmentActivity {
 		Intent i = new Intent(BaseActivity.this, LoginActivity.class);
 		startActivity(i);
 		finish();
-	}
-
-	public void stopUpdateAnimation() {
-		refreshButton.clearAnimation();
 	}
 
 	public void showMessage(final String message) {
@@ -314,7 +325,7 @@ public class BaseActivity extends FragmentActivity {
 
 		public void loadMailbox() {
 			if (networkConnection.isNetworkAvailable()) {
-				new GetAccountMetaTask(LetterOperations.INBOX).execute(Secret.ACCESS_TOKEN);
+				new GetAccountMetaTask(LetterOperations.MAILBOX).execute(Secret.ACCESS_TOKEN);
 			}
 		}
 
@@ -358,7 +369,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				spinRefreshButton();
+				updatingView[LetterOperations.RECEIPTS] = true;
 			}
 
 			@Override
@@ -376,7 +387,8 @@ public class BaseActivity extends FragmentActivity {
 				super.onPostExecute(result);
 				adapter_receipts.updateList(result);
 				progressDialog.dismiss();
-				stopUpdateAnimation();
+				updatingView[LetterOperations.RECEIPTS] = false;
+				toggleRefreshButton();
 
 			}
 
@@ -384,7 +396,8 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
-				stopUpdateAnimation();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
 			}
 		}
 
@@ -398,7 +411,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				spinRefreshButton();
+				updatingView[type] = true;
 			}
 
 			@Override
@@ -416,7 +429,7 @@ public class BaseActivity extends FragmentActivity {
 				super.onPostExecute(result);
 
 				switch (type) {
-				case LetterOperations.INBOX:
+				case LetterOperations.MAILBOX:
 					adapter_mailbox.updateList(result);
 					break;
 				case LetterOperations.WORKAREA:
@@ -431,7 +444,8 @@ public class BaseActivity extends FragmentActivity {
 				}
 
 				progressDialog.dismiss();
-				stopUpdateAnimation();
+				updatingView[type] = false;
+				toggleRefreshButton();
 
 			}
 
@@ -439,7 +453,8 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
-				stopUpdateAnimation();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
 			}
 		}
 
@@ -499,14 +514,16 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
-				stopUpdateAnimation();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
 			}
 
 			@Override
 			protected void onPostExecute(final Boolean result) {
 				super.onPostExecute(result);
 				progressDialog.dismiss();
-				stopUpdateAnimation();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
 			}
 		}
 
@@ -538,7 +555,8 @@ public class BaseActivity extends FragmentActivity {
 				super.onCancelled();
 				System.out.println("cancel pdf");
 				progressDialog.dismiss();
-				stopUpdateAnimation();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
 			}
 
 			@Override
@@ -553,7 +571,8 @@ public class BaseActivity extends FragmentActivity {
 				}
 
 				progressDialog.dismiss();
-				stopUpdateAnimation();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
 			}
 		}
 
@@ -599,7 +618,8 @@ public class BaseActivity extends FragmentActivity {
 				super.onCancelled();
 				System.out.println("cancel html");
 				progressDialog.dismiss();
-				stopUpdateAnimation();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
 			}
 
 			@Override
@@ -613,7 +633,8 @@ public class BaseActivity extends FragmentActivity {
 				}
 
 				progressDialog.dismiss();
-				stopUpdateAnimation();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
 			}
 		}
 

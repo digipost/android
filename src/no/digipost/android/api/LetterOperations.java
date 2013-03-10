@@ -34,7 +34,7 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.UniformInterfaceException;
 
 public class LetterOperations {
-	public static final int INBOX = 0;
+	public static final int MAILBOX = 0;
 	public static final int ARCHIVE = 1;
 	public static final int WORKAREA = 2;
 	public static final int RECEIPTS = 3;
@@ -53,7 +53,7 @@ public class LetterOperations {
 		temp = primaryaccount.getInboxUri().substring(50, 56);
 
 		switch (type) {
-		case INBOX:
+		case MAILBOX:
 			return apiAccess.getDocuments(access_token, primaryaccount.getInboxUri()).getDocument();
 		case ARCHIVE:
 			return apiAccess.getDocuments(access_token, primaryaccount.getArchiveUri()).getDocument();

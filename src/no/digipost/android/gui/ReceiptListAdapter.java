@@ -65,7 +65,8 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
 		creator.setText(receipts.get(position).getFranchiceName());
 		TextView price = (TextView) row.findViewById(R.id.mail_size_price);
-		price.setText(receipts.get(position).getAmount() + " " + receipts.get(position).getCurrency() );
+		price.setTextColor(con.getResources().getColor(R.color.green_price));
+		price.setText(receipts.get(position).getAmount() + " " + receipts.get(position).getCurrency());
 
 		checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
 
