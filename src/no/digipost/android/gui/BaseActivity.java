@@ -478,7 +478,7 @@ public class BaseActivity extends FragmentActivity {
 				} catch (IllegalStateException e) {
 					e.printStackTrace();
 				} catch (NetworkErrorException e) {
-					showMessage(e.getMessage());
+					showMessage(getString(R.string.error_your_network));
 					return null;
 				}
 
@@ -521,7 +521,7 @@ public class BaseActivity extends FragmentActivity {
 				try {
 					return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
 				} catch (NetworkErrorException e) {
-					showMessage(e.getMessage());
+					showMessage(getString(R.string.error_your_network));
 					return null;
 				}
 			}
@@ -573,7 +573,7 @@ public class BaseActivity extends FragmentActivity {
 					try {
 						html = lo.getReceiptContentHTML((String) params[0], (Receipt) params[2]);
 					} catch (NetworkErrorException e) {
-						showMessage(e.getMessage());
+						showMessage(getString(R.string.error_your_network));
 						return null;
 					}
 					return html;
@@ -581,7 +581,7 @@ public class BaseActivity extends FragmentActivity {
 					try {
 						html = lo.getDocumentContentHTML((String) params[0], (Letter) params[2]);
 					} catch (NetworkErrorException e) {
-						showMessage(e.getMessage());
+						showMessage(getString(R.string.error_your_network));
 						return null;
 					}
 				}
