@@ -4,13 +4,12 @@ import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 
-public class Html_WebViewTest extends Activity {
+public class HtmlWebview extends Activity {
 
 	private WebView webView;
 	private ImageButton toMailbox;
@@ -25,11 +24,9 @@ public class Html_WebViewTest extends Activity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_html_webview);
-
 		createButtons();
 
 		String html = getIntent().getExtras().getString(ApiConstants.FILETYPE_HTML);
-
 		String mime = "text/html";
 		String encoding = "utf-8";
 
@@ -41,13 +38,6 @@ public class Html_WebViewTest extends Activity {
 		webView.getSettings().setDisplayZoomControls(true);
 		webView.getSettings().setLoadWithOverviewMode(true);
 		webView.loadDataWithBaseURL(null, html, mime, encoding, null);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_html_veb_view, menu);
-		return true;
 	}
 
 	private void createButtons() {
@@ -67,7 +57,7 @@ public class Html_WebViewTest extends Activity {
 		digipostIcon.setOnClickListener(new HTMLViewListener());
 		backButton.setOnClickListener(new HTMLViewListener());
 
-		//webView.setOnClickListener(new HTMLViewListener());
+		// webView.setOnClickListener(new HTMLViewListener());
 	}
 
 	private void enableFullScreenOnSingleTap() {
@@ -77,12 +67,9 @@ public class Html_WebViewTest extends Activity {
 	private class HTMLViewListener implements OnClickListener {
 
 		public void onClick(final View v) {
-			// TODO Auto-generated method stub
 			if (v.getId() == R.id.web_html) {
 				enableFullScreenOnSingleTap();
 			}
-
 		}
 	}
-
 }

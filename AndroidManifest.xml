@@ -69,7 +69,7 @@
             android:theme="@android:style/Theme.Holo.NoActionBar" >
         </activity>
         <activity
-            android:name="no.digipost.android.gui.Html_WebViewTest"
+            android:name="no.digipost.android.gui.HtmlWebview"
             android:label="@string/title_activity_html_veb_view" >
         </activity>
         <activity

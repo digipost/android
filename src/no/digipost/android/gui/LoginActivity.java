@@ -85,7 +85,7 @@ public class LoginActivity extends Activity {
 			} else if (msg.what == ErrorHandling.ERROR_GENERAL) {
 				showMessage(getString(R.string.error_wrong_credentials));
 			} else if (msg.what == ErrorHandling.ERROR_SERVER) {
-				showMessage(getString(R.string.error_digipos_api));
+				showMessage(getString(R.string.error_digipost_api));
 			}
 		}
 	}

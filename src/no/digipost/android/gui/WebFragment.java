@@ -121,7 +121,6 @@ public class WebFragment extends DialogFragment {
 	public void onViewCreated(final View v, final Bundle arg1) {
 		super.onViewCreated(v, arg1);
 		webViewOauth = (WebView) v.findViewById(R.id.web_oauth);
-		getDialog().setTitle("Innlogging");
 		String url = OAuth2.getAuthorizeURL();
 		webViewOauth.loadUrl(url);
 		WebSettings settings = webViewOauth.getSettings();
