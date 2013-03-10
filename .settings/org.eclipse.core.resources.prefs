@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/no/digipost/android/MainActivity.java=UTF-8
+encoding//src/no/digipost/android/api/LetterOperations.java=UTF-8
 encoding//src/no/digipost/android/authentication/OAuth2.java=UTF-8
 encoding//src/no/digipost/android/gui/BaseActivity.java=UTF-8
 encoding//src/no/digipost/android/gui/LoginActivity.java=UTF-8
