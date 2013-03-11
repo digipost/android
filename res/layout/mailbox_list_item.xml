@@ -13,8 +13,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
--->
+ */-->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -41,10 +40,13 @@
 
             <TextView
                 android:id="@+id/mail_subject"
-                android:layout_width="wrap_content"
+                android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:lines="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingRight="5sp"
+                android:singleLine="true"
                 android:textColor="#383435"
                 android:textSize="18sp" />
 
@@ -66,7 +68,10 @@
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:lines="1"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingRight="5sp"
+                android:singleLine="true"
                 android:textColor="#4D484A"
                 android:textSize="13sp" />
 

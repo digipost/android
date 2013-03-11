@@ -46,11 +46,11 @@ public class LetterOperations {
 	public ArrayList<Letter> getAccountContentMeta(final String access_token, final int type) throws DigipostApiException,
 			DigipostClientException {
 		Account account = apiAccess.getPrimaryAccount(access_token);
-
+		
 		if (account == null) {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
-
+		
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
 
 		profil_id = primaryaccount.getInboxUri().substring(50, 56);
