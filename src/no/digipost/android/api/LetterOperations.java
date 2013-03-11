@@ -16,7 +16,6 @@
 package no.digipost.android.api;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import no.digipost.android.model.Account;
@@ -25,13 +24,8 @@ import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
 
 import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
 
-import android.accounts.NetworkErrorException;
 import android.content.Context;
-
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
 
 public class LetterOperations {
 	public static final int MAILBOX = 0;
@@ -46,7 +40,8 @@ public class LetterOperations {
 		apiAccess = new ApiAccess(context);
 	}
 
-	public ArrayList<Letter> getAccountContentMeta(final String access_token, final int type) throws NetworkErrorException {
+	public ArrayList<Letter> getAccountContentMeta(final String access_token, final int type) throws DigipostApiException,
+			DigipostClientException {
 		Account account = apiAccess.getPrimaryAccount(access_token);
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
 
@@ -64,32 +59,36 @@ public class LetterOperations {
 		}
 	}
 
-	public ArrayList<Receipt> getAccountContentMetaReceipt(final String access_token) throws NetworkErrorException {
+	public ArrayList<Receipt> getAccountContentMetaReceipt(final String access_token) throws DigipostApiException, DigipostClientException {
 		String uri = "https://www.digipost.no/post/api/private/accounts/" + profil_id + "/receipts";
 		return apiAccess.getReceipts(access_token, uri).getReceipt();
 	}
 
-	public boolean moveDocument(final String access_token, final Letter letter) throws ClientProtocolException, UniformInterfaceException,
-			ClientHandlerException, ParseException, IOException, URISyntaxException, IllegalStateException, NetworkErrorException {
+	public boolean moveDocument(final String access_token, final Letter letter) throws ParseException, DigipostClientException,
+			DigipostApiException, IOException {
 		Letter movedletter = apiAccess.getMovedDocument(access_token, letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
 
 		return movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE);
 	}
 
-	public byte[] getDocumentContentPDF(final String access_token, final Letter letter) throws NetworkErrorException {
+	public byte[] getDocumentContentPDF(final String access_token, final Letter letter) throws DigipostApiException,
+			DigipostClientException {
 		ApiAccess.filesize = Integer.parseInt(letter.getFileSize());
 		return apiAccess.getDocumentContent(access_token, letter.getContentUri());
 	}
 
-	public String getDocumentContentHTML(final String access_token, final Letter letter) throws NetworkErrorException {
+	public String getDocumentContentHTML(final String access_token, final Letter letter) throws DigipostApiException,
+			DigipostClientException {
 		return apiAccess.getDocumentHTML(access_token, letter.getContentUri());
 	}
 
-	public byte[] getReceiptContentPDF(final String access_token, final Receipt receipt) throws NetworkErrorException {
+	public byte[] getReceiptContentPDF(final String access_token, final Receipt receipt) throws DigipostApiException,
+			DigipostClientException {
 		return apiAccess.getDocumentContent(access_token, receipt.getContentAsPDFUri());
 	}
 
-	public String getReceiptContentHTML(final String access_token, final Receipt receipt) throws NetworkErrorException {
+	public String getReceiptContentHTML(final String access_token, final Receipt receipt) throws DigipostApiException,
+			DigipostClientException {
 		return apiAccess.getReceiptHTML(access_token, receipt.getContentAsHTMLUri());
 	}
 }

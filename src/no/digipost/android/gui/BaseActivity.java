@@ -20,13 +20,14 @@ import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
+import no.digipost.android.api.DigipostApiException;
+import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
 import no.digipost.android.pdf.PdfStore;
-import android.accounts.NetworkErrorException;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -170,7 +171,7 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	private void unsupportedActionDialog(final int resource) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage(resource)
 				.setCancelable(false)
 				.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
@@ -183,6 +184,7 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	private class GetAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
+		private String errorMessage = "";
 
 		@Override
 		protected void onPreExecute() {
@@ -192,18 +194,24 @@ public class BaseActivity extends FragmentActivity {
 
 		@Override
 		protected ArrayList<Receipt> doInBackground(final String... params) {
+
 			try {
 				return lo.getAccountContentMetaReceipt(params[0]);
-			} catch (NetworkErrorException e) {
+			} catch (DigipostApiException e) {
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostClientException e) {
+				errorMessage = e.getMessage();
 				return null;
 			}
+
 		}
 
 		@Override
 		protected void onPostExecute(final ArrayList<Receipt> result) {
 			super.onPostExecute(result);
 			if (result == null) {
-				showMessage(getString(R.string.error_digipost_api));
+				showMessage(errorMessage);
 			} else {
 				adapter_receipts.updateList(result);
 				progressDialog.dismiss();
@@ -223,6 +231,7 @@ public class BaseActivity extends FragmentActivity {
 
 	private class GetAccountMetaTask extends AsyncTask<String, Void, ArrayList<Letter>> {
 		private final int type;
+		private String errorMessage = "";
 
 		public GetAccountMetaTask(final int type) {
 			this.type = type;
@@ -236,18 +245,24 @@ public class BaseActivity extends FragmentActivity {
 
 		@Override
 		protected ArrayList<Letter> doInBackground(final String... params) {
+
 			try {
 				return lo.getAccountContentMeta(params[0], type);
-			} catch (NetworkErrorException e) {
+			} catch (DigipostApiException e) {
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostClientException e) {
+				errorMessage = e.getMessage();
 				return null;
 			}
+
 		}
 
 		@Override
 		protected void onPostExecute(final ArrayList<Letter> result) {
 			super.onPostExecute(result);
 			if (result == null) {
-				showMessage(getString(R.string.error_digipost_api));
+				showMessage(errorMessage);
 			} else {
 				switch (type) {
 				case LetterOperations.MAILBOX:
@@ -264,7 +279,6 @@ public class BaseActivity extends FragmentActivity {
 			progressDialog.dismiss();
 			updatingView[type] = false;
 			toggleRefreshButton();
-
 		}
 
 		@Override
@@ -477,6 +491,8 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
+			private String errorMessage = "";
+
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
@@ -491,11 +507,17 @@ public class BaseActivity extends FragmentActivity {
 
 			@Override
 			protected byte[] doInBackground(final Object... params) {
+
 				try {
 					return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
-				} catch (NetworkErrorException e) {
+				} catch (DigipostApiException e) {
+					errorMessage = e.getMessage();
+					return null;
+				} catch (DigipostClientException e) {
+					errorMessage = e.getMessage();
 					return null;
 				}
+
 			}
 
 			@Override
@@ -511,7 +533,7 @@ public class BaseActivity extends FragmentActivity {
 				super.onPostExecute(result);
 
 				if (result == null) {
-					showMessage(getString(R.string.error_digipost_api));
+					showMessage(errorMessage);
 				} else {
 					PdfStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
@@ -526,6 +548,8 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private class GetHTMLTask extends AsyncTask<Object, Void, String> {
+			private String errorMessage = "";
+
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
@@ -544,20 +568,33 @@ public class BaseActivity extends FragmentActivity {
 				String html = null;
 
 				if (params[1].equals(ApiConstants.GET_RECEIPT)) {
+
 					try {
 						html = lo.getReceiptContentHTML((String) params[0], (Receipt) params[2]);
-					} catch (NetworkErrorException e) {
+						return html;
+					} catch (DigipostApiException e) {
+						errorMessage = e.getMessage();
+						return null;
+					} catch (DigipostClientException e) {
+						errorMessage = e.getMessage();
 						return null;
 					}
-					return html;
+
 				} else {
+
 					try {
 						html = lo.getDocumentContentHTML((String) params[0], (Letter) params[2]);
-					} catch (NetworkErrorException e) {
+						return html;
+					} catch (DigipostApiException e) {
+						errorMessage = e.getMessage();
+						return null;
+					} catch (DigipostClientException e) {
+						errorMessage = e.getMessage();
 						return null;
 					}
+
 				}
-				return html;
+
 			}
 
 			@Override
@@ -573,7 +610,7 @@ public class BaseActivity extends FragmentActivity {
 				super.onPostExecute(result);
 
 				if (result == null) {
-					showMessage(getString(R.string.error_digipost_api));
+					showMessage(errorMessage);
 				} else {
 					Intent i = new Intent(getActivity(), HtmlWebview.class);
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);

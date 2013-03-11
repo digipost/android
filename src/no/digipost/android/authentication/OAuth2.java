@@ -25,14 +25,12 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
+import no.digipost.android.api.DigipostApiException;
+import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.api.JSONConverter;
 import no.digipost.android.gui.NetworkConnection;
 import no.digipost.android.model.Access;
 import no.digipost.android.model.TokenValue;
-
-import org.apache.http.auth.AuthenticationException;
-
-import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -59,7 +57,7 @@ public class OAuth2 {
 	}
 
 	public static void retriveAccessTokenSuccess(final String url_state, final String url_code, final Context context)
-			throws NetworkErrorException, IllegalStateException, AuthenticationException {
+			throws DigipostApiException, DigipostClientException {
 		nonce = generateSecureRandom(20);
 
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
@@ -71,16 +69,16 @@ public class OAuth2 {
 		Access data = getAccessData(params, context);
 
 		if (!state.equals(url_state)) {
-			throw new IllegalStateException(context.getString(R.string.error_digipost_api));
+			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		} else if (!verifyAuth(data.getId_token(), Secret.CLIENT_SECRET)) {
-			throw new AuthenticationException(context.getString(R.string.error_digipost_api));
+			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
 
 		encryptAndStoreRefreshToken(data, context);
 	}
 
-	public static void retriveAccessTokenSuccess(final String refresh_token, final Context context) throws NetworkErrorException,
-			IllegalStateException {
+	public static void retriveAccessTokenSuccess(final String refresh_token, final Context context) throws DigipostApiException,
+			DigipostClientException {
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
 		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
@@ -99,7 +97,7 @@ public class OAuth2 {
 		editor.commit();
 	}
 
-	public static void updateRefreshTokenSuccess(final Context context) throws IllegalStateException, NetworkErrorException {
+	public static void updateRefreshTokenSuccess(final Context context) throws DigipostApiException, DigipostClientException {
 		String encrypted_refresh_token = getEncryptedRefreshToken(context);
 
 		KeyStoreAdapter ksa = new KeyStoreAdapter();
@@ -112,17 +110,20 @@ public class OAuth2 {
 		return settings.getString(ApiConstants.REFRESH_TOKEN, "");
 	}
 
-	public static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws NetworkErrorException,
-			IllegalStateException {
+	public static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws DigipostApiException,
+			DigipostClientException {
 		Client c = Client.create();
 		WebResource r = c.resource(ApiConstants.URL_API_OAUTH_ACCESSTOKEN);
-
-		ClientResponse cr = r
-				.queryParams(params)
-				.header(ApiConstants.POST, ApiConstants.POST_API_ACCESSTOKEN_HTTP)
-				.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_FORM_URLENCODED)
-				.header(ApiConstants.AUTHORIZATION, getB64Auth(Secret.CLIENT_ID, Secret.CLIENT_SECRET))
-				.post(ClientResponse.class);
+		ClientResponse cr = null;
+		try {
+			cr = r.queryParams(params)
+					.header(ApiConstants.POST, ApiConstants.POST_API_ACCESSTOKEN_HTTP)
+					.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_FORM_URLENCODED)
+					.header(ApiConstants.AUTHORIZATION, getB64Auth(Secret.CLIENT_ID, Secret.CLIENT_SECRET))
+					.post(ClientResponse.class);
+		} catch (Exception e) {
+			throw new DigipostClientException(context.getString(R.string.error_your_network));
+		}
 
 		NetworkConnection networkConnection = new NetworkConnection(context);
 		networkConnection.checkHttpStatusCode(cr.getStatus());
@@ -167,8 +168,7 @@ public class OAuth2 {
 			mac = Mac.getInstance(ApiConstants.HMACSHA256);
 			mac.init(secretKey);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Ignore
 		}
 
 		byte[] hmacData = mac.doFinal(data.getBytes());

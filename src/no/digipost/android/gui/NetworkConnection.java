@@ -5,7 +5,7 @@ import java.net.URLConnection;
 import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.R;
-import android.accounts.NetworkErrorException;
+import no.digipost.android.api.DigipostApiException;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -24,13 +24,13 @@ public class NetworkConnection {
 		return activeNetworkInfo != null;
 	}
 
-	public void checkHttpStatusCode(final int statusCode) throws NetworkErrorException, IllegalStateException {
+	public void checkHttpStatusCode(final int statusCode) throws DigipostApiException {
 		if (statusCode == 200) {
 			return;
 		} else if (statusCode == 401) {
 			throw new IllegalStateException();
 		} else {
-			throw new NetworkErrorException(context.getString(R.string.error_digipost_api));
+			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
 	}
 
