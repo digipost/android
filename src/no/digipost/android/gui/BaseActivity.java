@@ -16,9 +16,6 @@
 
 package no.digipost.android.gui;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import no.digipost.android.R;
@@ -29,10 +26,6 @@ import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
 import no.digipost.android.pdf.PdfStore;
-
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
-
 import android.accounts.NetworkErrorException;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -63,9 +56,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
 
 public class BaseActivity extends FragmentActivity {
 
@@ -364,7 +354,6 @@ public class BaseActivity extends FragmentActivity {
 				try {
 					return lo.getAccountContentMetaReceipt(params[0]);
 				} catch (NetworkErrorException e) {
-					showMessage(e.getMessage());
 					return null;
 				}
 			}
@@ -372,11 +361,14 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPostExecute(final ArrayList<Receipt> result) {
 				super.onPostExecute(result);
-				adapter_receipts.updateList(result);
-				progressDialog.dismiss();
-				updatingView[LetterOperations.RECEIPTS] = false;
-				toggleRefreshButton();
-
+				if (result == null) {
+					showMessage(getString(R.string.error_digipost_api));
+				} else {
+					adapter_receipts.updateList(result);
+					progressDialog.dismiss();
+					updatingView[LetterOperations.RECEIPTS] = false;
+					toggleRefreshButton();
+				}
 			}
 
 			@Override
@@ -406,7 +398,6 @@ public class BaseActivity extends FragmentActivity {
 				try {
 					return lo.getAccountContentMeta(params[0], type);
 				} catch (NetworkErrorException e) {
-					showMessage(e.getMessage());
 					return null;
 				}
 			}
@@ -414,19 +405,21 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPostExecute(final ArrayList<Letter> result) {
 				super.onPostExecute(result);
-
-				switch (type) {
-				case LetterOperations.MAILBOX:
-					adapter_mailbox.updateList(result);
-					break;
-				case LetterOperations.WORKAREA:
-					adapter_workarea.updateList(result);
-					break;
-				case LetterOperations.ARCHIVE:
-					adapter_archive.updateList(result);
-					break;
+				if (result == null) {
+					showMessage(getString(R.string.error_digipost_api));
+				} else {
+					switch (type) {
+					case LetterOperations.MAILBOX:
+						adapter_mailbox.updateList(result);
+						break;
+					case LetterOperations.WORKAREA:
+						adapter_workarea.updateList(result);
+						break;
+					case LetterOperations.ARCHIVE:
+						adapter_archive.updateList(result);
+						break;
+					}
 				}
-
 				progressDialog.dismiss();
 				updatingView[type] = false;
 				toggleRefreshButton();
@@ -461,24 +454,8 @@ public class BaseActivity extends FragmentActivity {
 				boolean moved = false;
 				try {
 					moved = lo.moveDocument((String) params[0], (Letter) params[1]);
-				} catch (ClientProtocolException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
-				} catch (UniformInterfaceException e) {
-					e.printStackTrace();
-				} catch (ClientHandlerException e) {
-					e.printStackTrace();
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-				} catch (NetworkErrorException e) {
-					showMessage(getString(R.string.error_your_network));
 					return null;
 				}
 
@@ -521,7 +498,6 @@ public class BaseActivity extends FragmentActivity {
 				try {
 					return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
 				} catch (NetworkErrorException e) {
-					showMessage(getString(R.string.error_your_network));
 					return null;
 				}
 			}
@@ -538,7 +514,9 @@ public class BaseActivity extends FragmentActivity {
 			protected void onPostExecute(final byte[] result) {
 				super.onPostExecute(result);
 
-				if (result != null) {
+				if (result == null) {
+					showMessage(getString(R.string.error_digipost_api));
+				} else {
 					PdfStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
 					i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
@@ -573,7 +551,6 @@ public class BaseActivity extends FragmentActivity {
 					try {
 						html = lo.getReceiptContentHTML((String) params[0], (Receipt) params[2]);
 					} catch (NetworkErrorException e) {
-						showMessage(getString(R.string.error_your_network));
 						return null;
 					}
 					return html;
@@ -581,7 +558,6 @@ public class BaseActivity extends FragmentActivity {
 					try {
 						html = lo.getDocumentContentHTML((String) params[0], (Letter) params[2]);
 					} catch (NetworkErrorException e) {
-						showMessage(getString(R.string.error_your_network));
 						return null;
 					}
 				}
@@ -600,7 +576,9 @@ public class BaseActivity extends FragmentActivity {
 			protected void onPostExecute(final String result) {
 				super.onPostExecute(result);
 
-				if (result != null) {
+				if (result == null) {
+					showMessage(getString(R.string.error_digipost_api));
+				} else {
 					Intent i = new Intent(getActivity(), HtmlWebview.class);
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);
 					startActivity(i);

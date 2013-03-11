@@ -34,9 +34,9 @@
     <string name="abort">Avbryt</string>
     <string name="loading_content">Laster innhold...</string>
     <string name="pdf_search_document">Søk i dokumentet...</string>
-    <string name="error_your_network">Nettverksfeil. \nSjekk internetforbindelsen din og prøv igjen.</string>
+    <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv igjen.</string>
     <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.</string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
     <string name="dialog_error_not_supported_filetype">Beklager! \nDigipost for Android støtter ikke denne filtypen</string>
-    <string name="dialog_error_two_factor">Beklager! \nDette brevet krever autentisering med Bank ID. \nLogg inn på Digipost.no for å se innholdet</string>
+    <string name="dialog_error_two_factor">Beklager! \nDette brevet krever autentisering med Bank ID. Logg inn på Digipost.no for å se innholdet</string>
 </resources>
