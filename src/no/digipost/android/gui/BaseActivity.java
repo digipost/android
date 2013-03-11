@@ -214,10 +214,10 @@ public class BaseActivity extends FragmentActivity {
 				showMessage(errorMessage);
 			} else {
 				adapter_receipts.updateList(result);
-				progressDialog.dismiss();
-				updatingView[LetterOperations.RECEIPTS] = false;
-				toggleRefreshButton();
 			}
+			progressDialog.dismiss();
+			updatingView[LetterOperations.RECEIPTS] = false;
+			toggleRefreshButton();
 		}
 
 		@Override
