@@ -18,6 +18,7 @@ package no.digipost.android.api;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import no.digipost.android.R;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
@@ -34,15 +35,22 @@ public class LetterOperations {
 	public static final int RECEIPTS = 3;
 
 	private final ApiAccess apiAccess;
+	private final Context context;
 	static String profil_id;
 
 	public LetterOperations(final Context context) {
+		this.context = context;
 		apiAccess = new ApiAccess(context);
 	}
 
 	public ArrayList<Letter> getAccountContentMeta(final String access_token, final int type) throws DigipostApiException,
 			DigipostClientException {
 		Account account = apiAccess.getPrimaryAccount(access_token);
+
+		if (account == null) {
+			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
+		}
+
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
 
 		profil_id = primaryaccount.getInboxUri().substring(50, 56);
