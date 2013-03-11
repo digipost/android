@@ -114,7 +114,7 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	private String getDateFormatted(final String date) {
 		String date_substring = date.substring(0, 10);
 		SimpleDateFormat fromApi = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat guiFormat = new SimpleDateFormat("d MMM yyyy", Locale.getDefault());
+		SimpleDateFormat guiFormat = new SimpleDateFormat("d. MMM yyyy", Locale.getDefault());
 		String formatted = null;
 		try {
 			formatted = guiFormat.format(fromApi.parse(date_substring));
