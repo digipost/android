@@ -58,6 +58,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity {
+	private static final String CURRENT_PAGE = "currentPage";
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ImageButton optionsButton;
@@ -138,6 +139,21 @@ public class BaseActivity extends FragmentActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(final Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(CURRENT_PAGE, pageListener.getCurrentPage());
+		System.out.println("save");
+	}
+
+	@Override
+	protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		int currentPage = savedInstanceState.getInt(CURRENT_PAGE);
+		mViewPager.setCurrentItem(currentPage);
+		System.out.println("load");
 	}
 
 	private void logOut() {
