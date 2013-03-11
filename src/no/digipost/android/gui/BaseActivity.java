@@ -108,6 +108,7 @@ public class BaseActivity extends FragmentActivity {
 		networkConnection = new NetworkConnection(this);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setOnPageChangeListener(pageListener);
+		mViewPager.setClickable(true);
 	}
 
 	private class ButtonListener implements OnClickListener {
