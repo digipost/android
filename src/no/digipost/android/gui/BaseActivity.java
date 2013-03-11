@@ -266,7 +266,8 @@ public class BaseActivity extends FragmentActivity {
 
 	private void unsupportedActionDialog(final int resource) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(resource)
+		builder.setTitle(getString(R.string.dialog_error_header))
+				.setMessage(resource)
 				.setCancelable(false)
 				.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int id) {
