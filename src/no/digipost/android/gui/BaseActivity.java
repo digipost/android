@@ -141,6 +141,12 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	@Override
+	protected void onActivityResult(final int arg0, final int arg1, final Intent arg2) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(arg0, arg1, arg2);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(final Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_base, menu);
 		return true;
@@ -614,9 +620,14 @@ public class BaseActivity extends FragmentActivity {
 				super.onPostExecute(result);
 
 				if (result != null) {
+
 					Intent i = new Intent(getActivity(), HtmlWebview.class);
+					String type = letter != null? "letter" : "receipt";
+					i.putExtra("type",type);
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);
-					i.putExtra("from", letter.getLocation());
+					if(type.equals("letter")) {
+						i.putExtra("from", letter.getLocation());
+					}
 					startActivityForResult(i, REQUESTCODE_HTMLVIEW);
 				}
 
