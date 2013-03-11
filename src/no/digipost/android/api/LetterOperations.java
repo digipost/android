@@ -43,60 +43,54 @@ public class LetterOperations {
 		apiAccess = new ApiAccess(context);
 	}
 
-	public ArrayList<Letter> getAccountContentMeta(final String access_token, final int type) throws DigipostApiException,
-			DigipostClientException {
-		Account account = apiAccess.getPrimaryAccount(access_token);
-		
+	public ArrayList<Letter> getAccountContentMeta(final int type) throws DigipostApiException, DigipostClientException {
+		Account account = apiAccess.getPrimaryAccount();
+
 		if (account == null) {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
-		
+
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
 
 		profil_id = primaryaccount.getInboxUri().substring(50, 56);
 
 		switch (type) {
 		case MAILBOX:
-			return apiAccess.getDocuments(access_token, primaryaccount.getInboxUri()).getDocument();
+			return apiAccess.getDocuments(primaryaccount.getInboxUri()).getDocument();
 		case ARCHIVE:
-			return apiAccess.getDocuments(access_token, primaryaccount.getArchiveUri()).getDocument();
+			return apiAccess.getDocuments(primaryaccount.getArchiveUri()).getDocument();
 		case WORKAREA:
-			return apiAccess.getDocuments(access_token, primaryaccount.getWorkareaUri()).getDocument();
+			return apiAccess.getDocuments(primaryaccount.getWorkareaUri()).getDocument();
 		default:
 			return null;
 		}
 	}
 
-	public ArrayList<Receipt> getAccountContentMetaReceipt(final String access_token) throws DigipostApiException, DigipostClientException {
+	public ArrayList<Receipt> getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException {
 		String uri = "https://www.digipost.no/post/api/private/accounts/" + profil_id + "/receipts";
-		return apiAccess.getReceipts(access_token, uri).getReceipt();
+		return apiAccess.getReceipts(uri).getReceipt();
 	}
 
-	public boolean moveDocument(final String access_token, final Letter letter) throws ParseException, DigipostClientException,
-			DigipostApiException, IOException {
-		Letter movedletter = apiAccess.getMovedDocument(access_token, letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
+	public boolean moveDocument(final Letter letter) throws ParseException, DigipostClientException, DigipostApiException, IOException {
+		Letter movedletter = apiAccess.getMovedDocument(letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
 
 		return movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE);
 	}
 
-	public byte[] getDocumentContentPDF(final String access_token, final Letter letter) throws DigipostApiException,
-			DigipostClientException {
+	public byte[] getDocumentContentPDF(final Letter letter) throws DigipostApiException, DigipostClientException {
 		ApiAccess.filesize = Integer.parseInt(letter.getFileSize());
-		return apiAccess.getDocumentContent(access_token, letter.getContentUri());
+		return apiAccess.getDocumentContent(letter.getContentUri());
 	}
 
-	public String getDocumentContentHTML(final String access_token, final Letter letter) throws DigipostApiException,
-			DigipostClientException {
-		return apiAccess.getDocumentHTML(access_token, letter.getContentUri());
+	public String getDocumentContentHTML(final Letter letter) throws DigipostApiException, DigipostClientException {
+		return apiAccess.getDocumentHTML(letter.getContentUri());
 	}
 
-	public byte[] getReceiptContentPDF(final String access_token, final Receipt receipt) throws DigipostApiException,
-			DigipostClientException {
-		return apiAccess.getDocumentContent(access_token, receipt.getContentAsPDFUri());
+	public byte[] getReceiptContentPDF(final Receipt receipt) throws DigipostApiException, DigipostClientException {
+		return apiAccess.getDocumentContent(receipt.getContentAsPDFUri());
 	}
 
-	public String getReceiptContentHTML(final String access_token, final Receipt receipt) throws DigipostApiException,
-			DigipostClientException {
-		return apiAccess.getReceiptHTML(access_token, receipt.getContentAsHTMLUri());
+	public String getReceiptContentHTML(final Receipt receipt) throws DigipostApiException, DigipostClientException {
+		return apiAccess.getReceiptHTML(receipt.getContentAsHTMLUri());
 	}
 }

@@ -50,16 +50,16 @@ public class ApiAccess {
 		networkConnection = new NetworkConnection(context);
 	}
 
-	public Account getPrimaryAccount(final String access_token) throws DigipostApiException, DigipostClientException {
-		return (Account) JSONConverter.processJackson(Account.class, getApiJsonString(access_token, ApiConstants.URL_API));
+	public Account getPrimaryAccount() throws DigipostApiException, DigipostClientException {
+		return (Account) JSONConverter.processJackson(Account.class, getApiJsonString(ApiConstants.URL_API));
 	}
 
-	public Documents getDocuments(final String access_token, final String uri) throws DigipostApiException, DigipostClientException {
-		return (Documents) JSONConverter.processJackson(Documents.class, getApiJsonString(access_token, uri));
+	public Documents getDocuments(final String uri) throws DigipostApiException, DigipostClientException {
+		return (Documents) JSONConverter.processJackson(Documents.class, getApiJsonString(uri));
 	}
 
-	public Receipts getReceipts(final String access_token, final String uri) throws DigipostApiException, DigipostClientException {
-		return (Receipts) JSONConverter.processJackson(Receipts.class, getApiJsonString(access_token, uri));
+	public Receipts getReceipts(final String uri) throws DigipostApiException, DigipostClientException {
+		return (Receipts) JSONConverter.processJackson(Receipts.class, getApiJsonString(uri));
 	}
 
 	private ClientResponse executeGetRequest(final String uri, final String header_accept, final String header_authorization)
@@ -78,26 +78,24 @@ public class ApiAccess {
 		}
 	}
 
-	public String getApiJsonString(final String access_token, final String uri) throws DigipostApiException, DigipostClientException {
-		ClientResponse cr = executeGetRequest(uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON, access_token);
+	public String getApiJsonString(final String uri) throws DigipostApiException, DigipostClientException {
+		ClientResponse cr = executeGetRequest(uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON, Secret.ACCESS_TOKEN);
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
 			OAuth2.updateRefreshTokenSuccess(context);
-			return getApiJsonString(Secret.ACCESS_TOKEN, uri);
+			return getApiJsonString(uri);
 		}
 
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());
 	}
 
-	public Letter getMovedDocument(final String access_token, final String uri, final StringEntity json) throws DigipostClientException,
-			DigipostApiException {
-		return (Letter) JSONConverter.processJackson(Letter.class, moveLetter(access_token, uri, json));
+	public Letter getMovedDocument(final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException {
+		return (Letter) JSONConverter.processJackson(Letter.class, moveLetter(uri, json));
 	}
 
-	public String moveLetter(final String access_token, final String uri, final StringEntity json) throws DigipostClientException,
-			DigipostApiException {
+	public String moveLetter(final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException {
 
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost post = new HttpPost();
@@ -108,7 +106,7 @@ public class ApiAccess {
 		}
 		post.addHeader(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
 		post.addHeader(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
-		post.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + access_token);
+		post.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
 		post.setEntity(json);
 
 		HttpResponse response;
@@ -122,7 +120,7 @@ public class ApiAccess {
 			networkConnection.checkHttpStatusCode(response.getStatusLine().getStatusCode());
 		} catch (IllegalStateException e) {
 			OAuth2.updateRefreshTokenSuccess(context);
-			return moveLetter(Secret.ACCESS_TOKEN, uri, json);
+			return moveLetter(uri, json);
 		}
 
 		InputStream is = null;
@@ -139,40 +137,40 @@ public class ApiAccess {
 
 	}
 
-	public byte[] getDocumentContent(final String access_token, final String uri) throws DigipostApiException, DigipostClientException {
-		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM, access_token);
+	public byte[] getDocumentContent(final String uri) throws DigipostApiException, DigipostClientException {
+		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM, Secret.ACCESS_TOKEN);
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
 			OAuth2.updateRefreshTokenSuccess(context);
-			return getDocumentContent(Secret.ACCESS_TOKEN, uri);
+			return getDocumentContent(uri);
 		}
 
 		return JSONConverter.inputStreamtoByteArray(filesize, cr.getEntityInputStream());
 	}
 
-	public String getDocumentHTML(final String access_token, final String uri) throws DigipostApiException, DigipostClientException {
-		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM, access_token);
+	public String getDocumentHTML(final String uri) throws DigipostApiException, DigipostClientException {
+		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM, Secret.ACCESS_TOKEN);
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
 			OAuth2.updateRefreshTokenSuccess(context);
-			return getDocumentHTML(Secret.ACCESS_TOKEN, uri);
+			return getDocumentHTML(uri);
 		}
 
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());
 	}
 
-	public String getReceiptHTML(final String access_token, final String uri) throws DigipostApiException, DigipostClientException {
-		ClientResponse cr = executeGetRequest(uri, ApiConstants.TEXT_HTML, access_token);
+	public String getReceiptHTML(final String uri) throws DigipostApiException, DigipostClientException {
+		ClientResponse cr = executeGetRequest(uri, ApiConstants.TEXT_HTML, Secret.ACCESS_TOKEN);
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
 			OAuth2.updateRefreshTokenSuccess(context);
-			return getDocumentHTML(Secret.ACCESS_TOKEN, uri);
+			return getDocumentHTML(uri);
 		}
 
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());

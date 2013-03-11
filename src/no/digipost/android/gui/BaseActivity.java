@@ -23,7 +23,6 @@ import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.DigipostApiException;
 import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.api.LetterOperations;
-import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
@@ -188,25 +187,25 @@ public class BaseActivity extends FragmentActivity {
 
 	public void loadMailbox() {
 		if (networkConnection.isNetworkAvailable()) {
-			new GetAccountMetaTask(LetterOperations.MAILBOX).execute(Secret.ACCESS_TOKEN);
+			new GetAccountMetaTask(LetterOperations.MAILBOX).execute();
 		}
 	}
 
 	private void loadWorkbench() {
 		if (networkConnection.isNetworkAvailable()) {
-			new GetAccountMetaTask(LetterOperations.WORKAREA).execute(Secret.ACCESS_TOKEN);
+			new GetAccountMetaTask(LetterOperations.WORKAREA).execute();
 		}
 	}
 
 	private void loadArchive() {
 		if (networkConnection.isNetworkAvailable()) {
-			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(Secret.ACCESS_TOKEN);
+			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute();
 		}
 	}
 
 	private void loadReceipts() {
 		if (networkConnection.isNetworkAvailable()) {
-			new GetAccountReceiptMetaTask().execute(Secret.ACCESS_TOKEN);
+			new GetAccountReceiptMetaTask().execute();
 		}
 	}
 
@@ -223,7 +222,7 @@ public class BaseActivity extends FragmentActivity {
 		alert.show();
 	}
 
-	private class GetAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
+	private class GetAccountReceiptMetaTask extends AsyncTask<Void, Void, ArrayList<Receipt>> {
 		private String errorMessage = "";
 
 		@Override
@@ -233,10 +232,10 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		@Override
-		protected ArrayList<Receipt> doInBackground(final String... params) {
+		protected ArrayList<Receipt> doInBackground(final Void... params) {
 
 			try {
-				return lo.getAccountContentMetaReceipt(params[0]);
+				return lo.getAccountContentMetaReceipt();
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
 				return null;
@@ -269,7 +268,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	private class GetAccountMetaTask extends AsyncTask<String, Void, ArrayList<Letter>> {
+	private class GetAccountMetaTask extends AsyncTask<Void, Void, ArrayList<Letter>> {
 		private final int type;
 		private String errorMessage = "";
 
@@ -284,10 +283,10 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		@Override
-		protected ArrayList<Letter> doInBackground(final String... params) {
+		protected ArrayList<Letter> doInBackground(final Void... params) {
 
 			try {
-				return lo.getAccountContentMeta(params[0], type);
+				return lo.getAccountContentMeta(type);
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
 				return null;
@@ -485,7 +484,7 @@ public class BaseActivity extends FragmentActivity {
 
 		}
 
-		private class MoveDocumentsTask extends AsyncTask<Object, Void, Boolean> {
+		private class MoveDocumentsTask extends AsyncTask<Letter, Void, Boolean> {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
@@ -500,10 +499,10 @@ public class BaseActivity extends FragmentActivity {
 			}
 
 			@Override
-			protected Boolean doInBackground(final Object... params) {
+			protected Boolean doInBackground(final Letter... params) {
 				boolean moved = false;
 				try {
-					moved = lo.moveDocument((String) params[0], (Letter) params[1]);
+					moved = lo.moveDocument(params[0]);
 				} catch (Exception e) {
 					e.printStackTrace();
 					return null;
@@ -530,7 +529,7 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 
-		private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
+		private class GetPDFTask extends AsyncTask<Letter, Void, byte[]> {
 			private String errorMessage = "";
 
 			@Override
@@ -546,10 +545,10 @@ public class BaseActivity extends FragmentActivity {
 			}
 
 			@Override
-			protected byte[] doInBackground(final Object... params) {
+			protected byte[] doInBackground(final Letter... params) {
 
 				try {
-					return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+					return lo.getDocumentContentPDF(params[0]);
 				} catch (DigipostApiException e) {
 					errorMessage = e.getMessage();
 					return null;
@@ -607,10 +606,10 @@ public class BaseActivity extends FragmentActivity {
 
 				String html = null;
 
-				if (params[1].equals(ApiConstants.GET_RECEIPT)) {
+				if (params[0].equals(ApiConstants.GET_RECEIPT)) {
 
 					try {
-						html = lo.getReceiptContentHTML((String) params[0], (Receipt) params[2]);
+						html = lo.getReceiptContentHTML((Receipt) params[1]);
 						return html;
 					} catch (DigipostApiException e) {
 						errorMessage = e.getMessage();
@@ -623,7 +622,7 @@ public class BaseActivity extends FragmentActivity {
 				} else {
 
 					try {
-						html = lo.getDocumentContentHTML((String) params[0], (Letter) params[2]);
+						html = lo.getDocumentContentHTML((Letter) params[1]);
 						return html;
 					} catch (DigipostApiException e) {
 						errorMessage = e.getMessage();
@@ -681,10 +680,10 @@ public class BaseActivity extends FragmentActivity {
 				if (networkConnection.isNetworkAvailable()) {
 					if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
 						GetPDFTask pdfTask = new GetPDFTask();
-						pdfTask.execute(Secret.ACCESS_TOKEN, mletter);
+						pdfTask.execute(mletter);
 					} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 						GetHTMLTask htmlTask = new GetHTMLTask();
-						htmlTask.execute(Secret.ACCESS_TOKEN, ApiConstants.GET_DOCUMENT, mletter);
+						htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
 					} else {
 						unsupportedActionDialog(R.string.dialog_error_not_supported_filetype);
 						return;
@@ -706,7 +705,7 @@ public class BaseActivity extends FragmentActivity {
 				Receipt mReceipt = adapter.getItem(position);
 
 				GetHTMLTask htmlTask = new GetHTMLTask();
-				htmlTask.execute(Secret.ACCESS_TOKEN, ApiConstants.GET_RECEIPT, mReceipt);
+				htmlTask.execute(ApiConstants.GET_RECEIPT, mReceipt);
 			}
 		}
 	}
