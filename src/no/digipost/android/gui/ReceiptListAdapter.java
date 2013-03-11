@@ -16,6 +16,7 @@
 package no.digipost.android.gui;
 
 //import android.R;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,7 +65,16 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 		date.setText(getDateFormatted(receipts.get(position).getTimeOfPurchase()));
 		TextView price = (TextView) row.findViewById(R.id.mail_size_price);
 		price.setTextColor(con.getResources().getColor(R.color.green_price));
-		price.setText(receipts.get(position).getAmount() + " " + receipts.get(position).getCurrency());
+		String currency = receipts.get(position).getCurrency();
+		if (currency.equals("NOK")) {
+			currency = "kr.";
+		}
+		String amount = receipts.get(position).getAmount();
+		Double number = Double.valueOf(amount);
+		DecimalFormat dec = new DecimalFormat("#.00");
+		amount = dec.format(number);
+
+		price.setText(amount + " " + currency);
 
 		checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
 

@@ -23,7 +23,12 @@
     <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
-    <string name="empty_listview_text">Ingen elementer.</string>
+   
+    <string name="empty_listview_mailbox">Du har ingen brev i din postkasse. Alle brev som sendes til deg i Digipost vil komme hit.</string>
+    <string name="empty_listview_archive">Du har ingen dokumenter i arkivet. Her kan du arkivere brev og laste opp dine viktige filer.</string>
+    <string name="empty_listview_workarea">Du har ingen dokumenter på kjøkkenbenken. Her kan du legge ting du vil arbeide videre med.</string>
+    <string name="empty_listview_receipts">Du har ingen kvitteringer tilgjengelig.</string>
+            
     <string name="menu_settings">Settings</string>
     <string name="title_activity_html_veb_view">HtmlVebView</string>
     <string name="pdf_no_further_occurences_found">Ingen flere treff funnet</string>

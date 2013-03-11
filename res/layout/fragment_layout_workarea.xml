@@ -33,21 +33,18 @@
         android:id="@+id/empty_listview_workarea"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:background="#BFBFBF"
+        android:gravity="center"
         android:orientation="vertical"
-        android:gravity="center">
-
-        <ImageView
-            android:layout_width="100sp"
-            android:layout_height="100sp"
-            android:src="@drawable/kjokkenbenk4"
-            android:paddingBottom="40sp" />
+        android:padding="20dp"
+        android:visibility="gone" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/empty_listview_text"
-            android:textSize="30sp" />
+            android:text="@string/empty_listview_workarea"
+            android:textColor="#5E5E5E"
+            android:textSize="18sp" />
     </LinearLayout>
 
 </LinearLayout>
