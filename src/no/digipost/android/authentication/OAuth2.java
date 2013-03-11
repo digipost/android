@@ -71,9 +71,9 @@ public class OAuth2 {
 		Access data = getAccessData(params, context);
 
 		if (!state.equals(url_state)) {
-			throw new IllegalStateException(context.getString(R.string.error_digipos_api));
+			throw new IllegalStateException(context.getString(R.string.error_digipost_api));
 		} else if (!verifyAuth(data.getId_token(), Secret.CLIENT_SECRET)) {
-			throw new AuthenticationException(context.getString(R.string.error_digipos_api));
+			throw new AuthenticationException(context.getString(R.string.error_digipost_api));
 		}
 
 		encryptAndStoreRefreshToken(data, context);
@@ -84,9 +84,6 @@ public class OAuth2 {
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
 		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
-
-		// TODO Sjekk om verifisering av signatur ernødvendig
-
 		Secret.ACCESS_TOKEN = getAccessData(params, context).getAccess_token();
 	}
 

@@ -74,9 +74,9 @@ public class BaseActivity extends FragmentActivity {
 	private ImageButton refreshButton;
 	private ProgressBar refreshSpinner;
 	private ButtonListener listener;
-	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
+	public static final int REQUESTCODE_HTMLVIEW = 1;
 	private ProgressDialog progressDialog;
 	private NetworkConnection networkConnection;
 
@@ -85,17 +85,16 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println("BaseActivity OnCreate");
 		setContentView(R.layout.activity_base);
+		context = this;
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		progressDialog.setMessage("Laster innhold...");
+		progressDialog.setMessage(getString(R.string.loading_content));
 		progressDialog.setCancelable(false);
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setOffscreenPageLimit(3);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		context = this;
 		refreshSpinner = (ProgressBar) findViewById(R.id.base_refreshSpinner);
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
 		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
@@ -103,7 +102,6 @@ public class BaseActivity extends FragmentActivity {
 		optionsButton.setOnClickListener(listener);
 		refreshButton.setOnClickListener(listener);
 		networkConnection = new NetworkConnection(this);
-
 	}
 
 	private class ButtonListener implements OnClickListener {
@@ -208,6 +206,12 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
+	@Override
+	public void onBackPressed() {
+		System.out.println("YTTERST, BACK PRESSA");
+		super.onBackPressed();
+	}
+
 	public class DigipostSectionFragment extends Fragment {
 
 		public static final String ARG_SECTION_NUMBER = "section_number";
@@ -226,7 +230,7 @@ public class BaseActivity extends FragmentActivity {
 		private ListView lv_archive;
 		private ListView lv_receipts;
 		private ImageButton refreshButton;
-
+		private Letter tempLetter;
 
 		public DigipostSectionFragment() {
 		}
@@ -239,10 +243,7 @@ public class BaseActivity extends FragmentActivity {
 
 		@Override
 		public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-			System.out.println("onCreateView");
 			int number = getArguments().getInt(ARG_SECTION_NUMBER);
-			System.out.println("number: " + number);
-
 			if (number == 1) {
 				View v = inflater.inflate(R.layout.fragment_layout_mailbox, container, false);
 
@@ -257,6 +258,7 @@ public class BaseActivity extends FragmentActivity {
 
 					public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 						LetterListAdapter.showboxes = true;
+						lv_mailbox.requestFocus();
 						adapter_mailbox.setInitialcheck(position);
 						adapter_mailbox.notifyDataSetChanged();
 						return true;
@@ -286,7 +288,6 @@ public class BaseActivity extends FragmentActivity {
 			} else if (number == 2) {
 				View v = inflater.inflate(R.layout.fragment_layout_workarea, container, false);
 				lv_workarea = (ListView) v.findViewById(R.id.listview_kitchen);
-				System.out.println("1st: " + lv_workarea);
 				View emptyView = v.findViewById(R.id.empty_listview_workarea);
 				lv_workarea.setEmptyView(emptyView);
 				adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
@@ -345,15 +346,17 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 
-		private void unsupportedActionDialog(final int resourceString) {
+		private void unsupportedActionDialog(final String text) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage(resourceString)
-			       .setCancelable(false)
-			       .setNeutralButton("Lukk", new DialogInterface.OnClickListener() {
-			           public void onClick(final DialogInterface dialog, final int id) {
-			                dialog.cancel();
-			           }
-			       });
+
+			builder.setMessage(text)
+					.setCancelable(false)
+					.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+						public void onClick(final DialogInterface dialog, final int id) {
+							dialog.cancel();
+						}
+					});
+
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
@@ -432,9 +435,6 @@ public class BaseActivity extends FragmentActivity {
 				case LetterOperations.ARCHIVE:
 					adapter_archive.updateList(result);
 					break;
-				// case LetterOperations.RECEIPTS:
-				// adapter_receipts.updateList(result);
-				// break;
 				}
 
 				progressDialog.dismiss();
@@ -456,7 +456,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int which) {
 						dialog.dismiss();
 						cancel(true);
@@ -472,28 +472,20 @@ public class BaseActivity extends FragmentActivity {
 				try {
 					moved = lo.moveDocument((String) params[0], (Letter) params[1]);
 				} catch (ClientProtocolException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (UniformInterfaceException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ClientHandlerException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (NetworkErrorException e) {
 					showMessage(e.getMessage());
@@ -525,7 +517,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int which) {
 						dialog.dismiss();
 						cancel(true);
@@ -547,7 +539,6 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
-				System.out.println("cancel pdf");
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
@@ -571,10 +562,11 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private class GetHTMLTask extends AsyncTask<Object, Void, String> {
+			Letter letter;
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Avbryt", new DialogInterface.OnClickListener() {
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int which) {
 						dialog.dismiss();
 						cancel(true);
@@ -603,14 +595,15 @@ public class BaseActivity extends FragmentActivity {
 						showMessage(e.getMessage());
 						return null;
 					}
+					letter = (Letter) params[2];
 				}
+
 				return html;
 			}
 
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
-				System.out.println("cancel html");
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
@@ -621,14 +614,33 @@ public class BaseActivity extends FragmentActivity {
 				super.onPostExecute(result);
 
 				if (result != null) {
-					Intent i = new Intent(getActivity(), Html_WebViewTest.class);
+					Intent i = new Intent(getActivity(), HtmlWebview.class);
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);
-					startActivity(i);
+					i.putExtra("from", letter.getLocation());
+					startActivityForResult(i, REQUESTCODE_HTMLVIEW);
 				}
 
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
+			}
+		}
+
+		@Override
+		public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+			super.onActivityResult(requestCode, resultCode, data);
+			if(resultCode == RESULT_OK) {
+				if(requestCode == REQUESTCODE_HTMLVIEW) {
+					System.out.println("BACK FROM HTML");
+					Bundle b = data.getExtras();
+					if(b.getString("newAction").equals(ApiConstants.LOCATION_ARCHIVE)) {
+						System.out.println("INNI RESULT, PRØVER Å FIKSE");
+						MoveDocumentsTask moveTask = new MoveDocumentsTask();
+						tempLetter.setLocation(ApiConstants.LOCATION_ARCHIVE);
+						moveTask.execute(Secret.ACCESS_TOKEN,tempLetter);
+						adapter_mailbox.remove(tempLetter);
+					}
+				}
 			}
 		}
 
@@ -641,8 +653,9 @@ public class BaseActivity extends FragmentActivity {
 
 			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 				Letter mletter = adapter.getItem(position);
-				if(mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-					unsupportedActionDialog(R.string.dialog_error_two_factor);
+				tempLetter = mletter;
+				if (mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+					unsupportedActionDialog(getString(R.string.dialog_error_two_factor));
 					return;
 				}
 				String filetype = mletter.getFileType();
@@ -655,7 +668,7 @@ public class BaseActivity extends FragmentActivity {
 						GetHTMLTask htmlTask = new GetHTMLTask();
 						htmlTask.execute(Secret.ACCESS_TOKEN, ApiConstants.GET_DOCUMENT, mletter);
 					} else {
-						unsupportedActionDialog(R.string.dialog_error_not_supported_filetype);
+						unsupportedActionDialog(getString(R.string.dialog_error_not_supported_filetype));
 						return;
 					}
 				} else {

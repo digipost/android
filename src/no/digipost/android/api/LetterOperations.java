@@ -40,7 +40,7 @@ public class LetterOperations {
 	public static final int RECEIPTS = 3;
 
 	private final ApiAccess apiAccess;
-	static String temp;
+	static String profil_id;
 
 	public LetterOperations(final Context context) {
 		apiAccess = new ApiAccess(context);
@@ -50,7 +50,7 @@ public class LetterOperations {
 		Account account = apiAccess.getPrimaryAccount(access_token);
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
 
-		temp = primaryaccount.getInboxUri().substring(50, 56);
+		profil_id = primaryaccount.getInboxUri().substring(50, 56);
 
 		switch (type) {
 		case MAILBOX:
@@ -59,16 +59,13 @@ public class LetterOperations {
 			return apiAccess.getDocuments(access_token, primaryaccount.getArchiveUri()).getDocument();
 		case WORKAREA:
 			return apiAccess.getDocuments(access_token, primaryaccount.getWorkareaUri()).getDocument();
-			// case RECEIPTS:
-			// return apiAccess.getReceipts(access_token,
-			// primaryaccount.getReceiptsUri()).getReceipt();
 		default:
 			return null;
 		}
 	}
 
 	public ArrayList<Receipt> getAccountContentMetaReceipt(final String access_token) throws NetworkErrorException {
-		String uri = "https://www.digipost.no/post/api/private/accounts/" + temp + "/receipts";
+		String uri = "https://www.digipost.no/post/api/private/accounts/" + profil_id + "/receipts";
 		return apiAccess.getReceipts(access_token, uri).getReceipt();
 	}
 

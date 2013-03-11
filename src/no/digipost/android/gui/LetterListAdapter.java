@@ -62,7 +62,7 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		row.setBackgroundDrawable((position % 2 == 0) ? even : odd);
 
 		TextView subject = (TextView) row.findViewById(R.id.mail_subject);
-		if(letters.get(position).getRead().equals("false")) {
+		if (letters.get(position).getRead().equals("false")) {
 			subject.setTypeface(null, Typeface.BOLD);
 		}
 		subject.setText(letters.get(position).getSubject());
@@ -73,11 +73,10 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		creator.setText(letters.get(position).getCreatorName());
 		TextView size = (TextView) row.findViewById(R.id.mail_size_price);
 		ImageView locked = (ImageView) row.findViewById(R.id.document_locked);
-		if(letters.get(position).getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+		if (letters.get(position).getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
 			locked.setVisibility(View.VISIBLE);
 			size.setVisibility(View.INVISIBLE);
-		}
-		else {
+		} else {
 			size.setText(getSizeFormatted(letters.get(position).getFileSize()));
 		}
 
@@ -91,7 +90,6 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 
 			checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				public void onCheckedChanged(final CompoundButton arg0, final boolean state) {
-					// TODO Auto-generated method stub
 					checked[position] = state;
 				}
 			});
@@ -134,21 +132,19 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		try {
 			formatted = guiFormat.format(fromApi.parse(date_substring));
 		} catch (ParseException e) {
-			// Ignore
 		}
 		return formatted;
 	}
 
 	private String getSizeFormatted(final String byteString) {
 		long bytes = Long.parseLong(byteString);
-		String[] units = new String[]{"", "KB", "MB", "GB"};
-		for (int i = 3; i > 0; i--)
-	    {
-	        double exp = Math.pow(1024, i);
-	        if (bytes > exp) {
+		String[] units = new String[] { "", "KB", "MB", "GB" };
+		for (int i = 3; i > 0; i--) {
+			double exp = Math.pow(1024, i);
+			if (bytes > exp) {
 				return String.format("%3.1f %s", bytes / exp, units[i]);
 			}
-	    }
-	    return Long.toString(bytes);
+		}
+		return Long.toString(bytes);
 	}
 }

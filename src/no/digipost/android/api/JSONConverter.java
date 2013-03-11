@@ -60,7 +60,6 @@ public class JSONConverter {
 				reader.close();
 				writer.close();
 			} catch (Exception e) {
-				// TODO Feilhåndtering
 			}
 
 			content = writer.toString();

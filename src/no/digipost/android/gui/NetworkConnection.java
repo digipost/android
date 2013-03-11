@@ -30,7 +30,7 @@ public class NetworkConnection {
 		} else if (statusCode == 401) {
 			throw new IllegalStateException();
 		} else {
-			throw new NetworkErrorException(context.getString(R.string.error_digipos_api));
+			throw new NetworkErrorException(context.getString(R.string.error_digipost_api));
 		}
 	}
 
@@ -51,8 +51,8 @@ public class NetworkConnection {
 		@Override
 		protected Boolean doInBackground(final Void... params) {
 			try {
-				URL myUrl = new URL("https://www.digipost.no");
-				URLConnection connection = myUrl.openConnection();
+				URL url = new URL("https://www.digipost.no");
+				URLConnection connection = url.openConnection();
 				connection.setConnectTimeout(3000);
 				connection.connect();
 				return true;

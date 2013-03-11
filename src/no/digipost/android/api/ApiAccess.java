@@ -33,7 +33,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.codehaus.jettison.json.JSONObject;
 
 import android.accounts.NetworkErrorException;
 import android.content.Context;
@@ -44,8 +43,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 
 public class ApiAccess {
-	private String json;
-	private JSONObject jsonob;
 	static int filesize = 0;
 	private final Context context;
 	private final NetworkConnection networkConnection;
