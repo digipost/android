@@ -69,11 +69,11 @@ public class LetterOperations {
 		return apiAccess.getReceipts(access_token, uri).getReceipt();
 	}
 
-	public boolean moveDocument(final String access_token, final Letter letter) throws ClientProtocolException, UniformInterfaceException,
+	public boolean moveDocument(final String access_token, final Letter letter, final String toLocation) throws ClientProtocolException, UniformInterfaceException,
 			ClientHandlerException, ParseException, IOException, URISyntaxException, IllegalStateException, NetworkErrorException {
 		Letter movedletter = apiAccess.getMovedDocument(access_token, letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
 
-		return movedletter.getLocation().equals(ApiConstants.LOCATION_ARCHIVE);
+		return movedletter.getLocation().equals(toLocation);
 	}
 
 	public byte[] getDocumentContentPDF(final String access_token, final Letter letter) throws NetworkErrorException {

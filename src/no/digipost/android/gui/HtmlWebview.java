@@ -3,6 +3,8 @@ package no.digipost.android.gui;
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -33,10 +35,8 @@ public class HtmlWebview extends Activity {
 		String mime = "text/html";
 		String encoding = "utf-8";
 
-		from = getIntent().getExtras().getString("from");
-		type = getIntent().getExtras().getString("type");
-
-		System.out.println("I HTMLVIEW, HAR EXTRA MED: " + from);
+		from = getIntent().getExtras().getString(ApiConstants.LOCATION_FROM);
+		type = getIntent().getExtras().getString(ApiConstants.DOCUMENT_TYPE);
 
 		createButtons();
 
@@ -59,14 +59,13 @@ public class HtmlWebview extends Activity {
 		digipostIcon = (ImageButton) findViewById(R.id.html_digipost_icon);
 		backButton = (ImageButton) findViewById(R.id.html_backbtn);
 
-		if (type.equals("receipt")) {
+		if (type.equals(ApiConstants.RECEIPT)) {
 			toArchive.setVisibility(View.GONE);
 			toMailbox.setVisibility(View.GONE);
 			toWorkarea.setVisibility(View.GONE);
 		} else {
-			if (from.equals("INBOX")) {
+			if (from.equals(ApiConstants.LOCATION_INBOX)) {
 				toMailbox.setVisibility(View.GONE);
-				System.out.println("Kommer fra mailbox, gjør den usynlig");
 			} else if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
 				toArchive.setVisibility(View.GONE);
 			} else if (from.equals(ApiConstants.LOCATION_WORKAREA)) {
@@ -86,22 +85,38 @@ public class HtmlWebview extends Activity {
 
 	private void singleLetterOperation(final String action) {
 		Intent i = new Intent(HtmlWebview.this, BaseActivity.class);
-		i.putExtra("newAction", action);
-		setResult(BaseActivity.REQUESTCODE_HTMLVIEW, i);
+		i.putExtra(ApiConstants.ACTION, action);
+		setResult(RESULT_OK, i);
 		finish();
+	}
+
+	private void showWarning(final String text, final String action) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int id) {
+				singleLetterOperation(action);
+				dialog.dismiss();
+			}
+		}).setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int id) {
+				dialog.cancel();
+			}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 
 	private class HTMLViewListener implements OnClickListener {
 
 		public void onClick(final View v) {
 			if (v.getId() == R.id.html_toArchive) {
-				singleLetterOperation(ApiConstants.LOCATION_ARCHIVE);
+				showWarning(getString(R.string.dialog_prompt_toArchive), ApiConstants.LOCATION_ARCHIVE);
 			} else if (v.getId() == R.id.html_toWorkarea) {
-				singleLetterOperation(ApiConstants.LOCATION_WORKAREA);
+				showWarning(getString(R.string.dialog_prompt_toWorkarea), ApiConstants.LOCATION_WORKAREA);
 			} else if (v.getId() == R.id.html_digipost_icon) {
 				finish();
 			} else if (v.getId() == R.id.html_delete) {
-				singleLetterOperation("delete");
+				showWarning(getString(R.string.dialog_prompt_delete), ApiConstants.DELETE);
 			}
 		}
 	}

@@ -35,16 +35,25 @@ public class ApiConstants {
 	public static final String MEDIA_TYPE = "media-type";
 	public static final String PRIMARY_ACCOUNT = "primaryAccount";
 
-	public static final String AUTHENTICATION_LEVEL_TWO_FACTOR = "TWO_FACTOR";
-
 	public static final String LOCATION_ARCHIVE = "ARCHIVE";
 	public static final String LOCATION_WORKAREA = "WORKAREA";
+	public static final String LOCATION_INBOX = "INBOX";
+	public static final String LOCATION_FROM = "from";
+	public static final String LOCATION_TO = "to";
 
 	public static final String FILETYPE_PDF = "pdf";
 	public static final String FILETYPE_HTML = "html";
 
 	public static final String GET_DOCUMENT = "document";
 	public static final String GET_RECEIPT = "receipt";
+
+	public static final String DELETE = "delete";
+	public static final String LETTER = "letter";
+	public static final String RECEIPT = "receipt";
+	public static final String ACTION = "action";
+	public static final String AUTHENTICATION_LEVEL_TWO_FACTOR = "TWO_FACTOR";
+	public static final String DOCUMENT_TYPE = "type";
+
 
 	public static final String GRANT_TYPE = "grant_type";
 	public static final String AUD = "aud";

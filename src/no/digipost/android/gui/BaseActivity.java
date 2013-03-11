@@ -169,19 +169,6 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	private void unsupportedActionDialog(final int resource) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(resource)
-				.setCancelable(false)
-				.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int id) {
-						dialog.cancel();
-					}
-				});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
 	private class GetAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
 
 		@Override
@@ -352,6 +339,16 @@ public class BaseActivity extends FragmentActivity {
 		public static final int DIALOG_ID_NOT_AUTHENTICATED = 1;
 		private Letter tempLetter;
 
+		private ImageButton mailbox_multiSelection_moveToWorkarea;
+		private ImageButton mailbox_multiSelection_moveToArchive;
+		private ImageButton mailbox_multiSelection_share;
+		private ImageButton mailbox_multiSelection_delete;
+
+		private View v1;
+		private View v2;
+		private View v3;
+		private View v4;
+
 		public DigipostSectionFragment() {
 		}
 
@@ -369,32 +366,30 @@ public class BaseActivity extends FragmentActivity {
 		public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
 			int number = getArguments().getInt(ARG_SECTION_NUMBER);
 			if (number == 1) {
-				View v = inflater.inflate(R.layout.fragment_layout_mailbox, container, false);
 
-				lv_mailbox = (ListView) v.findViewById(R.id.listview_mailbox);
-				View emptyView = v.findViewById(R.id.empty_listview_mailbox);
+				v1 = inflater.inflate(R.layout.fragment_layout_mailbox, container, false);
+
+				lv_mailbox = (ListView) v1.findViewById(R.id.listview_mailbox);
+				View emptyView = v1.findViewById(R.id.empty_listview_mailbox);
 				lv_mailbox.setEmptyView(emptyView);
 				adapter_mailbox = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
 				lv_mailbox.setAdapter(adapter_mailbox);
 				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
 
-				lv_mailbox.setOnItemLongClickListener(new OnItemLongClickListener() {
+				mailbox_multiSelection_moveToArchive = (ImageButton) v1.findViewById(R.id.mailbox_toArchive);
+				mailbox_multiSelection_moveToArchive.setOnClickListener(new MultiSelectionListener(adapter_mailbox));
 
+				lv_mailbox.setOnItemLongClickListener(new OnItemLongClickListener() {
 					public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-						LetterListAdapter.showboxes = true;
-						lv_mailbox.requestFocus();
-						adapter_mailbox.setInitialcheck(position);
-						adapter_mailbox.notifyDataSetChanged();
+						checkboxesOnOff(v1, true, position);
 						return true;
 					}
 				});
 				lv_mailbox.setOnKeyListener(new OnKeyListener() {
-					public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
+					public boolean onKey(final View view, final int keyCode, final KeyEvent event) {
 						if (keyCode == KeyEvent.KEYCODE_BACK) {
 							if (LetterListAdapter.showboxes == true) {
-								LetterListAdapter.showboxes = false;
-								adapter_mailbox.clearCheckboxes();
-								adapter_mailbox.notifyDataSetChanged();
+								checkboxesOnOff(v1, false, -1);
 								return true;
 							}
 							return false;
@@ -405,35 +400,50 @@ public class BaseActivity extends FragmentActivity {
 
 				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
 
-				return v;
+				return v1;
 
 			} else if (number == 2) {
-				View v = inflater.inflate(R.layout.fragment_layout_workarea, container, false);
-				lv_workarea = (ListView) v.findViewById(R.id.listview_kitchen);
-				View emptyView = v.findViewById(R.id.empty_listview_workarea);
+				View v2 = inflater.inflate(R.layout.fragment_layout_workarea, container, false);
+				lv_workarea = (ListView) v2.findViewById(R.id.listview_kitchen);
+				View emptyView = v2.findViewById(R.id.empty_listview_workarea);
 				lv_workarea.setEmptyView(emptyView);
 				adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
 				lv_workarea.setAdapter(adapter_workarea);
 				lv_workarea.setOnItemClickListener(new ListListener(adapter_workarea));
-				return v;
+				return v2;
 			} else if (number == 3) {
-				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
-				lv_archive = (ListView) v.findViewById(R.id.listview_archive);
-				View emptyView = v.findViewById(R.id.empty_listview_archive);
+				View v3 = inflater.inflate(R.layout.fragment_layout_archive, container, false);
+				lv_archive = (ListView) v3.findViewById(R.id.listview_archive);
+				View emptyView = v3.findViewById(R.id.empty_listview_archive);
 				lv_archive.setEmptyView(emptyView);
 				adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
 				lv_archive.setAdapter(adapter_archive);
 				lv_archive.setOnItemClickListener(new ListListener(adapter_archive));
-				return v;
+				return v3;
 			} else {
-				View v = inflater.inflate(R.layout.fragment_layout_receipts, container, false);
-				lv_receipts = (ListView) v.findViewById(R.id.listview_receipts);
-				View emptyView = v.findViewById(R.id.empty_listview_receipts);
+				View v4 = inflater.inflate(R.layout.fragment_layout_receipts, container, false);
+				lv_receipts = (ListView) v4.findViewById(R.id.listview_receipts);
+				View emptyView = v4.findViewById(R.id.empty_listview_receipts);
 				lv_receipts.setEmptyView(emptyView);
 				adapter_receipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
 				lv_receipts.setAdapter(adapter_receipts);
 				lv_receipts.setOnItemClickListener(new ReceiptListListener(adapter_receipts));
-				return v;
+				return v4;
+			}
+		}
+
+		private void checkboxesOnOff(final View v, final boolean state, final int position) {
+			if (state) {
+				LetterListAdapter.showboxes = true;
+				lv_mailbox.requestFocus();
+				adapter_mailbox.setInitialcheck(position);
+				adapter_mailbox.notifyDataSetChanged();
+				v.findViewById(R.id.mailbox_bottombar).setVisibility(View.VISIBLE);
+			} else {
+				LetterListAdapter.showboxes = false;
+				adapter_mailbox.clearCheckboxes();
+				adapter_mailbox.notifyDataSetChanged();
+				v.findViewById(R.id.mailbox_bottombar).setVisibility(View.GONE);
 			}
 		}
 
@@ -454,6 +464,7 @@ public class BaseActivity extends FragmentActivity {
 
 		private class GetHTMLTask extends AsyncTask<Object, Void, String> {
 			Letter letter;
+
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
@@ -506,11 +517,11 @@ public class BaseActivity extends FragmentActivity {
 					showMessage(getString(R.string.error_digipost_api));
 				} else {
 					Intent i = new Intent(getActivity(), HtmlWebview.class);
-					String type = letter != null? "letter" : "receipt";
-					i.putExtra("type",type);
+					String type = letter != null ? ApiConstants.LETTER : ApiConstants.RECEIPT;
+					i.putExtra(ApiConstants.DOCUMENT_TYPE, type);
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);
-					if(type.equals("letter")) {
-						i.putExtra("from", letter.getLocation());
+					if (type.equals(ApiConstants.LETTER)) {
+						i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
 						tempLetter = letter;
 					}
 					startActivityForResult(i, REQUESTCODE_HTMLVIEW);
@@ -525,53 +536,61 @@ public class BaseActivity extends FragmentActivity {
 		private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
 			@Override
 			protected void onPreExecute() {
-			super.onPreExecute();
-			progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int which) {
-			dialog.dismiss();
-			cancel(true);
-			}
-			});
-			progressDialog.show();
+				super.onPreExecute();
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.show();
 			}
 
 			@Override
 			protected byte[] doInBackground(final Object... params) {
-			try {
-			return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
-			} catch (NetworkErrorException e) {
-			return null;
-			}
+				try {
+					return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+				} catch (NetworkErrorException e) {
+					return null;
+				}
 			}
 
 			@Override
 			protected void onCancelled() {
-			super.onCancelled();
-			progressDialog.dismiss();
-			updatingView = new boolean[4];
-			toggleRefreshButton();
+				super.onCancelled();
+				progressDialog.dismiss();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
 			}
 
 			@Override
 			protected void onPostExecute(final byte[] result) {
-			super.onPostExecute(result);
+				super.onPostExecute(result);
 
-			if (result == null) {
-			showMessage(getString(R.string.error_digipost_api));
-			} else {
-			PdfStore.pdf = result;
-			Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-			i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
-			startActivity(i);
-			}
+				if (result == null) {
+					showMessage(getString(R.string.error_digipost_api));
+				} else {
+					PdfStore.pdf = result;
+					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+					i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
+					startActivity(i);
+				}
 
-			progressDialog.dismiss();
-			updatingView = new boolean[4];
-			toggleRefreshButton();
+				progressDialog.dismiss();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
 			}
-			}
+		}
 
 		private class MoveDocumentsTask extends AsyncTask<Object, Void, Boolean> {
+			Letter letter;
+			String toLocation;
+			String fromLocation;
+
+			public MoveDocumentsTask(final String toLocation) {
+				this.toLocation = toLocation;
+			}
+
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
@@ -586,9 +605,11 @@ public class BaseActivity extends FragmentActivity {
 
 			@Override
 			protected Boolean doInBackground(final Object... params) {
+				letter = (Letter) params[1];
+				fromLocation = letter.getLocation();
 				boolean moved = false;
 				try {
-					moved = lo.moveDocument((String) params[0], (Letter) params[1]);
+					moved = lo.moveDocument((String) params[0], (Letter) params[1], toLocation);
 				} catch (Exception e) {
 					e.printStackTrace();
 					return null;
@@ -607,25 +628,120 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPostExecute(final Boolean result) {
 				super.onPostExecute(result);
+
+				if (fromLocation.equals(ApiConstants.LOCATION_ARCHIVE)) {
+					adapter_archive.remove(letter);
+					adapter_archive.notifyDataSetChanged();
+				} else if (fromLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
+					adapter_workarea.remove(letter);
+					adapter_workarea.notifyDataSetChanged();
+				} else if (fromLocation.equals(ApiConstants.LOCATION_INBOX)) {
+					adapter_mailbox.remove(letter);
+					adapter_mailbox.notifyDataSetChanged();
+				}
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
 			}
 		}
 
+		private class MultipleDocumentsTask extends AsyncTask<LetterListAdapter, Integer, Boolean> {
+
+			Letter letter;
+			String action;
+			boolean[] checked;
+			int counter = 0;
+
+			public MultipleDocumentsTask(final String location, final boolean[] checked) {
+				action = location;
+				this.checked = checked;
+			}
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.setMessage(0 + " av " + checked.length + " flyttet");
+				progressDialog.show();
+			}
+
+			@Override
+			protected Boolean doInBackground(final LetterListAdapter... params) {
+				boolean moved = false;
+
+				for (int i = 0; i < checked.length; i++) {
+					try {
+						if (checked[i]) {
+							letter = params[0].getItem(i);
+							letter.setLocation(action);
+							moved = lo.moveDocument(Secret.ACCESS_TOKEN, letter, action);
+
+							publishProgress(++counter);
+						} else {
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						return null;
+					}
+				}
+				return moved;
+			}
+
+			@Override
+			protected void onProgressUpdate(final Integer... values) {
+				super.onProgressUpdate(values);
+				progressDialog.setMessage((values[0] + 1) + " av " + checked.length + " flyttet");
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				progressDialog.dismiss();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
+			}
+
+			@Override
+			protected void onPostExecute(final Boolean result) {
+				super.onPostExecute(result);
+				Letter letter;
+				for (int i = 0; i < checked.length; i++) {
+					if (checked[i]) {
+						letter = adapter_mailbox.getItem(i);
+						adapter_mailbox.remove(letter);
+						adapter_mailbox.notifyDataSetChanged();
+					}
+				}
+				progressDialog.dismiss();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
+				checkboxesOnOff(v1, false, -1);
+			}
+		}
+
 		@Override
 		public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 			super.onActivityResult(requestCode, resultCode, data);
-			if(resultCode == RESULT_OK) {
-				if(requestCode == REQUESTCODE_HTMLVIEW) {
-					System.out.println("BACK FROM HTML");
-					Bundle b = data.getExtras();
-					if(b.getString("newAction").equals(ApiConstants.LOCATION_ARCHIVE)) {
-						System.out.println("INNI RESULT, PRØVER Å FIKSE");
-						MoveDocumentsTask moveTask = new MoveDocumentsTask();
+			if (resultCode == RESULT_OK) {
+				if (requestCode == REQUESTCODE_HTMLVIEW) {
+					String action = data.getExtras().getString(ApiConstants.ACTION);
+
+					if (action.equals(ApiConstants.DELETE)) {
+						// DELETE LETTER
+					} else if (action.equals(ApiConstants.LOCATION_ARCHIVE)) {
+						MoveDocumentsTask moveTask = new MoveDocumentsTask(ApiConstants.LOCATION_ARCHIVE);
 						tempLetter.setLocation(ApiConstants.LOCATION_ARCHIVE);
-						moveTask.execute(Secret.ACCESS_TOKEN,tempLetter);
-						adapter_mailbox.remove(tempLetter);
+						moveTask.execute(Secret.ACCESS_TOKEN, tempLetter);
+					} else if (action.equals(ApiConstants.LOCATION_WORKAREA)) {
+						MoveDocumentsTask moveTask = new MoveDocumentsTask(ApiConstants.LOCATION_WORKAREA);
+						tempLetter.setLocation(ApiConstants.LOCATION_WORKAREA);
+						moveTask.execute(Secret.ACCESS_TOKEN, tempLetter);
 					}
 				}
 			}
@@ -678,8 +794,33 @@ public class BaseActivity extends FragmentActivity {
 				htmlTask.execute(Secret.ACCESS_TOKEN, ApiConstants.GET_RECEIPT, mReceipt);
 			}
 		}
+
+		private class MultiSelectionListener implements OnClickListener {
+			LetterListAdapter adapter;
+
+			public MultiSelectionListener(final LetterListAdapter adapter) {
+				this.adapter = adapter;
+			}
+
+			public void onClick(final View v) {
+				boolean[] checkedlist = adapter_mailbox.getCheckedDocuments();
+
+				if (v.getId() == R.id.mailbox_toArchive) {
+					Toast.makeText(getActivity(), "Midlertidig av", 2000).show();
+					// MultipleDocumentsTask multipleDocumentsTask = new
+					// MultipleDocumentsTask(ApiConstants.LOCATION_ARCHIVE,
+					// checkedlist);
+					// multipleDocumentsTask.execute(adapter_mailbox);
+				} else if (v.getId() == R.id.mailbox_toWorkarea) {
+					Toast.makeText(getActivity(), "Midlertidig av", 2000).show();
+					// MultipleDocumentsTask multipleDocumentsTask = new
+					// MultipleDocumentsTask(ApiConstants.LOCATION_WORKAREA,
+					// checkedlist);
+					// multipleDocumentsTask.execute(adapter_mailbox);
+				} else if (v.getId() == R.id.mailbox_delete) {
+					Toast.makeText(getActivity(), "Midlertidig av", 2000).show();
+				}
+			}
 		}
+	}
 }
-
-
-
