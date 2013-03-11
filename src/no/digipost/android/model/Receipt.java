@@ -24,6 +24,9 @@ public class Receipt {
 	private String timeOfPurchase;
 
 	@JsonProperty
+	private ArrayList<String> card;
+
+	@JsonProperty
 	private ArrayList<Link> link;
 
 	public String getAmount() {
@@ -48,6 +51,14 @@ public class Receipt {
 
 	public void setTimeOfPurchase(final String timeOfPurchase) {
 		this.timeOfPurchase = timeOfPurchase;
+	}
+
+	public ArrayList<String> getCard() {
+		return card;
+	}
+
+	public void setCard(final ArrayList<String> card) {
+		this.card = card;
 	}
 
 	public ArrayList<Link> getLink() {
