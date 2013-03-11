@@ -46,11 +46,12 @@ public class LetterOperations {
 	public ArrayList<Letter> getAccountContentMeta(final int type) throws DigipostApiException, DigipostClientException {
 		Account account = apiAccess.getPrimaryAccount();
 
-		if (account == null) {
+		PrimaryAccount primaryaccount = account.getPrimaryAccount();
+
+		if (primaryaccount == null) {
+			// TODO Midlertidig bugfix
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
-
-		PrimaryAccount primaryaccount = account.getPrimaryAccount();
 
 		profil_id = primaryaccount.getInboxUri().substring(50, 56);
 
