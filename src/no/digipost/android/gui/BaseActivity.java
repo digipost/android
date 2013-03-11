@@ -63,8 +63,10 @@ public class BaseActivity extends FragmentActivity {
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ImageButton optionsButton;
 	private ImageButton refreshButton;
+	private ImageButton logoButton;
 	private ProgressBar refreshSpinner;
-	private ButtonListener listener;
+	private ButtonListener buttonListener;
+	private ViewPagerListener pageListener;
 	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
@@ -97,11 +99,15 @@ public class BaseActivity extends FragmentActivity {
 		refreshSpinner = (ProgressBar) findViewById(R.id.base_refreshSpinner);
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
 		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
-		listener = new ButtonListener();
-		optionsButton.setOnClickListener(listener);
-		refreshButton.setOnClickListener(listener);
+		logoButton = (ImageButton) findViewById(R.id.base_logoButton);
+		buttonListener = new ButtonListener();
+		pageListener = new ViewPagerListener();
+		optionsButton.setOnClickListener(buttonListener);
+		refreshButton.setOnClickListener(buttonListener);
+		logoButton.setOnClickListener(buttonListener);
 		networkConnection = new NetworkConnection(this);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		mViewPager.setOnPageChangeListener(pageListener);
 	}
 
 	private class ButtonListener implements OnClickListener {
@@ -111,7 +117,41 @@ public class BaseActivity extends FragmentActivity {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
 				updateViews();
+			} else if (v == logoButton) {
+				scrollToTheTop();
 			}
+		}
+	}
+
+	public class ViewPagerListener extends ViewPager.SimpleOnPageChangeListener {
+
+		private int currentPage;
+
+		@Override
+		public void onPageSelected(final int position) {
+			currentPage = position;
+		}
+
+		public int getCurrentPage() {
+			return currentPage;
+		}
+	}
+
+	private void scrollToTheTop() {
+		int page = pageListener.getCurrentPage();
+		switch (page) {
+		case LetterOperations.MAILBOX:
+			lv_mailbox.setSelection(0);
+			break;
+		case LetterOperations.WORKAREA:
+			lv_workarea.setSelection(0);
+			break;
+		case LetterOperations.ARCHIVE:
+			lv_archive.setSelection(0);
+			break;
+		case LetterOperations.RECEIPTS:
+			lv_archive.setSelection(0);
+			break;
 		}
 	}
 
