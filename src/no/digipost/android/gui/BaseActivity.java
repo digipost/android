@@ -123,6 +123,40 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_base, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.basemenu_logoutOption:
+			logOut();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	private void logOut() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		settings.edit().clear().commit();
+		Intent i = new Intent(BaseActivity.this, LoginActivity.class);
+		startActivity(i);
+		finish();
+	}
+
+	public void showMessage(final String message) {
+		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+		toast.show();
+	}
+
+	public void changeView(final int pos) {
+		mViewPager.setCurrentItem(pos);
+	}
+
 	public class ViewPagerListener extends ViewPager.SimpleOnPageChangeListener {
 
 		private int currentPage;
@@ -134,6 +168,10 @@ public class BaseActivity extends FragmentActivity {
 
 		public int getCurrentPage() {
 			return currentPage;
+		}
+
+		public void setCurrentPage(final int currentPage) {
+			this.currentPage = currentPage;
 		}
 	}
 
@@ -328,36 +366,6 @@ public class BaseActivity extends FragmentActivity {
 			updatingView = new boolean[4];
 			toggleRefreshButton();
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_base, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.basemenu_logoutOption:
-			logOut();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	private void logOut() {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		settings.edit().clear().commit();
-		Intent i = new Intent(BaseActivity.this, LoginActivity.class);
-		startActivity(i);
-		finish();
-	}
-
-	public void showMessage(final String message) {
-		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-		toast.show();
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
