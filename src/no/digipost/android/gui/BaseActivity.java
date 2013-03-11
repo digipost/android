@@ -170,7 +170,7 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	private void unsupportedActionDialog(final int resource) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(resource)
 				.setCancelable(false)
 				.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
