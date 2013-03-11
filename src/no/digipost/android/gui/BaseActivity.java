@@ -193,18 +193,19 @@ public class BaseActivity extends FragmentActivity {
 
 	private void scrollToTheTop() {
 		int page = pageListener.getCurrentPage();
+		System.out.println("page" + page);
 		switch (page) {
 		case LetterOperations.MAILBOX:
 			lv_mailbox.setSelection(0);
 			break;
 		case LetterOperations.WORKAREA:
-			lv_workarea.setSelection(1);
+			lv_workarea.setSelection(0);
 			break;
 		case LetterOperations.ARCHIVE:
-			lv_archive.setSelection(2);
+			lv_archive.setSelection(0);
 			break;
 		case LetterOperations.RECEIPTS:
-			lv_archive.setSelection(3);
+			lv_receipts.setSelection(0);
 			break;
 		}
 	}
