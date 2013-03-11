@@ -16,9 +16,6 @@
 
 package no.digipost.android.gui;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import no.digipost.android.R;
@@ -29,10 +26,6 @@ import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
 import no.digipost.android.pdf.PdfStore;
-
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
-
 import android.accounts.NetworkErrorException;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -64,9 +57,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
-
 public class BaseActivity extends FragmentActivity {
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
@@ -79,8 +69,17 @@ public class BaseActivity extends FragmentActivity {
 	public static final int REQUESTCODE_HTMLVIEW = 1;
 	private ProgressDialog progressDialog;
 	private NetworkConnection networkConnection;
-
 	private boolean[] updatingView = new boolean[4];
+	private int viewCounter = 0;
+	private LetterOperations lo;
+	private LetterListAdapter adapter_mailbox;
+	private LetterListAdapter adapter_workarea;
+	private LetterListAdapter adapter_archive;
+	private ReceiptListAdapter adapter_receipts;
+	private ListView lv_mailbox;
+	private ListView lv_workarea;
+	private ListView lv_archive;
+	private ListView lv_receipts;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -94,7 +93,6 @@ public class BaseActivity extends FragmentActivity {
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setOffscreenPageLimit(3);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
 		refreshSpinner = (ProgressBar) findViewById(R.id.base_refreshSpinner);
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
 		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
@@ -102,6 +100,7 @@ public class BaseActivity extends FragmentActivity {
 		optionsButton.setOnClickListener(listener);
 		refreshButton.setOnClickListener(listener);
 		networkConnection = new NetworkConnection(this);
+		mViewPager.setAdapter(mSectionsPagerAdapter);
 	}
 
 	private class ButtonListener implements OnClickListener {
@@ -110,15 +109,22 @@ public class BaseActivity extends FragmentActivity {
 			if (v == optionsButton) {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
-				if (networkConnection.isNetworkAvailable()) {
-					updatingView = new boolean[4];
-					updatingView[LetterOperations.RECEIPTS] = true;
-					toggleRefreshButton();
-					mViewPager.setAdapter(mSectionsPagerAdapter);
-				} else {
-					showMessage(getString(R.string.error_your_network));
-				}
+				updateViews();
 			}
+		}
+	}
+
+	private void updateViews() {
+		if (networkConnection.isNetworkAvailable()) {
+			updatingView = new boolean[4];
+			updatingView[LetterOperations.RECEIPTS] = true;
+			loadMailbox();
+			loadWorkbench();
+			loadArchive();
+			loadReceipts();
+			toggleRefreshButton();
+		} else {
+			showMessage(getString(R.string.error_your_network));
 		}
 	}
 
@@ -136,13 +142,142 @@ public class BaseActivity extends FragmentActivity {
 		} else {
 			refreshSpinner.setVisibility(View.GONE);
 			refreshButton.setVisibility(View.VISIBLE);
+		}
+	}
 
+	public void loadMailbox() {
+		if (networkConnection.isNetworkAvailable()) {
+			new GetAccountMetaTask(LetterOperations.MAILBOX).execute(Secret.ACCESS_TOKEN);
+		}
+	}
+
+	private void loadWorkbench() {
+		if (networkConnection.isNetworkAvailable()) {
+			new GetAccountMetaTask(LetterOperations.WORKAREA).execute(Secret.ACCESS_TOKEN);
+		}
+	}
+
+	private void loadArchive() {
+		if (networkConnection.isNetworkAvailable()) {
+			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(Secret.ACCESS_TOKEN);
+		}
+	}
+
+	private void loadReceipts() {
+		if (networkConnection.isNetworkAvailable()) {
+			new GetAccountReceiptMetaTask().execute(Secret.ACCESS_TOKEN);
+		}
+	}
+
+	private void unsupportedActionDialog(final int resource) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(resource)
+				.setCancelable(false)
+				.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int id) {
+						dialog.cancel();
+					}
+				});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+
+	private class GetAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			updatingView[LetterOperations.RECEIPTS] = true;
+		}
+
+		@Override
+		protected ArrayList<Receipt> doInBackground(final String... params) {
+			try {
+				return lo.getAccountContentMetaReceipt(params[0]);
+			} catch (NetworkErrorException e) {
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(final ArrayList<Receipt> result) {
+			super.onPostExecute(result);
+			if (result == null) {
+				showMessage(getString(R.string.error_digipost_api));
+			} else {
+				adapter_receipts.updateList(result);
+				progressDialog.dismiss();
+				updatingView[LetterOperations.RECEIPTS] = false;
+				toggleRefreshButton();
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			progressDialog.dismiss();
+			updatingView = new boolean[4];
+			toggleRefreshButton();
+		}
+	}
+
+	private class GetAccountMetaTask extends AsyncTask<String, Void, ArrayList<Letter>> {
+		private final int type;
+
+		public GetAccountMetaTask(final int type) {
+			this.type = type;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			updatingView[type] = true;
+		}
+
+		@Override
+		protected ArrayList<Letter> doInBackground(final String... params) {
+			try {
+				return lo.getAccountContentMeta(params[0], type);
+			} catch (NetworkErrorException e) {
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(final ArrayList<Letter> result) {
+			super.onPostExecute(result);
+			if (result == null) {
+				showMessage(getString(R.string.error_digipost_api));
+			} else {
+				switch (type) {
+				case LetterOperations.MAILBOX:
+					adapter_mailbox.updateList(result);
+					break;
+				case LetterOperations.WORKAREA:
+					adapter_workarea.updateList(result);
+					break;
+				case LetterOperations.ARCHIVE:
+					adapter_archive.updateList(result);
+					break;
+				}
+			}
+			progressDialog.dismiss();
+			updatingView[type] = false;
+			toggleRefreshButton();
+
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			progressDialog.dismiss();
+			updatingView = new boolean[4];
+			toggleRefreshButton();
 		}
 	}
 
 	@Override
 	protected void onActivityResult(final int arg0, final int arg1, final Intent arg2) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(arg0, arg1, arg2);
 	}
 
@@ -177,7 +312,6 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
 		public SectionsPagerAdapter(final FragmentManager fm) {
 			super(fm);
 		}
@@ -212,30 +346,10 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	@Override
-	public void onBackPressed() {
-		System.out.println("YTTERST, BACK PRESSA");
-		super.onBackPressed();
-	}
-
 	public class DigipostSectionFragment extends Fragment {
 
 		public static final String ARG_SECTION_NUMBER = "section_number";
 		public static final int DIALOG_ID_NOT_AUTHENTICATED = 1;
-		private LetterOperations lo;
-		private LetterListAdapter adapter_mailbox;
-		private LetterListAdapter adapter_workarea;
-		private LetterListAdapter adapter_archive;
-		private ReceiptListAdapter adapter_receipts;
-		private ArrayList<Letter> list_mailbox;
-		private ArrayList<Letter> list_archive;
-		private ArrayList<Letter> list_workarea;
-		private ArrayList<Receipt> list_receipts;
-		private ListView lv_mailbox;
-		private ListView lv_workarea;
-		private ListView lv_archive;
-		private ListView lv_receipts;
-		private ImageButton refreshButton;
 		private Letter tempLetter;
 
 		public DigipostSectionFragment() {
@@ -245,6 +359,10 @@ public class BaseActivity extends FragmentActivity {
 		public void onCreate(final Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			lo = new LetterOperations(getActivity().getApplicationContext());
+			if ((++viewCounter) == 4) {
+				updateViews();
+				viewCounter = 0;
+			}
 		}
 
 		@Override
@@ -285,8 +403,6 @@ public class BaseActivity extends FragmentActivity {
 					}
 				});
 
-				loadMailbox();
-
 				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
 
 				return v;
@@ -299,8 +415,6 @@ public class BaseActivity extends FragmentActivity {
 				adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
 				lv_workarea.setAdapter(adapter_workarea);
 				lv_workarea.setOnItemClickListener(new ListListener(adapter_workarea));
-				loadWorkbench();
-
 				return v;
 			} else if (number == 3) {
 				View v = inflater.inflate(R.layout.fragment_layout_archive, container, false);
@@ -310,8 +424,6 @@ public class BaseActivity extends FragmentActivity {
 				adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
 				lv_archive.setAdapter(adapter_archive);
 				lv_archive.setOnItemClickListener(new ListListener(adapter_archive));
-				loadArchive();
-
 				return v;
 			} else {
 				View v = inflater.inflate(R.layout.fragment_layout_receipts, container, false);
@@ -321,34 +433,7 @@ public class BaseActivity extends FragmentActivity {
 				adapter_receipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
 				lv_receipts.setAdapter(adapter_receipts);
 				lv_receipts.setOnItemClickListener(new ReceiptListListener(adapter_receipts));
-				loadReceipts();
-
 				return v;
-			}
-
-		}
-
-		public void loadMailbox() {
-			if (networkConnection.isNetworkAvailable()) {
-				new GetAccountMetaTask(LetterOperations.MAILBOX).execute(Secret.ACCESS_TOKEN);
-			}
-		}
-
-		private void loadWorkbench() {
-			if (networkConnection.isNetworkAvailable()) {
-				new GetAccountMetaTask(LetterOperations.WORKAREA).execute(Secret.ACCESS_TOKEN);
-			}
-		}
-
-		private void loadArchive() {
-			if (networkConnection.isNetworkAvailable()) {
-				new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(Secret.ACCESS_TOKEN);
-			}
-		}
-
-		private void loadReceipts() {
-			if (networkConnection.isNetworkAvailable()) {
-				new GetAccountReceiptMetaTask().execute(Secret.ACCESS_TOKEN);
 			}
 		}
 
@@ -365,206 +450,6 @@ public class BaseActivity extends FragmentActivity {
 
 			AlertDialog alert = builder.create();
 			alert.show();
-		}
-
-		private class GetAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
-
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				updatingView[LetterOperations.RECEIPTS] = true;
-			}
-
-			@Override
-			protected ArrayList<Receipt> doInBackground(final String... params) {
-				try {
-					return lo.getAccountContentMetaReceipt(params[0]);
-				} catch (NetworkErrorException e) {
-					showMessage(e.getMessage());
-					return null;
-				}
-			}
-
-			@Override
-			protected void onPostExecute(final ArrayList<Receipt> result) {
-				super.onPostExecute(result);
-				adapter_receipts.updateList(result);
-				progressDialog.dismiss();
-				updatingView[LetterOperations.RECEIPTS] = false;
-				toggleRefreshButton();
-
-			}
-
-			@Override
-			protected void onCancelled() {
-				super.onCancelled();
-				progressDialog.dismiss();
-				updatingView = new boolean[4];
-				toggleRefreshButton();
-			}
-		}
-
-		private class GetAccountMetaTask extends AsyncTask<String, Void, ArrayList<Letter>> {
-			private final int type;
-
-			public GetAccountMetaTask(final int type) {
-				this.type = type;
-			}
-
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				updatingView[type] = true;
-			}
-
-			@Override
-			protected ArrayList<Letter> doInBackground(final String... params) {
-				try {
-					return lo.getAccountContentMeta(params[0], type);
-				} catch (NetworkErrorException e) {
-					showMessage(e.getMessage());
-					return null;
-				}
-			}
-
-			@Override
-			protected void onPostExecute(final ArrayList<Letter> result) {
-				super.onPostExecute(result);
-
-				switch (type) {
-				case LetterOperations.MAILBOX:
-					adapter_mailbox.updateList(result);
-					break;
-				case LetterOperations.WORKAREA:
-					adapter_workarea.updateList(result);
-					break;
-				case LetterOperations.ARCHIVE:
-					adapter_archive.updateList(result);
-					break;
-				}
-
-				progressDialog.dismiss();
-				updatingView[type] = false;
-				toggleRefreshButton();
-
-			}
-
-			@Override
-			protected void onCancelled() {
-				super.onCancelled();
-				progressDialog.dismiss();
-				updatingView = new boolean[4];
-				toggleRefreshButton();
-			}
-		}
-
-		private class MoveDocumentsTask extends AsyncTask<Object, Void, Boolean> {
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int which) {
-						dialog.dismiss();
-						cancel(true);
-					}
-				});
-				progressDialog.show();
-
-			}
-
-			@Override
-			protected Boolean doInBackground(final Object... params) {
-				boolean moved = false;
-				try {
-					moved = lo.moveDocument((String) params[0], (Letter) params[1]);
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (UniformInterfaceException e) {
-					e.printStackTrace();
-				} catch (ClientHandlerException e) {
-					e.printStackTrace();
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-				} catch (NetworkErrorException e) {
-					showMessage(e.getMessage());
-					return null;
-				}
-
-				return moved;
-
-			}
-
-			@Override
-			protected void onCancelled() {
-				super.onCancelled();
-				progressDialog.dismiss();
-				updatingView = new boolean[4];
-				toggleRefreshButton();
-			}
-
-			@Override
-			protected void onPostExecute(final Boolean result) {
-				super.onPostExecute(result);
-				progressDialog.dismiss();
-				updatingView = new boolean[4];
-				toggleRefreshButton();
-			}
-		}
-
-		private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int which) {
-						dialog.dismiss();
-						cancel(true);
-					}
-				});
-				progressDialog.show();
-			}
-
-			@Override
-			protected byte[] doInBackground(final Object... params) {
-				try {
-					return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
-				} catch (NetworkErrorException e) {
-					showMessage(e.getMessage());
-					return null;
-				}
-			}
-
-			@Override
-			protected void onCancelled() {
-				super.onCancelled();
-				progressDialog.dismiss();
-				updatingView = new boolean[4];
-				toggleRefreshButton();
-			}
-
-			@Override
-			protected void onPostExecute(final byte[] result) {
-				super.onPostExecute(result);
-
-				if (result != null) {
-					PdfStore.pdf = result;
-					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-					i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
-					startActivity(i);
-				}
-
-				progressDialog.dismiss();
-				updatingView = new boolean[4];
-				toggleRefreshButton();
-			}
 		}
 
 		private class GetHTMLTask extends AsyncTask<Object, Void, String> {
@@ -590,7 +475,6 @@ public class BaseActivity extends FragmentActivity {
 					try {
 						html = lo.getReceiptContentHTML((String) params[0], (Receipt) params[2]);
 					} catch (NetworkErrorException e) {
-						showMessage(e.getMessage());
 						return null;
 					}
 					return html;
@@ -598,7 +482,6 @@ public class BaseActivity extends FragmentActivity {
 					try {
 						html = lo.getDocumentContentHTML((String) params[0], (Letter) params[2]);
 					} catch (NetworkErrorException e) {
-						showMessage(e.getMessage());
 						return null;
 					}
 					letter = (Letter) params[2];
@@ -619,18 +502,111 @@ public class BaseActivity extends FragmentActivity {
 			protected void onPostExecute(final String result) {
 				super.onPostExecute(result);
 
-				if (result != null) {
-
+				if (result == null) {
+					showMessage(getString(R.string.error_digipost_api));
+				} else {
 					Intent i = new Intent(getActivity(), HtmlWebview.class);
 					String type = letter != null? "letter" : "receipt";
 					i.putExtra("type",type);
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);
 					if(type.equals("letter")) {
 						i.putExtra("from", letter.getLocation());
+						tempLetter = letter;
 					}
 					startActivityForResult(i, REQUESTCODE_HTMLVIEW);
 				}
 
+				progressDialog.dismiss();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
+			}
+		}
+
+		private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
+			@Override
+			protected void onPreExecute() {
+			super.onPreExecute();
+			progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int which) {
+			dialog.dismiss();
+			cancel(true);
+			}
+			});
+			progressDialog.show();
+			}
+
+			@Override
+			protected byte[] doInBackground(final Object... params) {
+			try {
+			return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
+			} catch (NetworkErrorException e) {
+			return null;
+			}
+			}
+
+			@Override
+			protected void onCancelled() {
+			super.onCancelled();
+			progressDialog.dismiss();
+			updatingView = new boolean[4];
+			toggleRefreshButton();
+			}
+
+			@Override
+			protected void onPostExecute(final byte[] result) {
+			super.onPostExecute(result);
+
+			if (result == null) {
+			showMessage(getString(R.string.error_digipost_api));
+			} else {
+			PdfStore.pdf = result;
+			Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+			i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
+			startActivity(i);
+			}
+
+			progressDialog.dismiss();
+			updatingView = new boolean[4];
+			toggleRefreshButton();
+			}
+			}
+
+		private class MoveDocumentsTask extends AsyncTask<Object, Void, Boolean> {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.show();
+			}
+
+			@Override
+			protected Boolean doInBackground(final Object... params) {
+				boolean moved = false;
+				try {
+					moved = lo.moveDocument((String) params[0], (Letter) params[1]);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+				return moved;
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				progressDialog.dismiss();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
+			}
+
+			@Override
+			protected void onPostExecute(final Boolean result) {
+				super.onPostExecute(result);
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
@@ -664,7 +640,7 @@ public class BaseActivity extends FragmentActivity {
 
 			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 				Letter mletter = adapter.getItem(position);
-				tempLetter = mletter;
+
 				if (mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
 					unsupportedActionDialog(getString(R.string.dialog_error_two_factor));
 					return;
@@ -702,5 +678,8 @@ public class BaseActivity extends FragmentActivity {
 				htmlTask.execute(Secret.ACCESS_TOKEN, ApiConstants.GET_RECEIPT, mReceipt);
 			}
 		}
-	}
+		}
 }
+
+
+

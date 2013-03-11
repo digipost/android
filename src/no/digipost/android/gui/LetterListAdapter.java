@@ -107,6 +107,7 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	}
 
 	public void updateList(final ArrayList<Letter> list) {
+		letters.clear();
 		letters.addAll(list);
 		notifyDataSetChanged();
 	}

@@ -1,13 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/basemenu_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/optionsmenu_settings"/>
-    <item
         android:id="@+id/basemenu_logoutOption"
         android:showAsAction="never"
         android:title="@string/optionsmenu_logout">
     </item>
+
 </menu>

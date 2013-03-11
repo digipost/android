@@ -49,11 +49,6 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	protected void onStop() {
-		super.onStop();
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
 		ks = KeyStore.getInstance();
@@ -85,15 +80,16 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkTokenStatus() {
+		boolean hasInternetAccess = networkConnection.isOnline();
 		if (OAuth2.getEncryptedRefreshToken(this) != "") {
-			if (networkConnection.isNetworkAvailable()) {
+			if (hasInternetAccess) {
 				new CheckTokenTask().execute();
 			} else {
 				showMessage(getString(R.string.error_your_network));
 				startBaseActivity();
 			}
 		} else {
-			if (!networkConnection.isNetworkAvailable()) {
+			if (!hasInternetAccess) {
 				showMessage(getString(R.string.error_your_network));
 			}
 
