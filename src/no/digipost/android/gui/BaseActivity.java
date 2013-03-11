@@ -198,13 +198,13 @@ public class BaseActivity extends FragmentActivity {
 			lv_mailbox.setSelection(0);
 			break;
 		case LetterOperations.WORKAREA:
-			lv_workarea.setSelection(0);
+			lv_workarea.setSelection(1);
 			break;
 		case LetterOperations.ARCHIVE:
-			lv_archive.setSelection(0);
+			lv_archive.setSelection(2);
 			break;
 		case LetterOperations.RECEIPTS:
-			lv_archive.setSelection(0);
+			lv_archive.setSelection(3);
 			break;
 		}
 	}
