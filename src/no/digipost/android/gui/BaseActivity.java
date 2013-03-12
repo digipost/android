@@ -52,7 +52,6 @@ import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -72,7 +71,8 @@ public class BaseActivity extends FragmentActivity {
 	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
-	public static final int REQUESTCODE_HTMLVIEW = 1;
+	public static final int REQUESTCODE_INTENT = 1;
+	public static final int REQUESTCODE_PDF = 2;
 	private ProgressDialog progressDialog;
 	private NetworkConnection networkConnection;
 	private boolean[] updatingView = new boolean[4];
@@ -420,6 +420,7 @@ public class BaseActivity extends FragmentActivity {
 		public static final String ARG_SECTION_NUMBER = "section_number";
 		public static final int DIALOG_ID_NOT_AUTHENTICATED = 1;
 		private Letter tempLetter;
+		private Receipt tempReceipt;
 
 		private ImageButton mailbox_multiSelection_moveToWorkarea;
 		private ImageButton mailbox_multiSelection_moveToArchive;
@@ -461,12 +462,13 @@ public class BaseActivity extends FragmentActivity {
 				mailbox_multiSelection_moveToArchive = (ImageButton) v1.findViewById(R.id.mailbox_toArchive);
 				mailbox_multiSelection_moveToArchive.setOnClickListener(new MultiSelectionListener(adapter_mailbox));
 
-				lv_mailbox.setOnItemLongClickListener(new OnItemLongClickListener() {
-					public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-						checkboxesOnOff(v1, true, position);
-						return true;
-					}
-				});
+				/*
+				 * lv_mailbox.setOnItemLongClickListener(new
+				 * OnItemLongClickListener() { public boolean
+				 * onItemLongClick(final AdapterView<?> arg0, final View arg1,
+				 * final int position, final long arg3) { checkboxesOnOff(v1,
+				 * true, position); return true; } });
+				 */
 				lv_mailbox.setOnKeyListener(new OnKeyListener() {
 					public boolean onKey(final View view, final int keyCode, final KeyEvent event) {
 						if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -548,6 +550,7 @@ public class BaseActivity extends FragmentActivity {
 		private class GetHTMLTask extends AsyncTask<Object, Void, String> {
 			private String errorMessage = "";
 			Letter letter;
+			Receipt receipt;
 
 			@Override
 			protected void onPreExecute() {
@@ -567,7 +570,7 @@ public class BaseActivity extends FragmentActivity {
 				String html = null;
 
 				if (params[0].equals(ApiConstants.GET_RECEIPT)) {
-
+					receipt = (Receipt) params[1];
 					try {
 						html = lo.getReceiptContentHTML((Receipt) params[1]);
 						return html;
@@ -616,8 +619,10 @@ public class BaseActivity extends FragmentActivity {
 					if (type.equals(ApiConstants.LETTER)) {
 						i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
 						tempLetter = letter;
+					} else if (type.equals(ApiConstants.RECEIPT)) {
+						tempReceipt = receipt;
 					}
-					startActivityForResult(i, REQUESTCODE_HTMLVIEW);
+					startActivityForResult(i, REQUESTCODE_INTENT);
 				}
 
 				progressDialog.dismiss();
@@ -627,6 +632,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private class GetPDFTask extends AsyncTask<Letter, Void, byte[]> {
+			Letter letter;
 			private String errorMessage = "";
 
 			@Override
@@ -645,6 +651,7 @@ public class BaseActivity extends FragmentActivity {
 			protected byte[] doInBackground(final Letter... params) {
 
 				try {
+					letter = params[0];
 					return lo.getDocumentContentPDF(params[0]);
 				} catch (DigipostApiException e) {
 					errorMessage = e.getMessage();
@@ -671,10 +678,11 @@ public class BaseActivity extends FragmentActivity {
 				if (result == null) {
 					showMessage(errorMessage);
 				} else {
+					tempLetter = letter;
 					PdfStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-					i.putExtra(PDFActivity.INTENT_FROM, PDFActivity.FROM_MAILBOX);
-					startActivity(i);
+					i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
+					startActivityForResult(i, REQUESTCODE_INTENT);
 				}
 
 				progressDialog.dismiss();
@@ -709,9 +717,8 @@ public class BaseActivity extends FragmentActivity {
 			protected Boolean doInBackground(final Object... params) {
 				letter = (Letter) params[1];
 				fromLocation = letter.getLocation();
-				boolean moved = false;
 				try {
-					moved = lo.moveDocument((String) params[0], (Letter) params[1], toLocation);
+					return lo.moveDocument((String) params[0], (Letter) params[1], toLocation);
 				} catch (DigipostApiException e) {
 					errorMessage = e.getMessage();
 					return false;
@@ -719,9 +726,72 @@ public class BaseActivity extends FragmentActivity {
 					errorMessage = e.getMessage();
 					return false;
 				} catch (Exception e) {
+					errorMessage = e.getMessage();
 					return false;
 				}
-				return moved;
+			}
+
+			@Override
+			protected void onCancelled() {
+				super.onCancelled();
+				progressDialog.dismiss();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
+			}
+
+			@Override
+			protected void onPostExecute(final Boolean result) {
+				super.onPostExecute(result);
+
+				if (!result) {
+					showMessage(errorMessage);
+				}
+
+				progressDialog.dismiss();
+				updatingView = new boolean[4];
+				toggleRefreshButton();
+			}
+		}
+
+		private class DeleteTask extends AsyncTask<Object, Void, Boolean> {
+			String errorMessage;
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+					public void onClick(final DialogInterface dialog, final int which) {
+						dialog.dismiss();
+						cancel(true);
+					}
+				});
+				progressDialog.show();
+			}
+
+			@Override
+			protected Boolean doInBackground(final Object... params) {
+
+				if (params[0].equals(ApiConstants.RECEIPT)) {
+					try {
+						return lo.delete(params[1]);
+					} catch (DigipostApiException e) {
+						errorMessage = e.getMessage();
+						return false;
+					} catch (DigipostClientException e) {
+						errorMessage = e.getMessage();
+						return false;
+					}
+				} else {
+					try {
+						return lo.delete(params[1]);
+					} catch (DigipostApiException e) {
+						errorMessage = e.getMessage();
+						return false;
+					} catch (DigipostClientException e) {
+						errorMessage = e.getMessage();
+						return false;
+					}
+				}
 			}
 
 			@Override
@@ -739,24 +809,11 @@ public class BaseActivity extends FragmentActivity {
 				if (!result) {
 					showMessage(errorMessage);
 				} else {
-					if (fromLocation.equals(ApiConstants.LOCATION_ARCHIVE)) {
-						adapter_archive.remove(letter);
-						adapter_archive.notifyDataSetChanged();
-						loadWorkbench();
-					} else if (fromLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
-						adapter_workarea.remove(letter);
-						adapter_workarea.notifyDataSetChanged();
-						loadArchive();
-					} else if (fromLocation.equals(ApiConstants.LOCATION_INBOX)) {
-						adapter_mailbox.remove(letter);
-						adapter_mailbox.notifyDataSetChanged();
-						if (toLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
-							loadWorkbench();
-						} else {
-							loadArchive();
-						}
-					}
+					Toast.makeText(getActivity(), "SLETTET", 3000).show();
+					// LEGGER TIL DOBBELT
+					updateViews();
 				}
+
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
@@ -854,20 +911,24 @@ public class BaseActivity extends FragmentActivity {
 		public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 			super.onActivityResult(requestCode, resultCode, data);
 			if (resultCode == RESULT_OK) {
-				if (requestCode == REQUESTCODE_HTMLVIEW) {
+				if (requestCode == REQUESTCODE_INTENT) {
 					String action = data.getExtras().getString(ApiConstants.ACTION);
+					String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
 
 					if (action.equals(ApiConstants.DELETE)) {
-						//MoveDocumentsTask deleteTask = new MoveDocumentsTask(ApiConstants.DELETE);
-						//deleteTask.execute(params)
-					} else if (action.equals(ApiConstants.LOCATION_ARCHIVE)) {
-						MoveDocumentsTask moveTask = new MoveDocumentsTask(ApiConstants.LOCATION_ARCHIVE);
-						tempLetter.setLocation(ApiConstants.LOCATION_ARCHIVE);
+						DeleteTask deleteTask = new DeleteTask();
+						if (type.equals(ApiConstants.RECEIPT)) {
+							deleteTask.execute(ApiConstants.RECEIPT, tempReceipt);
+							updateViews();
+						} else {
+							deleteTask.execute(ApiConstants.LETTER, tempLetter);
+							updateViews();
+						}
+					} else {
+						MoveDocumentsTask moveTask = new MoveDocumentsTask(action);
+						tempLetter.setLocation(action);
 						moveTask.execute(Secret.ACCESS_TOKEN, tempLetter);
-					} else if (action.equals(ApiConstants.LOCATION_WORKAREA)) {
-						MoveDocumentsTask moveTask = new MoveDocumentsTask(ApiConstants.LOCATION_WORKAREA);
-						tempLetter.setLocation(ApiConstants.LOCATION_WORKAREA);
-						moveTask.execute(Secret.ACCESS_TOKEN, tempLetter);
+						updateViews();
 					}
 				}
 			}

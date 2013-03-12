@@ -78,7 +78,6 @@ public class LetterOperations {
 		return apiAccess.getReceipts(uri).getReceipt();
 	}
 
-
 	public boolean moveDocument(final String access_token, final Letter letter, final String toLocation) throws ClientProtocolException, UniformInterfaceException,
 			ClientHandlerException, ParseException, IOException, URISyntaxException, IllegalStateException, NetworkErrorException, DigipostClientException, DigipostApiException {
 		Letter movedletter = apiAccess.getMovedDocument(letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
@@ -100,5 +99,16 @@ public class LetterOperations {
 
 	public String getReceiptContentHTML(final Receipt receipt) throws DigipostApiException, DigipostClientException {
 		return apiAccess.getReceiptHTML(receipt.getContentAsHTMLUri());
+	}
+
+	public boolean delete(final Object object) throws DigipostApiException, DigipostClientException {
+		if(object instanceof Letter) {
+			Letter letter = (Letter) object;
+			return apiAccess.delete(letter.getDeleteUri());
+		}
+		else {
+			Receipt receipt = (Receipt) object;
+			return apiAccess.delete(receipt.getDeleteUri());
+		}
 	}
 }

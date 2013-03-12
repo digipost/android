@@ -137,6 +137,24 @@ public class ApiAccess {
 
 	}
 
+	public boolean delete(final String uri) throws DigipostClientException {
+		Client client = Client.create();
+
+		try {
+			ClientResponse cr = client
+					.resource(uri)
+					.header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
+					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
+					.delete(ClientResponse.class);
+				System.out.println("STATUSKODE SLETT" + cr.getStatus());
+				return true;
+
+		}
+		catch (Exception e) {
+			throw new DigipostClientException(context.getString(R.string.error_your_network));
+		}
+	}
+
 	public byte[] getDocumentContent(final String uri) throws DigipostApiException, DigipostClientException {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM, Secret.ACCESS_TOKEN);
 

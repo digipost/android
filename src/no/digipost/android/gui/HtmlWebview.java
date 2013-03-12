@@ -15,11 +15,10 @@ import android.widget.ImageButton;
 public class HtmlWebview extends Activity {
 
 	private WebView webView;
-	private ImageButton toMailbox;
 	private ImageButton toArchive;
 	private ImageButton toWorkarea;
 	private ImageButton delete;
-	private ImageButton share;
+	//private ImageButton share;
 	private ImageButton digipostIcon;
 	private ImageButton backButton;
 
@@ -51,33 +50,28 @@ public class HtmlWebview extends Activity {
 	}
 
 	private void createButtons() {
-		toMailbox = (ImageButton) findViewById(R.id.html_toMailbox);
 		toArchive = (ImageButton) findViewById(R.id.html_toArchive);
 		toWorkarea = (ImageButton) findViewById(R.id.html_toWorkarea);
 		delete = (ImageButton) findViewById(R.id.html_delete);
-		share = (ImageButton) findViewById(R.id.html_share);
+		//share = (ImageButton) findViewById(R.id.html_share);
 		digipostIcon = (ImageButton) findViewById(R.id.html_digipost_icon);
 		backButton = (ImageButton) findViewById(R.id.html_backbtn);
 
 		if (type.equals(ApiConstants.RECEIPT)) {
 			toArchive.setVisibility(View.GONE);
-			toMailbox.setVisibility(View.GONE);
 			toWorkarea.setVisibility(View.GONE);
 		} else {
-			if (from.equals(ApiConstants.LOCATION_INBOX)) {
-				toMailbox.setVisibility(View.GONE);
-			} else if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
+			if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
 				toArchive.setVisibility(View.GONE);
 			} else if (from.equals(ApiConstants.LOCATION_WORKAREA)) {
 				toWorkarea.setVisibility(View.GONE);
 			}
 		}
 
-		toMailbox.setOnClickListener(new HTMLViewListener());
 		toArchive.setOnClickListener(new HTMLViewListener());
 		toWorkarea.setOnClickListener(new HTMLViewListener());
 		delete.setOnClickListener(new HTMLViewListener());
-		share.setOnClickListener(new HTMLViewListener());
+		//share.setOnClickListener(new HTMLViewListener());
 		digipostIcon.setOnClickListener(new HTMLViewListener());
 		backButton.setOnClickListener(new HTMLViewListener());
 
@@ -86,6 +80,7 @@ public class HtmlWebview extends Activity {
 	private void singleLetterOperation(final String action) {
 		Intent i = new Intent(HtmlWebview.this, BaseActivity.class);
 		i.putExtra(ApiConstants.ACTION, action);
+		i.putExtra(ApiConstants.DOCUMENT_TYPE, type);
 		setResult(RESULT_OK, i);
 		finish();
 	}
