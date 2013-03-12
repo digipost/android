@@ -20,13 +20,14 @@ import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
+import no.digipost.android.api.DigipostApiException;
+import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
 import no.digipost.android.pdf.PdfStore;
-import android.accounts.NetworkErrorException;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -58,12 +59,17 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity {
+	private static final String CURRENT_PAGE = "currentPage";
 
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ImageButton optionsButton;
 	private ImageButton refreshButton;
+	private ImageButton logoButton;
 	private ProgressBar refreshSpinner;
 	private ButtonListener listener;
+	private ButtonListener buttonListener;
+	private ViewPagerListener pageListener;
+	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
 	public static final int REQUESTCODE_HTMLVIEW = 1;
@@ -96,11 +102,16 @@ public class BaseActivity extends FragmentActivity {
 		refreshSpinner = (ProgressBar) findViewById(R.id.base_refreshSpinner);
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
 		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
-		listener = new ButtonListener();
-		optionsButton.setOnClickListener(listener);
-		refreshButton.setOnClickListener(listener);
+		logoButton = (ImageButton) findViewById(R.id.base_logoButton);
+		buttonListener = new ButtonListener();
+		pageListener = new ViewPagerListener();
+		optionsButton.setOnClickListener(buttonListener);
+		refreshButton.setOnClickListener(buttonListener);
+		logoButton.setOnClickListener(buttonListener);
 		networkConnection = new NetworkConnection(this);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		mViewPager.setOnPageChangeListener(pageListener);
+		mViewPager.setClickable(true);
 	}
 
 	private class ButtonListener implements OnClickListener {
@@ -110,7 +121,95 @@ public class BaseActivity extends FragmentActivity {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
 				updateViews();
+			} else if (v == logoButton) {
+				scrollToTheTop();
 			}
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		getMenuInflater().inflate(R.menu.activity_base, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.basemenu_logoutOption:
+			logOut();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	protected void onSaveInstanceState(final Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(CURRENT_PAGE, pageListener.getCurrentPage());
+		System.out.println("save");
+	}
+
+	@Override
+	protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		int currentPage = savedInstanceState.getInt(CURRENT_PAGE);
+		mViewPager.setCurrentItem(currentPage);
+		System.out.println("load");
+	}
+
+	private void logOut() {
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		settings.edit().clear().commit();
+		Intent i = new Intent(BaseActivity.this, LoginActivity.class);
+		startActivity(i);
+		finish();
+	}
+
+	public void showMessage(final String message) {
+		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+		toast.show();
+	}
+
+	public void changeView(final int pos) {
+		mViewPager.setCurrentItem(pos);
+	}
+
+	public class ViewPagerListener extends ViewPager.SimpleOnPageChangeListener {
+
+		private int currentPage;
+
+		@Override
+		public void onPageSelected(final int position) {
+			currentPage = position;
+		}
+
+		public int getCurrentPage() {
+			return currentPage;
+		}
+
+		public void setCurrentPage(final int currentPage) {
+			this.currentPage = currentPage;
+		}
+	}
+
+	private void scrollToTheTop() {
+		int page = pageListener.getCurrentPage();
+		System.out.println("page" + page);
+		switch (page) {
+		case LetterOperations.MAILBOX:
+			lv_mailbox.setSelection(0);
+			break;
+		case LetterOperations.WORKAREA:
+			lv_workarea.setSelection(0);
+			break;
+		case LetterOperations.ARCHIVE:
+			lv_archive.setSelection(0);
+			break;
+		case LetterOperations.RECEIPTS:
+			lv_receipts.setSelection(0);
+			break;
 		}
 	}
 
@@ -147,29 +246,30 @@ public class BaseActivity extends FragmentActivity {
 
 	public void loadMailbox() {
 		if (networkConnection.isNetworkAvailable()) {
-			new GetAccountMetaTask(LetterOperations.MAILBOX).execute(Secret.ACCESS_TOKEN);
+			new GetAccountMetaTask(LetterOperations.MAILBOX).execute();
 		}
 	}
 
 	private void loadWorkbench() {
 		if (networkConnection.isNetworkAvailable()) {
-			new GetAccountMetaTask(LetterOperations.WORKAREA).execute(Secret.ACCESS_TOKEN);
+			new GetAccountMetaTask(LetterOperations.WORKAREA).execute();
 		}
 	}
 
 	private void loadArchive() {
 		if (networkConnection.isNetworkAvailable()) {
-			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute(Secret.ACCESS_TOKEN);
+			new GetAccountMetaTask(LetterOperations.ARCHIVE).execute();
 		}
 	}
 
 	private void loadReceipts() {
 		if (networkConnection.isNetworkAvailable()) {
-			new GetAccountReceiptMetaTask().execute(Secret.ACCESS_TOKEN);
+			new GetAccountReceiptMetaTask().execute();
 		}
 	}
 
-	private class GetAccountReceiptMetaTask extends AsyncTask<String, Void, ArrayList<Receipt>> {
+	private class GetAccountReceiptMetaTask extends AsyncTask<Void, Void, ArrayList<Receipt>> {
+		private String errorMessage = "";
 
 		@Override
 		protected void onPreExecute() {
@@ -178,25 +278,31 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		@Override
-		protected ArrayList<Receipt> doInBackground(final String... params) {
+		protected ArrayList<Receipt> doInBackground(final Void... params) {
+
 			try {
-				return lo.getAccountContentMetaReceipt(params[0]);
-			} catch (NetworkErrorException e) {
+				return lo.getAccountContentMetaReceipt();
+			} catch (DigipostApiException e) {
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostClientException e) {
+				errorMessage = e.getMessage();
 				return null;
 			}
+
 		}
 
 		@Override
 		protected void onPostExecute(final ArrayList<Receipt> result) {
 			super.onPostExecute(result);
 			if (result == null) {
-				showMessage(getString(R.string.error_digipost_api));
+				showMessage(errorMessage);
 			} else {
 				adapter_receipts.updateList(result);
-				progressDialog.dismiss();
-				updatingView[LetterOperations.RECEIPTS] = false;
-				toggleRefreshButton();
 			}
+			progressDialog.dismiss();
+			updatingView[LetterOperations.RECEIPTS] = false;
+			toggleRefreshButton();
 		}
 
 		@Override
@@ -208,8 +314,9 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	private class GetAccountMetaTask extends AsyncTask<String, Void, ArrayList<Letter>> {
+	private class GetAccountMetaTask extends AsyncTask<Void, Void, ArrayList<Letter>> {
 		private final int type;
+		private String errorMessage = "";
 
 		public GetAccountMetaTask(final int type) {
 			this.type = type;
@@ -222,19 +329,25 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		@Override
-		protected ArrayList<Letter> doInBackground(final String... params) {
+		protected ArrayList<Letter> doInBackground(final Void... params) {
+
 			try {
-				return lo.getAccountContentMeta(params[0], type);
-			} catch (NetworkErrorException e) {
+				return lo.getAccountContentMeta(type);
+			} catch (DigipostApiException e) {
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostClientException e) {
+				errorMessage = e.getMessage();
 				return null;
 			}
+
 		}
 
 		@Override
 		protected void onPostExecute(final ArrayList<Letter> result) {
 			super.onPostExecute(result);
 			if (result == null) {
-				showMessage(getString(R.string.error_digipost_api));
+				showMessage(errorMessage);
 			} else {
 				switch (type) {
 				case LetterOperations.MAILBOX:
@@ -251,7 +364,6 @@ public class BaseActivity extends FragmentActivity {
 			progressDialog.dismiss();
 			updatingView[type] = false;
 			toggleRefreshButton();
-
 		}
 
 		@Override
@@ -266,36 +378,6 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onActivityResult(final int arg0, final int arg1, final Intent arg2) {
 		super.onActivityResult(arg0, arg1, arg2);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_base, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.basemenu_logoutOption:
-			logOut();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-	private void logOut() {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		settings.edit().clear().commit();
-		Intent i = new Intent(BaseActivity.this, LoginActivity.class);
-		startActivity(i);
-		finish();
-	}
-
-	public void showMessage(final String message) {
-		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-		toast.show();
 	}
 
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -463,6 +545,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		private class GetHTMLTask extends AsyncTask<Object, Void, String> {
+			private String errorMessage = "";
 			Letter letter;
 
 			@Override
@@ -482,23 +565,33 @@ public class BaseActivity extends FragmentActivity {
 
 				String html = null;
 
-				if (params[1].equals(ApiConstants.GET_RECEIPT)) {
+				if (params[0].equals(ApiConstants.GET_RECEIPT)) {
+
 					try {
-						html = lo.getReceiptContentHTML((String) params[0], (Receipt) params[2]);
-					} catch (NetworkErrorException e) {
+						html = lo.getReceiptContentHTML((Receipt) params[1]);
+						return html;
+					} catch (DigipostApiException e) {
+						errorMessage = e.getMessage();
+						return null;
+					} catch (DigipostClientException e) {
+						errorMessage = e.getMessage();
 						return null;
 					}
-					return html;
+
 				} else {
+
 					try {
-						html = lo.getDocumentContentHTML((String) params[0], (Letter) params[2]);
-					} catch (NetworkErrorException e) {
+						html = lo.getDocumentContentHTML((Letter) params[1]);
+						return html;
+					} catch (DigipostApiException e) {
+						errorMessage = e.getMessage();
 						return null;
+					} catch (DigipostClientException e) {
+						errorMessage = e.getMessage();
 					}
-					letter = (Letter) params[2];
 				}
 
-				return html;
+				return null;
 			}
 
 			@Override
@@ -514,7 +607,7 @@ public class BaseActivity extends FragmentActivity {
 				super.onPostExecute(result);
 
 				if (result == null) {
-					showMessage(getString(R.string.error_digipost_api));
+					showMessage(errorMessage);
 				} else {
 					Intent i = new Intent(getActivity(), HtmlWebview.class);
 					String type = letter != null ? ApiConstants.LETTER : ApiConstants.RECEIPT;
@@ -533,7 +626,9 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 
-		private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
+		private class GetPDFTask extends AsyncTask<Letter, Void, byte[]> {
+			private String errorMessage = "";
+
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
@@ -547,12 +642,18 @@ public class BaseActivity extends FragmentActivity {
 			}
 
 			@Override
-			protected byte[] doInBackground(final Object... params) {
+			protected byte[] doInBackground(final Letter... params) {
+
 				try {
-					return lo.getDocumentContentPDF((String) params[0], (Letter) params[1]);
-				} catch (NetworkErrorException e) {
+					return lo.getDocumentContentPDF(params[0]);
+				} catch (DigipostApiException e) {
+					errorMessage = e.getMessage();
+					return null;
+				} catch (DigipostClientException e) {
+					errorMessage = e.getMessage();
 					return null;
 				}
+
 			}
 
 			@Override
@@ -568,7 +669,7 @@ public class BaseActivity extends FragmentActivity {
 				super.onPostExecute(result);
 
 				if (result == null) {
-					showMessage(getString(R.string.error_digipost_api));
+					showMessage(errorMessage);
 				} else {
 					PdfStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
@@ -586,6 +687,7 @@ public class BaseActivity extends FragmentActivity {
 			Letter letter;
 			String toLocation;
 			String fromLocation;
+			String errorMessage;
 
 			public MoveDocumentsTask(final String toLocation) {
 				this.toLocation = toLocation;
@@ -651,6 +753,7 @@ public class BaseActivity extends FragmentActivity {
 			String action;
 			boolean[] checked;
 			int counter = 0;
+			String errorMessage;
 
 			public MultipleDocumentsTask(final String location, final boolean[] checked) {
 				action = location;
@@ -689,7 +792,9 @@ public class BaseActivity extends FragmentActivity {
 						e.printStackTrace();
 						return null;
 					}
+
 				}
+
 				return moved;
 			}
 
@@ -697,6 +802,7 @@ public class BaseActivity extends FragmentActivity {
 			protected void onProgressUpdate(final Integer... values) {
 				super.onProgressUpdate(values);
 				progressDialog.setMessage((values[0] + 1) + " av " + checked.length + " flyttet");
+
 			}
 
 			@Override
@@ -710,6 +816,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPostExecute(final Boolean result) {
 				super.onPostExecute(result);
+
 				Letter letter;
 				for (int i = 0; i < checked.length; i++) {
 					if (checked[i]) {
@@ -717,11 +824,12 @@ public class BaseActivity extends FragmentActivity {
 						adapter_mailbox.remove(letter);
 						adapter_mailbox.notifyDataSetChanged();
 					}
+
+					progressDialog.dismiss();
+					updatingView = new boolean[4];
+					toggleRefreshButton();
+					checkboxesOnOff(v1, false, -1);
 				}
-				progressDialog.dismiss();
-				updatingView = new boolean[4];
-				toggleRefreshButton();
-				checkboxesOnOff(v1, false, -1);
 			}
 		}
 
@@ -766,10 +874,10 @@ public class BaseActivity extends FragmentActivity {
 				if (networkConnection.isNetworkAvailable()) {
 					if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
 						GetPDFTask pdfTask = new GetPDFTask();
-						pdfTask.execute(Secret.ACCESS_TOKEN, mletter);
+						pdfTask.execute(mletter);
 					} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 						GetHTMLTask htmlTask = new GetHTMLTask();
-						htmlTask.execute(Secret.ACCESS_TOKEN, ApiConstants.GET_DOCUMENT, mletter);
+						htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
 					} else {
 						unsupportedActionDialog(getString(R.string.dialog_error_not_supported_filetype));
 						return;
@@ -791,7 +899,7 @@ public class BaseActivity extends FragmentActivity {
 				Receipt mReceipt = adapter.getItem(position);
 
 				GetHTMLTask htmlTask = new GetHTMLTask();
-				htmlTask.execute(Secret.ACCESS_TOKEN, ApiConstants.GET_RECEIPT, mReceipt);
+				htmlTask.execute(ApiConstants.GET_RECEIPT, mReceipt);
 			}
 		}
 
@@ -823,4 +931,5 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 	}
+
 }

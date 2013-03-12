@@ -33,8 +33,10 @@
         android:id="@+id/empty_listview_mailbox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#BFBFBF"
         android:gravity="center"
         android:orientation="vertical"
+        android:padding="20dp"
         android:visibility="gone" >
 
         <ImageView
@@ -46,8 +48,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/empty_listview_text"
-            android:textSize="30sp" />
+            android:text="@string/empty_listview_mailbox"
+            android:textColor="#5E5E5E"
+            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout

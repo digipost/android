@@ -23,12 +23,17 @@
     <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
-    <string name="empty_listview_text">Ingen elementer.</string>
+   
+    <string name="empty_listview_mailbox">Du har ingen brev i din postkasse. Alle brev som sendes til deg i Digipost vil komme hit.</string>
+    <string name="empty_listview_archive">Du har ingen dokumenter i arkivet. Her kan du arkivere brev og laste opp dine viktige filer.</string>
+    <string name="empty_listview_workarea">Du har ingen dokumenter på kjøkkenbenken. Her kan du legge ting du vil arbeide videre med.</string>
+    <string name="empty_listview_receipts">Du har ingen kvitteringer tilgjengelig.</string>
+            
     <string name="menu_settings">Settings</string>
     <string name="title_activity_html_veb_view">HtmlVebView</string>
-    <string name="pdf_no_further_occurences_found">Ingen flere treff funnet</string>
-    <string name="pdf_text_not_found">Fant ingen treff</string>
-    <string name="pdf_open_failed">Kunne ikke åpne dokumentet</string>
+    <string name="pdf_no_further_occurences_found">Ingen flere treff funnet.</string>
+    <string name="pdf_text_not_found">Fant ingen treff.</string>
+    <string name="pdf_open_failed">Kunne ikke åpne dokumentet.</string>
     <string name="pdf_searching_">Søker...</string>
     <string name="close">Lukk</string>
     <string name="abort">Avbryt</string>
@@ -37,10 +42,10 @@
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv igjen.</string>
     <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.</string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
-    <string name="dialog_error_not_supported_filetype">Beklager! \nDigipost for Android støtter ikke denne filtypen</string>
-    <string name="dialog_error_two_factor">Beklager! \nDette brevet krever autentisering med Bank ID. Logg inn på Digipost.no for å se innholdet</string>
     <string name="dialog_prompt_toArchive">Er du sikker på at du vil flytte brevet til arkivet?</string>
     <string name="dialog_prompt_toWorkarea">Er du sikker på at du vil flytte brevet til kjøkkenbenk?</string>
     <string name="dialog_prompt_delete">Er du sikker på at du vil slette brevet?</string>
-    
+    <string name="dialog_error_header">Beklager!</string>
+    <string name="dialog_error_not_supported_filetype">Digipost for Android støtter ikke denne filtypen.</string>
+    <string name="dialog_error_two_factor">Dette brevet krever autentisering med Bank ID. Logg inn på Digipost.no for å se innholdet.</string>
 </resources>

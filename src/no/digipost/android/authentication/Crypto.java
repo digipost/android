@@ -11,7 +11,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 import android.util.Base64;
-import android.util.Log;
 
 public class Crypto {
 
@@ -52,10 +51,8 @@ public class Crypto {
 			Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
 
 			byte[] iv = generateIv(cipher.getBlockSize());
-			Log.d(TAG, "IV: " + toHex(iv));
 			IvParameterSpec ivParams = new IvParameterSpec(iv);
 			cipher.init(Cipher.ENCRYPT_MODE, key, ivParams);
-			Log.d(TAG, "Cipher IV: " + (cipher.getIV() == null ? null : toHex(cipher.getIV())));
 			byte[] cipherText = cipher.doFinal(plaintext.getBytes("UTF-8"));
 
 			return String.format("%s%s%s", toBase64(iv), DELIMITER, toBase64(cipherText));
@@ -95,7 +92,6 @@ public class Crypto {
 			Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
 			IvParameterSpec ivParams = new IvParameterSpec(iv);
 			cipher.init(Cipher.DECRYPT_MODE, key, ivParams);
-			Log.d(TAG, "Cipher IV: " + toHex(cipher.getIV()));
 			byte[] plaintext = cipher.doFinal(cipherBytes);
 			String plainrStr = new String(plaintext, "UTF-8");
 

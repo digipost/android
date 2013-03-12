@@ -16,6 +16,7 @@
 package no.digipost.android.gui;
 
 //import android.R;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,13 +59,35 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 
 		row.setBackgroundDrawable((position % 2 == 0) ? even : odd);
 
+		Receipt receipt = receipts.get(position);
+
+		ArrayList<String> cards = receipt.getCard();
+		TextView cardnumber = (TextView) row.findViewById(R.id.mail_creator);
+
+		for (int i = 0; i < cards.size(); i++) {
+			cardnumber.append(cards.get(i));
+
+			if (i < cards.size() - 1) {
+				cardnumber.append(", ");
+			}
+		}
+
 		TextView subject = (TextView) row.findViewById(R.id.mail_subject);
-		subject.setText(receipts.get(position).getStoreName());
+		subject.setText(receipt.getStoreName());
 		TextView date = (TextView) row.findViewById(R.id.mail_date);
-		date.setText(getDateFormatted(receipts.get(position).getTimeOfPurchase()));
+		date.setText(getDateFormatted(receipt.getTimeOfPurchase()));
 		TextView price = (TextView) row.findViewById(R.id.mail_size_price);
 		price.setTextColor(con.getResources().getColor(R.color.green_price));
-		price.setText(receipts.get(position).getAmount() + " " + receipts.get(position).getCurrency());
+		String currency = receipt.getCurrency();
+		if (currency.equals("NOK")) {
+			currency = "kr.";
+		}
+		String amount = receipt.getAmount();
+		Double number = Double.valueOf(amount);
+		DecimalFormat dec = new DecimalFormat("#.00");
+		amount = dec.format(number);
+
+		price.setText(amount + " " + currency);
 
 		checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
 
@@ -112,9 +135,9 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	}
 
 	private String getDateFormatted(final String date) {
-		String date_substring = date.substring(0, 10);
-		SimpleDateFormat fromApi = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat guiFormat = new SimpleDateFormat("d MMM yyyy", Locale.getDefault());
+		String date_substring = date.substring(0, 16);
+		SimpleDateFormat fromApi = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+		SimpleDateFormat guiFormat = new SimpleDateFormat("d. MMM yyyy, HH:mm", Locale.getDefault());
 		String formatted = null;
 		try {
 			formatted = guiFormat.format(fromApi.parse(date_substring));

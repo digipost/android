@@ -16,12 +16,13 @@
 
 package no.digipost.android;
 
+import no.digipost.android.api.DigipostApiException;
+import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.gui.BaseActivity;
 import no.digipost.android.gui.LoginActivity;
 import no.digipost.android.gui.NetworkConnection;
-import android.accounts.NetworkErrorException;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -80,20 +81,10 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkTokenStatus() {
-		boolean hasInternetAccess = networkConnection.isOnline();
-		if (OAuth2.getEncryptedRefreshToken(this) != "") {
-			if (hasInternetAccess) {
-				new CheckTokenTask().execute();
-			} else {
-				showMessage(getString(R.string.error_your_network));
-				startBaseActivity();
-			}
-		} else {
-			if (!hasInternetAccess) {
-				showMessage(getString(R.string.error_your_network));
-			}
-
+		if (OAuth2.getEncryptedRefreshToken(this) == "") {
 			startLoginActivity();
+		} else {
+			new CheckTokenTask().execute();
 		}
 	}
 
@@ -118,24 +109,25 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected String doInBackground(final Void... params) {
+
 			try {
 				OAuth2.updateRefreshTokenSuccess(context);
 				return null;
-			} catch (IllegalStateException e) {
+			} catch (DigipostApiException e) {
 				return e.getMessage();
-			} catch (NetworkErrorException e) {
+			} catch (DigipostClientException e) {
 				return e.getMessage();
 			}
+
 		}
 
 		@Override
 		protected void onPostExecute(final String result) {
-			if (result == null) {
-				startBaseActivity();
-			} else {
+			if (result != null) {
 				showMessage(result);
-				startLoginActivity();
 			}
+
+			startBaseActivity();
 		}
 	}
 }
