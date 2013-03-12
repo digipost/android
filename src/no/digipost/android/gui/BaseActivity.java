@@ -532,7 +532,8 @@ public class BaseActivity extends FragmentActivity {
 		private void unsupportedActionDialog(final String text) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-			builder.setMessage(text)
+			builder.setTitle(R.string.dialog_error_header)
+					.setMessage(text)
 					.setCancelable(false)
 					.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
 						public void onClick(final DialogInterface dialog, final int id) {
@@ -738,7 +739,6 @@ public class BaseActivity extends FragmentActivity {
 				if (!result) {
 					showMessage(errorMessage);
 				} else {
-
 					if (fromLocation.equals(ApiConstants.LOCATION_ARCHIVE)) {
 						adapter_archive.remove(letter);
 						adapter_archive.notifyDataSetChanged();
@@ -849,8 +849,6 @@ public class BaseActivity extends FragmentActivity {
 				}
 			}
 		}
-
-
 
 		@Override
 		public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
