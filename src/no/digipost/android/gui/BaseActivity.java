@@ -689,13 +689,6 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int which) {
-						dialog.dismiss();
-						cancel(true);
-					}
-				});
-				progressDialog.show();
 			}
 
 			@Override
@@ -719,7 +712,6 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
-				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
 			}
@@ -731,8 +723,6 @@ public class BaseActivity extends FragmentActivity {
 				if (!result) {
 					showMessage(errorMessage);
 				}
-
-				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
 			}
@@ -744,13 +734,6 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int which) {
-						dialog.dismiss();
-						cancel(true);
-					}
-				});
-				progressDialog.show();
 			}
 
 			@Override
@@ -782,7 +765,6 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
-				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
 			}
@@ -798,8 +780,6 @@ public class BaseActivity extends FragmentActivity {
 					// LEGGER TIL DOBBELT
 					updateViews();
 				}
-
-				progressDialog.dismiss();
 				updatingView = new boolean[4];
 				toggleRefreshButton();
 			}
