@@ -144,21 +144,6 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	@Override
-	protected void onSaveInstanceState(final Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt(CURRENT_PAGE, pageListener.getCurrentPage());
-		System.out.println("save");
-	}
-
-	@Override
-	protected void onRestoreInstanceState(final Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		int currentPage = savedInstanceState.getInt(CURRENT_PAGE);
-		mViewPager.setCurrentItem(currentPage);
-		System.out.println("load");
-	}
-
 	private void logOut() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		settings.edit().clear().commit();
