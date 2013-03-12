@@ -273,13 +273,10 @@ public class PDFActivity extends Activity {
 		makeButtonsView();
 
 		String toolbarType = intent.getExtras().getString(ApiConstants.LOCATION_FROM);
-		System.out.println("TOOLBARTYPE: " + toolbarType);
 
 		if (toolbarType.equals(ApiConstants.LOCATION_WORKAREA)) {
-			System.out.println("Setter workarea toolbar");
 			makeWorkareaToolbar();
 		} else if (toolbarType.equals(ApiConstants.LOCATION_ARCHIVE)) {
-			System.out.println("Setter archive toolbar");
 			makeArchiveToolbar();
 		}
 
@@ -395,7 +392,6 @@ public class PDFActivity extends Activity {
 		layout.setBackgroundColor(Color.BLACK);
 		setContentView(layout);
 	}
-
 
 	public void singleLetterOperation(final String action) {
 		Intent i = new Intent(PDFActivity.this, BaseActivity.class);

@@ -794,9 +794,7 @@ public class BaseActivity extends FragmentActivity {
 				if (!result) {
 					showMessage(errorMessage);
 				} else {
-					Toast.makeText(getActivity(), "SLETTET", 3000).show();
-					// LEGGER TIL DOBBELT
-					updateViews();
+					Toast.makeText(getActivity(), "Slettet", 3000).show();
 				}
 
 				progressDialog.dismiss();

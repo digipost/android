@@ -146,9 +146,7 @@ public class ApiAccess {
 					.header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
 					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
 					.delete(ClientResponse.class);
-				System.out.println("STATUSKODE SLETT" + cr.getStatus());
 				return true;
-
 		}
 		catch (Exception e) {
 			throw new DigipostClientException(context.getString(R.string.error_your_network));
