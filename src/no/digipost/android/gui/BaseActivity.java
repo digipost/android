@@ -579,7 +579,7 @@ public class BaseActivity extends FragmentActivity {
 					}
 
 				} else {
-
+					letter = (Letter) params[1];
 					try {
 						html = lo.getDocumentContentHTML((Letter) params[1]);
 						return html;
@@ -588,10 +588,9 @@ public class BaseActivity extends FragmentActivity {
 						return null;
 					} catch (DigipostClientException e) {
 						errorMessage = e.getMessage();
+						return null;
 					}
 				}
-
-				return null;
 			}
 
 			@Override
