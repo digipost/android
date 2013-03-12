@@ -42,7 +42,7 @@
             android:layout_height="115dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="150dp"
-            android:src="@drawable/fragment_folder_128" />
+            android:src="@drawable/fragment_card_128" />
 
         <TextView
             android:layout_width="wrap_content"
