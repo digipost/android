@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:contentDescription="Options button"
-            android:padding="15dp"
+            android:padding="5dp"
             android:src="@drawable/base_optionbutton_style" />
 
         <ImageButton
@@ -45,15 +45,15 @@
             android:layout_weight="0.25"
             android:background="#00000000"
             android:contentDescription="options drawer logo"
-            android:padding="10dp"
-            android:src="@drawable/digipost_white_header_medium" />
+            android:padding="8dp"
+            android:src="@drawable/digipost_white_header_small" />
 
         <ProgressBar
             android:id="@+id/base_refreshSpinner"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:visibility="gone" />
 
         <ImageButton
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:contentDescription="Refresh button"
-            android:padding="15dp"
+            android:padding="5dp"
             android:src="@drawable/base_refreshbutton_style" />
     </LinearLayout>
 
@@ -77,7 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:background="#262626"
-            android:padding="5dp" />
+            android:textSize="2dp"
+            android:padding="2dp" />
     </android.support.v4.view.ViewPager>
 
 </LinearLayout>
