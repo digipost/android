@@ -532,7 +532,8 @@ public class BaseActivity extends FragmentActivity {
 		private void unsupportedActionDialog(final String text) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-			builder.setMessage(text)
+			builder.setTitle(R.string.dialog_error_header)
+					.setMessage(text)
 					.setCancelable(false)
 					.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
 						public void onClick(final DialogInterface dialog, final int id) {
@@ -743,7 +744,7 @@ public class BaseActivity extends FragmentActivity {
 				} else if (fromLocation.equals(ApiConstants.LOCATION_INBOX)) {
 					adapter_mailbox.remove(letter);
 					adapter_mailbox.notifyDataSetChanged();
-					if(toLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
+					if (toLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
 						adapter_workarea.add(letter);
 						adapter_workarea.notifyDataSetChanged();
 					} else {
