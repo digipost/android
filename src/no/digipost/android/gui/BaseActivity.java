@@ -711,9 +711,14 @@ public class BaseActivity extends FragmentActivity {
 				boolean moved = false;
 				try {
 					moved = lo.moveDocument((String) params[0], (Letter) params[1], toLocation);
+				} catch (DigipostApiException e) {
+					errorMessage = e.getMessage();
+					return false;
+				} catch (DigipostClientException e) {
+					errorMessage = e.getMessage();
+					return false;
 				} catch (Exception e) {
-					e.printStackTrace();
-					return null;
+					return false;
 				}
 				return moved;
 			}
@@ -730,25 +735,26 @@ public class BaseActivity extends FragmentActivity {
 			protected void onPostExecute(final Boolean result) {
 				super.onPostExecute(result);
 
-				if (fromLocation.equals(ApiConstants.LOCATION_ARCHIVE)) {
-					adapter_archive.remove(letter);
-					adapter_workarea.add(letter);
-					adapter_archive.notifyDataSetChanged();
-					adapter_workarea.notifyDataSetChanged();
-				} else if (fromLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
-					adapter_workarea.remove(letter);
-					adapter_archive.add(letter);
-					adapter_workarea.notifyDataSetChanged();
-					adapter_archive.notifyDataSetChanged();
-				} else if (fromLocation.equals(ApiConstants.LOCATION_INBOX)) {
-					adapter_mailbox.remove(letter);
-					adapter_mailbox.notifyDataSetChanged();
-					if(toLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
-						adapter_workarea.add(letter);
-						adapter_workarea.notifyDataSetChanged();
-					} else {
-						adapter_archive.add(letter);
+				if (!result) {
+					showMessage(errorMessage);
+				} else {
+
+					if (fromLocation.equals(ApiConstants.LOCATION_ARCHIVE)) {
+						adapter_archive.remove(letter);
 						adapter_archive.notifyDataSetChanged();
+						loadWorkbench();
+					} else if (fromLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
+						adapter_workarea.remove(letter);
+						adapter_workarea.notifyDataSetChanged();
+						loadArchive();
+					} else if (fromLocation.equals(ApiConstants.LOCATION_INBOX)) {
+						adapter_mailbox.remove(letter);
+						adapter_mailbox.notifyDataSetChanged();
+						if (toLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
+							loadWorkbench();
+						} else {
+							loadArchive();
+						}
 					}
 				}
 				progressDialog.dismiss();
@@ -794,17 +800,18 @@ public class BaseActivity extends FragmentActivity {
 							letter = params[0].getItem(i);
 							letter.setLocation(action);
 							moved = lo.moveDocument(Secret.ACCESS_TOKEN, letter, action);
-
 							publishProgress(++counter);
-						} else {
 						}
+					} catch (DigipostApiException e) {
+						errorMessage = e.getMessage();
+						return false;
+					} catch (DigipostClientException e) {
+						errorMessage = e.getMessage();
+						return false;
 					} catch (Exception e) {
-						e.printStackTrace();
-						return null;
+						return false;
 					}
-
 				}
-
 				return moved;
 			}
 
@@ -843,6 +850,8 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 
+
+
 		@Override
 		public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 			super.onActivityResult(requestCode, resultCode, data);
@@ -851,7 +860,8 @@ public class BaseActivity extends FragmentActivity {
 					String action = data.getExtras().getString(ApiConstants.ACTION);
 
 					if (action.equals(ApiConstants.DELETE)) {
-						// DELETE LETTER
+						//MoveDocumentsTask deleteTask = new MoveDocumentsTask(ApiConstants.DELETE);
+						//deleteTask.execute(params)
 					} else if (action.equals(ApiConstants.LOCATION_ARCHIVE)) {
 						MoveDocumentsTask moveTask = new MoveDocumentsTask(ApiConstants.LOCATION_ARCHIVE);
 						tempLetter.setLocation(ApiConstants.LOCATION_ARCHIVE);

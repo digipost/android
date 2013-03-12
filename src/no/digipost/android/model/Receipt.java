@@ -102,4 +102,13 @@ public class Receipt {
 		}
 		return null;
 	}
+
+	public String getDeleteUri() {
+		for (Link l : link) {
+			if (l.getRel().equals("https://www.digipost.no/post/relations/delete_receipt")) {
+				return l.getUri();
+			}
+		}
+		return null;
+	}
 }
