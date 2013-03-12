@@ -38,8 +38,6 @@ public class HtmlWebview extends Activity {
 		from = getIntent().getExtras().getString(ApiConstants.LOCATION_FROM);
 		type = getIntent().getExtras().getString(ApiConstants.DOCUMENT_TYPE);
 
-		System.out.println(from +" = from");
-
 		createButtons();
 
 		webView = (WebView) findViewById(R.id.web_html);

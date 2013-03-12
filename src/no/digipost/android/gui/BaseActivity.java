@@ -732,13 +732,24 @@ public class BaseActivity extends FragmentActivity {
 
 				if (fromLocation.equals(ApiConstants.LOCATION_ARCHIVE)) {
 					adapter_archive.remove(letter);
+					adapter_workarea.add(letter);
 					adapter_archive.notifyDataSetChanged();
+					adapter_workarea.notifyDataSetChanged();
 				} else if (fromLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
 					adapter_workarea.remove(letter);
+					adapter_archive.add(letter);
 					adapter_workarea.notifyDataSetChanged();
+					adapter_archive.notifyDataSetChanged();
 				} else if (fromLocation.equals(ApiConstants.LOCATION_INBOX)) {
 					adapter_mailbox.remove(letter);
 					adapter_mailbox.notifyDataSetChanged();
+					if(toLocation.equals(ApiConstants.LOCATION_WORKAREA)) {
+						adapter_workarea.add(letter);
+						adapter_workarea.notifyDataSetChanged();
+					} else {
+						adapter_archive.add(letter);
+						adapter_archive.notifyDataSetChanged();
+					}
 				}
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
