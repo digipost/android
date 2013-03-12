@@ -144,21 +144,6 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	@Override
-	protected void onSaveInstanceState(final Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt(CURRENT_PAGE, pageListener.getCurrentPage());
-		System.out.println("save");
-	}
-
-	@Override
-	protected void onRestoreInstanceState(final Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		int currentPage = savedInstanceState.getInt(CURRENT_PAGE);
-		mViewPager.setCurrentItem(currentPage);
-		System.out.println("load");
-	}
-
 	private void logOut() {
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		settings.edit().clear().commit();
@@ -199,16 +184,16 @@ public class BaseActivity extends FragmentActivity {
 		System.out.println("page" + page);
 		switch (page) {
 		case LetterOperations.MAILBOX:
-			lv_mailbox.setSelection(0);
+			lv_mailbox.smoothScrollToPosition(0);
 			break;
 		case LetterOperations.WORKAREA:
-			lv_workarea.setSelection(0);
+			lv_workarea.smoothScrollToPosition(0);
 			break;
 		case LetterOperations.ARCHIVE:
-			lv_archive.setSelection(0);
+			lv_archive.smoothScrollToPosition(0);
 			break;
 		case LetterOperations.RECEIPTS:
-			lv_receipts.setSelection(0);
+			lv_receipts.smoothScrollToPosition(0);
 			break;
 		}
 	}
