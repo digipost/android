@@ -50,6 +50,8 @@
             android:layout_gravity="center"
             android:text="@string/empty_listview_receipts"
             android:textColor="#5E5E5E"
+                        android:layout_marginTop="2dp"
+            
             android:textSize="18sp" />
     </LinearLayout>
 

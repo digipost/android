@@ -199,16 +199,16 @@ public class BaseActivity extends FragmentActivity {
 		System.out.println("page" + page);
 		switch (page) {
 		case LetterOperations.MAILBOX:
-			lv_mailbox.setSelection(0);
+			lv_mailbox.smoothScrollToPosition(0);
 			break;
 		case LetterOperations.WORKAREA:
-			lv_workarea.setSelection(0);
+			lv_workarea.smoothScrollToPosition(0);
 			break;
 		case LetterOperations.ARCHIVE:
-			lv_archive.setSelection(0);
+			lv_archive.smoothScrollToPosition(0);
 			break;
 		case LetterOperations.RECEIPTS:
-			lv_receipts.setSelection(0);
+			lv_receipts.smoothScrollToPosition(0);
 			break;
 		}
 	}
