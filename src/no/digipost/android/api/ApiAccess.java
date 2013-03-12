@@ -50,7 +50,7 @@ public class ApiAccess {
 		networkConnection = new NetworkConnection(context);
 	}
 
-	public Account getPrimaryAccount() throws DigipostApiException, DigipostClientException {
+	public Account getAccount() throws DigipostApiException, DigipostClientException {
 		return (Account) JSONConverter.processJackson(Account.class, getApiJsonString(ApiConstants.URL_API));
 	}
 
@@ -146,11 +146,10 @@ public class ApiAccess {
 					.header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
 					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
 					.delete(ClientResponse.class);
-				System.out.println("STATUSKODE SLETT" + cr.getStatus());
-				return true;
+			System.out.println("STATUSKODE SLETT" + cr.getStatus());
+			return true;
 
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new DigipostClientException(context.getString(R.string.error_your_network));
 		}
 	}
