@@ -45,7 +45,8 @@
             android:layout_weight="0.25"
             android:background="#00000000"
             android:contentDescription="options drawer logo"
-            android:padding="8dp"
+            android:padding="6dp"
+            android:layout_marginTop="2dp"
             android:src="@drawable/digipost_white_header_small" />
 
         <ProgressBar
