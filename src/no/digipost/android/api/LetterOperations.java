@@ -42,7 +42,7 @@ public class LetterOperations {
 
 	private final ApiAccess apiAccess;
 	private final Context context;
-	static String profil_id;
+	static String tempLink;
 
 	public LetterOperations(final Context context) {
 		this.context = context;
@@ -63,7 +63,7 @@ public class LetterOperations {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
 
-		profil_id = primaryaccount.getInboxUri().substring(50, 56);
+		tempLink = primaryaccount.getInboxUri();
 
 		switch (type) {
 		case MAILBOX:
@@ -77,9 +77,14 @@ public class LetterOperations {
 		}
 	}
 
+	private String tempReceipLink() {
+			String profileDigits = tempLink.replaceAll("\\D+","");
+			System.out.println("PROFILDIGITS: " + profileDigits);
+			return "https://www.digipost.no/post/api/private/accounts/" + profileDigits + "/receipts";
+	}
+
 	public ArrayList<Receipt> getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException {
-		String uri = "https://www.digipost.no/post/api/private/accounts/" + profil_id + "/receipts";
-		return apiAccess.getReceipts(uri).getReceipt();
+		return apiAccess.getReceipts(tempReceipLink()).getReceipt();
 	}
 
 	public boolean moveDocument(final String access_token, final Letter letter, final String toLocation) throws ClientProtocolException,
