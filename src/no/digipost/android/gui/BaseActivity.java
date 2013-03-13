@@ -42,13 +42,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -454,25 +452,21 @@ public class BaseActivity extends FragmentActivity {
 				 * final int position, final long arg3) { checkboxesOnOff(v1,
 				 * true, position); return true; } });
 				 */
-				lv_mailbox.setOnKeyListener(new OnKeyListener() {
-					public boolean onKey(final View view, final int keyCode, final KeyEvent event) {
-						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							if (LetterListAdapter.showboxes == true) {
-								checkboxesOnOff(v1, false, -1);
-								return true;
-							}
-							return false;
-						}
-						return false;
-					}
-				});
+				/*
+				 * lv_mailbox.setOnKeyListener(new OnKeyListener() { public
+				 * boolean onKey(final View view, final int keyCode, final
+				 * KeyEvent event) { if (keyCode == KeyEvent.KEYCODE_BACK) { if
+				 * (LetterListAdapter.showboxes == true) { checkboxesOnOff(v1,
+				 * false, -1); return true; } return false; } return false; }
+				 * });
+				 */
 
 				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
 
 				return v1;
 
 			} else if (number == 2) {
-				View v2 = inflater.inflate(R.layout.fragment_layout_workarea, container, false);
+				final View v2 = inflater.inflate(R.layout.fragment_layout_workarea, container, false);
 				lv_workarea = (ListView) v2.findViewById(R.id.listview_kitchen);
 				View emptyView = v2.findViewById(R.id.empty_listview_workarea);
 				lv_workarea.setEmptyView(emptyView);
@@ -504,15 +498,15 @@ public class BaseActivity extends FragmentActivity {
 		private void checkboxesOnOff(final View v, final boolean state, final int position) {
 			if (state) {
 				LetterListAdapter.showboxes = true;
-				lv_mailbox.requestFocus();
-				adapter_mailbox.setInitialcheck(position);
-				adapter_mailbox.notifyDataSetChanged();
-				v.findViewById(R.id.mailbox_bottombar).setVisibility(View.VISIBLE);
+				lv_workarea.requestFocus();
+				adapter_workarea.setInitialcheck(position);
+				adapter_workarea.notifyDataSetChanged();
+				v.findViewById(R.id.workarea_bottombar).setVisibility(View.VISIBLE);
 			} else {
 				LetterListAdapter.showboxes = false;
-				adapter_mailbox.clearCheckboxes();
-				adapter_mailbox.notifyDataSetChanged();
-				v.findViewById(R.id.mailbox_bottombar).setVisibility(View.GONE);
+				adapter_workarea.clearCheckboxes();
+				adapter_workarea.notifyDataSetChanged();
+				v.findViewById(R.id.workarea_bottombar).setVisibility(View.GONE);
 			}
 		}
 

@@ -61,9 +61,9 @@ public class JSONConverter {
 				writer.close();
 			} catch (Exception e) {
 			}
-
 			content = writer.toString();
 		}
+		System.out.println(content);
 
 		return content;
 	}
