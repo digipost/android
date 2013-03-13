@@ -406,6 +406,9 @@ public class BaseActivity extends FragmentActivity {
 		public static final int DIALOG_ID_NOT_AUTHENTICATED = 1;
 		private Letter tempLetter;
 		private Receipt tempReceipt;
+		private LetterListAdapter tempLetterAdapter;
+		private ReceiptListAdapter tempReceiptsAdapter;
+		private View tempRowView;
 
 		private ImageButton mailbox_multiSelection_moveToWorkarea;
 		private ImageButton mailbox_multiSelection_moveToArchive;
@@ -704,6 +707,7 @@ public class BaseActivity extends FragmentActivity {
 					errorMessage = e.getMessage();
 					return false;
 				} catch (Exception e) {
+					System.out.println(e.getMessage());
 					errorMessage = e.getMessage();
 					return false;
 				}
@@ -722,14 +726,23 @@ public class BaseActivity extends FragmentActivity {
 
 				if (!result) {
 					showMessage(errorMessage);
+				} else {
+					tempLetterAdapter.remove(tempRowView, tempLetter);
+					updateViews();
 				}
+
 				updatingView = new boolean[4];
 				toggleRefreshButton();
 			}
 		}
 
 		private class DeleteTask extends AsyncTask<Object, Void, Boolean> {
-			String errorMessage;
+			private final String type;
+			private String errorMessage;
+
+			public DeleteTask(final String type) {
+				this.type = type;
+			}
 
 			@Override
 			protected void onPreExecute() {
@@ -739,9 +752,9 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected Boolean doInBackground(final Object... params) {
 
-				if (params[0].equals(ApiConstants.RECEIPT)) {
+				if (type.equals(ApiConstants.RECEIPT)) {
 					try {
-						return lo.delete(params[1]);
+						return lo.delete(params[0]);
 					} catch (DigipostApiException e) {
 						errorMessage = e.getMessage();
 						return false;
@@ -751,7 +764,7 @@ public class BaseActivity extends FragmentActivity {
 					}
 				} else {
 					try {
-						return lo.delete(params[1]);
+						return lo.delete(params[0]);
 					} catch (DigipostApiException e) {
 						errorMessage = e.getMessage();
 						return false;
@@ -776,8 +789,11 @@ public class BaseActivity extends FragmentActivity {
 				if (!result) {
 					showMessage(errorMessage);
 				} else {
-					Toast.makeText(getActivity(), "SLETTET", 3000).show();
-					// LEGGER TIL DOBBELT
+					if (type.equals(ApiConstants.RECEIPT)) {
+						tempReceiptsAdapter.remove(tempRowView, tempReceipt);
+					} else {
+						tempLetterAdapter.remove(tempRowView, tempLetter);
+					}
 					updateViews();
 				}
 				updatingView = new boolean[4];
@@ -881,13 +897,11 @@ public class BaseActivity extends FragmentActivity {
 					String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
 
 					if (action.equals(ApiConstants.DELETE)) {
-						DeleteTask deleteTask = new DeleteTask();
+						DeleteTask deleteTask = new DeleteTask(type);
 						if (type.equals(ApiConstants.RECEIPT)) {
-							deleteTask.execute(ApiConstants.RECEIPT, tempReceipt);
-							updateViews();
+							deleteTask.execute(tempReceipt);
 						} else {
-							deleteTask.execute(ApiConstants.LETTER, tempLetter);
-							updateViews();
+							deleteTask.execute(tempLetter);
 						}
 					} else {
 						MoveDocumentsTask moveTask = new MoveDocumentsTask(action);
@@ -926,6 +940,8 @@ public class BaseActivity extends FragmentActivity {
 						unsupportedActionDialog(getString(R.string.dialog_error_not_supported_filetype));
 						return;
 					}
+					tempRowView = arg1;
+					tempLetterAdapter = adapter;
 				} else {
 					showMessage(getString(R.string.error_your_network));
 				}
@@ -944,6 +960,8 @@ public class BaseActivity extends FragmentActivity {
 
 				GetHTMLTask htmlTask = new GetHTMLTask();
 				htmlTask.execute(ApiConstants.GET_RECEIPT, mReceipt);
+				tempRowView = arg1;
+				tempReceiptsAdapter = adapter;
 			}
 		}
 

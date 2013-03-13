@@ -27,9 +27,12 @@ import no.digipost.android.model.Letter;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -123,6 +126,20 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 
 	public boolean[] getCheckedDocuments() {
 		return checked;
+	}
+
+	public void remove(final View rowView, final Letter object) {
+		final Animation animation = AnimationUtils.loadAnimation(rowView.getContext(), R.anim.list_splashfadeout);
+		rowView.startAnimation(animation);
+		Handler handle = new Handler();
+		handle.postDelayed(new Runnable() {
+
+			public void run() {
+				letters.remove(object);
+				notifyDataSetChanged();
+				animation.cancel();
+			}
+		}, 1000);
 	}
 
 	private String getDateFormatted(final String date) {
