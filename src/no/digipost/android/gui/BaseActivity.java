@@ -40,7 +40,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -371,7 +371,7 @@ public class BaseActivity extends FragmentActivity {
 		super.onActivityResult(arg0, arg1, arg2);
 	}
 
-	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		public SectionsPagerAdapter(final FragmentManager fm) {
 			super(fm);
 		}
