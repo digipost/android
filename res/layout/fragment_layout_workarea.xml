@@ -46,6 +46,7 @@
             android:src="@drawable/fragment_folder_128" />
 
         <TextView
+            android:id="@+id/workarea_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
