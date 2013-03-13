@@ -46,6 +46,7 @@
             android:src="@drawable/fragment_folder_128" />
 
         <TextView
+            android:id="@+id/workarea_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -53,6 +54,43 @@
             android:textColor="#5E5E5E"
             android:textSize="18sp"
             android:visibility="gone" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/workarea_bottombar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#323538"
+        android:gravity="bottom"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:id="@+id/workarea_bottombar_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+
+            <ImageButton
+                android:id="@+id/workarea_toArchive"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_archive_48" />
+
+            <ImageButton
+                android:id="@+id/workarea_delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_delete_48" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

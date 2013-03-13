@@ -29,6 +29,7 @@ import no.digipost.android.model.Letter;
 
 import org.apache.http.ParseException;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.protocol.HTTP;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
@@ -61,10 +62,8 @@ public class JSONConverter {
 				writer.close();
 			} catch (Exception e) {
 			}
-
 			content = writer.toString();
 		}
-
 		return content;
 	}
 
@@ -117,7 +116,7 @@ public class JSONConverter {
 			e.printStackTrace();
 		}
 
-		return new StringEntity(strWriter.toString());
+		return new StringEntity(strWriter.toString(), HTTP.UTF_8);
 	}
 
 	public static byte[] inputStreamtoByteArray(final int size, final InputStream data) {

@@ -74,7 +74,6 @@ public class PrimaryAccount {
 				return l.getUri();
 			}
 		}
-
 		return null;
 	}
 }
