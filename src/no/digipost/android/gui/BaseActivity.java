@@ -575,7 +575,6 @@ public class BaseActivity extends FragmentActivity {
 				super.onCancelled();
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
 			}
 
 			@Override
@@ -600,7 +599,6 @@ public class BaseActivity extends FragmentActivity {
 
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
 			}
 		}
 
@@ -641,7 +639,6 @@ public class BaseActivity extends FragmentActivity {
 				super.onCancelled();
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
 			}
 
 			@Override
@@ -660,7 +657,6 @@ public class BaseActivity extends FragmentActivity {
 
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
 			}
 		}
 
@@ -892,7 +888,6 @@ public class BaseActivity extends FragmentActivity {
 						MoveDocumentsTask moveTask = new MoveDocumentsTask(action);
 						tempLetter.setLocation(action);
 						moveTask.execute(Secret.ACCESS_TOKEN, tempLetter);
-						updateViews();
 					}
 				}
 			}

@@ -47,6 +47,7 @@ public class HtmlWebview extends Activity {
 		webView.getSettings().setDisplayZoomControls(true);
 		webView.getSettings().setLoadWithOverviewMode(true);
 		webView.loadDataWithBaseURL(null, html, mime, encoding, null);
+
 	}
 
 	private void createButtons() {
@@ -74,7 +75,6 @@ public class HtmlWebview extends Activity {
 		//share.setOnClickListener(new HTMLViewListener());
 		digipostIcon.setOnClickListener(new HTMLViewListener());
 		backButton.setOnClickListener(new HTMLViewListener());
-
 	}
 
 	private void singleLetterOperation(final String action) {

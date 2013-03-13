@@ -96,7 +96,7 @@ public class ApiAccess {
 	}
 
 	public String moveLetter(final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException {
-
+		System.out.println("Letter uri: " + uri);
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost post = new HttpPost();
 		try {
