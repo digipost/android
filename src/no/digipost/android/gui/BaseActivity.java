@@ -117,7 +117,7 @@ public class BaseActivity extends FragmentActivity {
 			if (v == optionsButton) {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
-				updateViews();
+				refreshCurrentView(mViewPager.getCurrentItem());
 			} else if (v == logoButton) {
 				scrollToTheTop();
 			}
@@ -154,13 +154,8 @@ public class BaseActivity extends FragmentActivity {
 		toast.show();
 	}
 
-	public void changeView(final int pos) {
-		mViewPager.setCurrentItem(pos);
-	}
-
 	private void scrollToTheTop() {
 		int page = mViewPager.getCurrentItem();
-		System.out.println("page" + page);
 		switch (page) {
 		case LetterOperations.MAILBOX:
 			lv_mailbox.smoothScrollToPosition(0);
@@ -177,14 +172,37 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
+	private void refreshCurrentView(final int page) {
+		refreshButton.setVisibility(View.GONE);
+		refreshSpinner.setVisibility(View.VISIBLE);
+
+		switch (page) {
+		case LetterOperations.MAILBOX:
+			loadMailbox();
+			break;
+		case LetterOperations.WORKAREA:
+			loadWorkarea();
+			break;
+		case LetterOperations.ARCHIVE:
+			loadArchive();
+			break;
+		case LetterOperations.RECEIPTS:
+			loadReceipts();
+			break;
+		}
+
+	}
+
 	private void updateViews() {
 		if (networkConnection.isNetworkAvailable()) {
 			updatingView = new boolean[4];
 			updatingView[LetterOperations.RECEIPTS] = true;
 			loadMailbox();
-			loadWorkbench();
+			loadWorkarea();
 			loadArchive();
 			loadReceipts();
+			refreshButton.setVisibility(View.GONE);
+			refreshSpinner.setVisibility(View.VISIBLE);
 			toggleRefreshButton();
 		} else {
 			showMessage(getString(R.string.error_your_network));
@@ -199,10 +217,7 @@ public class BaseActivity extends FragmentActivity {
 				break;
 			}
 		}
-		if (updating) {
-			refreshButton.setVisibility(View.GONE);
-			refreshSpinner.setVisibility(View.VISIBLE);
-		} else {
+		if (!updating) {
 			refreshSpinner.setVisibility(View.GONE);
 			refreshButton.setVisibility(View.VISIBLE);
 		}
@@ -214,7 +229,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	private void loadWorkbench() {
+	private void loadWorkarea() {
 		if (networkConnection.isNetworkAvailable()) {
 			new GetAccountMetaTask(LetterOperations.WORKAREA).execute();
 		}
@@ -456,7 +471,6 @@ public class BaseActivity extends FragmentActivity {
 				});
 
 				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
-
 				return v1;
 
 			} else if (number == 2) {
