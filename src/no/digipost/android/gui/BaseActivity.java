@@ -55,7 +55,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity {
@@ -93,12 +92,6 @@ public class BaseActivity extends FragmentActivity {
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setMessage(getString(R.string.loading_content));
 		progressDialog.setCancelable(false);
-
-		TextView mailbox_empty = (TextView) findViewById(R.id.mailbox_empty);
-		TextView workarea_empty = (TextView) findViewById(R.id.workarea_empty);
-		TextView archive_empty = (TextView) findViewById(R.id.archive_empty);
-		TextView receipts_empty = (TextView) findViewById(R.id.receipts_empty);
-
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setOffscreenPageLimit(3);
