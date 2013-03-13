@@ -5,5 +5,25 @@
         android:showAsAction="never"
         android:title="@string/optionsmenu_logout">
     </item>
+    <item
+        android:id="@+id/basemenu_mailbox"
+        android:showAsAction="never"
+        android:title="@string/title_section1">
+    </item>
+    <item
+        android:id="@+id/basemenu_workarea"
+        android:showAsAction="never"
+        android:title="@string/title_section2">
+    </item>
+    <item
+        android:id="@+id/basemenu_archive"
+        android:showAsAction="never"
+        android:title="@string/title_section3">
+    </item>
+    <item
+        android:id="@+id/basemenu_receipts"
+        android:showAsAction="never"
+        android:title="@string/title_section4">
+    </item>
 
 </menu>

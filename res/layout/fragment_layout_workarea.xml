@@ -46,12 +46,14 @@
             android:src="@drawable/fragment_folder_128" />
 
         <TextView
+            android:id="@+id/workarea_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/empty_listview_workarea"
             android:textColor="#5E5E5E"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="gone" />
     </LinearLayout>
     
     <LinearLayout

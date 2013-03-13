@@ -40,7 +40,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -57,11 +57,8 @@ import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity {
 	private static final String CURRENT_PAGE = "currentPage";
-
 	private SectionsPagerAdapter mSectionsPagerAdapter;
-	private ImageButton optionsButton;
-	private ImageButton refreshButton;
-	private ImageButton logoButton;
+	private ImageButton optionsButton, refreshButton, logoButton;
 	private ProgressBar refreshSpinner;
 	private ButtonListener listener;
 	private ButtonListener buttonListener;
@@ -116,9 +113,9 @@ public class BaseActivity extends FragmentActivity {
 			if (v == optionsButton) {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
-				refreshCurrentView(mViewPager.getCurrentItem());
+				refreshViewById(mViewPager.getCurrentItem());
 			} else if (v == logoButton) {
-				scrollToTheTop(mViewPager.getCurrentItem());
+				scrollViewToTopById(mViewPager.getCurrentItem());
 			}
 		}
 	}
@@ -134,6 +131,18 @@ public class BaseActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.basemenu_logoutOption:
 			logOut();
+			return true;
+		case R.id.basemenu_mailbox:
+			mViewPager.setCurrentItem(0, true);
+			return true;
+		case R.id.basemenu_workarea:
+			mViewPager.setCurrentItem(1, true);
+			return true;
+		case R.id.basemenu_archive:
+			mViewPager.setCurrentItem(2, true);
+			return true;
+		case R.id.basemenu_receipts:
+			mViewPager.setCurrentItem(3, true);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -153,7 +162,7 @@ public class BaseActivity extends FragmentActivity {
 		toast.show();
 	}
 
-	private void scrollToTheTop(final int page) {
+	private void scrollViewToTopById(final int page) {
 		switch (page) {
 		case LetterOperations.MAILBOX:
 			lv_mailbox.smoothScrollToPosition(0);
@@ -170,7 +179,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	private void refreshCurrentView(final int page) {
+	private void refreshViewById(final int page) {
 		refreshButton.setVisibility(View.GONE);
 		refreshSpinner.setVisibility(View.VISIBLE);
 
@@ -357,7 +366,7 @@ public class BaseActivity extends FragmentActivity {
 		super.onActivityResult(arg0, arg1, arg2);
 	}
 
-	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		public SectionsPagerAdapter(final FragmentManager fm) {
 			super(fm);
 		}
@@ -583,7 +592,6 @@ public class BaseActivity extends FragmentActivity {
 				super.onCancelled();
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
 			}
 
 			@Override
@@ -608,7 +616,6 @@ public class BaseActivity extends FragmentActivity {
 
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
 			}
 		}
 
@@ -649,7 +656,6 @@ public class BaseActivity extends FragmentActivity {
 				super.onCancelled();
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
 			}
 
 			@Override
@@ -668,7 +674,6 @@ public class BaseActivity extends FragmentActivity {
 
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
 			}
 		}
 
@@ -900,7 +905,6 @@ public class BaseActivity extends FragmentActivity {
 						MoveDocumentsTask moveTask = new MoveDocumentsTask(action);
 						tempLetter.setLocation(action);
 						moveTask.execute(Secret.ACCESS_TOKEN, tempLetter);
-						updateViews();
 					}
 				}
 			}
