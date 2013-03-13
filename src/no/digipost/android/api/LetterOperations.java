@@ -36,8 +36,8 @@ import com.sun.jersey.api.client.UniformInterfaceException;
 
 public class LetterOperations {
 	public static final int MAILBOX = 0;
-	public static final int ARCHIVE = 1;
-	public static final int WORKAREA = 2;
+	public static final int WORKAREA = 1;
+	public static final int ARCHIVE = 2;
 	public static final int RECEIPTS = 3;
 
 	private final ApiAccess apiAccess;
@@ -49,8 +49,12 @@ public class LetterOperations {
 		apiAccess = new ApiAccess(context);
 	}
 
+	public PrimaryAccount getPrimaryAccount() throws DigipostApiException, DigipostClientException {
+		return apiAccess.getAccount().getPrimaryAccount();
+	}
+
 	public ArrayList<Letter> getAccountContentMeta(final int type) throws DigipostApiException, DigipostClientException {
-		Account account = apiAccess.getPrimaryAccount();
+		Account account = apiAccess.getAccount();
 
 		PrimaryAccount primaryaccount = account.getPrimaryAccount();
 
@@ -83,8 +87,9 @@ public class LetterOperations {
 		return apiAccess.getReceipts(uri).getReceipt();
 	}
 
-	public boolean moveDocument(final String access_token, final Letter letter, final String toLocation) throws ClientProtocolException, UniformInterfaceException,
-			ClientHandlerException, ParseException, IOException, URISyntaxException, IllegalStateException, NetworkErrorException, DigipostClientException, DigipostApiException {
+	public boolean moveDocument(final String access_token, final Letter letter, final String toLocation) throws ClientProtocolException,
+			UniformInterfaceException, ClientHandlerException, ParseException, IOException, URISyntaxException, IllegalStateException,
+			NetworkErrorException, DigipostClientException, DigipostApiException {
 		Letter movedletter = apiAccess.getMovedDocument(letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
 		return movedletter.getLocation().equals(toLocation);
 	}
@@ -107,11 +112,10 @@ public class LetterOperations {
 	}
 
 	public boolean delete(final Object object) throws DigipostApiException, DigipostClientException {
-		if(object instanceof Letter) {
+		if (object instanceof Letter) {
 			Letter letter = (Letter) object;
 			return apiAccess.delete(letter.getDeleteUri());
-		}
-		else {
+		} else {
 			Receipt receipt = (Receipt) object;
 			return apiAccess.delete(receipt.getDeleteUri());
 		}

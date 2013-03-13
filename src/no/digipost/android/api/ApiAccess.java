@@ -50,7 +50,7 @@ public class ApiAccess {
 		networkConnection = new NetworkConnection(context);
 	}
 
-	public Account getPrimaryAccount() throws DigipostApiException, DigipostClientException {
+	public Account getAccount() throws DigipostApiException, DigipostClientException {
 		return (Account) JSONConverter.processJackson(Account.class, getApiJsonString(ApiConstants.URL_API));
 	}
 
@@ -147,8 +147,7 @@ public class ApiAccess {
 					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
 					.delete(ClientResponse.class);
 				return true;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new DigipostClientException(context.getString(R.string.error_your_network));
 		}
 	}

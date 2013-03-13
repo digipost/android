@@ -26,9 +26,12 @@ import no.digipost.android.R;
 import no.digipost.android.model.Receipt;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -111,12 +114,27 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 		return row;
 	}
 
+	public void remove(final View rowView, final Receipt object) {
+		final Animation animation = AnimationUtils.loadAnimation(rowView.getContext(), R.anim.list_splashfadeout);
+		rowView.startAnimation(animation);
+		Handler handle = new Handler();
+		handle.postDelayed(new Runnable() {
+
+			public void run() {
+				receipts.remove(object);
+				notifyDataSetChanged();
+				animation.cancel();
+			}
+		}, 1000);
+	}
+
 	@Override
 	public Receipt getItem(final int position) {
 		return receipts.get(position);
 	}
 
 	public void updateList(final ArrayList<Receipt> list) {
+		receipts.clear();
 		receipts.addAll(list);
 		notifyDataSetChanged();
 	}
