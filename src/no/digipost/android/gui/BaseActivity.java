@@ -119,7 +119,7 @@ public class BaseActivity extends FragmentActivity {
 			} else if (v == refreshButton) {
 				refreshCurrentView(mViewPager.getCurrentItem());
 			} else if (v == logoButton) {
-				scrollToTheTop();
+				scrollToTheTop(mViewPager.getCurrentItem());
 			}
 		}
 	}
@@ -154,8 +154,7 @@ public class BaseActivity extends FragmentActivity {
 		toast.show();
 	}
 
-	private void scrollToTheTop() {
-		int page = mViewPager.getCurrentItem();
+	private void scrollToTheTop(final int page) {
 		switch (page) {
 		case LetterOperations.MAILBOX:
 			lv_mailbox.smoothScrollToPosition(0);
