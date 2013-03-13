@@ -79,7 +79,6 @@ public class LetterOperations {
 
 	private String tempReceipLink() {
 			String profileDigits = tempLink.replaceAll("\\D+","");
-			System.out.println("PROFILDIGITS: " + profileDigits);
 			return "https://www.digipost.no/post/api/private/accounts/" + profileDigits + "/receipts";
 	}
 
