@@ -180,6 +180,11 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	private void refreshViewById(final int page) {
+		if (!networkConnection.isNetworkAvailable()) {
+			showMessage(getString(R.string.error_your_network));
+			return;
+		}
+
 		refreshButton.setVisibility(View.GONE);
 		refreshSpinner.setVisibility(View.VISIBLE);
 
