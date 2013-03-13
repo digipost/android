@@ -137,6 +137,18 @@ public class BaseActivity extends FragmentActivity {
 		case R.id.basemenu_logoutOption:
 			logOut();
 			return true;
+		case R.id.basemenu_mailbox:
+			mViewPager.setCurrentItem(0, true);
+			return true;
+		case R.id.basemenu_workarea:
+			mViewPager.setCurrentItem(1, true);
+			return true;
+		case R.id.basemenu_archive:
+			mViewPager.setCurrentItem(2, true);
+			return true;
+		case R.id.basemenu_receipts:
+			mViewPager.setCurrentItem(3, true);
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
