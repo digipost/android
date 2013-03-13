@@ -350,6 +350,12 @@ public class BaseActivity extends FragmentActivity {
 		}
 
 		@Override
+		public int getItemPosition(final Object object) {
+			return POSITION_NONE;
+
+		}
+
+		@Override
 		public Fragment getItem(final int position) {
 			DigipostSectionFragment fragment = new DigipostSectionFragment();
 			Bundle args = new Bundle();
