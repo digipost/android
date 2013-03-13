@@ -40,7 +40,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -109,6 +109,7 @@ public class BaseActivity extends FragmentActivity {
 		networkConnection = new NetworkConnection(this);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setClickable(true);
+		mSectionsPagerAdapter.notifyDataSetChanged();
 	}
 
 	private class ButtonListener implements OnClickListener {
@@ -117,9 +118,9 @@ public class BaseActivity extends FragmentActivity {
 			if (v == optionsButton) {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
-				updateViews();
+				refreshViewById(mViewPager.getCurrentItem());
 			} else if (v == logoButton) {
-				scrollToTheTop();
+				scrollViewToTopById(mViewPager.getCurrentItem());
 			}
 		}
 	}
@@ -135,6 +136,18 @@ public class BaseActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.basemenu_logoutOption:
 			logOut();
+			return true;
+		case R.id.basemenu_mailbox:
+			mViewPager.setCurrentItem(0, true);
+			return true;
+		case R.id.basemenu_workarea:
+			mViewPager.setCurrentItem(1, true);
+			return true;
+		case R.id.basemenu_archive:
+			mViewPager.setCurrentItem(2, true);
+			return true;
+		case R.id.basemenu_receipts:
+			mViewPager.setCurrentItem(3, true);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -154,13 +167,7 @@ public class BaseActivity extends FragmentActivity {
 		toast.show();
 	}
 
-	public void changeView(final int pos) {
-		mViewPager.setCurrentItem(pos);
-	}
-
-	private void scrollToTheTop() {
-		int page = mViewPager.getCurrentItem();
-		System.out.println("page" + page);
+	private void scrollViewToTopById(final int page) {
 		switch (page) {
 		case LetterOperations.MAILBOX:
 			lv_mailbox.smoothScrollToPosition(0);
@@ -177,14 +184,37 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
+	private void refreshViewById(final int page) {
+		refreshButton.setVisibility(View.GONE);
+		refreshSpinner.setVisibility(View.VISIBLE);
+
+		switch (page) {
+		case LetterOperations.MAILBOX:
+			loadMailbox();
+			break;
+		case LetterOperations.WORKAREA:
+			loadWorkarea();
+			break;
+		case LetterOperations.ARCHIVE:
+			loadArchive();
+			break;
+		case LetterOperations.RECEIPTS:
+			loadReceipts();
+			break;
+		}
+
+	}
+
 	private void updateViews() {
 		if (networkConnection.isNetworkAvailable()) {
 			updatingView = new boolean[4];
 			updatingView[LetterOperations.RECEIPTS] = true;
 			loadMailbox();
-			loadWorkbench();
+			loadWorkarea();
 			loadArchive();
 			loadReceipts();
+			refreshButton.setVisibility(View.GONE);
+			refreshSpinner.setVisibility(View.VISIBLE);
 			toggleRefreshButton();
 		} else {
 			showMessage(getString(R.string.error_your_network));
@@ -199,10 +229,7 @@ public class BaseActivity extends FragmentActivity {
 				break;
 			}
 		}
-		if (updating) {
-			refreshButton.setVisibility(View.GONE);
-			refreshSpinner.setVisibility(View.VISIBLE);
-		} else {
+		if (!updating) {
 			refreshSpinner.setVisibility(View.GONE);
 			refreshButton.setVisibility(View.VISIBLE);
 		}
@@ -214,7 +241,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	private void loadWorkbench() {
+	private void loadWorkarea() {
 		if (networkConnection.isNetworkAvailable()) {
 			new GetAccountMetaTask(LetterOperations.WORKAREA).execute();
 		}
@@ -344,7 +371,7 @@ public class BaseActivity extends FragmentActivity {
 		super.onActivityResult(arg0, arg1, arg2);
 	}
 
-	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
+	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 		public SectionsPagerAdapter(final FragmentManager fm) {
 			super(fm);
 		}
@@ -456,7 +483,6 @@ public class BaseActivity extends FragmentActivity {
 				});
 
 				lv_mailbox.setOnItemClickListener(new ListListener(adapter_mailbox));
-
 				return v1;
 
 			} else if (number == 2) {

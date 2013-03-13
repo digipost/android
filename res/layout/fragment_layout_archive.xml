@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/empty_listview_archive"
+            android:visibility="gone"
             android:textColor="#5E5E5E"
             android:textSize="18sp" />
     </LinearLayout>

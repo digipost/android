@@ -51,6 +51,7 @@
             android:layout_gravity="center"
             android:text="@string/empty_listview_mailbox"
             android:textColor="#5E5E5E"
+            android:visibility="gone"
             android:layout_marginTop="1dp"
             android:textSize="18sp" />
     </LinearLayout>
