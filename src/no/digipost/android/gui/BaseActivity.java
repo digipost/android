@@ -289,6 +289,7 @@ public class BaseActivity extends FragmentActivity {
 				showMessage(errorMessage);
 			} else {
 				adapter_receipts.updateList(result);
+				findViewById(R.id.receipts_empty).setVisibility(View.VISIBLE);
 			}
 			updatingView[LetterOperations.RECEIPTS] = false;
 			toggleRefreshButtonOff();
@@ -348,6 +349,9 @@ public class BaseActivity extends FragmentActivity {
 					adapter_archive.updateList(result);
 					break;
 				}
+				findViewById(R.id.mailbox_empty).setVisibility(View.VISIBLE);
+				findViewById(R.id.workarea_empty).setVisibility(View.VISIBLE);
+				findViewById(R.id.archive_empty).setVisibility(View.VISIBLE);
 			}
 			updatingView[type] = false;
 			toggleRefreshButtonOff();
