@@ -40,7 +40,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -67,7 +67,6 @@ public class BaseActivity extends FragmentActivity {
 	private ProgressBar refreshSpinner;
 	private ButtonListener listener;
 	private ButtonListener buttonListener;
-	private ViewPagerListener pageListener;
 	private final int REQUEST_CODE = 1;
 	private ViewPager mViewPager;
 	private Context context;
@@ -104,13 +103,11 @@ public class BaseActivity extends FragmentActivity {
 		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
 		logoButton = (ImageButton) findViewById(R.id.base_logoButton);
 		buttonListener = new ButtonListener();
-		pageListener = new ViewPagerListener();
 		optionsButton.setOnClickListener(buttonListener);
 		refreshButton.setOnClickListener(buttonListener);
 		logoButton.setOnClickListener(buttonListener);
 		networkConnection = new NetworkConnection(this);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		mViewPager.setOnPageChangeListener(pageListener);
 		mViewPager.setClickable(true);
 	}
 
@@ -161,26 +158,8 @@ public class BaseActivity extends FragmentActivity {
 		mViewPager.setCurrentItem(pos);
 	}
 
-	public class ViewPagerListener extends ViewPager.SimpleOnPageChangeListener {
-
-		private int currentPage;
-
-		@Override
-		public void onPageSelected(final int position) {
-			currentPage = position;
-		}
-
-		public int getCurrentPage() {
-			return currentPage;
-		}
-
-		public void setCurrentPage(final int currentPage) {
-			this.currentPage = currentPage;
-		}
-	}
-
 	private void scrollToTheTop() {
-		int page = pageListener.getCurrentPage();
+		int page = mViewPager.getCurrentItem();
 		System.out.println("page" + page);
 		switch (page) {
 		case LetterOperations.MAILBOX:
@@ -365,9 +344,15 @@ public class BaseActivity extends FragmentActivity {
 		super.onActivityResult(arg0, arg1, arg2);
 	}
 
-	public class SectionsPagerAdapter extends FragmentPagerAdapter {
+	public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 		public SectionsPagerAdapter(final FragmentManager fm) {
 			super(fm);
+		}
+
+		@Override
+		public int getItemPosition(final Object object) {
+			return POSITION_NONE;
+
 		}
 
 		@Override

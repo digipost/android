@@ -134,6 +134,7 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	}
 
 	public void updateList(final ArrayList<Receipt> list) {
+		receipts.clear();
 		receipts.addAll(list);
 		notifyDataSetChanged();
 	}
