@@ -208,15 +208,19 @@ public class BaseActivity extends FragmentActivity {
 			loadWorkarea();
 			loadArchive();
 			loadReceipts();
-			refreshButton.setVisibility(View.GONE);
-			refreshSpinner.setVisibility(View.VISIBLE);
-			toggleRefreshButton();
+			toggleRefreshButtonOn();
+			toggleRefreshButtonOff();
 		} else {
 			showMessage(getString(R.string.error_your_network));
 		}
 	}
 
-	private void toggleRefreshButton() {
+	private void toggleRefreshButtonOn() {
+		refreshButton.setVisibility(View.GONE);
+		refreshSpinner.setVisibility(View.VISIBLE);
+	}
+
+	private void toggleRefreshButtonOff() {
 		boolean updating = false;
 		for (boolean i : updatingView) {
 			if (i) {
@@ -286,17 +290,15 @@ public class BaseActivity extends FragmentActivity {
 			} else {
 				adapter_receipts.updateList(result);
 			}
-			progressDialog.dismiss();
 			updatingView[LetterOperations.RECEIPTS] = false;
-			toggleRefreshButton();
+			toggleRefreshButtonOff();
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			progressDialog.dismiss();
 			updatingView = new boolean[4];
-			toggleRefreshButton();
+			toggleRefreshButtonOff();
 		}
 	}
 
@@ -347,17 +349,15 @@ public class BaseActivity extends FragmentActivity {
 					break;
 				}
 			}
-			progressDialog.dismiss();
 			updatingView[type] = false;
-			toggleRefreshButton();
+			toggleRefreshButtonOff();
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			progressDialog.dismiss();
 			updatingView = new boolean[4];
-			toggleRefreshButton();
+			toggleRefreshButtonOff();
 		}
 	}
 
@@ -591,7 +591,6 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
-				updatingView = new boolean[4];
 			}
 
 			@Override
@@ -615,7 +614,6 @@ public class BaseActivity extends FragmentActivity {
 				}
 
 				progressDialog.dismiss();
-				updatingView = new boolean[4];
 			}
 		}
 
@@ -655,7 +653,6 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
-				updatingView = new boolean[4];
 			}
 
 			@Override
@@ -673,7 +670,6 @@ public class BaseActivity extends FragmentActivity {
 				}
 
 				progressDialog.dismiss();
-				updatingView = new boolean[4];
 			}
 		}
 
@@ -715,7 +711,7 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
+				toggleRefreshButtonOff();
 			}
 
 			@Override
@@ -730,7 +726,7 @@ public class BaseActivity extends FragmentActivity {
 				}
 
 				updatingView = new boolean[4];
-				toggleRefreshButton();
+				toggleRefreshButtonOff();
 			}
 		}
 
@@ -777,7 +773,7 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
+				toggleRefreshButtonOff();
 			}
 
 			@Override
@@ -795,7 +791,7 @@ public class BaseActivity extends FragmentActivity {
 					updateViews();
 				}
 				updatingView = new boolean[4];
-				toggleRefreshButton();
+				toggleRefreshButtonOff();
 			}
 		}
 
@@ -863,7 +859,7 @@ public class BaseActivity extends FragmentActivity {
 				super.onCancelled();
 				progressDialog.dismiss();
 				updatingView = new boolean[4];
-				toggleRefreshButton();
+				toggleRefreshButtonOff();
 			}
 
 			@Override
@@ -880,7 +876,7 @@ public class BaseActivity extends FragmentActivity {
 
 					progressDialog.dismiss();
 					updatingView = new boolean[4];
-					toggleRefreshButton();
+					toggleRefreshButtonOff();
 					checkboxesOnOff(v1, false, -1);
 				}
 			}
@@ -891,6 +887,7 @@ public class BaseActivity extends FragmentActivity {
 			super.onActivityResult(requestCode, resultCode, data);
 			if (resultCode == RESULT_OK) {
 				if (requestCode == REQUESTCODE_INTENT) {
+					toggleRefreshButtonOn();
 					String action = data.getExtras().getString(ApiConstants.ACTION);
 					String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
 

@@ -49,7 +49,6 @@ public class HtmlWebview extends Activity {
 		webView.getSettings().setDisplayZoomControls(true);
 		webView.getSettings().setLoadWithOverviewMode(true);
 		webView.loadDataWithBaseURL(null, html, mime, encoding, null);
-
 	}
 
 	private void createButtons() {
