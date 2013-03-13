@@ -118,9 +118,9 @@ public class BaseActivity extends FragmentActivity {
 			if (v == optionsButton) {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
-				refreshCurrentView(mViewPager.getCurrentItem());
+				refreshViewById(mViewPager.getCurrentItem());
 			} else if (v == logoButton) {
-				scrollToTheTop(mViewPager.getCurrentItem());
+				scrollViewToTopById(mViewPager.getCurrentItem());
 			}
 		}
 	}
@@ -155,7 +155,7 @@ public class BaseActivity extends FragmentActivity {
 		toast.show();
 	}
 
-	private void scrollToTheTop(final int page) {
+	private void scrollViewToTopById(final int page) {
 		switch (page) {
 		case LetterOperations.MAILBOX:
 			lv_mailbox.smoothScrollToPosition(0);
@@ -172,7 +172,7 @@ public class BaseActivity extends FragmentActivity {
 		}
 	}
 
-	private void refreshCurrentView(final int page) {
+	private void refreshViewById(final int page) {
 		refreshButton.setVisibility(View.GONE);
 		refreshSpinner.setVisibility(View.VISIBLE);
 
