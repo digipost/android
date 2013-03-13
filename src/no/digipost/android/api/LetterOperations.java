@@ -63,11 +63,6 @@ public class LetterOperations {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
 
-		System.out.println("INBOX: " + primaryaccount.getInboxUri());
-		System.out.println("WORKAREA:" + primaryaccount.getWorkareaUri());
-		System.out.println("ARCHIVE: " + primaryaccount.getArchiveUri());
-		System.out.println("RECEIPTS: " + primaryaccount.getReceiptsUri());
-
 		profil_id = primaryaccount.getInboxUri().substring(50, 56);
 
 		switch (type) {
