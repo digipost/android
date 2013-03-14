@@ -56,6 +56,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity {
@@ -83,6 +84,10 @@ public class BaseActivity extends FragmentActivity {
 	private ListView lv_workarea;
 	private ListView lv_archive;
 	private ListView lv_receipts;
+	private TextView mailboxEmptyText;
+	private TextView workareaEmptyText;
+	private TextView archiveEmptyText;
+	private TextView receiptsEmptyText;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -116,7 +121,6 @@ public class BaseActivity extends FragmentActivity {
 			if (v == optionsButton) {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
-				//refreshViewById(mViewPager.getCurrentItem());
 				updateViews();
 			} else if (v == logoButton) {
 				scrollViewToTopById(mViewPager.getCurrentItem());
@@ -179,6 +183,23 @@ public class BaseActivity extends FragmentActivity {
 			break;
 		case LetterOperations.RECEIPTS:
 			lv_receipts.smoothScrollToPosition(0);
+			break;
+		}
+	}
+
+	private void setEmptyViewTextVisible(final int type) {
+		switch (type) {
+		case LetterOperations.MAILBOX:
+			mailboxEmptyText.setVisibility(View.VISIBLE);
+			break;
+		case LetterOperations.WORKAREA:
+			workareaEmptyText.setVisibility(View.VISIBLE);
+			break;
+		case LetterOperations.ARCHIVE:
+			archiveEmptyText.setVisibility(View.VISIBLE);
+			break;
+		case LetterOperations.RECEIPTS:
+			receiptsEmptyText.setVisibility(View.VISIBLE);
 			break;
 		}
 	}
@@ -298,6 +319,7 @@ public class BaseActivity extends FragmentActivity {
 				showMessage(errorMessage);
 			} else {
 				adapter_receipts.updateList(result);
+				setEmptyViewTextVisible(LetterOperations.RECEIPTS);
 			}
 			updatingView[LetterOperations.RECEIPTS] = false;
 			toggleRefreshButtonOff();
@@ -356,6 +378,8 @@ public class BaseActivity extends FragmentActivity {
 					adapter_archive.updateList(result);
 					break;
 				}
+
+				setEmptyViewTextVisible(type);
 			}
 			updatingView[type] = false;
 			toggleRefreshButtonOff();
@@ -465,6 +489,7 @@ public class BaseActivity extends FragmentActivity {
 
 				lv_mailbox = (ListView) v1.findViewById(R.id.listview_mailbox);
 				View emptyView = v1.findViewById(R.id.empty_listview_mailbox);
+				mailboxEmptyText = (TextView) v1.findViewById(R.id.mailbox_empty);
 				lv_mailbox.setEmptyView(emptyView);
 				adapter_mailbox = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>(), v1,
 						R.id.mailbox_bottombar);
@@ -507,6 +532,7 @@ public class BaseActivity extends FragmentActivity {
 				final View v2 = inflater.inflate(R.layout.fragment_layout_workarea, container, false);
 				lv_workarea = (ListView) v2.findViewById(R.id.listview_kitchen);
 				View emptyView = v2.findViewById(R.id.empty_listview_workarea);
+				workareaEmptyText = (TextView) v2.findViewById(R.id.workarea_empty);
 				lv_workarea.setEmptyView(emptyView);
 				adapter_workarea = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>(), v2,
 						R.id.workarea_bottombar);
@@ -545,6 +571,7 @@ public class BaseActivity extends FragmentActivity {
 				final View v3 = inflater.inflate(R.layout.fragment_layout_archive, container, false);
 				lv_archive = (ListView) v3.findViewById(R.id.listview_archive);
 				View emptyView = v3.findViewById(R.id.empty_listview_archive);
+				archiveEmptyText = (TextView) v3.findViewById(R.id.archive_empty);
 				lv_archive.setEmptyView(emptyView);
 				adapter_archive = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>(), v3,
 						R.id.archive_bottombar);
@@ -583,6 +610,7 @@ public class BaseActivity extends FragmentActivity {
 				final View v4 = inflater.inflate(R.layout.fragment_layout_receipts, container, false);
 				lv_receipts = (ListView) v4.findViewById(R.id.listview_receipts);
 				View emptyView = v4.findViewById(R.id.empty_listview_receipts);
+				receiptsEmptyText = (TextView) v4.findViewById(R.id.receipts_empty);
 				lv_receipts.setEmptyView(emptyView);
 				adapter_receipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>(), v4,
 						R.id.receipt_bottombar);
@@ -1214,7 +1242,6 @@ public class BaseActivity extends FragmentActivity {
 						showMultiSelecetionWarning("Vil du slette " + adapter.checkedCount()
 								+ ((adapter.checkedCount() > 1) ? " kvitteringer?" : " kvittering?"), multipleReceiptsTask, adapter);
 					}
-
 				}
 			}
 		}
