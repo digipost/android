@@ -25,16 +25,16 @@
         android:id="@+id/listview_kitchen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:divider="#eee"
-        android:dividerHeight="1sp"
-        android:layout_weight="1" >
+        android:dividerHeight="1sp" >
     </ListView>
 
     <LinearLayout
         android:id="@+id/empty_listview_workarea"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#BFBFBF"
+        android:background="#eceef1"
         android:orientation="vertical"
         android:padding="20dp"
         android:visibility="gone" >
@@ -51,12 +51,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:padding="10dp"
             android:text="@string/empty_listview_workarea"
             android:textColor="#5E5E5E"
             android:textSize="18sp"
             android:visibility="gone" />
     </LinearLayout>
-    
+
     <LinearLayout
         android:id="@+id/workarea_bottombar"
         android:layout_width="fill_parent"
@@ -70,7 +73,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
-
 
             <ImageButton
                 android:id="@+id/workarea_toArchive"
