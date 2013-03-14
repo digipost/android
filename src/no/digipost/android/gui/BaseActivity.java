@@ -217,7 +217,6 @@ public class BaseActivity extends FragmentActivity {
 			loadArchive();
 			loadReceipts();
 			toggleRefreshButtonOn();
-			toggleRefreshButtonOff();
 		} else {
 			showMessage(getString(R.string.error_your_network));
 		}
@@ -229,17 +228,18 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	private void toggleRefreshButtonOff() {
-		boolean updating = false;
 		for (boolean i : updatingView) {
 			if (i) {
-				updating = true;
-				break;
+				return;
 			}
 		}
-		if (!updating) {
-			refreshSpinner.setVisibility(View.GONE);
-			refreshButton.setVisibility(View.VISIBLE);
-		}
+		resetResfreshButton();
+	}
+
+	private void resetResfreshButton() {
+		updatingView = new boolean[4];
+		refreshSpinner.setVisibility(View.GONE);
+		refreshButton.setVisibility(View.VISIBLE);
 	}
 
 	public void loadMailbox() {
@@ -305,8 +305,7 @@ public class BaseActivity extends FragmentActivity {
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			updatingView = new boolean[4];
-			toggleRefreshButtonOff();
+			resetResfreshButton();
 		}
 	}
 
@@ -364,8 +363,7 @@ public class BaseActivity extends FragmentActivity {
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			updatingView = new boolean[4];
-			toggleRefreshButtonOff();
+			resetResfreshButton();
 		}
 	}
 
@@ -590,8 +588,10 @@ public class BaseActivity extends FragmentActivity {
 				lv_receipts.setAdapter(adapter_receipts);
 				lv_receipts.setOnItemClickListener(new ReceiptListListener(adapter_receipts));
 
+
 				receipts_multiSelection_delete = (ImageButton) v4.findViewById(R.id.receipt_delete);
 				receipts_multiSelection_delete.setOnClickListener(new MultiSelectionReceiptListener(adapter_receipts));
+
 
 				lv_receipts.setOnItemLongClickListener(new OnItemLongClickListener() {
 					public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
@@ -645,6 +645,7 @@ public class BaseActivity extends FragmentActivity {
 
 		public void showMultiSelecetionWarning(final String text, final MultipleDocumentsTask task, final Object adapter) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle("Advarsel!");
 			builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 				public void onClick(final DialogInterface dialog, final int id) {
 					task.execute(adapter);
@@ -850,8 +851,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
-				updatingView = new boolean[4];
-				toggleRefreshButtonOff();
+				resetResfreshButton();
 			}
 
 			@Override
@@ -864,9 +864,7 @@ public class BaseActivity extends FragmentActivity {
 					tempLetterAdapter.remove(tempRowView, tempLetter);
 					updateViews();
 				}
-
-				updatingView = new boolean[4];
-				toggleRefreshButtonOff();
+				resetResfreshButton();
 			}
 		}
 
@@ -912,8 +910,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
-				updatingView = new boolean[4];
-				toggleRefreshButtonOff();
+				resetResfreshButton();
 			}
 
 			@Override
@@ -930,8 +927,7 @@ public class BaseActivity extends FragmentActivity {
 					}
 					updateViews();
 				}
-				updatingView = new boolean[4];
-				toggleRefreshButtonOff();
+				resetResfreshButton();
 			}
 		}
 
@@ -946,6 +942,7 @@ public class BaseActivity extends FragmentActivity {
 			LetterListAdapter documentadapter;
 			ReceiptListAdapter receiptadapter;
 			int checkedCount;
+
 
 			public MultipleDocumentsTask(final int type, final String action, final boolean[] checked) {
 				this.type = type;
@@ -1041,8 +1038,7 @@ public class BaseActivity extends FragmentActivity {
 			protected void onCancelled() {
 				super.onCancelled();
 				progressDialog.dismiss();
-				updatingView = new boolean[4];
-				toggleRefreshButtonOff();
+				resetResfreshButton();
 			}
 
 			@Override
@@ -1059,8 +1055,7 @@ public class BaseActivity extends FragmentActivity {
 				}
 				updateViews();
 				progressDialog.dismiss();
-				updatingView = new boolean[4];
-				toggleRefreshButtonOff();
+				resetResfreshButton();
 			}
 		}
 
@@ -1161,25 +1156,32 @@ public class BaseActivity extends FragmentActivity {
 
 				if (v.getId() == R.id.mailbox_toArchive) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_ARCHIVE, checkedlist);
-					multipleDocumentsTask.execute(adapter);
+					showMultiSelecetionWarning("Vil du flytte " + adapter.checkedCount() + " brev til arkivet?", multipleDocumentsTask, adapter);
+					//multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.mailbox_toWorkarea) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
-					multipleDocumentsTask.execute(adapter);
+					showMultiSelecetionWarning("Vil du flytte " + adapter.checkedCount() + " brev til kjøkkenbenken?", multipleDocumentsTask, adapter);
+					//multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.mailbox_delete) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
-					multipleDocumentsTask.execute(adapter);
+					showMultiSelecetionWarning("Vil du slette " + adapter.checkedCount() + " brev?", multipleDocumentsTask, adapter);
+					//multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.workarea_toArchive) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_ARCHIVE, checkedlist);
-					multipleDocumentsTask.execute(adapter);
+					showMultiSelecetionWarning("Vil du flytte " + adapter.checkedCount() + " brev til arkivet?", multipleDocumentsTask, adapter);
+					//multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.workarea_delete) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
-					multipleDocumentsTask.execute(adapter);
+					showMultiSelecetionWarning("Vil du slette " + adapter.checkedCount() + " brev?", multipleDocumentsTask, adapter);
+					//multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.archive_toWorkarea) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
-					multipleDocumentsTask.execute(adapter);
+					showMultiSelecetionWarning("Vil du flytte " + adapter.checkedCount() + " brev til kjøkkenbenken?", multipleDocumentsTask, adapter);
+					//multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.archive_delete) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
-					multipleDocumentsTask.execute(adapter);
+					showMultiSelecetionWarning("Vil du slette " + adapter.checkedCount() + " brev?", multipleDocumentsTask, adapter);
+					//multipleDocumentsTask.execute(adapter);
 				}
 			}
 			}
@@ -1202,6 +1204,7 @@ public class BaseActivity extends FragmentActivity {
 						showMultiSelecetionWarning("Vil du slette " + adapter.checkedCount()
 								+ ((adapter.checkedCount() > 1) ? " kvitteringer?" : " kvittering?"), multipleReceiptsTask, adapter);
 					}
+
 				}
 			}
 		}
