@@ -1147,16 +1147,6 @@ public class BaseActivity extends FragmentActivity {
 						moveTask.execute(Secret.ACCESS_TOKEN, tempLetter);
 					}
 				}
-				/*System.out.println("RESULT OK");
-				tempLetter.setRead("true");
-				if(from.equals(ApiConstants.LOCATION_INBOX)) {
-					adapter_mailbox.notifyDataSetChanged();
-				} else if(from.equals(ApiConstants.LOCATION_WORKAREA)) {
-					adapter_workarea.notifyDataSetChanged();
-				} else if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
-					adapter_archive.notifyDataSetChanged();
-				} */
-
 				refreshViewById(mViewPager.getCurrentItem());
 			}
 
