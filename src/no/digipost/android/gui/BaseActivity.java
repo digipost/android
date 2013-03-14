@@ -113,6 +113,36 @@ public class BaseActivity extends FragmentActivity {
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setClickable(true);
 		mSectionsPagerAdapter.notifyDataSetChanged();
+
+		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+			public void onPageScrollStateChanged(final int arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void onPageScrolled(final int arg0, final float arg1, final int arg2) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void onPageSelected(final int page) {
+
+				if(adapter_mailbox.getShowBoxes()) {
+					adapter_mailbox.clearCheckboxes();
+					adapter_mailbox.notifyDataSetChanged();
+				} else if (adapter_workarea.getShowBoxes()) {
+					adapter_workarea.clearCheckboxes();
+					adapter_workarea.notifyDataSetChanged();
+				} else if (adapter_archive.getShowBoxes()) {
+					adapter_archive.clearCheckboxes();
+					adapter_archive.notifyDataSetChanged();
+				} else if (adapter_receipts.getShowBoxes()) {
+					adapter_receipts.clearCheckboxes();
+					adapter_receipts.notifyDataSetChanged();
+				}
+			}
+		});
 	}
 
 	private class ButtonListener implements OnClickListener {
@@ -437,6 +467,7 @@ public class BaseActivity extends FragmentActivity {
 			return null;
 		}
 	}
+
 
 	public class DigipostSectionFragment extends Fragment {
 
@@ -1090,8 +1121,8 @@ public class BaseActivity extends FragmentActivity {
 		public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 			super.onActivityResult(requestCode, resultCode, data);
 			String from ="";
-			if (resultCode == RESULT_OK) {
-				if (requestCode == REQUESTCODE_INTENT) {
+			if (requestCode == REQUESTCODE_INTENT) {
+				if (resultCode == RESULT_OK) {
 					toggleRefreshButtonOn();
 					String action = data.getExtras().getString(ApiConstants.ACTION);
 					String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
@@ -1110,16 +1141,17 @@ public class BaseActivity extends FragmentActivity {
 						moveTask.execute(Secret.ACCESS_TOKEN, tempLetter);
 					}
 				}
-				System.out.println("RESULT OK");
+				/*System.out.println("RESULT OK");
+				tempLetter.setRead("true");
+				if(from.equals(ApiConstants.LOCATION_INBOX)) {
+					adapter_mailbox.notifyDataSetChanged();
+				} else if(from.equals(ApiConstants.LOCATION_WORKAREA)) {
+					adapter_workarea.notifyDataSetChanged();
+				} else if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
+					adapter_archive.notifyDataSetChanged();
+				} */
 			}
-			/*tempLetter.setRead("true");
-			if(from.equals(ApiConstants.LOCATION_INBOX)) {
-				adapter_mailbox.notifyDataSetChanged();
-			} else if(from.equals(ApiConstants.LOCATION_WORKAREA)) {
-				adapter_workarea.notifyDataSetChanged();
-			} else if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
-				adapter_archive.notifyDataSetChanged();
-			} */
+
 		}
 
 		private class ListListener implements OnItemClickListener {
