@@ -116,7 +116,8 @@ public class BaseActivity extends FragmentActivity {
 			if (v == optionsButton) {
 				openOptionsMenu();
 			} else if (v == refreshButton) {
-				refreshViewById(mViewPager.getCurrentItem());
+				//refreshViewById(mViewPager.getCurrentItem());
+				updateViews();
 			} else if (v == logoButton) {
 				scrollViewToTopById(mViewPager.getCurrentItem());
 			}
@@ -631,7 +632,6 @@ public class BaseActivity extends FragmentActivity {
 				}
 			} else {
 				if (state) {
-					System.out.println("kvittoadapter");
 					lw.requestFocus();
 					((ReceiptListAdapter) adapter).setInitialcheck(position);
 					((ReceiptListAdapter) adapter).notifyDataSetChanged();
@@ -640,7 +640,6 @@ public class BaseActivity extends FragmentActivity {
 					((ReceiptListAdapter) adapter).notifyDataSetChanged();
 				}
 			}
-
 		}
 
 		public void showMultiSelecetionWarning(final String text, final MultipleDocumentsTask task, final Object adapter) {
@@ -1062,11 +1061,13 @@ public class BaseActivity extends FragmentActivity {
 		@Override
 		public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 			super.onActivityResult(requestCode, resultCode, data);
+			String from ="";
 			if (resultCode == RESULT_OK) {
 				if (requestCode == REQUESTCODE_INTENT) {
 					toggleRefreshButtonOn();
 					String action = data.getExtras().getString(ApiConstants.ACTION);
 					String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
+					from = data.getExtras().getString(ApiConstants.LOCATION_FROM);
 
 					if (action.equals(ApiConstants.DELETE)) {
 						DeleteTask deleteTask = new DeleteTask(type);
@@ -1081,7 +1082,16 @@ public class BaseActivity extends FragmentActivity {
 						moveTask.execute(Secret.ACCESS_TOKEN, tempLetter);
 					}
 				}
+				System.out.println("RESULT OK");
 			}
+			/*tempLetter.setRead("true");
+			if(from.equals(ApiConstants.LOCATION_INBOX)) {
+				adapter_mailbox.notifyDataSetChanged();
+			} else if(from.equals(ApiConstants.LOCATION_WORKAREA)) {
+				adapter_workarea.notifyDataSetChanged();
+			} else if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
+				adapter_archive.notifyDataSetChanged();
+			} */
 		}
 
 		private class ListListener implements OnItemClickListener {

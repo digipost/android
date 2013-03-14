@@ -80,6 +80,7 @@ public class HtmlWebview extends Activity {
 
 	private void singleLetterOperation(final String action) {
 		Intent i = new Intent(HtmlWebview.this, BaseActivity.class);
+		i.putExtra(ApiConstants.LOCATION_FROM, from);
 		i.putExtra(ApiConstants.ACTION, action);
 		i.putExtra(ApiConstants.DOCUMENT_TYPE, type);
 		setResult(RESULT_OK, i);

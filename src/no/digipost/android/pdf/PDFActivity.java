@@ -395,6 +395,7 @@ public class PDFActivity extends Activity {
 
 	public void singleLetterOperation(final String action) {
 		Intent i = new Intent(PDFActivity.this, BaseActivity.class);
+		i.putExtra(ApiConstants.LOCATION_FROM,intent.getExtras().getString(ApiConstants.LOCATION_FROM));
 		i.putExtra(ApiConstants.ACTION, action);
 		i.putExtra(ApiConstants.DOCUMENT_TYPE,ApiConstants.LETTER);
 		setResult(RESULT_OK,i);
