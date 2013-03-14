@@ -43,7 +43,7 @@ import android.widget.TextView;
 public class LetterListAdapter extends ArrayAdapter<Letter> {
 	private final Context con;
 	private final ArrayList<Letter> letters;
-	public static boolean showboxes = false;
+	public boolean  showboxes;
 	public boolean[] checked;
 	CheckBox checkbox;
 	View mainview;
@@ -55,6 +55,7 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		letters = objects;
 		this.mainview = mainview;
 		this.bottombar = bottombar;
+		showboxes = false;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -136,6 +137,14 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		return checked;
 	}
 
+	public void setShowboxes(final boolean state) {
+		showboxes = state;
+	}
+
+	public boolean getShowBoxes() {
+		return showboxes;
+	}
+
 	public void remove(final View rowView, final Letter object) {
 		final Animation animation = AnimationUtils.loadAnimation(rowView.getContext(), R.anim.list_splashfadeout);
 		rowView.startAnimation(animation);
@@ -148,6 +157,14 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 				animation.cancel();
 			}
 		}, 1000);
+	}
+
+	public int checkedCount() {
+		int counter = 0;
+		for(int i = 0; i < checked.length; i++) {
+			counter = (checked[i]) ? counter +1 : counter ;
+		}
+		return counter;
 	}
 
 	private String getDateFormatted(final String date) {
