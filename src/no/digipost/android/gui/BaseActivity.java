@@ -1013,13 +1013,13 @@ public class BaseActivity extends FragmentActivity {
 			protected void onPreExecute() {
 				super.onPreExecute();
 
-				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+			/*	progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int which) {
 						dialog.dismiss();
 						cancel(true);
 					}
-				});
-				progressDialog.setMessage("Laster...");
+				}); */
+				progressDialog.setMessage("Vennligst venter...");
 				progressDialog.show();
 			}
 
@@ -1095,6 +1095,12 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onCancelled() {
 				super.onCancelled();
+
+				if (type == ApiConstants.TYPE_LETTER) {
+					documentadapter.clearCheckboxes();
+				} else {
+					receiptadapter.clearCheckboxes();
+				}
 				progressDialog.dismiss();
 				resetResfreshButton();
 			}
@@ -1150,6 +1156,8 @@ public class BaseActivity extends FragmentActivity {
 				} else if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
 					adapter_archive.notifyDataSetChanged();
 				} */
+
+				refreshViewById(mViewPager.getCurrentItem());
 			}
 
 		}
@@ -1230,7 +1238,7 @@ public class BaseActivity extends FragmentActivity {
 					//multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.mailbox_toWorkarea) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
-					showMultiSelecetionWarning("Vil du flytte " + adapter.checkedCount() + " brev til kjøkkenbenken?", multipleDocumentsTask, adapter);
+					showMultiSelecetionWarning("Vil du flytte " + adapter.checkedCount() + " brev til " +  getString(R.string.title_section2) + "?", multipleDocumentsTask, adapter);
 					//multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.mailbox_delete) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
@@ -1246,7 +1254,7 @@ public class BaseActivity extends FragmentActivity {
 					//multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.archive_toWorkarea) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
-					showMultiSelecetionWarning("Vil du flytte " + adapter.checkedCount() + " brev til kjøkkenbenken?", multipleDocumentsTask, adapter);
+					showMultiSelecetionWarning("Vil du flytte " + adapter.checkedCount() + " brev til " +  getString(R.string.title_section2) + "?", multipleDocumentsTask, adapter);
 					//multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.archive_delete) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
