@@ -491,7 +491,7 @@ public class BaseActivity extends FragmentActivity {
 				lv_mailbox.setOnKeyListener(new OnKeyListener() {
 					public boolean onKey(final View view, final int keyCode, final KeyEvent event) {
 						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							if (LetterListAdapter.showboxes == true) {
+							if (adapter_mailbox.getShowBoxes()) {
 								checkboxesOnOff(v1, false, -1, adapter_mailbox, lv_mailbox);
 								return true;
 							}
@@ -531,7 +531,7 @@ public class BaseActivity extends FragmentActivity {
 				lv_workarea.setOnKeyListener(new OnKeyListener() {
 					public boolean onKey(final View view, final int keyCode, final KeyEvent event) {
 						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							if (LetterListAdapter.showboxes == true) {
+							if (adapter_workarea.getShowBoxes()) {
 								checkboxesOnOff(v2, false, -1, adapter_workarea, lv_workarea);
 								return true;
 							}
@@ -569,7 +569,7 @@ public class BaseActivity extends FragmentActivity {
 				lv_archive.setOnKeyListener(new OnKeyListener() {
 					public boolean onKey(final View view, final int keyCode, final KeyEvent event) {
 						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							if (LetterListAdapter.showboxes == true) {
+							if (adapter_archive.getShowBoxes()) {
 								checkboxesOnOff(v3, false, -1, adapter_archive, lv_archive);
 								return true;
 							}
@@ -585,10 +585,13 @@ public class BaseActivity extends FragmentActivity {
 				lv_receipts = (ListView) v4.findViewById(R.id.listview_receipts);
 				View emptyView = v4.findViewById(R.id.empty_listview_receipts);
 				lv_receipts.setEmptyView(emptyView);
-				adapter_receipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>(), v4, R.id.receipt_bottombar);
+				adapter_receipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>(), v4,
+						R.id.receipt_bottombar);
 				lv_receipts.setAdapter(adapter_receipts);
 				lv_receipts.setOnItemClickListener(new ReceiptListListener(adapter_receipts));
 
+				receipts_multiSelection_delete = (ImageButton) v4.findViewById(R.id.receipt_delete);
+				receipts_multiSelection_delete.setOnClickListener(new MultiSelectionReceiptListener(adapter_receipts));
 
 				lv_receipts.setOnItemLongClickListener(new OnItemLongClickListener() {
 					public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
@@ -600,7 +603,7 @@ public class BaseActivity extends FragmentActivity {
 				lv_receipts.setOnKeyListener(new OnKeyListener() {
 					public boolean onKey(final View view, final int keyCode, final KeyEvent event) {
 						if (keyCode == KeyEvent.KEYCODE_BACK) {
-							if (LetterListAdapter.showboxes == true) {
+							if (adapter_receipts.getShowBoxes()) {
 								checkboxesOnOff(v4, false, -1, adapter_receipts, lv_receipts);
 								return true;
 							}
@@ -614,29 +617,46 @@ public class BaseActivity extends FragmentActivity {
 			}
 		}
 
-		private void checkboxesOnOff(final View v, final boolean state, final int position, final Object adapter,
-				final ListView lw) {
-			if(adapter instanceof LetterListAdapter) {
+		private void checkboxesOnOff(final View v, final boolean state, final int position, final Object adapter, final ListView lw) {
+
+			if (adapter instanceof LetterListAdapter) {
 
 				if (state) {
 					lw.requestFocus();
-					((LetterListAdapter)adapter).setInitialcheck(position);
-					((LetterListAdapter)adapter).notifyDataSetChanged();
+					((LetterListAdapter) adapter).setInitialcheck(position);
+					((LetterListAdapter) adapter).notifyDataSetChanged();
 				} else {
-					((LetterListAdapter)adapter).clearCheckboxes();
-					((LetterListAdapter)adapter).notifyDataSetChanged();
+					((LetterListAdapter) adapter).clearCheckboxes();
+					((LetterListAdapter) adapter).notifyDataSetChanged();
 				}
 			} else {
 				if (state) {
+					System.out.println("kvittoadapter");
 					lw.requestFocus();
-					((ReceiptListAdapter)adapter).setInitialcheck(position);
-					((ReceiptListAdapter)adapter).notifyDataSetChanged();
+					((ReceiptListAdapter) adapter).setInitialcheck(position);
+					((ReceiptListAdapter) adapter).notifyDataSetChanged();
 				} else {
-					((ReceiptListAdapter)adapter).clearCheckboxes();
-					((ReceiptListAdapter)adapter).notifyDataSetChanged();
+					((ReceiptListAdapter) adapter).clearCheckboxes();
+					((ReceiptListAdapter) adapter).notifyDataSetChanged();
 				}
 			}
 
+		}
+
+		public void showMultiSelecetionWarning(final String text, final MultipleDocumentsTask task, final Object adapter) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+				public void onClick(final DialogInterface dialog, final int id) {
+					task.execute(adapter);
+					dialog.dismiss();
+				}
+			}).setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+				public void onClick(final DialogInterface dialog, final int id) {
+					dialog.cancel();
+				}
+			});
+			AlertDialog alert = builder.create();
+			alert.show();
 		}
 
 		private void unsupportedActionDialog(final String text) {
@@ -663,6 +683,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
+				progressDialog.setMessage(getString(R.string.loading_content));
 				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int which) {
 						dialog.dismiss();
@@ -742,6 +763,7 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
+				progressDialog.setMessage(getString(R.string.loading_content));
 				progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int which) {
 						dialog.dismiss();
@@ -923,12 +945,13 @@ public class BaseActivity extends FragmentActivity {
 			int type;
 			LetterListAdapter documentadapter;
 			ReceiptListAdapter receiptadapter;
-
+			int checkedCount;
 
 			public MultipleDocumentsTask(final int type, final String action, final boolean[] checked) {
 				this.type = type;
 				this.action = action;
 				this.checked = checked;
+				checkedCount = 0;
 			}
 
 			@Override
@@ -949,21 +972,23 @@ public class BaseActivity extends FragmentActivity {
 			protected Boolean doInBackground(final Object... params) {
 				boolean done = false;
 
-				if(params[0] instanceof LetterListAdapter) {
-					documentadapter = (LetterListAdapter)params[0];
+				if (params[0] instanceof LetterListAdapter) {
+					documentadapter = (LetterListAdapter) params[0];
+					checkedCount = documentadapter.checkedCount();
 				} else {
-					receiptadapter = (ReceiptListAdapter)params[0];
+					receiptadapter = (ReceiptListAdapter) params[0];
+					checkedCount = receiptadapter.checkedCount();
 				}
 
 				if (action.equals(ApiConstants.DELETE)) {
 					for (int i = 0; i < checked.length; i++) {
 						try {
 							if (checked[i]) {
-								if(type == ApiConstants.TYPE_LETTER) {
+								if (type == ApiConstants.TYPE_LETTER) {
 									done = lo.delete(documentadapter.getItem(i));
 								} else {
 									done = lo.delete(receiptadapter.getItem(i));
-								publishProgress(++counter);
+									publishProgress(++counter);
 								}
 							}
 						} catch (DigipostApiException e) {
@@ -1003,10 +1028,12 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			protected void onProgressUpdate(final Integer... values) {
 				super.onProgressUpdate(values);
+				int total = 0;
+
 				if (action.equals(ApiConstants.DELETE)) {
-					progressDialog.setMessage(values[0] + " slettet");
+					progressDialog.setMessage(values[0] + " av " + checkedCount + " slettet");
 				} else {
-					progressDialog.setMessage(values[0] + " flyttet");
+					progressDialog.setMessage(values[0] + " av " + checkedCount + " flyttet");
 				}
 			}
 
@@ -1025,7 +1052,7 @@ public class BaseActivity extends FragmentActivity {
 				if (!result) {
 					showMessage(errorMessage);
 				}
-				if(type == ApiConstants.TYPE_LETTER) {
+				if (type == ApiConstants.TYPE_LETTER) {
 					documentadapter.clearCheckboxes();
 				} else {
 					receiptadapter.clearCheckboxes();
@@ -1107,10 +1134,15 @@ public class BaseActivity extends FragmentActivity {
 			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 				Receipt mReceipt = adapter.getItem(position);
 
-				GetHTMLTask htmlTask = new GetHTMLTask();
-				htmlTask.execute(ApiConstants.GET_RECEIPT, mReceipt);
-				tempRowView = arg1;
-				tempReceiptsAdapter = adapter;
+				if (networkConnection.isNetworkAvailable()) {
+
+					GetHTMLTask htmlTask = new GetHTMLTask();
+					htmlTask.execute(ApiConstants.GET_RECEIPT, mReceipt);
+					tempRowView = arg1;
+					tempReceiptsAdapter = adapter;
+				} else {
+					showMessage(getString(R.string.error_your_network));
+				}
 			}
 		}
 
@@ -1125,28 +1157,31 @@ public class BaseActivity extends FragmentActivity {
 			public void onClick(final View v) {
 				boolean[] checkedlist = adapter.getCheckedDocuments();
 
+				if(adapter.checkedCount() > 0) {
+
 				if (v.getId() == R.id.mailbox_toArchive) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER,ApiConstants.LOCATION_ARCHIVE, checkedlist);
+					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_ARCHIVE, checkedlist);
 					multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.mailbox_toWorkarea) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER,ApiConstants.LOCATION_WORKAREA, checkedlist);
+					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
 					multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.mailbox_delete) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER,ApiConstants.DELETE, checkedlist);
+					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
 					multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.workarea_toArchive) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER,ApiConstants.LOCATION_ARCHIVE, checkedlist);
+					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_ARCHIVE, checkedlist);
 					multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.workarea_delete) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER,ApiConstants.DELETE, checkedlist);
+					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
 					multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.archive_toWorkarea) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER,ApiConstants.LOCATION_WORKAREA, checkedlist);
+					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
 					multipleDocumentsTask.execute(adapter);
 				} else if (v.getId() == R.id.archive_delete) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER,ApiConstants.DELETE, checkedlist);
+					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
 					multipleDocumentsTask.execute(adapter);
 				}
+			}
 			}
 		}
 
@@ -1161,12 +1196,14 @@ public class BaseActivity extends FragmentActivity {
 			public void onClick(final View v) {
 				boolean[] checkedlist = adapter.getCheckedDocuments();
 
-				if(v.getId() == R.id.receipt_delete) {
-					multipleReceiptsTask = new MultipleDocumentsTask(ApiConstants.TYPE_RECEIPT,ApiConstants.DELETE,checkedlist);
-					multipleReceiptsTask.execute(adapter);
+				if (v.getId() == R.id.receipt_delete) {
+					if (adapter.checkedCount() > 0) {
+						multipleReceiptsTask = new MultipleDocumentsTask(ApiConstants.TYPE_RECEIPT, ApiConstants.DELETE, checkedlist);
+						showMultiSelecetionWarning("Vil du slette " + adapter.checkedCount()
+								+ ((adapter.checkedCount() > 1) ? " kvitteringer?" : " kvittering?"), multipleReceiptsTask, adapter);
+					}
 				}
 			}
 		}
 	}
-
 }

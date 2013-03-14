@@ -41,7 +41,7 @@ import android.widget.TextView;
 public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	private final Context con;
 	private final ArrayList<Receipt> receipts;
-	public static boolean showboxes = false;
+	public boolean showboxes;
 	public boolean[] checked;
 	CheckBox checkbox;
 	View mainview;
@@ -53,6 +53,7 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 		receipts = objects;
 		this.mainview = mainview;
 		this.bottombar = bottombar;
+		showboxes = false;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -158,6 +159,22 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 
 	public boolean[] getCheckedDocuments() {
 		return checked;
+	}
+
+	public int checkedCount() {
+		int counter = 0;
+		for(int i = 0; i < checked.length; i++) {
+			counter = (checked[i]) ? counter +1 : counter ;
+		}
+		return counter;
+	}
+
+	public void setShowboxes(final boolean state) {
+		showboxes = state;
+	}
+
+	public boolean getShowBoxes() {
+		return showboxes;
 	}
 
 	private String getDateFormatted(final String date) {
