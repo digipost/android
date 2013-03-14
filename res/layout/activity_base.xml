@@ -26,7 +26,9 @@
         android:layout_height="wrap_content"
         android:background="#d80c16"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp" >
 
         <ImageButton
             android:id="@+id/base_optionsButton"
@@ -42,17 +44,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="3dp"
             android:layout_weight="0.25"
             android:background="#00000000"
             android:contentDescription="options drawer logo"
             android:padding="6dp"
-            android:layout_marginTop="2dp"
             android:src="@drawable/digipost_white_header_small" />
 
         <ProgressBar
             android:id="@+id/base_refreshSpinner"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginBottom="1dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:visibility="gone" />
@@ -78,10 +81,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:background="#262626"
-            android:textSize="2dp"
-            android:padding="2dp" />
+            android:padding="5dp"
+            android:textSize="2dp" />
     </android.support.v4.view.ViewPager>
-    
+
     <LinearLayout
         android:id="@+id/base_bottombar"
         android:layout_width="fill_parent"
