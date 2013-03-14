@@ -44,11 +44,15 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	public static boolean showboxes = false;
 	public boolean[] checked;
 	CheckBox checkbox;
+	View mainview;
+	int bottombar;
 
-	public ReceiptListAdapter(final Context context, final int textViewResourceId, final ArrayList<Receipt> objects) {
+	public ReceiptListAdapter(final Context context, final int textViewResourceId, final ArrayList<Receipt> objects, final View mainview, final int bottombar) {
 		super(context, textViewResourceId, objects);
 		con = context;
 		receipts = objects;
+		this.mainview = mainview;
+		this.bottombar = bottombar;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -142,10 +146,14 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	public void setInitialcheck(final int position) {
 		checked = new boolean[receipts.size()];
 		checked[position] = true;
+		mainview.findViewById(bottombar).setVisibility(View.VISIBLE);
+		showboxes = true;
 	}
 
 	public void clearCheckboxes() {
 		checked = null;
+		mainview.findViewById(bottombar).setVisibility(View.GONE);
+		showboxes = false;
 	}
 
 	public boolean[] getCheckedDocuments() {

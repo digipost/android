@@ -78,8 +78,7 @@ public class LetterOperations {
 	}
 
 	private String tempReceipLink() {
-			String profileDigits = tempLink.replaceAll("\\D+","");
-			return "https://www.digipost.no/post/api/private/accounts/" + profileDigits + "/receipts";
+			return "https://www.digipost.no/post/api/private/accounts/" + tempLink.replaceAll("\\D+","") + "/receipts";
 	}
 
 	public ArrayList<Receipt> getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException {

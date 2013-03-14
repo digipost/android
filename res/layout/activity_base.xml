@@ -81,5 +81,51 @@
             android:textSize="2dp"
             android:padding="2dp" />
     </android.support.v4.view.ViewPager>
+    
+    <LinearLayout
+        android:id="@+id/base_bottombar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#323538"
+        android:gravity="bottom"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:id="@+id/base_bottombar_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/base_toWorkarea"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_workarea_48" />
+
+            <ImageButton
+                android:id="@+id/base_toArchive"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_archive_48" />
+
+            <ImageButton
+                android:id="@+id/base_delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:src="@drawable/white_delete_48" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

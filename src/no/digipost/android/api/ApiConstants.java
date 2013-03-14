@@ -50,6 +50,8 @@ public class ApiConstants {
 	public static final String DELETE = "delete";
 	public static final String LETTER = "letter";
 	public static final String RECEIPT = "receipt";
+	public static final int TYPE_LETTER = 1;
+	public static final int TYPE_RECEIPT = 2;
 	public static final String ACTION = "action";
 	public static final String AUTHENTICATION_LEVEL_TWO_FACTOR = "TWO_FACTOR";
 	public static final String DOCUMENT_TYPE = "type";

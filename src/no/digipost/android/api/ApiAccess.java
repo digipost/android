@@ -137,19 +137,28 @@ public class ApiAccess {
 
 	}
 
-	public boolean delete(final String uri) throws DigipostClientException {
+	public boolean delete(final String uri) throws DigipostClientException, DigipostApiException {
 		Client client = Client.create();
+		ClientResponse cr = null;
 
 		try {
-			ClientResponse cr = client
+			cr = client
 					.resource(uri)
 					.header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
 					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
 					.delete(ClientResponse.class);
-				return true;
 		} catch (Exception e) {
 			throw new DigipostClientException(context.getString(R.string.error_your_network));
 		}
+
+		try {
+			networkConnection.checkHttpStatusCode(cr.getStatus());
+		} catch (IllegalStateException e) {
+			OAuth2.updateRefreshTokenSuccess(context);
+			return delete(uri);
+		}
+
+		return true;
 	}
 
 	public byte[] getDocumentContent(final String uri) throws DigipostApiException, DigipostClientException {

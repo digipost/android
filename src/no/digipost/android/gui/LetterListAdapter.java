@@ -46,11 +46,15 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	public static boolean showboxes = false;
 	public boolean[] checked;
 	CheckBox checkbox;
+	View mainview;
+	int bottombar;
 
-	public LetterListAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects) {
+	public LetterListAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects, final View mainview, final int bottombar) {
 		super(context, textViewResourceId, objects);
 		con = context;
 		letters = objects;
+		this.mainview = mainview;
+		this.bottombar = bottombar;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -118,10 +122,14 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	public void setInitialcheck(final int position) {
 		checked = new boolean[letters.size()];
 		checked[position] = true;
+		mainview.findViewById(bottombar).setVisibility(View.VISIBLE);
+		showboxes = true;
 	}
 
 	public void clearCheckboxes() {
 		checked = null;
+		mainview.findViewById(bottombar).setVisibility(View.GONE);
+		showboxes = false;
 	}
 
 	public boolean[] getCheckedDocuments() {
