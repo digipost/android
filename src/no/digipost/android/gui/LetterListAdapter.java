@@ -118,14 +118,30 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	public void setInitialcheck(final int position) {
 		checked = new boolean[letters.size()];
 		checked[position] = true;
+		showboxes = true;
+		notifyDataSetChanged();
 	}
 
 	public void clearCheckboxes() {
 		checked = null;
+		showboxes = false;
+		notifyDataSetChanged();
 	}
 
 	public boolean[] getCheckedDocuments() {
 		return checked;
+	}
+
+	public boolean getShowBoxes() {
+		return showboxes;
+	}
+
+	public int checkedCount() {
+		int counter = 0;
+		for (int i = 0; i < checked.length; i++) {
+			counter = (checked[i]) ? counter + 1 : counter;
+		}
+		return counter;
 	}
 
 	public void remove(final View rowView, final Letter object) {

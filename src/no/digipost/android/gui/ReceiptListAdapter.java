@@ -142,14 +142,30 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	public void setInitialcheck(final int position) {
 		checked = new boolean[receipts.size()];
 		checked[position] = true;
+		showboxes = true;
+		notifyDataSetChanged();
 	}
 
 	public void clearCheckboxes() {
 		checked = null;
+		showboxes = false;
+		notifyDataSetChanged();
 	}
 
 	public boolean[] getCheckedDocuments() {
 		return checked;
+	}
+
+	public boolean getShowBoxes() {
+		return showboxes;
+	}
+
+	public int checkedCount() {
+		int counter = 0;
+		for (int i = 0; i < checked.length; i++) {
+			counter = (checked[i]) ? counter + 1 : counter;
+		}
+		return counter;
 	}
 
 	private String getDateFormatted(final String date) {
