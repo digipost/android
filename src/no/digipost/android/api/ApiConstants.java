@@ -50,12 +50,12 @@ public class ApiConstants {
 	public static final String DELETE = "delete";
 	public static final String LETTER = "letter";
 	public static final String RECEIPT = "receipt";
-	public static final int TYPE_LETTER = 1;
-	public static final int TYPE_RECEIPT = 2;
 	public static final String ACTION = "action";
 	public static final String AUTHENTICATION_LEVEL_TWO_FACTOR = "TWO_FACTOR";
 	public static final String DOCUMENT_TYPE = "type";
 
+	public static final int TYPE_LETTER = 1;
+	public static final int TYPE_RECEIPT = 2;
 
 	public static final String GRANT_TYPE = "grant_type";
 	public static final String AUD = "aud";
@@ -78,8 +78,8 @@ public class ApiConstants {
 	public static final String BEARER = "Bearer ";
 	public static final String BASIC = "Basic ";
 	public static final String APPLICATION_VND_DIGIPOST_V2_JSON = "application/vnd.digipost-v2+json";
-	public static final String CONTENT_OCTET_STREAM ="application/octet-stream";
-	public static final String TEXT_HTML ="text/html";
+	public static final String CONTENT_OCTET_STREAM = "application/octet-stream";
+	public static final String TEXT_HTML = "text/html";
 
 	public static final String URL_API = "https://www.digipost.no/post/api";
 	public static final String URL_RELATIONS_DOCUMENT_INBOX = "https://www.digipost.no/post/relations/document_inbox";

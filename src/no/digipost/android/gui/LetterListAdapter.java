@@ -43,18 +43,14 @@ import android.widget.TextView;
 public class LetterListAdapter extends ArrayAdapter<Letter> {
 	private final Context con;
 	private final ArrayList<Letter> letters;
-	public boolean  showboxes;
+	public boolean showboxes;
 	public boolean[] checked;
 	CheckBox checkbox;
-	View mainview;
-	int bottombar;
 
-	public LetterListAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects, final View mainview, final int bottombar) {
+	public LetterListAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects) {
 		super(context, textViewResourceId, objects);
 		con = context;
 		letters = objects;
-		this.mainview = mainview;
-		this.bottombar = bottombar;
 		showboxes = false;
 	}
 
@@ -123,22 +119,18 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	public void setInitialcheck(final int position) {
 		checked = new boolean[letters.size()];
 		checked[position] = true;
-		mainview.findViewById(bottombar).setVisibility(View.VISIBLE);
 		showboxes = true;
+		notifyDataSetChanged();
 	}
 
 	public void clearCheckboxes() {
 		checked = null;
-		mainview.findViewById(bottombar).setVisibility(View.GONE);
 		showboxes = false;
+		notifyDataSetChanged();
 	}
 
 	public boolean[] getCheckedDocuments() {
 		return checked;
-	}
-
-	public void setShowboxes(final boolean state) {
-		showboxes = state;
 	}
 
 	public boolean getShowBoxes() {
@@ -161,8 +153,8 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 
 	public int checkedCount() {
 		int counter = 0;
-		for(int i = 0; i < checked.length; i++) {
-			counter = (checked[i]) ? counter +1 : counter ;
+		for (int i = 0; i < checked.length; i++) {
+			counter = (checked[i]) ? counter + 1 : counter;
 		}
 		return counter;
 	}

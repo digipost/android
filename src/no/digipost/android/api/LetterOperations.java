@@ -78,18 +78,17 @@ public class LetterOperations {
 	}
 
 	private String tempReceipLink() {
-			return "https://www.digipost.no/post/api/private/accounts/" + tempLink.replaceAll("\\D+","") + "/receipts";
+		return "https://www.digipost.no/post/api/private/accounts/" + tempLink.replaceAll("\\D+", "") + "/receipts";
 	}
 
 	public ArrayList<Receipt> getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException {
 		return apiAccess.getReceipts(tempReceipLink()).getReceipt();
 	}
 
-	public boolean moveDocument(final String access_token, final Letter letter, final String toLocation) throws ClientProtocolException,
-			UniformInterfaceException, ClientHandlerException, ParseException, IOException, URISyntaxException, IllegalStateException,
-			NetworkErrorException, DigipostClientException, DigipostApiException {
-		Letter movedletter = apiAccess.getMovedDocument(letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
-		return movedletter.getLocation().equals(toLocation);
+	public void moveDocument(final Letter letter, final String toLocation) throws ClientProtocolException, UniformInterfaceException,
+			ClientHandlerException, ParseException, IOException, URISyntaxException, IllegalStateException, NetworkErrorException,
+			DigipostClientException, DigipostApiException {
+		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
 	}
 
 	public byte[] getDocumentContentPDF(final Letter letter) throws DigipostApiException, DigipostClientException {
@@ -109,13 +108,13 @@ public class LetterOperations {
 		return apiAccess.getReceiptHTML(receipt.getContentAsHTMLUri());
 	}
 
-	public boolean delete(final Object object) throws DigipostApiException, DigipostClientException {
+	public void delete(final Object object) throws DigipostApiException, DigipostClientException {
 		if (object instanceof Letter) {
 			Letter letter = (Letter) object;
-			return apiAccess.delete(letter.getDeleteUri());
+			apiAccess.delete(letter.getDeleteUri());
 		} else {
 			Receipt receipt = (Receipt) object;
-			return apiAccess.delete(receipt.getDeleteUri());
+			apiAccess.delete(receipt.getDeleteUri());
 		}
 	}
 }

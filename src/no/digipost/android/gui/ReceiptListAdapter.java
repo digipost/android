@@ -44,15 +44,11 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	public boolean showboxes;
 	public boolean[] checked;
 	CheckBox checkbox;
-	View mainview;
-	int bottombar;
 
-	public ReceiptListAdapter(final Context context, final int textViewResourceId, final ArrayList<Receipt> objects, final View mainview, final int bottombar) {
+	public ReceiptListAdapter(final Context context, final int textViewResourceId, final ArrayList<Receipt> objects) {
 		super(context, textViewResourceId, objects);
 		con = context;
 		receipts = objects;
-		this.mainview = mainview;
-		this.bottombar = bottombar;
 		showboxes = false;
 	}
 
@@ -147,34 +143,30 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	public void setInitialcheck(final int position) {
 		checked = new boolean[receipts.size()];
 		checked[position] = true;
-		mainview.findViewById(bottombar).setVisibility(View.VISIBLE);
 		showboxes = true;
+		notifyDataSetChanged();
 	}
 
 	public void clearCheckboxes() {
 		checked = null;
-		mainview.findViewById(bottombar).setVisibility(View.GONE);
 		showboxes = false;
+		notifyDataSetChanged();
 	}
 
 	public boolean[] getCheckedDocuments() {
 		return checked;
 	}
 
-	public int checkedCount() {
-		int counter = 0;
-		for(int i = 0; i < checked.length; i++) {
-			counter = (checked[i]) ? counter +1 : counter ;
-		}
-		return counter;
-	}
-
-	public void setShowboxes(final boolean state) {
-		showboxes = state;
-	}
-
 	public boolean getShowBoxes() {
 		return showboxes;
+	}
+
+	public int checkedCount() {
+		int counter = 0;
+		for (int i = 0; i < checked.length; i++) {
+			counter = (checked[i]) ? counter + 1 : counter;
+		}
+		return counter;
 	}
 
 	private String getDateFormatted(final String date) {

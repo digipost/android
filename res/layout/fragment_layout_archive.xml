@@ -94,5 +94,4 @@
                 android:src="@drawable/white_delete_48" />
         </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
