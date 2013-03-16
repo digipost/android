@@ -13,8 +13,8 @@
 	<color name="list_divider">#eee</color>
 	
     <!-- Emptyslate -->
-    <color name="empty_slate_background">#eceef1</color>
-    <color name="empty_slate_text">#5E5E5E</color>
+    <color name="emptyslate_background">#eceef1</color>
+    <color name="emptyslate_text">#5E5E5E</color>
 
     <!-- BottomBar -->
     <color name="bottom_bar_background">#323538</color>

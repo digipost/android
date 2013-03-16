@@ -23,8 +23,8 @@
     <ListView
         android:id="@+id/listview_mailbox"
         android:layout_width="fill_parent"
-        android:layout_height="0sp"
-        android:layout_weight="1"
+        android:layout_height="@dimen/listview_height"
+        android:layout_weight="@dimen/listview_weight"
         android:divider="@color/list_divider"
         android:dividerHeight="@dimen/listview_dividerheight" >
     </ListView>
@@ -33,7 +33,7 @@
         android:id="@+id/empty_listview_mailbox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/empty_slate_background"
+        android:background="@color/emptyslate_background"
         android:orientation="vertical"
         android:padding="@dimen/emptyslate_listview_padding"
         android:visibility="gone" >
@@ -50,12 +50,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="@dimen/emptyslate_mailbox_extramargintop"
             android:gravity="center"
             android:lineSpacingExtra="@dimen/emptyslate_text_linespacing"
             android:padding="@dimen/emptyslate_text_padding"
             android:text="@string/empty_listview_mailbox"
-            android:textColor="@color/empty_slate_text"
+            android:textColor="@color/emptyslate_text"
             android:textSize="@dimen/emptyslate_text_size"
             android:visibility="gone" />
     </LinearLayout>
@@ -76,9 +76,9 @@
 
             <ImageButton
                 android:id="@+id/mailbox_toWorkarea"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/bottombar_image_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="@dimen/bottombar_image_weight"
                 android:background="@color/transparent"
                 android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
                 android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
@@ -88,7 +88,7 @@
                 android:id="@+id/mailbox_toArchive"
                 android:layout_width="@dimen/bottombar_image_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="@dimen/bottombar_image_weight"
                 android:background="@color/transparent"
                 android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
                 android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
@@ -98,7 +98,7 @@
                 android:id="@+id/mailbox_delete"
                 android:layout_width="@dimen/bottombar_image_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="@dimen/bottombar_image_weight"
                 android:background="@color/transparent"
                 android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
                 android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
