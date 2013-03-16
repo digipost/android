@@ -8,11 +8,11 @@
     <string name="optionsmenu_moveToWorkarea">Flytt til kjøkkenbenk</string>
     <string name="optionsmenu_deleteselected">Slett</string>
     <string name="title_activity_login_view">LoginView</string>
-    <string name="title_section3">Arkivet</string>
-    <string name="title_section2">Kjøkkenbenken</string>
-    <string name="title_section1">Postkassen</string>
+    <string name="archive">Arkivet</string>
+    <string name="workarea">Kjøkkenbenken</string>
+    <string name="mailbox">Postkassen</string>
+    <string name="receipts">Kvitteringer</string>
     <string name="title_activity_base">BaseActivity</string>
-    <string name="title_section4">Kvitteringer</string>
     <string name="context_letterlist_show">Vis brev</string>
     <string name="context_letterlist_delete">Slett brev</string>
     <string name="context_letterlist_abort">Lukk</string>

@@ -604,12 +604,12 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			/*	progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int which) {
-						dialog.dismiss();
-						cancel(true);
-					}
-				}); */
+			/*
+			 * progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+			 * getString(R.string.abort), new DialogInterface.OnClickListener()
+			 * { public void onClick(final DialogInterface dialog, final int
+			 * which) { dialog.dismiss(); cancel(true); } });
+			 */
 			progressDialog.setMessage("Vennligst vent...");
 			progressDialog.show();
 		}
@@ -810,7 +810,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				if (v.equals(moveToWorkarea)) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
 					showMultiSelecetionWarning("Vil du flytte " + adapterLetter.checkedCount() + " brev til "
-							+ getString(R.string.title_section2) + "?", multipleDocumentsTask, adapterLetter);
+							+ getString(R.string.workarea) + "?", multipleDocumentsTask, adapterLetter);
 				} else if (v.equals(moveToArchive)) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_ARCHIVE, checkedlist);
 					showMultiSelecetionWarning("Vil du flytte " + adapterLetter.checkedCount() + " brev til arkivet?",
@@ -860,6 +860,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	}
 
 	public void passDataToFragment(final String someValue) {
-		//TODO Fra Activity
+		// TODO Fra Activity
 	}
 }

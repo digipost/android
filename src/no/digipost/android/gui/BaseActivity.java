@@ -145,7 +145,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 				openOptionsMenu();
 			} else if (v == refreshButton) {
 				loadAccountMetaComplete();
-				//loadAccountMeta(mViewPager.getCurrentItem());
+				// loadAccountMeta(mViewPager.getCurrentItem());
 			} else if (v == logoButton) {
 				scrollListToTop(mViewPager.getCurrentItem());
 			}
@@ -181,13 +181,13 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		public CharSequence getPageTitle(final int position) {
 			switch (position) {
 			case 0:
-				return getString(R.string.title_section1).toUpperCase();
+				return getString(R.string.mailbox).toUpperCase();
 			case 1:
-				return getString(R.string.title_section2).toUpperCase();
+				return getString(R.string.workarea).toUpperCase();
 			case 2:
-				return getString(R.string.title_section3).toUpperCase();
+				return getString(R.string.archive).toUpperCase();
 			case 3:
-				return getString(R.string.title_section4).toUpperCase();
+				return getString(R.string.receipts).toUpperCase();
 			}
 			return null;
 		}
