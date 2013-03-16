@@ -6,7 +6,16 @@
     <color name="list_even">#ffffff</color>
     <color name="list_odd">#f9f9fa</color>
     <color name="splash_bg_color">#e2251b</color>
+    
     <color name="green_price">#7bc144</color>
     <color name="blue_date">#56b4ef</color>
-
+	<color name="black_subject">#383435</color>
+	<color name="grey_creator">#4D484A</color>
+	
+	<color name="empty_slate_background">#eceef1</color>
+	<color name="empty_slate_text">#5E5E5E</color>
+	<color name="bottom_bar_background">#323538</color>
+	<color name="transparent">#00000000</color>
+	<color name="title_strip_background">#262626</color>
+	<color name="background_red">#D80C16</color>
 </resources>

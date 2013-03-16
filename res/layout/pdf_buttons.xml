@@ -6,7 +6,7 @@
         android:id="@+id/pdf_topbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#323538"
+        android:background="@color/bottom_bar_background"
         android:orientation="horizontal" >
 
         <LinearLayout
@@ -18,7 +18,7 @@
                 android:id="@+id/pdf_backbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="-5dp"
@@ -29,7 +29,7 @@
                 android:id="@+id/pdf_digipost_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingRight="8dp"
                 android:paddingTop="8dp"
@@ -44,7 +44,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#323538"
+                android:background="@color/bottom_bar_background"
                 android:orientation="horizontal" >
 
                 <TextView
@@ -59,7 +59,7 @@
                     android:id="@+id/pdf_searchbtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#00000000"
+                    android:background="@color/transparent"
                     android:padding="8dp"
                     android:src="@drawable/white_search_48" />
             </LinearLayout>
@@ -85,7 +85,7 @@
                     android:id="@+id/pdf_search_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#00000000"
+                    android:background="@color/transparent"
                     android:padding="8dp"
                     android:src="@drawable/white_leftarrow_48" />
 
@@ -93,7 +93,7 @@
                     android:id="@+id/pdf_search_forward"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#00000000"
+                    android:background="@color/transparent"
                     android:padding="8dp"
                     android:src="@drawable/white_rightarrow_48" />
             </LinearLayout>
@@ -105,7 +105,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#323538" >
+        android:background="@color/bottom_bar_background" >
 
         <LinearLayout
             android:id="@+id/pdf_bottombar_linearlayout"
@@ -118,7 +118,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_workarea_48" />
@@ -128,7 +128,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_archive_48" />
@@ -138,7 +138,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_delete_48" />

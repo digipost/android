@@ -7,7 +7,7 @@
         android:id="@+id/html_topbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#323538"
+        android:background="@color/bottom_bar_background"
         android:orientation="horizontal" >
 
         <ImageButton
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="-5dp"
-            android:background="#00000000"
+            android:background="@color/transparent"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
             android:src="@drawable/white_back_32" />
@@ -25,7 +25,7 @@
             android:id="@+id/html_digipost_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#00000000"
+            android:background="@color/transparent"
             android:paddingBottom="8dp"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
@@ -42,7 +42,7 @@
         android:id="@+id/html_bottombar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#323538"
+        android:background="@color/bottom_bar_background"
         android:gravity="bottom" >
 
         <LinearLayout
@@ -56,7 +56,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_workarea_48" />
@@ -66,7 +66,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_archive_48" />
@@ -76,7 +76,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_delete_48" />

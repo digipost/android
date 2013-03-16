@@ -18,13 +18,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#d80c16"
+    android:background="@color/background_red"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#d80c16"
+        android:background="@color/background_red"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="2dp"
@@ -34,7 +34,7 @@
             android:id="@+id/base_optionsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#00000000"
+            android:background="@color/transparent"
             android:contentDescription="Options button"
             android:padding="5dp"
             android:src="@drawable/base_optionbutton_style" />
@@ -46,7 +46,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="3dp"
             android:layout_weight="0.25"
-            android:background="#00000000"
+            android:background="@color/transparent"
             android:contentDescription="options drawer logo"
             android:padding="6dp"
             android:src="@drawable/digipost_white_header_small" />
@@ -64,7 +64,7 @@
             android:id="@+id/base_refreshButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#00000000"
+            android:background="@color/transparent"
             android:contentDescription="Refresh button"
             android:padding="5dp"
             android:src="@drawable/base_refreshbutton_style" />
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="#262626"
+            android:background="@color/title_strip_background"
             android:padding="5dp"
             android:textSize="2dp" />
     </android.support.v4.view.ViewPager>
@@ -89,7 +89,7 @@
         android:id="@+id/base_bottombar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#323538"
+        android:background="@color/bottom_bar_background"
         android:gravity="bottom"
         android:visibility="gone" >
 
@@ -104,7 +104,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_workarea_48" />
@@ -114,7 +114,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_archive_48" />
@@ -124,7 +124,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25"
-                android:background="#00000000"
+                android:background="@color/transparent"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
                 android:src="@drawable/white_delete_48" />

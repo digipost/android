@@ -19,7 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#323538"
+    android:background="@color/bottom_bar_background"
     tools:context=".LoginActivity" >
 
     <LinearLayout
@@ -30,7 +30,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="52dp"
-        android:background="#323538"
+        android:background="@color/bottom_bar_background"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="20sp" >
