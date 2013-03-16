@@ -1,51 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- App -->
     <string name="app_name">Digipost</string>
+    <string name="archive">Arkivet</string>
+    <string name="workarea">Kjøkkenbenken</string>
+    <string name="mailbox">Postkassen</string>
+    <string name="receipts">Kvitteringer</string>
+
+    <!-- Misc -->
+    <string name="close">Lukk</string>
+    <string name="abort">Avbryt</string>
+    <string name="loading_content">Laster innhold...</string>
+
+    <!-- Titles -->
+    <string name="title_activity_login_view">LoginView</string>
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="title_activity_html_veb_view">HtmlVebView</string>
+    <string name="title_activity_web_fragment">WebFragment</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <!-- LoginActivity -->
+    <string name="login_loginbutton_text">Logg inn i Digipost</string>
+    <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
+    <string name="login_privacybutton_text">Personvern</string>
+    <string name="login_header_logo_contentdescription">Digipost logo</string>
+
+    <!-- OptionsMenu -->
     <string name="optionsmenu_settings">Innstillinger</string>
     <string name="optionsmenu_logout">Logg ut</string>
     <string name="optionsmenu_moveToArchive">Flytt til arkiv</string>
     <string name="optionsmenu_moveToWorkarea">Flytt til kjøkkenbenk</string>
     <string name="optionsmenu_deleteselected">Slett</string>
-    <string name="title_activity_login_view">LoginView</string>
-    <string name="archive">Arkivet</string>
-    <string name="workarea">Kjøkkenbenken</string>
-    <string name="mailbox">Postkassen</string>
-    <string name="receipts">Kvitteringer</string>
-    <string name="title_activity_base">BaseActivity</string>
+
+    <!-- ContextMenu -->
     <string name="context_letterlist_show">Vis brev</string>
     <string name="context_letterlist_delete">Slett brev</string>
     <string name="context_letterlist_abort">Lukk</string>
     <string name="context_letterlist_move">Flytt til arkiv</string>
-    <string name="title_activity_web_fragment">WebFragment</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="login_loginbutton_text">Logg inn i Digipost</string>
-    <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
-    <string name="login_privacybutton_text">Personvern</string>
-    <string name="login_header_logo_contentdescription">Digipost logo</string>
-   
+
+    <!-- Emptyslate -->
     <string name="empty_listview_mailbox">Du har ingen brev i din postkasse. Alle brev som sendes til deg i Digipost vil komme hit.</string>
     <string name="empty_listview_archive">Du har ingen dokumenter i arkivet. Her kan du arkivere brev og laste opp dine viktige filer.</string>
     <string name="empty_listview_workarea">Du har ingen dokumenter på kjøkkenbenken. Her kan du legge ting du vil arbeide videre med.</string>
     <string name="empty_listview_receipts">Du har ingen kvitteringer tilgjengelig.</string>
-            
-    <string name="menu_settings">Settings</string>
-    <string name="title_activity_html_veb_view">HtmlVebView</string>
+
+    <!-- PDF -->
     <string name="pdf_no_further_occurences_found">Ingen flere treff funnet.</string>
     <string name="pdf_text_not_found">Fant ingen treff.</string>
     <string name="pdf_open_failed">Kunne ikke åpne dokumentet.</string>
     <string name="pdf_searching_">Søker...</string>
-    <string name="close">Lukk</string>
-    <string name="abort">Avbryt</string>
-    <string name="loading_content">Laster innhold...</string>
     <string name="pdf_search_document">Søk i dokumentet...</string>
+
+    <!-- Errors -->
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv igjen.</string>
     <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.</string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
+
+    <!-- Prompts -->
     <string name="dialog_prompt_toArchive">Er du sikker på at du vil flytte brevet til arkivet?</string>
     <string name="dialog_prompt_toWorkarea">Er du sikker på at du vil flytte brevet til kjøkkenbenk?</string>
     <string name="dialog_prompt_delete">Er du sikker på at du vil slette brevet?</string>
     <string name="dialog_error_header">Ustøttet filtype.</string>
     <string name="dialog_error_not_supported_filetype">Digipost for Android støtter ikke denne filtypen.</string>
     <string name="dialog_error_two_factor">Dette brevet krever autentisering med Bank ID. Logg inn på Digipost.no for å se innholdet.</string>
+
 </resources>
