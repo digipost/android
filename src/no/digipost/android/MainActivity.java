@@ -22,14 +22,12 @@ import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.gui.BaseActivity;
 import no.digipost.android.gui.LoginActivity;
-import no.digipost.android.gui.NetworkConnection;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -37,16 +35,12 @@ public class MainActivity extends Activity {
 	private Context context;
 	private boolean pinQuestion;
 	private KeyStore ks;
-	private NetworkConnection networkConnection;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		context = this;
-
-		networkConnection = new NetworkConnection(this);
-
 	}
 
 	@Override
@@ -81,16 +75,11 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkTokenStatus() {
-		if (OAuth2.getEncryptedRefreshToken(this) == "") {
+		if (OAuth2.getEncryptedRefreshToken(this).isEmpty()) {
 			startLoginActivity();
 		} else {
 			new CheckTokenTask().execute();
 		}
-	}
-
-	public void showMessage(final String message) {
-		Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-		toast.show();
 	}
 
 	private void startBaseActivity() {
