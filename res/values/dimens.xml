@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Emptyslate -->
+    <dimen name="emptyslate_listview_padding">20dp</dimen>
+    <dimen name="emptyslate_image_size">115dp</dimen>
+    <dimen name="emptyslate_marginTop">150dp</dimen>
+    <dimen name="emptyslate_text_linespacing">2dp</dimen>
+    <dimen name="emptyslate_text_padding">10dp</dimen>
+	<dimen name="emptyslate_text_size">18sp</dimen>
+    
+    <!-- ListView -->
+    <dimen name="listview_dividerheight">1sp</dimen>
+    
+    <!-- Bottombar -->
+    <dimen name="bottombar_image_padding_bottom_and_top">8dp</dimen>
+	<dimen name="bottombar_image_width">0dp</dimen>
+</resources>
