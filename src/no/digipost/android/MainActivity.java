@@ -24,15 +24,12 @@ import no.digipost.android.gui.BaseActivity;
 import no.digipost.android.gui.LoginActivity;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
 public class MainActivity extends Activity {
 
-	public static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
-	private Context context;
 	private boolean pinQuestion;
 	private KeyStore ks;
 
@@ -40,7 +37,6 @@ public class MainActivity extends Activity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		context = this;
 	}
 
 	@Override
@@ -65,7 +61,7 @@ public class MainActivity extends Activity {
 		try {
 			if (!pinQuestion) {
 				pinQuestion = true;
-				startActivity(new Intent(UNLOCK_ACTION));
+				startActivity(new Intent(KeyStore.UNLOCK_ACTION));
 			} else {
 				finish();
 			}
@@ -100,7 +96,7 @@ public class MainActivity extends Activity {
 		protected String doInBackground(final Void... params) {
 
 			try {
-				OAuth2.updateRefreshTokenSuccess(context);
+				OAuth2.updateRefreshTokenSuccess(getApplicationContext());
 				return null;
 			} catch (DigipostApiException e) {
 				return e.getMessage();

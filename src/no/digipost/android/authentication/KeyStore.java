@@ -45,6 +45,8 @@ public class KeyStore {
 	public static final int UNDEFINED_ACTION = 9;
 	public static final int WRONG_PASSWORD = 10;
 
+	public static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
+
 	// States
 	public enum State {
 		UNLOCKED,
