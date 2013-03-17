@@ -49,7 +49,6 @@ public class LetterOperations {
 
 	public PrimaryAccount getPrimaryAccount() throws DigipostApiException, DigipostClientException {
 		if (primaryAccount == null) {
-			System.out.println("primaryAccount");
 			primaryAccount = apiAccess.getAccount().getPrimaryAccount();
 		}
 		return primaryAccount;

@@ -102,7 +102,6 @@ public class OAuth2 {
 
 		KeyStoreAdapter ksa = new KeyStoreAdapter();
 		String refresh_token = ksa.decrypt(encrypted_refresh_token);
-		System.out.println("REFRESH TOKEN: " + refresh_token);
 		retriveAccessTokenSuccess(refresh_token, context);
 	}
 

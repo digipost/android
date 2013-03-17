@@ -65,7 +65,6 @@ public class ApiAccess {
 	private ClientResponse executeGetRequest(final String uri, final String header_accept) throws DigipostClientException,
 			DigipostApiException {
 		if (Secret.ACCESS_TOKEN.equals("")) {
-			System.out.println("Empty ACCESS TOKEN, getting new");
 			OAuth2.updateRefreshTokenSuccess(context);
 		}
 
@@ -84,8 +83,6 @@ public class ApiAccess {
 	}
 
 	public String getApiJsonString(final String uri) throws DigipostApiException, DigipostClientException {
-		System.out.println("URI: " + uri);
-		System.out.println("ACCESS TOKEN: " + Secret.ACCESS_TOKEN);
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
 
 		try {

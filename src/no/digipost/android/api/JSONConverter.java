@@ -64,7 +64,6 @@ public class JSONConverter {
 			}
 			content = writer.toString();
 		}
-		System.out.println("Json: " + content);
 		return content;
 	}
 
@@ -77,14 +76,11 @@ public class JSONConverter {
 			JsonParser jp = fact.createJsonParser(data);
 			jacksonObject = objectMapper.readValue(jp, type);
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Ignore
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Ignore
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Ignore
 		}
 
 		return jacksonObject;
@@ -95,7 +91,6 @@ public class JSONConverter {
 	}
 
 	public static StringEntity createJsonFromJackson(final Letter letter) throws ParseException, IOException {
-
 		// ignore-test
 		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo" };
 
@@ -107,14 +102,11 @@ public class JSONConverter {
 
 			objectMapper.filteredWriter(filters).writeValue(strWriter, letter);
 		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Ignore
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Ignore
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Ignore
 		}
 
 		return new StringEntity(strWriter.toString(), HTTP.UTF_8);
@@ -133,8 +125,7 @@ public class JSONConverter {
 			}
 			buffer.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Ignore
 		}
 		return buffer.toByteArray();
 	}
