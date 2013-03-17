@@ -45,11 +45,14 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	private ButtonListener buttonListener;
 	private ViewPager mViewPager;
 
+	private int currentViewIndex;
+
 	@Override
 	protected void onCreate(final Bundle arg0) {
 		super.onCreate(arg0);
 		setContentView(R.layout.activity_base);
 
+		currentViewIndex = 0;
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setOffscreenPageLimit(3);
@@ -66,7 +69,10 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			public void onPageSelected(final int arg0) {
-
+				System.out.println("index: " + currentViewIndex);
+				DigipostSectionFragment fragment = getFragment(currentViewIndex);
+				fragment.toggleMultiselectionOff(currentViewIndex);
+				currentViewIndex = arg0;
 			}
 
 			public void onPageScrolled(final int arg0, final float arg1, final int arg2) {

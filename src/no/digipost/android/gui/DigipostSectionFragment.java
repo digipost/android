@@ -225,23 +225,27 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		activityCommunicator.passDataToActivity("updateAll");
 	}
 
-	private void toggleCheckboxesOn(final int type, final int position) {
+	private void toggleMultiselectionOn(final int type, final int position) {
 		listview.requestFocus();
 
-		if (type != LetterOperations.RECEIPTS) {
+		if (type != LetterOperations.RECEIPTS && !adapterLetter.getShowBoxes()) {
 			adapterLetter.setInitialcheck(position);
-		} else {
+			showBottomBar();
+		} else if (type == LetterOperations.RECEIPTS && !adapterReciepts.getShowBoxes()) {
 			adapterReciepts.setInitialcheck(position);
+			showBottomBar();
 		}
 	}
 
-	public void toggleCheckboxesOff(final int type) {
+	public void toggleMultiselectionOff(final int type) {
 		listview.requestFocus();
 
-		if (type != LetterOperations.RECEIPTS) {
+		if (type != LetterOperations.RECEIPTS && adapterLetter.getShowBoxes()) {
 			adapterLetter.clearCheckboxes();
-		} else {
+			hideBottomBar();
+		} else if (type == LetterOperations.RECEIPTS && adapterReciepts.getShowBoxes()) {
 			adapterReciepts.clearCheckboxes();
+			hideBottomBar();
 		}
 	}
 
@@ -676,7 +680,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		@Override
 		protected void onProgressUpdate(final Integer... values) {
 			super.onProgressUpdate(values);
-			int total = 0;
 
 			if (action.equals(ApiConstants.DELETE)) {
 				progressDialog.setMessage(values[0] + " av " + checkedCount + " slettet");
@@ -763,8 +766,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		}
 
 		public boolean onItemLongClick(final AdapterView<?> arg0, final View arg1, final int arg2, final long arg3) {
-			toggleCheckboxesOn(type, arg2);
-			showBottomBar();
+			toggleMultiselectionOn(type, arg2);
 			return true;
 		}
 	}
@@ -780,8 +782,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			if (keyCode == KeyEvent.KEYCODE_BACK) {
 				if ((type == LetterOperations.RECEIPTS && adapterReciepts.getShowBoxes())
 						|| (type != LetterOperations.RECEIPTS && adapterLetter.getShowBoxes())) {
-					toggleCheckboxesOff(type);
-					hideBottomBar();
+					toggleMultiselectionOff(type);
 					return true;
 				}
 			}
