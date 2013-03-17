@@ -64,6 +64,7 @@ public class JSONConverter {
 			}
 			content = writer.toString();
 		}
+		System.out.println("Json: " + content);
 		return content;
 	}
 

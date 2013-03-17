@@ -62,14 +62,19 @@ public class ApiAccess {
 		return (Receipts) JSONConverter.processJackson(Receipts.class, getApiJsonString(uri));
 	}
 
-	private ClientResponse executeGetRequest(final String uri, final String header_accept, final String header_authorization)
-			throws DigipostClientException {
+	private ClientResponse executeGetRequest(final String uri, final String header_accept) throws DigipostClientException,
+			DigipostApiException {
+		if (Secret.ACCESS_TOKEN.equals("")) {
+			System.out.println("Empty ACCESS TOKEN, getting new");
+			OAuth2.updateRefreshTokenSuccess(context);
+		}
+
 		Client client = Client.create();
 		try {
 			ClientResponse cr = client
 					.resource(uri)
 					.header(ApiConstants.ACCEPT, header_accept)
-					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + header_authorization)
+					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
 					.get(ClientResponse.class);
 
 			return cr;
@@ -79,7 +84,9 @@ public class ApiAccess {
 	}
 
 	public String getApiJsonString(final String uri) throws DigipostApiException, DigipostClientException {
-		ClientResponse cr = executeGetRequest(uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON, Secret.ACCESS_TOKEN);
+		System.out.println("URI: " + uri);
+		System.out.println("ACCESS TOKEN: " + Secret.ACCESS_TOKEN);
+		ClientResponse cr = executeGetRequest(uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
@@ -96,7 +103,6 @@ public class ApiAccess {
 	}
 
 	public String moveLetter(final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException {
-		System.out.println("Letter uri: " + uri);
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost post = new HttpPost();
 		try {
@@ -128,13 +134,11 @@ public class ApiAccess {
 			is = response.getEntity().getContent();
 		} catch (IllegalStateException e) {
 			// Ignore
-			e.printStackTrace();
 		} catch (IOException e) {
 			// Ignore
 		}
 
 		return JSONConverter.getJsonStringFromInputStream(is);
-
 	}
 
 	public boolean delete(final String uri) throws DigipostClientException, DigipostApiException {
@@ -162,7 +166,7 @@ public class ApiAccess {
 	}
 
 	public byte[] getDocumentContent(final String uri) throws DigipostApiException, DigipostClientException {
-		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM, Secret.ACCESS_TOKEN);
+		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
@@ -175,7 +179,7 @@ public class ApiAccess {
 	}
 
 	public String getDocumentHTML(final String uri) throws DigipostApiException, DigipostClientException {
-		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM, Secret.ACCESS_TOKEN);
+		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
@@ -188,7 +192,7 @@ public class ApiAccess {
 	}
 
 	public String getReceiptHTML(final String uri) throws DigipostApiException, DigipostClientException {
-		ClientResponse cr = executeGetRequest(uri, ApiConstants.TEXT_HTML, Secret.ACCESS_TOKEN);
+		ClientResponse cr = executeGetRequest(uri, ApiConstants.TEXT_HTML);
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());

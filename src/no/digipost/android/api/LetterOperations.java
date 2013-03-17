@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-import no.digipost.android.R;
-import no.digipost.android.model.Account;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
@@ -40,38 +38,35 @@ public class LetterOperations {
 	public static final int ARCHIVE = 2;
 	public static final int RECEIPTS = 3;
 
-	private final ApiAccess apiAccess;
-	private final Context context;
+	private static PrimaryAccount primaryAccount = null;
+	private static ApiAccess apiAccess;
+
 	static String tempLink;
 
 	public LetterOperations(final Context context) {
-		this.context = context;
 		apiAccess = new ApiAccess(context);
 	}
 
 	public PrimaryAccount getPrimaryAccount() throws DigipostApiException, DigipostClientException {
-		return apiAccess.getAccount().getPrimaryAccount();
+		if (primaryAccount == null) {
+			System.out.println("primaryAccount");
+			primaryAccount = apiAccess.getAccount().getPrimaryAccount();
+		}
+		return primaryAccount;
 	}
 
 	public ArrayList<Letter> getAccountContentMeta(final int type) throws DigipostApiException, DigipostClientException {
-		Account account = apiAccess.getAccount();
+		PrimaryAccount primaryAccount = getPrimaryAccount();
 
-		PrimaryAccount primaryaccount = account.getPrimaryAccount();
-
-		if (primaryaccount == null) {
-			// TODO Midlertidig bugfix
-			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-		}
-
-		tempLink = primaryaccount.getInboxUri();
+		tempLink = primaryAccount.getInboxUri();
 
 		switch (type) {
 		case MAILBOX:
-			return apiAccess.getDocuments(primaryaccount.getInboxUri()).getDocument();
+			return apiAccess.getDocuments(primaryAccount.getInboxUri()).getDocument();
 		case ARCHIVE:
-			return apiAccess.getDocuments(primaryaccount.getArchiveUri()).getDocument();
+			return apiAccess.getDocuments(primaryAccount.getArchiveUri()).getDocument();
 		case WORKAREA:
-			return apiAccess.getDocuments(primaryaccount.getWorkareaUri()).getDocument();
+			return apiAccess.getDocuments(primaryAccount.getWorkareaUri()).getDocument();
 		default:
 			return null;
 		}
