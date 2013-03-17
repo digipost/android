@@ -94,7 +94,7 @@ public class WebFragment extends DialogFragment {
 		protected Void doInBackground(final String... params) {
 
 			try {
-				OAuth2.retriveAccessTokenSuccess(params[0], params[1], context);
+				OAuth2.retriveAccessToken(params[0], params[1], context);
 				handler.sendEmptyMessage(ErrorHandling.ERROR_OK);
 			} catch (DigipostApiException e) {
 				handler.sendEmptyMessage(ErrorHandling.ERROR_SERVER);

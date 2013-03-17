@@ -152,15 +152,22 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	}
 
 	public void loadAccountMeta(final int type) {
-		if (networkConnection.isNetworkAvailable()) {
-			if (type != LetterOperations.RECEIPTS) {
-				new GetAccountMetaTask(type).execute();
-			} else {
-				new GetReceiptsMetaTask().execute();
-			}
+		if (type != LetterOperations.RECEIPTS) {
+			new GetAccountMetaTask(type).execute();
 		} else {
-			showMessage(getActivity().getString(R.string.error_your_network));
+			new GetReceiptsMetaTask().execute();
 		}
+	}
+
+	private boolean accountMetaRefreshing() {
+		for (boolean refreshing : fragmentsRefreshing) {
+			if (refreshing) {
+				return true;
+			}
+		}
+
+		fragmentsRefreshing = new boolean[4];
+		return false;
 	}
 
 	private void toggleRefreshSpinnerOn() {
@@ -169,15 +176,10 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	}
 
 	private void toggleRefreshSpinnerOff() {
-		for (boolean refreshing : fragmentsRefreshing) {
-			if (refreshing) {
-				return;
-			}
+		if (!accountMetaRefreshing()) {
+			BaseActivity.refreshButton.setVisibility(View.VISIBLE);
+			BaseActivity.refreshSpinner.setVisibility(View.GONE);
 		}
-
-		fragmentsRefreshing = new boolean[4];
-		BaseActivity.refreshButton.setVisibility(View.VISIBLE);
-		BaseActivity.refreshSpinner.setVisibility(View.GONE);
 	}
 
 	private void showBottomBar() {
@@ -308,15 +310,18 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		@Override
 		protected void onPostExecute(final ArrayList<Receipt> result) {
 			super.onPostExecute(result);
-			if (result == null) {
-				showMessage(errorMessage);
-			} else {
-				adapterReciepts.updateList(result);
-				listEmpty.setVisibility(View.VISIBLE);
-			}
-
 			fragmentsRefreshing[LetterOperations.RECEIPTS] = false;
 			toggleRefreshSpinnerOff();
+
+			if (result == null) {
+				if (!accountMetaRefreshing()) {
+					showMessage(errorMessage);
+				}
+				return;
+			}
+
+			adapterReciepts.updateList(result);
+			listEmpty.setVisibility(View.VISIBLE);
 		}
 
 		@Override
@@ -358,15 +363,18 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		@Override
 		protected void onPostExecute(final ArrayList<Letter> result) {
 			super.onPostExecute(result);
-			if (result == null) {
-				showMessage(errorMessage);
-			} else {
-				adapterLetter.updateList(result);
-				listEmpty.setVisibility(View.VISIBLE);
-			}
-
 			fragmentsRefreshing[type] = false;
 			toggleRefreshSpinnerOff();
+
+			if (result == null) {
+				if (!accountMetaRefreshing()) {
+					showMessage(errorMessage);
+				}
+				return;
+			}
+
+			adapterLetter.updateList(result);
+			listEmpty.setVisibility(View.VISIBLE);
 		}
 
 		@Override

@@ -41,8 +41,6 @@ public class LetterOperations {
 	private static PrimaryAccount primaryAccount = null;
 	private static ApiAccess apiAccess;
 
-	static String tempLink;
-
 	public LetterOperations(final Context context) {
 		apiAccess = new ApiAccess(context);
 	}
@@ -57,8 +55,6 @@ public class LetterOperations {
 	public ArrayList<Letter> getAccountContentMeta(final int type) throws DigipostApiException, DigipostClientException {
 		PrimaryAccount primaryAccount = getPrimaryAccount();
 
-		tempLink = primaryAccount.getInboxUri();
-
 		switch (type) {
 		case MAILBOX:
 			return apiAccess.getDocuments(primaryAccount.getInboxUri()).getDocument();
@@ -71,12 +67,13 @@ public class LetterOperations {
 		}
 	}
 
-	private String tempReceipLink() {
-		return "https://www.digipost.no/post/api/private/accounts/" + tempLink.replaceAll("\\D+", "") + "/receipts";
+	private String getReceipLink(final String uri) {
+		return "https://www.digipost.no/post/api/private/accounts/" + uri.replaceAll("\\D+", "") + "/receipts";
 	}
 
 	public ArrayList<Receipt> getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException {
-		return apiAccess.getReceipts(tempReceipLink()).getReceipt();
+		PrimaryAccount primaryAccount = getPrimaryAccount();
+		return apiAccess.getReceipts(getReceipLink(primaryAccount.getInboxUri())).getReceipt();
 	}
 
 	public void moveDocument(final Letter letter, final String toLocation) throws ClientProtocolException, UniformInterfaceException,

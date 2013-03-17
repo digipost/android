@@ -65,7 +65,7 @@ public class ApiAccess {
 	private ClientResponse executeGetRequest(final String uri, final String header_accept) throws DigipostClientException,
 			DigipostApiException {
 		if (Secret.ACCESS_TOKEN.equals("")) {
-			OAuth2.updateRefreshTokenSuccess(context);
+			OAuth2.updateAccessToken(context);
 		}
 
 		Client client = Client.create();
@@ -88,7 +88,7 @@ public class ApiAccess {
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
-			OAuth2.updateRefreshTokenSuccess(context);
+			OAuth2.updateAccessToken(context);
 			return getApiJsonString(uri);
 		}
 
@@ -122,7 +122,7 @@ public class ApiAccess {
 		try {
 			networkConnection.checkHttpStatusCode(response.getStatusLine().getStatusCode());
 		} catch (IllegalStateException e) {
-			OAuth2.updateRefreshTokenSuccess(context);
+			OAuth2.updateAccessToken(context);
 			return moveLetter(uri, json);
 		}
 
@@ -155,7 +155,7 @@ public class ApiAccess {
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
-			OAuth2.updateRefreshTokenSuccess(context);
+			OAuth2.updateAccessToken(context);
 			return delete(uri);
 		}
 
@@ -168,7 +168,7 @@ public class ApiAccess {
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
-			OAuth2.updateRefreshTokenSuccess(context);
+			OAuth2.updateAccessToken(context);
 			return getDocumentContent(uri);
 		}
 
@@ -181,7 +181,7 @@ public class ApiAccess {
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
-			OAuth2.updateRefreshTokenSuccess(context);
+			OAuth2.updateAccessToken(context);
 			return getDocumentHTML(uri);
 		}
 
@@ -194,7 +194,7 @@ public class ApiAccess {
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (IllegalStateException e) {
-			OAuth2.updateRefreshTokenSuccess(context);
+			OAuth2.updateAccessToken(context);
 			return getDocumentHTML(uri);
 		}
 

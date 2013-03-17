@@ -50,15 +50,15 @@ public class OAuth2 {
 	private static SecureRandom random = new SecureRandom();
 
 	public static String getAuthorizeURL() {
-		state = generateSecureRandom(20);
+		state = getSecureRandom(20);
 		return ApiConstants.URL_API_OAUTH_AUTHORIZE_NEW + "?" + ApiConstants.RESPONSE_TYPE + "=" + ApiConstants.CODE + "&"
 				+ ApiConstants.CLIENT_ID + "=" + Secret.CLIENT_ID + "&" + ApiConstants.REDIRECT_URI + "=" + Secret.REDIRECT_URI + "&"
 				+ ApiConstants.STATE + "=" + state;
 	}
 
-	public static void retriveAccessTokenSuccess(final String url_state, final String url_code, final Context context)
+	public static void retriveAccessToken(final String url_state, final String url_code, final Context context)
 			throws DigipostApiException, DigipostClientException {
-		nonce = generateSecureRandom(20);
+		nonce = getSecureRandom(20);
 
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.CODE);
@@ -68,16 +68,16 @@ public class OAuth2 {
 
 		Access data = getAccessData(params, context);
 
-		if (!state.equals(url_state)) {
+		if (!stateVerified(url_state)) {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-		} else if (!verifyAuth(data.getId_token(), Secret.CLIENT_SECRET)) {
+		} else if (!authenticationVerified(data.getId_token(), Secret.CLIENT_SECRET)) {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
 
 		encryptAndStoreRefreshToken(data, context);
 	}
 
-	public static void retriveAccessTokenSuccess(final String refresh_token, final Context context) throws DigipostApiException,
+	public static void retriveAccessToken(final String refresh_token, final Context context) throws DigipostApiException,
 			DigipostClientException {
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
@@ -97,12 +97,12 @@ public class OAuth2 {
 		editor.commit();
 	}
 
-	public static void updateRefreshTokenSuccess(final Context context) throws DigipostApiException, DigipostClientException {
+	public static void updateAccessToken(final Context context) throws DigipostApiException, DigipostClientException {
 		String encrypted_refresh_token = getEncryptedRefreshToken(context);
 
 		KeyStoreAdapter ksa = new KeyStoreAdapter();
 		String refresh_token = ksa.decrypt(encrypted_refresh_token);
-		retriveAccessTokenSuccess(refresh_token, context);
+		retriveAccessToken(refresh_token, context);
 	}
 
 	public static String getEncryptedRefreshToken(final Context context) {
@@ -131,7 +131,7 @@ public class OAuth2 {
 		return (Access) JSONConverter.processJackson(Access.class, cr.getEntityInputStream());
 	}
 
-	public static boolean verifyAuth(final String id_token, final String client_secret) {
+	private static boolean authenticationVerified(final String id_token, final String client_secret) {
 		String split_by = ".";
 		int splitindex = id_token.indexOf(split_by);
 
@@ -153,15 +153,15 @@ public class OAuth2 {
 		return true;
 	}
 
-	public static boolean verifyState(final String received_state) {
+	private static boolean stateVerified(final String received_state) {
 		return state.equals(received_state);
 	}
 
-	private static String generateSecureRandom(final int num_bytes) {
+	private static String getSecureRandom(final int num_bytes) {
 		return new BigInteger(130, random).toString(32);
 	}
 
-	public static String encryptHmacSHA256(final String data, final String key) {
+	private static String encryptHmacSHA256(final String data, final String key) {
 		SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), ApiConstants.HMACSHA256);
 		Mac mac = null;
 		try {
@@ -176,9 +176,8 @@ public class OAuth2 {
 		return new String(hmacData);
 	}
 
-	public static String getB64Auth(final String id, final String secret) {
+	private static String getB64Auth(final String id, final String secret) {
 		String source = id + ":" + secret;
-
 		return ApiConstants.BASIC + Base64.encodeToString(source.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
 	}
 }
