@@ -25,5 +25,9 @@
     <color name="title_strip_background">#262626</color>
     <color name="background_red">#D80C16</color>
     <color name="splash_bg_color">#e2251b</color>
-
+    
+    <!-- LoginActivity -->
+    <color name="login_loginbutton_drawablebottom">#aa0000</color>
+	<color name="disclamer_registration_layout_background">#292b2d</color>
+	<color name="disclamer_registration_buttons_background">#8c8c8c</color>
 </resources>

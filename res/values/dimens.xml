@@ -17,12 +17,34 @@
 
     <item name="listview_weight" format="integer" type="dimen">1</item>
 
-    <!-- Bottombar -->
+    <!-- ListItem -->
+    <dimen name="listitem_super_layout_padding">5sp</dimen>
+    <dimen name="listitem_sub_layout_padding">8sp</dimen>
+    <dimen name="listitem_mail_subject_width">0sp</dimen>
+    <dimen name="listitem_mail_subject_padding_right">5sp</dimen>
+    <dimen name="listitem_mail_subject_textsize">18sp</dimen>
+    <dimen name="listitem_mail_date_textsize">13sp</dimen>
+    <dimen name="lisitem_mail_creator_width">0sp</dimen>
+    <dimen name="listitem_mail_creator_padding_right">5sp</dimen>
+    <dimen name="listitem_mail_creator_textsize">13sp</dimen>
+    <dimen name="listitem_mail_prize_padding_right">5sp</dimen>
+    <dimen name="listitem_mail_prize_textsize">13sp</dimen>
+    <dimen name="listitem_mail_document_lock_padding_top">10sp</dimen>
+
+    <item name="listitem_mail_subject_weight" format="float" type="dimen">1</item>
+    <item name="lisitem_mail_creator_weight" format="float" type="dimen">1</item>
+    <item name="listitem_mail_subject_maxlines" format="float" type="dimen">1</item>
+    <item name="listitem_mail_creator_maxlines" format="float" type="dimen">1</item>
+
+    <!--  PDF HTML BAR Webview Bottombar-->
     <dimen name="bottombar_image_padding_bottom_and_top">8dp</dimen>
     <dimen name="bottombar_image_width">0dp</dimen>
-
+    <dimen name="document_backbutton_margin_right">-5dp</dimen>
+    <dimen name="document_webview_height">0sp</dimen>
+    <dimen name="document_pagenumber_margin_bottom">10dp</dimen>
     <item name="bottombar_image_weight" format="float" type="dimen">0.25</item>
-
+    <item name="document_webview_weight" format="float" type="dimen">1</item>
+    
     <!-- BaseView -->
     <dimen name="base_padding_bottom_and_top">2dp</dimen>
     <dimen name="base_optionsbutton_padding">5dp</dimen>
@@ -33,9 +55,25 @@
     <dimen name="base_refreshbutton_padding">5dp</dimen>
     <dimen name="base_pagertitlestrip_padding">5dp</dimen>
     <dimen name="base_pagertitlestrip_textsize">2dp</dimen>
+    <dimen name="base_logobutton_padding">6dp</dimen>
 
     <item name="base_logobutton_image_weight" format="float" type="dimen">0.25</item>
 
-    <dimen name="base_logobutton_padding">6dp</dimen>
+    <!-- LoginView -->
+    <dimen name="login_margin_bottom">52dp</dimen>
+    <dimen name="login_padding">20sp</dimen>
+    <dimen name="login_logo_width">136dp</dimen>
+    <dimen name="login_logo_height">0dip</dimen>
+    <dimen name="login_loginbutton_margin_left_right_top">20dp</dimen>
+    <dimen name="login_loginbutton_padding_left_right">15dp</dimen>
+    <dimen name="login_loginbutton_padding_bottom_top">5dp</dimen>
+    <dimen name="login_loginbutton_paddingdrawable">2dp</dimen>
+    <dimen name="login_loginbutton_textsize">14sp</dimen>
+    <dimen name="login_disclaimer_registration_button_padding">10dp</dimen>
+    <dimen name="login_disclaimer_registration_button_margin_left_right_top">10dp</dimen>
+    <dimen name="login_disclaimer_registration_button_margin_bottom">5dp</dimen>
+
+    <item name="login_logo_weight" format="float" type="dimen">0.30</item>
+
 
 </resources>

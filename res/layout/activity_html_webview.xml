@@ -15,10 +15,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginRight="-5dp"
+            android:layout_marginRight="@dimen/document_backbutton_margin_right"
             android:background="@color/transparent"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
+            android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+            android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
             android:src="@drawable/white_back_32" />
 
         <ImageButton
@@ -26,17 +26,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:paddingBottom="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="8dp"
+            android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+            android:paddingRight="@dimen/bottombar_image_padding_bottom_and_top"
+            android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
             android:src="@drawable/white_postbox_48" />
     </LinearLayout>
 
     <WebView
         android:id="@+id/web_html"
         android:layout_width="fill_parent"
-        android:layout_height="0sp"
-        android:layout_weight="1" />
+        android:layout_height="@dimen/document_webview_height"
+        android:layout_weight="@dimen/document_webview_weight" />
 
     <LinearLayout
         android:id="@+id/html_bottombar"
@@ -53,35 +53,36 @@
 
             <ImageButton
                 android:id="@+id/html_toWorkarea"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/bottombar_image_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="@dimen/bottombar_image_weight"
                 android:background="@color/transparent"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
+                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
                 android:src="@drawable/white_workarea_48" />
 
             <ImageButton
                 android:id="@+id/html_toArchive"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/bottombar_image_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="@dimen/bottombar_image_width"
                 android:background="@color/transparent"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
+                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
                 android:src="@drawable/white_archive_48" />
 
             <ImageButton
                 android:id="@+id/html_delete"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/bottombar_image_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="@dimen/bottombar_image_width"
                 android:background="@color/transparent"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
+                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
                 android:src="@drawable/white_delete_48" />
 
-           <!--  <ImageButton
+            <!--
+                 <ImageButton
                 android:id="@+id/html_share"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -89,7 +90,8 @@
                 android:background="#00000000"
                 android:paddingBottom="8dp"
                 android:paddingTop="8dp"
-                android:src="@drawable/white_share_48" />  -->
+                android:src="@drawable/white_share_48" />
+            -->
         </LinearLayout>
     </LinearLayout>
 

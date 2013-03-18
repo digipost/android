@@ -116,7 +116,7 @@
                 android:layout_weight="@dimen/bottombar_image_weight"
                 android:background="@color/transparent"
                 android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
-                android:paddingTop="8dp"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
                 android:src="@drawable/white_archive_48" />
 
             <ImageButton
