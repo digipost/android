@@ -7,17 +7,36 @@
     <dimen name="emptyslate_marginTop">150dp</dimen>
     <dimen name="emptyslate_text_linespacing">2dp</dimen>
     <dimen name="emptyslate_text_padding">10dp</dimen>
-	<dimen name="emptyslate_text_size">18sp</dimen>
-	<dimen name="emptyslate_receipts_extramargintop">2dp</dimen>
-	<dimen name="emptyslate_mailbox_extramargintop">1dp</dimen>
-    
+    <dimen name="emptyslate_text_size">18sp</dimen>
+    <dimen name="emptyslate_receipts_extramargintop">2dp</dimen>
+    <dimen name="emptyslate_mailbox_extramargintop">1dp</dimen>
+
     <!-- ListView -->
     <dimen name="listview_dividerheight">1sp</dimen>
     <dimen name="listview_height">0sp</dimen>
+
     <item name="listview_weight" format="integer" type="dimen">1</item>
-    
+
     <!-- Bottombar -->
     <dimen name="bottombar_image_padding_bottom_and_top">8dp</dimen>
-	<dimen name="bottombar_image_width">0dp</dimen>
-	<item name="bottombar_image_weight" format="float" type="dimen">0.25</item>
+    <dimen name="bottombar_image_width">0dp</dimen>
+
+    <item name="bottombar_image_weight" format="float" type="dimen">0.25</item>
+
+    <!-- BaseView -->
+    <dimen name="base_padding_bottom_and_top">2dp</dimen>
+    <dimen name="base_optionsbutton_padding">5dp</dimen>
+    <dimen name="base_logobutton_margintop">3dp</dimen>
+    <dimen name="base_refreshspinner_width_and_height">30dp</dimen>
+    <dimen name="base_refreshspinner_margin_left_and_right">5dp</dimen>
+    <dimen name="base_refreshspinner_marginbottom">1dp</dimen>
+    <dimen name="base_refreshbutton_padding">5dp</dimen>
+    <dimen name="base_pagertitlestrip_padding">5dp</dimen>
+    <dimen name="base_pagertitlestrip_textsize">2dp</dimen>
+    <dimen name=""
+
+    <item name="base_logobutton_image_weight" format="float" type="dimen">0.25</item>
+
+    <dimen name="base_logobutton_padding">6dp</dimen>
+
 </resources>

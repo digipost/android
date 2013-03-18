@@ -27,16 +27,16 @@
         android:background="@color/background_red"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingBottom="2dp"
-        android:paddingTop="2dp" >
+        android:paddingBottom="@dimen/base_padding_bottom_and_top"
+        android:paddingTop="@dimen/base_padding_bottom_and_top" >
 
         <ImageButton
             android:id="@+id/base_optionsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:contentDescription="Options button"
-            android:padding="5dp"
+            android:contentDescription="@string/base_optionsbutton_contentDescription"
+            android:padding="@dimen/base_optionsbutton_padding"
             android:src="@drawable/base_optionbutton_style" />
 
         <ImageButton
@@ -44,20 +44,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="3dp"
-            android:layout_weight="0.25"
+            android:layout_marginTop="@dimen/base_logobutton_margintop"
+            android:layout_weight="@dimen/base_logobutton_image_weight"
             android:background="@color/transparent"
-            android:contentDescription="options drawer logo"
-            android:padding="6dp"
+            android:contentDescription="@string/base_logobutton_contentDescription"
+            android:padding="@dimen/base_logobutton_padding"
             android:src="@drawable/digipost_white_header_small" />
 
         <ProgressBar
             android:id="@+id/base_refreshSpinner"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginBottom="1dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_width="@dimen/base_refreshspinner_width_and_height"
+            android:layout_height="@dimen/base_refreshspinner_width_and_height"
+            android:layout_marginBottom="@dimen/base_refreshspinner_marginbottom"
+            android:layout_marginLeft="@dimen/base_refreshspinner_margin_left_and_right"
+            android:layout_marginRight="@dimen/base_refreshspinner_margin_left_and_right"
             android:visibility="gone" />
 
         <ImageButton
@@ -65,8 +65,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:contentDescription="Refresh button"
-            android:padding="5dp"
+            android:contentDescription="@string/base_refreshbutton_contentDescription"
+            android:padding="@dimen/base_refreshbutton_padding"
             android:src="@drawable/base_refreshbutton_style" />
     </LinearLayout>
 
@@ -74,15 +74,15 @@
         android:id="@+id/pager"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#FFF" >
+        android:background="@color/white" >
 
         <android.support.v4.view.PagerTitleStrip
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:background="@color/title_strip_background"
-            android:padding="5dp"
-            android:textSize="2dp" />
+            android:padding="@dimen/base_pagertitlestrip_padding"
+            android:textSize="@dimen/base_pagertitlestrip_textsize" />
     </android.support.v4.view.ViewPager>
 
     <LinearLayout
@@ -101,32 +101,32 @@
 
             <ImageButton
                 android:id="@+id/base_toWorkarea"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/bottombar_image_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="@dimen/bottombar_image_weight"
                 android:background="@color/transparent"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
+                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
                 android:src="@drawable/white_workarea_48" />
 
             <ImageButton
                 android:id="@+id/base_toArchive"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/bottombar_image_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="@dimen/bottombar_image_weight"
                 android:background="@color/transparent"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
+                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
                 android:src="@drawable/white_archive_48" />
 
             <ImageButton
                 android:id="@+id/base_delete"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/bottombar_image_width"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.25"
+                android:layout_weight="@dimen/bottombar_image_weight"
                 android:background="@color/transparent"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp"
+                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
                 android:src="@drawable/white_delete_48" />
         </LinearLayout>
     </LinearLayout>

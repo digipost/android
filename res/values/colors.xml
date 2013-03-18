@@ -10,8 +10,8 @@
     <color name="blue_date">#56b4ef</color>
     <color name="black_subject">#383435</color>
     <color name="grey_creator">#4D484A</color>
-	<color name="list_divider">#eee</color>
-	
+    <color name="list_divider">#eee</color>
+
     <!-- Emptyslate -->
     <color name="emptyslate_background">#eceef1</color>
     <color name="emptyslate_text">#5E5E5E</color>
@@ -21,6 +21,7 @@
 
     <!-- Misc -->
     <color name="transparent">#00000000</color>
+    <color name="white">#FFF</color>
     <color name="title_strip_background">#262626</color>
     <color name="background_red">#D80C16</color>
     <color name="splash_bg_color">#e2251b</color>

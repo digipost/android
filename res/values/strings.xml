@@ -20,6 +20,11 @@
     <string name="title_activity_web_fragment">WebFragment</string>
     <string name="title_activity_login">LoginActivity</string>
 
+    <!-- BaseActivity -->
+    <string name="base_optionsbutton_contentDescription">Options button</string>
+    <string name="base_logobutton_contentDescription">Digipost logo"</string>
+    <string name="base_refreshbutton_contentDescription">Refresh button"</string>
+
     <!-- LoginActivity -->
     <string name="login_loginbutton_text">Logg inn i Digipost</string>
     <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
