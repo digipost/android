@@ -180,6 +180,14 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		}
 	}
 
+	public void clearFilter(final int type) {
+		if (type != LetterOperations.RECEIPTS) {
+			adapterLetter.clearFilter();
+		} else {
+			adapterReciepts.clearFilter();
+		}
+	}
+
 	private void toggleRefreshSpinnerOn() {
 		BaseActivity.refreshButton.setVisibility(View.GONE);
 		BaseActivity.refreshSpinner.setVisibility(View.VISIBLE);
@@ -242,8 +250,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		attachmentlistview.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int arg2, final long arg3) {
-				Attachment attachment  = attachments.get(arg2);
-				if(attachment.getFileType().equals(ApiConstants.FILETYPE_PDF)) {
+				Attachment attachment = attachments.get(arg2);
+				if (attachment.getFileType().equals(ApiConstants.FILETYPE_PDF)) {
 					GetPDFTask pdfTask = new GetPDFTask();
 					pdfTask.execute(attachment);
 				} else if (attachment.getFileType().equals(ApiConstants.FILETYPE_HTML)) {
@@ -255,12 +263,12 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			}
 		});
 
-		AttachmentListAdapter attachmentadapter = new AttachmentListAdapter(getActivity(), R.layout.attachentdialog_list_item,attachments);
+		AttachmentListAdapter attachmentadapter = new AttachmentListAdapter(getActivity(), R.layout.attachentdialog_list_item, attachments);
 
 		attachmentlistview.setAdapter(attachmentadapter);
 
 		final Dialog dialog = builder.create();
-	    dialog.show();
+		dialog.show();
 
 	}
 
@@ -446,20 +454,20 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		@Override
 		protected byte[] doInBackground(final Object... params) {
 
-			if(params[0] instanceof Letter) {
-				letter = (Letter)params[0];
+			if (params[0] instanceof Letter) {
+				letter = (Letter) params[0];
 			} else {
-				attachment = (Attachment)params[0];
+				attachment = (Attachment) params[0];
 			}
-				try {
-					return lo.getDocumentContentPDF(params[0]);
-				} catch (DigipostApiException e) {
-					errorMessage = e.getMessage();
-					return null;
-				} catch (DigipostClientException e) {
-					errorMessage = e.getMessage();
-					return null;
-				}
+			try {
+				return lo.getDocumentContentPDF(params[0]);
+			} catch (DigipostApiException e) {
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostClientException e) {
+				errorMessage = e.getMessage();
+				return null;
+			}
 		}
 
 		@Override
@@ -475,12 +483,12 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			if (result == null) {
 				showMessage(errorMessage);
 			} else {
-				if(letter != null) {
-				tempLetter = letter;
-				PdfStore.pdf = result;
-				Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-				i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
-				startActivityForResult(i, REQUESTCODE_INTENT);
+				if (letter != null) {
+					tempLetter = letter;
+					PdfStore.pdf = result;
+					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+					i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
+					startActivityForResult(i, REQUESTCODE_INTENT);
 				} else {
 					PdfStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
@@ -508,18 +516,18 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		@Override
 		protected String doInBackground(final Object... params) {
 			try {
-				if(params[1] instanceof Attachment) {
+				if (params[1] instanceof Attachment) {
 					attachment = (Attachment) params[1];
 					return lo.getDocumentContentHTML(params[1]);
 				} else {
 
-				if (params[0].equals(ApiConstants.GET_RECEIPT)) {
-					receipt = (Receipt) params[1];
-					return lo.getReceiptContentHTML(receipt);
-				} else {
-					letter = (Letter) params[1];
-					return lo.getDocumentContentHTML(letter);
-				}
+					if (params[0].equals(ApiConstants.GET_RECEIPT)) {
+						receipt = (Receipt) params[1];
+						return lo.getReceiptContentHTML(receipt);
+					} else {
+						letter = (Letter) params[1];
+						return lo.getDocumentContentHTML(letter);
+					}
 				}
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
@@ -544,19 +552,19 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				showMessage(errorMessage);
 			} else {
 				Intent i = new Intent(getActivity(), HtmlWebview.class);
-				if(attachment != null) {
+				if (attachment != null) {
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);
-					i.putExtra(ApiConstants.DOCUMENT_TYPE,"");
+					i.putExtra(ApiConstants.DOCUMENT_TYPE, "");
 				} else {
-				String type = letter != null ? ApiConstants.LETTER : ApiConstants.RECEIPT;
-				i.putExtra(ApiConstants.DOCUMENT_TYPE, type);
-				i.putExtra(ApiConstants.FILETYPE_HTML, result);
-				if (type.equals(ApiConstants.LETTER)) {
-					i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
-					tempLetter = letter;
-				} else if (type.equals(ApiConstants.RECEIPT)) {
-					tempReceipt = receipt;
-				}
+					String type = letter != null ? ApiConstants.LETTER : ApiConstants.RECEIPT;
+					i.putExtra(ApiConstants.DOCUMENT_TYPE, type);
+					i.putExtra(ApiConstants.FILETYPE_HTML, result);
+					if (type.equals(ApiConstants.LETTER)) {
+						i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
+						tempLetter = letter;
+					} else if (type.equals(ApiConstants.RECEIPT)) {
+						tempReceipt = receipt;
+					}
 				}
 				startActivityForResult(i, REQUESTCODE_INTENT);
 			}
@@ -798,22 +806,22 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 			String filetype = mletter.getFileType();
 
-			if(mletter.getAttachment().size() > 1) {
+			if (mletter.getAttachment().size() > 1) {
 				showAttactmentDialog(mletter.getAttachment());
 			} else {
 
-			if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
-				GetPDFTask pdfTask = new GetPDFTask();
-				pdfTask.execute(mletter);
-			} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
-				GetHTMLTask htmlTask = new GetHTMLTask();
-				htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
-			} else {
-				unsupportedActionDialog(getString(R.string.dialog_error_not_supported_filetype));
-				return;
-			}
+				if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
+					GetPDFTask pdfTask = new GetPDFTask();
+					pdfTask.execute(mletter);
+				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
+					GetHTMLTask htmlTask = new GetHTMLTask();
+					htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
+				} else {
+					unsupportedActionDialog(getString(R.string.dialog_error_not_supported_filetype));
+					return;
+				}
 
-			tempRowView = arg1;
+				tempRowView = arg1;
 			}
 		}
 	}

@@ -239,6 +239,13 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		v.setText(Html.fromHtml(convertedText));
 	}
 
+	public void clearFilter() {
+		creatorFilterText = null;
+		subjectFilterText = null;
+		dateFilterText = null;
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public Filter getFilter() {
 		return (filter != null) ? filter : new LetterFilter();

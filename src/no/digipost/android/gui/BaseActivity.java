@@ -87,8 +87,9 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 			public void onPageSelected(final int arg0) {
 				DigipostSectionFragment fragment = getFragment(currentViewIndex);
 				fragment.toggleMultiselectionOff(currentViewIndex);
-				currentViewIndex = arg0;
 				hideSearchBar();
+				fragment.clearFilter(currentViewIndex);
+				currentViewIndex = arg0;
 			}
 
 			public void onPageScrolled(final int arg0, final float arg1, final int arg2) {

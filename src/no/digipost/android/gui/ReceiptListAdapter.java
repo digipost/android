@@ -232,6 +232,12 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 		v.setText(Html.fromHtml(convertedText));
 	}
 
+	public void clearFilter() {
+		storeNameFilterText = null;
+		dateFilterText = null;
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public Filter getFilter() {
 		return (filter != null) ? filter : new ReceiptFilter();
