@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
--->
+ -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -39,35 +39,67 @@
             android:padding="@dimen/base_optionsbutton_padding"
             android:src="@drawable/base_optionbutton_style" />
 
-        <ImageButton
-            android:id="@+id/base_logoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/base_logobutton_margintop"
-            android:layout_weight="0.25"
-            android:background="@color/transparent"
-            android:contentDescription="@string/base_logobutton_contentDescription"
-            android:padding="@dimen/base_logobutton_padding"
-            android:src="@drawable/digipost_white_header_small" />
+        <ViewSwitcher
+            android:id="@+id/base_topbar_switcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-        <ProgressBar
-            android:id="@+id/base_refreshSpinner"
-            android:layout_width="@dimen/base_refreshspinner_width_and_height"
-            android:layout_height="@dimen/base_refreshspinner_width_and_height"
-            android:layout_marginBottom="@dimen/base_refreshspinner_marginbottom"
-            android:layout_marginLeft="@dimen/base_refreshspinner_margin_left_and_right"
-            android:layout_marginRight="@dimen/base_refreshspinner_margin_left_and_right"
-            android:visibility="gone" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
 
-        <ImageButton
-            android:id="@+id/base_refreshButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:contentDescription="@string/base_refreshbutton_contentDescription"
-            android:padding="@dimen/base_refreshbutton_padding"
-            android:src="@drawable/base_refreshbutton_style" />
+                <ImageButton
+                    android:id="@+id/base_logoButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/base_logobutton_margintop"
+                    android:layout_weight="0.25"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/base_logobutton_contentDescription"
+                    android:padding="@dimen/base_logobutton_padding"
+                    android:src="@drawable/digipost_white_header_small" />
+
+                <ProgressBar
+                    android:id="@+id/base_refreshSpinner"
+                    android:layout_width="@dimen/base_refreshspinner_width_and_height"
+                    android:layout_height="@dimen/base_refreshspinner_width_and_height"
+                    android:layout_marginBottom="@dimen/base_refreshspinner_marginbottom"
+                    android:layout_marginLeft="@dimen/base_refreshspinner_margin_left_and_right"
+                    android:layout_marginRight="@dimen/base_refreshspinner_margin_left_and_right"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/base_refreshButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:contentDescription="@string/base_refreshbutton_contentDescription"
+                    android:padding="@dimen/base_refreshbutton_padding"
+                    android:src="@drawable/base_refreshbutton_style" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/base_searchfield"
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25" />
+
+                <ImageButton
+                    android:id="@+id/base_searchfield_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:padding="5dp"
+                    android:src="@drawable/white_delete_48" />
+            </LinearLayout>
+        </ViewSwitcher>
     </LinearLayout>
 
     <android.support.v4.view.ViewPager

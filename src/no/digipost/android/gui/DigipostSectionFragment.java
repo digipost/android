@@ -173,6 +173,14 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		return false;
 	}
 
+	public void filterList(final int type, final CharSequence constraint) {
+		if (type != LetterOperations.RECEIPTS) {
+			adapterLetter.getFilter().filter(constraint);
+		} else {
+			adapterReciepts.getFilter().filter(constraint);
+		}
+	}
+
 	private void toggleRefreshSpinnerOn() {
 		BaseActivity.refreshButton.setVisibility(View.GONE);
 		BaseActivity.refreshSpinner.setVisibility(View.VISIBLE);

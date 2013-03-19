@@ -28,6 +28,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,21 +38,35 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LetterListAdapter extends ArrayAdapter<Letter> {
+	public static final String TEXT_HIGHLIGHT_COLOR = "0xFF6100";
+
 	private final Context con;
 	private final ArrayList<Letter> letters;
+	private ArrayList<Letter> filtered;
+	private final Filter filter;
 	public boolean showboxes;
 	public boolean[] checked;
 	CheckBox checkbox;
 
+	private String subjectFilterText;
+	private String creatorFilterText;
+	private String dateFilterText;
+
 	public LetterListAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects) {
 		super(context, textViewResourceId, objects);
 		con = context;
-		letters = objects;
+		filtered = objects;
+		letters = filtered;
 		showboxes = false;
+		filter = new LetterFilter();
+		subjectFilterText = null;
+		creatorFilterText = null;
+		dateFilterText = null;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -84,6 +99,18 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 			size.setText(getSizeFormatted(letters.get(position).getFileSize()));
 		}
 
+		if (creatorFilterText != null) {
+			changeFilteredTextcolor(creator, creatorFilterText);
+		}
+
+		if (subjectFilterText != null) {
+			changeFilteredTextcolor(subject, subjectFilterText);
+		}
+
+		if (dateFilterText != null) {
+			changeFilteredTextcolor(date, dateFilterText);
+		}
+
 		checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
 
 		if (checked != null) {
@@ -107,12 +134,24 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 
 	@Override
 	public Letter getItem(final int position) {
-		return letters.get(position);
+		return filtered.get(position);
+	}
+
+	@Override
+	public int getCount() {
+		return filtered.size();
+	}
+
+	@Override
+	public void remove(final Letter object) {
+		filtered.remove(object);
+		notifyDataSetChanged();
 	}
 
 	public void updateList(final ArrayList<Letter> list) {
 		letters.clear();
 		letters.addAll(list);
+		filtered = letters;
 		notifyDataSetChanged();
 	}
 
@@ -181,5 +220,73 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 			}
 		}
 		return Long.toString(bytes);
+	}
+
+	public static void changeFilteredTextcolor(final TextView v, final String filterText) {
+		int l = filterText.length();
+		int i = v.getText().toString().toLowerCase().indexOf(filterText.toLowerCase());
+		String originalText = v.getText().toString();
+
+		if (i < 0) {
+			return;
+		}
+
+		String before = originalText.substring(0, i);
+		String sub = originalText.substring(i, i + l);
+		String after = originalText.substring(i + l, v.getText().toString().length());
+
+		String convertedText = before + "<font color=" + TEXT_HIGHLIGHT_COLOR + ">" + sub + "</font>" + after;
+		v.setText(Html.fromHtml(convertedText));
+	}
+
+	@Override
+	public Filter getFilter() {
+		return (filter != null) ? filter : new LetterFilter();
+	}
+
+	private class LetterFilter extends Filter {
+		@Override
+		protected FilterResults performFiltering(final CharSequence constraint) {
+			FilterResults results = new FilterResults();
+			ArrayList<Letter> i = new ArrayList<Letter>();
+			creatorFilterText = null;
+			subjectFilterText = null;
+			dateFilterText = null;
+
+			if ((constraint != null) && (constraint.toString().length() > 0)) {
+				String constraintLowerCase = constraint.toString().toLowerCase();
+
+				for (Letter l : letters) {
+					if (l.getCreatorName().toLowerCase().contains(constraintLowerCase)) {
+						creatorFilterText = constraint.toString();
+						i.add(l);
+					} else if (l.getSubject().toLowerCase().contains(constraintLowerCase)) {
+						subjectFilterText = constraint.toString();
+						i.add(l);
+					} else if (getDateFormatted(l.getCreated()).contains(constraintLowerCase)) {
+						dateFilterText = constraint.toString();
+						i.add(l);
+					}
+				}
+
+				results.values = i;
+				results.count = i.size();
+			} else {
+
+				synchronized (letters) {
+					results.values = letters;
+					results.count = letters.size();
+				}
+			}
+
+			return results;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void publishResults(final CharSequence constraint, final FilterResults results) {
+			filtered = (ArrayList<Letter>) results.values;
+			notifyDataSetChanged();
+		}
 	}
 }
