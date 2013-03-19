@@ -29,14 +29,12 @@
     <dimen name="listitem_mail_prize_textsize">13sp</dimen>
     <dimen name="listitem_mail_document_lock_padding_top">10sp</dimen>
 
-
     <!-- PDF HTML BAR Webview Bottombar -->
     <dimen name="bottombar_image_padding_bottom_and_top">8dp</dimen>
     <dimen name="bottombar_image_width">0dp</dimen>
     <dimen name="document_backbutton_margin_right">-5dp</dimen>
     <dimen name="document_webview_height">0sp</dimen>
     <dimen name="document_pagenumber_margin_bottom">10dp</dimen>
-
 
     <!-- BaseView -->
     <dimen name="base_padding_bottom_and_top">2dp</dimen>
@@ -45,12 +43,13 @@
     <dimen name="base_refreshspinner_width_and_height">30dp</dimen>
     <dimen name="base_refreshspinner_margin_left_and_right">5dp</dimen>
     <dimen name="base_refreshspinner_marginbottom">1dp</dimen>
+    <dimen name="base_refreshspinner_margintop">8dp</dimen>
     <dimen name="base_refreshbutton_padding">5dp</dimen>
+    <dimen name="base_refreshbutton_margintop">3dp</dimen>
     <dimen name="base_pagertitlestrip_padding">5dp</dimen>
     <dimen name="base_pagertitlestrip_textsize">2dp</dimen>
     <dimen name="base_logobutton_padding">6dp</dimen>
 
-   
     <!-- LoginView -->
     <dimen name="login_margin_bottom">52dp</dimen>
     <dimen name="login_padding">20sp</dimen>
