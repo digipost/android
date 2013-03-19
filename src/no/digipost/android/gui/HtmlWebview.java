@@ -28,9 +28,7 @@ public class HtmlWebview extends Activity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println("før");
 		setContentView(R.layout.activity_html_webview);
-		System.out.println("Etter");
 		String html = getIntent().getExtras().getString(ApiConstants.FILETYPE_HTML);
 		String mime = "text/html";
 		String encoding = "utf-8";
