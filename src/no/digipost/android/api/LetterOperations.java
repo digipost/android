@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
+import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
@@ -82,13 +83,23 @@ public class LetterOperations {
 		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
 	}
 
-	public byte[] getDocumentContentPDF(final Letter letter) throws DigipostApiException, DigipostClientException {
-		ApiAccess.filesize = Integer.parseInt(letter.getFileSize());
-		return apiAccess.getDocumentContent(letter.getContentUri());
+	public byte[] getDocumentContentPDF(final Object object) throws DigipostApiException, DigipostClientException {
+		if(object instanceof Letter) {
+			ApiAccess.filesize = Integer.parseInt(((Letter)object).getFileSize());
+			return apiAccess.getDocumentContent(((Letter)object).getContentUri());
+		} else {
+			ApiAccess.filesize = Integer.parseInt(((Attachment)object).getFileSize());
+			return apiAccess.getDocumentContent(((Attachment)object).getContentUri());
+		}
 	}
 
-	public String getDocumentContentHTML(final Letter letter) throws DigipostApiException, DigipostClientException {
-		return apiAccess.getDocumentHTML(letter.getContentUri());
+	public String getDocumentContentHTML(final Object object) throws DigipostApiException, DigipostClientException {
+		if(object instanceof Letter) {
+			return apiAccess.getDocumentHTML(((Letter)object).getContentUri());
+		} else {
+			return apiAccess.getDocumentHTML(((Attachment)object).getContentUri());
+		}
+
 	}
 
 	public byte[] getReceiptContentPDF(final Receipt receipt) throws DigipostApiException, DigipostClientException {
