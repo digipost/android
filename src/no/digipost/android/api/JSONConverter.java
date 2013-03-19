@@ -92,7 +92,7 @@ public class JSONConverter {
 
 	public static StringEntity createJsonFromJackson(final Letter letter) throws ParseException, IOException {
 		// ignore-test
-		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo" };
+		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo","attachment" };
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		FilterProvider filters = new SimpleFilterProvider().addFilter("toJSON", SimpleBeanPropertyFilter.serializeAllExcept(ignore));
