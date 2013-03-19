@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- -->
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -68,12 +68,14 @@
                     android:layout_marginBottom="@dimen/base_refreshspinner_marginbottom"
                     android:layout_marginLeft="@dimen/base_refreshspinner_margin_left_and_right"
                     android:layout_marginRight="@dimen/base_refreshspinner_margin_left_and_right"
+                    android:layout_marginTop="@dimen/base_refreshspinner_margintop"
                     android:visibility="gone" />
 
                 <ImageButton
                     android:id="@+id/base_refreshButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_refreshbutton_margintop"
                     android:background="@color/transparent"
                     android:contentDescription="@string/base_refreshbutton_contentDescription"
                     android:padding="@dimen/base_refreshbutton_padding"
