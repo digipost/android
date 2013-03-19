@@ -278,6 +278,8 @@ public class PDFActivity extends Activity {
 			makeWorkareaToolbar();
 		} else if (toolbarType.equals(ApiConstants.LOCATION_ARCHIVE)) {
 			makeArchiveToolbar();
+		} else {
+			makeAttachmentToolbar();
 		}
 
 		filenameView.setText(fileName);
@@ -590,6 +592,12 @@ public class PDFActivity extends Activity {
 
 	private void makeWorkareaToolbar() {
 		toWorkarea.setVisibility(View.GONE);
+	}
+
+	private void makeAttachmentToolbar() {
+		toWorkarea.setVisibility(View.GONE);
+		toArchive.setVisibility(View.GONE);
+		delete.setVisibility(View.GONE);
 	}
 
 	void showKeyboard() {

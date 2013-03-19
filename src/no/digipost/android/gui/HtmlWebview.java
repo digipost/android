@@ -59,12 +59,16 @@ public class HtmlWebview extends Activity {
 		if (type.equals(ApiConstants.RECEIPT)) {
 			toArchive.setVisibility(View.GONE);
 			toWorkarea.setVisibility(View.GONE);
-		} else {
+		} else if(type.equals(ApiConstants.LETTER)) {
 			if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
 				toArchive.setVisibility(View.GONE);
 			} else if (from.equals(ApiConstants.LOCATION_WORKAREA)) {
 				toWorkarea.setVisibility(View.GONE);
 			}
+		} else {
+			toArchive.setVisibility(View.GONE);
+			toWorkarea.setVisibility(View.GONE);
+			delete.setVisibility(View.GONE);
 		}
 
 		toArchive.setOnClickListener(new HTMLViewListener());
