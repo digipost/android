@@ -39,7 +39,7 @@
             android:id="@+id/login_logo"
             android:layout_width="@dimen/login_logo_width"
             android:layout_height="@dimen/login_logo_height"
-            android:layout_weight="@dimen/login_logo_weight"
+            android:layout_weight="0.30"
             android:contentDescription="@string/login_header_logo_contentdescription"
             android:src="@drawable/postbox_white_medium" />
 
