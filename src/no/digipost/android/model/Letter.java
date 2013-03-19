@@ -48,6 +48,16 @@ public class Letter {
 	private String type;
 	@JsonProperty
 	private ArrayList<Link> link;
+	@JsonProperty
+	private ArrayList<Attachment> attachment;
+
+	public ArrayList<Attachment> getAttachment() {
+		return attachment;
+	}
+
+	public void setAttachment(final ArrayList<Attachment> attachment) {
+		this.attachment = attachment;
+	}
 
 	public String getSubject() {
 		return subject;
