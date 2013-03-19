@@ -67,7 +67,7 @@
 
             <TextView
                 android:id="@+id/mail_creator"
-                android:layout_width="@dimen/lisitem_mail_creator_width"
+                android:layout_width="@dimen/listitem_mail_creator_width"
                 android:layout_height="wrap_content"
                 android:layout_weight="@dimen/lisitem_mail_creator_weight"
                 android:ellipsize="end"

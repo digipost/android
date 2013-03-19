@@ -24,7 +24,7 @@
     <dimen name="listitem_mail_subject_padding_right">5sp</dimen>
     <dimen name="listitem_mail_subject_textsize">18sp</dimen>
     <dimen name="listitem_mail_date_textsize">13sp</dimen>
-    <dimen name="lisitem_mail_creator_width">0sp</dimen>
+    <dimen name="listitem_mail_creator_width">0sp</dimen>
     <dimen name="listitem_mail_creator_padding_right">5sp</dimen>
     <dimen name="listitem_mail_creator_textsize">13sp</dimen>
     <dimen name="listitem_mail_prize_padding_right">5sp</dimen>
@@ -74,6 +74,7 @@
     <dimen name="login_disclaimer_registration_button_margin_bottom">5dp</dimen>
 
     <item name="login_logo_weight" format="float" type="dimen">0.30</item>
-
-
+	
+    <!-- MainActivity -->
+	<dimen name="main_spinner_margin_bottom">31dp</dimen>
 </resources>
