@@ -252,7 +252,9 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 					if (r.getStoreName().toLowerCase().contains(constraintLowerCase)) {
 						storeNameFilterText = constraint.toString();
 						i.add(r);
-					} else if (getDateFormatted(r.getTimeOfPurchase()).contains(constraintLowerCase)) {
+					}
+
+					if (getDateFormatted(r.getTimeOfPurchase()).contains(constraintLowerCase)) {
 						dateFilterText = constraint.toString();
 						i.add(r);
 					}
