@@ -232,14 +232,14 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		listview.smoothScrollToPosition(0);
 	}
 
-	private void showAttactmentDialog(final String headertext, final ArrayList<Attachment> attachments) {
+	private void showAttactmentDialog(final ArrayList<Attachment> attachments) {
 		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setView(view);
 
 		TextView header = (TextView) view.findViewById(R.id.attachmentdialog_header);
-		header.setText("Vedlegg: " + headertext);
+		header.setText("Vedlegg:");
 		ListView attachmentlistview = (ListView) view.findViewById(R.id.attachmentdialog_listview);
 
 		attachmentlistview.setOnItemClickListener(new OnItemClickListener() {
@@ -803,7 +803,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			String filetype = mletter.getFileType();
 
 			if(mletter.getAttachment().size() > 1) {
-				showAttactmentDialog(mletter.getSubject(),mletter.getAttachment());
+				showAttactmentDialog(mletter.getAttachment());
 			} else {
 
 			if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
