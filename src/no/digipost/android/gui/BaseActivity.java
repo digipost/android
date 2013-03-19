@@ -176,6 +176,8 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		case R.id.basemenu_search:
 			showSearchBar();
 			return true;
+		case R.id.basemenu_upload:
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -189,6 +191,38 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 			topbarSwitcher.showNext();
 		}
 	}
+	/*
+	private void showUpload() {
+		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Vedlegg:");
+		builder.setView(view);
+		ListView attachmentlistview = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+
+		attachmentlistview.setOnItemClickListener(new OnItemClickListener() {
+
+			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int arg2, final long arg3) {
+				Attachment attachment  = attachments.get(arg2);
+				if(attachment.getFileType().equals(ApiConstants.FILETYPE_PDF)) {
+					GetPDFTask pdfTask = new GetPDFTask();
+					pdfTask.execute(attachment);
+				} else if (attachment.getFileType().equals(ApiConstants.FILETYPE_HTML)) {
+					GetHTMLTask htmlTask = new GetHTMLTask();
+					htmlTask.execute(ApiConstants.GET_DOCUMENT, attachment);
+				} else {
+					unsupportedActionDialog(getString(R.string.dialog_error_not_supported_filetype));
+				}
+			}
+		});
+
+		AttachmentListAdapter attachmentadapter = new AttachmentListAdapter(getActivity(), R.layout.attachentdialog_list_item,attachments);
+
+		attachmentlistview.setAdapter(attachmentadapter);
+
+		final Dialog dialog = builder.create();
+	    dialog.show();
+	} */
 
 	private void hideSearchBar() {
 		if (isSearch) {
