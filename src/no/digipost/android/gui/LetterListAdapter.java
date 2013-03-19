@@ -81,22 +81,22 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		row.setBackgroundDrawable((position % 2 == 0) ? even : odd);
 
 		TextView subject = (TextView) row.findViewById(R.id.mail_subject);
-		if (letters.get(position).getRead().equals("false")) {
+		if (filtered.get(position).getRead().equals("false")) {
 			subject.setTypeface(null, Typeface.BOLD);
 		}
-		subject.setText(letters.get(position).getSubject());
+		subject.setText(filtered.get(position).getSubject());
 
 		TextView date = (TextView) row.findViewById(R.id.mail_date);
-		date.setText(getDateFormatted(letters.get(position).getCreated()));
+		date.setText(getDateFormatted(filtered.get(position).getCreated()));
 		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
-		creator.setText(letters.get(position).getCreatorName());
+		creator.setText(filtered.get(position).getCreatorName());
 		TextView size = (TextView) row.findViewById(R.id.mail_size_price);
 		ImageView locked = (ImageView) row.findViewById(R.id.document_locked);
-		if (letters.get(position).getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+		if (filtered.get(position).getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
 			locked.setVisibility(View.VISIBLE);
 			size.setVisibility(View.INVISIBLE);
 		} else {
-			size.setText(getSizeFormatted(letters.get(position).getFileSize()));
+			size.setText(getSizeFormatted(filtered.get(position).getFileSize()));
 		}
 
 		if (creatorFilterText != null) {
@@ -236,7 +236,6 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		String after = originalText.substring(i + l, v.getText().toString().length());
 
 		String convertedText = before + "<font color=" + TEXT_HIGHLIGHT_COLOR + ">" + sub + "</font>" + after;
-		System.out.println(convertedText);
 		v.setText(Html.fromHtml(convertedText));
 	}
 
@@ -258,18 +257,24 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 				String constraintLowerCase = constraint.toString().toLowerCase();
 
 				for (Letter l : letters) {
+					boolean addLetter = false;
+
 					if (l.getCreatorName().toLowerCase().contains(constraintLowerCase)) {
 						creatorFilterText = constraint.toString();
-						i.add(l);
+						addLetter = true;
 					}
 
 					if (l.getSubject().toLowerCase().contains(constraintLowerCase)) {
 						subjectFilterText = constraint.toString();
-						i.add(l);
+						addLetter = true;
 					}
 
-					if (getDateFormatted(l.getCreated()).contains(constraintLowerCase)) {
+					if (getDateFormatted(l.getCreated()).toLowerCase().contains(constraintLowerCase)) {
 						dateFilterText = constraint.toString();
+						addLetter = true;
+					}
+
+					if (addLetter) {
 						i.add(l);
 					}
 				}

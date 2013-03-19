@@ -76,7 +76,7 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 
 		row.setBackgroundDrawable((position % 2 == 0) ? even : odd);
 
-		Receipt receipt = receipts.get(position);
+		Receipt receipt = filtered.get(position);
 
 		ArrayList<String> cards = receipt.getCard();
 		TextView cardnumber = (TextView) row.findViewById(R.id.mail_creator);
@@ -249,13 +249,19 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 				String constraintLowerCase = constraint.toString().toLowerCase();
 
 				for (Receipt r : receipts) {
+					boolean addReceipt = false;
+
 					if (r.getStoreName().toLowerCase().contains(constraintLowerCase)) {
 						storeNameFilterText = constraint.toString();
-						i.add(r);
+						addReceipt = true;
 					}
 
-					if (getDateFormatted(r.getTimeOfPurchase()).contains(constraintLowerCase)) {
+					if (getDateFormatted(r.getTimeOfPurchase()).toLowerCase().contains(constraintLowerCase)) {
 						dateFilterText = constraint.toString();
+						addReceipt = true;
+					}
+
+					if (addReceipt) {
 						i.add(r);
 					}
 				}
