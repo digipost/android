@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -191,8 +192,13 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		if (!isSearch) {
 			isSearch = true;
 			searchfield.requestFocus();
-			showKeyboard();
 			topbarSwitcher.showNext();
+			new Handler().postDelayed(new Runnable() {
+				public void run() {
+					showKeyboard();
+				}
+			}, 100);
+
 		}
 	}
 
@@ -210,9 +216,9 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	private void hideSearchBar() {
 		if (isSearch) {
 			isSearch = false;
-			hideKeyboard();
 			searchfield.setText("");
 			topbarSwitcher.showPrevious();
+			hideKeyboard();
 		}
 	}
 
