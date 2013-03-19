@@ -34,7 +34,7 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/digipost_icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Holo.NoActionBar" >
         <activity
             android:name="no.digipost.android.MainActivity"
             android:label="@string/app_name"
@@ -48,34 +48,29 @@
         <activity
             android:name="no.digipost.android.authentication.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.NoActionBar" >
+             >
         </activity>
         <activity
             android:name="no.digipost.android.gui.BaseActivity"
             android:label="@string/title_activity_base"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.NoActionBar" >
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="no.digipost.android.WebFragment"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.NoActionBar" >
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="no.digipost.android.gui.LoginActivity"
             android:hardwareAccelerated="false"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.NoActionBar" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="no.digipost.android.gui.HtmlWebview"
             android:label="@string/title_activity_html_veb_view" >
         </activity>
         <activity
-            android:name="no.digipost.android.pdf.PDFActivity"
-            android:theme="@android:style/Theme.Holo.NoActionBar" >
-
+            android:name="no.digipost.android.pdf.PDFActivity" >
         </activity>
     </application>
 
