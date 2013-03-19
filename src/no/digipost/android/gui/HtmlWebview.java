@@ -18,7 +18,7 @@ public class HtmlWebview extends Activity {
 	private ImageButton toArchive;
 	private ImageButton toWorkarea;
 	private ImageButton delete;
-	//private ImageButton share;
+	// private ImageButton share;
 	private ImageButton digipostIcon;
 	private ImageButton backButton;
 
@@ -28,8 +28,9 @@ public class HtmlWebview extends Activity {
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		System.out.println("før");
 		setContentView(R.layout.activity_html_webview);
-
+		System.out.println("Etter");
 		String html = getIntent().getExtras().getString(ApiConstants.FILETYPE_HTML);
 		String mime = "text/html";
 		String encoding = "utf-8";
@@ -53,7 +54,7 @@ public class HtmlWebview extends Activity {
 		toArchive = (ImageButton) findViewById(R.id.html_toArchive);
 		toWorkarea = (ImageButton) findViewById(R.id.html_toWorkarea);
 		delete = (ImageButton) findViewById(R.id.html_delete);
-		//share = (ImageButton) findViewById(R.id.html_share);
+		// share = (ImageButton) findViewById(R.id.html_share);
 		digipostIcon = (ImageButton) findViewById(R.id.html_digipost_icon);
 		backButton = (ImageButton) findViewById(R.id.html_backbtn);
 
@@ -71,7 +72,7 @@ public class HtmlWebview extends Activity {
 		toArchive.setOnClickListener(new HTMLViewListener());
 		toWorkarea.setOnClickListener(new HTMLViewListener());
 		delete.setOnClickListener(new HTMLViewListener());
-		//share.setOnClickListener(new HTMLViewListener());
+		// share.setOnClickListener(new HTMLViewListener());
 		digipostIcon.setOnClickListener(new HTMLViewListener());
 		backButton.setOnClickListener(new HTMLViewListener());
 	}
