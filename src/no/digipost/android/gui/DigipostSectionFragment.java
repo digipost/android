@@ -36,7 +36,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class DigipostSectionFragment extends Fragment implements FragmentCommunicator {
@@ -232,14 +231,12 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		listview.smoothScrollToPosition(0);
 	}
 
-	private void showAttactmentDialog(final String headertext, final ArrayList<Attachment> attachments) {
+	private void showAttactmentDialog(final ArrayList<Attachment> attachments) {
 		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle("Vedlegg:");
 		builder.setView(view);
-
-		TextView header = (TextView) view.findViewById(R.id.attachmentdialog_header);
-		header.setText("Vedlegg: " + headertext);
 		ListView attachmentlistview = (ListView) view.findViewById(R.id.attachmentdialog_listview);
 
 		attachmentlistview.setOnItemClickListener(new OnItemClickListener() {
@@ -251,7 +248,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 					pdfTask.execute(attachment);
 				} else if (attachment.getFileType().equals(ApiConstants.FILETYPE_HTML)) {
 					GetHTMLTask htmlTask = new GetHTMLTask();
-					//htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
+					htmlTask.execute(ApiConstants.GET_DOCUMENT, attachment);
 				} else {
 					unsupportedActionDialog(getString(R.string.dialog_error_not_supported_filetype));
 				}
@@ -636,7 +633,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				errorMessage = e.getMessage();
 				return false;
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
 				errorMessage = e.getMessage();
 				return false;
 			}
@@ -803,7 +799,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			String filetype = mletter.getFileType();
 
 			if(mletter.getAttachment().size() > 1) {
-				showAttactmentDialog(mletter.getSubject(),mletter.getAttachment());
+				showAttactmentDialog(mletter.getAttachment());
 			} else {
 
 			if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
@@ -867,7 +863,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	public void showMultiSelecetionWarning(final String text, final MultipleDocumentsTask task, final Object adapter) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Advarsel!");
 		builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
 				task.execute(adapter);

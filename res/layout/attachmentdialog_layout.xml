@@ -3,14 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    
-    <TextView
-        android:id="@+id/attachmentdialog_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:padding="8dp"/>
-    
+        
     <ListView 
         android:id="@+id/attachmentdialog_listview"
         android:layout_width="match_parent"
