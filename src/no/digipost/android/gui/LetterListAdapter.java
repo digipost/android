@@ -236,6 +236,7 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		String after = originalText.substring(i + l, v.getText().toString().length());
 
 		String convertedText = before + "<font color=" + TEXT_HIGHLIGHT_COLOR + ">" + sub + "</font>" + after;
+		System.out.println(convertedText);
 		v.setText(Html.fromHtml(convertedText));
 	}
 
@@ -260,10 +261,14 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 					if (l.getCreatorName().toLowerCase().contains(constraintLowerCase)) {
 						creatorFilterText = constraint.toString();
 						i.add(l);
-					} else if (l.getSubject().toLowerCase().contains(constraintLowerCase)) {
+					}
+
+					if (l.getSubject().toLowerCase().contains(constraintLowerCase)) {
 						subjectFilterText = constraint.toString();
 						i.add(l);
-					} else if (getDateFormatted(l.getCreated()).contains(constraintLowerCase)) {
+					}
+
+					if (getDateFormatted(l.getCreated()).contains(constraintLowerCase)) {
 						dateFilterText = constraint.toString();
 						i.add(l);
 					}
