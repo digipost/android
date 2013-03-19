@@ -89,9 +89,13 @@
 
                 <EditText
                     android:id="@+id/base_searchfield"
-                    android:layout_width="0sp"
+                    android:layout_width="@dimen/base_seach_width"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_search_margintop"
                     android:layout_weight="0.25"
+                    android:background="@color/background_red_darker"
+                    android:hint="@string/search"
+                    android:padding="@dimen/base_search_padding"
                     android:singleLine="true" />
 
                 <ImageButton
@@ -99,7 +103,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@color/transparent"
-                    android:padding="5dp"
+                    android:padding="@dimen/base_search_padding"
                     android:src="@drawable/white_delete_48" />
             </LinearLayout>
         </ViewSwitcher>
