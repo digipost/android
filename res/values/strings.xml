@@ -12,6 +12,7 @@
     <string name="close">Lukk</string>
     <string name="abort">Avbryt</string>
     <string name="loading_content">Laster innhold...</string>
+    <string name="search">Søk</string>
 
     <!-- Titles -->
     <string name="title_activity_login_view">LoginView</string>

@@ -27,6 +27,7 @@ import no.digipost.android.model.Receipt;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,20 +37,32 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Filter;
 import android.widget.TextView;
 
 public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
+	public static final String TEXT_HIGHLIGHT_COLOR = "0xFF6100";
+
 	private final Context con;
 	private final ArrayList<Receipt> receipts;
+	private ArrayList<Receipt> filtered;
+	private final Filter filter;
 	public boolean showboxes;
 	public boolean[] checked;
 	CheckBox checkbox;
 
+	private String storeNameFilterText;
+	private String dateFilterText;
+
 	public ReceiptListAdapter(final Context context, final int textViewResourceId, final ArrayList<Receipt> objects) {
 		super(context, textViewResourceId, objects);
 		con = context;
-		receipts = objects;
+		filtered = objects;
+		receipts = filtered;
 		showboxes = false;
+		filter = new ReceiptFilter();
+		storeNameFilterText = null;
+		dateFilterText = null;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -93,6 +106,14 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 
 		price.setText(amount + " " + currency);
 
+		if (storeNameFilterText != null) {
+			changeFilteredTextcolor(subject, storeNameFilterText);
+		}
+
+		if (dateFilterText != null) {
+			changeFilteredTextcolor(date, dateFilterText);
+		}
+
 		checkbox = (CheckBox) row.findViewById(R.id.mailbox_checkbox);
 
 		if (checked != null) {
@@ -115,6 +136,22 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 		return row;
 	}
 
+	@Override
+	public Receipt getItem(final int position) {
+		return filtered.get(position);
+	}
+
+	@Override
+	public int getCount() {
+		return filtered.size();
+	}
+
+	@Override
+	public void remove(final Receipt object) {
+		filtered.remove(object);
+		notifyDataSetChanged();
+	}
+
 	public void remove(final View rowView, final Receipt object) {
 		final Animation animation = AnimationUtils.loadAnimation(rowView.getContext(), R.anim.list_splashfadeout);
 		rowView.startAnimation(animation);
@@ -129,14 +166,10 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 		}, 1000);
 	}
 
-	@Override
-	public Receipt getItem(final int position) {
-		return receipts.get(position);
-	}
-
 	public void updateList(final ArrayList<Receipt> list) {
 		receipts.clear();
 		receipts.addAll(list);
+		filtered = receipts;
 		notifyDataSetChanged();
 	}
 
@@ -180,5 +213,69 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 			// Ignore
 		}
 		return formatted;
+	}
+
+	public static void changeFilteredTextcolor(final TextView v, final String filterText) {
+		int l = filterText.length();
+		int i = v.getText().toString().toLowerCase().indexOf(filterText.toLowerCase());
+		String originalText = v.getText().toString();
+
+		if (i < 0) {
+			return;
+		}
+
+		String before = originalText.substring(0, i);
+		String sub = originalText.substring(i, i + l);
+		String after = originalText.substring(i + l, v.getText().toString().length());
+
+		String convertedText = before + "<font color=" + TEXT_HIGHLIGHT_COLOR + ">" + sub + "</font>" + after;
+		v.setText(Html.fromHtml(convertedText));
+	}
+
+	@Override
+	public Filter getFilter() {
+		return (filter != null) ? filter : new ReceiptFilter();
+	}
+
+	private class ReceiptFilter extends Filter {
+		@Override
+		protected FilterResults performFiltering(final CharSequence constraint) {
+			FilterResults results = new FilterResults();
+			ArrayList<Receipt> i = new ArrayList<Receipt>();
+			storeNameFilterText = null;
+			dateFilterText = null;
+
+			if ((constraint != null) && (constraint.toString().length() > 0)) {
+				String constraintLowerCase = constraint.toString().toLowerCase();
+
+				for (Receipt r : receipts) {
+					if (r.getStoreName().toLowerCase().contains(constraintLowerCase)) {
+						storeNameFilterText = constraint.toString();
+						i.add(r);
+					} else if (getDateFormatted(r.getTimeOfPurchase()).contains(constraintLowerCase)) {
+						dateFilterText = constraint.toString();
+						i.add(r);
+					}
+				}
+
+				results.values = i;
+				results.count = i.size();
+			} else {
+
+				synchronized (receipts) {
+					results.values = receipts;
+					results.count = receipts.size();
+				}
+			}
+
+			return results;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void publishResults(final CharSequence constraint, final FilterResults results) {
+			filtered = (ArrayList<Receipt>) results.values;
+			notifyDataSetChanged();
+		}
 	}
 }
