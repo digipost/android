@@ -863,7 +863,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	public void showMultiSelecetionWarning(final String text, final MultipleDocumentsTask task, final Object adapter) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Advarsel!");
 		builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
 				task.execute(adapter);
