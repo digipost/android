@@ -60,9 +60,13 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	public LetterListAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects) {
 		super(context, textViewResourceId, objects);
 		con = context;
-		letters = objects;
+		filtered = objects;
+		letters = filtered;
 		showboxes = false;
 		filter = new LetterFilter();
+		subjectFilterText = null;
+		creatorFilterText = null;
+		dateFilterText = null;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -130,7 +134,18 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 
 	@Override
 	public Letter getItem(final int position) {
-		return letters.get(position);
+		return filtered.get(position);
+	}
+
+	@Override
+	public int getCount() {
+		return filtered.size();
+	}
+
+	@Override
+	public void remove(final Letter object) {
+		filtered.remove(object);
+		notifyDataSetChanged();
 	}
 
 	public void updateList(final ArrayList<Letter> list) {
@@ -233,6 +248,9 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		protected FilterResults performFiltering(final CharSequence constraint) {
 			FilterResults results = new FilterResults();
 			ArrayList<Letter> i = new ArrayList<Letter>();
+			creatorFilterText = null;
+			subjectFilterText = null;
+			dateFilterText = null;
 
 			if ((constraint != null) && (constraint.toString().length() > 0)) {
 				String constraintLowerCase = constraint.toString().toLowerCase();
@@ -253,9 +271,6 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 				results.values = i;
 				results.count = i.size();
 			} else {
-				creatorFilterText = null;
-				subjectFilterText = null;
-				dateFilterText = null;
 
 				synchronized (letters) {
 					results.values = letters;

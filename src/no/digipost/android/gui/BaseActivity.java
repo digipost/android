@@ -26,12 +26,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.ViewSwitcher;
 
 public class BaseActivity extends FragmentActivity implements ActivityCommunicator {
 	public static ImageButton refreshButton;
@@ -44,6 +48,9 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ButtonListener buttonListener;
 	private ViewPager mViewPager;
+	private ViewSwitcher topbarSwitcher;
+	private EditText searchfield;
+	private ImageButton searchClose;
 
 	private int currentViewIndex;
 
@@ -79,6 +86,28 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 			}
 
 			public void onPageScrollStateChanged(final int arg0) {
+
+			}
+		});
+
+		topbarSwitcher = (ViewSwitcher) findViewById(R.id.base_topbar_switcher);
+		searchClose = (ImageButton) findViewById(R.id.base_searchfield_close);
+		searchClose.setOnClickListener(new ButtonListener());
+		searchfield = (EditText) findViewById(R.id.base_searchfield);
+		searchfield.addTextChangedListener(new TextWatcher() {
+
+			public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+				DigipostSectionFragment fragment = getFragment(currentViewIndex);
+				fragment.filterList(currentViewIndex, s);
+			}
+
+			public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void afterTextChanged(final Editable s) {
+				// TODO Auto-generated method stub
 
 			}
 		});
@@ -138,21 +167,34 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		case R.id.basemenu_receipts:
 			mViewPager.setCurrentItem(3, true);
 			return true;
+		case R.id.basemenu_search:
+			showSearchBar();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
+	private void showSearchBar() {
+		topbarSwitcher.showNext();
+	}
+
+	private void hideSearchBar() {
+		topbarSwitcher.showPrevious();
+	}
+
 	private class ButtonListener implements OnClickListener {
 
 		public void onClick(final View v) {
-			if (v == optionsButton) {
+			if (v.equals(optionsButton)) {
 				openOptionsMenu();
-			} else if (v == refreshButton) {
+			} else if (v.equals(refreshButton)) {
 				loadAccountMetaComplete();
 				// loadAccountMeta(mViewPager.getCurrentItem());
-			} else if (v == logoButton) {
+			} else if (v.equals(logoButton)) {
 				scrollListToTop(mViewPager.getCurrentItem());
+			} else if (v.equals(searchClose)) {
+				hideSearchBar();
 			}
 		}
 	}
