@@ -69,7 +69,6 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			public void onPageSelected(final int arg0) {
-				System.out.println("index: " + currentViewIndex);
 				DigipostSectionFragment fragment = getFragment(currentViewIndex);
 				fragment.toggleMultiselectionOff(currentViewIndex);
 				currentViewIndex = arg0;

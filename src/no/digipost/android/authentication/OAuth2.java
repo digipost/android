@@ -70,7 +70,7 @@ public class OAuth2 {
 
 		if (!stateVerified(url_state)) {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-		} else if (!authenticationVerified(data.getId_token(), Secret.CLIENT_SECRET)) {
+		} else if (!authenticationVerified(data.getId_token())) {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
 
@@ -119,7 +119,7 @@ public class OAuth2 {
 			cr = r.queryParams(params)
 					.header(ApiConstants.POST, ApiConstants.POST_API_ACCESSTOKEN_HTTP)
 					.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_FORM_URLENCODED)
-					.header(ApiConstants.AUTHORIZATION, getB64Auth(Secret.CLIENT_ID, Secret.CLIENT_SECRET))
+					.header(ApiConstants.AUTHORIZATION, getB64Auth())
 					.post(ClientResponse.class);
 		} catch (Exception e) {
 			throw new DigipostClientException(context.getString(R.string.error_your_network));
@@ -131,7 +131,7 @@ public class OAuth2 {
 		return (Access) JSONConverter.processJackson(Access.class, cr.getEntityInputStream());
 	}
 
-	private static boolean authenticationVerified(final String id_token, final String client_secret) {
+	private static boolean authenticationVerified(final String id_token) {
 		String split_by = ".";
 		int splitindex = id_token.indexOf(split_by);
 
@@ -139,7 +139,7 @@ public class OAuth2 {
 		String token_value_enc = id_token.substring(splitindex + split_by.length(), id_token.length());
 		String signature_dec = new String(Base64.decode(signature_enc.getBytes(), Base64.DEFAULT));
 
-		if (!encryptHmacSHA256(token_value_enc, Secret.CLIENT_SECRET).equals(signature_dec)) {
+		if (!encryptHmacSHA256(token_value_enc).equals(signature_dec)) {
 			return false;
 		}
 
@@ -161,8 +161,8 @@ public class OAuth2 {
 		return new BigInteger(130, random).toString(32);
 	}
 
-	private static String encryptHmacSHA256(final String data, final String key) {
-		SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(), ApiConstants.HMACSHA256);
+	private static String encryptHmacSHA256(final String data) {
+		SecretKeySpec secretKey = new SecretKeySpec(Secret.CLIENT_SECRET.getBytes(), ApiConstants.HMACSHA256);
 		Mac mac = null;
 		try {
 			mac = Mac.getInstance(ApiConstants.HMACSHA256);
@@ -176,8 +176,8 @@ public class OAuth2 {
 		return new String(hmacData);
 	}
 
-	private static String getB64Auth(final String id, final String secret) {
-		String source = id + ":" + secret;
+	private static String getB64Auth() {
+		String source = Secret.CLIENT_ID + ":" + Secret.CLIENT_SECRET;
 		return ApiConstants.BASIC + Base64.encodeToString(source.getBytes(), Base64.URL_SAFE | Base64.NO_WRAP);
 	}
 }
