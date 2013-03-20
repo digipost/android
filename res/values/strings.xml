@@ -13,6 +13,7 @@
     <string name="abort">Avbryt</string>
     <string name="loading_content">Laster innhold...</string>
     <string name="search">Søk</string>
+    <string name="upload">Last opp...</string>
 
     <!-- Titles -->
     <string name="title_activity_login_view">LoginView</string>

@@ -17,6 +17,8 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,6 +33,7 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -178,6 +181,9 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		case R.id.basemenu_search:
 			showSearchBar();
 			return true;
+		case R.id.basemenu_upload:
+			showUpload();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -195,6 +201,17 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 			}, 100);
 
 		}
+	}
+
+	private void showUpload() {
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.uploaddialog_layout, null);
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Velg kilde");
+		builder.setView(view);
+
+		final Dialog dialog = builder.create();
+	    dialog.show();
 	}
 
 	private void hideSearchBar() {
