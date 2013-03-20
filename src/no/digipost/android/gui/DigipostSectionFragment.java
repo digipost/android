@@ -237,18 +237,32 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		listview.smoothScrollToPosition(0);
 	}
 
-	private void showAttactmentDialog(final ArrayList<Attachment> attachments) {
+	private void showAttachmentDialog(final ArrayList<Attachment> attachments) {
 		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Vedlegg:");
 		builder.setView(view);
+
+		/*
+		 * TextView mainTitle = (TextView)
+		 * view.findViewById(R.id.attachmentdialog_mainDocument); TextView
+		 * mainType = (TextView)
+		 * view.findViewById(R.id.attachmentdialog_mainDocument_filetype);
+		 * TextView mainSize = (TextView)
+		 * view.findViewById(R.id.attachmentdialog_mainDocument_filesize);
+		 */
 		ListView attachmentlistview = (ListView) view.findViewById(R.id.attachmentdialog_listview);
 
 		attachmentlistview.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(final AdapterView<?> arg0, final View arg1, final int arg2, final long arg3) {
 				Attachment attachment = attachments.get(arg2);
+
+				if (attachment.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+					unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor),getString(R.string.dialog_error_two_factor));
+					return;
+				}
+
 				if (attachment.getFileType().equals(ApiConstants.FILETYPE_PDF)) {
 					GetPDFTask pdfTask = new GetPDFTask();
 					pdfTask.execute(attachment);
@@ -256,12 +270,21 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(ApiConstants.GET_DOCUMENT, attachment);
 				} else {
-					unsupportedActionDialog(getString(R.string.dialog_error_not_supported_filetype));
+					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),getString(R.string.dialog_error_not_supported_filetype));
 				}
 			}
 		});
 
 		AttachmentListAdapter attachmentadapter = new AttachmentListAdapter(getActivity(), R.layout.attachentdialog_list_item, attachments);
+		/*
+		 * Attachment main = attachmentadapter.findMain();
+		 * attachmentadapter.remove(main);
+		 *
+		 * mainTitle.setText(main.getSubject());
+		 * mainType.setText(main.getFileType());
+		 * mainSize.setText(attachmentadapter
+		 * .getSizeFormatted(main.getFileSize()));
+		 */
 
 		attachmentlistview.setAdapter(attachmentadapter);
 
@@ -298,10 +321,10 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		}
 	}
 
-	private void unsupportedActionDialog(final String text) {
+	private void unsupportedActionDialog(final String header,final String text) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-		builder.setTitle(R.string.dialog_error_header)
+		builder.setTitle(header)
 				.setMessage(text)
 				.setCancelable(false)
 				.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
@@ -798,14 +821,15 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			Letter mletter = adapterLetter.getItem(position);
 
 			if (mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-				unsupportedActionDialog(getString(R.string.dialog_error_two_factor));
+				unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor),getString(R.string.dialog_error_two_factor));
 				return;
 			}
 
 			String filetype = mletter.getFileType();
 
 			if (mletter.getAttachment().size() > 1) {
-				showAttactmentDialog(mletter.getAttachment());
+				showAttachmentDialog(mletter.getAttachment());
+				tempLetter = mletter;
 			} else {
 
 				if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
@@ -815,7 +839,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
 				} else {
-					unsupportedActionDialog(getString(R.string.dialog_error_not_supported_filetype));
+					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),getString(R.string.dialog_error_not_supported_filetype));
 					return;
 				}
 
@@ -887,22 +911,30 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		public void onClick(final View v) {
 			MultipleDocumentsTask multipleDocumentsTask = null;
 			boolean[] checkedlist = null;
+			int page = getArguments().getInt(ARG_SECTION_NUMBER) +1;
 
 			if (adapterLetter != null && adapterLetter.checkedCount() > 0) {
 				checkedlist = adapterLetter.getCheckedDocuments();
 
 				if (v.equals(moveToWorkarea)) {
+
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
-					showMultiSelecetionWarning("Vil du flytte " + adapterLetter.checkedCount() + " brev til "
-							+ getString(R.string.workarea) + "?", multipleDocumentsTask, adapterLetter);
+					showMultiSelecetionWarning(
+							"Vil du flytte " + adapterLetter.checkedCount() + " "
+									+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? "dokumenter" : "dokument") : "brev") + " til "
+									+ getString(R.string.workarea) + "?", multipleDocumentsTask, adapterLetter);
 				} else if (v.equals(moveToArchive)) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_ARCHIVE, checkedlist);
-					showMultiSelecetionWarning("Vil du flytte " + adapterLetter.checkedCount() + " brev til arkivet?",
-							multipleDocumentsTask, adapterLetter);
+					showMultiSelecetionWarning(
+							"Vil du flytte " + adapterLetter.checkedCount() + " "
+									+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? "dokumenter" : "dokument") : "brev")
+									+ " til arkivet?", multipleDocumentsTask, adapterLetter);
 				} else if (v.equals(delete)) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
-					showMultiSelecetionWarning("Vil du slette " + adapterLetter.checkedCount() + " brev?", multipleDocumentsTask,
-							adapterLetter);
+					showMultiSelecetionWarning(
+							"Vil du slette " + adapterLetter.checkedCount() + " "
+									+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? "dokumenter" : "dokument") : "brev") + "?",
+							multipleDocumentsTask, adapterLetter);
 				}
 			} else if (adapterReciepts != null && adapterReciepts.checkedCount() > 0) {
 				checkedlist = adapterReciepts.getCheckedDocuments();

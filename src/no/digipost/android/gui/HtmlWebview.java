@@ -59,7 +59,7 @@ public class HtmlWebview extends Activity {
 		if (type.equals(ApiConstants.RECEIPT)) {
 			toArchive.setVisibility(View.GONE);
 			toWorkarea.setVisibility(View.GONE);
-		} else if(type.equals(ApiConstants.LETTER)) {
+		} else if (type.equals(ApiConstants.LETTER)) {
 			if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
 				toArchive.setVisibility(View.GONE);
 			} else if (from.equals(ApiConstants.LOCATION_WORKAREA)) {
@@ -108,13 +108,35 @@ public class HtmlWebview extends Activity {
 
 		public void onClick(final View v) {
 			if (v.getId() == R.id.html_toArchive) {
-				showWarning(getString(R.string.dialog_prompt_toArchive), ApiConstants.LOCATION_ARCHIVE);
+				String message = "";
+				if (type.equals(ApiConstants.LETTER)) {
+					message = getString(R.string.dialog_prompt_letter_toArchive);
+				} else {
+					message = getString(R.string.dialog_prompt_document_toArchive);
+				}
+				showWarning(message, ApiConstants.LOCATION_ARCHIVE);
 			} else if (v.getId() == R.id.html_toWorkarea) {
-				showWarning(getString(R.string.dialog_prompt_toWorkarea), ApiConstants.LOCATION_WORKAREA);
+				String message = "";
+				if (type.equals(ApiConstants.LETTER)) {
+					message = getString(R.string.dialog_prompt_letter_toWorkarea);
+				} else {
+					message = getString(R.string.dialog_prompt_document_toWorkarea);
+				}
+				showWarning(message, ApiConstants.LOCATION_WORKAREA);
 			} else if (v.getId() == R.id.html_digipost_icon) {
 				finish();
 			} else if (v.getId() == R.id.html_delete) {
-				showWarning(getString(R.string.dialog_prompt_delete), ApiConstants.DELETE);
+
+				String message = "";
+				if (type.equals(ApiConstants.LETTER)) {
+					message = getString(R.string.dialog_prompt_delete_letter);
+				} else if (type.equals(ApiConstants.RECEIPT)) {
+					message = getString(R.string.dialog_prompt_delete_receipt);
+				} else {
+					message = getString(R.string.dialog_prompt_delete_document);
+				}
+				showWarning(message, ApiConstants.DELETE);
+
 			}
 		}
 	}

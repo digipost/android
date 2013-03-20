@@ -25,10 +25,13 @@ import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.model.Letter;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
-import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +46,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class LetterListAdapter extends ArrayAdapter<Letter> {
-	public static final String TEXT_HIGHLIGHT_COLOR = "0xFF6100";
+	public static final String TEXT_HIGHLIGHT_COLOR = "#EBEB86";
 
 	private final Context con;
 	private final ArrayList<Letter> letters;
@@ -91,6 +94,10 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
 		creator.setText(filtered.get(position).getCreatorName());
 		TextView size = (TextView) row.findViewById(R.id.mail_size_price);
+		ImageView attachment = (ImageView) row.findViewById(R.id.document_attachment);
+		if (filtered.get(position).getAttachment().size() > 1) {
+			attachment.setVisibility(View.VISIBLE);
+		}
 		ImageView locked = (ImageView) row.findViewById(R.id.document_locked);
 		if (filtered.get(position).getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
 			locked.setVisibility(View.VISIBLE);
@@ -225,18 +232,14 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	public static void changeFilteredTextcolor(final TextView v, final String filterText) {
 		int l = filterText.length();
 		int i = v.getText().toString().toLowerCase().indexOf(filterText.toLowerCase());
-		String originalText = v.getText().toString();
 
 		if (i < 0) {
 			return;
 		}
 
-		String before = originalText.substring(0, i);
-		String sub = originalText.substring(i, i + l);
-		String after = originalText.substring(i + l, v.getText().toString().length());
-
-		String convertedText = before + "<font color=" + TEXT_HIGHLIGHT_COLOR + ">" + sub + "</font>" + after;
-		v.setText(Html.fromHtml(convertedText));
+		Spannable sb = new SpannableString(v.getText().toString());
+		sb.setSpan(new BackgroundColorSpan(Color.parseColor(TEXT_HIGHLIGHT_COLOR)), i, i + l, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		v.setText(sb);
 	}
 
 	public void clearFilter() {

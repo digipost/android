@@ -22,6 +22,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textColor="@color/black_subject"
                 android:paddingRight="@dimen/listitem_mail_subject_padding_right"
                 android:singleLine="true"
                 android:textSize="@dimen/listitem_mail_subject_textsize" />
