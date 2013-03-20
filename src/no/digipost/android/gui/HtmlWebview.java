@@ -59,7 +59,7 @@ public class HtmlWebview extends Activity {
 		if (type.equals(ApiConstants.RECEIPT)) {
 			toArchive.setVisibility(View.GONE);
 			toWorkarea.setVisibility(View.GONE);
-		} else if(type.equals(ApiConstants.LETTER)) {
+		} else if (type.equals(ApiConstants.LETTER)) {
 			if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
 				toArchive.setVisibility(View.GONE);
 			} else if (from.equals(ApiConstants.LOCATION_WORKAREA)) {
@@ -114,7 +114,17 @@ public class HtmlWebview extends Activity {
 			} else if (v.getId() == R.id.html_digipost_icon) {
 				finish();
 			} else if (v.getId() == R.id.html_delete) {
-				showWarning(getString(R.string.dialog_prompt_delete), ApiConstants.DELETE);
+
+				String message = "";
+				if (type.equals(ApiConstants.LETTER)) {
+					message = getString(R.string.dialog_prompt_delete_letter);
+				} else if (type.equals(ApiConstants.RECEIPT)) {
+					message = getString(R.string.dialog_prompt_delete_receipt);
+				} else {
+					message = getString(R.string.dialog_prompt_delete_document);
+				}
+				showWarning(message, ApiConstants.DELETE);
+
 			}
 		}
 	}

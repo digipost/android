@@ -67,7 +67,9 @@
     <!-- Prompts -->
     <string name="dialog_prompt_toArchive">Er du sikker på at du vil flytte brevet til arkivet?</string>
     <string name="dialog_prompt_toWorkarea">Er du sikker på at du vil flytte brevet til kjøkkenbenk?</string>
-    <string name="dialog_prompt_delete">Er du sikker på at du vil slette brevet?</string>
+    <string name="dialog_prompt_delete_letter">Er du sikker på at du vil slette dette brevet?</string>
+    <string name="dialog_prompt_delete_receipt">Er du sikker på at du vil slette denne kvitteringen?</string>
+    <string name="dialog_prompt_delete_document">Er du sikker på at du vil slette dette dokumentet?</string>
     <string name="dialog_error_header">Ustøttet filtype.</string>
     <string name="dialog_error_not_supported_filetype">Digipost for Android støtter ikke denne filtypen.</string>
     <string name="dialog_error_two_factor">Dette brevet krever autentisering med Bank ID. Logg inn på Digipost.no for å se innholdet.</string>
