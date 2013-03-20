@@ -894,6 +894,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				checkedlist = adapterLetter.getCheckedDocuments();
 
 				if (v.equals(moveToWorkarea)) {
+
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
 					showMultiSelecetionWarning("Vil du flytte " + adapterLetter.checkedCount() + " brev til "
 							+ getString(R.string.workarea) + "?", multipleDocumentsTask, adapterLetter);

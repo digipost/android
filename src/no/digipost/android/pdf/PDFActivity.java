@@ -122,7 +122,7 @@ public class PDFActivity extends Activity {
 	private ImageButton toArchive;
 	private ImageButton toWorkarea;
 	private ImageButton delete;
-	//private ImageButton share;
+	// private ImageButton share;
 	private ImageButton digipostIcon;
 	private SafeAsyncTask<Void, Integer, SearchTaskResult> searchTask;
 	private AlertDialog.Builder alertBuilder;
@@ -272,7 +272,7 @@ public class PDFActivity extends Activity {
 
 		makeButtonsView();
 
-		String toolbarType = intent.getExtras().getString(ApiConstants.LOCATION_FROM);
+		final String toolbarType = intent.getExtras().getString(ApiConstants.LOCATION_FROM);
 
 		if (toolbarType.equals(ApiConstants.LOCATION_WORKAREA)) {
 			makeWorkareaToolbar();
@@ -318,7 +318,6 @@ public class PDFActivity extends Activity {
 				if (actionId == EditorInfo.IME_ACTION_SEARCH) {
 					search(1);
 				}
-				System.out.println("søk1");
 				return false;
 			}
 		});
@@ -359,21 +358,41 @@ public class PDFActivity extends Activity {
 		toArchive.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(final View v) {
-				showWarning(getString(R.string.dialog_prompt_toArchive), ApiConstants.LOCATION_ARCHIVE);
+				String message = "";
+				if (toolbarType.equals(ApiConstants.LOCATION_INBOX)) {
+					message = getString(R.string.dialog_prompt_letter_toArchive);
+				} else {
+					message = getString(R.string.dialog_prompt_document_toArchive);
+				}
+
+				showWarning(message, ApiConstants.LOCATION_ARCHIVE);
 			}
 		});
 
 		toWorkarea.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(final View v) {
-				showWarning(getString(R.string.dialog_prompt_toWorkarea), ApiConstants.LOCATION_WORKAREA);
+				String message = "";
+				if (toolbarType.equals(ApiConstants.LOCATION_INBOX)) {
+					message = getString(R.string.dialog_prompt_letter_toWorkarea);
+				} else {
+					message = getString(R.string.dialog_prompt_document_toWorkarea);
+				}
+				showWarning(message, ApiConstants.LOCATION_WORKAREA);
 			}
 		});
 
 		delete.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(final View v) {
-				showWarning(getString(R.string.dialog_prompt_delete), ApiConstants.DELETE);
+				String message = "";
+
+				if (toolbarType.equals(ApiConstants.LOCATION_INBOX)) {
+					message = getString(R.string.dialog_prompt_delete_letter);
+				} else {
+					message = getString(R.string.dialog_prompt_delete_document);
+				}
+				showWarning(message, ApiConstants.DELETE);
 			}
 		});
 
@@ -397,10 +416,10 @@ public class PDFActivity extends Activity {
 
 	public void singleLetterOperation(final String action) {
 		Intent i = new Intent(PDFActivity.this, BaseActivity.class);
-		i.putExtra(ApiConstants.LOCATION_FROM,intent.getExtras().getString(ApiConstants.LOCATION_FROM));
+		i.putExtra(ApiConstants.LOCATION_FROM, intent.getExtras().getString(ApiConstants.LOCATION_FROM));
 		i.putExtra(ApiConstants.ACTION, action);
-		i.putExtra(ApiConstants.DOCUMENT_TYPE,ApiConstants.LETTER);
-		setResult(RESULT_OK,i);
+		i.putExtra(ApiConstants.DOCUMENT_TYPE, ApiConstants.LETTER);
+		setResult(RESULT_OK, i);
 		finish();
 	}
 
@@ -578,7 +597,7 @@ public class PDFActivity extends Activity {
 		toWorkarea = (ImageButton) buttonsView.findViewById(R.id.pdf_toWorkarea);
 		toArchive = (ImageButton) buttonsView.findViewById(R.id.pdf_toArchive);
 		delete = (ImageButton) buttonsView.findViewById(R.id.pdf_delete);
-		//share = (ImageButton) buttonsView.findViewById(R.id.pdf_share);
+		// share = (ImageButton) buttonsView.findViewById(R.id.pdf_share);
 		digipostIcon = (ImageButton) buttonsView.findViewById(R.id.pdf_digipost_icon);
 
 		pageNumberView.setVisibility(View.INVISIBLE);
