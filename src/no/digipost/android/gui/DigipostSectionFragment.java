@@ -11,7 +11,7 @@ import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
-import no.digipost.android.pdf.PdfStore;
+import no.digipost.android.pdf.PDFStore;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -46,7 +46,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	private ActivityCommunicator activityCommunicator;
 
-	private static NetworkConnection networkConnection;
 	private static LetterOperations lo;
 	private LetterListAdapter adapterLetter;
 	private ReceiptListAdapter adapterReciepts;
@@ -70,7 +69,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		lo = new LetterOperations(getActivity().getApplicationContext());
-		networkConnection = new NetworkConnection(getActivity().getApplicationContext());
 		fragmentsRefreshing = new boolean[4];
 
 		progressDialog = new ProgressDialog(getActivity());
@@ -485,12 +483,12 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			} else {
 				if (letter != null) {
 					tempLetter = letter;
-					PdfStore.pdf = result;
+					PDFStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
 					i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
 					startActivityForResult(i, REQUESTCODE_INTENT);
 				} else {
-					PdfStore.pdf = result;
+					PDFStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
 					i.putExtra(ApiConstants.LOCATION_FROM, "");
 					startActivityForResult(i, REQUESTCODE_INTENT);
@@ -923,7 +921,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUESTCODE_INTENT) {
-			PdfStore.pdf = null;
+			PDFStore.pdf = null;
 
 			if (resultCode == Activity.RESULT_OK) {
 				String action = data.getExtras().getString(ApiConstants.ACTION);
