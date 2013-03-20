@@ -274,7 +274,9 @@ public class PDFActivity extends Activity {
 
 		final String toolbarType = intent.getExtras().getString(ApiConstants.LOCATION_FROM);
 
-		if (toolbarType.equals(ApiConstants.LOCATION_WORKAREA)) {
+		if (toolbarType.equals(ApiConstants.LOCATION_INBOX)) {
+			makeInboxToolbar();
+		} else if (toolbarType.equals(ApiConstants.LOCATION_WORKAREA)) {
 			makeWorkareaToolbar();
 		} else if (toolbarType.equals(ApiConstants.LOCATION_ARCHIVE)) {
 			makeArchiveToolbar();
@@ -603,6 +605,10 @@ public class PDFActivity extends Activity {
 		pageNumberView.setVisibility(View.INVISIBLE);
 		bottombar.setVisibility(View.INVISIBLE);
 		topbar.setVisibility(View.VISIBLE);
+	}
+
+	private void makeInboxToolbar() {
+
 	}
 
 	private void makeArchiveToolbar() {

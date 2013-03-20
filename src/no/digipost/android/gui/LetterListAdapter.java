@@ -91,6 +91,10 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		TextView creator = (TextView) row.findViewById(R.id.mail_creator);
 		creator.setText(filtered.get(position).getCreatorName());
 		TextView size = (TextView) row.findViewById(R.id.mail_size_price);
+		ImageView attachment = (ImageView) row.findViewById(R.id.document_attachment);
+		if(filtered.get(position).getAttachment().size() > 1) {
+			attachment.setVisibility(View.VISIBLE);
+		}
 		ImageView locked = (ImageView) row.findViewById(R.id.document_locked);
 		if (filtered.get(position).getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
 			locked.setVisibility(View.VISIBLE);
