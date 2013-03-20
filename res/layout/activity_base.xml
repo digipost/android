@@ -93,16 +93,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/base_search_margintop"
                     android:layout_weight="0.25"
-                    android:background="@color/background_red_darker"
+                    android:background="@color/base_searchfield_background"
                     android:hint="@string/search"
-                    android:textColorHint="@color/white"
                     android:padding="@dimen/base_search_padding"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textColorHint="@color/white"
+                    android:textStyle="normal" />
 
                 <ImageButton
                     android:id="@+id/base_searchfield_close"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_searchfield_close_margin_top"
                     android:background="@color/transparent"
                     android:padding="@dimen/base_search_padding"
                     android:src="@drawable/white_delete_48" />
