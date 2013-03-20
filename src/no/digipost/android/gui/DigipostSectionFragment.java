@@ -243,8 +243,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle("Velg dokument");
 		builder.setView(view);
+
 		/*
 		 * TextView mainTitle = (TextView)
 		 * view.findViewById(R.id.attachmentdialog_mainDocument); TextView
