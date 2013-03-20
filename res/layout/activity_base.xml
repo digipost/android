@@ -95,6 +95,7 @@
                     android:layout_weight="0.25"
                     android:background="@color/background_red_darker"
                     android:hint="@string/search"
+                    android:textColorHint="@color/white"
                     android:padding="@dimen/base_search_padding"
                     android:singleLine="true" />
 

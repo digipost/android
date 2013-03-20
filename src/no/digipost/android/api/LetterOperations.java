@@ -39,11 +39,12 @@ public class LetterOperations {
 	public static final int ARCHIVE = 2;
 	public static final int RECEIPTS = 3;
 
-	private static PrimaryAccount primaryAccount = null;
+	private static PrimaryAccount primaryAccount;
 	private static ApiAccess apiAccess;
 
 	public LetterOperations(final Context context) {
 		apiAccess = new ApiAccess(context);
+		primaryAccount = null;
 	}
 
 	public PrimaryAccount getPrimaryAccount() throws DigipostApiException, DigipostClientException {
@@ -84,20 +85,20 @@ public class LetterOperations {
 	}
 
 	public byte[] getDocumentContentPDF(final Object object) throws DigipostApiException, DigipostClientException {
-		if(object instanceof Letter) {
-			ApiAccess.filesize = Integer.parseInt(((Letter)object).getFileSize());
-			return apiAccess.getDocumentContent(((Letter)object).getContentUri());
+		if (object instanceof Letter) {
+			ApiAccess.filesize = Integer.parseInt(((Letter) object).getFileSize());
+			return apiAccess.getDocumentContent(((Letter) object).getContentUri());
 		} else {
-			ApiAccess.filesize = Integer.parseInt(((Attachment)object).getFileSize());
-			return apiAccess.getDocumentContent(((Attachment)object).getContentUri());
+			ApiAccess.filesize = Integer.parseInt(((Attachment) object).getFileSize());
+			return apiAccess.getDocumentContent(((Attachment) object).getContentUri());
 		}
 	}
 
 	public String getDocumentContentHTML(final Object object) throws DigipostApiException, DigipostClientException {
-		if(object instanceof Letter) {
-			return apiAccess.getDocumentHTML(((Letter)object).getContentUri());
+		if (object instanceof Letter) {
+			return apiAccess.getDocumentHTML(((Letter) object).getContentUri());
 		} else {
-			return apiAccess.getDocumentHTML(((Attachment)object).getContentUri());
+			return apiAccess.getDocumentHTML(((Attachment) object).getContentUri());
 		}
 
 	}
