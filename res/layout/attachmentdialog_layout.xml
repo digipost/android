@@ -20,8 +20,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Velg dokument"
             android:paddingLeft="5dp"
+            android:text="Vedlegg"
             android:textColor="@color/black_subject"
             android:textSize="23sp" />
     </LinearLayout>
