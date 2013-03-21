@@ -277,10 +277,14 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		});
 
 		AttachmentListAdapter attachmentadapter = new AttachmentListAdapter(getActivity(), R.layout.attachentdialog_list_item, attachments);
+		Attachment main = attachmentadapter.findMain();
+		attachmentadapter.remove(main);
+		attachmentadapter.insert(main, 0);
+
 		/*
 		 * Attachment main = attachmentadapter.findMain();
 		 * attachmentadapter.remove(main);
-		 * 
+		 *
 		 * mainTitle.setText(main.getSubject());
 		 * mainType.setText(main.getFileType());
 		 * mainSize.setText(attachmentadapter
