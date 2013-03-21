@@ -29,7 +29,7 @@
             android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
             android:paddingRight="@dimen/bottombar_image_padding_bottom_and_top"
             android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
-            android:src="@drawable/white_postbox_48" />
+            android:src="@drawable/white_mailbox_48" />
     </LinearLayout>
 
     <WebView
