@@ -64,10 +64,10 @@
     <dimen name="login_loginbutton_padding_bottom_top">5dp</dimen>
     <dimen name="login_loginbutton_paddingdrawable">2dp</dimen>
     <dimen name="login_loginbutton_textsize">14sp</dimen>
-    <dimen name="login_disclaimer_registration_button_padding">10dp</dimen>
-    <dimen name="login_disclaimer_registration_button_margin_left_right_top">10dp</dimen>
-    <dimen name="login_disclaimer_registration_button_margin_bottom">5dp</dimen>
-
+    <dimen name="login_disclaimer_registration_buttons_padding">10dp</dimen>
+    <dimen name="login_disclaimer_registration_buttons_margin_left_right_top">10dp</dimen>
+    <dimen name="login_disclaimer_registration_buttons_margin_bottom">5dp</dimen>
+	<dimen name="login_disclaimer_registration_buttons_corners">4dp</dimen>
     <!-- MainActivity -->
     <dimen name="main_spinner_margin_bottom">31dp</dimen>
 

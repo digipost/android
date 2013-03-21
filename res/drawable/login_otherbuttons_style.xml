@@ -2,19 +2,12 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true"><shape>
-            <solid android:color="#292B2E" />
-
-            <stroke android:width="1dp" android:color="#222426" />
-
-            <corners android:radius="3dp" />
+            <solid android:color="@color/login_disclamer_registration_buttons_background_pressed" />
+            <corners android:radius="4dp" />
         </shape></item>
     <item><shape>
-            <solid android:color="#323538" />
-
-            <stroke android:width="1dp" android:color="#2a2d2f" />
-
-            <corners android:radius="3dp" />
-
+            <solid android:color="@color/login_disclamer_registration_buttons_background_normal" />
+            <corners android:radius="@dimen/login_disclaimer_registration_buttons_corners" />
         </shape></item>
 
 </selector>
