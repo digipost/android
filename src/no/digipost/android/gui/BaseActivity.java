@@ -36,13 +36,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupMenu;
+import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.ViewSwitcher;
 
@@ -158,40 +159,21 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		finish();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(final Menu menu) {
-		getMenuInflater().inflate(R.menu.activity_base, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(final MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.basemenu_logoutOption:
-			logOut();
-			return true;
-		case R.id.basemenu_mailbox:
-			mViewPager.setCurrentItem(0, true);
-			return true;
-		case R.id.basemenu_workarea:
-			mViewPager.setCurrentItem(1, true);
-			return true;
-		case R.id.basemenu_archive:
-			mViewPager.setCurrentItem(2, true);
-			return true;
-		case R.id.basemenu_receipts:
-			mViewPager.setCurrentItem(3, true);
-			return true;
-		case R.id.basemenu_search:
-			showSearchBar();
-			return true;
-		case R.id.basemenu_upload:
-			showUpload();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+	/*
+	 * @Override public boolean onCreateOptionsMenu(final Menu menu) {
+	 * getMenuInflater().inflate(R.menu.activity_base, menu); return true; }
+	 * 
+	 * @Override public boolean onOptionsItemSelected(final MenuItem item) {
+	 * switch (item.getItemId()) { case R.id.basemenu_logoutOption: logOut();
+	 * return true; case R.id.basemenu_mailbox: mViewPager.setCurrentItem(0,
+	 * true); return true; case R.id.basemenu_workarea:
+	 * mViewPager.setCurrentItem(1, true); return true; case
+	 * R.id.basemenu_archive: mViewPager.setCurrentItem(2, true); return true;
+	 * case R.id.basemenu_receipts: mViewPager.setCurrentItem(3, true); return
+	 * true; case R.id.basemenu_search: showSearchBar(); return true; case
+	 * R.id.basemenu_upload: showUpload(); return true; default: return
+	 * super.onOptionsItemSelected(item); } }
+	 */
 
 	private void showSearchBar() {
 		if (!isSearch) {
@@ -234,6 +216,41 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		}
 	}
 
+	public void showMenu(final View v) {
+		PopupMenu popup = new PopupMenu(this, v);
+		popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			public boolean onMenuItemClick(final MenuItem item) {
+				switch (item.getItemId()) {
+				case R.id.basemenu_logoutOption:
+					logOut();
+					return true;
+				case R.id.basemenu_mailbox:
+					mViewPager.setCurrentItem(0, true);
+					return true;
+				case R.id.basemenu_workarea:
+					mViewPager.setCurrentItem(1, true);
+					return true;
+				case R.id.basemenu_archive:
+					mViewPager.setCurrentItem(2, true);
+					return true;
+				case R.id.basemenu_receipts:
+					mViewPager.setCurrentItem(3, true);
+					return true;
+				case R.id.basemenu_search:
+					showSearchBar();
+					return true;
+				case R.id.basemenu_upload:
+					showUpload();
+					return true;
+				}
+				return false;
+			}
+		});
+		popup.inflate(R.menu.activity_base);
+		popup.show();
+	}
+
 	private void hideKeyboard() {
 		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		if (imm != null) {
@@ -245,7 +262,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 
 		public void onClick(final View v) {
 			if (v.equals(optionsButton)) {
-				openOptionsMenu();
+				showMenu(v);
 			} else if (v.equals(refreshButton)) {
 				loadAccountMetaComplete();
 			} else if (v.equals(logoButton)) {
@@ -304,6 +321,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 				hideSearchBar();
 				return true;
 			}
+		} else if (keyCode == KeyEvent.KEYCODE_MENU) {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
