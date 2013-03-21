@@ -10,4 +10,7 @@ tools:ignore="TypographyDashes">
 
   <!--Enable automatic exception tracking-->
   <bool name="ga_reportUncaughtExceptions">true</bool>
+  
+  <!--Removing the last octet of the IP address -->
+  <bool name="ga_anonymizeIp">true</bool>
 </resources>

@@ -11,7 +11,7 @@ import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.pdf.PDFActivity;
-import no.digipost.android.pdf.PdfStore;
+import no.digipost.android.pdf.PDFStore;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -46,10 +46,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	private ActivityCommunicator activityCommunicator;
 
-	private static NetworkConnection networkConnection;
 	private static LetterOperations lo;
 	private LetterListAdapter adapterLetter;
-	private ReceiptListAdapter adapterReciepts;
+	private ReceiptListAdapter adapterReceipts;
 	private ListView listview;
 	private View view;
 	private View listEmpty;
@@ -70,7 +69,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		lo = new LetterOperations(getActivity().getApplicationContext());
-		networkConnection = new NetworkConnection(getActivity().getApplicationContext());
 		fragmentsRefreshing = new boolean[4];
 
 		progressDialog = new ProgressDialog(getActivity());
@@ -129,8 +127,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			listview = (ListView) view.findViewById(R.id.listview_receipts);
 			View emptyView = view.findViewById(R.id.empty_listview_receipts);
 			listview.setEmptyView(emptyView);
-			adapterReciepts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
-			listview.setAdapter(adapterReciepts);
+			adapterReceipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
+			listview.setAdapter(adapterReceipts);
 			listview.setOnItemClickListener(new ReceiptListListener());
 			listEmpty = view.findViewById(R.id.receipts_empty);
 			bottombar = (LinearLayout) view.findViewById(R.id.receipt_bottombar);
@@ -176,7 +174,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		if (type != LetterOperations.RECEIPTS) {
 			adapterLetter.getFilter().filter(constraint);
 		} else {
-			adapterReciepts.getFilter().filter(constraint);
+			adapterReceipts.getFilter().filter(constraint);
 		}
 	}
 
@@ -184,7 +182,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		if (type != LetterOperations.RECEIPTS) {
 			adapterLetter.clearFilter();
 		} else {
-			adapterReciepts.clearFilter();
+			adapterReceipts.clearFilter();
 		}
 	}
 
@@ -261,7 +259,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				Attachment attachment = attachments.get(arg2);
 
 				if (attachment.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-					unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor),getString(R.string.dialog_error_two_factor));
+					unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor), getString(R.string.dialog_error_two_factor));
 					return;
 				}
 
@@ -272,7 +270,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(ApiConstants.GET_DOCUMENT, attachment);
 				} else {
-					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),getString(R.string.dialog_error_not_supported_filetype));
+					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),
+							getString(R.string.dialog_error_not_supported_filetype));
 				}
 			}
 		});
@@ -281,7 +280,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		/*
 		 * Attachment main = attachmentadapter.findMain();
 		 * attachmentadapter.remove(main);
-		 *
+		 * 
 		 * mainTitle.setText(main.getSubject());
 		 * mainType.setText(main.getFileType());
 		 * mainSize.setText(attachmentadapter
@@ -305,8 +304,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		if (type != LetterOperations.RECEIPTS && !adapterLetter.getShowBoxes()) {
 			adapterLetter.setInitialcheck(position);
 			showBottomBar();
-		} else if (type == LetterOperations.RECEIPTS && !adapterReciepts.getShowBoxes()) {
-			adapterReciepts.setInitialcheck(position);
+		} else if (type == LetterOperations.RECEIPTS && !adapterReceipts.getShowBoxes()) {
+			adapterReceipts.setInitialcheck(position);
 			showBottomBar();
 		}
 	}
@@ -317,13 +316,13 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		if (type != LetterOperations.RECEIPTS && adapterLetter.getShowBoxes()) {
 			adapterLetter.clearCheckboxes();
 			hideBottomBar();
-		} else if (type == LetterOperations.RECEIPTS && adapterReciepts.getShowBoxes()) {
-			adapterReciepts.clearCheckboxes();
+		} else if (type == LetterOperations.RECEIPTS && adapterReceipts.getShowBoxes()) {
+			adapterReceipts.clearCheckboxes();
 			hideBottomBar();
 		}
 	}
 
-	private void unsupportedActionDialog(final String header,final String text) {
+	private void unsupportedActionDialog(final String header, final String text) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 		builder.setTitle(header)
@@ -398,8 +397,12 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				return;
 			}
 
-			adapterReciepts.updateList(result);
-			listEmpty.setVisibility(View.VISIBLE);
+			adapterReceipts.updateList(result);
+			if (result.isEmpty()) {
+				listEmpty.setVisibility(View.VISIBLE);
+			} else {
+				listEmpty.setVisibility(View.GONE);
+			}
 		}
 
 		@Override
@@ -452,7 +455,11 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			}
 
 			adapterLetter.updateList(result);
-			listEmpty.setVisibility(View.VISIBLE);
+			if (result.isEmpty()) {
+				listEmpty.setVisibility(View.VISIBLE);
+			} else {
+				listEmpty.setVisibility(View.GONE);
+			}
 		}
 
 		@Override
@@ -508,12 +515,12 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			} else {
 				if (letter != null) {
 					tempLetter = letter;
-					PdfStore.pdf = result;
+					PDFStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
 					i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
 					startActivityForResult(i, REQUESTCODE_INTENT);
 				} else {
-					PdfStore.pdf = result;
+					PDFStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
 					i.putExtra(ApiConstants.LOCATION_FROM, "");
 					startActivityForResult(i, REQUESTCODE_INTENT);
@@ -632,7 +639,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				if (!type.equals(ApiConstants.RECEIPT)) {
 					adapterLetter.remove(tempRowView, tempLetter);
 				} else {
-					adapterReciepts.remove(tempRowView, tempReceipt);
+					adapterReceipts.remove(tempRowView, tempReceipt);
 				}
 				loadAccountMetaComplete();
 			}
@@ -823,7 +830,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			Letter mletter = adapterLetter.getItem(position);
 
 			if (mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-				unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor),getString(R.string.dialog_error_two_factor));
+				unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor), getString(R.string.dialog_error_two_factor));
 				return;
 			}
 
@@ -841,7 +848,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
 				} else {
-					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),getString(R.string.dialog_error_not_supported_filetype));
+					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),
+							getString(R.string.dialog_error_not_supported_filetype));
 					return;
 				}
 
@@ -852,7 +860,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	private class ReceiptListListener implements OnItemClickListener {
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-			Receipt mReceipt = adapterReciepts.getItem(position);
+			Receipt mReceipt = adapterReceipts.getItem(position);
 
 			GetHTMLTask htmlTask = new GetHTMLTask();
 			htmlTask.execute(ApiConstants.GET_RECEIPT, mReceipt);
@@ -882,7 +890,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 		public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
 			if (keyCode == KeyEvent.KEYCODE_BACK) {
-				if ((type == LetterOperations.RECEIPTS && adapterReciepts.getShowBoxes())
+				if ((type == LetterOperations.RECEIPTS && adapterReceipts.getShowBoxes())
 						|| (type != LetterOperations.RECEIPTS && adapterLetter.getShowBoxes())) {
 					toggleMultiselectionOff(type);
 					return true;
@@ -913,39 +921,45 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		public void onClick(final View v) {
 			MultipleDocumentsTask multipleDocumentsTask = null;
 			boolean[] checkedlist = null;
-			int page = getArguments().getInt(ARG_SECTION_NUMBER) +1;
+			int page = getArguments().getInt(ARG_SECTION_NUMBER) + 1;
 
 			if (adapterLetter != null && adapterLetter.checkedCount() > 0) {
 				checkedlist = adapterLetter.getCheckedDocuments();
-
+				String where = "";
+				String message = "";
+				int itemsPicked = adapterLetter.checkedCount();
 				if (v.equals(moveToWorkarea)) {
+					where = ApiConstants.LOCATION_WORKAREA;
+					message = getString(R.string.dialog_prompt_do_you_want_to_move)
+							+ itemsPicked
+							+ ((page != 1) ? ((itemsPicked > 1) ? getString(R.string.documents) : getString(R.string.document))
+									: getString(R.string.letter)) + getString(R.string.dialog_prompt_to_workarea);
 
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
-					showMultiSelecetionWarning(
-							"Vil du flytte " + adapterLetter.checkedCount() + " "
-									+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? "dokumenter" : "dokument") : "brev") + " til "
-									+ getString(R.string.workarea) + "?", multipleDocumentsTask, adapterLetter);
 				} else if (v.equals(moveToArchive)) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_ARCHIVE, checkedlist);
-					showMultiSelecetionWarning(
-							"Vil du flytte " + adapterLetter.checkedCount() + " "
-									+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? "dokumenter" : "dokument") : "brev")
-									+ " til arkivet?", multipleDocumentsTask, adapterLetter);
+					where = ApiConstants.LOCATION_ARCHIVE;
+					message = getString(R.string.dialog_prompt_do_you_want_to_move)
+							+ itemsPicked
+							+ ((page != 1) ? ((itemsPicked > 1) ? getString(R.string.documents) : getString(R.string.document))
+									: getString(R.string.letter)) + getString(R.string.dialog_prompt_to_archive);
+
 				} else if (v.equals(delete)) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
-					showMultiSelecetionWarning(
-							"Vil du slette " + adapterLetter.checkedCount() + " "
-									+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? "dokumenter" : "dokument") : "brev") + "?",
-							multipleDocumentsTask, adapterLetter);
+					where = ApiConstants.DELETE;
+					message = getString(R.string.dialog_prompt_do_you_want_to_delete)
+							+ itemsPicked
+							+ ((page != 1) ? ((itemsPicked > 1) ? getString(R.string.documents) : getString(R.string.document))
+									: getString(R.string.letter)) + "?";
 				}
-			} else if (adapterReciepts != null && adapterReciepts.checkedCount() > 0) {
-				checkedlist = adapterReciepts.getCheckedDocuments();
+				multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, where, checkedlist);
+				showMultiSelecetionWarning(message, multipleDocumentsTask, adapterLetter);
+
+			} else if (adapterReceipts != null && adapterReceipts.checkedCount() > 0) {
+				checkedlist = adapterReceipts.getCheckedDocuments();
 
 				if (v.equals(delete)) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_RECEIPT, ApiConstants.DELETE, checkedlist);
-					showMultiSelecetionWarning("Vil du slette " + adapterReciepts.checkedCount()
-							+ ((adapterReciepts.checkedCount() > 1) ? " kvitteringer?" : " kvittering?"), multipleDocumentsTask,
-							adapterReciepts);
+					showMultiSelecetionWarning(getString(R.string.dialog_prompt_do_you_want_to_delete) + adapterReceipts.checkedCount()
+							+ ((adapterReceipts.checkedCount() > 1) ? getString(R.string.receiptss) : getString(R.string.receipt)),
+							multipleDocumentsTask, adapterReceipts);
 				}
 			}
 		}
@@ -955,7 +969,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUESTCODE_INTENT) {
-			PdfStore.pdf = null;
+			PDFStore.pdf = null;
 
 			if (resultCode == Activity.RESULT_OK) {
 				String action = data.getExtras().getString(ApiConstants.ACTION);

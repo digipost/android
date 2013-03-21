@@ -39,8 +39,8 @@ public class LetterOperations {
 	public static final int ARCHIVE = 2;
 	public static final int RECEIPTS = 3;
 
-	private static PrimaryAccount primaryAccount;
-	private static ApiAccess apiAccess;
+	private PrimaryAccount primaryAccount;
+	private final ApiAccess apiAccess;
 
 	public LetterOperations(final Context context) {
 		apiAccess = new ApiAccess(context);

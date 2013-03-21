@@ -149,7 +149,7 @@ public class PDFActivity extends Activity {
 
 		if (core == null) {
 			char type = 'P';
-			byte[] b = PdfStore.pdf;
+			byte[] b = PDFStore.pdf;
 			core = openFile(b, type);
 
 			SearchTaskResult.set(null);

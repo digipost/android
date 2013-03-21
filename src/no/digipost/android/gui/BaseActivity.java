@@ -17,6 +17,8 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
+import no.digipost.android.authentication.Secret;
+import no.digipost.android.pdf.PDFStore;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -147,6 +149,8 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	}
 
 	private void logOut() {
+		Secret.ACCESS_TOKEN = null;
+		PDFStore.pdf = null;
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		settings.edit().clear().commit();
 		Intent i = new Intent(BaseActivity.this, LoginActivity.class);
@@ -211,7 +215,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		builder.setView(view);
 
 		final Dialog dialog = builder.create();
-	    dialog.show();
+		dialog.show();
 	}
 
 	private void hideSearchBar() {
@@ -244,7 +248,6 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 				openOptionsMenu();
 			} else if (v.equals(refreshButton)) {
 				loadAccountMetaComplete();
-				// loadAccountMeta(mViewPager.getCurrentItem());
 			} else if (v.equals(logoButton)) {
 				scrollListToTop(mViewPager.getCurrentItem());
 			} else if (v.equals(searchClose)) {
