@@ -48,7 +48,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	private static LetterOperations lo;
 	private LetterListAdapter adapterLetter;
-	private ReceiptListAdapter adapterReciepts;
+	private ReceiptListAdapter adapterReceipts;
 	private ListView listview;
 	private View view;
 	private View listEmpty;
@@ -127,8 +127,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			listview = (ListView) view.findViewById(R.id.listview_receipts);
 			View emptyView = view.findViewById(R.id.empty_listview_receipts);
 			listview.setEmptyView(emptyView);
-			adapterReciepts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
-			listview.setAdapter(adapterReciepts);
+			adapterReceipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
+			listview.setAdapter(adapterReceipts);
 			listview.setOnItemClickListener(new ReceiptListListener());
 			listEmpty = view.findViewById(R.id.receipts_empty);
 			bottombar = (LinearLayout) view.findViewById(R.id.receipt_bottombar);
@@ -174,7 +174,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		if (type != LetterOperations.RECEIPTS) {
 			adapterLetter.getFilter().filter(constraint);
 		} else {
-			adapterReciepts.getFilter().filter(constraint);
+			adapterReceipts.getFilter().filter(constraint);
 		}
 	}
 
@@ -182,7 +182,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		if (type != LetterOperations.RECEIPTS) {
 			adapterLetter.clearFilter();
 		} else {
-			adapterReciepts.clearFilter();
+			adapterReceipts.clearFilter();
 		}
 	}
 
@@ -304,8 +304,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		if (type != LetterOperations.RECEIPTS && !adapterLetter.getShowBoxes()) {
 			adapterLetter.setInitialcheck(position);
 			showBottomBar();
-		} else if (type == LetterOperations.RECEIPTS && !adapterReciepts.getShowBoxes()) {
-			adapterReciepts.setInitialcheck(position);
+		} else if (type == LetterOperations.RECEIPTS && !adapterReceipts.getShowBoxes()) {
+			adapterReceipts.setInitialcheck(position);
 			showBottomBar();
 		}
 	}
@@ -316,8 +316,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		if (type != LetterOperations.RECEIPTS && adapterLetter.getShowBoxes()) {
 			adapterLetter.clearCheckboxes();
 			hideBottomBar();
-		} else if (type == LetterOperations.RECEIPTS && adapterReciepts.getShowBoxes()) {
-			adapterReciepts.clearCheckboxes();
+		} else if (type == LetterOperations.RECEIPTS && adapterReceipts.getShowBoxes()) {
+			adapterReceipts.clearCheckboxes();
 			hideBottomBar();
 		}
 	}
@@ -397,7 +397,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				return;
 			}
 
-			adapterReciepts.updateList(result);
+			adapterReceipts.updateList(result);
 			if (result.isEmpty()) {
 				listEmpty.setVisibility(View.VISIBLE);
 			} else {
@@ -639,7 +639,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				if (!type.equals(ApiConstants.RECEIPT)) {
 					adapterLetter.remove(tempRowView, tempLetter);
 				} else {
-					adapterReciepts.remove(tempRowView, tempReceipt);
+					adapterReceipts.remove(tempRowView, tempReceipt);
 				}
 				loadAccountMetaComplete();
 			}
@@ -860,7 +860,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	private class ReceiptListListener implements OnItemClickListener {
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-			Receipt mReceipt = adapterReciepts.getItem(position);
+			Receipt mReceipt = adapterReceipts.getItem(position);
 
 			GetHTMLTask htmlTask = new GetHTMLTask();
 			htmlTask.execute(ApiConstants.GET_RECEIPT, mReceipt);
@@ -890,7 +890,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 		public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
 			if (keyCode == KeyEvent.KEYCODE_BACK) {
-				if ((type == LetterOperations.RECEIPTS && adapterReciepts.getShowBoxes())
+				if ((type == LetterOperations.RECEIPTS && adapterReceipts.getShowBoxes())
 						|| (type != LetterOperations.RECEIPTS && adapterLetter.getShowBoxes())) {
 					toggleMultiselectionOff(type);
 					return true;
@@ -925,42 +925,41 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 			if (adapterLetter != null && adapterLetter.checkedCount() > 0) {
 				checkedlist = adapterLetter.getCheckedDocuments();
-				String what = "";
+				String where = "";
 				String message = "";
+				int itemsPicked = adapterLetter.checkedCount();
 				if (v.equals(moveToWorkarea)) {
-					what = ApiConstants.LOCATION_WORKAREA;
+					where = ApiConstants.LOCATION_WORKAREA;
 					message = getString(R.string.dialog_prompt_do_you_want_to_move)
-							+ adapterLetter.checkedCount()
-							+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? getString(R.string.documents)
-									: getString(R.string.document)) : getString(R.string.letter))
-							+ getString(R.string.dialog_prompt_to_workarea);
+							+ itemsPicked
+							+ ((page != 1) ? ((itemsPicked > 1) ? getString(R.string.documents) : getString(R.string.document))
+									: getString(R.string.letter)) + getString(R.string.dialog_prompt_to_workarea);
 
 				} else if (v.equals(moveToArchive)) {
-					what = ApiConstants.LOCATION_ARCHIVE;
+					where = ApiConstants.LOCATION_ARCHIVE;
 					message = getString(R.string.dialog_prompt_do_you_want_to_move)
-							+ adapterLetter.checkedCount()
-							+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? getString(R.string.documents)
-									: getString(R.string.document)) : getString(R.string.letter))
-							+ getString(R.string.dialog_prompt_to_archive);
+							+ itemsPicked
+							+ ((page != 1) ? ((itemsPicked > 1) ? getString(R.string.documents) : getString(R.string.document))
+									: getString(R.string.letter)) + getString(R.string.dialog_prompt_to_archive);
 
 				} else if (v.equals(delete)) {
-					what = ApiConstants.DELETE;
+					where = ApiConstants.DELETE;
 					message = getString(R.string.dialog_prompt_do_you_want_to_delete)
-							+ adapterLetter.checkedCount()
-							+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? getString(R.string.documents)
-									: getString(R.string.document)) : getString(R.string.letter)) + "?";
+							+ itemsPicked
+							+ ((page != 1) ? ((itemsPicked > 1) ? getString(R.string.documents) : getString(R.string.document))
+									: getString(R.string.letter)) + "?";
 				}
-				multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, what, checkedlist);
+				multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, where, checkedlist);
 				showMultiSelecetionWarning(message, multipleDocumentsTask, adapterLetter);
 
-			} else if (adapterReciepts != null && adapterReciepts.checkedCount() > 0) {
-				checkedlist = adapterReciepts.getCheckedDocuments();
+			} else if (adapterReceipts != null && adapterReceipts.checkedCount() > 0) {
+				checkedlist = adapterReceipts.getCheckedDocuments();
 
 				if (v.equals(delete)) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_RECEIPT, ApiConstants.DELETE, checkedlist);
-					showMultiSelecetionWarning(getString(R.string.dialog_prompt_do_you_want_to_delete) + adapterReciepts.checkedCount()
-							+ ((adapterReciepts.checkedCount() > 1) ? getString(R.string.receiptss) : getString(R.string.receipt)),
-							multipleDocumentsTask, adapterReciepts);
+					showMultiSelecetionWarning(getString(R.string.dialog_prompt_do_you_want_to_delete) + adapterReceipts.checkedCount()
+							+ ((adapterReceipts.checkedCount() > 1) ? getString(R.string.receiptss) : getString(R.string.receipt)),
+							multipleDocumentsTask, adapterReceipts);
 				}
 			}
 		}
