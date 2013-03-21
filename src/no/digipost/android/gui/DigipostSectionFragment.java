@@ -259,7 +259,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				Attachment attachment = attachments.get(arg2);
 
 				if (attachment.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-					unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor),getString(R.string.dialog_error_two_factor));
+					unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor), getString(R.string.dialog_error_two_factor));
 					return;
 				}
 
@@ -270,7 +270,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(ApiConstants.GET_DOCUMENT, attachment);
 				} else {
-					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),getString(R.string.dialog_error_not_supported_filetype));
+					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),
+							getString(R.string.dialog_error_not_supported_filetype));
 				}
 			}
 		});
@@ -279,7 +280,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		/*
 		 * Attachment main = attachmentadapter.findMain();
 		 * attachmentadapter.remove(main);
-		 *
+		 * 
 		 * mainTitle.setText(main.getSubject());
 		 * mainType.setText(main.getFileType());
 		 * mainSize.setText(attachmentadapter
@@ -321,7 +322,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		}
 	}
 
-	private void unsupportedActionDialog(final String header,final String text) {
+	private void unsupportedActionDialog(final String header, final String text) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 		builder.setTitle(header)
@@ -397,7 +398,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			}
 
 			adapterReciepts.updateList(result);
-			listEmpty.setVisibility(View.VISIBLE);
+			if (result.isEmpty()) {
+				listEmpty.setVisibility(View.VISIBLE);
+			}
 		}
 
 		@Override
@@ -450,7 +453,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			}
 
 			adapterLetter.updateList(result);
-			listEmpty.setVisibility(View.VISIBLE);
+			if (result.isEmpty()) {
+				listEmpty.setVisibility(View.VISIBLE);
+			}
 		}
 
 		@Override
@@ -821,7 +826,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			Letter mletter = adapterLetter.getItem(position);
 
 			if (mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-				unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor),getString(R.string.dialog_error_two_factor));
+				unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor), getString(R.string.dialog_error_two_factor));
 				return;
 			}
 
@@ -839,7 +844,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
 				} else {
-					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),getString(R.string.dialog_error_not_supported_filetype));
+					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),
+							getString(R.string.dialog_error_not_supported_filetype));
 					return;
 				}
 
@@ -911,7 +917,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		public void onClick(final View v) {
 			MultipleDocumentsTask multipleDocumentsTask = null;
 			boolean[] checkedlist = null;
-			int page = getArguments().getInt(ARG_SECTION_NUMBER) +1;
+			int page = getArguments().getInt(ARG_SECTION_NUMBER) + 1;
 
 			if (adapterLetter != null && adapterLetter.checkedCount() > 0) {
 				checkedlist = adapterLetter.getCheckedDocuments();
