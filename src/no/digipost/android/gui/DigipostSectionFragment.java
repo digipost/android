@@ -400,6 +400,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			adapterReciepts.updateList(result);
 			if (result.isEmpty()) {
 				listEmpty.setVisibility(View.VISIBLE);
+			} else {
+				listEmpty.setVisibility(View.GONE);
 			}
 		}
 
@@ -455,6 +457,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			adapterLetter.updateList(result);
 			if (result.isEmpty()) {
 				listEmpty.setVisibility(View.VISIBLE);
+			} else {
+				listEmpty.setVisibility(View.GONE);
 			}
 		}
 
@@ -921,35 +925,42 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 			if (adapterLetter != null && adapterLetter.checkedCount() > 0) {
 				checkedlist = adapterLetter.getCheckedDocuments();
-
+				String what = "";
+				String message = "";
 				if (v.equals(moveToWorkarea)) {
+					what = ApiConstants.LOCATION_WORKAREA;
+					message = getString(R.string.dialog_prompt_do_you_want_to_move)
+							+ adapterLetter.checkedCount()
+							+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? getString(R.string.documents)
+									: getString(R.string.document)) : getString(R.string.letter))
+							+ getString(R.string.dialog_prompt_to_workarea);
 
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_WORKAREA, checkedlist);
-					showMultiSelecetionWarning(
-							"Vil du flytte " + adapterLetter.checkedCount() + " "
-									+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? "dokumenter" : "dokument") : "brev") + " til "
-									+ getString(R.string.workarea) + "?", multipleDocumentsTask, adapterLetter);
 				} else if (v.equals(moveToArchive)) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.LOCATION_ARCHIVE, checkedlist);
-					showMultiSelecetionWarning(
-							"Vil du flytte " + adapterLetter.checkedCount() + " "
-									+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? "dokumenter" : "dokument") : "brev")
-									+ " til arkivet?", multipleDocumentsTask, adapterLetter);
+					what = ApiConstants.LOCATION_ARCHIVE;
+					message = getString(R.string.dialog_prompt_do_you_want_to_move)
+							+ adapterLetter.checkedCount()
+							+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? getString(R.string.documents)
+									: getString(R.string.document)) : getString(R.string.letter))
+							+ getString(R.string.dialog_prompt_to_archive);
+
 				} else if (v.equals(delete)) {
-					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, ApiConstants.DELETE, checkedlist);
-					showMultiSelecetionWarning(
-							"Vil du slette " + adapterLetter.checkedCount() + " "
-									+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? "dokumenter" : "dokument") : "brev") + "?",
-							multipleDocumentsTask, adapterLetter);
+					what = ApiConstants.DELETE;
+					message = getString(R.string.dialog_prompt_do_you_want_to_delete)
+							+ adapterLetter.checkedCount()
+							+ ((page != 1) ? ((adapterLetter.checkedCount() > 1) ? getString(R.string.documents)
+									: getString(R.string.document)) : getString(R.string.letter)) + "?";
 				}
+				multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_LETTER, what, checkedlist);
+				showMultiSelecetionWarning(message, multipleDocumentsTask, adapterLetter);
+
 			} else if (adapterReciepts != null && adapterReciepts.checkedCount() > 0) {
 				checkedlist = adapterReciepts.getCheckedDocuments();
 
 				if (v.equals(delete)) {
 					multipleDocumentsTask = new MultipleDocumentsTask(ApiConstants.TYPE_RECEIPT, ApiConstants.DELETE, checkedlist);
-					showMultiSelecetionWarning("Vil du slette " + adapterReciepts.checkedCount()
-							+ ((adapterReciepts.checkedCount() > 1) ? " kvitteringer?" : " kvittering?"), multipleDocumentsTask,
-							adapterReciepts);
+					showMultiSelecetionWarning(getString(R.string.dialog_prompt_do_you_want_to_delete) + adapterReciepts.checkedCount()
+							+ ((adapterReciepts.checkedCount() > 1) ? getString(R.string.receiptss) : getString(R.string.receipt)),
+							multipleDocumentsTask, adapterReciepts);
 				}
 			}
 		}
