@@ -37,22 +37,21 @@
     <dimen name="document_pagenumber_margin_bottom">10dp</dimen>
 
     <!-- BaseView -->
-    <dimen name="base_padding_bottom_and_top">2dp</dimen>
-    <dimen name="base_optionsbutton_padding">4dp</dimen>
-    <dimen name="base_logobutton_margintop">3dp</dimen>
+    <dimen name="base_padding_bottom_and_top">4dp</dimen>
     <dimen name="base_refreshspinner_width_and_height">30dp</dimen>
-    <dimen name="base_refreshspinner_margin_left_and_right">5dp</dimen>
-    <dimen name="base_refreshspinner_marginbottom">1dp</dimen>
-    <dimen name="base_refreshspinner_margintop">8dp</dimen>
-    <dimen name="base_refreshbutton_padding">5dp</dimen>
-    <dimen name="base_refreshbutton_margintop">3dp</dimen>
+    <dimen name="base_refreshspinner_margin_left">2dp</dimen>
+    <dimen name="base_refreshspinner_margin_right">10dp</dimen>
+    <dimen name="base_refreshspinner_margin_top">1dp</dimen>
+    <dimen name="base_refreshbutton_margin_right">10dp</dimen>
     <dimen name="base_pagertitlestrip_padding">5dp</dimen>
     <dimen name="base_pagertitlestrip_textsize">2dp</dimen>
-    <dimen name="base_logobutton_padding">6dp</dimen>
-    <dimen name="base_search_margintop">6dp</dimen>
+    <dimen name="base_searchlayout_margin_top">5dp</dimen>
     <dimen name="base_search_padding">5dp</dimen>
     <dimen name="base_seach_width">0sp</dimen>
-    <dimen name="base_searchfield_close_margin_top">3dp</dimen>
+    <dimen name="base_searchfield_close_margin_right">5dp</dimen>
+    <dimen name="base_searchfield_margin_right">3dp</dimen>
+    <dimen name="base_searchbutton_margin_right">15dp</dimen>
+    <dimen name="base_headerbuttonslayout_padding">5dp</dimen>
 
     <!-- LoginView -->
     <dimen name="login_margin_bottom">52dp</dimen>
@@ -67,7 +66,7 @@
     <dimen name="login_disclaimer_registration_buttons_padding">10dp</dimen>
     <dimen name="login_disclaimer_registration_buttons_margin_left_right_top">10dp</dimen>
     <dimen name="login_disclaimer_registration_buttons_margin_bottom">5dp</dimen>
-	<dimen name="login_disclaimer_registration_buttons_corners">4dp</dimen>
+    <dimen name="login_disclaimer_registration_buttons_corners">4dp</dimen>
     <!-- MainActivity -->
     <dimen name="main_spinner_margin_bottom">31dp</dimen>
 
