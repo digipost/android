@@ -17,6 +17,7 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
+import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.pdf.PDFStore;
 import android.app.AlertDialog;
@@ -24,6 +25,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -37,14 +40,17 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 public class BaseActivity extends FragmentActivity implements ActivityCommunicator {
@@ -61,6 +67,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	private ViewSwitcher topbarSwitcher;
 	private EditText searchfield;
 	private ImageButton searchClose;
+	private Drawable deleteTextImage;
 
 	private int currentViewIndex;
 	private boolean isSearch;
@@ -83,6 +90,8 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		optionsButton.setOnClickListener(buttonListener);
 		refreshButton.setOnClickListener(buttonListener);
 		logoButton.setOnClickListener(buttonListener);
+		deleteTextImage = getResources().getDrawable(R.drawable.black_delete_32);
+		deleteTextImage.setBounds(new Rect(0, 0, deleteTextImage.getIntrinsicWidth(), deleteTextImage.getIntrinsicHeight()));
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setClickable(true);
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -96,11 +105,11 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 			}
 
 			public void onPageScrolled(final int arg0, final float arg1, final int arg2) {
-
+				// Not implemented.
 			}
 
 			public void onPageScrollStateChanged(final int arg0) {
-
+				// Not implemented.
 			}
 		});
 
@@ -113,16 +122,39 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 			public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
 				DigipostSectionFragment fragment = getFragment(currentViewIndex);
 				fragment.filterList(currentViewIndex, s);
+
+				if (s.length() != 0) {
+					searchfield.setCompoundDrawables(null, null, deleteTextImage, null);
+				} else {
+					searchfield.setCompoundDrawables(null, null, null, null);
+				}
 			}
 
 			public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
-				// TODO Auto-generated method stub
-
+				// Not implemented.
 			}
 
 			public void afterTextChanged(final Editable s) {
-				// TODO Auto-generated method stub
+				// Not implemented.
+			}
+		});
 
+		searchfield.setOnTouchListener(new OnTouchListener() {
+
+			public boolean onTouch(final View v, final MotionEvent event) {
+				Drawable co = ((TextView) v).getCompoundDrawables()[2];
+				if (co == null) {
+					return false;
+				}
+				if (event.getAction() != MotionEvent.ACTION_DOWN) {
+					return false;
+				}
+				if (event.getX() > v.getMeasuredWidth() - v.getPaddingRight() - co.getIntrinsicWidth()) {
+					searchfield.setText("");
+					return true;
+				} else {
+					return false;
+				}
 			}
 		});
 
@@ -238,6 +270,21 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 					mViewPager.setCurrentItem(3, true);
 					return true;
 				case R.id.basemenu_search:
+					switch (currentViewIndex) {
+					case LetterOperations.MAILBOX:
+						searchfield.setHint(R.string.search_mailbox);
+						break;
+					case LetterOperations.WORKAREA:
+						searchfield.setHint(R.string.search_workarea);
+						break;
+					case LetterOperations.ARCHIVE:
+						searchfield.setHint(R.string.search_archive);
+						break;
+					case LetterOperations.RECEIPTS:
+						searchfield.setHint(R.string.search_receipts);
+						break;
+					}
+
 					showSearchBar();
 					return true;
 				case R.id.basemenu_upload:
