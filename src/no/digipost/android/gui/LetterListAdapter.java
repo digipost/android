@@ -28,15 +28,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -54,7 +51,8 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	private final Filter filter;
 	public boolean showboxes;
 	public boolean[] checked;
-	CheckBox checkbox;
+	private CheckBox checkbox;
+	private boolean runAnimation;
 
 	private String subjectFilterText;
 	private String creatorFilterText;
@@ -70,6 +68,7 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		subjectFilterText = null;
 		creatorFilterText = null;
 		dateFilterText = null;
+		runAnimation = true;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -160,6 +159,7 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		letters.addAll(list);
 		filtered = letters;
 		notifyDataSetChanged();
+		runAnimation = false;
 	}
 
 	public void setInitialcheck(final int position) {
@@ -181,20 +181,6 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 
 	public boolean getShowBoxes() {
 		return showboxes;
-	}
-
-	public void remove(final View rowView, final Letter object) {
-		final Animation animation = AnimationUtils.loadAnimation(rowView.getContext(), R.anim.list_splashfadeout);
-		rowView.startAnimation(animation);
-		Handler handle = new Handler();
-		handle.postDelayed(new Runnable() {
-
-			public void run() {
-				letters.remove(object);
-				notifyDataSetChanged();
-				animation.cancel();
-			}
-		}, 1000);
 	}
 
 	public int checkedCount() {
