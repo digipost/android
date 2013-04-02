@@ -27,15 +27,12 @@ import no.digipost.android.model.Receipt;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -52,7 +49,7 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	private final Filter filter;
 	public boolean showboxes;
 	public boolean[] checked;
-	CheckBox checkbox;
+	private CheckBox checkbox;
 
 	private String storeNameFilterText;
 	private String dateFilterText;
@@ -153,20 +150,6 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	public void remove(final Receipt object) {
 		filtered.remove(object);
 		notifyDataSetChanged();
-	}
-
-	public void remove(final View rowView, final Receipt object) {
-		final Animation animation = AnimationUtils.loadAnimation(rowView.getContext(), R.anim.list_splashfadeout);
-		rowView.startAnimation(animation);
-		Handler handle = new Handler();
-		handle.postDelayed(new Runnable() {
-
-			public void run() {
-				receipts.remove(object);
-				notifyDataSetChanged();
-				animation.cancel();
-			}
-		}, 1000);
 	}
 
 	public void updateList(final ArrayList<Receipt> list) {

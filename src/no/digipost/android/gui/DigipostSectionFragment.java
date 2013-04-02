@@ -60,7 +60,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	private Letter tempLetter;
 	private Receipt tempReceipt;
-	private View tempRowView;
 
 	public DigipostSectionFragment() {
 	}
@@ -640,11 +639,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			if (result != null) {
 				showMessage(errorMessage);
 			} else {
-				if (!type.equals(ApiConstants.RECEIPT)) {
-					adapterLetter.remove(tempRowView, tempLetter);
-				} else {
-					adapterReceipts.remove(tempRowView, tempReceipt);
-				}
 				loadAccountMetaComplete();
 			}
 		}
@@ -693,7 +687,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			if (!result) {
 				showMessage(errorMessage);
 			} else {
-				adapterLetter.remove(tempRowView, tempLetter);
 				loadAccountMetaComplete();
 			}
 			toggleRefreshSpinnerOff();
@@ -856,8 +849,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 							getString(R.string.dialog_error_not_supported_filetype));
 					return;
 				}
-
-				tempRowView = arg1;
 			}
 		}
 	}
@@ -868,7 +859,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 			GetHTMLTask htmlTask = new GetHTMLTask();
 			htmlTask.execute(ApiConstants.GET_RECEIPT, mReceipt);
-			tempRowView = arg1;
 		}
 	}
 
