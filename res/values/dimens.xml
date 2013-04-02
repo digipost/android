@@ -37,7 +37,7 @@
     <dimen name="document_pagenumber_margin_bottom">10dp</dimen>
 
     <!-- BaseView -->
-    <dimen name="base_padding_bottom_and_top">4dp</dimen>
+    <dimen name="base_padding_bottom_and_top">2dp</dimen>
     <dimen name="base_refreshspinner_width_and_height">30dp</dimen>
     <dimen name="base_refreshspinner_margin_left">2dp</dimen>
     <dimen name="base_refreshspinner_margin_right">10dp</dimen>

@@ -57,6 +57,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	private ImageButton moveToWorkarea;
 	private ImageButton moveToArchive;
 	private ImageButton delete;
+	public boolean checkboxesVisible;
 
 	Dialog attachmentDialog;
 
@@ -288,6 +289,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	private void toggleMultiselectionOn(final int type, final int position) {
 		listview.requestFocus();
 
+
 		if (type != LetterOperations.RECEIPTS && !adapterLetter.getShowBoxes()) {
 			adapterLetter.setInitialcheck(position);
 			showBottomBar();
@@ -295,6 +297,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			adapterReceipts.setInitialcheck(position);
 			showBottomBar();
 		}
+		checkboxesVisible = true;
+
+
 	}
 
 	public void toggleMultiselectionOff(final int type) {
@@ -307,6 +312,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			adapterReceipts.clearCheckboxes();
 			hideBottomBar();
 		}
+		checkboxesVisible = false;
 	}
 
 	private void unsupportedActionDialog(final String header, final String text) {
@@ -509,7 +515,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				} else {
 					PDFStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-					//i.putExtra(ApiConstants.LOCATION_FROM, "");
+					// i.putExtra(ApiConstants.LOCATION_FROM, "");
 					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
 					startActivityForResult(i, REQUESTCODE_INTENT);
 				}
@@ -573,6 +579,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				if (attachment != null) {
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);
 					i.putExtra(ApiConstants.DOCUMENT_TYPE, "");
+					i.putExtra(ApiConstants.LOCATION_FROM,tempLetter.getLocation());
 				} else {
 					String type = letter != null ? ApiConstants.LETTER : ApiConstants.RECEIPT;
 					i.putExtra(ApiConstants.DOCUMENT_TYPE, type);
@@ -951,7 +958,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			PDFStore.pdf = null;
 
 			if (resultCode == Activity.RESULT_OK) {
-				attachmentDialog.cancel();
+				if (attachmentDialog != null) {
+					attachmentDialog.cancel();
+				}
 				String action = data.getExtras().getString(ApiConstants.ACTION);
 				String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
 

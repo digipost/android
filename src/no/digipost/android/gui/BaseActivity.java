@@ -101,10 +101,16 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 
 			public void onPageSelected(final int arg0) {
 				DigipostSectionFragment fragment = getFragment(currentViewIndex);
-				fragment.toggleMultiselectionOff(currentViewIndex);
-				hideSearchBar();
-				fragment.clearFilter(currentViewIndex);
-				currentViewIndex = arg0;
+				if(fragment.checkboxesVisible) {
+					fragment.toggleMultiselectionOff(currentViewIndex);
+				}
+				if(isSearch) {
+					hideSearchBar();
+					fragment.clearFilter(currentViewIndex);
+				}
+					currentViewIndex = arg0;
+
+
 			}
 
 			public void onPageScrolled(final int arg0, final float arg1, final int arg2) {
@@ -220,12 +226,12 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	}
 
 	private void hideSearchBar() {
-		if (isSearch) {
+		//if (isSearch) {
 			isSearch = false;
 			searchfield.setText("");
 			topbarSwitcher.showPrevious();
 			hideKeyboard();
-		}
+
 	}
 
 	private void showKeyboard() {

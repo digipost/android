@@ -18,7 +18,6 @@ public class HtmlWebview extends Activity {
 	private ImageButton toArchive;
 	private ImageButton toWorkarea;
 	private ImageButton delete;
-	// private ImageButton share;
 	private ImageButton digipostIcon;
 	private ImageButton backButton;
 
@@ -52,23 +51,18 @@ public class HtmlWebview extends Activity {
 		toArchive = (ImageButton) findViewById(R.id.html_toArchive);
 		toWorkarea = (ImageButton) findViewById(R.id.html_toWorkarea);
 		delete = (ImageButton) findViewById(R.id.html_delete);
-		// share = (ImageButton) findViewById(R.id.html_share);
 		digipostIcon = (ImageButton) findViewById(R.id.html_digipost_icon);
 		backButton = (ImageButton) findViewById(R.id.html_backbtn);
 
 		if (type.equals(ApiConstants.RECEIPT)) {
 			toArchive.setVisibility(View.GONE);
 			toWorkarea.setVisibility(View.GONE);
-		} else if (type.equals(ApiConstants.LETTER)) {
+		} else {
 			if (from.equals(ApiConstants.LOCATION_ARCHIVE)) {
 				toArchive.setVisibility(View.GONE);
 			} else if (from.equals(ApiConstants.LOCATION_WORKAREA)) {
 				toWorkarea.setVisibility(View.GONE);
 			}
-		} else {
-			toArchive.setVisibility(View.GONE);
-			toWorkarea.setVisibility(View.GONE);
-			delete.setVisibility(View.GONE);
 		}
 
 		toArchive.setOnClickListener(new HTMLViewListener());
