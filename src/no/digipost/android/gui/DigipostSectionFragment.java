@@ -961,7 +961,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			PDFStore.pdf = null;
 
 			if (resultCode == Activity.RESULT_OK) {
-				attachmentDialog.dismiss();
+				attachmentDialog.cancel();
 				String action = data.getExtras().getString(ApiConstants.ACTION);
 				String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
 
