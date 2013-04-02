@@ -46,7 +46,7 @@
     <dimen name="base_pagertitlestrip_padding">5dp</dimen>
     <dimen name="base_pagertitlestrip_textsize">2dp</dimen>
     <dimen name="base_searchlayout_margin_top">4dp</dimen>
-    <dimen name="base_searchfield_close_margin_top">2dp</dimen>
+    <dimen name="base_searchfield_close_margin_top">1dp</dimen>
     <dimen name="base_logobutton_margin_top">5dp</dimen>
     <dimen name="base_search_padding">5dp</dimen>
     <dimen name="base_seach_width">0sp</dimen>
