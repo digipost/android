@@ -58,6 +58,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	private ImageButton moveToArchive;
 	private ImageButton delete;
 
+	Dialog attachmentDialog;
+
 	private Letter tempLetter;
 	private Receipt tempReceipt;
 	private View tempRowView;
@@ -243,14 +245,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setView(view);
 
-		/*
-		 * TextView mainTitle = (TextView)
-		 * view.findViewById(R.id.attachmentdialog_mainDocument); TextView
-		 * mainType = (TextView)
-		 * view.findViewById(R.id.attachmentdialog_mainDocument_filetype);
-		 * TextView mainSize = (TextView)
-		 * view.findViewById(R.id.attachmentdialog_mainDocument_filesize);
-		 */
 		ListView attachmentlistview = (ListView) view.findViewById(R.id.attachmentdialog_listview);
 
 		attachmentlistview.setOnItemClickListener(new OnItemClickListener() {
@@ -281,20 +275,10 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		attachmentadapter.remove(main);
 		attachmentadapter.insert(main, 0);
 
-		/*
-		 * Attachment main = attachmentadapter.findMain();
-		 * attachmentadapter.remove(main);
-		 *
-		 * mainTitle.setText(main.getSubject());
-		 * mainType.setText(main.getFileType());
-		 * mainSize.setText(attachmentadapter
-		 * .getSizeFormatted(main.getFileSize()));
-		 */
-
 		attachmentlistview.setAdapter(attachmentadapter);
 
-		final Dialog dialog = builder.create();
-		dialog.show();
+		attachmentDialog = builder.create();
+		attachmentDialog.show();
 
 	}
 
@@ -526,7 +510,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				} else {
 					PDFStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-					i.putExtra(ApiConstants.LOCATION_FROM, "");
+					//i.putExtra(ApiConstants.LOCATION_FROM, "");
+					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
 					startActivityForResult(i, REQUESTCODE_INTENT);
 				}
 			}
@@ -976,6 +961,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			PDFStore.pdf = null;
 
 			if (resultCode == Activity.RESULT_OK) {
+				attachmentDialog.dismiss();
 				String action = data.getExtras().getString(ApiConstants.ACTION);
 				String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
 
