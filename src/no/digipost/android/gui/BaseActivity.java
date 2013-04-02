@@ -93,7 +93,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		refreshButton.setOnClickListener(buttonListener);
 		logoButton.setOnClickListener(buttonListener);
 		searchButton.setOnClickListener(buttonListener);
-		deleteTextImage = getResources().getDrawable(R.drawable.white_delete_32);
+		deleteTextImage = getResources().getDrawable(R.drawable.white_clear_32);
 		deleteTextImage.setBounds(new Rect(0, 0, deleteTextImage.getIntrinsicWidth(), deleteTextImage.getIntrinsicHeight()));
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setClickable(true);
