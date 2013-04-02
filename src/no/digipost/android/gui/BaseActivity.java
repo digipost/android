@@ -61,6 +61,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 
 	private ImageButton optionsButton;
 	private ImageButton logoButton;
+	private ImageButton searchButton;
 	private SectionsPagerAdapter mSectionsPagerAdapter;
 	private ButtonListener buttonListener;
 	private ViewPager mViewPager;
@@ -85,12 +86,14 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		refreshSpinner = (ProgressBar) findViewById(R.id.base_refreshSpinner);
 		optionsButton = (ImageButton) findViewById(R.id.base_optionsButton);
 		refreshButton = (ImageButton) findViewById(R.id.base_refreshButton);
+		searchButton = (ImageButton) findViewById(R.id.base_searchButton);
 		logoButton = (ImageButton) findViewById(R.id.base_logoButton);
 		buttonListener = new ButtonListener();
 		optionsButton.setOnClickListener(buttonListener);
 		refreshButton.setOnClickListener(buttonListener);
 		logoButton.setOnClickListener(buttonListener);
-		deleteTextImage = getResources().getDrawable(R.drawable.black_delete_32);
+		searchButton.setOnClickListener(buttonListener);
+		deleteTextImage = getResources().getDrawable(R.drawable.white_delete_32);
 		deleteTextImage.setBounds(new Rect(0, 0, deleteTextImage.getIntrinsicWidth(), deleteTextImage.getIntrinsicHeight()));
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 		mViewPager.setClickable(true);
@@ -115,7 +118,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 
 		topbarSwitcher = (ViewSwitcher) findViewById(R.id.base_topbar_switcher);
 		searchClose = (ImageButton) findViewById(R.id.base_searchfield_close);
-		searchClose.setOnClickListener(new ButtonListener());
+		searchClose.setOnClickListener(buttonListener);
 		searchfield = (EditText) findViewById(R.id.base_searchfield);
 		searchfield.addTextChangedListener(new TextWatcher() {
 
@@ -191,22 +194,6 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		finish();
 	}
 
-	/*
-	 * @Override public boolean onCreateOptionsMenu(final Menu menu) {
-	 * getMenuInflater().inflate(R.menu.activity_base, menu); return true; }
-	 * 
-	 * @Override public boolean onOptionsItemSelected(final MenuItem item) {
-	 * switch (item.getItemId()) { case R.id.basemenu_logoutOption: logOut();
-	 * return true; case R.id.basemenu_mailbox: mViewPager.setCurrentItem(0,
-	 * true); return true; case R.id.basemenu_workarea:
-	 * mViewPager.setCurrentItem(1, true); return true; case
-	 * R.id.basemenu_archive: mViewPager.setCurrentItem(2, true); return true;
-	 * case R.id.basemenu_receipts: mViewPager.setCurrentItem(3, true); return
-	 * true; case R.id.basemenu_search: showSearchBar(); return true; case
-	 * R.id.basemenu_upload: showUpload(); return true; default: return
-	 * super.onOptionsItemSelected(item); } }
-	 */
-
 	private void showSearchBar() {
 		if (!isSearch) {
 			isSearch = true;
@@ -269,27 +256,6 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 				case R.id.basemenu_receipts:
 					mViewPager.setCurrentItem(3, true);
 					return true;
-				case R.id.basemenu_search:
-					switch (currentViewIndex) {
-					case LetterOperations.MAILBOX:
-						searchfield.setHint(R.string.search_mailbox);
-						break;
-					case LetterOperations.WORKAREA:
-						searchfield.setHint(R.string.search_workarea);
-						break;
-					case LetterOperations.ARCHIVE:
-						searchfield.setHint(R.string.search_archive);
-						break;
-					case LetterOperations.RECEIPTS:
-						searchfield.setHint(R.string.search_receipts);
-						break;
-					}
-
-					showSearchBar();
-					return true;
-				case R.id.basemenu_upload:
-					showUpload();
-					return true;
 				}
 				return false;
 			}
@@ -316,6 +282,22 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 				scrollListToTop(mViewPager.getCurrentItem());
 			} else if (v.equals(searchClose)) {
 				hideSearchBar();
+			} else if (v.equals(searchButton)) {
+				switch (currentViewIndex) {
+				case LetterOperations.MAILBOX:
+					searchfield.setHint(R.string.search_mailbox);
+					break;
+				case LetterOperations.WORKAREA:
+					searchfield.setHint(R.string.search_workarea);
+					break;
+				case LetterOperations.ARCHIVE:
+					searchfield.setHint(R.string.search_archive);
+					break;
+				case LetterOperations.RECEIPTS:
+					searchfield.setHint(R.string.search_receipts);
+					break;
+				}
+				showSearchBar();
 			}
 		}
 	}
