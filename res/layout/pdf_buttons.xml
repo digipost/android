@@ -9,33 +9,6 @@
         android:background="@color/bottom_bar_background"
         android:orientation="horizontal" >
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <ImageButton
-                android:id="@+id/pdf_backbtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/document_backbutton_margin_right"
-                android:background="@color/transparent"
-                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
-                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
-                android:src="@drawable/white_back_32" />
-
-            <ImageButton
-                android:id="@+id/pdf_digipost_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
-                android:paddingRight="@dimen/bottombar_image_padding_bottom_and_top"
-                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
-                android:src="@drawable/white_mailbox_48" />
-        </LinearLayout>
-
         <ViewSwitcher
             android:id="@+id/pdf_switcher"
             android:layout_width="fill_parent"
@@ -46,6 +19,14 @@
                 android:layout_height="wrap_content"
                 android:background="@color/bottom_bar_background"
                 android:orientation="horizontal" >
+                
+                <ImageButton
+                android:id="@+id/pdf_digipost_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:padding="@dimen/bottombar_image_padding_bottom_and_top"
+                android:src="@drawable/white_mailbox_back_60" />
 
                 <TextView
                     android:id="@+id/pdf_name"
@@ -68,6 +49,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
+                
+                <ImageButton
+                android:id="@+id/pdf_digipost_icon_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:padding="@dimen/bottombar_image_padding_bottom_and_top"
+                android:src="@drawable/white_mailbox_back_60" />
 
                 <EditText
                     android:id="@+id/pdf_searchtext"
@@ -81,7 +70,7 @@
                     android:textColor="@color/white"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
-                    android:padding="@dimen/bottombar_image_padding_bottom_and_top"
+                    android:padding="@dimen/base_search_padding"
                     android:singleLine="true"
                     android:textColorHint="@color/search_hint" />
 

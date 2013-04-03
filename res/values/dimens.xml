@@ -35,7 +35,7 @@
     <dimen name="document_backbutton_margin_right">-5dp</dimen>
     <dimen name="document_webview_height">0sp</dimen>
     <dimen name="document_pagenumber_margin_bottom">10dp</dimen>
-    <dimen name="pdf_searchtext_margin_top">4dp</dimen>
+    <dimen name="pdf_searchtext_margin_top">7dp</dimen>
 
     <!-- BaseView -->
     <dimen name="base_padding_bottom_and_top">2dp</dimen>

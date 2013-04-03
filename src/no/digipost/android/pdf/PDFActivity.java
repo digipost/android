@@ -26,7 +26,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -36,6 +38,7 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
@@ -129,6 +132,7 @@ public class PDFActivity extends Activity {
 	private final LinkState linkState = LinkState.HIGHLIGHT;
 	private final Handler handler = new Handler();
 	private Intent intent;
+	private Drawable deleteTextImage;
 
 	private PDFCore openFile(final byte b[], final char type) {
 		try {
@@ -293,6 +297,9 @@ public class PDFActivity extends Activity {
 		searchBack.setEnabled(false);
 		searchFwd.setEnabled(false);
 
+		deleteTextImage = getResources().getDrawable(R.drawable.white_clear_32);
+		deleteTextImage.setBounds(new Rect(0, 0, deleteTextImage.getIntrinsicWidth(), deleteTextImage.getIntrinsicHeight()));
+
 		searchText.addTextChangedListener(new TextWatcher() {
 
 			public void afterTextChanged(final Editable s) {
@@ -310,6 +317,30 @@ public class PDFActivity extends Activity {
 			}
 
 			public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+				if (s.length() != 0) {
+					searchText.setCompoundDrawables(null, null, deleteTextImage, null);
+				} else {
+					searchText.setCompoundDrawables(null, null, null, null);
+				}
+			}
+		});
+
+		searchText.setOnTouchListener(new OnTouchListener() {
+
+			public boolean onTouch(final View v, final MotionEvent event) {
+				Drawable co = ((TextView) v).getCompoundDrawables()[2];
+				if (co == null) {
+					return false;
+				}
+				if (event.getAction() != MotionEvent.ACTION_DOWN) {
+					return false;
+				}
+				if (event.getX() > v.getMeasuredWidth() - v.getPaddingRight() - co.getIntrinsicWidth()) {
+					searchText.setText("");
+					return true;
+				} else {
+					return false;
+				}
 			}
 		});
 
@@ -347,11 +378,7 @@ public class PDFActivity extends Activity {
 		digipostIcon.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(final View v) {
-				if (topBarIsSearch) {
-					searchModeOff();
-				} else {
-					finish();
-				}
+				finish();
 			}
 		});
 
@@ -591,7 +618,7 @@ public class PDFActivity extends Activity {
 		searchBack = (ImageButton) buttonsView.findViewById(R.id.pdf_search_back);
 		searchFwd = (ImageButton) buttonsView.findViewById(R.id.pdf_search_forward);
 		searchText = (EditText) buttonsView.findViewById(R.id.pdf_searchtext);
-		backButton = (ImageButton) buttonsView.findViewById(R.id.pdf_backbtn);
+		backButton = (ImageButton) buttonsView.findViewById(R.id.pdf_digipost_icon_back);
 		bottombar = (RelativeLayout) buttonsView.findViewById(R.id.pdf_bottombar);
 		topbar = (LinearLayout) buttonsView.findViewById(R.id.pdf_topbar);
 		toWorkarea = (ImageButton) buttonsView.findViewById(R.id.pdf_toWorkarea);
