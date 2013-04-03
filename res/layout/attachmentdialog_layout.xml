@@ -8,9 +8,9 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/list_item_even"
         android:orientation="horizontal"
-        android:padding="5dp"
-        android:background="@drawable/list_item_even" >
+        android:padding="5dp" >
 
         <ImageView
             android:layout_width="wrap_content"
@@ -21,7 +21,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="5dp"
-            android:text="Vedlegg"
+            android:padding="2dp"
+            android:text="@string/attachment"
             android:textColor="@color/black_subject"
             android:textSize="23sp" />
     </LinearLayout>

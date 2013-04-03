@@ -18,10 +18,12 @@
 
     <!-- BottomBar -->
     <color name="bottom_bar_background">#323538</color>
+    <color name="bottom_bar_search_background">#66686B</color>
 
     <!-- Misc -->
     <color name="transparent">#00000000</color>
     <color name="white">#FFF</color>
+    <color name="search_hint">#E6E3E3</color>
     <color name="title_strip_background">#262626</color>
     <color name="background_red">#D80C16</color>
     <color name="base_searchfield_background">#BA0D16</color>

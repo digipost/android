@@ -1,10 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <LinearLayout
         android:id="@+id/pdf_topbar"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bottom_bar_background"
         android:orientation="horizontal" >
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content" >
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/bottom_bar_background"
                 android:orientation="horizontal" >
@@ -65,7 +65,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
 
@@ -73,13 +73,17 @@
                     android:id="@+id/pdf_searchtext"
                     android:layout_width="@dimen/bottombar_image_width"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/pdf_searchtext_margin_top"
                     android:layout_weight="1"
+                    android:background="@color/bottom_bar_search_background"
                     android:gravity="center_vertical"
                     android:hint="@string/pdf_search_document"
+                    android:textColor="@color/white"
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:padding="@dimen/bottombar_image_padding_bottom_and_top"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textColorHint="@color/search_hint" />
 
                 <ImageButton
                     android:id="@+id/pdf_search_back"

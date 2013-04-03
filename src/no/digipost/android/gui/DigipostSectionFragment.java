@@ -322,7 +322,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		builder.setTitle(header)
 				.setMessage(text)
 				.setCancelable(false)
-				.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+				.setNeutralButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int id) {
 						dialog.cancel();
 					}
@@ -961,7 +961,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				task.execute(adapter);
 				dialog.dismiss();
 			}
-		}).setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
 				dialog.cancel();
 			}
