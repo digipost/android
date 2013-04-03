@@ -50,20 +50,20 @@ public class ApiAccess {
 		networkConnection = new NetworkConnection(context);
 	}
 
-	public Account getAccount() throws DigipostApiException, DigipostClientException {
+	public Account getAccount() throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		return (Account) JSONConverter.processJackson(Account.class, getApiJsonString(ApiConstants.URL_API));
 	}
 
-	public Documents getDocuments(final String uri) throws DigipostApiException, DigipostClientException {
+	public Documents getDocuments(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		return (Documents) JSONConverter.processJackson(Documents.class, getApiJsonString(uri));
 	}
 
-	public Receipts getReceipts(final String uri) throws DigipostApiException, DigipostClientException {
+	public Receipts getReceipts(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		return (Receipts) JSONConverter.processJackson(Receipts.class, getApiJsonString(uri));
 	}
 
 	private ClientResponse executeGetRequest(final String uri, final String header_accept) throws DigipostClientException,
-			DigipostApiException {
+			DigipostApiException, DigipostAuthenticationException {
 		if (Secret.ACCESS_TOKEN.equals("")) {
 			OAuth2.updateAccessToken(context);
 		}
@@ -82,7 +82,7 @@ public class ApiAccess {
 		}
 	}
 
-	public String getApiJsonString(final String uri) throws DigipostApiException, DigipostClientException {
+	public String getApiJsonString(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
 
 		try {
@@ -95,11 +95,13 @@ public class ApiAccess {
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());
 	}
 
-	public Letter getMovedDocument(final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException {
+	public Letter getMovedDocument(final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
+			DigipostAuthenticationException {
 		return (Letter) JSONConverter.processJackson(Letter.class, moveLetter(uri, json));
 	}
 
-	public String moveLetter(final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException {
+	public String moveLetter(final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
+			DigipostAuthenticationException {
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost post = new HttpPost();
 		try {
@@ -138,7 +140,7 @@ public class ApiAccess {
 		return JSONConverter.getJsonStringFromInputStream(is);
 	}
 
-	public boolean delete(final String uri) throws DigipostClientException, DigipostApiException {
+	public boolean delete(final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
 		Client client = Client.create();
 		ClientResponse cr = null;
 
@@ -162,7 +164,8 @@ public class ApiAccess {
 		return true;
 	}
 
-	public byte[] getDocumentContent(final String uri) throws DigipostApiException, DigipostClientException {
+	public byte[] getDocumentContent(final String uri) throws DigipostApiException, DigipostClientException,
+			DigipostAuthenticationException {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
 
 		try {
@@ -175,7 +178,7 @@ public class ApiAccess {
 		return JSONConverter.inputStreamtoByteArray(filesize, cr.getEntityInputStream());
 	}
 
-	public String getDocumentHTML(final String uri) throws DigipostApiException, DigipostClientException {
+	public String getDocumentHTML(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
 
 		try {
@@ -188,7 +191,7 @@ public class ApiAccess {
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());
 	}
 
-	public String getReceiptHTML(final String uri) throws DigipostApiException, DigipostClientException {
+	public String getReceiptHTML(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.TEXT_HTML);
 
 		try {

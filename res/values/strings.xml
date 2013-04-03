@@ -72,6 +72,7 @@
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv igjen.</string>
     <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.</string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
+    <string name="error_invalid_token">Tilgang tilbaketrukket.</string>
 
     <!-- Prompts -->
     <string name="dialog_prompt_letter_toArchive">Er du sikker på at du vil flytte brevet til arkivet?</string>

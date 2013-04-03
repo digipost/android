@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.DigipostApiException;
+import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.model.Attachment;
@@ -41,6 +42,8 @@ import android.widget.Toast;
 public class DigipostSectionFragment extends Fragment implements FragmentCommunicator {
 	public static final String ARG_SECTION_NUMBER = "section_number";
 	public static final int REQUESTCODE_INTENT = 1;
+	public static final String BASE_UPDATE_ALL = "updateAll";
+	public static final String BASE_INVALID_TOKEN = "invalidToken";
 
 	private static boolean[] fragmentsRefreshing;
 
@@ -283,12 +286,11 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	}
 
 	private void loadAccountMetaComplete() {
-		activityCommunicator.passDataToActivity("updateAll");
+		activityCommunicator.passDataToActivity(BASE_UPDATE_ALL);
 	}
 
 	private void toggleMultiselectionOn(final int type, final int position) {
 		listview.requestFocus();
-
 
 		if (type != LetterOperations.RECEIPTS && !adapterLetter.getShowBoxes()) {
 			adapterLetter.setInitialcheck(position);
@@ -298,7 +300,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			showBottomBar();
 		}
 		checkboxesVisible = true;
-
 
 	}
 
@@ -352,9 +353,11 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	private class GetReceiptsMetaTask extends AsyncTask<Void, Void, ArrayList<Receipt>> {
 		private String errorMessage;
+		private boolean invalidToken;
 
 		public GetReceiptsMetaTask() {
 			errorMessage = "";
+			invalidToken = false;
 		}
 
 		@Override
@@ -374,6 +377,10 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			} catch (DigipostClientException e) {
 				errorMessage = e.getMessage();
 				return null;
+			} catch (DigipostAuthenticationException e) {
+				errorMessage = e.getMessage();
+				invalidToken = true;
+				return null;
 			}
 		}
 
@@ -386,6 +393,10 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			if (result == null) {
 				if (!accountMetaRefreshing()) {
 					showMessage(errorMessage);
+
+					if (invalidToken) {
+						activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
+					}
 				}
 				return;
 			}
@@ -409,9 +420,11 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	private class GetAccountMetaTask extends AsyncTask<Void, Void, ArrayList<Letter>> {
 		private final int type;
 		private String errorMessage = "";
+		private final boolean invalidToken;
 
 		public GetAccountMetaTask(final int type) {
 			this.type = type;
+			invalidToken = false;
 		}
 
 		@Override
@@ -431,6 +444,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			} catch (DigipostClientException e) {
 				errorMessage = e.getMessage();
 				return null;
+			} catch (DigipostAuthenticationException e) {
+				errorMessage = e.getMessage();
+				return null;
 			}
 		}
 
@@ -443,6 +459,10 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			if (result == null) {
 				if (!accountMetaRefreshing()) {
 					showMessage(errorMessage);
+
+					if (invalidToken) {
+						activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
+					}
 				}
 				return;
 			}
@@ -464,14 +484,16 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	}
 
 	private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
-		Letter letter;
-		Attachment attachment;
+		private Letter letter;
+		private Attachment attachment;
 		private String errorMessage = "";
+		private boolean invalidToken;
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 			loadContentProgressDialog(this);
+			invalidToken = false;
 		}
 
 		@Override
@@ -490,6 +512,10 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			} catch (DigipostClientException e) {
 				errorMessage = e.getMessage();
 				return null;
+			} catch (DigipostAuthenticationException e) {
+				errorMessage = e.getMessage();
+				invalidToken = true;
+				return null;
 			}
 		}
 
@@ -505,6 +531,10 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 			if (result == null) {
 				showMessage(errorMessage);
+
+				if (invalidToken) {
+					activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
+				}
 			} else {
 				if (letter != null) {
 					tempLetter = letter;
@@ -530,11 +560,13 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		private Letter letter;
 		private Attachment attachment;
 		private Receipt receipt;
+		private boolean invalidToken;
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 			loadContentProgressDialog(this);
+			invalidToken = false;
 		}
 
 		@Override
@@ -559,6 +591,10 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			} catch (DigipostClientException e) {
 				errorMessage = e.getMessage();
 				return null;
+			} catch (DigipostAuthenticationException e) {
+				errorMessage = e.getMessage();
+				invalidToken = true;
+				return null;
 			}
 		}
 
@@ -574,12 +610,16 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 			if (result == null) {
 				showMessage(errorMessage);
+
+				if (invalidToken) {
+					activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
+				}
 			} else {
 				Intent i = new Intent(getActivity(), HtmlWebview.class);
 				if (attachment != null) {
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);
 					i.putExtra(ApiConstants.DOCUMENT_TYPE, "");
-					i.putExtra(ApiConstants.LOCATION_FROM,tempLetter.getLocation());
+					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
 				} else {
 					String type = letter != null ? ApiConstants.LETTER : ApiConstants.RECEIPT;
 					i.putExtra(ApiConstants.DOCUMENT_TYPE, type);
@@ -601,9 +641,11 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	private class DeleteTask extends AsyncTask<Object, Integer, String> {
 		private final String type;
 		private String errorMessage;
+		private boolean invalidToken;
 
 		public DeleteTask(final String type) {
 			this.type = type;
+			invalidToken = false;
 		}
 
 		@Override
@@ -614,6 +656,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			} catch (DigipostApiException e) {
 				return e.getMessage();
 			} catch (DigipostClientException e) {
+				return e.getMessage();
+			} catch (DigipostAuthenticationException e) {
+				invalidToken = true;
 				return e.getMessage();
 			}
 		}
@@ -629,7 +674,11 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			super.onPostExecute(result);
 
 			if (result != null) {
-				showMessage(errorMessage);
+				showMessage(result);
+
+				if (invalidToken) {
+					activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
+				}
 			} else {
 				loadAccountMetaComplete();
 			}
@@ -639,9 +688,11 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	private class MoveDocumentsTask extends AsyncTask<Letter, Void, Boolean> {
 		private final String toLocation;
 		private String errorMessage;
+		private boolean invalidToken;
 
 		public MoveDocumentsTask(final String toLocation) {
 			this.toLocation = toLocation;
+			invalidToken = false;
 		}
 
 		@Override
@@ -660,6 +711,10 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			} catch (DigipostClientException e) {
 				errorMessage = e.getMessage();
 				return false;
+			} catch (DigipostAuthenticationException e) {
+				invalidToken = true;
+				errorMessage = e.getMessage();
+				return false;
 			} catch (Exception e) {
 				errorMessage = e.getMessage();
 				return false;
@@ -674,10 +729,12 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 		@Override
 		protected void onPostExecute(final Boolean result) {
-			super.onPostExecute(result);
-
 			if (!result) {
 				showMessage(errorMessage);
+
+				if (invalidToken) {
+					activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
+				}
 			} else {
 				loadAccountMetaComplete();
 			}
@@ -686,22 +743,24 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	}
 
 	private class MultipleDocumentsTask extends AsyncTask<Object, Integer, String> {
-
-		Letter letter;
-		String action;
-		boolean[] checked;
-		int counter = 0;
-		String errorMessage;
-		int type;
-		LetterListAdapter documentadapter;
-		ReceiptListAdapter receiptadapter;
-		int checkedCount;
+		private Letter letter;
+		private final String action;
+		private final boolean[] checked;
+		private int counter = 0;
+		private String errorMessage;
+		private final int type;
+		private LetterListAdapter documentadapter;
+		private ReceiptListAdapter receiptadapter;
+		private int checkedCount;
+		private boolean invalidToken;
 
 		public MultipleDocumentsTask(final int type, final String action, final boolean[] checked) {
 			this.type = type;
 			this.action = action;
 			this.checked = checked;
 			checkedCount = 0;
+			invalidToken = false;
+
 		}
 
 		@Override
@@ -743,6 +802,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 						return e.getMessage();
 					} catch (DigipostClientException e) {
 						return e.getMessage();
+					} catch (DigipostAuthenticationException e) {
+						invalidToken = true;
+						return e.getMessage();
 					} catch (Exception e) {
 						return e.getMessage();
 					}
@@ -759,6 +821,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 					} catch (DigipostApiException e) {
 						return e.getMessage();
 					} catch (DigipostClientException e) {
+						return e.getMessage();
+					} catch (DigipostAuthenticationException e) {
+						invalidToken = true;
 						return e.getMessage();
 					} catch (Exception e) {
 						return e.getMessage();
@@ -797,10 +862,12 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 		@Override
 		protected void onPostExecute(final String result) {
-			super.onPostExecute(result);
-
 			if (result != null) {
 				showMessage(errorMessage);
+
+				if (invalidToken) {
+					activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
+				}
 			}
 			if (type == ApiConstants.TYPE_LETTER) {
 				documentadapter.clearCheckboxes();

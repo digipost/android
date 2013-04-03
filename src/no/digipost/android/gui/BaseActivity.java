@@ -51,6 +51,7 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 public class BaseActivity extends FragmentActivity implements ActivityCommunicator {
@@ -101,15 +102,14 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 
 			public void onPageSelected(final int arg0) {
 				DigipostSectionFragment fragment = getFragment(currentViewIndex);
-				if(fragment.checkboxesVisible) {
+				if (fragment.checkboxesVisible) {
 					fragment.toggleMultiselectionOff(currentViewIndex);
 				}
-				if(isSearch) {
+				if (isSearch) {
 					hideSearchBar();
 					fragment.clearFilter(currentViewIndex);
 				}
-					currentViewIndex = arg0;
-
+				currentViewIndex = arg0;
 
 			}
 
@@ -200,6 +200,11 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		finish();
 	}
 
+	public void showMessage(final String message) {
+		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+		toast.show();
+	}
+
 	private void showSearchBar() {
 		if (!isSearch) {
 			isSearch = true;
@@ -227,10 +232,10 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 
 	private void hideSearchBar() {
 		//if (isSearch) {
-			isSearch = false;
-			searchfield.setText("");
-			topbarSwitcher.showPrevious();
-			hideKeyboard();
+		isSearch = false;
+		searchfield.setText("");
+		topbarSwitcher.showPrevious();
+		hideKeyboard();
 
 	}
 
@@ -361,9 +366,12 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		return super.onKeyDown(keyCode, event);
 	}
 
-	public void passDataToActivity(final String someValue) {
-		if (someValue.equals("updateAll")) {
+	public void passDataToActivity(final String message) {
+		if (message.equals(DigipostSectionFragment.BASE_UPDATE_ALL)) {
 			loadAccountMetaComplete();
+		} else if (message.equals(DigipostSectionFragment.BASE_INVALID_TOKEN)) {
+			showMessage(this.getString(R.string.error_invalid_token));
+			logOut();
 		}
 	}
 }

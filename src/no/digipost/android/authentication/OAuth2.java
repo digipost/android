@@ -26,6 +26,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.DigipostApiException;
+import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.api.JSONConverter;
 import no.digipost.android.gui.NetworkConnection;
@@ -57,7 +58,7 @@ public class OAuth2 {
 	}
 
 	public static void retriveAccessToken(final String url_state, final String url_code, final Context context)
-			throws DigipostApiException, DigipostClientException {
+			throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		nonce = getSecureRandom(20);
 
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
@@ -78,7 +79,7 @@ public class OAuth2 {
 	}
 
 	public static void retriveAccessToken(final String refresh_token, final Context context) throws DigipostApiException,
-			DigipostClientException {
+			DigipostClientException, DigipostAuthenticationException {
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
 		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
@@ -97,7 +98,8 @@ public class OAuth2 {
 		editor.commit();
 	}
 
-	public static void updateAccessToken(final Context context) throws DigipostApiException, DigipostClientException {
+	public static void updateAccessToken(final Context context) throws DigipostApiException, DigipostClientException,
+			DigipostAuthenticationException {
 		String encrypted_refresh_token = getEncryptedRefreshToken(context);
 
 		KeyStoreAdapter ksa = new KeyStoreAdapter();
@@ -111,7 +113,7 @@ public class OAuth2 {
 	}
 
 	public static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws DigipostApiException,
-			DigipostClientException {
+			DigipostClientException, DigipostAuthenticationException {
 		Client c = Client.create();
 		WebResource r = c.resource(ApiConstants.URL_API_OAUTH_ACCESSTOKEN);
 		ClientResponse cr = null;
@@ -125,8 +127,14 @@ public class OAuth2 {
 			throw new DigipostClientException(context.getString(R.string.error_your_network));
 		}
 
+		int statusCode = cr.getStatus();
+
+		if (statusCode == 400) {
+			throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
+		}
+
 		NetworkConnection networkConnection = new NetworkConnection(context);
-		networkConnection.checkHttpStatusCode(cr.getStatus());
+		networkConnection.checkHttpStatusCode(statusCode);
 
 		return (Access) JSONConverter.processJackson(Access.class, cr.getEntityInputStream());
 	}

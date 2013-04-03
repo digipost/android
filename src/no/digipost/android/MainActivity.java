@@ -17,6 +17,7 @@
 package no.digipost.android;
 
 import no.digipost.android.api.DigipostApiException;
+import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.OAuth2;
@@ -25,8 +26,11 @@ import no.digipost.android.gui.LoginActivity;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -90,7 +94,17 @@ public class MainActivity extends Activity {
 		finish();
 	}
 
+	public void showMessage(final String message) {
+		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+		toast.show();
+	}
+
 	private class CheckTokenTask extends AsyncTask<Void, Void, String> {
+		private boolean clearRefreshToken;
+
+		public CheckTokenTask() {
+			clearRefreshToken = false;
+		}
 
 		@Override
 		protected String doInBackground(final Void... params) {
@@ -102,13 +116,26 @@ public class MainActivity extends Activity {
 				return e.getMessage();
 			} catch (DigipostClientException e) {
 				return e.getMessage();
+			} catch (DigipostAuthenticationException e) {
+				clearRefreshToken = true;
+				return e.getMessage();
 			}
 
 		}
 
 		@Override
 		protected void onPostExecute(final String result) {
-			startBaseActivity();
+			if (result == null) {
+				startBaseActivity();
+			} else {
+				if (clearRefreshToken) {
+					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+					settings.edit().clear().commit();
+				}
+
+				showMessage(result);
+				startLoginActivity();
+			}
 		}
 	}
 }

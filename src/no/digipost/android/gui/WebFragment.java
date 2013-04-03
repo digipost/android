@@ -19,6 +19,7 @@ package no.digipost.android.gui;
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.DigipostApiException;
+import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.api.ErrorHandling;
 import no.digipost.android.authentication.OAuth2;
@@ -100,6 +101,8 @@ public class WebFragment extends DialogFragment {
 				handler.sendEmptyMessage(ErrorHandling.ERROR_SERVER);
 			} catch (DigipostClientException e) {
 				handler.sendEmptyMessage(ErrorHandling.ERROR_DEVICE);
+			} catch (DigipostAuthenticationException e) {
+				// Ignore
 			}
 
 			return null;

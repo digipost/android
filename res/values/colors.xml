@@ -5,7 +5,7 @@
     <color name="list_pressed">#E0E0E0</color>
     <color name="list_focused">#6F7275</color>
     <color name="list_even">#ffffff</color>
-    <color name="list_odd">#f9f9fa</color>
+    <color name="list_odd">#fafafa</color>
     <color name="green_price">#7bc144</color>
     <color name="blue_date">#56b4ef</color>
     <color name="black_subject">#383435</color>

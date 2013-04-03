@@ -47,14 +47,15 @@ public class LetterOperations {
 		primaryAccount = null;
 	}
 
-	public PrimaryAccount getPrimaryAccount() throws DigipostApiException, DigipostClientException {
+	public PrimaryAccount getPrimaryAccount() throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		if (primaryAccount == null) {
 			primaryAccount = apiAccess.getAccount().getPrimaryAccount();
 		}
 		return primaryAccount;
 	}
 
-	public ArrayList<Letter> getAccountContentMeta(final int type) throws DigipostApiException, DigipostClientException {
+	public ArrayList<Letter> getAccountContentMeta(final int type) throws DigipostApiException, DigipostClientException,
+			DigipostAuthenticationException {
 		PrimaryAccount primaryAccount = getPrimaryAccount();
 
 		switch (type) {
@@ -73,18 +74,20 @@ public class LetterOperations {
 		return "https://www.digipost.no/post/api/private/accounts/" + uri.replaceAll("\\D+", "") + "/receipts";
 	}
 
-	public ArrayList<Receipt> getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException {
+	public ArrayList<Receipt> getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException,
+			DigipostAuthenticationException {
 		PrimaryAccount primaryAccount = getPrimaryAccount();
 		return apiAccess.getReceipts(getReceipLink(primaryAccount.getInboxUri())).getReceipt();
 	}
 
 	public void moveDocument(final Letter letter, final String toLocation) throws ClientProtocolException, UniformInterfaceException,
 			ClientHandlerException, ParseException, IOException, URISyntaxException, IllegalStateException, NetworkErrorException,
-			DigipostClientException, DigipostApiException {
+			DigipostClientException, DigipostApiException, DigipostAuthenticationException {
 		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
 	}
 
-	public byte[] getDocumentContentPDF(final Object object) throws DigipostApiException, DigipostClientException {
+	public byte[] getDocumentContentPDF(final Object object) throws DigipostApiException, DigipostClientException,
+			DigipostAuthenticationException {
 		if (object instanceof Letter) {
 			ApiAccess.filesize = Integer.parseInt(((Letter) object).getFileSize());
 			return apiAccess.getDocumentContent(((Letter) object).getContentUri());
@@ -94,7 +97,8 @@ public class LetterOperations {
 		}
 	}
 
-	public String getDocumentContentHTML(final Object object) throws DigipostApiException, DigipostClientException {
+	public String getDocumentContentHTML(final Object object) throws DigipostApiException, DigipostClientException,
+			DigipostAuthenticationException {
 		if (object instanceof Letter) {
 			return apiAccess.getDocumentHTML(((Letter) object).getContentUri());
 		} else {
@@ -103,15 +107,17 @@ public class LetterOperations {
 
 	}
 
-	public byte[] getReceiptContentPDF(final Receipt receipt) throws DigipostApiException, DigipostClientException {
+	public byte[] getReceiptContentPDF(final Receipt receipt) throws DigipostApiException, DigipostClientException,
+			DigipostAuthenticationException {
 		return apiAccess.getDocumentContent(receipt.getContentAsPDFUri());
 	}
 
-	public String getReceiptContentHTML(final Receipt receipt) throws DigipostApiException, DigipostClientException {
+	public String getReceiptContentHTML(final Receipt receipt) throws DigipostApiException, DigipostClientException,
+			DigipostAuthenticationException {
 		return apiAccess.getReceiptHTML(receipt.getContentAsHTMLUri());
 	}
 
-	public void delete(final Object object) throws DigipostApiException, DigipostClientException {
+	public void delete(final Object object) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		if (object instanceof Letter) {
 			Letter letter = (Letter) object;
 			apiAccess.delete(letter.getDeleteUri());
