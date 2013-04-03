@@ -120,7 +120,7 @@
                     android:background="@color/base_searchfield_background"
                     android:padding="@dimen/base_search_padding"
                     android:singleLine="true"
-                    android:textColorHint="@color/white"
+                    android:textColorHint="@color/search_hint"
                     android:textStyle="normal" />
             </LinearLayout>
         </ViewSwitcher>
