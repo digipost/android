@@ -19,7 +19,6 @@ public class HtmlWebview extends Activity {
 	private ImageButton toWorkarea;
 	private ImageButton delete;
 	private ImageButton digipostIcon;
-	private ImageButton backButton;
 
 	private String from;
 	private String type;
@@ -52,7 +51,6 @@ public class HtmlWebview extends Activity {
 		toWorkarea = (ImageButton) findViewById(R.id.html_toWorkarea);
 		delete = (ImageButton) findViewById(R.id.html_delete);
 		digipostIcon = (ImageButton) findViewById(R.id.html_digipost_icon);
-		backButton = (ImageButton) findViewById(R.id.html_backbtn);
 
 		if (type.equals(ApiConstants.RECEIPT)) {
 			toArchive.setVisibility(View.GONE);
@@ -70,7 +68,6 @@ public class HtmlWebview extends Activity {
 		delete.setOnClickListener(new HTMLViewListener());
 		// share.setOnClickListener(new HTMLViewListener());
 		digipostIcon.setOnClickListener(new HTMLViewListener());
-		backButton.setOnClickListener(new HTMLViewListener());
 	}
 
 	private void singleLetterOperation(final String action) {

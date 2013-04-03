@@ -11,25 +11,15 @@
         android:orientation="horizontal" >
 
         <ImageButton
-            android:id="@+id/html_backbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/document_backbutton_margin_right"
-            android:background="@color/transparent"
-            android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
-            android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
-            android:src="@drawable/white_back_32" />
-
-        <ImageButton
             android:id="@+id/html_digipost_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
-            android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
-            android:paddingRight="@dimen/bottombar_image_padding_bottom_and_top"
             android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
-            android:src="@drawable/white_mailbox_48" />
+            android:paddingRight="@dimen/bottombar_image_padding_bottom_and_top"
+            android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+            android:paddingLeft="@dimen/base_headerbuttonslayout_padding"
+            android:src="@drawable/white_mailbox_back_60" />
     </LinearLayout>
 
     <WebView
