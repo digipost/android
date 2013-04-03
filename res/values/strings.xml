@@ -13,6 +13,7 @@
     <string name="abort">Avbryt</string>
     <string name="loading_content">Laster innhold...</string>
     <string name="search">Søk</string>
+    <string name="yes"></string>
     <string name="attachment">Vedlegg</string>
     <string name="search_mailbox">Søk i postkassen</string>
     <string name="search_workarea">Søk i kjøkkenbenken</string>

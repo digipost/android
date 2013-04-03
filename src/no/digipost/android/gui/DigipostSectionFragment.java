@@ -289,7 +289,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	private void toggleMultiselectionOn(final int type, final int position) {
 		listview.requestFocus();
 
-
 		if (type != LetterOperations.RECEIPTS && !adapterLetter.getShowBoxes()) {
 			adapterLetter.setInitialcheck(position);
 			showBottomBar();
@@ -298,7 +297,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			showBottomBar();
 		}
 		checkboxesVisible = true;
-
 
 	}
 
@@ -321,7 +319,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		builder.setTitle(header)
 				.setMessage(text)
 				.setCancelable(false)
-				.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+				.setNeutralButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int id) {
 						dialog.cancel();
 					}
@@ -579,7 +577,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				if (attachment != null) {
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);
 					i.putExtra(ApiConstants.DOCUMENT_TYPE, "");
-					i.putExtra(ApiConstants.LOCATION_FROM,tempLetter.getLocation());
+					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
 				} else {
 					String type = letter != null ? ApiConstants.LETTER : ApiConstants.RECEIPT;
 					i.putExtra(ApiConstants.DOCUMENT_TYPE, type);
@@ -894,7 +892,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				task.execute(adapter);
 				dialog.dismiss();
 			}
-		}).setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
 				dialog.cancel();
 			}

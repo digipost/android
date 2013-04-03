@@ -430,7 +430,7 @@ public class PDFActivity extends Activity {
 				singleLetterOperation(action);
 				dialog.dismiss();
 			}
-		}).setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
 				dialog.cancel();
 			}

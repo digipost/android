@@ -84,12 +84,12 @@ public class HtmlWebview extends Activity {
 
 	private void showWarning(final String text, final String action) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+		builder.setMessage(text).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
 				singleLetterOperation(action);
 				dialog.dismiss();
 			}
-		}).setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
 				dialog.cancel();
 			}
