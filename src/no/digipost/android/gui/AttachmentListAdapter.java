@@ -45,11 +45,15 @@ public class AttachmentListAdapter extends ArrayAdapter<Attachment> {
 
 	private String getSizeFormatted(final String byteString) {
 		long bytes = Long.parseLong(byteString);
-		String[] units = new String[] { "", "KB", "MB", "GB" };
-		for (int i = 3; i > 0; i--) {
+		String[] units = new String[] { "", "KB", "MB" };
+		for (int i = 2; i > 0; i--) {
 			double exp = Math.pow(1024, i);
 			if (bytes > exp) {
-				return String.format("%3.1f %s", bytes / exp, units[i]);
+				float n = (float) (bytes / exp);
+				if(i==1){
+					return (int) n + " "+ units[i];
+				}
+				return String.format("%3.1f %s", n, units[i]);
 			}
 		}
 		return Long.toString(bytes);
