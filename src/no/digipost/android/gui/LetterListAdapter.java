@@ -213,7 +213,11 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		for (int i = 3; i > 0; i--) {
 			double exp = Math.pow(1024, i);
 			if (bytes > exp) {
-				return String.format("%3.1f %s", bytes / exp, units[i]);
+				float n = (float) (bytes / exp);
+				if(i==1){
+					return (int) n + " "+ units[i];
+				}
+				return String.format("%3.1f %s", n, units[i]);
 			}
 		}
 		return Long.toString(bytes);
