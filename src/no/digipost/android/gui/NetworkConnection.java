@@ -6,12 +6,17 @@ import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.R;
 import no.digipost.android.api.DigipostApiException;
+import no.digipost.android.api.DigipostInvalidTokenException;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
 public class NetworkConnection {
+	public static final int HTTP_STATUS_SUCCESS = 200;
+	public static final int HTTP_STATUS_UNAUTHORIZED = 401;
+	public static final int HTTP_STATUS_BAD_REQUEST = 400;
+
 	private final Context context;
 
 	public NetworkConnection(final Context context) {
@@ -24,11 +29,11 @@ public class NetworkConnection {
 		return activeNetworkInfo != null;
 	}
 
-	public void checkHttpStatusCode(final int statusCode) throws DigipostApiException {
-		if (statusCode == 200) {
+	public void checkHttpStatusCode(final int statusCode) throws DigipostApiException, DigipostInvalidTokenException {
+		if (statusCode == HTTP_STATUS_SUCCESS) {
 			return;
-		} else if (statusCode == 401) {
-			throw new IllegalStateException();
+		} else if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
+			throw new DigipostInvalidTokenException();
 		} else {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}

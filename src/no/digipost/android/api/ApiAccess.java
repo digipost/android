@@ -87,7 +87,7 @@ public class ApiAccess {
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
-		} catch (IllegalStateException e) {
+		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return getApiJsonString(uri);
 		}
@@ -123,7 +123,7 @@ public class ApiAccess {
 
 		try {
 			networkConnection.checkHttpStatusCode(response.getStatusLine().getStatusCode());
-		} catch (IllegalStateException e) {
+		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return moveLetter(uri, json);
 		}
@@ -156,7 +156,7 @@ public class ApiAccess {
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
-		} catch (IllegalStateException e) {
+		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return delete(uri);
 		}
@@ -170,7 +170,7 @@ public class ApiAccess {
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
-		} catch (IllegalStateException e) {
+		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return getDocumentContent(uri);
 		}
@@ -183,11 +183,10 @@ public class ApiAccess {
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
-		} catch (IllegalStateException e) {
+		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return getDocumentHTML(uri);
 		}
-
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());
 	}
 
@@ -196,9 +195,9 @@ public class ApiAccess {
 
 		try {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
-		} catch (IllegalStateException e) {
+		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
-			return getDocumentHTML(uri);
+			return getReceiptHTML(uri);
 		}
 
 		return JSONConverter.getJsonStringFromInputStream(cr.getEntityInputStream());

@@ -52,7 +52,6 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	public boolean showboxes;
 	public boolean[] checked;
 	private CheckBox checkbox;
-	private boolean runAnimation;
 
 	private String subjectFilterText;
 	private String creatorFilterText;
@@ -68,7 +67,6 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		subjectFilterText = null;
 		creatorFilterText = null;
 		dateFilterText = null;
-		runAnimation = true;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -135,7 +133,14 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 				checkbox.setVisibility(View.VISIBLE);
 			}
 		}
+
 		return row;
+	}
+
+	@Override
+	public void add(final Letter object) {
+		filtered.add(object);
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -159,11 +164,10 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 		letters.addAll(list);
 		filtered = letters;
 		notifyDataSetChanged();
-		runAnimation = false;
 	}
 
 	public void setInitialcheck(final int position) {
-		checked = new boolean[letters.size()];
+		checked = new boolean[filtered.size()];
 		checked[position] = true;
 		showboxes = true;
 		notifyDataSetChanged();
