@@ -14,7 +14,6 @@ import android.widget.TextView;
 public class AttachmentListAdapter extends ArrayAdapter<Attachment> {
 	private final Context con;
 	private final ArrayList<Attachment> attachments;
-	private final Attachment main;
 
 
 
@@ -22,7 +21,6 @@ public class AttachmentListAdapter extends ArrayAdapter<Attachment> {
 		super(context, resource, objects);
 		con = context;
 		attachments = objects;
-		main = findMain();
 	}
 
 	@Override
