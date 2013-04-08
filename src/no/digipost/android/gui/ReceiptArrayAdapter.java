@@ -128,11 +128,12 @@ public class ReceiptArrayAdapter extends ArrayAdapter<Receipt> {
 					checked[position] = state;
 				}
 			});
-
-			if (showboxes) {
-				checkbox.setVisibility(View.VISIBLE);
-			}
 		}
+
+		if (showboxes) {
+			checkbox.setVisibility(View.VISIBLE);
+		}
+
 		return row;
 	}
 
@@ -152,11 +153,11 @@ public class ReceiptArrayAdapter extends ArrayAdapter<Receipt> {
 		notifyDataSetChanged();
 	}
 
-	public void updateList(final ArrayList<Receipt> list) {
+	public void updateList(final ArrayList<Receipt> list, final String searchContraint) {
 		receipts.clear();
 		receipts.addAll(list);
-		filtered = receipts;
-		notifyDataSetChanged();
+
+		filter.filter(searchContraint);
 	}
 
 	public void setInitialcheck(final int position) {

@@ -62,6 +62,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	private ImageButton moveToArchive;
 	private ImageButton delete;
 	public boolean checkboxesVisible;
+	private String searchConstraint;
 
 	private Dialog attachmentDialog;
 
@@ -76,6 +77,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		super.onCreate(savedInstanceState);
 		lo = new LetterOperations(getActivity().getApplicationContext());
 		fragmentsRefreshing = new boolean[4];
+		searchConstraint = "";
 
 		progressDialog = new ProgressDialog(getActivity());
 	}
@@ -177,6 +179,8 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	}
 
 	public void filterList(final int type, final CharSequence constraint) {
+		searchConstraint = constraint.toString();
+
 		if (type != LetterOperations.RECEIPTS) {
 			adapterLetter.getFilter().filter(constraint);
 		} else {
@@ -291,6 +295,14 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		activityCommunicator.passDataToActivity(BASE_UPDATE_ALL);
 	}
 
+	private void clearCheckboxes(final int type) {
+		if (type != LetterOperations.RECEIPTS && adapterLetter.getShowBoxes()) {
+			adapterLetter.clearCheckboxes();
+		} else if (type == LetterOperations.RECEIPTS && adapterReceipts.getShowBoxes()) {
+			adapterReceipts.clearCheckboxes();
+		}
+	}
+
 	private void toggleMultiselectionOn(final int type, final int position) {
 		listview.requestFocus();
 
@@ -306,16 +318,12 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	}
 
 	public void toggleMultiselectionOff(final int type) {
-		listview.requestFocus();
-
-		if (type != LetterOperations.RECEIPTS && adapterLetter.getShowBoxes()) {
-			adapterLetter.clearCheckboxes();
+		if (checkboxesVisible) {
+			listview.requestFocus();
+			clearCheckboxes(type);
 			hideBottomBar();
-		} else if (type == LetterOperations.RECEIPTS && adapterReceipts.getShowBoxes()) {
-			adapterReceipts.clearCheckboxes();
-			hideBottomBar();
+			checkboxesVisible = false;
 		}
-		checkboxesVisible = false;
 	}
 
 	private void unsupportedActionDialog(final String header, final String text) {
@@ -403,7 +411,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				return;
 			}
 
-			adapterReceipts.updateList(result);
+			adapterReceipts.updateList(result, searchConstraint);
 			if (result.isEmpty()) {
 				listEmpty.setVisibility(View.VISIBLE);
 			} else {
@@ -469,7 +477,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				return;
 			}
 
-			adapterLetter.updateList(result);
+			adapterLetter.updateList(result, searchConstraint);
 			if (result.isEmpty()) {
 				listEmpty.setVisibility(View.VISIBLE);
 			} else {

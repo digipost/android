@@ -128,10 +128,10 @@ public class LetterArrayAdapter extends ArrayAdapter<Letter> {
 					checked[position] = state;
 				}
 			});
+		}
 
-			if (showboxes) {
-				checkbox.setVisibility(View.VISIBLE);
-			}
+		if (showboxes) {
+			checkbox.setVisibility(View.VISIBLE);
 		}
 
 		return row;
@@ -159,11 +159,11 @@ public class LetterArrayAdapter extends ArrayAdapter<Letter> {
 		notifyDataSetChanged();
 	}
 
-	public void updateList(final ArrayList<Letter> list) {
+	public void updateList(final ArrayList<Letter> list, final String searchContraint) {
 		letters.clear();
 		letters.addAll(list);
-		filtered = letters;
-		notifyDataSetChanged();
+
+		filter.filter(searchContraint);
 	}
 
 	public void setInitialcheck(final int position) {
@@ -214,8 +214,8 @@ public class LetterArrayAdapter extends ArrayAdapter<Letter> {
 			double exp = Math.pow(1024, i);
 			if (bytes > exp) {
 				float n = (float) (bytes / exp);
-				if(i==1){
-					return (int) n + " "+ units[i];
+				if (i == 1) {
+					return (int) n + " " + units[i];
 				}
 				return String.format("%3.1f %s", n, units[i]);
 			}

@@ -130,6 +130,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 
 			public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
 				DigipostPageFragment fragment = getFragment(currentViewIndex);
+				fragment.toggleMultiselectionOff(currentViewIndex);
 				fragment.filterList(currentViewIndex, s);
 
 				if (s.length() != 0) {
@@ -144,7 +145,6 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 			}
 
 			public void afterTextChanged(final Editable s) {
-				// Not implemented.
 			}
 		});
 
