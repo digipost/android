@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.R;
 import no.digipost.android.api.DigipostApiException;
+import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostInvalidTokenException;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -29,11 +30,14 @@ public class NetworkConnection {
 		return activeNetworkInfo != null;
 	}
 
-	public void checkHttpStatusCode(final int statusCode) throws DigipostApiException, DigipostInvalidTokenException {
+	public void checkHttpStatusCode(final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
+			DigipostAuthenticationException {
 		if (statusCode == HTTP_STATUS_SUCCESS) {
 			return;
 		} else if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
 			throw new DigipostInvalidTokenException();
+		} else if (statusCode == HTTP_STATUS_BAD_REQUEST) {
+			throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
 		} else {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
