@@ -15,23 +15,13 @@
  */
 package no.digipost.android.api;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
-
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
-
-import android.accounts.NetworkErrorException;
 import android.content.Context;
-
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.UniformInterfaceException;
 
 public class LetterOperations {
 	public static final int MAILBOX = 0;
@@ -76,9 +66,8 @@ public class LetterOperations {
 		return apiAccess.getReceipts(primaryAccount.getReceiptsUri()).getReceipt();
 	}
 
-	public void moveDocument(final Letter letter, final String toLocation) throws ClientProtocolException, UniformInterfaceException,
-			ClientHandlerException, ParseException, IOException, URISyntaxException, IllegalStateException, NetworkErrorException,
-			DigipostClientException, DigipostApiException, DigipostAuthenticationException {
+	public void moveDocument(final Letter letter, final String toLocation) throws DigipostClientException, DigipostApiException,
+			DigipostAuthenticationException {
 		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
 	}
 
