@@ -62,7 +62,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	private ImageButton delete;
 	public boolean checkboxesVisible;
 
-	Dialog attachmentDialog;
+	private Dialog attachmentDialog;
 
 	private Letter tempLetter;
 	private Receipt tempReceipt;
@@ -712,9 +712,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				invalidToken = true;
 				errorMessage = e.getMessage();
 				return false;
-			} catch (Exception e) {
-				errorMessage = e.getMessage();
-				return false;
 			}
 		}
 
@@ -813,8 +810,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				return e.getMessage();
 			} catch (DigipostAuthenticationException e) {
 				invalidToken = true;
-				return e.getMessage();
-			} catch (Exception e) {
 				return e.getMessage();
 			}
 		}

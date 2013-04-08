@@ -23,11 +23,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 import no.digipost.android.model.Letter;
 
-import org.apache.http.ParseException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
 import org.codehaus.jackson.JsonFactory;
@@ -91,7 +91,7 @@ public class JSONConverter {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static StringEntity createJsonFromJackson(final Letter letter) throws ParseException, IOException {
+	public static StringEntity createJsonFromJackson(final Letter letter) {
 		// ignore-test
 		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment" };
 
@@ -110,7 +110,15 @@ public class JSONConverter {
 			// Ignore
 		}
 
-		return new StringEntity(strWriter.toString(), HTTP.UTF_8);
+		StringEntity output = null;
+
+		try {
+			output = new StringEntity(strWriter.toString(), HTTP.UTF_8);
+		} catch (UnsupportedEncodingException e) {
+			// Ignore
+		}
+
+		return output;
 	}
 
 	public static byte[] inputStreamtoByteArray(final int size, final InputStream data) {
