@@ -485,7 +485,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	private class GetPDFTask extends AsyncTask<Object, Void, byte[]> {
 		private Letter letter;
-		private Attachment attachment;
 		private String errorMessage = "";
 		private boolean invalidToken;
 
@@ -501,8 +500,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 			if (params[0] instanceof Letter) {
 				letter = (Letter) params[0];
-			} else {
-				attachment = (Attachment) params[0];
 			}
 			try {
 				return lo.getDocumentContentPDF(params[0]);
@@ -540,12 +537,11 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 					tempLetter = letter;
 					PDFStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-					i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
+					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
 					startActivityForResult(i, REQUESTCODE_INTENT);
 				} else {
 					PDFStore.pdf = result;
 					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
-					// i.putExtra(ApiConstants.LOCATION_FROM, "");
 					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
 					startActivityForResult(i, REQUESTCODE_INTENT);
 				}
