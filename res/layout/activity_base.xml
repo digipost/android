@@ -118,11 +118,11 @@
                     android:layout_marginRight="@dimen/base_searchfield_margin_right"
                     android:layout_weight="0.25"
                     android:background="@color/base_searchfield_background"
+                    android:inputType="textFilter"
                     android:padding="@dimen/base_search_padding"
                     android:singleLine="true"
                     android:textColorHint="@color/search_hint"
-                    android:textStyle="normal"
-                    android:inputType="textNoSuggestions" />
+                    android:textStyle="normal" />
             </LinearLayout>
         </ViewSwitcher>
     </LinearLayout>
