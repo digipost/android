@@ -38,13 +38,13 @@ import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class WebFragment extends DialogFragment {
+public class WebLoginDialogFragment extends DialogFragment {
 
 	private WebView webViewOauth;
 	private final Handler handler;
 	private Context context;
 
-	public WebFragment(final Handler handler) {
+	public WebLoginDialogFragment(final Handler handler) {
 		this.handler = handler;
 	}
 

@@ -50,7 +50,7 @@ public class LoginActivity extends Activity {
 
 	private void openWebView() {
 		if (networkConnection.isOnline()) {
-			WebFragment webView = new WebFragment(new WebFragmentHandler());
+			WebLoginDialogFragment webView = new WebLoginDialogFragment(new WebFragmentHandler());
 			webView.show(getFragmentManager(), "webView");
 		} else {
 			showMessage(getString(R.string.error_your_network));

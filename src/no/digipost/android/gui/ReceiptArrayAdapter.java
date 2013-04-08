@@ -40,7 +40,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Filter;
 import android.widget.TextView;
 
-public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
+public class ReceiptArrayAdapter extends ArrayAdapter<Receipt> {
 	public static final String TEXT_HIGHLIGHT_COLOR = "#EBEB86";
 
 	private final Context con;
@@ -54,7 +54,7 @@ public class ReceiptListAdapter extends ArrayAdapter<Receipt> {
 	private String storeNameFilterText;
 	private String dateFilterText;
 
-	public ReceiptListAdapter(final Context context, final int textViewResourceId, final ArrayList<Receipt> objects) {
+	public ReceiptArrayAdapter(final Context context, final int textViewResourceId, final ArrayList<Receipt> objects) {
 		super(context, textViewResourceId, objects);
 		con = context;
 		filtered = objects;

@@ -51,7 +51,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 	private static LetterOperations lo;
 	private LetterListAdapter adapterLetter;
-	private ReceiptListAdapter adapterReceipts;
+	private ReceiptArrayAdapter adapterReceipts;
 	private ListView listview;
 	private View view;
 	private View listEmpty;
@@ -132,7 +132,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			listview = (ListView) view.findViewById(R.id.listview_receipts);
 			View emptyView = view.findViewById(R.id.empty_listview_receipts);
 			listview.setEmptyView(emptyView);
-			adapterReceipts = new ReceiptListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
+			adapterReceipts = new ReceiptArrayAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Receipt>());
 			listview.setAdapter(adapterReceipts);
 			listview.setOnItemClickListener(new ReceiptListListener());
 			listEmpty = view.findViewById(R.id.receipts_empty);
@@ -739,7 +739,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		private int counter = 0;
 		private final int type;
 		private LetterListAdapter documentadapter;
-		private ReceiptListAdapter receiptadapter;
+		private ReceiptArrayAdapter receiptadapter;
 		private int checkedCount;
 		private boolean invalidToken;
 
@@ -772,7 +772,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				documentadapter = (LetterListAdapter) params[0];
 				checkedCount = documentadapter.checkedCount();
 			} else {
-				receiptadapter = (ReceiptListAdapter) params[0];
+				receiptadapter = (ReceiptArrayAdapter) params[0];
 				checkedCount = receiptadapter.checkedCount();
 			}
 
