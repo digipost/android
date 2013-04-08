@@ -65,7 +65,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="no.digipost.android.gui.HtmlWebview"
+            android:name="no.digipost.android.gui.HtmlActivity"
             android:label="@string/title_activity_html_veb_view" >
         </activity>
         <activity

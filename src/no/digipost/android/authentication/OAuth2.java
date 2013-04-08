@@ -29,7 +29,7 @@ import no.digipost.android.api.DigipostApiException;
 import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.api.DigipostInvalidTokenException;
-import no.digipost.android.api.JSONConverter;
+import no.digipost.android.api.JSONUtilities;
 import no.digipost.android.gui.NetworkConnection;
 import no.digipost.android.model.Access;
 import no.digipost.android.model.TokenValue;
@@ -136,7 +136,7 @@ public class OAuth2 {
 			// Ignore
 		}
 
-		return (Access) JSONConverter.processJackson(Access.class, cr.getEntityInputStream());
+		return (Access) JSONUtilities.processJackson(Access.class, cr.getEntityInputStream());
 	}
 
 	private static boolean authenticationVerified(final String id_token) {
@@ -151,7 +151,7 @@ public class OAuth2 {
 			return false;
 		}
 
-		TokenValue data = (TokenValue) JSONConverter.processJackson(TokenValue.class,
+		TokenValue data = (TokenValue) JSONUtilities.processJackson(TokenValue.class,
 				new String(Base64.decode(token_value_enc.getBytes(), Base64.DEFAULT)));
 		String aud = data.getAud();
 

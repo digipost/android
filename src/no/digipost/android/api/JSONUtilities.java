@@ -40,7 +40,7 @@ import org.codehaus.jackson.map.ser.FilterProvider;
 import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 
-public class JSONConverter {
+public class JSONUtilities {
 	public static String getJsonStringFromInputStream(final InputStream inputStream) {
 		String content = "";
 

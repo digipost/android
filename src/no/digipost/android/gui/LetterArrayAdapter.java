@@ -42,7 +42,7 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class LetterListAdapter extends ArrayAdapter<Letter> {
+public class LetterArrayAdapter extends ArrayAdapter<Letter> {
 	public static final String TEXT_HIGHLIGHT_COLOR = "#EBEB86";
 
 	private final Context con;
@@ -57,7 +57,7 @@ public class LetterListAdapter extends ArrayAdapter<Letter> {
 	private String creatorFilterText;
 	private String dateFilterText;
 
-	public LetterListAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects) {
+	public LetterArrayAdapter(final Context context, final int textViewResourceId, final ArrayList<Letter> objects) {
 		super(context, textViewResourceId, objects);
 		con = context;
 		filtered = objects;

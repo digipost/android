@@ -68,7 +68,7 @@ public class LetterOperations {
 
 	public void moveDocument(final Letter letter, final String toLocation) throws DigipostClientException, DigipostApiException,
 			DigipostAuthenticationException {
-		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONConverter.createJsonFromJackson(letter));
+		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
 	}
 
 	public byte[] getDocumentContentPDF(final Object object) throws DigipostApiException, DigipostClientException,

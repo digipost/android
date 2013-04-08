@@ -99,7 +99,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
 			public void onPageSelected(final int arg0) {
-				DigipostSectionFragment fragment = getFragment(currentViewIndex);
+				DigipostPageFragment fragment = getFragment(currentViewIndex);
 				if (fragment.checkboxesVisible) {
 					fragment.toggleMultiselectionOff(currentViewIndex);
 				}
@@ -127,7 +127,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		searchfield.addTextChangedListener(new TextWatcher() {
 
 			public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-				DigipostSectionFragment fragment = getFragment(currentViewIndex);
+				DigipostPageFragment fragment = getFragment(currentViewIndex);
 				fragment.filterList(currentViewIndex, s);
 
 				if (s.length() != 0) {
@@ -169,7 +169,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	}
 
 	private void loadAccountMeta(final int type) {
-		DigipostSectionFragment fragment = getFragment(type);
+		DigipostPageFragment fragment = getFragment(type);
 		fragment.loadAccountMeta(type);
 	}
 
@@ -180,12 +180,12 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	}
 
 	private void scrollListToTop(final int type) {
-		DigipostSectionFragment fragment = getFragment(type);
+		DigipostPageFragment fragment = getFragment(type);
 		fragment.scrollListToTop();
 	}
 
-	private DigipostSectionFragment getFragment(final int type) {
-		return (DigipostSectionFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + type);
+	private DigipostPageFragment getFragment(final int type) {
+		return (DigipostPageFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.pager + ":" + type);
 	}
 
 	private void logOut() {
@@ -313,9 +313,9 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 
 		@Override
 		public Fragment getItem(final int position) {
-			DigipostSectionFragment fragment = new DigipostSectionFragment();
+			DigipostPageFragment fragment = new DigipostPageFragment();
 			Bundle args = new Bundle();
-			args.putInt(DigipostSectionFragment.ARG_SECTION_NUMBER, position);
+			args.putInt(DigipostPageFragment.ARG_SECTION_NUMBER, position);
 			fragment.setArguments(args);
 			return fragment;
 		}
@@ -355,9 +355,9 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	}
 
 	public void passDataToActivity(final String message) {
-		if (message.equals(DigipostSectionFragment.BASE_UPDATE_ALL)) {
+		if (message.equals(DigipostPageFragment.BASE_UPDATE_ALL)) {
 			loadAccountMetaComplete();
-		} else if (message.equals(DigipostSectionFragment.BASE_INVALID_TOKEN)) {
+		} else if (message.equals(DigipostPageFragment.BASE_INVALID_TOKEN)) {
 			showMessage(this.getString(R.string.error_invalid_token));
 			logOut();
 		}

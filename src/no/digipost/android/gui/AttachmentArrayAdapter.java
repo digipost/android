@@ -11,13 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class AttachmentListAdapter extends ArrayAdapter<Attachment> {
+public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 	private final Context con;
 	private final ArrayList<Attachment> attachments;
 
 
 
-	public AttachmentListAdapter(final Context context, final int resource, final ArrayList<Attachment> objects) {
+	public AttachmentArrayAdapter(final Context context, final int resource, final ArrayList<Attachment> objects) {
 		super(context, resource, objects);
 		con = context;
 		attachments = objects;

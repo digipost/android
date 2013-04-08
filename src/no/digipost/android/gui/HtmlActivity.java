@@ -12,7 +12,7 @@ import android.view.View.OnClickListener;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 
-public class HtmlWebview extends Activity {
+public class HtmlActivity extends Activity {
 
 	private WebView webView;
 	private ImageButton toArchive;
@@ -70,7 +70,7 @@ public class HtmlWebview extends Activity {
 	}
 
 	private void singleLetterOperation(final String action) {
-		Intent i = new Intent(HtmlWebview.this, BaseActivity.class);
+		Intent i = new Intent(HtmlActivity.this, BaseActivity.class);
 		i.putExtra(ApiConstants.LOCATION_FROM, from);
 		i.putExtra(ApiConstants.ACTION, action);
 		i.putExtra(ApiConstants.DOCUMENT_TYPE, type);

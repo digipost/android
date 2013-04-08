@@ -21,7 +21,6 @@ import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.DigipostApiException;
 import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostClientException;
-import no.digipost.android.api.ErrorHandling;
 import no.digipost.android.authentication.OAuth2;
 import android.annotation.SuppressLint;
 import android.app.DialogFragment;
@@ -84,7 +83,7 @@ public class WebLoginDialogFragment extends DialogFragment {
 		@Override
 		public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
-			handler.sendEmptyMessage(ErrorHandling.ERROR_DEVICE);
+			handler.sendEmptyMessage(ApiConstants.ERROR_DEVICE);
 			dismiss();
 		}
 	}
@@ -96,11 +95,11 @@ public class WebLoginDialogFragment extends DialogFragment {
 
 			try {
 				OAuth2.retriveAccessToken(params[0], params[1], context);
-				handler.sendEmptyMessage(ErrorHandling.ERROR_OK);
+				handler.sendEmptyMessage(ApiConstants.ERROR_OK);
 			} catch (DigipostApiException e) {
-				handler.sendEmptyMessage(ErrorHandling.ERROR_SERVER);
+				handler.sendEmptyMessage(ApiConstants.ERROR_SERVER);
 			} catch (DigipostClientException e) {
-				handler.sendEmptyMessage(ErrorHandling.ERROR_DEVICE);
+				handler.sendEmptyMessage(ApiConstants.ERROR_DEVICE);
 			} catch (DigipostAuthenticationException e) {
 				// Ignore
 			}

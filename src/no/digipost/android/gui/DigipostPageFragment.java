@@ -39,7 +39,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class DigipostSectionFragment extends Fragment implements FragmentCommunicator {
+public class DigipostPageFragment extends Fragment implements FragmentCommunicator {
 	public static final String ARG_SECTION_NUMBER = "section_number";
 	public static final int REQUESTCODE_INTENT = 1;
 	public static final String BASE_UPDATE_ALL = "updateAll";
@@ -50,7 +50,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	private ActivityCommunicator activityCommunicator;
 
 	private static LetterOperations lo;
-	private LetterListAdapter adapterLetter;
+	private LetterArrayAdapter adapterLetter;
 	private ReceiptArrayAdapter adapterReceipts;
 	private ListView listview;
 	private View view;
@@ -67,7 +67,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	private Letter tempLetter;
 	private Receipt tempReceipt;
 
-	public DigipostSectionFragment() {
+	public DigipostPageFragment() {
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			listview = (ListView) view.findViewById(R.id.listview_mailbox);
 			View emptyView = view.findViewById(R.id.empty_listview_mailbox);
 			listview.setEmptyView(emptyView);
-			adapterLetter = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+			adapterLetter = new LetterArrayAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
 			listview.setAdapter(adapterLetter);
 			listview.setOnItemClickListener(new ListListener());
 			listEmpty = view.findViewById(R.id.mailbox_empty);
@@ -104,7 +104,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			listview = (ListView) view.findViewById(R.id.listview_kitchen);
 			View emptyView = view.findViewById(R.id.empty_listview_workarea);
 			listview.setEmptyView(emptyView);
-			adapterLetter = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+			adapterLetter = new LetterArrayAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
 			listview.setAdapter(adapterLetter);
 			listview.setOnItemClickListener(new ListListener());
 			listEmpty = view.findViewById(R.id.workarea_empty);
@@ -118,7 +118,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			listview = (ListView) view.findViewById(R.id.listview_archive);
 			View emptyView = view.findViewById(R.id.empty_listview_archive);
 			listview.setEmptyView(emptyView);
-			adapterLetter = new LetterListAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
+			adapterLetter = new LetterArrayAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
 			listview.setAdapter(adapterLetter);
 			listview.setOnItemClickListener(new ListListener());
 			listEmpty = view.findViewById(R.id.archive_empty);
@@ -273,7 +273,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			}
 		});
 
-		AttachmentListAdapter attachmentadapter = new AttachmentListAdapter(getActivity(), R.layout.attachentdialog_list_item, attachments);
+		AttachmentArrayAdapter attachmentadapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachentdialog_list_item, attachments);
 		Attachment main = attachmentadapter.findMain();
 		attachmentadapter.remove(main);
 		attachmentadapter.insert(main, 0);
@@ -611,7 +611,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 					activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
 				}
 			} else {
-				Intent i = new Intent(getActivity(), HtmlWebview.class);
+				Intent i = new Intent(getActivity(), HtmlActivity.class);
 				if (attachment != null) {
 					i.putExtra(ApiConstants.FILETYPE_HTML, result);
 					i.putExtra(ApiConstants.DOCUMENT_TYPE, "");
@@ -738,7 +738,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		private final boolean[] checked;
 		private int counter = 0;
 		private final int type;
-		private LetterListAdapter documentadapter;
+		private LetterArrayAdapter documentadapter;
 		private ReceiptArrayAdapter receiptadapter;
 		private int checkedCount;
 		private boolean invalidToken;
@@ -768,8 +768,8 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 
 		@Override
 		protected String doInBackground(final Object... params) {
-			if (params[0] instanceof LetterListAdapter) {
-				documentadapter = (LetterListAdapter) params[0];
+			if (params[0] instanceof LetterArrayAdapter) {
+				documentadapter = (LetterArrayAdapter) params[0];
 				checkedCount = documentadapter.checkedCount();
 			} else {
 				receiptadapter = (ReceiptArrayAdapter) params[0];

@@ -16,7 +16,7 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
-import no.digipost.android.api.ErrorHandling;
+import no.digipost.android.api.ApiConstants;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -75,13 +75,13 @@ public class LoginActivity extends Activity {
 		@Override
 		public void handleMessage(final Message msg) {
 			super.handleMessage(msg);
-			if (msg.what == ErrorHandling.ERROR_OK) {
+			if (msg.what == ApiConstants.ERROR_OK) {
 				startBaseActivity();
-			} else if (msg.what == ErrorHandling.ERROR_DEVICE) {
+			} else if (msg.what == ApiConstants.ERROR_DEVICE) {
 				showMessage(getString(R.string.error_your_network));
-			} else if (msg.what == ErrorHandling.ERROR_GENERAL) {
+			} else if (msg.what == ApiConstants.ERROR_GENERAL) {
 				showMessage(getString(R.string.error_wrong_credentials));
-			} else if (msg.what == ErrorHandling.ERROR_SERVER) {
+			} else if (msg.what == ApiConstants.ERROR_SERVER) {
 				showMessage(getString(R.string.error_digipost_api));
 			}
 		}

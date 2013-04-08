@@ -95,4 +95,10 @@ public class ApiConstants {
 	public static final String URL_API_OAUTH_ACCESSTOKEN = "https://www.digipost.no/post/api/oauth/accesstoken";
 
 	public static final String HMACSHA256 = "HmacSHA256";
+
+	public static final int ERROR_SERVER = 0;
+	public static final int ERROR_CLIENT = 1;
+	public static final int ERROR_DEVICE = 3;
+	public static final int ERROR_GENERAL = 4;
+	public static final int ERROR_OK = 5;
 }
