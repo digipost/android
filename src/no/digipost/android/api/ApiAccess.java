@@ -41,7 +41,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 
 public class ApiAccess {
-	static int filesize = 0;
+	public static int filesize = 0;
 	private final Context context;
 	private final NetworkConnection networkConnection;
 

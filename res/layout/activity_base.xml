@@ -121,7 +121,8 @@
                     android:padding="@dimen/base_search_padding"
                     android:singleLine="true"
                     android:textColorHint="@color/search_hint"
-                    android:textStyle="normal" />
+                    android:textStyle="normal"
+                    android:inputType="textNoSuggestions" />
             </LinearLayout>
         </ViewSwitcher>
     </LinearLayout>
