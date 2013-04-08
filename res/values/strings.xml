@@ -79,9 +79,12 @@
     <!-- Prompts -->
     <string name="dialog_prompt_letter_toArchive">Er du sikker på at du vil flytte brevet til arkivet?</string>
     <string name="dialog_prompt_letter_toWorkarea">Er du sikker på at du vil flytte brevet til kjøkkenbenken?</string>
+    <string name="dialog_prompt_image_toArchive">Er du sikker på at du vil flytte bildet til arkivet?</string>
+    <string name="dialog_prompt_image_toWorkarea">Er du sikker på at du vil flytte bildet til kjøkkenbenken?</string>
     <string name="dialog_prompt_document_toArchive">Er du sikker på at du vil flytte dokumentet til arkivet?</string>
     <string name="dialog_prompt_document_toWorkarea">Er du sikker på at du vil flytte dokumentet til kjøkkenbenken?</string>
     <string name="dialog_prompt_delete_letter">Er du sikker på at du vil slette brevet?</string>
+    <string name="dialog_prompt_delete_image">Er du sikker på at du vil slette bildet?</string>
     <string name="dialog_prompt_delete_receipt">Er du sikker på at du vil slette kvitteringen?</string>
     <string name="dialog_prompt_delete_document">Er du sikker på at du vil slette dokumentet?</string>
     <string name="dialog_prompt_do_you_want_to_delete">Vil du slette\u0020</string>

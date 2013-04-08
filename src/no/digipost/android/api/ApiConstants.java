@@ -44,6 +44,8 @@ public class ApiConstants {
 	public static final String FILETYPE_PDF = "pdf";
 	public static final String FILETYPE_HTML = "html";
 	public static final String FILETYPE_ATTACHMENT = "attachment";
+	public static final String FILETYPE_JPG = "jpg";
+	public static final String FILETYPE_PNG = "png";
 
 	public static final String GET_DOCUMENT = "document";
 	public static final String GET_RECEIPT = "receipt";

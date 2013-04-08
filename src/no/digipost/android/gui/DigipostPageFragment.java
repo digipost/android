@@ -865,6 +865,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	private class GetImageTask extends AsyncTask<Letter, Void, Bitmap> {
 		private String errorMessage;
 		private boolean invalidToken;
+		private Letter letter;
 
 		public GetImageTask() {
 			errorMessage = "";
@@ -880,7 +881,8 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected Bitmap doInBackground(final Letter... params) {
 			try {
-				return lo.getDocumentContentImage(params[0]);
+				letter = params[0];
+				return lo.getDocumentContentImage(letter);
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
 				return null;
@@ -908,8 +910,10 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 					activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
 				}
 			} else {
+				tempLetter = letter;
 				ImageStore.image = result;
 				Intent i = new Intent(getActivity().getApplicationContext(), ImageActivity.class);
+				i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
 				startActivityForResult(i, REQUESTCODE_INTENT);
 			}
 
@@ -939,7 +943,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
-				} else if (filetype.equals("png") || filetype.equals("jpg")) {
+				} else if (filetype.equals(ApiConstants.FILETYPE_PNG) || filetype.equals(ApiConstants.FILETYPE_JPG)) {
 					GetImageTask imageTask = new GetImageTask();
 					imageTask.execute(mletter);
 				} else {

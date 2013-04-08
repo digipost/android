@@ -1,11 +1,92 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+/**
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
+    android:layout_height="match_parent" >
+
     <ImageView
         android:id="@+id/image_imageView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
-</LinearLayout>
+    
+        <LinearLayout
+        android:id="@+id/image_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bottom_bar_background"
+        android:orientation="horizontal"
+        android:layout_alignTop="@+id/image_imageView" >
+
+        <ImageButton
+            android:id="@+id/image_digipost_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+            android:paddingLeft="@dimen/base_headerbuttonslayout_padding"
+            android:paddingRight="@dimen/bottombar_image_padding_bottom_and_top"
+            android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
+            android:src="@drawable/white_mailbox_back_60" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/image_bottombar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bottom_bar_background"
+        android:gravity="bottom"
+        android:layout_alignBottom="@+id/image_imageView" >
+
+        <LinearLayout
+            android:id="@+id/image_bottombar_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <ImageButton
+                android:id="@+id/image_toWorkarea"
+                android:layout_width="@dimen/bottombar_image_width"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="@color/transparent"
+                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
+                android:src="@drawable/white_workarea_48" />
+
+            <ImageButton
+                android:id="@+id/image_toArchive"
+                android:layout_width="@dimen/bottombar_image_width"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="@color/transparent"
+                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
+                android:src="@drawable/white_archive_48" />
+
+            <ImageButton
+                android:id="@+id/image_delete"
+                android:layout_width="@dimen/bottombar_image_width"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:background="@color/transparent"
+                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
+                android:src="@drawable/white_delete_48" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>
