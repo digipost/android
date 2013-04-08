@@ -570,7 +570,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 			try {
 				if (params[1] instanceof Attachment) {
 					attachment = (Attachment) params[1];
-					return lo.getDocumentContentHTML(params[1]);
+					return lo.getDocumentContentHTML(attachment);
 				} else {
 
 					if (params[0].equals(ApiConstants.GET_RECEIPT)) {
