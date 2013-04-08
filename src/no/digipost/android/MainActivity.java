@@ -101,9 +101,11 @@ public class MainActivity extends Activity {
 
 	private class CheckTokenTask extends AsyncTask<Void, Void, String> {
 		private boolean clearRefreshToken;
+		private boolean error;
 
 		public CheckTokenTask() {
 			clearRefreshToken = false;
+			error = false;
 		}
 
 		@Override
@@ -113,8 +115,10 @@ public class MainActivity extends Activity {
 				OAuth2.updateAccessToken(getApplicationContext());
 				return null;
 			} catch (DigipostApiException e) {
+				error = true;
 				return e.getMessage();
 			} catch (DigipostClientException e) {
+				error = true;
 				return e.getMessage();
 			} catch (DigipostAuthenticationException e) {
 				clearRefreshToken = true;
@@ -131,10 +135,11 @@ public class MainActivity extends Activity {
 				if (clearRefreshToken) {
 					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
 					settings.edit().clear().commit();
+					showMessage(result);
+					startLoginActivity();
+				} else if (error) {
+					startBaseActivity();
 				}
-
-				showMessage(result);
-				startLoginActivity();
 			}
 		}
 	}
