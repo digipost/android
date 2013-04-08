@@ -71,6 +71,9 @@
         <activity
             android:name="no.digipost.android.pdf.PDFActivity" >
         </activity>
+        <activity 
+            android:name="no.digipost.android.gui.ImageActivity">
+        </activity>
     </application>
 
 </manifest>

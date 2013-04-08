@@ -36,6 +36,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -175,6 +177,19 @@ public class ApiAccess {
 		}
 
 		return JSONUtilities.inputStreamtoByteArray(filesize, cr.getEntityInputStream());
+	}
+
+	public Bitmap getDocumentImage(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
+
+		try {
+			networkConnection.checkHttpStatusCode(cr.getStatus());
+		} catch (DigipostInvalidTokenException e) {
+			OAuth2.updateAccessToken(context);
+			return getDocumentImage(uri);
+		}
+
+		return BitmapFactory.decodeStream(cr.getEntityInputStream());
 	}
 
 	public String getDocumentHTML(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {

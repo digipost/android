@@ -22,6 +22,7 @@ import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
 import android.content.Context;
+import android.graphics.Bitmap;
 
 public class LetterOperations {
 	public static final int MAILBOX = 0;
@@ -89,7 +90,11 @@ public class LetterOperations {
 		} else {
 			return apiAccess.getDocumentHTML(((Attachment) object).getContentUri());
 		}
+	}
 
+	public Bitmap getDocumentContentImage(final Letter letter) throws DigipostApiException, DigipostClientException,
+			DigipostAuthenticationException {
+		return apiAccess.getDocumentImage(letter.getContentUri());
 	}
 
 	public String getReceiptContentHTML(final Receipt receipt) throws DigipostApiException, DigipostClientException,

@@ -208,6 +208,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	private void logOut() {
 		Secret.ACCESS_TOKEN = null;
 		PDFStore.pdf = null;
+		ImageStore.image = null;
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		settings.edit().clear().commit();
 		Intent i = new Intent(BaseActivity.this, LoginActivity.class);

@@ -43,6 +43,11 @@
 
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>com.github.chrisbanes.photoview</groupId>
+			<artifactId>sample</artifactId>
+			<version>1.2.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

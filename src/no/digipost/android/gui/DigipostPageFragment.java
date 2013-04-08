@@ -20,6 +20,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -273,7 +274,8 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			}
 		});
 
-		AttachmentArrayAdapter attachmentadapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachentdialog_list_item, attachments);
+		AttachmentArrayAdapter attachmentadapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachentdialog_list_item,
+				attachments);
 		Attachment main = attachmentadapter.findMain();
 		attachmentadapter.remove(main);
 		attachmentadapter.insert(main, 0);
@@ -860,6 +862,61 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		}
 	}
 
+	private class GetImageTask extends AsyncTask<Letter, Void, Bitmap> {
+		private String errorMessage;
+		private boolean invalidToken;
+
+		public GetImageTask() {
+			errorMessage = "";
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			loadContentProgressDialog(this);
+			invalidToken = false;
+		}
+
+		@Override
+		protected Bitmap doInBackground(final Letter... params) {
+			try {
+				return lo.getDocumentContentImage(params[0]);
+			} catch (DigipostApiException e) {
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostClientException e) {
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostAuthenticationException e) {
+				errorMessage = e.getMessage();
+				return null;
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			progressDialog.dismiss();
+		}
+
+		@Override
+		protected void onPostExecute(final Bitmap result) {
+			if (result == null) {
+				showMessage(errorMessage);
+
+				if (invalidToken) {
+					activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
+				}
+			} else {
+				ImageStore.image = result;
+				Intent i = new Intent(getActivity().getApplicationContext(), ImageActivity.class);
+				startActivityForResult(i, REQUESTCODE_INTENT);
+			}
+
+			progressDialog.dismiss();
+		}
+	}
+
 	private class ListListener implements OnItemClickListener {
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 			Letter mletter = adapterLetter.getItem(position);
@@ -882,6 +939,9 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
+				} else if (filetype.equals("png") || filetype.equals("jpg")) {
+					GetImageTask imageTask = new GetImageTask();
+					imageTask.execute(mletter);
 				} else {
 					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),
 							getString(R.string.dialog_error_not_supported_filetype));
@@ -1002,6 +1062,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUESTCODE_INTENT) {
 			PDFStore.pdf = null;
+			ImageStore.image = null;
 
 			if (resultCode == Activity.RESULT_OK) {
 				if (attachmentDialog != null) {
