@@ -15,6 +15,7 @@
  */
 package no.digipost.android.pdf;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -154,6 +155,7 @@ public abstract class PageView extends ViewGroup {
 		}
 	}
 
+	@SuppressLint("DrawAllocation")
 	public void setPage(final int page, final PointF size) {
 		if (mDrawEntire != null) {
 			mDrawEntire.cancel(true);

@@ -18,7 +18,6 @@ package no.digipost.android.gui;
 import no.digipost.android.R;
 import no.digipost.android.api.ErrorHandling;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,14 +32,12 @@ import android.widget.Toast;
 public class LoginActivity extends Activity {
 	private Button loginButton, privacyButton, registrationButton;
 	private ButtonListener listener;
-	private Context context;
 	private NetworkConnection networkConnection;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		context = this;
 		listener = new ButtonListener();
 		loginButton = (Button) findViewById(R.id.login_loginButton);
 		loginButton.setOnClickListener(listener);

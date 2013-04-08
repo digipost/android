@@ -107,7 +107,6 @@ public class PDFActivity extends Activity {
 	private static final int SEARCH_PROGRESS_DELAY = 200;
 	private PDFCore core;
 	private String fileName;
-	private String location_to;
 	private ReaderView docView;
 	private View buttonsView;
 	private boolean buttonsVisible;

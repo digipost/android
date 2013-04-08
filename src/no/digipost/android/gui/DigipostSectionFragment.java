@@ -639,12 +639,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	}
 
 	private class DeleteTask extends AsyncTask<Object, Integer, String> {
-		private final String type;
-		private String errorMessage;
 		private boolean invalidToken;
 
-		public DeleteTask(final String type) {
-			this.type = type;
+		public DeleteTask() {
 			invalidToken = false;
 		}
 
@@ -747,7 +744,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		private final String action;
 		private final boolean[] checked;
 		private int counter = 0;
-		private String errorMessage;
 		private final int type;
 		private LetterListAdapter documentadapter;
 		private ReceiptListAdapter receiptadapter;
@@ -787,9 +783,9 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				checkedCount = receiptadapter.checkedCount();
 			}
 
-			if (action.equals(ApiConstants.DELETE)) {
-				for (int i = 0; i < checked.length; i++) {
-					try {
+			try {
+				if (action.equals(ApiConstants.DELETE)) {
+					for (int i = 0; i < checked.length; i++) {
 						if (checked[i]) {
 							if (type == ApiConstants.TYPE_LETTER) {
 								lo.delete(documentadapter.getItem(i));
@@ -798,40 +794,29 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 								publishProgress(++counter);
 							}
 						}
-					} catch (DigipostApiException e) {
-						return e.getMessage();
-					} catch (DigipostClientException e) {
-						return e.getMessage();
-					} catch (DigipostAuthenticationException e) {
-						invalidToken = true;
-						return e.getMessage();
-					} catch (Exception e) {
-						return e.getMessage();
 					}
-				}
-			} else {
-				for (int i = 0; i < checked.length; i++) {
-					try {
+				} else {
+					for (int i = 0; i < checked.length; i++) {
 						if (checked[i]) {
 							letter = documentadapter.getItem(i);
 							letter.setLocation(action);
 							lo.moveDocument(letter, action);
 							publishProgress(++counter);
 						}
-					} catch (DigipostApiException e) {
-						return e.getMessage();
-					} catch (DigipostClientException e) {
-						return e.getMessage();
-					} catch (DigipostAuthenticationException e) {
-						invalidToken = true;
-						return e.getMessage();
-					} catch (Exception e) {
-						return e.getMessage();
 					}
 				}
-			}
 
-			return null;
+				return null;
+			} catch (DigipostApiException e) {
+				return e.getMessage();
+			} catch (DigipostClientException e) {
+				return e.getMessage();
+			} catch (DigipostAuthenticationException e) {
+				invalidToken = true;
+				return e.getMessage();
+			} catch (Exception e) {
+				return e.getMessage();
+			}
 		}
 
 		@Override
@@ -863,21 +848,24 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		@Override
 		protected void onPostExecute(final String result) {
 			if (result != null) {
-				showMessage(errorMessage);
+				showMessage(result);
 
 				if (invalidToken) {
 					activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
 				}
+			} else {
+				loadAccountMetaComplete();
 			}
+
 			if (type == ApiConstants.TYPE_LETTER) {
 				documentadapter.clearCheckboxes();
 			} else {
 				receiptadapter.clearCheckboxes();
 			}
+
 			hideBottomBar();
-			loadAccountMetaComplete();
 			progressDialog.dismiss();
-			toggleRefreshSpinnerOn();
+			toggleRefreshSpinnerOff();
 		}
 	}
 
@@ -1032,7 +1020,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 				String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
 
 				if (action.equals(ApiConstants.DELETE)) {
-					DeleteTask deleteTask = new DeleteTask(type);
+					DeleteTask deleteTask = new DeleteTask();
 					if (type.equals(ApiConstants.RECEIPT)) {
 						deleteTask.execute(tempReceipt);
 					} else {
@@ -1048,6 +1036,6 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 	}
 
 	public void passDataToFragment(final String someValue) {
-		// TODO Fra Activity
+		// Fra Activity
 	}
 }
