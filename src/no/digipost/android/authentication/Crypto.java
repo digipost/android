@@ -13,9 +13,6 @@ import javax.crypto.spec.IvParameterSpec;
 import android.util.Base64;
 
 public class Crypto {
-
-	private static final String TAG = Crypto.class.getSimpleName();
-
 	private static String DELIMITER = "]";
 
 	private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
