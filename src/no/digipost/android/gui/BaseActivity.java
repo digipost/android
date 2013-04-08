@@ -16,8 +16,10 @@
 
 package no.digipost.android.gui;
 
+import no.digipost.android.MainActivity;
 import no.digipost.android.R;
 import no.digipost.android.api.LetterOperations;
+import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.pdf.PDFStore;
 import android.annotation.SuppressLint;
@@ -168,6 +170,21 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		mSectionsPagerAdapter.notifyDataSetChanged();
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		KeyStore ks = KeyStore.getInstance();
+		if (ks.state() != KeyStore.State.UNLOCKED) {
+			Secret.ACCESS_TOKEN = null;
+			PDFStore.pdf = null;
+			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+			settings.edit().clear().commit();
+			Intent i = new Intent(BaseActivity.this, MainActivity.class);
+			startActivity(i);
+			finish();
+		}
+	}
+
 	private void loadAccountMeta(final int type) {
 		DigipostPageFragment fragment = getFragment(type);
 		fragment.loadAccountMeta(type);
@@ -218,7 +235,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 	}
 
 	private void hideSearchBar() {
-		//if (isSearch) {
+		// if (isSearch) {
 		isSearch = false;
 		searchfield.setText("");
 		topbarSwitcher.showPrevious();
