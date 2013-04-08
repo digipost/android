@@ -322,7 +322,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		builder.setTitle(header)
 				.setMessage(text)
 				.setCancelable(false)
-				.setNeutralButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+				.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int id) {
 						dialog.cancel();
 					}
@@ -937,7 +937,7 @@ public class DigipostSectionFragment extends Fragment implements FragmentCommuni
 		}
 	}
 
-	public void showMultiSelecetionWarning(final String text, final MultipleDocumentsTask task, final Object adapter) {
+	private void showMultiSelecetionWarning(final String text, final MultipleDocumentsTask task, final Object adapter) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
