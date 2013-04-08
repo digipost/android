@@ -16,12 +16,12 @@ Digipost Android Klient
 This software includes third party software subject to the following licenses:
 
 **************************************************************************************************************
-GNU AFFERO GENERAL PUBLIC LICENSE - Version 3, 19 November 2007 - http://www.gnu.org/licenses/agpl-3.0.html
+GNU AFFERO GENERAL PUBLIC LICENSE - http://www.gnu.org/licenses/agpl-3.0.html
 **************************************************************************************************************
 libmupdf.so:1.1 - http://www.mupdf.com/
 
 **************************************************************************************************************
-CDDL 1.1 - LICENSE_CDDL_1.1 - http://glassfish.java.net/public/CDDL+GPL_1_1.html
+CDDL 1.1 - http://glassfish.java.net/public/CDDL+GPL_1_1.html
 **************************************************************************************************************
 jersey-client:1.17 - http://jersey.java.net/
 jersey-apache-client:1.17 - http://jersey.java.net/
