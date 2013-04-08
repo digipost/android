@@ -66,7 +66,6 @@ public class HtmlWebview extends Activity {
 		toArchive.setOnClickListener(new HTMLViewListener());
 		toWorkarea.setOnClickListener(new HTMLViewListener());
 		delete.setOnClickListener(new HTMLViewListener());
-		// share.setOnClickListener(new HTMLViewListener());
 		digipostIcon.setOnClickListener(new HTMLViewListener());
 	}
 
