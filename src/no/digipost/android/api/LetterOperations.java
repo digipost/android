@@ -74,11 +74,11 @@ public class LetterOperations {
 	public byte[] getDocumentContentPDF(final Object object) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
 		if (object instanceof Letter) {
-			ApiAccess.filesize = Integer.parseInt(((Letter) object).getFileSize());
-			return apiAccess.getDocumentContent(((Letter) object).getContentUri());
+			int filesize = Integer.parseInt(((Letter) object).getFileSize());
+			return apiAccess.getDocumentContent(((Letter) object).getContentUri(), filesize);
 		} else {
-			ApiAccess.filesize = Integer.parseInt(((Attachment) object).getFileSize());
-			return apiAccess.getDocumentContent(((Attachment) object).getContentUri());
+			int filesize = Integer.parseInt(((Attachment) object).getFileSize());
+			return apiAccess.getDocumentContent(((Attachment) object).getContentUri(), filesize);
 		}
 	}
 
@@ -90,11 +90,6 @@ public class LetterOperations {
 			return apiAccess.getDocumentHTML(((Attachment) object).getContentUri());
 		}
 
-	}
-
-	public byte[] getReceiptContentPDF(final Receipt receipt) throws DigipostApiException, DigipostClientException,
-			DigipostAuthenticationException {
-		return apiAccess.getDocumentContent(receipt.getContentAsPDFUri());
 	}
 
 	public String getReceiptContentHTML(final Receipt receipt) throws DigipostApiException, DigipostClientException,

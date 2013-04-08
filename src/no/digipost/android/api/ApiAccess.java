@@ -41,7 +41,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 
 public class ApiAccess {
-	public static int filesize = 0;
 	private final Context context;
 	private final NetworkConnection networkConnection;
 
@@ -164,7 +163,7 @@ public class ApiAccess {
 		return true;
 	}
 
-	public byte[] getDocumentContent(final String uri) throws DigipostApiException, DigipostClientException,
+	public byte[] getDocumentContent(final String uri, final int filesize) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
 
@@ -172,7 +171,7 @@ public class ApiAccess {
 			networkConnection.checkHttpStatusCode(cr.getStatus());
 		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
-			return getDocumentContent(uri);
+			return getDocumentContent(uri, filesize);
 		}
 
 		return JSONConverter.inputStreamtoByteArray(filesize, cr.getEntityInputStream());
