@@ -70,14 +70,10 @@ public class LetterOperations {
 		}
 	}
 
-	private String getReceipLink(final String uri) {
-		return "https://www.digipost.no/post/api/private/accounts/" + uri.replaceAll("\\D+", "") + "/receipts";
-	}
-
 	public ArrayList<Receipt> getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
 		PrimaryAccount primaryAccount = getPrimaryAccount();
-		return apiAccess.getReceipts(getReceipLink(primaryAccount.getInboxUri())).getReceipt();
+		return apiAccess.getReceipts(primaryAccount.getReceiptsUri()).getReceipt();
 	}
 
 	public void moveDocument(final Letter letter, final String toLocation) throws ClientProtocolException, UniformInterfaceException,
