@@ -774,6 +774,8 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			progressDialog = new ProgressDialog(getActivity());
+
 
 			/*
 			 * progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
