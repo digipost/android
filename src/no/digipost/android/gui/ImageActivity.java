@@ -56,6 +56,18 @@ public class ImageActivity extends Activity {
 		createButtons();
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+
+		if (attacher != null) {
+			attacher.cleanup();
+		}
+
+		attacher = null;
+		ImageStore.image = null;
+	}
+
 	private void createButtons() {
 		ButtonListener buttonListener = new ButtonListener();
 
@@ -204,8 +216,6 @@ public class ImageActivity extends Activity {
 	private class MatrixChangeListener implements OnMatrixChangedListener {
 
 		public void onMatrixChanged(final RectF rect) {
-			System.out.println("matrix changed");
-
 			if (buttonsVisible) {
 				if (created) {
 					hideButtons();

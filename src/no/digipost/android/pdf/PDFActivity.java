@@ -489,11 +489,14 @@ public class PDFActivity extends Activity {
 
 	@Override
 	public void onDestroy() {
+		super.onDestroy();
+
 		if (core != null) {
 			core.onDestroy();
 		}
+
 		core = null;
-		super.onDestroy();
+		PDFStore.pdf = null;
 	}
 
 	void showButtons() {

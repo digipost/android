@@ -1074,9 +1074,6 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUESTCODE_INTENT) {
-			PDFStore.pdf = null;
-			ImageStore.image = null;
-
 			if (resultCode == Activity.RESULT_OK) {
 				if (attachmentDialog != null) {
 					attachmentDialog.cancel();

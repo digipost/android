@@ -45,10 +45,12 @@ import com.sun.jersey.api.client.ClientResponse;
 public class ApiAccess {
 	private final Context context;
 	private final NetworkConnection networkConnection;
+	private final Client jerseyClient;
 
 	public ApiAccess(final Context context) {
 		this.context = context;
 		networkConnection = new NetworkConnection(context);
+		jerseyClient = Client.create();
 	}
 
 	public Account getAccount() throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
@@ -69,9 +71,8 @@ public class ApiAccess {
 			OAuth2.updateAccessToken(context);
 		}
 
-		Client client = Client.create();
 		try {
-			ClientResponse cr = client
+			ClientResponse cr = jerseyClient
 					.resource(uri)
 					.header(ApiConstants.ACCEPT, header_accept)
 					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
