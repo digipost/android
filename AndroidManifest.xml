@@ -50,7 +50,7 @@
              >
         </activity>
         <activity
-            android:name="no.digipost.android.gui.BaseActivity"
+            android:name="no.digipost.android.gui.BaseFragmentActivity"
             android:label="@string/title_activity_base"
             android:screenOrientation="portrait">
         </activity>

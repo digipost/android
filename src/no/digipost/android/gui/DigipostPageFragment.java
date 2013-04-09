@@ -156,7 +156,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		super.onAttach(activity);
 		Context context = getActivity();
 		activityCommunicator = (ActivityCommunicator) context;
-		((BaseActivity) context).fragmentCommunicator = this;
+		((BaseFragmentActivity) context).fragmentCommunicator = this;
 	}
 
 	public void loadAccountMeta(final int type) {
@@ -197,14 +197,14 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	}
 
 	private void toggleRefreshSpinnerOn() {
-		BaseActivity.refreshButton.setVisibility(View.GONE);
-		BaseActivity.refreshSpinner.setVisibility(View.VISIBLE);
+		BaseFragmentActivity.refreshButton.setVisibility(View.GONE);
+		BaseFragmentActivity.refreshSpinner.setVisibility(View.VISIBLE);
 	}
 
 	private void toggleRefreshSpinnerOff() {
 		if (!accountMetaRefreshing()) {
-			BaseActivity.refreshButton.setVisibility(View.VISIBLE);
-			BaseActivity.refreshSpinner.setVisibility(View.GONE);
+			BaseFragmentActivity.refreshButton.setVisibility(View.VISIBLE);
+			BaseFragmentActivity.refreshSpinner.setVisibility(View.GONE);
 		}
 	}
 
@@ -1081,6 +1081,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				if (attachmentDialog != null) {
 					attachmentDialog.cancel();
 				}
+
 				String action = data.getExtras().getString(ApiConstants.ACTION);
 				String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
 

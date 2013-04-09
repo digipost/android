@@ -17,7 +17,7 @@ package no.digipost.android.pdf;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
-import no.digipost.android.gui.BaseActivity;
+import no.digipost.android.gui.BaseFragmentActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -441,7 +441,7 @@ public class PDFActivity extends Activity {
 	}
 
 	public void singleLetterOperation(final String action) {
-		Intent i = new Intent(PDFActivity.this, BaseActivity.class);
+		Intent i = new Intent(PDFActivity.this, BaseFragmentActivity.class);
 		i.putExtra(ApiConstants.LOCATION_FROM, intent.getExtras().getString(ApiConstants.LOCATION_FROM));
 		i.putExtra(ApiConstants.ACTION, action);
 		i.putExtra(ApiConstants.DOCUMENT_TYPE, ApiConstants.LETTER);

@@ -147,7 +147,7 @@ public class ImageActivity extends Activity {
 	}
 
 	private void singleLetterOperation(final String action) {
-		Intent i = new Intent(ImageActivity.this, BaseActivity.class);
+		Intent i = new Intent(ImageActivity.this, BaseFragmentActivity.class);
 		i.putExtra(ApiConstants.ACTION, action);
 		i.putExtra(ApiConstants.DOCUMENT_TYPE, ApiConstants.LETTER);
 		setResult(RESULT_OK, i);

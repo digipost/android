@@ -21,7 +21,7 @@ import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.OAuth2;
-import no.digipost.android.gui.BaseActivity;
+import no.digipost.android.gui.BaseFragmentActivity;
 import no.digipost.android.gui.LoginActivity;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void startBaseActivity() {
-		Intent i = new Intent(MainActivity.this, BaseActivity.class);
+		Intent i = new Intent(MainActivity.this, BaseFragmentActivity.class);
 		startActivity(i);
 		finish();
 	}

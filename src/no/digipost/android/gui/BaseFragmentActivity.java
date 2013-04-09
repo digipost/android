@@ -54,7 +54,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
-public class BaseActivity extends FragmentActivity implements ActivityCommunicator {
+public class BaseFragmentActivity extends FragmentActivity implements ActivityCommunicator {
 	public static ImageButton refreshButton;
 	public static ProgressBar refreshSpinner;
 
@@ -179,7 +179,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 			PDFStore.pdf = null;
 			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 			settings.edit().clear().commit();
-			Intent i = new Intent(BaseActivity.this, MainActivity.class);
+			Intent i = new Intent(BaseFragmentActivity.this, MainActivity.class);
 			startActivity(i);
 			finish();
 		}
@@ -211,7 +211,7 @@ public class BaseActivity extends FragmentActivity implements ActivityCommunicat
 		ImageStore.image = null;
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 		settings.edit().clear().commit();
-		Intent i = new Intent(BaseActivity.this, LoginActivity.class);
+		Intent i = new Intent(BaseFragmentActivity.this, LoginActivity.class);
 		startActivity(i);
 		finish();
 	}

@@ -66,7 +66,7 @@ public class LoginActivity extends Activity {
 
 	private void startBaseActivity() {
 		loginButton.setVisibility(View.INVISIBLE);
-		Intent i = new Intent(LoginActivity.this, BaseActivity.class);
+		Intent i = new Intent(LoginActivity.this, BaseFragmentActivity.class);
 		startActivity(i);
 		finish();
 	}
