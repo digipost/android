@@ -19,7 +19,6 @@ This software includes third party software subject to the following licenses:
 APACHE 2 - LICENSE - http://www.apache.org/licenses/LICENSE-2.0.html
 **************************************************************************************************************
 sample:1.2.1 - https://github.com/chrisbanes/PhotoView
-android-keystore:1.0 https://github.com/nelenkov/android-keystore
 
 **************************************************************************************************************
 GNU AFFERO GENERAL PUBLIC LICENSE 3 - LICENSE_GNU_3 - http://www.gnu.org/licenses/agpl-3.0.html
