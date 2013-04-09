@@ -78,8 +78,6 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		lo = new LetterOperations(getActivity().getApplicationContext());
 		fragmentsRefreshing = new boolean[4];
 		searchConstraint = "";
-
-		progressDialog = new ProgressDialog(getActivity());
 	}
 
 	@Override
@@ -344,6 +342,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 
 	@SuppressWarnings("rawtypes")
 	private void loadContentProgressDialog(final AsyncTask task) {
+		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setMessage(getString(R.string.loading_content));
 		progressDialog.setCancelable(false);
@@ -354,6 +353,11 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			}
 		});
 		progressDialog.show();
+	}
+
+	private void clearContentProgressDialog() {
+		progressDialog.dismiss();
+		progressDialog = null;
 	}
 
 	public void showMessage(final String message) {
@@ -529,7 +533,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			progressDialog.dismiss();
+			clearContentProgressDialog();
 		}
 
 		@Override
@@ -557,7 +561,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				}
 			}
 
-			progressDialog.dismiss();
+			clearContentProgressDialog();
 		}
 	}
 
@@ -607,7 +611,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			progressDialog.dismiss();
+			clearContentProgressDialog();
 		}
 
 		@Override
@@ -640,7 +644,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				startActivityForResult(i, REQUESTCODE_INTENT);
 			}
 
-			progressDialog.dismiss();
+			clearContentProgressDialog();
 		}
 	}
 
@@ -840,7 +844,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			} else {
 				receiptadapter.clearCheckboxes();
 			}
-			progressDialog.dismiss();
+			clearContentProgressDialog();
 			loadAccountMetaComplete();
 			toggleRefreshSpinnerOn();
 			hideBottomBar();
@@ -865,7 +869,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			}
 
 			hideBottomBar();
-			progressDialog.dismiss();
+			clearContentProgressDialog();
 			toggleRefreshSpinnerOff();
 		}
 	}
@@ -906,7 +910,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			progressDialog.dismiss();
+			clearContentProgressDialog();
 		}
 
 		@Override
@@ -925,7 +929,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				startActivityForResult(i, REQUESTCODE_INTENT);
 			}
 
-			progressDialog.dismiss();
+			clearContentProgressDialog();
 		}
 	}
 

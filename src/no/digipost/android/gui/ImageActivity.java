@@ -65,6 +65,7 @@ public class ImageActivity extends Activity {
 		}
 
 		attacher = null;
+		imageView = null;
 		ImageStore.image = null;
 	}
 
