@@ -770,15 +770,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		protected void onPreExecute() {
 			super.onPreExecute();
 			progressDialog = new ProgressDialog(getActivity());
-
-
-			/*
-			 * progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
-			 * getString(R.string.abort), new DialogInterface.OnClickListener()
-			 * { public void onClick(final DialogInterface dialog, final int
-			 * which) { dialog.dismiss(); cancel(true); } });
-			 */
-			progressDialog.setMessage("Vennligst vent...");
+			progressDialog.setMessage(getString(R.string.please_wait));
 			progressDialog.show();
 		}
 
@@ -905,6 +897,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				return null;
 			} catch (DigipostAuthenticationException e) {
 				errorMessage = e.getMessage();
+				invalidToken = true;
 				return null;
 			}
 		}
@@ -1014,7 +1007,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 
 	private void showMultiSelecetionWarning(final String text, final MultipleDocumentsTask task, final Object adapter) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+		builder.setMessage(text).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
 				task.execute(adapter);
 				dialog.dismiss();
