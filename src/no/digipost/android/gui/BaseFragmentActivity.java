@@ -375,6 +375,8 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 	public void passDataToActivity(final String message) {
 		if (message.equals(DigipostPageFragment.BASE_UPDATE_ALL)) {
 			loadAccountMetaComplete();
+		}else if (message.equals(DigipostPageFragment.BASE_UPDATE_SINGLE)) {
+			loadAccountMeta(mViewPager.getCurrentItem());
 		} else if (message.equals(DigipostPageFragment.BASE_INVALID_TOKEN)) {
 			showMessage(this.getString(R.string.error_invalid_token));
 			logOut();

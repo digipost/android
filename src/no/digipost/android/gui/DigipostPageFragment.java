@@ -44,6 +44,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	public static final String ARG_SECTION_NUMBER = "section_number";
 	public static final int REQUESTCODE_INTENT = 1;
 	public static final String BASE_UPDATE_ALL = "updateAll";
+	public static final String BASE_UPDATE_SINGLE ="updateSingle";
 	public static final String BASE_INVALID_TOKEN = "invalidToken";
 
 	private static boolean[] fragmentsRefreshing;
@@ -567,6 +568,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			}
 
 			clearContentProgressDialog();
+			activityCommunicator.passDataToActivity(BASE_UPDATE_SINGLE);
 		}
 	}
 
@@ -650,6 +652,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			}
 
 			clearContentProgressDialog();
+			activityCommunicator.passDataToActivity(BASE_UPDATE_SINGLE);
 		}
 	}
 
@@ -938,6 +941,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			}
 
 			clearContentProgressDialog();
+			activityCommunicator.passDataToActivity(BASE_UPDATE_SINGLE);
 		}
 	}
 
