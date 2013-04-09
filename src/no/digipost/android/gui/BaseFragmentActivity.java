@@ -114,11 +114,9 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 			}
 
 			public void onPageScrolled(final int arg0, final float arg1, final int arg2) {
-				// Not implemented.
 			}
 
 			public void onPageScrollStateChanged(final int arg0) {
-				// Not implemented.
 			}
 		});
 
@@ -141,7 +139,6 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 			}
 
 			public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
-				// Not implemented.
 			}
 
 			public void afterTextChanged(final Editable s) {
@@ -231,12 +228,10 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 					showKeyboard();
 				}
 			}, 100);
-
 		}
 	}
 
 	private void hideSearchBar() {
-		// if (isSearch) {
 		isSearch = false;
 		searchfield.setText("");
 		topbarSwitcher.showPrevious();
