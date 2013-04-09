@@ -60,13 +60,15 @@ public class ImageActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 
-		if (attacher != null) {
-			attacher.cleanup();
-		}
+		if (isFinishing()) {
+			if (attacher != null) {
+				attacher.cleanup();
+			}
 
-		attacher = null;
-		imageView = null;
-		ImageStore.image = null;
+			attacher = null;
+			imageView = null;
+			ImageStore.image = null;
+		}
 	}
 
 	private void createButtons() {
