@@ -157,6 +157,10 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		((BaseFragmentActivity) context).fragmentCommunicator = this;
 	}
 
+	private void forceGarbageCollection() {
+		System.gc();
+	}
+
 	public void loadAccountMeta(final int type) {
 		if (type != LetterOperations.RECEIPTS) {
 			new GetAccountMetaTask(type).execute();
@@ -505,6 +509,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			forceGarbageCollection();
 			loadContentProgressDialog(this);
 			invalidToken = false;
 		}
@@ -886,6 +891,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			forceGarbageCollection();
 			loadContentProgressDialog(this);
 			invalidToken = false;
 		}
