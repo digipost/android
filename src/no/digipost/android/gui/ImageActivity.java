@@ -50,7 +50,16 @@ public class ImageActivity extends Activity {
 			attacher.setOnPhotoTapListener(new PhotoTapListener());
 			attacher.setOnMatrixChangeListener(new MatrixChangeListener());
 		} else {
-			finish();
+			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+			AlertDialog alert = alertBuilder.create();
+			alert.setTitle(R.string.image_open_failed);
+			alert.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.close), new DialogInterface.OnClickListener() {
+				public void onClick(final DialogInterface dialog, final int which) {
+					finish();
+				}
+			});
+			alert.show();
+			return;
 		}
 
 		createButtons();

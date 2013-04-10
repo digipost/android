@@ -70,6 +70,9 @@
     <string name="pdf_open_failed">Kunne ikke åpne dokumentet.</string>
     <string name="pdf_searching_">Søker...</string>
     <string name="pdf_search_document">Søk i dokumentet</string>
+    
+    <!-- Image -->
+    <string name="image_open_failed">Kunne ikke åpne bildet.</string>
 
     <!-- Errors -->
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv igjen.</string>

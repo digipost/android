@@ -161,7 +161,7 @@ public class PDFActivity extends Activity {
 		if (core == null) {
 			AlertDialog alert = alertBuilder.create();
 			alert.setTitle(R.string.pdf_open_failed);
-			alert.setButton(AlertDialog.BUTTON_POSITIVE, "Lukk", new DialogInterface.OnClickListener() {
+			alert.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.close), new DialogInterface.OnClickListener() {
 				public void onClick(final DialogInterface dialog, final int which) {
 					finish();
 				}
@@ -496,7 +496,10 @@ public class PDFActivity extends Activity {
 		}
 
 		core = null;
-		PDFStore.pdf = null;
+
+		if (isFinishing()) {
+			PDFStore.pdf = null;
+		}
 	}
 
 	void showButtons() {
