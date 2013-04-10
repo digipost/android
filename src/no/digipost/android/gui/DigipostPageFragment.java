@@ -963,7 +963,9 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
 				} else if (filetype.equals(ApiConstants.FILETYPE_PNG) || filetype.equals(ApiConstants.FILETYPE_JPG)
-						|| filetype.equals(ApiConstants.FILETYPE_JPEG)) {
+						|| filetype.equals(ApiConstants.FILETYPE_JPEG) || filetype.equals(ApiConstants.FILETYPE_JFIF)
+						|| filetype.equals(ApiConstants.FILETYPE_JPE) || filetype.equals(ApiConstants.FILETYPE_TIF)
+						|| filetype.equals(ApiConstants.FILETYPE_TIFF)) {
 					GetImageTask imageTask = new GetImageTask();
 					imageTask.execute(mletter);
 				} else {
