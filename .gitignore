@@ -22,3 +22,6 @@ target/
 obj
 
 # libs/android-support-v4.jar
+ 
+.idea
+*.iml
