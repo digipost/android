@@ -13,6 +13,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
+import static javax.ws.rs.core.Response.Status.TEMPORARY_REDIRECT;
+
 public class NetworkConnection {
 	public static final int HTTP_STATUS_SUCCESS = 200;
 	public static final int HTTP_STATUS_UNAUTHORIZED = 401;
@@ -32,7 +34,7 @@ public class NetworkConnection {
 
 	public void checkHttpStatusCode(final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
 			DigipostAuthenticationException {
-		if (statusCode == HTTP_STATUS_SUCCESS) {
+		if (statusCode == HTTP_STATUS_SUCCESS || statusCode == TEMPORARY_REDIRECT.getStatusCode()) {
 			return;
 		} else if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
 			throw new DigipostInvalidTokenException();
