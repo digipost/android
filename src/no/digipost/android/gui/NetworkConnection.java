@@ -8,6 +8,8 @@ import no.digipost.android.R;
 import no.digipost.android.api.DigipostApiException;
 import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostInvalidTokenException;
+import no.digipost.android.authentication.SharedPreferencesUtil;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -35,7 +37,11 @@ public class NetworkConnection {
 		if (statusCode == HTTP_STATUS_SUCCESS) {
 			return;
 		} else if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
-			throw new DigipostInvalidTokenException();
+            if(SharedPreferencesUtil.screenlockChoiceYes(context)){
+                throw new DigipostInvalidTokenException();
+            }else{
+                throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
+            }
 		} else if (statusCode == HTTP_STATUS_BAD_REQUEST) {
 			throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
 		} else {

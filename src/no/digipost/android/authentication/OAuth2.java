@@ -34,9 +34,6 @@ import no.digipost.android.gui.NetworkConnection;
 import no.digipost.android.model.Access;
 import no.digipost.android.model.TokenValue;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 import android.util.Base64;
 
 import com.sun.jersey.api.client.Client;
@@ -76,7 +73,7 @@ public class OAuth2 {
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
 
-		encryptAndStoreRefreshToken(data, context);
+        storeTokens(data, context);
 	}
 
 	public static void retriveAccessToken(final String refresh_token, final Context context) throws DigipostApiException,
@@ -87,31 +84,26 @@ public class OAuth2 {
 		Secret.ACCESS_TOKEN = getAccessData(params, context).getAccess_token();
 	}
 
-	public static void encryptAndStoreRefreshToken(final Access data, final Context context) {
+	public static void storeTokens(final Access data, final Context context) {
 		Secret.ACCESS_TOKEN = data.getAccess_token();
-		String refresh_token = data.getRefresh_token();
-		KeyStoreAdapter ksa = new KeyStoreAdapter();
-		String cipher = ksa.encrypt(refresh_token);
-		refresh_token = null;
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		Editor editor = settings.edit();
-		editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
-		editor.commit();
+        if(SharedPreferencesUtil.screenlockChoiceYes(context)){
+	    	String refresh_token = data.getRefresh_token();
+		    KeyStoreAdapter ksa = new KeyStoreAdapter();
+		    String cipher = ksa.encrypt(refresh_token);
+            SharedPreferencesUtil.storeEncryptedRefreshtokenCipher(cipher,context);
+        }
 	}
+
 
 	public static void updateAccessToken(final Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		String encrypted_refresh_token = getEncryptedRefreshToken(context);
+		    String encrypted_refresh_token = SharedPreferencesUtil.getEncryptedRefreshtokenCipher(context);
+		    KeyStoreAdapter ksa = new KeyStoreAdapter();
+		    String refresh_token = ksa.decrypt(encrypted_refresh_token);
+		    retriveAccessToken(refresh_token, context);
+    }
 
-		KeyStoreAdapter ksa = new KeyStoreAdapter();
-		String refresh_token = ksa.decrypt(encrypted_refresh_token);
-		retriveAccessToken(refresh_token, context);
-	}
 
-	public static String getEncryptedRefreshToken(final Context context) {
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-		return settings.getString(ApiConstants.REFRESH_TOKEN, "");
-	}
 
 	public static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {

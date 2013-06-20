@@ -19,18 +19,16 @@ package no.digipost.android.gui;
 import no.digipost.android.MainActivity;
 import no.digipost.android.R;
 import no.digipost.android.api.LetterOperations;
-import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.Secret;
+import no.digipost.android.authentication.SharedPreferencesUtil;
 import no.digipost.android.pdf.PDFStore;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -167,21 +165,6 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 		mSectionsPagerAdapter.notifyDataSetChanged();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		KeyStore ks = KeyStore.getInstance();
-		if (ks.state() != KeyStore.State.UNLOCKED) {
-			Secret.ACCESS_TOKEN = null;
-			PDFStore.pdf = null;
-			SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-			settings.edit().clear().commit();
-			Intent i = new Intent(BaseFragmentActivity.this, MainActivity.class);
-			startActivity(i);
-			finish();
-		}
-	}
-
 	private void loadAccountMeta(final int type) {
 		DigipostPageFragment fragment = getFragment(type);
 		fragment.loadAccountMeta(type);
@@ -206,9 +189,9 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 		Secret.ACCESS_TOKEN = null;
 		PDFStore.pdf = null;
 		ImageStore.image = null;
-		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-		settings.edit().clear().commit();
-		Intent i = new Intent(BaseFragmentActivity.this, LoginActivity.class);
+        SharedPreferencesUtil.deleteRefreshtoken(this);
+        SharedPreferencesUtil.deleteScreenlockChoice(this);
+		Intent i = new Intent(BaseFragmentActivity.this, MainActivity.class);
 		startActivity(i);
 		finish();
 	}
@@ -321,7 +304,6 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 		@Override
 		public int getItemPosition(final Object object) {
 			return POSITION_NONE;
-
 		}
 
 		@Override
@@ -363,6 +345,7 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 				return true;
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_MENU) {
+           //Open Popup menu // eller settings
 		}
 		return super.onKeyDown(keyCode, event);
 	}

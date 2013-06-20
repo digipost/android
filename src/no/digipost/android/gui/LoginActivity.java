@@ -46,9 +46,9 @@ public class LoginActivity extends Activity {
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
 		networkConnection = new NetworkConnection(this);
-	}
+    }
 
-	private void openWebView() {
+    private void openWebView() {
 		if (networkConnection.isOnline()) {
 			WebLoginDialogFragment webView = new WebLoginDialogFragment(new WebFragmentHandler());
 			webView.show(getFragmentManager(), "webView");

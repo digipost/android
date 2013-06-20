@@ -16,131 +16,112 @@
 
 package no.digipost.android;
 
+import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.DigipostApiException;
 import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.OAuth2;
+import no.digipost.android.authentication.SharedPreferencesUtil;
 import no.digipost.android.gui.BaseFragmentActivity;
 import no.digipost.android.gui.LoginActivity;
+import no.digipost.android.gui.ScreenlockPreferenceActivity;
+
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	private boolean pinQuestion;
-	private KeyStore ks;
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        checkKeyStoreStatus();
+    }
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-	}
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		ks = KeyStore.getInstance();
-		checkKeyStoreStatus();
-	}
+    private void checkKeyStoreStatus() {
+        KeyStore ks = KeyStore.getInstance();
+        if (ks.state() != KeyStore.State.UNLOCKED) {
 
-	private void checkKeyStoreStatus() {
-		if (ks.state() != KeyStore.State.UNLOCKED) {
-			unlockKeyStore();
-		} else {
-			checkTokenStatus();
-		}
-	}
+            if(SharedPreferencesUtil.screenlockChoiceNo(this)){
+                startLoginActivity();
+            }else{
+                startActivity(new Intent(MainActivity.this, ScreenlockPreferenceActivity.class));
+            }
+        }else {
+            if(SharedPreferencesUtil.screenlockChoiceNo(this)){
+                startLoginActivity();
+            }else{
+                SharedPreferencesUtil.storeScreenlockChoice(this,ApiConstants.SCREENLOCK_CHOICE_YES);
+                checkTokenStatus();
+            }
+        }
+    }
 
-	private void unlockKeyStore() {
-		if (ks.state() == KeyStore.State.UNLOCKED) {
-			return;
-		}
-		try {
-			if (!pinQuestion) {
-				pinQuestion = true;
-				startActivity(new Intent(KeyStore.UNLOCK_ACTION));
-			} else {
-				finish();
-			}
-		} catch (ActivityNotFoundException e) {
-			return;
-		}
-	}
+    private void checkTokenStatus() {
+        if (SharedPreferencesUtil.getEncryptedRefreshtokenCipher(this).isEmpty()) {
+            startLoginActivity();
+        } else {
+            new CheckTokenTask().execute();
+        }
+    }
 
-	private void checkTokenStatus() {
-		if (OAuth2.getEncryptedRefreshToken(this).isEmpty()) {
-			startLoginActivity();
-		} else {
-			new CheckTokenTask().execute();
-		}
-	}
+    private void startBaseActivity() {
+        Intent i = new Intent(MainActivity.this, BaseFragmentActivity.class);
+        startActivity(i);
+        finish();
+    }
 
-	private void startBaseActivity() {
-		Intent i = new Intent(MainActivity.this, BaseFragmentActivity.class);
-		startActivity(i);
-		finish();
-	}
+    private void startLoginActivity() {
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(i);
+        finish();
+    }
 
-	private void startLoginActivity() {
-		Intent i = new Intent(MainActivity.this, LoginActivity.class);
-		startActivity(i);
-		finish();
-	}
+    private class CheckTokenTask extends AsyncTask<Void, Void, String> {
+        private boolean clearRefreshToken;
 
-	public void showMessage(final String message) {
-		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-		toast.show();
-	}
+        public CheckTokenTask() {
+            clearRefreshToken = false;
+        }
 
-	private class CheckTokenTask extends AsyncTask<Void, Void, String> {
-		private boolean clearRefreshToken;
-		private boolean error;
+        @Override
+        protected String doInBackground(final Void... params) {
 
-		public CheckTokenTask() {
-			clearRefreshToken = false;
-			error = false;
-		}
+            try {
+                OAuth2.updateAccessToken(MainActivity.this);
+                return null;
+            } catch (DigipostApiException e) {
+                return e.getMessage();
+            } catch (DigipostClientException e) {
+                return e.getMessage();
+            } catch (DigipostAuthenticationException e) {
+                clearRefreshToken = true;
+                return e.getMessage();
+            }
 
-		@Override
-		protected String doInBackground(final Void... params) {
+        }
 
-			try {
-				OAuth2.updateAccessToken(getApplicationContext());
-				return null;
-			} catch (DigipostApiException e) {
-				error = true;
-				return e.getMessage();
-			} catch (DigipostClientException e) {
-				error = true;
-				return e.getMessage();
-			} catch (DigipostAuthenticationException e) {
-				clearRefreshToken = true;
-				return e.getMessage();
-			}
-
-		}
-
-		@Override
-		protected void onPostExecute(final String result) {
-			if (result == null) {
-				startBaseActivity();
-			} else {
-				if (clearRefreshToken) {
-					SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-					settings.edit().clear().commit();
-					showMessage(result);
-					startLoginActivity();
-				} else if (error) {
-					startBaseActivity();
-				}
-			}
-		}
-	}
+        @Override
+        protected void onPostExecute(final String result) {
+            if (result == null) {
+                startBaseActivity();
+            } else {
+                if (clearRefreshToken) {
+                    SharedPreferencesUtil.deleteRefreshtoken(MainActivity.this);
+                    startLoginActivity();
+                } else{
+                    startBaseActivity();
+                }
+            }
+        }
+    }
 }

@@ -22,3 +22,9 @@ target/
 obj
 
 # libs/android-support-v4.jar
+
+# IDEA Ignores
+*.iml
+*.ipr
+*.iws
+.idea/

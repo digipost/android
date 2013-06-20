@@ -14,6 +14,7 @@
     <string name="loading_content">Laster innhold...</string>
     <string name="search">Søk</string>
     <string name="yes">Ja</string>
+    <string name="no">Nei</string>
     <string name="please_wait">Vennligst vent...</string>
     <string name="attachment">Vedlegg</string>
     <string name="search_mailbox">Søk i postkassen</string>
@@ -51,6 +52,7 @@
     <string name="optionsmenu_moveToArchive">Flytt til arkiv</string>
     <string name="optionsmenu_moveToWorkarea">Flytt til kjøkkenbenken</string>
     <string name="optionsmenu_deleteselected">Slett</string>
+    <string name="optionsmenu_screenlockchoice">Slett skjermlås preferanse</string>
 
     <!-- ContextMenu -->
     <string name="context_letterlist_show">Vis brev</string>

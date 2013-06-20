@@ -108,4 +108,11 @@ public class ApiConstants {
 	public static final int ERROR_DEVICE = 3;
 	public static final int ERROR_GENERAL = 4;
 	public static final int ERROR_OK = 5;
+
+    public static final String SCREENLOCK_CHOICE = "SCREENLOCK_CHOICE";
+    public static final int SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET = 0;
+    public static final int SCREENLOCK_CHOICE_NO = 1;
+    public static final int SCREENLOCK_CHOICE_YES = 2;
+
+
 }
