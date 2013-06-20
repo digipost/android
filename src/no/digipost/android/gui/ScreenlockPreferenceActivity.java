@@ -46,10 +46,8 @@ public class ScreenlockPreferenceActivity extends Activity {
         super.onResume();
         KeyStore ks = KeyStore.getInstance();
         if (ks.state() == KeyStore.State.UNLOCKED) {
-            System.out.println("SCREENLOCK KeyStore.State.UNLOCKED");
             saveToSharedPreferences(ApiConstants.SCREENLOCK_CHOICE_YES);
-        }else{
-            System.out.println("SCREENLOCK KeyStore.State.LOCKED");
+            startLoginActivity();
         }
 
     }
