@@ -17,6 +17,9 @@ package no.digipost.android.gui;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ApiConstants;
+import no.digipost.android.authentication.KeyStore;
+import no.digipost.android.authentication.SharedPreferencesUtil;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -46,7 +49,15 @@ public class LoginActivity extends Activity {
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
 		networkConnection = new NetworkConnection(this);
+        deleteOldRefreshtoken();
     }
+    private void deleteOldRefreshtoken(){
+        KeyStore ks = KeyStore.getInstance();
+        if (ks.state() == KeyStore.State.UNLOCKED) {
+            SharedPreferencesUtil.deleteRefreshtoken(this);
+        }
+    }
+
 
     private void openWebView() {
 		if (networkConnection.isOnline()) {
