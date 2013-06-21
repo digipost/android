@@ -1091,6 +1091,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				if (attachmentDialog != null) {
 					attachmentDialog.cancel();
 				}
+                try{
 
 				String action = data.getExtras().getString(ApiConstants.ACTION);
 				String type = data.getExtras().getString(ApiConstants.DOCUMENT_TYPE);
@@ -1107,6 +1108,9 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 					MoveDocumentsTask moveTask = new MoveDocumentsTask(action);
 					moveTask.execute(tempLetter);
 				}
+                }catch(NullPointerException e){
+                    e.printStackTrace();
+                }
 			}
 		}
 	}

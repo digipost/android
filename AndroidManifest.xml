@@ -47,18 +47,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="no.digipost.android.authentication.LoginActivity"
-            android:screenOrientation="portrait"
-             >
-        </activity>
-        <activity
             android:name="no.digipost.android.gui.BaseFragmentActivity"
             android:label="@string/title_activity_base">
-        </activity>
-        <activity
-            android:name="no.digipost.android.WebFragment"
-            android:hardwareAccelerated="false"
-            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="no.digipost.android.gui.LoginActivity"
