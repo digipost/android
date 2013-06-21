@@ -44,6 +44,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.app.Activity;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
@@ -345,7 +346,7 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 				return true;
 			}
 		} else if (keyCode == KeyEvent.KEYCODE_MENU) {
-           //Open Popup menu // eller settings
+            showMenu(optionsButton);
 		}
 		return super.onKeyDown(keyCode, event);
 	}

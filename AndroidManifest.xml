@@ -48,8 +48,10 @@
         </activity>
         <activity
             android:name="no.digipost.android.gui.BaseFragmentActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_base">
         </activity>
+
         <activity
             android:name="no.digipost.android.gui.LoginActivity"
             android:hardwareAccelerated="false"

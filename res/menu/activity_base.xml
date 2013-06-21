@@ -23,6 +23,13 @@
         android:showAsAction="never"
         android:title="@string/receipts">
     </item>
+    <!--
+    <item
+            android:id="@+id/basemenu_settings"
+            android:showAsAction="never"
+            android:title="@string/optionsmenu_settings">
+    </item>
+    -->
     <item
         android:id="@+id/basemenu_logoutOption"
         android:icon="@drawable/white_power_48"
