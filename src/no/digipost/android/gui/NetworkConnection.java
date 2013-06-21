@@ -26,12 +26,6 @@ public class NetworkConnection {
 		this.context = context;
 	}
 
-	public boolean isNetworkAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-		return activeNetworkInfo != null;
-	}
-
 	public void checkHttpStatusCode(final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
 			DigipostAuthenticationException {
 		if (statusCode == HTTP_STATUS_SUCCESS) {
