@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
@@ -46,8 +47,6 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
         ks = KeyStore.getInstance();
         listener = new ButtonListener();
-        stayLoggedInCheckBox = (CheckBox)findViewById(R.id.login_stay_logged_in_checkbox);
-        //TODO OPEN YES NO DIALOG LYTTER
         loginButton = (Button) findViewById(R.id.login_loginButton);
 		loginButton.setOnClickListener(listener);
 		privacyButton = (Button) findViewById(R.id.login_privacyButton);
@@ -55,6 +54,7 @@ public class LoginActivity extends Activity {
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
 		networkConnection = new NetworkConnection(this);
+        stayLoggedInCheckBox = (CheckBox)findViewById(R.id.login_stay_logged_in_checkbox);
     }
 
     @Override
@@ -62,6 +62,18 @@ public class LoginActivity extends Activity {
         super.onResume();
         enableCheckBoxIfScreenlock();
         deleteOldRefreshtoken();
+        stayLoggedInCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(stayLoggedInCheckBox.isChecked()){
+                    KeyStore ks = KeyStore.getInstance();
+                    if (ks.state() != KeyStore.State.UNLOCKED) {
+                        Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
+                        startActivity(i);
+                    }
+                }
+            }
+        });
     }
 
     private void deleteOldRefreshtoken(){
@@ -80,12 +92,7 @@ public class LoginActivity extends Activity {
     private void startLoginProcess(){
         if (stayLoggedInCheckBox.isChecked()) {
             SharedPreferencesUtil.storeScreenlockChoice(this,ApiConstants.SCREENLOCK_CHOICE_YES);
-            KeyStore ks = KeyStore.getInstance();
-            if (ks.state() != KeyStore.State.UNLOCKED) {
-                startActivity(new Intent(KeyStore.UNLOCK_ACTION));
-            }else{
-                openWebView();
-            }
+            openWebView();
         }else{
             SharedPreferencesUtil.storeScreenlockChoice(this,ApiConstants.SCREENLOCK_CHOICE_NO);
             openWebView();

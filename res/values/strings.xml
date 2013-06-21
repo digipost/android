@@ -9,8 +9,10 @@
     <string name="receipts">Kvitteringer</string>
 
     <!--Screenlock-->
-    <string name="yes_apply_screenlock">Aktiver skjermlås</string>
-    <string name="no_dont_use_screenlock">Bruk uten skjermlås</string>
+    <string name="screenlock_message1">For at Digipost-appen skal huske din innlogging må du aktivere skjermlås på din mobil.</string>
+    <string name="screenlock_message2">Uten skjermlås må du logge inn med fødselsnummer og passord hver gang du åpner appen.</string>
+    <string name="yes_apply_screenlock">Skru på skjermlås</string>
+    <string name="no_dont_use_screenlock">Avbryt</string>
 
     <!-- Misc -->
     <string name="close">Lukk</string>

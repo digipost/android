@@ -41,31 +41,8 @@ public class ScreenlockPreferenceActivity extends Activity {
         noButton.setOnClickListener(listener);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        KeyStore ks = KeyStore.getInstance();
-        if (ks.state() == KeyStore.State.UNLOCKED) {
-            saveToSharedPreferences(ApiConstants.SCREENLOCK_CHOICE_YES);
-            startLoginActivity();
-        }
-
-    }
-
     private void yesButton() {
         startActivity(new Intent(KeyStore.UNLOCK_ACTION));
-    }
-    private void noButton(){
-        saveToSharedPreferences(ApiConstants.SCREENLOCK_CHOICE_NO);
-        startLoginActivity();
-    }
-
-    private void saveToSharedPreferences(int choice){
-        SharedPreferencesUtil.storeScreenlockChoice(this,choice);
-    }
-    private void startLoginActivity() {
-        Intent i = new Intent(ScreenlockPreferenceActivity.this, LoginActivity.class);
-        startActivity(i);
         finish();
     }
 
@@ -74,8 +51,8 @@ public class ScreenlockPreferenceActivity extends Activity {
         public void onClick(final View v) {
             if (v == yesButton) {
                 yesButton();
-            } else if (v == noButton) {
-                noButton();
+            }else{
+                finish();
             }
         }
     }
