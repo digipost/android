@@ -16,7 +16,6 @@
 
 package no.digipost.android;
 
-import no.digipost.android.api.ApiConstants;
 import no.digipost.android.api.DigipostApiException;
 import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostClientException;
@@ -25,8 +24,6 @@ import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.authentication.SharedPreferencesUtil;
 import no.digipost.android.gui.BaseFragmentActivity;
 import no.digipost.android.gui.LoginActivity;
-import no.digipost.android.gui.ScreenlockPreferenceActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -38,7 +35,7 @@ public class MainActivity extends Activity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkKeyStoreStatus();
+        checkTokenAndScreenlockStatus();
     }
 
     @Override
@@ -47,30 +44,12 @@ public class MainActivity extends Activity {
         finish();
     }
 
-    private void checkKeyStoreStatus() {
+    private void checkTokenAndScreenlockStatus() {
         KeyStore ks = KeyStore.getInstance();
-        if (ks.state() != KeyStore.State.UNLOCKED) {
-
-            if(SharedPreferencesUtil.screenlockChoiceNo(this)){
-                startLoginActivity();
-            }else{
-                startActivity(new Intent(MainActivity.this, ScreenlockPreferenceActivity.class));
-            }
-        }else {
-            if(SharedPreferencesUtil.screenlockChoiceNo(this)){
-                startLoginActivity();
-            }else{
-                SharedPreferencesUtil.storeScreenlockChoice(this,ApiConstants.SCREENLOCK_CHOICE_YES);
-                checkTokenStatus();
-            }
-        }
-    }
-
-    private void checkTokenStatus() {
-        if (SharedPreferencesUtil.getEncryptedRefreshtokenCipher(this).isEmpty()) {
+        if (ks.state() == KeyStore.State.UNLOCKED && (!SharedPreferencesUtil.getEncryptedRefreshtokenCipher(this).isEmpty())) {
+                new CheckTokenTask().execute();
+        }else{
             startLoginActivity();
-        } else {
-            new CheckTokenTask().execute();
         }
     }
 

@@ -50,6 +50,7 @@
     <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
+    <string name="login_stay_logged_in_checkbox">Forbli innlogget?</string>
 
     <!-- OptionsMenu -->
     <string name="optionsmenu_settings">Innstillinger</string>

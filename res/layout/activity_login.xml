@@ -51,7 +51,6 @@
             android:layout_marginRight="@dimen/login_loginbutton_margin_left_right_top"
             android:layout_marginTop="@dimen/login_loginbutton_margin_left_right_top"
             android:background="@drawable/login_loginbutton_style"
-            android:drawableBottom="@color/login_loginbutton_drawablebottom"
             android:drawableLeft="@drawable/lock_white_35"
             android:drawablePadding="@dimen/login_loginbutton_paddingdrawable"
             android:paddingBottom="@dimen/login_loginbutton_padding_bottom_top"
@@ -62,6 +61,15 @@
             android:textColor="@color/white"
             android:textSize="@dimen/login_loginbutton_textsize"
             android:textStyle="bold" />
+
+        <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/login_loginbutton_margin_left_right_top"
+                android:layout_height="wrap_content"
+                android:text="@string/login_stay_logged_in_checkbox"
+                android:id="@+id/login_stay_logged_in_checkbox"
+                android:layout_gravity="center"
+                android:checked="false"/>
     </LinearLayout>
 
     <LinearLayout
