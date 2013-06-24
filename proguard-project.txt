@@ -1,4 +1,3 @@
-
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
 -dontpreverify
@@ -43,7 +42,6 @@ public protected *;
 -keep class com.sun.jersey.** { *; }
 -keep class org.apache.commons.** { *; }
 -keep class no.digipost.android.** { *; }
--keep class !no.digipost.android.autentication.Secret { *; }
 
 -keepclassmembers class * implements no.digipost.android.gui.WebLoginDialogFragment$MyWebViewClient { <methods>; }
 
