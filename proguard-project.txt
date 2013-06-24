@@ -1,20 +1,40 @@
-# To enable ProGuard in your project, edit project.properties
-# to define the proguard.config property as described in that file.
-#
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in ${sdk.dir}/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the ProGuard
-# include property in project.properties.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
 
-# Add any project specific keep options here:
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+-verbose
+-dontshrink
+-dontoptimize
+-keepattributes Signature,*Annotation*
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class com.android.vending.licensing.ILicensingService
+
+#keep all classes that might be used in XML layouts
+-keep public class * extends android.view.View
+-keep public class * extends android.app.Fragment
+-keep public class * extends android.support.v4.Fragment
+
+#keep all classes
+-keep public class *{
+public protected *;
+}
+
+#keep all public and protected methods that could be used by java reflection
+-keepclassmembernames class * {
+    public protected <methods>;
+}
+
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
 
 #Keep classes.
 -keep class javax.** { *; }
@@ -22,19 +42,12 @@
 -keep class org.codehaus.jackson.** { *; }
 -keep class com.sun.jersey.** { *; }
 -keep class org.apache.commons.** { *; }
+-keep class no.digipost.android.** { *; }
+-keep class !no.digipost.android.autentication.Secret { *; }
 
 -keepclassmembers class * implements no.digipost.android.gui.WebLoginDialogFragment$MyWebViewClient { <methods>; }
 
--keepattributes *Annotation*,EnclosingMethod
--optimizationpasses 5
--dontusemixedcaseclassnames
--dontskipnonpubliclibraryclasses
--dontskipnonpubliclibraryclassmembers
--dontpreverify
--verbose
-
 #Dont warn
-
 -dontwarn android.support.v4.view.**
 -dontwarn org.codehaus.jackson.**
 -dontwarn org.codehaus.jettison.**
