@@ -15,6 +15,28 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+
+#Keep classes.
+-keep class javax.** { *; }
+-keep class android.support.v4.** { *; }
+-keep class org.codehaus.jackson.** { *; }
+-keep class com.sun.jersey.** { *; }
+-keep class org.apache.commons.** { *; }
+
+-keepclassmembers class * implements no.digipost.android.gui.WebLoginDialogFragment$MyWebViewClient { <methods>; }
+
+-keepattributes *Annotation*,EnclosingMethod
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontskipnonpubliclibraryclassmembers
+-dontpreverify
+-verbose
+
+#Dont warn
+
+-dontwarn android.support.v4.view.**
+-dontwarn org.codehaus.jackson.**
+-dontwarn org.codehaus.jettison.**
+-dontwarn com.sun.jersey.**
+-dontwarn org.apache.commons.**
