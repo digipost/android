@@ -9,10 +9,11 @@
     <string name="receipts">Kvitteringer</string>
 
     <!--Screenlock-->
-    <string name="screenlock_message1">For at Digipost-appen skal huske din innlogging må du aktivere skjermlås på din mobil.</string>
+    <string name="screenlock_message1">For at Digipost-appen skal huske din innlogging må du skru på skjermlås på din mobil.</string>
     <string name="screenlock_message2">Uten skjermlås må du logge inn med fødselsnummer og passord hver gang du åpner appen.</string>
     <string name="yes_apply_screenlock">Skru på skjermlås</string>
     <string name="no_dont_use_screenlock">Avbryt</string>
+    <string name="screenlock">Skjermlås</string>
 
     <!-- Misc -->
     <string name="close">Lukk</string>
@@ -52,7 +53,7 @@
     <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
-    <string name="login_stay_logged_in_checkbox">Forbli innlogget?</string>
+    <string name="login_remember_me">Husk meg</string>
 
     <!-- OptionsMenu -->
     <string name="optionsmenu_settings">Innstillinger</string>

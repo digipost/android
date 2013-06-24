@@ -54,7 +54,7 @@ public class LoginActivity extends Activity {
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
 		networkConnection = new NetworkConnection(this);
-        stayLoggedInCheckBox = (CheckBox)findViewById(R.id.login_stay_logged_in_checkbox);
+        stayLoggedInCheckBox = (CheckBox)findViewById(R.id.login_remember_me);
     }
 
     @Override

@@ -19,55 +19,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/login_background"
-    tools:context=".LoginActivity" >
-
+    android:background="@color/login_disclamer_registration_layout_background"
+    tools:context=".LoginActivity"
+        >
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center|center_vertical|center_horizontal"
+            >
+        <ImageView
+                android:id="@+id/login_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/login_header_logo_contentdescription"
+                android:src="@drawable/postbox_white_medium"
+                android:layout_above="@+id/login_content_layout"
+                android:layout_centerInParent="true"/>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/login_content_layout"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/login_disclaimer_layout"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/login_margin_bottom"
-        android:background="@color/login_background"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/login_padding" >
+        android:layout_above="@+id/login_disclaimer_layout"
+        android:paddingLeft="@dimen/login_padding"
+        android:paddingRight="@dimen/login_padding">
 
-        <ImageView
-            android:id="@+id/login_logo"
-            android:layout_width="@dimen/login_logo_width"
-            android:layout_height="@dimen/login_logo_height"
-            android:layout_weight="0.30"
-            android:contentDescription="@string/login_header_logo_contentdescription"
-            android:src="@drawable/postbox_white_medium" />
+
 
         <Button
             android:id="@+id/login_loginButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/login_loginbutton_margin_left_right_top"
-            android:layout_marginRight="@dimen/login_loginbutton_margin_left_right_top"
-            android:layout_marginTop="@dimen/login_loginbutton_margin_left_right_top"
             android:background="@drawable/login_loginbutton_style"
-            android:drawableLeft="@drawable/lock_white_35"
-            android:drawablePadding="@dimen/login_loginbutton_paddingdrawable"
-            android:paddingBottom="@dimen/login_loginbutton_padding_bottom_top"
-            android:paddingLeft="@dimen/login_loginbutton_padding_left_right"
-            android:paddingRight="@dimen/login_loginbutton_padding_left_right"
-            android:paddingTop="@dimen/login_loginbutton_padding_bottom_top"
             android:text="@string/login_loginbutton_text"
             android:textColor="@color/white"
-            android:textSize="@dimen/login_loginbutton_textsize"
             android:textStyle="bold" />
 
         <CheckBox
                 android:layout_width="wrap_content"
-                android:layout_marginTop="@dimen/login_loginbutton_margin_left_right_top"
                 android:layout_height="wrap_content"
-                android:text="@string/login_stay_logged_in_checkbox"
-                android:id="@+id/login_stay_logged_in_checkbox"
+                android:layout_marginTop="10dp"
+                android:text="@string/login_remember_me"
+                android:id="@+id/login_remember_me"
                 android:layout_gravity="center"
                 android:checked="false"/>
     </LinearLayout>
@@ -77,21 +75,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:background="@color/login_disclamer_registration_layout_background"
+        android:layout_alignParentLeft="false"
         android:gravity="center"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_margin="20dp">
 
         <Button
             android:id="@+id/login_registrationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/login_disclaimer_registration_buttons_margin_bottom"
-            android:layout_marginLeft="@dimen/login_disclaimer_registration_buttons_margin_left_right_top"
-            android:layout_marginRight="@dimen/login_disclaimer_registration_buttons_margin_left_right_top"
-            android:layout_marginTop="@dimen/login_disclaimer_registration_buttons_margin_left_right_top"
             android:background="@drawable/login_otherbuttons_style"
-            android:padding="@dimen/login_disclaimer_registration_buttons_padding"
             android:text="@string/login_registrationbutton_text"
             android:textColor="@color/login_disclamer_registration_buttons_text_color_normal"
             android:textSize="@dimen/login_loginbutton_textsize" />
@@ -100,15 +93,13 @@
             android:id="@+id/login_privacyButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/login_disclaimer_registration_buttons_margin_left_right_top"
-            android:layout_marginLeft="@dimen/login_disclaimer_registration_buttons_margin_left_right_top"
-            android:layout_marginRight="@dimen/login_disclaimer_registration_buttons_margin_left_right_top"
-            android:layout_marginTop="@dimen/login_disclaimer_registration_buttons_margin_bottom"
             android:background="@drawable/login_otherbuttons_style"
-            android:padding="@dimen/login_disclaimer_registration_buttons_padding"
             android:text="@string/login_privacybutton_text"
             android:textColor="@color/login_disclamer_registration_buttons_text_color_normal"
-            android:textSize="@dimen/login_loginbutton_textsize" />
+            android:textSize="@dimen/login_loginbutton_textsize"
+            android:layout_marginTop="20dp"/>
     </LinearLayout>
+
+
 
 </RelativeLayout>

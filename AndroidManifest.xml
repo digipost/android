@@ -66,7 +66,9 @@
         <activity 
             android:name="no.digipost.android.gui.ImageActivity">
         </activity>
-        <activity android:name=".gui.ScreenlockPreferenceActivity"/>
+        <activity android:name="no.digipost.android.gui.ScreenlockPreferenceActivity"
+            android:screenOrientation="portrait">
+            </activity>
     </application>
 
 </manifest>
