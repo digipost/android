@@ -67,6 +67,7 @@
             android:name="no.digipost.android.gui.ImageActivity">
         </activity>
         <activity android:name=".gui.ScreenlockPreferenceActivity"/>
+        <activity android:name=".gui.WebLoginDialogFragment" />
     </application>
 
 </manifest>
