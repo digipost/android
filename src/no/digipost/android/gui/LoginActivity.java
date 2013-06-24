@@ -41,6 +41,8 @@ public class LoginActivity extends Activity {
 	private NetworkConnection networkConnection;
     private KeyStore ks;
 
+    private final int WEB_LOGIN_REQUEST = 1;
+
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,15 +102,25 @@ public class LoginActivity extends Activity {
     }
     private void openWebView() {
 		if (networkConnection.isOnline()) {
-			WebLoginDialogFragment webView = new WebLoginDialogFragment(new WebFragmentHandler());
-			webView.show(getFragmentManager(), "webView");
+            Intent i = new Intent(this, WebLoginActivity.class);
+            startActivityForResult(i, WEB_LOGIN_REQUEST);
+
 		} else {
 			showMessage(getString(R.string.error_your_network));
 		}
 
 	}
 
-	private void showMessage(final String message) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == WEB_LOGIN_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                startBaseActivity();
+            }
+        }
+    }
+
+    private void showMessage(final String message) {
 		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 200);
 		toast.show();
@@ -119,22 +131,6 @@ public class LoginActivity extends Activity {
 		Intent i = new Intent(LoginActivity.this, BaseFragmentActivity.class);
 		startActivity(i);
 		finish();
-	}
-
-	private class WebFragmentHandler extends Handler {
-		@Override
-		public void handleMessage(final Message msg) {
-			super.handleMessage(msg);
-			if (msg.what == ApiConstants.ERROR_OK) {
-				startBaseActivity();
-			} else if (msg.what == ApiConstants.ERROR_DEVICE) {
-				showMessage(getString(R.string.error_your_network));
-			} else if (msg.what == ApiConstants.ERROR_GENERAL) {
-				showMessage(getString(R.string.error_wrong_credentials));
-			} else if (msg.what == ApiConstants.ERROR_SERVER) {
-				showMessage(getString(R.string.error_digipost_api));
-			}
-		}
 	}
 
 	private void openPrivayBrowser() {

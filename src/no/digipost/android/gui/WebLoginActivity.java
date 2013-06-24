@@ -23,12 +23,15 @@ import no.digipost.android.api.DigipostAuthenticationException;
 import no.digipost.android.api.DigipostClientException;
 import no.digipost.android.authentication.OAuth2;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,27 +39,25 @@ import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
-public class WebLoginDialogFragment extends DialogFragment {
+public class WebLoginActivity extends Activity {
 
 	private WebView webViewOauth;
-	private final Handler handler;
-	private Context context;
 
-	public WebLoginDialogFragment(final Handler handler) {
-		this.handler = handler;
-	}
-
-	@Override
-	public void onDismiss(final DialogInterface dialog) {
-		super.onDismiss(dialog);
-	}
-
+    @SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		context = getActivity();
-		setStyle(STYLE_NO_FRAME, android.R.style.Theme_Holo_Light);
+
+        setContentView(R.layout.fragment_web);
+        webViewOauth = (WebView) findViewById(R.id.web_oauth);
+        String url = OAuth2.getAuthorizeURL();
+        webViewOauth.loadUrl(url);
+        WebSettings settings = webViewOauth.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+        webViewOauth.setWebViewClient(new MyWebViewClient());
 	}
 
 	private class MyWebViewClient extends WebViewClient {
@@ -83,55 +84,45 @@ public class WebLoginDialogFragment extends DialogFragment {
 		@Override
 		public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
-			handler.sendEmptyMessage(ApiConstants.ERROR_DEVICE);
-			dismiss();
+            setResult(RESULT_CANCELED);
+            finish();
 		}
 	}
 
-	private class GetAccessTokenTask extends AsyncTask<String, Void, Void> {
+	private class GetAccessTokenTask extends AsyncTask<String, Void, String> {
 
 		@Override
-		protected Void doInBackground(final String... params) {
+		protected String doInBackground(final String... params) {
 
 			try {
-				OAuth2.retriveAccessToken(params[0], params[1], context);
-				handler.sendEmptyMessage(ApiConstants.ERROR_OK);
+				OAuth2.retriveInitialAccessToken(params[0], params[1], WebLoginActivity.this);
+                return null;
 			} catch (DigipostApiException e) {
-				handler.sendEmptyMessage(ApiConstants.ERROR_SERVER);
+                return e.getMessage();
 			} catch (DigipostClientException e) {
-				handler.sendEmptyMessage(ApiConstants.ERROR_DEVICE);
+                return e.getMessage();
 			} catch (DigipostAuthenticationException e) {
-				// Ignore
+			    return e.getMessage();
 			}
-
-			return null;
 		}
 
 		@Override
-		protected void onPostExecute(final Void result) {
-			super.onPostExecute(result);
-			dismiss();
+		protected void onPostExecute(final String result) {
+            if (result != null) {
+                showMessage(result);
+                setResult(RESULT_CANCELED);
+            } else {
+                setResult(RESULT_OK);
+            }
+
+            finish();
 		}
 
 	}
 
-	@SuppressLint("SetJavaScriptEnabled")
-	@Override
-	public void onViewCreated(final View v, final Bundle arg1) {
-		super.onViewCreated(v, arg1);
-		webViewOauth = (WebView) v.findViewById(R.id.web_oauth);
-		String url = OAuth2.getAuthorizeURL();
-		webViewOauth.loadUrl(url);
-		WebSettings settings = webViewOauth.getSettings();
-		settings.setJavaScriptEnabled(true);
-		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-		webViewOauth.setWebViewClient(new MyWebViewClient());
-
-	}
-
-	@Override
-	public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_web, container, false);
-		return v;
-	}
+    private void showMessage(final String message) {
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 200);
+        toast.show();
+    }
 }

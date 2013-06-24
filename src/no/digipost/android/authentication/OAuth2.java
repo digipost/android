@@ -55,7 +55,7 @@ public class OAuth2 {
 				+ ApiConstants.STATE + "=" + state;
 	}
 
-	public static void retriveAccessToken(final String url_state, final String url_code, final Context context)
+	public static void retriveInitialAccessToken(final String url_state, final String url_code, final Context context)
 			throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		nonce = getSecureRandom(20);
 
@@ -67,11 +67,8 @@ public class OAuth2 {
 
 		Access data = getAccessData(params, context);
 
-		if (!stateVerified(url_state)) {
-			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-		} else if (!authenticationVerified(data.getId_token())) {
-			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-		}
+        verifyState(url_state, context);
+        verifyAuthentication(data.getId_token(), context);
 
         storeTokens(data, context);
 	}
@@ -84,7 +81,7 @@ public class OAuth2 {
 		Secret.ACCESS_TOKEN = getAccessData(params, context).getAccess_token();
 	}
 
-	public static void storeTokens(final Access data, final Context context) {
+	private static void storeTokens(final Access data, final Context context) {
 		Secret.ACCESS_TOKEN = data.getAccess_token();
         if(SharedPreferencesUtil.screenlockChoiceYes(context)){
 	    	String refresh_token = data.getRefresh_token();
@@ -105,7 +102,7 @@ public class OAuth2 {
 
 
 
-	public static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws DigipostApiException,
+	private static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {
 		Client c = Client.create();
 		WebResource r = c.resource(ApiConstants.URL_API_OAUTH_ACCESSTOKEN);
@@ -131,7 +128,7 @@ public class OAuth2 {
 		return (Access) JSONUtilities.processJackson(Access.class, cr.getEntityInputStream());
 	}
 
-	private static boolean authenticationVerified(final String id_token) {
+	private static void verifyAuthentication(final String id_token, final Context context) throws DigipostApiException {
 		String split_by = ".";
 		int splitindex = id_token.indexOf(split_by);
 
@@ -140,21 +137,22 @@ public class OAuth2 {
 		String signature_dec = new String(Base64.decode(signature_enc.getBytes(), Base64.DEFAULT));
 
 		if (!encryptHmacSHA256(token_value_enc).equals(signature_dec)) {
-			return false;
-		}
+            throw new DigipostApiException(context.getString(R.string.error_digipost_api));
+        }
 
 		TokenValue data = (TokenValue) JSONUtilities.processJackson(TokenValue.class,
 				new String(Base64.decode(token_value_enc.getBytes(), Base64.DEFAULT)));
 		String aud = data.getAud();
 
 		if (!aud.equals(Secret.CLIENT_ID)) {
-			return false;
-		}
-		return true;
+            throw new DigipostApiException(context.getString(R.string.error_digipost_api));
+        }
 	}
 
-	private static boolean stateVerified(final String received_state) {
-		return state.equals(received_state);
+	private static void verifyState(final String received_state, final Context context) throws DigipostApiException {
+		if (!state.equals(received_state)) {
+            throw new DigipostApiException(context.getString(R.string.error_digipost_api));
+        }
 	}
 
 	private static String getSecureRandom(final int num_bytes) {
