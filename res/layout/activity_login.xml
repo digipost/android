@@ -63,7 +63,7 @@
         <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/login_remember_me"
                 android:id="@+id/login_remember_me"
                 android:layout_gravity="center"
@@ -84,7 +84,7 @@
             android:id="@+id/login_registrationButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/login_otherbuttons_style"
+            android:background="@drawable/screenlock_no_button_style"
             android:text="@string/login_registrationbutton_text"
             android:textColor="@color/login_disclamer_registration_buttons_text_color_normal"
             android:textSize="@dimen/login_loginbutton_textsize" />
@@ -93,7 +93,7 @@
             android:id="@+id/login_privacyButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/login_otherbuttons_style"
+            android:background="@drawable/screenlock_no_button_style"
             android:text="@string/login_privacybutton_text"
             android:textColor="@color/login_disclamer_registration_buttons_text_color_normal"
             android:textSize="@dimen/login_loginbutton_textsize"
