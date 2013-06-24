@@ -441,7 +441,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	private class GetAccountMetaTask extends AsyncTask<Void, Void, ArrayList<Letter>> {
 		private final int type;
 		private String errorMessage = "";
-		private final boolean invalidToken;
+		private boolean invalidToken;
 
 		public GetAccountMetaTask(final int type) {
 			this.type = type;
@@ -467,6 +467,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				return null;
 			} catch (DigipostAuthenticationException e) {
 				errorMessage = e.getMessage();
+                invalidToken = true;
 				return null;
 			}
 		}
@@ -567,10 +568,11 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
 					startActivityForResult(i, REQUESTCODE_INTENT);
 				}
-			}
+
+                activityCommunicator.passDataToActivity(BASE_UPDATE_SINGLE);
+            }
 
 			clearContentProgressDialog();
-			activityCommunicator.passDataToActivity(BASE_UPDATE_SINGLE);
 		}
 	}
 
@@ -651,10 +653,10 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 					}
 				}
 				startActivityForResult(i, REQUESTCODE_INTENT);
-			}
+                activityCommunicator.passDataToActivity(BASE_UPDATE_SINGLE);
+            }
 
 			clearContentProgressDialog();
-			activityCommunicator.passDataToActivity(BASE_UPDATE_SINGLE);
 		}
 	}
 

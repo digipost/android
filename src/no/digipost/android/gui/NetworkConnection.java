@@ -11,8 +11,6 @@ import no.digipost.android.api.DigipostInvalidTokenException;
 import no.digipost.android.authentication.SharedPreferencesUtil;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
 public class NetworkConnection {
