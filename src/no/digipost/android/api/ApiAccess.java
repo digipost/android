@@ -42,6 +42,8 @@ import android.graphics.BitmapFactory;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 
+import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT;
+
 public class ApiAccess {
 	private final Context context;
 	private final NetworkConnection networkConnection;
@@ -77,6 +79,10 @@ public class ApiAccess {
 					.header(ApiConstants.ACCEPT, header_accept)
 					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
 					.get(ClientResponse.class);
+
+			if (cr.getStatus() == TEMPORARY_REDIRECT.getStatusCode()) {
+				return executeGetRequest(cr.getHeaders().getFirst("Location"), header_accept);
+			}
 
 			return cr;
 		} catch (Exception e) {
