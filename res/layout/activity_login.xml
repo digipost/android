@@ -15,37 +15,36 @@
  * limitations under the License.
  */
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/login_disclamer_registration_layout_background"
-    tools:context=".LoginActivity"
-        >
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/login_disclamer_registration_layout_background"
+        android:weightSum="5">
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             android:gravity="center|center_vertical|center_horizontal"
-            >
+            android:id="@+id/linearLayout"
+            android:layout_weight="3">
+
         <ImageView
                 android:id="@+id/login_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/login_header_logo_contentdescription"
                 android:src="@drawable/postbox_white_medium"
-                android:layout_above="@+id/login_content_layout"
-                android:layout_centerInParent="true"/>
+                android:layout_centerHorizontal="true"/>
     </LinearLayout>
     <LinearLayout
         android:id="@+id/login_content_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:gravity="center"
+        android:layout_weight="2"
         android:orientation="vertical"
-        android:layout_above="@+id/login_disclaimer_layout"
         android:paddingLeft="@dimen/login_padding"
         android:paddingRight="@dimen/login_padding">
 
@@ -55,7 +54,7 @@
             android:id="@+id/login_loginButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/login_loginbutton_style"
+            android:background="@drawable/screenlock_yes_button_style"
             android:text="@string/login_loginbutton_text"
             android:textColor="@color/white"
             android:textStyle="bold" />
@@ -63,7 +62,7 @@
         <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/login_layout_margin"
                 android:text="@string/login_remember_me"
                 android:id="@+id/login_remember_me"
                 android:layout_gravity="center"
@@ -74,11 +73,10 @@
         android:id="@+id/login_disclaimer_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="false"
         android:gravity="center"
+        android:layout_weight="2"
         android:orientation="vertical"
-        android:layout_margin="20dp">
+        android:layout_margin="@dimen/login_layout_margin">
 
         <Button
             android:id="@+id/login_registrationButton"
@@ -86,8 +84,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/screenlock_no_button_style"
             android:text="@string/login_registrationbutton_text"
-            android:textColor="@color/login_disclamer_registration_buttons_text_color_normal"
-            android:textSize="@dimen/login_loginbutton_textsize" />
+            android:textColor="@color/white"/>
 
         <Button
             android:id="@+id/login_privacyButton"
@@ -95,11 +92,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/screenlock_no_button_style"
             android:text="@string/login_privacybutton_text"
-            android:textColor="@color/login_disclamer_registration_buttons_text_color_normal"
-            android:textSize="@dimen/login_loginbutton_textsize"
-            android:layout_marginTop="20dp"/>
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/login_layout_margin"/>
     </LinearLayout>
-
-
-
-</RelativeLayout>
+</LinearLayout>

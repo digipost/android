@@ -59,14 +59,7 @@
     <!-- LoginView -->
     <dimen name="login_margin_bottom">52dp</dimen>
     <dimen name="login_padding">20dp</dimen>
-    <dimen name="login_logo_width">136dp</dimen>
-    <dimen name="login_logo_height">0dip</dimen>
-    <dimen name="login_loginbutton_margin_left_right_top">20dp</dimen>
-    <dimen name="login_loginbutton_padding_left_right">15dp</dimen>
-    <dimen name="login_loginbutton_padding_bottom_top">5dp</dimen>
-    <dimen name="login_loginbutton_paddingdrawable">10dp</dimen>
-    <dimen name="login_loginbutton_textsize">16dp</dimen>
-
+    <dimen name="login_layout_margin">20dp</dimen>
     <dimen name="login_disclaimer_registration_buttons_corners">4dp</dimen>
     
     <!-- MainActivity -->
@@ -74,5 +67,11 @@
 
     <!-- Screenlock -->
     <dimen name="screenlock_buttons_radius">8dp</dimen>
+    <dimen name="screenlock_infotext_size">20dp</dimen>
+    <dimen name="screenlock_view_padding">20dp</dimen>
+    <dimen name="screenlock_header_padding">15dp</dimen>
+    <dimen name="screenlock_header_textsize">30dp</dimen>
+    <dimen name="screenlock_header_marginleft">5dp</dimen>
+    <dimen name="screenlock_header_drawablepadding">10dp</dimen>
 
 </resources>

@@ -24,25 +24,24 @@
         >
     <LinearLayout
             android:orientation="vertical"
-            android:background="#1F1F1F"
+            android:background="@color/screenlock_header_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:padding="15dp"
-            android:paddingLeft="20dp">
+            android:padding="@dimen/screenlock_header_padding"
+            android:paddingLeft="@dimen/screenlock_view_padding">
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/screenlock"
                 android:drawableLeft="@drawable/lock_white_50"
-                android:textSize="30dp"
+                android:textSize="@dimen/screenlock_header_textsize"
                 android:id="@+id/textView"
                 android:textColor="@color/white"
                 android:textAlignment="center"
                 android:layout_gravity="top"
-                android:editable="false"
-                android:layout_marginLeft="5dp"
-                android:drawablePadding="10dp"/>
+                android:layout_marginLeft="@dimen/screenlock_header_marginleft"
+                android:drawablePadding="@dimen/screenlock_header_drawablepadding"/>
         </LinearLayout>
 
     <LinearLayout
@@ -50,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="20dp">
+            android:padding="@dimen/screenlock_view_padding">
 
 
         <TextView
@@ -59,22 +58,22 @@
                 android:textAlignment="center"
                 android:text="@string/screenlock_message1"
                 android:gravity="left"
-                android:textSize="20dp"/>
+                android:textSize="@dimen/screenlock_infotext_size"/>
 
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/screenlock_view_padding"
                 android:text="@string/screenlock_message2"
-                android:textSize="20dp"/>
+                android:textSize="@dimen/screenlock_infotext_size"/>
     </LinearLayout>
 
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
+            android:padding="@dimen/screenlock_view_padding"
             android:gravity="center_vertical|center_horizontal"
             android:layout_gravity="center">
     <Button
@@ -85,19 +84,17 @@
             android:text="@string/yes_apply_screenlock"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:id="@+id/screenlockactivity_yes_button"
-            android:paddingLeft="5dp"/>
+            android:id="@+id/screenlockactivity_yes_button"/>
 
         <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/screenlock_view_padding"
                 android:background="@drawable/screenlock_no_button_style"
                 android:text="@string/no_dont_use_screenlock"
                 android:textColor="@color/white"
-                android:id="@+id/screenlockactivity_no_button"
-                android:paddingLeft="5dp"/>
+                android:id="@+id/screenlockactivity_no_button"/>
     </LinearLayout>
 
 

@@ -34,9 +34,11 @@
     <color name="login_background">#323538</color>
     <color name="login_loginbutton_drawablebottom">#aa0000</color>
     <color name="login_disclamer_registration_layout_background">#292b2d</color>
-    <color name="login_disclamer_registration_buttons_text_color_normal">#FFF</color>
     <color name="login_disclamer_registration_buttons_text_color_pressed">#8c8c8c</color>
     <color name="login_disclamer_registration_buttons_background_normal">#5E5E5E</color>
     <color name="login_disclamer_registration_buttons_background_pressed">#222426</color>
+
+    <!-- Screenlock -->
+    <color name="screenlock_header_background">#1F1F1F</color>
 
 </resources>
