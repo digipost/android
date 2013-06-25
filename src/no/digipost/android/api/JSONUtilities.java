@@ -16,17 +16,7 @@
 
 package no.digipost.android.api;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-
-import no.digipost.android.model.Letter;
+import android.content.Context;
 
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
@@ -39,6 +29,19 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ser.FilterProvider;
 import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+
+import no.digipost.android.R;
+import no.digipost.android.model.Letter;
 
 public class JSONUtilities {
 	public static String getJsonStringFromInputStream(final InputStream inputStream) {
@@ -121,7 +124,7 @@ public class JSONUtilities {
 		return output;
 	}
 
-	public static byte[] inputStreamtoByteArray(final int size, final InputStream data) {
+	public static byte[] inputStreamtoByteArray(Context context, final int size, final InputStream data) throws DigipostClientException{
 		InputStream is = data;
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
@@ -135,7 +138,9 @@ public class JSONUtilities {
 			buffer.flush();
 		} catch (IOException e) {
 			// Ignore
-		}
+		}catch(OutOfMemoryError e){
+            throw new DigipostClientException(context.getString(R.string.error_inputstreamtobyarray));
+        }
 		return buffer.toByteArray();
 	}
 }
