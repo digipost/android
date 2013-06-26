@@ -1,0 +1,2 @@
+set solib-search-path C:/Users/Sigurd/Desktop/MuDev/mupdf-1.2-source/android/obj/local/armeabi
+directory C:/android-ndk-r6/platforms/android-8/arch-arm/usr/include ../draw ../fitz ../pdf C:/Users/Sigurd/Desktop/MuDev/mupdf-1.2-source/android/jni ../thirdparty/jbig2dec ../thirdparty/openjpeg/libopenjpeg ../thirdparty/jpeg ../thirdparty/zlib ../thirdparty/freetype/include ../xps ../cbz ../scripts C:/android-ndk-r6/sources/cxx-stl/system

@@ -11,8 +11,9 @@ import no.digipost.android.api.LetterOperations;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
-import no.digipost.android.pdf.PDFActivity;
+import no.digipost.android.pdf.MuPDFActivity;
 import no.digipost.android.pdf.PDFStore;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -559,12 +560,12 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				if (letter != null) {
 					tempLetter = letter;
 					PDFStore.pdf = result;
-					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+					Intent i = new Intent(getActivity().getApplicationContext(), MuPDFActivity.class);
 					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
 					startActivityForResult(i, REQUESTCODE_INTENT);
 				} else {
 					PDFStore.pdf = result;
-					Intent i = new Intent(getActivity().getApplicationContext(), PDFActivity.class);
+					Intent i = new Intent(getActivity().getApplicationContext(), MuPDFActivity.class);
 					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
 					startActivityForResult(i, REQUESTCODE_INTENT);
 				}

@@ -60,9 +60,6 @@
             android:name="no.digipost.android.gui.HtmlActivity"
             android:label="@string/title_activity_html_veb_view" >
         </activity>
-        <activity
-            android:name="no.digipost.android.pdf.PDFActivity" >
-        </activity>
         <activity 
             android:name="no.digipost.android.gui.ImageActivity">
         </activity>
@@ -70,6 +67,7 @@
             android:screenOrientation="portrait">
             </activity>
         <activity android:name="no.digipost.android.gui.WebLoginActivity" />
+        <activity android:name="no.digipost.android.pdf.MuPDFActivity"/>
     </application>
 
 </manifest>

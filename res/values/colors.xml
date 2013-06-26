@@ -29,6 +29,7 @@
     <color name="base_searchfield_background">#BA0D16</color>
     <color name="base_searchfield_background_shadow">#A10B13</color>
     <color name="splash_bg_color">#e2251b</color>
+    <color name="busy_indicator">#C0202020</color>
 
     <!-- LoginActivity -->
     <color name="login_background">#323538</color>
