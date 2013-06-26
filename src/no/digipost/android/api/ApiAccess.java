@@ -15,6 +15,19 @@
  */
 package no.digipost.android.api;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -28,19 +41,6 @@ import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipts;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
 
 import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT;
 
@@ -183,7 +183,7 @@ public class ApiAccess {
 			return getDocumentContent(uri, filesize);
 		}
 
-		return JSONUtilities.inputStreamtoByteArray(filesize, cr.getEntityInputStream());
+		return JSONUtilities.inputStreamtoByteArray(context,filesize, cr.getEntityInputStream());
 	}
 
 	public Bitmap getDocumentImage(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
@@ -195,8 +195,11 @@ public class ApiAccess {
 			OAuth2.updateAccessToken(context);
 			return getDocumentImage(uri);
 		}
-
-		return BitmapFactory.decodeStream(cr.getEntityInputStream());
+        try{
+            return BitmapFactory.decodeStream(cr.getEntityInputStream());
+        }catch(OutOfMemoryError e){
+            throw new DigipostClientException(context.getString(R.string.error_inputstreamtobyarray));
+        }
 	}
 
 	public String getDocumentHTML(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
