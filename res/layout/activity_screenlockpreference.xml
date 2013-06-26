@@ -38,7 +38,6 @@
                 android:textSize="@dimen/screenlock_header_textsize"
                 android:id="@+id/textView"
                 android:textColor="@color/white"
-                android:textAlignment="center"
                 android:layout_gravity="top"
                 android:layout_marginLeft="@dimen/screenlock_header_marginleft"
                 android:drawablePadding="@dimen/screenlock_header_drawablepadding"/>
@@ -55,7 +54,6 @@
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:text="@string/screenlock_message1"
                 android:gravity="left"
                 android:textSize="@dimen/screenlock_infotext_size"/>
@@ -63,7 +61,6 @@
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:layout_marginTop="@dimen/screenlock_view_padding"
                 android:text="@string/screenlock_message2"
                 android:textSize="@dimen/screenlock_infotext_size"/>
