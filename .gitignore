@@ -19,7 +19,7 @@ local.properties
 src/no/digipost/android/authentication/Secret.java
 target/
 proguard_logs/
-
+classes/
 obj
 
 # libs/android-support-v4.jar
