@@ -5,4 +5,6 @@ package no.digipost.android.pdf;
  */
 public class PDFStore {
     public static byte[] pdf = null;
+    public static String pdf_name = null;
+    public static String pdf_file_type = null;
 }

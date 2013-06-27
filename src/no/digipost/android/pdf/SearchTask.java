@@ -66,6 +66,7 @@ public abstract class SearchTask {
 				stop();
 			}
 		});
+
 		progressDialog.setMax(mCore.countPages());
 
 		mSearchTask = new AsyncTask<Void,Integer,SearchTaskResult>() {
@@ -93,7 +94,7 @@ public abstract class SearchTask {
 				} else {
 					mAlertBuilder.setTitle(SearchTaskResult.get() == null ? R.string.pdf_text_not_found : R.string.pdf_no_further_occurences_found);
 					AlertDialog alert = mAlertBuilder.create();
-					alert.setButton(AlertDialog.BUTTON_POSITIVE, "Dismiss",
+					alert.setButton(AlertDialog.BUTTON_POSITIVE, "Lukk",
 							(DialogInterface.OnClickListener)null);
 					alert.show();
 				}

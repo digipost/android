@@ -1,5 +1,8 @@
 package no.digipost.android.pdf;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.io.InputStream;
 import java.io.FileInputStream;
@@ -26,11 +29,13 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -64,44 +69,31 @@ public class MuPDFActivity extends Activity
 	private MuPDFReaderView mDocView;
 	private View         mButtonsView;
 	private boolean      mButtonsVisible;
-	private EditText     mPasswordView;
 	private TextView     mFilenameView;
-	private SeekBar      mPageSlider;
-	private int          mPageSliderRes;
 	private TextView     mPageNumberView;
-	private TextView     mInfoView;
 	private ImageButton  mSearchButton;
-	private ImageButton  mReflowButton;
 	private ImageButton mSelectButton;
-	private ImageButton mCancelSelectButton;
 	private ImageButton mCopySelectButton;
-	private ImageButton mStrikeOutButton;
-	private ImageButton  mCancelButton;
-	private ImageButton  mOutlineButton;
 	private ViewAnimator mTopBarSwitcher;
-	private ImageButton  mLinkButton;
 	private boolean      mTopBarIsSearch;
 	private ImageButton  mSearchBack;
 	private ImageButton  mSearchFwd;
 	private EditText     mSearchText;
 	private SearchTask   mSearchTask;
 	private AlertDialog.Builder mAlertBuilder;
-	private boolean    mLinkHighlight = false;
 	private final Handler mHandler = new Handler();
 	private boolean mAlertsActive= false;
-	private boolean mReflow = false;
 	private AsyncTask<Void,Void,MuPDFAlert> mAlertTask;
 	private AlertDialog mAlertDialog;
     private Intent intent;
-    private ImageButton mBackButton;
     private ImageButton toArchive;
     private ImageButton toWorkarea;
     private ImageButton delete;
-    // private ImageButton share;
     private ImageButton digipostIcon;
     private RelativeLayout mBottombar;
     private LinearLayout mTopbar;
     private boolean mTopBarIsSelect;
+    private ImageButton saveToSD;
 
     public void createAlertWaiter() {
 		mAlertsActive = true;
@@ -175,19 +167,19 @@ public class MuPDFActivity extends Activity
 				switch (result.buttonGroupType)
 				{
 				case OkCancel:
-					mAlertDialog.setButton(AlertDialog.BUTTON2, "Cancel", listener);
+					mAlertDialog.setButton(AlertDialog.BUTTON2, "Avbryt", listener);
 					pressed[1] = MuPDFAlert.ButtonPressed.Cancel;
 				case Ok:
 					mAlertDialog.setButton(AlertDialog.BUTTON1, "Ok", listener);
 					pressed[0] = MuPDFAlert.ButtonPressed.Ok;
 					break;
 				case YesNoCancel:
-					mAlertDialog.setButton(AlertDialog.BUTTON3, "Cancel", listener);
+					mAlertDialog.setButton(AlertDialog.BUTTON3, "Avbryt", listener);
 					pressed[2] = MuPDFAlert.ButtonPressed.Cancel;
 				case YesNo:
-					mAlertDialog.setButton(AlertDialog.BUTTON1, "Yes", listener);
+					mAlertDialog.setButton(AlertDialog.BUTTON1, "Ja", listener);
 					pressed[0] = MuPDFAlert.ButtonPressed.Yes;
-					mAlertDialog.setButton(AlertDialog.BUTTON2, "No", listener);
+					mAlertDialog.setButton(AlertDialog.BUTTON2, "Nei", listener);
 					pressed[1] = MuPDFAlert.ButtonPressed.No;
 					break;
 				}
@@ -522,6 +514,13 @@ public class MuPDFActivity extends Activity
             }
         });
 
+        saveToSD.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(final View v) {
+                promtSaveToSD();
+            }
+        });
+
 		// Stick the document view and the buttons overlay into a parent view
 		RelativeLayout layout = new RelativeLayout(this);
 		layout.addView(mDocView);
@@ -713,29 +712,6 @@ public class MuPDFActivity extends Activity
 	}
 
 	void makeButtonsView() {
-		/*mButtonsView = getLayoutInflater().inflate(R.layout.buttons,null);
-		mFilenameView = (TextView)mButtonsView.findViewById(R.id.docNameText);
-		mPageSlider = (SeekBar)mButtonsView.findViewById(R.id.pageSlider);
-		mPageNumberView = (TextView)mButtonsView.findViewById(R.id.pageNumber);
-		mInfoView = (TextView)mButtonsView.findViewById(R.id.info);
-		mSearchButton = (ImageButton)mButtonsView.findViewById(R.id.searchButton);
-		mReflowButton = (ImageButton)mButtonsView.findViewById(R.id.reflowButton);
-		mSelectButton = (ImageButton)mButtonsView.findViewById(R.id.selectButton);
-		mCancelSelectButton = (ImageButton)mButtonsView.findViewById(R.id.cancelSelectButton);
-		mCopySelectButton = (ImageButton)mButtonsView.findViewById(R.id.copySelectButton);
-		mStrikeOutButton = (ImageButton)mButtonsView.findViewById(R.id.strikeOutButton);
-		mCancelButton = (ImageButton)mButtonsView.findViewById(R.id.cancel);
-		mOutlineButton = (ImageButton)mButtonsView.findViewById(R.id.outlineButton);
-		mTopBarSwitcher = (ViewAnimator)mButtonsView.findViewById(R.id.switcher);
-		mSearchBack = (ImageButton)mButtonsView.findViewById(R.id.searchBack);
-		mSearchFwd = (ImageButton)mButtonsView.findViewById(R.id.searchForward);
-		mSearchText = (EditText)mButtonsView.findViewById(R.id.searchText);
-		mLinkButton = (ImageButton)mButtonsView.findViewById(R.id.linkButton);
-		mTopBarSwitcher.setVisibility(View.INVISIBLE);
-		mPageNumberView.setVisibility(View.INVISIBLE);
-		mInfoView.setVisibility(View.INVISIBLE);
-		mPageSlider.setVisibility(View.INVISIBLE);*/
-
         mButtonsView = getLayoutInflater().inflate(R.layout.pdf_buttons, null);
         mFilenameView = (TextView) mButtonsView.findViewById(R.id.pdf_name);
         mPageNumberView = (TextView) mButtonsView.findViewById(R.id.pdf_pageNumber);
@@ -754,6 +730,7 @@ public class MuPDFActivity extends Activity
         digipostIcon = (ImageButton) mButtonsView.findViewById(R.id.pdf_digipost_icon);
         mSelectButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_selectbtn);
         mCopySelectButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_select_copy);
+        saveToSD = (ImageButton) mButtonsView.findViewById(R.id.pdf_save);
 
         mPageNumberView.setVisibility(View.INVISIBLE);
         mBottombar.setVisibility(View.INVISIBLE);
@@ -846,4 +823,66 @@ public class MuPDFActivity extends Activity
 			super.onBackPressed();
 		}
 	}
+
+    private void promtSaveToSD() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                new SaveDocumentToSDTask().execute();
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = new ProgressDialog(MuPDFActivity.this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage(getString(R.string.loading_content));
+            progressDialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... parameters) {
+            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File file = new File(path, PDFStore.pdf_name + "." + PDFStore.pdf_file_type);
+            try {
+                FileOutputStream stream = new FileOutputStream(file, true);
+                stream.write(core.getBuffer());
+                stream.close();
+            } catch (IOException e) {
+                return false;
+            }
+
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            intent.setData(Uri.fromFile(file));
+            sendBroadcast(intent);
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean saved) {
+            super.onPostExecute(saved);
+
+            if (saved) {
+                showMessage(getString(R.string.pdf_saved_to_sd));
+            } else {
+                showMessage(getString(R.string.pdf_save_to_sd_failed));
+            }
+
+            progressDialog.dismiss();
+        }
+    }
 }

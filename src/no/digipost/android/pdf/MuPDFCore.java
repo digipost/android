@@ -265,4 +265,8 @@ public class MuPDFCore
 	public synchronized void save() {
 		saveInternal();
 	}
+
+    public synchronized byte[] getBuffer() {
+        return fileBuffer;
+    }
 }

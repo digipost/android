@@ -559,16 +559,14 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			} else {
 				if (letter != null) {
 					tempLetter = letter;
-					PDFStore.pdf = result;
-					Intent i = new Intent(getActivity().getApplicationContext(), MuPDFActivity.class);
-					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
-					startActivityForResult(i, REQUESTCODE_INTENT);
-				} else {
-					PDFStore.pdf = result;
-					Intent i = new Intent(getActivity().getApplicationContext(), MuPDFActivity.class);
-					i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
-					startActivityForResult(i, REQUESTCODE_INTENT);
 				}
+
+                PDFStore.pdf = result;
+                PDFStore.pdf_name = tempLetter.getSubject();
+                PDFStore.pdf_file_type = tempLetter.getFileType();
+                Intent i = new Intent(getActivity().getApplicationContext(), MuPDFActivity.class);
+                i.putExtra(ApiConstants.LOCATION_FROM, tempLetter.getLocation());
+                startActivityForResult(i, REQUESTCODE_INTENT);
 
                 activityCommunicator.passDataToActivity(BASE_UPDATE_SINGLE);
             }

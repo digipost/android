@@ -81,6 +81,9 @@
     <string name="pdf_open_failed">Kunne ikke åpne dokumentet.</string>
     <string name="pdf_searching_">Søker...</string>
     <string name="pdf_search_document">Søk i dokumentet</string>
+    <string name="pdf_promt_save_to_sd">Ønsker du å lagre dokumentet?</string>
+    <string name="pdf_saved_to_sd">Dokumentet er lagret i Downloads.</string>
+    <string name="pdf_save_to_sd_failed">En feil oppstod under lagringen.</string>
     
     <!-- Image -->
     <string name="image_open_failed">Kunne ikke åpne bildet.</string>
