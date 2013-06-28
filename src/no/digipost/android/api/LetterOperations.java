@@ -17,10 +17,15 @@ package no.digipost.android.api;
 
 import java.util.ArrayList;
 
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
+import no.digipost.android.utilities.JSONUtilities;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 
@@ -72,7 +77,7 @@ public class LetterOperations {
 		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
 	}
 
-	public byte[] getDocumentContentPDF(final Object object) throws DigipostApiException, DigipostClientException,
+	public byte[] getDocumentContent(final Object object) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
 		if (object instanceof Letter) {
 			int filesize = Integer.parseInt(((Letter) object).getFileSize());

@@ -3,7 +3,7 @@ package no.digipost.android.authentication;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import no.digipost.android.api.ApiConstants;
+import no.digipost.android.constants.ApiConstants;
 
 public class KeyStoreAdapter {
 

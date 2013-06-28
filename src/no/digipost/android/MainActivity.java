@@ -16,12 +16,13 @@
 
 package no.digipost.android;
 
-import no.digipost.android.api.DigipostApiException;
-import no.digipost.android.api.DigipostAuthenticationException;
-import no.digipost.android.api.DigipostClientException;
+import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.OAuth2;
-import no.digipost.android.authentication.SharedPreferencesUtil;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
 import no.digipost.android.gui.BaseFragmentActivity;
 import no.digipost.android.gui.LoginActivity;
 import android.app.Activity;
@@ -39,6 +40,12 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        FileUtilities.deleteTempFiles();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         finish();
@@ -46,7 +53,7 @@ public class MainActivity extends Activity {
 
     private void checkTokenAndScreenlockStatus() {
         KeyStore ks = KeyStore.getInstance();
-        if (ks.state() == KeyStore.State.UNLOCKED && (!SharedPreferencesUtil.getEncryptedRefreshtokenCipher(this).isEmpty())) {
+        if (ks.state() == KeyStore.State.UNLOCKED && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
                 new CheckTokenTask().execute();
         }else{
             startLoginActivity();
@@ -95,7 +102,7 @@ public class MainActivity extends Activity {
                 startBaseActivity();
             } else {
                 if (clearRefreshToken) {
-                    SharedPreferencesUtil.deleteRefreshtoken(MainActivity.this);
+                    SharedPreferencesUtilities.deleteRefreshtoken(MainActivity.this);
                     startLoginActivity();
                 } else{
                     startBaseActivity();

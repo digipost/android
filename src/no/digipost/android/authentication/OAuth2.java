@@ -24,15 +24,18 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.core.MultivaluedMap;
 
 import no.digipost.android.R;
-import no.digipost.android.api.ApiConstants;
-import no.digipost.android.api.DigipostApiException;
-import no.digipost.android.api.DigipostAuthenticationException;
-import no.digipost.android.api.DigipostClientException;
-import no.digipost.android.api.DigipostInvalidTokenException;
-import no.digipost.android.api.JSONUtilities;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.api.exception.DigipostInvalidTokenException;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.gui.NetworkConnection;
 import no.digipost.android.model.Access;
 import no.digipost.android.model.TokenValue;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
+
 import android.content.Context;
 import android.util.Base64;
 
@@ -83,18 +86,18 @@ public class OAuth2 {
 
 	private static void storeTokens(final Access data, final Context context) {
 		Secret.ACCESS_TOKEN = data.getAccess_token();
-        if(SharedPreferencesUtil.screenlockChoiceYes(context)){
+        if(SharedPreferencesUtilities.screenlockChoiceYes(context)){
 	    	String refresh_token = data.getRefresh_token();
 		    KeyStoreAdapter ksa = new KeyStoreAdapter();
 		    String cipher = ksa.encrypt(refresh_token);
-            SharedPreferencesUtil.storeEncryptedRefreshtokenCipher(cipher,context);
+            SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher,context);
         }
 	}
 
 
 	public static void updateAccessToken(final Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		    String encrypted_refresh_token = SharedPreferencesUtil.getEncryptedRefreshtokenCipher(context);
+		    String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
 		    KeyStoreAdapter ksa = new KeyStoreAdapter();
 		    String refresh_token = ksa.decrypt(encrypted_refresh_token);
 		    retriveAccessToken(refresh_token, context);
@@ -160,10 +163,10 @@ public class OAuth2 {
 	}
 
 	private static String encryptHmacSHA256(final String data) {
-		SecretKeySpec secretKey = new SecretKeySpec(Secret.CLIENT_SECRET.getBytes(), ApiConstants.HMACSHA256);
+		SecretKeySpec secretKey = new SecretKeySpec(Secret.CLIENT_SECRET.getBytes(), ApplicationConstants.HMACSHA256);
 		Mac mac = null;
 		try {
-			mac = Mac.getInstance(ApiConstants.HMACSHA256);
+			mac = Mac.getInstance(ApplicationConstants.HMACSHA256);
 			mac.init(secretKey);
 		} catch (Exception e) {
 			// Ignore

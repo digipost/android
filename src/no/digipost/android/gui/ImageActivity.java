@@ -1,7 +1,8 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
-import no.digipost.android.api.ApiConstants;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.documentstore.ImageStore;
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;

@@ -5,10 +5,10 @@ import java.net.URLConnection;
 import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.R;
-import no.digipost.android.api.DigipostApiException;
-import no.digipost.android.api.DigipostAuthenticationException;
-import no.digipost.android.api.DigipostInvalidTokenException;
-import no.digipost.android.authentication.SharedPreferencesUtil;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostInvalidTokenException;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -31,7 +31,7 @@ public class NetworkConnection {
 		if (statusCode == HTTP_STATUS_SUCCESS || statusCode == TEMPORARY_REDIRECT.getStatusCode()) {
 			return;
 		} else if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
-            if(SharedPreferencesUtil.screenlockChoiceYes(context)){
+            if(SharedPreferencesUtilities.screenlockChoiceYes(context)){
                 throw new DigipostInvalidTokenException();
             }else{
                 throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));

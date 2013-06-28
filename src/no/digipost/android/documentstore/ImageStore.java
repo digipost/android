@@ -1,4 +1,4 @@
-package no.digipost.android.gui;
+package no.digipost.android.documentstore;
 
 import android.graphics.Bitmap;
 

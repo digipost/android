@@ -1,7 +1,7 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
-import no.digipost.android.api.ApiConstants;
+import no.digipost.android.constants.ApiConstants;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

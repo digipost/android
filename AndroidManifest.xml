@@ -69,7 +69,8 @@
             android:screenOrientation="portrait">
             </activity>
         <activity android:name="no.digipost.android.gui.WebLoginActivity" />
-        <activity android:name="no.digipost.android.pdf.MuPDFActivity"/>
+        <activity android:name="no.digipost.android.gui.MuPDFActivity"/>
+        <activity android:name="no.digipost.android.gui.UnsupportedDocumentFormatActivity"/>
     </application>
 
 </manifest>

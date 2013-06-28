@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.api;
+package no.digipost.android.constants;
 
 public class ApiConstants {
 
@@ -101,12 +101,7 @@ public class ApiConstants {
 	public static final String URL_API_OAUTH_AUTHORIZE_NEW = "https://www.digipost.no/post/api/oauth/authorize/new";
 	public static final String URL_API_OAUTH_ACCESSTOKEN = "https://www.digipost.no/post/api/oauth/accesstoken";
 
-	public static final String HMACSHA256 = "HmacSHA256";
 
-    public static final String SCREENLOCK_CHOICE = "SCREENLOCK_CHOICE";
-    public static final int SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET = 0;
-    public static final int SCREENLOCK_CHOICE_NO = 1;
-    public static final int SCREENLOCK_CHOICE_YES = 2;
 
 
 }

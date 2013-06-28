@@ -1,45 +1,35 @@
-package no.digipost.android.pdf;
+package no.digipost.android.gui;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.Executor;
-import java.io.InputStream;
-import java.io.FileInputStream;
 
 import no.digipost.android.R;
-import no.digipost.android.api.ApiConstants;
-import no.digipost.android.gui.BaseFragmentActivity;
+import no.digipost.android.pdf.MuPDFAlert;
+import no.digipost.android.pdf.MuPDFCore;
+import no.digipost.android.pdf.MuPDFPageAdapter;
+import no.digipost.android.pdf.MuPDFReaderView;
+import no.digipost.android.pdf.MuPDFView;
+import no.digipost.android.documentstore.PDFStore;
+import no.digipost.android.pdf.SearchTask;
+import no.digipost.android.pdf.SearchTaskResult;
+import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.constants.ApiConstants;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.RectF;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -49,11 +39,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
-import android.widget.ViewSwitcher;
 
 class ThreadPerTaskExecutor implements Executor {
 	public void execute(Runnable r) {
@@ -64,7 +52,7 @@ class ThreadPerTaskExecutor implements Executor {
 public class MuPDFActivity extends Activity
 {
 	/* The core rendering instance */
-	private MuPDFCore    core;
+	private MuPDFCore core;
 	private String       mFileName;
 	private MuPDFReaderView mDocView;
 	private View         mButtonsView;
@@ -79,7 +67,7 @@ public class MuPDFActivity extends Activity
 	private ImageButton  mSearchBack;
 	private ImageButton  mSearchFwd;
 	private EditText     mSearchText;
-	private SearchTask   mSearchTask;
+	private SearchTask mSearchTask;
 	private AlertDialog.Builder mAlertBuilder;
 	private final Handler mHandler = new Handler();
 	private boolean mAlertsActive= false;
@@ -855,19 +843,15 @@ public class MuPDFActivity extends Activity
 
         @Override
         protected Boolean doInBackground(Void... parameters) {
-            File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-            File file = new File(path, PDFStore.pdf_name + "." + PDFStore.pdf_file_type);
+            File file = null;
+
             try {
-                FileOutputStream stream = new FileOutputStream(file, true);
-                stream.write(core.getBuffer());
-                stream.close();
+                file = FileUtilities.writeFileToSD(PDFStore.pdf_name, PDFStore.pdf_file_type, core.getBuffer());
             } catch (IOException e) {
                 return false;
             }
 
-            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            intent.setData(Uri.fromFile(file));
-            sendBroadcast(intent);
+            FileUtilities.makeFileVisible(MuPDFActivity.this, file);
 
             return true;
         }

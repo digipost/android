@@ -34,13 +34,19 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import no.digipost.android.R;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.api.exception.DigipostInvalidTokenException;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.authentication.Secret;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.gui.NetworkConnection;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipts;
+import no.digipost.android.utilities.JSONUtilities;
 
 import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT;
 

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import no.digipost.android.R;
-import no.digipost.android.api.ApiConstants;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Letter;
 import android.content.Context;
 import android.graphics.Color;

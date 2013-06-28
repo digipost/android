@@ -1,4 +1,4 @@
-package no.digipost.android.pdf;
+package no.digipost.android.documentstore;
 
 /**
  * Created by shf on 6/25/13.

@@ -1,0 +1,129 @@
+<!--
+/**
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@android:color/black" >
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bottom_bar_background"
+            android:orientation="horizontal" >
+
+        <ImageButton
+                android:id="@+id/unsupported_digipost_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingLeft="@dimen/base_headerbuttonslayout_padding"
+                android:paddingRight="@dimen/bottombar_image_padding_bottom_and_top"
+                android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
+                android:src="@drawable/white_mailbox_back_60" />
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/unsupported_imageView"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="0sp"
+            android:background="@color/emptyslate_background">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:padding="10sp"
+            android:gravity="center_vertical">
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:gravity="center_horizontal"
+                android:text="@string/unsupported_header"
+                android:textColor="@android:color/black"
+                android:textSize="30sp"
+                android:textStyle="bold"/>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:text="@string/unsupported_text"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:layout_marginTop="15sp"
+            android:layout_marginBottom="15sp"/>
+
+        <Button
+                android:id="@+id/unsupported_openBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/screenlock_yes_button_style"
+                android:text="@string/open"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+         </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bottom_bar_background"
+            android:gravity="bottom" >
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+            <ImageButton
+                    android:id="@+id/unsupported_toWorkarea"
+                    android:layout_width="@dimen/bottombar_image_width"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="@color/transparent"
+                    android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                    android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
+                    android:src="@drawable/white_workarea_48" />
+
+            <ImageButton
+                    android:id="@+id/unsupported_toArchive"
+                    android:layout_width="@dimen/bottombar_image_width"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="@color/transparent"
+                    android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                    android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
+                    android:src="@drawable/white_archive_48" />
+
+            <ImageButton
+                    android:id="@+id/unsupported_delete"
+                    android:layout_width="@dimen/bottombar_image_width"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:background="@color/transparent"
+                    android:paddingBottom="@dimen/bottombar_image_padding_bottom_and_top"
+                    android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
+                    android:src="@drawable/white_delete_48" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

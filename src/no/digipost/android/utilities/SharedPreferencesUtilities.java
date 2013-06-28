@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.authentication;
+package no.digipost.android.utilities;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -22,36 +22,38 @@ import android.content.Context;
 import android.content.SharedPreferences.Editor;
 
 
-import no.digipost.android.api.ApiConstants;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.authentication.KeyStore;
+import no.digipost.android.constants.ApplicationConstants;
 
-public class SharedPreferencesUtil {
+public class SharedPreferencesUtilities {
 
     private static SharedPreferences getSharedPreferences(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
     public static int screenlockChoice(Context context){
-        return getSharedPreferences(context).getInt(ApiConstants.SCREENLOCK_CHOICE, ApiConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET);
+        return getSharedPreferences(context).getInt(ApplicationConstants.SCREENLOCK_CHOICE, ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET);
     }
 
     public static boolean screenlockChoiceYes(Context context){
-        return screenlockChoice(context) == ApiConstants.SCREENLOCK_CHOICE_YES;
+        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_YES;
     }
 
     public static boolean screenlockChoiceNo(Context context){
-        return screenlockChoice(context) == ApiConstants.SCREENLOCK_CHOICE_NO;
+        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_NO;
     }
 
     public static boolean screenlockChoiceNotTakenYet(Context context){
-        return screenlockChoice(context) == ApiConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET;
+        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET;
     }
     public static void storeScreenlockChoice(Context context,int choice){
         SharedPreferences.Editor edit = getSharedPreferences(context).edit();
-        edit.putInt(ApiConstants.SCREENLOCK_CHOICE,choice);
+        edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE,choice);
         edit.commit();
     }
     public static void deleteScreenlockChoice(Context context){
         SharedPreferences.Editor edit = getSharedPreferences(context).edit();
-        edit.remove(ApiConstants.SCREENLOCK_CHOICE);
+        edit.remove(ApplicationConstants.SCREENLOCK_CHOICE);
         edit.commit();
     }
 

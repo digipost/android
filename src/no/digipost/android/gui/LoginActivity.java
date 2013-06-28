@@ -16,16 +16,15 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
-import no.digipost.android.api.ApiConstants;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.authentication.KeyStore;
-import no.digipost.android.authentication.SharedPreferencesUtil;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -80,7 +79,7 @@ public class LoginActivity extends Activity {
 
     private void deleteOldRefreshtoken(){
         if (ks.state() == KeyStore.State.UNLOCKED) {
-            SharedPreferencesUtil.deleteRefreshtoken(this);
+            SharedPreferencesUtilities.deleteRefreshtoken(this);
         }
     }
     private void enableCheckBoxIfScreenlock(){
@@ -93,10 +92,10 @@ public class LoginActivity extends Activity {
 
     private void startLoginProcess(){
         if (stayLoggedInCheckBox.isChecked()) {
-            SharedPreferencesUtil.storeScreenlockChoice(this,ApiConstants.SCREENLOCK_CHOICE_YES);
+            SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_YES);
             openWebView();
         }else{
-            SharedPreferencesUtil.storeScreenlockChoice(this,ApiConstants.SCREENLOCK_CHOICE_NO);
+            SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_NO);
             openWebView();
         }
     }

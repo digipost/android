@@ -21,6 +21,7 @@
     <string name="loading_content">Laster innhold...</string>
     <string name="search">Søk</string>
     <string name="yes">Ja</string>
+    <string name="open">Åpne</string>
 
     <string name="no">Nei</string>
     <string name="please_wait">Vennligst vent...</string>
@@ -88,12 +89,18 @@
     <!-- Image -->
     <string name="image_open_failed">Kunne ikke åpne bildet.</string>
 
+    <!-- Unsupported -->
+    <string name="unsupported_header">Ustøttet filformat</string>
+    <string name="unsupported_text">Digipost for Android kunne ikke åpne denne filtypen. Trykk på knappen under for å åpne i en ekstern applikasjon på din enhet.</string>
+
     <!-- Errors -->
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv igjen.</string>
     <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.</string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
     <string name="error_invalid_token">Tilgang tilbaketrukket.</string>
     <string name="error_inputstreamtobyarray">En feil oppstod under åpning av innhold</string>
+    <string name="error_no_activity_to_open_file">Din enhet har ingen applikasjoner som kan åpne denne filtypen.</string>
+    <string name="error_failed_to_open_with_intent">En feil oppstod under åpning av filen.</string>
 
     <!-- Prompts -->
     <string name="dialog_prompt_letter_toArchive">Er du sikker på at du vil flytte brevet til arkivet?</string>

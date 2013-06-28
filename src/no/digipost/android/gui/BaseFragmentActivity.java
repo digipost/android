@@ -20,8 +20,9 @@ import no.digipost.android.MainActivity;
 import no.digipost.android.R;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
-import no.digipost.android.authentication.SharedPreferencesUtil;
-import no.digipost.android.pdf.PDFStore;
+import no.digipost.android.documentstore.ImageStore;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
+import no.digipost.android.documentstore.PDFStore;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -190,8 +191,8 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 		Secret.ACCESS_TOKEN = null;
 		PDFStore.pdf = null;
 		ImageStore.image = null;
-        SharedPreferencesUtil.deleteRefreshtoken(this);
-        SharedPreferencesUtil.deleteScreenlockChoice(this);
+        SharedPreferencesUtilities.deleteRefreshtoken(this);
+        SharedPreferencesUtilities.deleteScreenlockChoice(this);
 		Intent i = new Intent(BaseFragmentActivity.this, MainActivity.class);
 		startActivity(i);
 		finish();

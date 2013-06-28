@@ -1,4 +1,4 @@
-package no.digipost.android.api;
+package no.digipost.android.api.exception;
 
 public class DigipostAuthenticationException extends Exception {
 	private static final long serialVersionUID = 4361342932572546766L;

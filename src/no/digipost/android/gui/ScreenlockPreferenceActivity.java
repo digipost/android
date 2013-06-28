@@ -22,9 +22,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import no.digipost.android.R;
-import no.digipost.android.api.ApiConstants;
 import no.digipost.android.authentication.KeyStore;
-import no.digipost.android.authentication.SharedPreferencesUtil;
 
 
 public class ScreenlockPreferenceActivity extends Activity {

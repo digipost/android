@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.api;
+package no.digipost.android.utilities;
 
 import android.content.Context;
 
@@ -41,6 +41,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 import no.digipost.android.R;
+import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.model.Letter;
 
 public class JSONUtilities {
@@ -124,7 +125,7 @@ public class JSONUtilities {
 		return output;
 	}
 
-	public static byte[] inputStreamtoByteArray(Context context, final int size, final InputStream data) throws DigipostClientException{
+	public static byte[] inputStreamtoByteArray(Context context, final int size, final InputStream data) throws DigipostClientException {
 		InputStream is = data;
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 

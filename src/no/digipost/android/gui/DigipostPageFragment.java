@@ -1,23 +1,27 @@
 package no.digipost.android.gui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import no.digipost.android.R;
-import no.digipost.android.api.ApiConstants;
-import no.digipost.android.api.DigipostApiException;
-import no.digipost.android.api.DigipostAuthenticationException;
-import no.digipost.android.api.DigipostClientException;
+import no.digipost.android.documentstore.ImageStore;
+import no.digipost.android.documentstore.UnsupportedFileStore;
+import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
-import no.digipost.android.pdf.MuPDFActivity;
-import no.digipost.android.pdf.PDFStore;
+import no.digipost.android.documentstore.PDFStore;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -265,7 +269,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				Attachment attachment = attachments.get(arg2);
 
 				if (attachment.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-					unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor), getString(R.string.dialog_error_two_factor));
+					twoFactorActionDialog(getString(R.string.dialog_error_header_two_factor), getString(R.string.dialog_error_two_factor));
 					return;
 				}
 
@@ -276,8 +280,8 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 					GetHTMLTask htmlTask = new GetHTMLTask();
 					htmlTask.execute(ApiConstants.GET_DOCUMENT, attachment);
 				} else {
-					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),
-							getString(R.string.dialog_error_not_supported_filetype));
+                    GetDocumentTask dokumentTask = new GetDocumentTask();
+                    dokumentTask.execute(attachment);
 				}
 			}
 		});
@@ -330,21 +334,16 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		}
 	}
 
-	private void unsupportedActionDialog(final String header, final String text) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-		builder.setTitle(header)
-				.setMessage(text)
-				.setCancelable(false)
-				.setNeutralButton(getString(R.string.close), new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int id) {
-						dialog.cancel();
-					}
-				});
-
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
+    private void twoFactorActionDialog(final String header, final String text) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(header).setMessage(text).setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 
 	@SuppressWarnings("rawtypes")
 	private void loadContentProgressDialog(final AsyncTask task) {
@@ -526,7 +525,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 				letter = (Letter) params[0];
 			}
 			try {
-				return lo.getDocumentContentPDF(params[0]);
+				return lo.getDocumentContent(params[0]);
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
 				return null;
@@ -574,6 +573,69 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			clearContentProgressDialog();
 		}
 	}
+
+    private class GetDocumentTask extends AsyncTask<Object, Void, byte[]> {
+        private String errorMessage;
+        private String documentFileType;
+        private boolean invalidToken;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            this.errorMessage = null;
+            this.documentFileType = null;
+            this.invalidToken = false;
+            loadContentProgressDialog(this);
+        }
+
+        @Override
+        protected byte[] doInBackground(Object... params) {
+            if (params[0] instanceof Letter) {
+                documentFileType = ((Letter) params[0]).getFileType();
+            } else {
+                documentFileType = ((Attachment) params[0]).getFileType();
+            }
+
+            try {
+                return lo.getDocumentContent(params[0]);
+            } catch (DigipostAuthenticationException e) {
+                this.invalidToken = true;
+                this.errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostApiException e) {
+                this.errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostClientException e) {
+                this.errorMessage = e.getMessage();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            clearContentProgressDialog();
+        }
+
+        @Override
+        protected void onPostExecute(byte[] data) {
+            super.onPostExecute(data);
+            clearContentProgressDialog();
+            if (data == null) {
+                showMessage(this.errorMessage);
+
+                if (invalidToken) {
+                    activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
+                }
+            } else {
+                UnsupportedFileStore.unsupportedDocument = data;
+                UnsupportedFileStore.unsupportedDocumentFileType = documentFileType;
+
+                Intent i = new Intent(getActivity().getApplicationContext(), UnsupportedDocumentFormatActivity.class);
+                startActivity(i);
+            }
+        }
+    }
 
 	private class GetHTMLTask extends AsyncTask<Object, Void, String> {
 		private String errorMessage = "";
@@ -946,7 +1008,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			Letter mletter = adapterLetter.getItem(position);
 
 			if (mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-				unsupportedActionDialog(getString(R.string.dialog_error_header_two_factor), getString(R.string.dialog_error_two_factor));
+				twoFactorActionDialog(getString(R.string.dialog_error_header_two_factor), getString(R.string.dialog_error_two_factor));
 				return;
 			}
 
@@ -970,9 +1032,8 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 					GetImageTask imageTask = new GetImageTask();
 					imageTask.execute(mletter);
 				} else {
-					unsupportedActionDialog(getString(R.string.dialog_error_header_filetype),
-							getString(R.string.dialog_error_not_supported_filetype));
-					return;
+                    GetDocumentTask dokumentTask = new GetDocumentTask();
+                    dokumentTask.execute(mletter);
 				}
 			}
 		}
@@ -1119,4 +1180,10 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	public void passDataToFragment(final String someValue) {
 		// Fra Activity
 	}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FileUtilities.deleteTempFiles();
+    }
 }
