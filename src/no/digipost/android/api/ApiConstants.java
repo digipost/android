@@ -89,17 +89,19 @@ public class ApiConstants {
 	public static final String CONTENT_OCTET_STREAM = "application/octet-stream";
 	public static final String TEXT_HTML = "text/html";
 
-	public static final String URL_API = "https://www.digipost.no/post/api";
-	public static final String URL_RELATIONS_DOCUMENT_INBOX = "https://www.digipost.no/post/relations/document_inbox";
-	public static final String URL_RELATIONS_DOCUMENT_ARCHIVE = "https://www.digipost.no/post/relations/document_archive";
-	public static final String URL_RELATIONS_DOCUMENT_KITCHENBENCH = "https://www.digipost.no/post/relations/document_workarea";
-	public static final String URL_RELATIONS_DOCUMENT_RECEIPTS = "https://www.digipost.no/post/relations/receipts";
-	public static final String URL_RELATIONS_DOCUMENT_GET_CONTENT = "https://www.digipost.no/post/relations/get_document_content";
-	public static final String URL_RELATIONS_DOCUMENT_UPDATE = "https://www.digipost.no/post/relations/update_document";
-	public static final String URL_RELATIONS_DOCUMENT_DELETE = "https://www.digipost.no/post/relations/delete_document";
-	public static final String URL_RELATIONS_DOCUMENT_GET_ORGANIZATION_LOGO = "https://www.digipost.no/post/relations/organisation_logo";
-	public static final String URL_API_OAUTH_AUTHORIZE_NEW = "https://www.digipost.no/post/api/oauth/authorize/new";
-	public static final String URL_API_OAUTH_ACCESSTOKEN = "https://www.digipost.no/post/api/oauth/accesstoken";
+    public static final String URL = "https://www.digipost.no";
+
+    public static final String URL_API = URL + "/post/api";
+	public static final String URL_RELATIONS_DOCUMENT_INBOX = URL + "/post/relations/document_inbox";
+	public static final String URL_RELATIONS_DOCUMENT_ARCHIVE = URL + "/post/relations/document_archive";
+	public static final String URL_RELATIONS_DOCUMENT_KITCHENBENCH = URL + "/post/relations/document_workarea";
+	public static final String URL_RELATIONS_DOCUMENT_RECEIPTS = URL + "/post/relations/receipts";
+	public static final String URL_RELATIONS_DOCUMENT_GET_CONTENT = URL + "/post/relations/get_document_content";
+	public static final String URL_RELATIONS_DOCUMENT_UPDATE = URL + "/post/relations/update_document";
+	public static final String URL_RELATIONS_DOCUMENT_DELETE = URL + "/post/relations/delete_document";
+	public static final String URL_RELATIONS_DOCUMENT_GET_ORGANIZATION_LOGO = URL + "/post/relations/organisation_logo";
+	public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "/post/api/oauth/authorize/new";
+	public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "/post/api/oauth/accesstoken";
 
 	public static final String HMACSHA256 = "HmacSHA256";
 

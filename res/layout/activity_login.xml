@@ -28,7 +28,8 @@
             android:layout_height="wrap_content"
             android:gravity="center|center_vertical|center_horizontal"
             android:id="@+id/linearLayout"
-            android:layout_weight="3">
+            android:layout_weight="3"
+            android:padding="5dp">
 
         <ImageView
                 android:id="@+id/login_logo"
