@@ -21,7 +21,6 @@
     <string name="loading_content">Laster innhold...</string>
     <string name="search">Søk</string>
     <string name="yes">Ja</string>
-    <string name="open">Åpne</string>
 
     <string name="no">Nei</string>
     <string name="please_wait">Vennligst vent...</string>
@@ -38,7 +37,7 @@
     <string name="receiptss">\u0020kvitteringer?</string>
     <string name="copy">Kopier tekst</string>
     <string name="save">Lagre</string>
-    <string name="open_external">Åpne eksternt</string>
+    <string name="open_external">Vis i en annen app</string>
 
     <!-- Titles -->
     <string name="title_activity_login_view">LoginView</string>
@@ -93,8 +92,8 @@
     <string name="image_open_failed">Kunne ikke åpne bildet.</string>
 
     <!-- Unsupported -->
-    <string name="unsupported_header">Ustøttet filformat</string>
-    <string name="unsupported_text">Digipost for Android kunne ikke åpne denne filtypen. Trykk på knappen under for å åpne i en ekstern applikasjon på din enhet.</string>
+    <string name="unsupported_header">Ustøttet filtype</string>
+    <string name="unsupported_text">Digipost-appen kan ikke vise denne filtypen.</string>
 
     <!-- Errors -->
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv igjen.</string>

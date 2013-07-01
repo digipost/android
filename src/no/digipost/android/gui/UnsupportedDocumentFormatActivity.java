@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -46,6 +47,7 @@ public class UnsupportedDocumentFormatActivity extends Activity {
     }
 
     private void createUI() {
+
         open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,6 +140,11 @@ public class UnsupportedDocumentFormatActivity extends Activity {
     }
 
     private void openFileWithIntent(final String documentFileType, final byte[] data) {
+        if (data == null) {
+            showMessage(getString(R.string.error_failed_to_open_with_intent));
+            finish();
+        }
+
         try {
             FileUtilities.openFileWithIntent(this, documentFileType, data);
         } catch (IOException e) {
