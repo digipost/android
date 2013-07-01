@@ -12,8 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class FileUtilities {
-    public static final String TEMP_FILE_NAME = "digiTemp";
-    public static final String TEMP_FILE_DIRECTORY = Environment.getExternalStorageDirectory() + "/digi/";
+    public static final String TEMP_FILE_NAME = "temp";
+    public static final String TEMP_FILE_DIRECTORY = Environment.getExternalStorageDirectory() + "/digipost/";
 
     public static void openFileWithIntent(final Context context, final String fileType, final byte[] data) throws ActivityNotFoundException, IOException {
         File file = writeTempFile(fileType, data);

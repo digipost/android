@@ -1,17 +1,26 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
+import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.documentstore.ImageStore;
+import no.digipost.android.documentstore.UnsupportedFileStore;
+import no.digipost.android.utilities.FileUtilities;
 import uk.co.senab.photoview.PhotoViewAttacher;
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -19,16 +28,25 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class ImageActivity extends Activity {
 	private ImageView imageView;
 	private PhotoViewAttacher attacher;
-	private LinearLayout topbar;
+	private RelativeLayout topbar;
 	private LinearLayout bottombar;
 	private ImageButton toArchive;
 	private ImageButton toWorkarea;
 	private ImageButton delete;
 	private ImageButton digipostIcon;
+    private ImageButton optionsButton;
 
 	private boolean buttonsVisible;
 	private boolean created;
@@ -40,13 +58,21 @@ public class ImageActivity extends Activity {
 		buttonsVisible = true;
 		created = false;
 
-		topbar = (LinearLayout) findViewById(R.id.image_topbar);
+		topbar = (RelativeLayout) findViewById(R.id.image_topbar);
 		bottombar = (LinearLayout) findViewById(R.id.image_bottombar);
 
 		imageView = (ImageView) findViewById(R.id.image_imageView);
 
+        Bitmap bitmap = null;
+
+        try{
+            bitmap = BitmapFactory.decodeByteArray(ImageStore.image, 0, ImageStore.image.length);
+        }catch(OutOfMemoryError e){
+            showMessage(getString(R.string.error_inputstreamtobyarray));
+        }
+
 		if (ImageStore.image != null) {
-			imageView.setImageBitmap(ImageStore.image);
+			imageView.setImageBitmap(bitmap);
 			attacher = new PhotoViewAttacher(imageView);
 			attacher.setOnPhotoTapListener(new PhotoTapListener());
 			attacher.setOnMatrixChangeListener(new MatrixChangeListener());
@@ -78,6 +104,7 @@ public class ImageActivity extends Activity {
 			attacher = null;
 			imageView = null;
 			ImageStore.image = null;
+            FileUtilities.deleteTempFiles();
 		}
 	}
 
@@ -92,6 +119,8 @@ public class ImageActivity extends Activity {
 		delete.setOnClickListener(buttonListener);
 		digipostIcon = (ImageButton) findViewById(R.id.image_digipost_icon);
 		digipostIcon.setOnClickListener(buttonListener);
+        optionsButton = (ImageButton) findViewById(R.id.image_optionsbtn);
+        optionsButton.setOnClickListener(buttonListener);
 
 		String from = getIntent().getExtras().getString(ApiConstants.LOCATION_FROM);
 
@@ -171,6 +200,26 @@ public class ImageActivity extends Activity {
 		bottombar.startAnimation(anim);
 	}
 
+    public void showMenu(final View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            public boolean onMenuItemClick(final MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.showdocumentmenu_open_external:
+                        openFileWithIntent(ImageStore.imageFileType, ImageStore.image);
+                        return true;
+                    case R.id.showdocumentmenu_save:
+                        promtSaveToSD();
+                        return true;
+                }
+                return false;
+            }
+        });
+        popup.inflate(R.menu.activity_showdocument_general);
+        popup.show();
+    }
+
 	private void singleLetterOperation(final String action) {
 		Intent i = new Intent(ImageActivity.this, BaseFragmentActivity.class);
 		i.putExtra(ApiConstants.ACTION, action);
@@ -195,6 +244,11 @@ public class ImageActivity extends Activity {
 		alert.show();
 	}
 
+    private void showMessage(final String message) {
+        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
 	private class ButtonListener implements OnClickListener {
 
 		public void onClick(final View v) {
@@ -211,9 +265,79 @@ public class ImageActivity extends Activity {
 			} else if (v.equals(delete)) {
 				message = getString(R.string.dialog_prompt_delete_image);
 				showWarning(message, ApiConstants.DELETE);
-			}
+			} else if (v.equals(optionsButton)) {
+                showMenu(optionsButton);
+            }
 		}
 	}
+
+    private void openFileWithIntent(final String documentFileType, final byte[] data) {
+        try {
+            FileUtilities.openFileWithIntent(this, documentFileType, data);
+        } catch (IOException e) {
+            showMessage(getString(R.string.error_failed_to_open_with_intent));
+        } catch (ActivityNotFoundException e) {
+            showMessage(getString(R.string.error_no_activity_to_open_file));
+        }
+    }
+
+    private void promtSaveToSD() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                new SaveDocumentToSDTask().execute();
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog = new ProgressDialog(ImageActivity.this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage(getString(R.string.loading_content));
+            progressDialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... parameters) {
+            File file = null;
+
+            try {
+                file = FileUtilities.writeFileToSD(ImageStore.imageName, ImageStore.imageFileType, ImageStore.image);
+            } catch (IOException e) {
+                return false;
+            }
+
+            FileUtilities.makeFileVisible(ImageActivity.this, file);
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean saved) {
+            super.onPostExecute(saved);
+
+            if (saved) {
+                showMessage(getString(R.string.pdf_saved_to_sd));
+            } else {
+                showMessage(getString(R.string.pdf_save_to_sd_failed));
+            }
+
+            progressDialog.dismiss();
+        }
+    }
 
 	private class PhotoTapListener implements OnPhotoTapListener {
 

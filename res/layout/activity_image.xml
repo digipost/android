@@ -25,7 +25,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
     
-        <LinearLayout
+        <RelativeLayout
         android:id="@+id/image_topbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +43,16 @@
             android:paddingRight="@dimen/bottombar_image_padding_bottom_and_top"
             android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
             android:src="@drawable/white_mailbox_back_60" />
-    </LinearLayout>
+
+            <ImageButton
+                    android:id="@+id/image_optionsbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:padding="@dimen/bottombar_image_padding_bottom_and_top"
+                    android:src="@drawable/white_options_48"
+                    android:layout_alignParentRight="true"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/image_bottombar"

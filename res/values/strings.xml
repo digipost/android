@@ -36,6 +36,9 @@
     <string name="documents">\u0020dokumenter\u0020</string>
     <string name="receipt">\u0020kvittering?</string>
     <string name="receiptss">\u0020kvitteringer?</string>
+    <string name="copy">Kopier tekst</string>
+    <string name="save">Lagre</string>
+    <string name="open_external">Åpne eksternt</string>
 
     <!-- Titles -->
     <string name="title_activity_login_view">LoginView</string>

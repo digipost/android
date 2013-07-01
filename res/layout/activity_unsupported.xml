@@ -21,11 +21,10 @@
               android:orientation="vertical"
               android:background="@android:color/black" >
 
-    <LinearLayout
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/bottom_bar_background"
-            android:orientation="horizontal" >
+            android:background="@color/bottom_bar_background" >
 
         <ImageButton
                 android:id="@+id/unsupported_digipost_icon"
@@ -37,7 +36,16 @@
                 android:paddingRight="@dimen/bottombar_image_padding_bottom_and_top"
                 android:paddingTop="@dimen/bottombar_image_padding_bottom_and_top"
                 android:src="@drawable/white_mailbox_back_60" />
-    </LinearLayout>
+
+        <ImageButton
+                android:id="@+id/unsupported_optionsbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:padding="@dimen/bottombar_image_padding_bottom_and_top"
+                android:src="@drawable/white_options_48"
+                android:layout_alignParentRight="true"/>
+    </RelativeLayout>
 
     <LinearLayout
             android:id="@+id/unsupported_imageView"

@@ -97,11 +97,6 @@ public class LetterOperations {
 		}
 	}
 
-	public Bitmap getDocumentContentImage(final Letter letter) throws DigipostApiException, DigipostClientException,
-			DigipostAuthenticationException {
-		return apiAccess.getDocumentImage(letter.getContentUri());
-	}
-
 	public String getReceiptContentHTML(final Receipt receipt) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
 		return apiAccess.getReceiptHTML(receipt.getContentAsHTMLUri());

@@ -19,6 +19,7 @@ import no.digipost.android.constants.ApiConstants;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -38,10 +40,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
+
+import static no.digipost.android.R.id.basemenu_mailbox;
 
 class ThreadPerTaskExecutor implements Executor {
 	public void execute(Runnable r) {
@@ -60,7 +65,7 @@ public class MuPDFActivity extends Activity
 	private TextView     mFilenameView;
 	private TextView     mPageNumberView;
 	private ImageButton  mSearchButton;
-	private ImageButton mSelectButton;
+	private ImageButton mOptionsButton;
 	private ImageButton mCopySelectButton;
 	private ViewAnimator mTopBarSwitcher;
 	private boolean      mTopBarIsSearch;
@@ -81,7 +86,6 @@ public class MuPDFActivity extends Activity
     private RelativeLayout mBottombar;
     private LinearLayout mTopbar;
     private boolean mTopBarIsSelect;
-    private ImageButton saveToSD;
 
     public void createAlertWaiter() {
 		mAlertsActive = true;
@@ -331,13 +335,6 @@ public class MuPDFActivity extends Activity
 			}
 		});
 
-		// Activate the select button
-		mSelectButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				selectModeOn();
-			}
-		});
-
 		/*mCancelSelectButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				MuPDFView pageView = (MuPDFView) mDocView.getDisplayedView();
@@ -461,6 +458,13 @@ public class MuPDFActivity extends Activity
             makeArchiveToolbar();
         }
 
+        mOptionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMenu(view);
+            }
+        });
+
         toArchive.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(final View v) {
@@ -502,13 +506,6 @@ public class MuPDFActivity extends Activity
             }
         });
 
-        saveToSD.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(final View v) {
-                promtSaveToSD();
-            }
-        });
-
 		// Stick the document view and the buttons overlay into a parent view
 		RelativeLayout layout = new RelativeLayout(this);
 		layout.addView(mDocView);
@@ -520,6 +517,39 @@ public class MuPDFActivity extends Activity
     private void showMessage(final String message) {
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    public void showMenu(final View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            public boolean onMenuItemClick(final MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.pdfmenu_copy:
+                        selectModeOn();
+                        return true;
+                    case R.id.pdfmenu_save:
+                        promtSaveToSD();
+                        return true;
+                    case R.id.pdfmenu_open_external:
+                        openFileWithIntent(PDFStore.pdf_file_type, core.getBuffer());
+                        return true;
+                }
+                return false;
+            }
+        });
+        popup.inflate(R.menu.activity_pdf);
+        popup.show();
+    }
+
+    private void openFileWithIntent(final String documentFileType, final byte[] data) {
+        try {
+            FileUtilities.openFileWithIntent(this, documentFileType, data);
+        } catch (IOException e) {
+            showMessage(getString(R.string.error_failed_to_open_with_intent));
+        } catch (ActivityNotFoundException e) {
+            showMessage(getString(R.string.error_no_activity_to_open_file));
+        }
     }
 
     public void singleLetterOperation(final String action) {
@@ -577,6 +607,12 @@ public class MuPDFActivity extends Activity
 			mAlertTask = null;
 		}
 		core = null;
+
+        if (isFinishing()) {
+            PDFStore.pdf = null;
+            FileUtilities.deleteTempFiles();
+        }
+
 		super.onDestroy();
 	}
 
@@ -716,9 +752,8 @@ public class MuPDFActivity extends Activity
         delete = (ImageButton) mButtonsView.findViewById(R.id.pdf_delete);
         // share = (ImageButton) buttonsView.findViewById(R.id.pdf_share);
         digipostIcon = (ImageButton) mButtonsView.findViewById(R.id.pdf_digipost_icon);
-        mSelectButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_selectbtn);
+        mOptionsButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_optionsbtn);
         mCopySelectButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_select_copy);
-        saveToSD = (ImageButton) mButtonsView.findViewById(R.id.pdf_save);
 
         mPageNumberView.setVisibility(View.INVISIBLE);
         mBottombar.setVisibility(View.INVISIBLE);

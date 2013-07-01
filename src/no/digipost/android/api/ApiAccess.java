@@ -192,22 +192,6 @@ public class ApiAccess {
 		return JSONUtilities.inputStreamtoByteArray(context,filesize, cr.getEntityInputStream());
 	}
 
-	public Bitmap getDocumentImage(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
-
-		try {
-			networkConnection.checkHttpStatusCode(cr.getStatus());
-		} catch (DigipostInvalidTokenException e) {
-			OAuth2.updateAccessToken(context);
-			return getDocumentImage(uri);
-		}
-        try{
-            return BitmapFactory.decodeStream(cr.getEntityInputStream());
-        }catch(OutOfMemoryError e){
-            throw new DigipostClientException(context.getString(R.string.error_inputstreamtobyarray));
-        }
-	}
-
 	public String getDocumentHTML(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
 

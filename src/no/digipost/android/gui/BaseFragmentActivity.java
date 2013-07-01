@@ -54,6 +54,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import static no.digipost.android.R.id.basemenu_mailbox;
+
 public class BaseFragmentActivity extends FragmentActivity implements ActivityCommunicator {
 	public static ImageButton refreshButton;
 	public static ProgressBar refreshSpinner;
@@ -240,7 +242,7 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 				case R.id.basemenu_logoutOption:
 					logOut();
 					return true;
-				case R.id.basemenu_mailbox:
+				case basemenu_mailbox:
 					mViewPager.setCurrentItem(0, true);
 					return true;
 				case R.id.basemenu_workarea:

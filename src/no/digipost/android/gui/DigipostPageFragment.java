@@ -577,6 +577,8 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
     private class GetDocumentTask extends AsyncTask<Object, Void, byte[]> {
         private String errorMessage;
         private String documentFileType;
+        private String documentFileName;
+        private String documentFileLocation;
         private boolean invalidToken;
 
         @Override
@@ -591,9 +593,16 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
         @Override
         protected byte[] doInBackground(Object... params) {
             if (params[0] instanceof Letter) {
-                documentFileType = ((Letter) params[0]).getFileType();
+                Letter letter = (Letter) params[0];
+                documentFileType = letter.getFileType();
+                documentFileName = letter.getSubject();
+                documentFileLocation = letter.getLocation();
+                tempLetter = letter;
             } else {
-                documentFileType = ((Attachment) params[0]).getFileType();
+                Attachment attachment = (Attachment) params[0];
+                documentFileType = attachment.getFileType();
+                documentFileName = attachment.getSubject();
+                documentFileLocation = tempLetter.getLocation();
             }
 
             try {
@@ -630,9 +639,13 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
             } else {
                 UnsupportedFileStore.unsupportedDocument = data;
                 UnsupportedFileStore.unsupportedDocumentFileType = documentFileType;
+                UnsupportedFileStore.unsupportedDocumentFileName = documentFileName;
 
                 Intent i = new Intent(getActivity().getApplicationContext(), UnsupportedDocumentFormatActivity.class);
-                startActivity(i);
+                i.putExtra(ApiConstants.LOCATION_FROM, documentFileLocation);
+                startActivityForResult(i, REQUESTCODE_INTENT);
+
+                activityCommunicator.passDataToActivity(BASE_UPDATE_SINGLE);
             }
         }
     }
@@ -941,7 +954,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		}
 	}
 
-	private class GetImageTask extends AsyncTask<Letter, Void, Bitmap> {
+	private class GetImageTask extends AsyncTask<Letter, Void, byte[]> {
 		private String errorMessage;
 		private boolean invalidToken;
 		private Letter letter;
@@ -959,10 +972,10 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		}
 
 		@Override
-		protected Bitmap doInBackground(final Letter... params) {
+		protected byte[] doInBackground(final Letter... params) {
 			try {
 				letter = params[0];
-				return lo.getDocumentContentImage(letter);
+				return lo.getDocumentContent(letter);
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
 				return null;
@@ -983,7 +996,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		}
 
 		@Override
-		protected void onPostExecute(final Bitmap result) {
+		protected void onPostExecute(final byte[] result) {
 			if (result == null) {
 				showMessage(errorMessage);
 
@@ -993,6 +1006,8 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			} else {
 				tempLetter = letter;
 				ImageStore.image = result;
+                ImageStore.imageFileType = letter.getFileType();
+                ImageStore.imageName = letter.getSubject();
 				Intent i = new Intent(getActivity().getApplicationContext(), ImageActivity.class);
 				i.putExtra(ApiConstants.LOCATION_FROM, letter.getLocation());
 				startActivityForResult(i, REQUESTCODE_INTENT);
