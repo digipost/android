@@ -16,6 +16,7 @@
 package no.digipost.android.api;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
@@ -76,6 +77,15 @@ public class LetterOperations {
 			DigipostAuthenticationException {
 		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
 	}
+    public void sendOpeningReceipt(final Letter letter) throws DigipostClientException, DigipostApiException,
+            DigipostAuthenticationException {
+        apiAccess.sendOpeningReceipt(letter.getOpeningReceiptUri());
+    }
+
+    public Letter getSelfLetter(final Letter letter) throws DigipostClientException, DigipostApiException,
+        DigipostAuthenticationException{
+        return (Letter) apiAccess.getLetterSelf(letter.getSelfUri());
+    }
 
 	public byte[] getDocumentContent(final Object object) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {

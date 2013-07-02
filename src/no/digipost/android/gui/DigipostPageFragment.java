@@ -2,6 +2,7 @@ package no.digipost.android.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.R;
 import no.digipost.android.documentstore.ImageStore;
@@ -895,11 +896,16 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 
 				return null;
 			} catch (DigipostApiException e) {
+                e.printStackTrace();
 				return e.getMessage();
 			} catch (DigipostClientException e) {
-				return e.getMessage();
+                e.printStackTrace();
+
+                return e.getMessage();
 			} catch (DigipostAuthenticationException e) {
-				invalidToken = true;
+                e.printStackTrace();
+
+                invalidToken = true;
 				return e.getMessage();
 			}
 		}
@@ -1018,41 +1024,68 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		}
 	}
 
+    private void sendOpeningReceipt(Letter letter){
+        SendOpeningReceiptTask task = new SendOpeningReceiptTask();
+        task.execute(letter);
+    }
+    private void showOpeningReceiptDialog(final Letter letter){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getString(R.string.dialog_answer_opening_receipt_message)).setPositiveButton(getString(R.string.dialog_answer_opening_receipt_yes), new DialogInterface.OnClickListener() {
+                public void onClick(final DialogInterface dialog, final int id) {
+                    sendOpeningReceipt(letter);
+                    dialog.dismiss();
+                }
+            }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+                public void onClick(final DialogInterface dialog, final int id) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+    }
+
 	private class ListListener implements OnItemClickListener {
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 			Letter mletter = adapterLetter.getItem(position);
-
-			if (mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-				twoFactorActionDialog(getString(R.string.dialog_error_header_two_factor), getString(R.string.dialog_error_two_factor));
-				return;
-			}
-
-			String filetype = mletter.getFileType();
-
-			if (mletter.getAttachment().size() > 1) {
-				showAttachmentDialog(mletter.getAttachment());
-				tempLetter = mletter;
-			} else {
-
-				if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
-					GetPDFTask pdfTask = new GetPDFTask();
-					pdfTask.execute(mletter);
-				} else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
-					GetHTMLTask htmlTask = new GetHTMLTask();
-					htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
-				} else if (filetype.equals(ApiConstants.FILETYPE_PNG) || filetype.equals(ApiConstants.FILETYPE_JPG)
-						|| filetype.equals(ApiConstants.FILETYPE_JPEG) || filetype.equals(ApiConstants.FILETYPE_JFIF)
-						|| filetype.equals(ApiConstants.FILETYPE_JPE) || filetype.equals(ApiConstants.FILETYPE_TIF)
-						|| filetype.equals(ApiConstants.FILETYPE_TIFF)) {
-					GetImageTask imageTask = new GetImageTask();
-					imageTask.execute(mletter);
-				} else {
+            openDocument(mletter,true);
+        }
+	}
+    private void openDocument(Letter mletter, boolean openingReceiptCheck){
+        if (mletter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+            twoFactorActionDialog(getString(R.string.dialog_error_header_two_factor), getString(R.string.dialog_error_two_factor));
+            return;
+        }
+        if(openingReceiptCheck){
+            if(mletter.getOpeningReceiptUri() != null){
+                showOpeningReceiptDialog(mletter);
+                return;
+            }
+        }
+            String filetype = mletter.getFileType();
+            if (mletter.getAttachment().size() > 1) {
+                showAttachmentDialog(mletter.getAttachment());
+                tempLetter = mletter;
+            } else {
+                if (filetype.equals(ApiConstants.FILETYPE_PDF)) {
+                    GetPDFTask pdfTask = new GetPDFTask();
+                    pdfTask.execute(mletter);
+                } else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
+                    GetHTMLTask htmlTask = new GetHTMLTask();
+                    htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
+                } else if (filetype.equals(ApiConstants.FILETYPE_PNG) || filetype.equals(ApiConstants.FILETYPE_JPG)
+                        || filetype.equals(ApiConstants.FILETYPE_JPEG) || filetype.equals(ApiConstants.FILETYPE_JFIF)
+                        || filetype.equals(ApiConstants.FILETYPE_JPE) || filetype.equals(ApiConstants.FILETYPE_TIF)
+                        || filetype.equals(ApiConstants.FILETYPE_TIFF)) {
+                    GetImageTask imageTask = new GetImageTask();
+                    imageTask.execute(mletter);
+                } else {
                     GetDocumentTask dokumentTask = new GetDocumentTask();
                     dokumentTask.execute(mletter);
-				}
-			}
-		}
-	}
+                }
+            }
+
+
+    }
 
 	private class ReceiptListListener implements OnItemClickListener {
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
@@ -1062,6 +1095,105 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 			htmlTask.execute(ApiConstants.GET_RECEIPT, mReceipt);
 		}
 	}
+
+    private class SendOpeningReceiptTask extends AsyncTask<Letter, Void, Boolean> {
+        private String errorMessage;
+        private Letter letter;
+        private boolean invalidToken;
+
+        public SendOpeningReceiptTask() {
+            invalidToken = false;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(final Letter... params) {
+            try {
+                letter = params[0];
+                lo.sendOpeningReceipt(letter);
+                return true;
+            } catch (DigipostApiException e) {
+                errorMessage = e.getMessage();
+                return false;
+            } catch (DigipostClientException e) {
+                errorMessage = e.getMessage();
+                return false;
+            } catch (DigipostAuthenticationException e) {
+                invalidToken = true;
+                errorMessage = e.getMessage();
+                return false;
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            toggleRefreshSpinnerOff();
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean result) {
+            if (!result) {
+                showMessage(errorMessage);
+
+                if (invalidToken) {
+                    activityCommunicator.passDataToActivity(BASE_INVALID_TOKEN);
+                }
+            } else {
+                loadAccountMetaComplete();
+
+                refreshSelfLetter(letter);
+            }
+            toggleRefreshSpinnerOff();
+        }
+    }
+    private void refreshSelfLetter(Letter letter){
+        RefreshSelfLetterTask task = new RefreshSelfLetterTask();
+        task.execute(letter);
+    }
+
+    private class RefreshSelfLetterTask extends AsyncTask<Letter, Void, Letter> {
+        private String errorMessage;
+        private boolean invalidToken;
+
+        public RefreshSelfLetterTask() {
+            invalidToken = false;
+        }
+
+        @Override
+        protected Letter doInBackground(final Letter... params) {
+            System.out.println("letter.getContentUri()"+ params[0].getContentUri());
+            System.out.println("letter.getOpeningReceiptUri()"+ params[0].getOpeningReceiptUri());
+            try {
+                return lo.getSelfLetter(params[0]);
+            } catch (DigipostApiException e) {
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostClientException e) {
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostAuthenticationException e) {
+                invalidToken = true;
+                errorMessage = e.getMessage();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Letter letter) {
+            super.onPostExecute(letter);
+            System.out.println("letter.getContentUri()"+ letter.getContentUri());
+            System.out.println("letter.getOpeningReceiptUri()"+ letter.getOpeningReceiptUri());
+
+            openDocument(letter,false);
+        }
+    }
+
+
 
 	private class MyOnItemLongClickListener implements OnItemLongClickListener {
 		private final int type;

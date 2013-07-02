@@ -97,7 +97,7 @@ public class JSONUtilities {
 	@SuppressWarnings("deprecation")
 	public static StringEntity createJsonFromJackson(final Letter letter) {
 		// ignore-test
-		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment" };
+		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment","openingReceiptUri","selfUri" };
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		FilterProvider filters = new SimpleFilterProvider().addFilter("toJSON", SimpleBeanPropertyFilter.serializeAllExcept(ignore));
@@ -121,7 +121,6 @@ public class JSONUtilities {
 		} catch (UnsupportedEncodingException e) {
 			// Ignore
 		}
-
 		return output;
 	}
 

@@ -19,6 +19,7 @@ public class NetworkConnection {
 	public static final int HTTP_STATUS_SUCCESS = 200;
 	public static final int HTTP_STATUS_UNAUTHORIZED = 401;
 	public static final int HTTP_STATUS_BAD_REQUEST = 400;
+    public static final int HTTP_STATUS_INTERNAL_ERROR = 500;
 
 	private final Context context;
 
@@ -28,6 +29,7 @@ public class NetworkConnection {
 
 	public void checkHttpStatusCode(final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
 			DigipostAuthenticationException {
+        System.out.println("HTTP_STATUS:"+statusCode);
 		if (statusCode == HTTP_STATUS_SUCCESS || statusCode == TEMPORARY_REDIRECT.getStatusCode()) {
 			return;
 		} else if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
