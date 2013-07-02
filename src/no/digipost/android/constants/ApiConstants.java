@@ -89,7 +89,7 @@ public class ApiConstants {
 	public static final String CONTENT_OCTET_STREAM = "application/octet-stream";
 	public static final String TEXT_HTML = "text/html";
 
-    public static final String URL = "https://qa.digipost.no";
+    public static final String URL = "https://www.digipost.no";
 
     public static final String URL_API = URL + "/post/api";
 	public static final String URL_RELATIONS_DOCUMENT_INBOX = URL + "/post/relations/document_inbox";
