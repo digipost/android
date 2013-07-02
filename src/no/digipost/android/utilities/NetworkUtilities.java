@@ -1,4 +1,4 @@
-package no.digipost.android.gui;
+package no.digipost.android.utilities;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -15,7 +15,7 @@ import android.os.AsyncTask;
 
 import static javax.ws.rs.core.Response.Status.TEMPORARY_REDIRECT;
 
-public class NetworkConnection {
+public class NetworkUtilities {
 	public static final int HTTP_STATUS_SUCCESS = 200;
 	public static final int HTTP_STATUS_UNAUTHORIZED = 401;
 	public static final int HTTP_STATUS_BAD_REQUEST = 400;
@@ -23,7 +23,7 @@ public class NetworkConnection {
 
 	private final Context context;
 
-	public NetworkConnection(final Context context) {
+	public NetworkUtilities(final Context context) {
 		this.context = context;
 	}
 
