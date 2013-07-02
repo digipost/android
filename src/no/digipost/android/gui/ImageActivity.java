@@ -20,6 +20,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,6 +69,7 @@ public class ImageActivity extends Activity {
         try{
             bitmap = BitmapFactory.decodeByteArray(ImageStore.image, 0, ImageStore.image.length);
         }catch(OutOfMemoryError e){
+            Log.e(getClass().getName(), e.getMessage(), e);
             showMessage(getString(R.string.error_inputstreamtobyarray));
         }
 

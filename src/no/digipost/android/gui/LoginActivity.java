@@ -16,9 +16,9 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 import android.app.Activity;
@@ -37,7 +37,7 @@ public class LoginActivity extends Activity {
 	private Button loginButton, privacyButton, registrationButton;
     private CheckBox stayLoggedInCheckBox;
 	private ButtonListener listener;
-	private NetworkConnection networkConnection;
+	private NetworkUtilities networkUtilities;
     private KeyStore ks;
 
     private final int WEB_LOGIN_REQUEST = 1;
@@ -54,7 +54,7 @@ public class LoginActivity extends Activity {
 		privacyButton.setOnClickListener(listener);
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
-		networkConnection = new NetworkConnection(this);
+		networkUtilities = new NetworkUtilities(this);
         stayLoggedInCheckBox = (CheckBox)findViewById(R.id.login_remember_me);
     }
 
@@ -100,7 +100,7 @@ public class LoginActivity extends Activity {
         }
     }
     private void openWebView() {
-		if (networkConnection.isOnline()) {
+		if (networkUtilities.isOnline()) {
             Intent i = new Intent(this, WebLoginActivity.class);
             startActivityForResult(i, WEB_LOGIN_REQUEST);
 

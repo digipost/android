@@ -31,7 +31,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.api.exception.DigipostInvalidTokenException;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.utilities.JSONUtilities;
-import no.digipost.android.gui.NetworkConnection;
+import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.model.Access;
 import no.digipost.android.model.TokenValue;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
@@ -120,10 +120,10 @@ public class OAuth2 {
 			throw new DigipostClientException(context.getString(R.string.error_your_network));
 		}
 
-		NetworkConnection networkConnection = new NetworkConnection(context);
+		NetworkUtilities networkUtilities = new NetworkUtilities(context);
 
 		try {
-			networkConnection.checkHttpStatusCode(cr.getStatus());
+			networkUtilities.checkHttpStatusCode(cr.getStatus());
 		} catch (DigipostInvalidTokenException e) {
 			// Ignore
 		}

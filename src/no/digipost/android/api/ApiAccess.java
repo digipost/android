@@ -16,8 +16,6 @@
 package no.digipost.android.api;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -32,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -42,7 +39,7 @@ import no.digipost.android.api.exception.DigipostInvalidTokenException;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.gui.NetworkConnection;
+import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
@@ -53,12 +50,12 @@ import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT
 
 public class ApiAccess {
 	private final Context context;
-	private final NetworkConnection networkConnection;
+	private final NetworkUtilities networkUtilities;
 	private final Client jerseyClient;
 
 	public ApiAccess(final Context context) {
 		this.context = context;
-		networkConnection = new NetworkConnection(context);
+		networkUtilities = new NetworkUtilities(context);
 		jerseyClient = Client.create();
 	}
 
@@ -105,7 +102,7 @@ public class ApiAccess {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
 
 		try {
-			networkConnection.checkHttpStatusCode(cr.getStatus());
+			networkUtilities.checkHttpStatusCode(cr.getStatus());
 		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return getApiJsonString(uri);
@@ -141,7 +138,7 @@ public class ApiAccess {
 		}
 
 		try {
-			networkConnection.checkHttpStatusCode(response.getStatusLine().getStatusCode());
+			networkUtilities.checkHttpStatusCode(response.getStatusLine().getStatusCode());
 		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return moveLetter(uri, json);
@@ -179,7 +176,7 @@ public class ApiAccess {
         }
 
         try {
-            networkConnection.checkHttpStatusCode(response.getStatusLine().getStatusCode());
+            networkUtilities.checkHttpStatusCode(response.getStatusLine().getStatusCode());
         } catch (DigipostInvalidTokenException e) {
             OAuth2.updateAccessToken(context);
             return sendOpeningReceipt(uri);
@@ -212,7 +209,7 @@ public class ApiAccess {
 		}
 
 		try {
-			networkConnection.checkHttpStatusCode(cr.getStatus());
+			networkUtilities.checkHttpStatusCode(cr.getStatus());
 		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return delete(uri);
@@ -226,7 +223,7 @@ public class ApiAccess {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
 
 		try {
-			networkConnection.checkHttpStatusCode(cr.getStatus());
+			networkUtilities.checkHttpStatusCode(cr.getStatus());
 		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return getDocumentContent(uri, filesize);
@@ -239,7 +236,7 @@ public class ApiAccess {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
 
 		try {
-			networkConnection.checkHttpStatusCode(cr.getStatus());
+			networkUtilities.checkHttpStatusCode(cr.getStatus());
 		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return getDocumentHTML(uri);
@@ -251,7 +248,7 @@ public class ApiAccess {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.TEXT_HTML);
 
 		try {
-			networkConnection.checkHttpStatusCode(cr.getStatus());
+			networkUtilities.checkHttpStatusCode(cr.getStatus());
 		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);
 			return getReceiptHTML(uri);
