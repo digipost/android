@@ -105,8 +105,8 @@
     <string name="error_failed_to_open_with_intent">En feil oppstod under åpning av filen.</string>
 
     <!-- Prompts -->
-    <string name="dialog_answer_opening_receipt_yes">Åpne brevet og send kvittering</string>
-    <string name="dialog_answer_opening_receipt_message">Hvis du åpner dette brevet, vil det bli sendt en lesekvittering til avsenderen.</string>
+    <string name="dialog_answer_opening_receipt_yes">Åpne og send kvittering</string>
+    <string name="dialog_answer_opening_receipt_message">Når du åpner dette brevet, vil det bli sendt en lesekvittering til avsenderen.</string>
     <string name="dialog_prompt_letter_toArchive">Er du sikker på at du vil flytte brevet til arkivet?</string>
     <string name="dialog_prompt_letter_toWorkarea">Er du sikker på at du vil flytte brevet til kjøkkenbenken?</string>
     <string name="dialog_prompt_image_toArchive">Er du sikker på at du vil flytte bildet til arkivet?</string>

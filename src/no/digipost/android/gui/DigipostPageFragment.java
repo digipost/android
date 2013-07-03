@@ -1145,55 +1145,11 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
                 }
             } else {
                 loadAccountMetaComplete();
-
-                refreshSelfLetter(letter);
+                openDocument(letter,false);
             }
             toggleRefreshSpinnerOff();
         }
     }
-    private void refreshSelfLetter(Letter letter){
-        RefreshSelfLetterTask task = new RefreshSelfLetterTask();
-        task.execute(letter);
-    }
-
-    private class RefreshSelfLetterTask extends AsyncTask<Letter, Void, Letter> {
-        private String errorMessage;
-        private boolean invalidToken;
-
-        public RefreshSelfLetterTask() {
-            invalidToken = false;
-        }
-
-        @Override
-        protected Letter doInBackground(final Letter... params) {
-            System.out.println("letter.getContentUri()"+ params[0].getContentUri());
-            System.out.println("letter.getOpeningReceiptUri()"+ params[0].getOpeningReceiptUri());
-            try {
-                return lo.getSelfLetter(params[0]);
-            } catch (DigipostApiException e) {
-                errorMessage = e.getMessage();
-                return null;
-            } catch (DigipostClientException e) {
-                errorMessage = e.getMessage();
-                return null;
-            } catch (DigipostAuthenticationException e) {
-                invalidToken = true;
-                errorMessage = e.getMessage();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Letter letter) {
-            super.onPostExecute(letter);
-            System.out.println("letter.getContentUri()"+ letter.getContentUri());
-            System.out.println("letter.getOpeningReceiptUri()"+ letter.getOpeningReceiptUri());
-
-            openDocument(letter,false);
-        }
-    }
-
-
 
 	private class MyOnItemLongClickListener implements OnItemLongClickListener {
 		private final int type;

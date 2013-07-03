@@ -97,9 +97,7 @@ public class ApiConstants {
 	public static final String URL_RELATIONS_DOCUMENT_KITCHENBENCH = URL + "/post/relations/document_workarea";
 	public static final String URL_RELATIONS_DOCUMENT_RECEIPTS = URL + "/post/relations/receipts";
 	public static final String URL_RELATIONS_DOCUMENT_GET_CONTENT = URL + "/post/relations/get_document_content";
-
     public static final String URL_RELATIONS_DOCUMENT_SELF = URL + "/post/relations/self";
-
 	public static final String URL_RELATIONS_DOCUMENT_UPDATE = URL + "/post/relations/update_document";
 	public static final String URL_RELATIONS_DOCUMENT_DELETE = URL + "/post/relations/delete_document";
     public static final String URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT = URL + "/post/relations/send_opening_receipt";
