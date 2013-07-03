@@ -16,6 +16,7 @@
 
 package no.digipost.android;
 
+import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
@@ -61,7 +62,8 @@ public class MainActivity extends Activity {
     }
 
     private void startBaseActivity() {
-        Intent i = new Intent(MainActivity.this, BaseFragmentActivity.class);
+        //Intent i = new Intent(MainActivity.this, BaseFragmentActivity.class);
+        Intent i = new Intent(MainActivity.this, MainContentActivity.class);
         startActivity(i);
         finish();
     }

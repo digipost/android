@@ -24,7 +24,7 @@ public class DialogUtitities {
         ProgressDialog progressDialog = getProgressDialogWithMessage(context, message);
         progressDialog.setTitle(title);
 
-        return progressDialog; 
+        return progressDialog;
     }
 
     public AlertDialog.Builder getAlertDialogBuilderWithMessage(final Context context, final String message) {

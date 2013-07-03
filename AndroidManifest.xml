@@ -36,7 +36,7 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/digipost_icon"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo.NoActionBar" >
+        android:theme="@android:style/Theme.Holo.Light.DarkActionBar" >
         <activity
             android:name="no.digipost.android.MainActivity"
             android:label="@string/app_name"
@@ -46,6 +46,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="no.digipost.android.gui.MainContentActivity"
+            android:label="@string/title_activity_base">
         </activity>
         <activity
             android:name="no.digipost.android.gui.BaseFragmentActivity"
