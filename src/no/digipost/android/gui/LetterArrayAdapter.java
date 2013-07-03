@@ -120,7 +120,7 @@ public class LetterArrayAdapter extends ArrayAdapter<Letter> {
 		if (checked != null) {
 
 			if (checked[position]) {
-				checkbox.setChecked(true);
+                checkbox.setChecked(true);
 			}
 
 			checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
