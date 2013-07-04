@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
@@ -31,10 +32,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 public class LetterOperations {
-	public static final int MAILBOX = 0;
-	public static final int WORKAREA = 1;
-	public static final int ARCHIVE = 2;
-	public static final int RECEIPTS = 3;
+
 
 	private PrimaryAccount primaryAccount;
 	private final ApiAccess apiAccess;
@@ -56,11 +54,11 @@ public class LetterOperations {
 		PrimaryAccount primaryAccount = getPrimaryAccount();
 
 		switch (type) {
-		case MAILBOX:
+		case ApplicationConstants.MAILBOX:
 			return apiAccess.getDocuments(primaryAccount.getInboxUri()).getDocument();
-		case ARCHIVE:
+		case ApplicationConstants.ARCHIVE:
 			return apiAccess.getDocuments(primaryAccount.getArchiveUri()).getDocument();
-		case WORKAREA:
+		case ApplicationConstants.WORKAREA:
 			return apiAccess.getDocuments(primaryAccount.getWorkareaUri()).getDocument();
 		default:
 			return null;

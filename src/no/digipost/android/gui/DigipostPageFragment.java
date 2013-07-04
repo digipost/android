@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import no.digipost.android.R;
+import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.ImageStore;
 import no.digipost.android.documentstore.UnsupportedFileStore;
 import no.digipost.android.utilities.FileUtilities;
@@ -169,7 +170,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	}
 
 	public void loadAccountMeta(final int type) {
-		if (type != LetterOperations.RECEIPTS) {
+		if (type != ApplicationConstants.RECEIPTS) {
 			new GetAccountMetaTask(type).execute();
 		} else {
 			new GetReceiptsMetaTask().execute();
@@ -190,7 +191,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	public void filterList(final int type, final CharSequence constraint) {
 		searchConstraint = constraint.toString();
 
-		if (type != LetterOperations.RECEIPTS) {
+		if (type != ApplicationConstants.RECEIPTS) {
 			adapterLetter.getFilter().filter(constraint);
 		} else {
 			adapterReceipts.getFilter().filter(constraint);
@@ -198,7 +199,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	}
 
 	public void clearFilter(final int type) {
-		if (type != LetterOperations.RECEIPTS) {
+		if (type != ApplicationConstants.RECEIPTS) {
 			adapterLetter.clearFilter();
 		} else {
 			adapterReceipts.clearFilter();
@@ -305,9 +306,9 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	}
 
 	private void clearCheckboxes(final int type) {
-		if (type != LetterOperations.RECEIPTS && adapterLetter.getShowBoxes()) {
+		if (type != ApplicationConstants.RECEIPTS && adapterLetter.getShowBoxes()) {
 			adapterLetter.clearCheckboxes();
-		} else if (type == LetterOperations.RECEIPTS && adapterReceipts.getShowBoxes()) {
+		} else if (type == ApplicationConstants.RECEIPTS && adapterReceipts.getShowBoxes()) {
 			adapterReceipts.clearCheckboxes();
 		}
 	}
@@ -315,10 +316,10 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 	private void toggleMultiselectionOn(final int type, final int position) {
 		listview.requestFocus();
 
-		if (type != LetterOperations.RECEIPTS && !adapterLetter.getShowBoxes()) {
+		if (type != ApplicationConstants.RECEIPTS && !adapterLetter.getShowBoxes()) {
 			adapterLetter.setInitialcheck(position);
 			showBottomBar();
-		} else if (type == LetterOperations.RECEIPTS && !adapterReceipts.getShowBoxes()) {
+		} else if (type == ApplicationConstants.RECEIPTS && !adapterReceipts.getShowBoxes()) {
 			adapterReceipts.setInitialcheck(position);
 			showBottomBar();
 		}
@@ -385,7 +386,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			fragmentsRefreshing[LetterOperations.RECEIPTS] = true;
+			fragmentsRefreshing[ApplicationConstants.RECEIPTS] = true;
 			toggleRefreshSpinnerOn();
 		}
 
@@ -409,7 +410,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected void onPostExecute(final ArrayList<Receipt> result) {
 			super.onPostExecute(result);
-			fragmentsRefreshing[LetterOperations.RECEIPTS] = false;
+			fragmentsRefreshing[ApplicationConstants.RECEIPTS] = false;
 			toggleRefreshSpinnerOff();
 
 			if (result == null) {
@@ -434,7 +435,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			fragmentsRefreshing[LetterOperations.RECEIPTS] = false;
+			fragmentsRefreshing[ApplicationConstants.RECEIPTS] = false;
 			toggleRefreshSpinnerOff();
 		}
 	}
@@ -1173,8 +1174,8 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 
 		public boolean onKey(final View v, final int keyCode, final KeyEvent event) {
 			if (keyCode == KeyEvent.KEYCODE_BACK) {
-				if ((type == LetterOperations.RECEIPTS && adapterReceipts.getShowBoxes())
-						|| (type != LetterOperations.RECEIPTS && adapterLetter.getShowBoxes())) {
+				if ((type == ApplicationConstants.RECEIPTS && adapterReceipts.getShowBoxes())
+						|| (type != ApplicationConstants.RECEIPTS && adapterLetter.getShowBoxes())) {
 					toggleMultiselectionOff(type);
 					return true;
 				}

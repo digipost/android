@@ -1,6 +1,8 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
+import no.digipost.android.gui.fragments.MailboxFragment;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -37,15 +39,15 @@ public class MainContentActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("MainContentActivity");
         setContentView(R.layout.activity_main_content);
 
         mTitle = mDrawerTitle = getTitle();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.main_left_drawer);
-
-        // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
+
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -148,18 +150,6 @@ public class MainContentActivity extends Activity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    public static class MailboxFragment extends Fragment {
-
-        public MailboxFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            return super.onCreateView(inflater, container, savedInstanceState);
-        }
     }
 
     private void setupSearchView(SearchView searchView) {

@@ -20,6 +20,7 @@ import no.digipost.android.MainActivity;
 import no.digipost.android.R;
 import no.digipost.android.api.LetterOperations;
 import no.digipost.android.authentication.Secret;
+import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.ImageStore;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 import no.digipost.android.documentstore.PDFStore;
@@ -282,16 +283,16 @@ public class BaseFragmentActivity extends FragmentActivity implements ActivityCo
 				hideSearchBar();
 			} else if (v.equals(searchButton)) {
 				switch (currentViewIndex) {
-				case LetterOperations.MAILBOX:
+				case ApplicationConstants.MAILBOX:
 					searchfield.setHint(R.string.search_mailbox);
 					break;
-				case LetterOperations.WORKAREA:
+				case ApplicationConstants.WORKAREA:
 					searchfield.setHint(R.string.search_workarea);
 					break;
-				case LetterOperations.ARCHIVE:
+				case ApplicationConstants.ARCHIVE:
 					searchfield.setHint(R.string.search_archive);
 					break;
-				case LetterOperations.RECEIPTS:
+				case ApplicationConstants.RECEIPTS:
 					searchfield.setHint(R.string.search_receipts);
 					break;
 				}
