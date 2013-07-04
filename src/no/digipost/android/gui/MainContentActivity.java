@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 public class MainContentActivity extends Activity {
@@ -44,8 +46,7 @@ public class MainContentActivity extends Activity {
         // set a custom shadow that overlays the main content when the drawer opens
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mPlanetTitles));
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
@@ -54,13 +55,8 @@ public class MainContentActivity extends Activity {
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
-                R.string.open_external,  /* "open drawer" description for accessibility */
-                R.string.close  /* "close drawer" description for accessibility */
-        ) {
+        // ToDo fikse open og close string
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.open_external, R.string.close) {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(mTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -71,6 +67,7 @@ public class MainContentActivity extends Activity {
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
+
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
         if (savedInstanceState == null) {
@@ -82,15 +79,19 @@ public class MainContentActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
+
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        setupSearchView(searchView);
+
         return super.onCreateOptionsMenu(menu);
     }
 
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        // If the nav drawer is open, hide action items related to the content view
         boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
+        menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -101,22 +102,6 @@ public class MainContentActivity extends Activity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        // Handle action buttons
-        /*switch(item.getItemId()) {
-            case R.id.action_websearch:
-                // create intent to perform web search for this planet
-                Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
-                intent.putExtra(SearchManager.QUERY, getActionBar().getTitle());
-                // catch event that there's no activity to handle intent
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, R.string.app_not_available, Toast.LENGTH_LONG).show();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);*/
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -130,16 +115,11 @@ public class MainContentActivity extends Activity {
     }
 
     private void selectItem(int position) {
-        // update the main content by replacing fragments
-        Fragment fragment = new PlanetFragment();
-        Bundle args = new Bundle();
-        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-        fragment.setArguments(args);
+        Fragment fragment = new MailboxFragment();
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_content_frame, fragment).commit();
 
-        // update selected item and title, then close the drawer
         mDrawerList.setItemChecked(position, true);
         setTitle(mPlanetTitles[position]);
         mDrawerLayout.closeDrawer(mDrawerList);
@@ -170,20 +150,34 @@ public class MainContentActivity extends Activity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    /**
-     * Fragment that appears in the "content_frame", shows a planet
-     */
-    public static class PlanetFragment extends Fragment {
-        public static final String ARG_PLANET_NUMBER = "planet_number";
+    public static class MailboxFragment extends Fragment {
 
-        public PlanetFragment() {
-            // Empty constructor required for fragment subclasses
+        public MailboxFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             return super.onCreateView(inflater, container, savedInstanceState);
+        }
+    }
+
+    private void setupSearchView(SearchView searchView) {
+        searchView.setQueryHint("Søk...");
+        searchView.setOnQueryTextListener(new SearchListener());
+    }
+
+    private class SearchListener implements SearchView.OnQueryTextListener {
+
+        @Override
+        public boolean onQueryTextSubmit(String s) {
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String s) {
+            System.out.println(s);
+            return true;
         }
     }
 }
