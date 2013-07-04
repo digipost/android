@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import no.digipost.android.R;
-import no.digipost.android.api.LetterOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;

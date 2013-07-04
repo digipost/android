@@ -1,7 +1,11 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.fragments.ArchiveFragment;
+import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.MailboxFragment;
+import no.digipost.android.gui.fragments.WorkareaFragment;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -34,12 +38,11 @@ public class MainContentActivity extends Activity {
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mPlanetTitles = {"Postkassen", "Kvitteringer", "Kjøkkenbenken", "Arkivet"};
+    private String[] mPlanetTitles = {"Postkassen","Kjøkkenbenken", "Arkivet","Kvitteringer"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("MainContentActivity");
         setContentView(R.layout.activity_main_content);
 
         mTitle = mDrawerTitle = getTitle();
@@ -116,14 +119,29 @@ public class MainContentActivity extends Activity {
         }
     }
 
-    private void selectItem(int position) {
-        Fragment fragment = new MailboxFragment();
+    private void selectItem(int content) {
+
+        ContentFragment contentFragment = null;
+        switch(content){
+            case ApplicationConstants.MAILBOX:
+                contentFragment = new MailboxFragment();
+                break;
+            case ApplicationConstants.WORKAREA:
+                contentFragment = new WorkareaFragment();
+                break;
+            case ApplicationConstants.ARCHIVE:
+                contentFragment = new ArchiveFragment();
+                break;
+            case ApplicationConstants.RECEIPTS:
+                //TODO Implementer receipts
+                return;
+        }
 
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.main_content_frame, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
 
-        mDrawerList.setItemChecked(position, true);
-        setTitle(mPlanetTitles[position]);
+        mDrawerList.setItemChecked(content, true);
+        setTitle(mPlanetTitles[content]);
         mDrawerLayout.closeDrawer(mDrawerList);
     }
 
