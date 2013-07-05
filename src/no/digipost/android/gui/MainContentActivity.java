@@ -38,7 +38,7 @@ public class MainContentActivity extends Activity {
 
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
-    private String[] mPlanetTitles = {"Postkassen","Kjøkkenbenken", "Arkivet","Kvitteringer"};
+    private String[] mPlanetTitles = {"Postkassen","Kjøkkenbenken", "Arkivet", "Kvitteringer"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

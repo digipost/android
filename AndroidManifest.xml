@@ -73,6 +73,7 @@
         <activity 
             android:name="no.digipost.android.gui.ImageActivity">
         </activity>
+
         <activity
                 android:name="no.digipost.android.gui.ScreenlockPreferenceActivity"
                   android:theme="@android:style/Theme.Holo.NoActionBar"
