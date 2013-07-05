@@ -38,11 +38,11 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 
     private void setMetaBottom(Letter letter) {
         if (letter.getAttachment().size() > 1) {
-            setMetaBottomDrawable(R.drawable.attachment_16);
+            setMetaBottomDrawable(R.drawable.paper_clip_dark);
         } else if (letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-            setMetaBottomDrawable(R.drawable.lock_white_35);
+            setMetaBottomDrawable(R.drawable.lock_dark);
         } else if (letter.getOpeningReceiptUri() != null) {
-            // ToDo legge til bilde for åpningskvittering
+            setMetaBottomDrawable(R.drawable.exclamation_sign_dark);
         }
     }
 
