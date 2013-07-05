@@ -26,8 +26,4 @@
           android:icon="@drawable/white_refresh_48"
           android:showAsAction="ifRoom" />
 
-    <item android:id="@+id/menu_options"
-          android:title="@string/base_optionsbutton_contentDescription"
-          android:icon="@drawable/white_options_48"
-          android:showAsAction="always" />
 </menu>

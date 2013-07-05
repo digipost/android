@@ -25,7 +25,7 @@ public class ReceiptArrayAdapter extends ContentArrayAdapter<Receipt> {
         super.title.setText(receipt.getStoreName());
         super.subTitle.setText(getCardsString(receipt));
         super.metaTop.setText(DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()));
-        super.metaMiddle.setText(DataFormatUtilities.getFormattedAmount(receipt.getAmount()) + DataFormatUtilities.getFormattedCurrency(receipt.getCurrency()));
+        super.metaMiddle.setText(DataFormatUtilities.getFormattedAmount(receipt.getAmount()) + " " + DataFormatUtilities.getFormattedCurrency(receipt.getCurrency()));
 
         super.setFilterTextColor();
 
