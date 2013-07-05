@@ -76,7 +76,7 @@ public class ReceiptFragment extends ContentFragment{
             super.onPostExecute(receipts);
 
             if (receipts != null) {
-                ReceiptFragment.super.listAdapter.addAll(receipts);
+                ReceiptFragment.super.listAdapter.replaceAll(receipts);
             } else {
                 DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
             }

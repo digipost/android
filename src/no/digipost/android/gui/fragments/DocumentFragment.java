@@ -70,7 +70,7 @@ public abstract class DocumentFragment extends ContentFragment {
         protected void onPostExecute(final ArrayList<Letter> letters) {
             super.onPostExecute(letters);
             if(letters != null){
-                DocumentFragment.super.listAdapter.addAll(letters);
+                DocumentFragment.super.listAdapter.replaceAll(letters);
             } else {
                 DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
             }

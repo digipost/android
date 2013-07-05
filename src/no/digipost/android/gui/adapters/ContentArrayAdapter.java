@@ -43,7 +43,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 
         this.context = context;
         this.filtered = objects;
-        this.objects = filtered;
+        this.objects = this.filtered;
 
         this.titleFilterText = null;
         this.subTitleFilterText = null;
@@ -62,6 +62,13 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
         this.metaBottom = (ImageView) row.findViewById(R.id.content_meta_bottom);
 
         return row;
+    }
+
+    public void replaceAll(Collection<? extends T> collection) {
+        this.filtered.clear();
+        this.filtered.addAll(collection);
+        this.objects = this.filtered;
+        notifyDataSetChanged();
     }
 
     @Override
