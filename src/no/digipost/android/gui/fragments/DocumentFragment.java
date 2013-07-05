@@ -46,6 +46,7 @@ public abstract class DocumentFragment extends ContentFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            DocumentFragment.super.showProgressDialog(this);
         }
 
         @Override
@@ -72,6 +73,14 @@ public abstract class DocumentFragment extends ContentFragment {
             } else {
                 DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
             }
+
+            DocumentFragment.super.hideProgressDialog();
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            DocumentFragment.super.hideProgressDialog();
         }
     }
 }

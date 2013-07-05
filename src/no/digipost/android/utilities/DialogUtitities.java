@@ -12,7 +12,7 @@ public class DialogUtitities {
         toast.show();
     }
 
-    public ProgressDialog getProgressDialogWithMessage(final Context context, final String message) {
+    public static ProgressDialog getProgressDialogWithMessage(final Context context, final String message) {
         ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setMessage(message);
@@ -20,21 +20,21 @@ public class DialogUtitities {
         return progressDialog;
     }
 
-    public ProgressDialog getProgressDialogWithMessageAndTitle(final Context context, final String message, final String title) {
+    public static ProgressDialog getProgressDialogWithMessageAndTitle(final Context context, final String message, final String title) {
         ProgressDialog progressDialog = getProgressDialogWithMessage(context, message);
         progressDialog.setTitle(title);
 
         return progressDialog;
     }
 
-    public AlertDialog.Builder getAlertDialogBuilderWithMessage(final Context context, final String message) {
+    public static AlertDialog.Builder getAlertDialogBuilderWithMessage(final Context context, final String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message);
 
         return builder;
     }
 
-    public AlertDialog.Builder getAlertDialogBuilderWithMessageAndTitle(final Context context, final String message, final String title) {
+    public static AlertDialog.Builder getAlertDialogBuilderWithMessageAndTitle(final Context context, final String message, final String title) {
         AlertDialog.Builder builder = getAlertDialogBuilderWithMessage(context, message);
         builder.setTitle(title);
 

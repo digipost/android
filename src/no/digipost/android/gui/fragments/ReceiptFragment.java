@@ -50,6 +50,7 @@ public class ReceiptFragment extends ContentFragment{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            ReceiptFragment.super.showProgressDialog(this);
         }
 
         @Override
@@ -76,8 +77,16 @@ public class ReceiptFragment extends ContentFragment{
             if (receipts != null) {
                 ReceiptFragment.super.listAdapter.addAll(receipts);
             } else {
-                DialogUtitities.showToast(ReceiptFragment.this.getActivity(), errorMessage);
+                DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
             }
+
+            ReceiptFragment.super.hideProgressDialog();
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            ReceiptFragment.super.hideProgressDialog();
         }
     }
 }
