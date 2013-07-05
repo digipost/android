@@ -5,6 +5,7 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.fragments.ArchiveFragment;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.MailboxFragment;
+import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.gui.fragments.WorkareaFragment;
 
 import android.app.Activity;
@@ -138,8 +139,8 @@ public class MainContentActivity extends Activity {
                 contentFragment = new ArchiveFragment();
                 break;
             case ApplicationConstants.RECEIPTS:
-                //TODO Implementer receipts
-                return;
+                contentFragment = new ReceiptFragment();
+                break;
         }
 
         FragmentManager fragmentManager = getFragmentManager();

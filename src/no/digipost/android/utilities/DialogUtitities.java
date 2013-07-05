@@ -7,8 +7,8 @@ import android.widget.Toast;
 
 public class DialogUtitities {
 
-    public static void showToast(final Context context, final String text, final int duration) {
-        Toast toast = Toast.makeText(context, text, duration);
+    public static void showToast(final Context context, final String text) {
+        Toast toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
         toast.show();
     }
 

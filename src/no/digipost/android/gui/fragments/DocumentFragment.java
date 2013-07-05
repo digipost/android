@@ -15,6 +15,7 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.model.Letter;
+import no.digipost.android.utilities.DialogUtitities;
 
 public abstract class DocumentFragment extends ContentFragment {
 
@@ -67,7 +68,9 @@ public abstract class DocumentFragment extends ContentFragment {
         protected void onPostExecute(final ArrayList<Letter> letters) {
             super.onPostExecute(letters);
             if(letters != null){
-                listAdapter.addAll(letters);
+                DocumentFragment.super.listAdapter.addAll(letters);
+            } else {
+                DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
             }
         }
     }
