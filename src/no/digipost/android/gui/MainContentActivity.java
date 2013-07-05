@@ -7,7 +7,7 @@ import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.MailboxFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.gui.fragments.WorkareaFragment;
-
+import no.digipost.android.gui.adapters.DrawerArrayAdapter;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -54,7 +54,10 @@ public class MainContentActivity extends Activity {
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
 
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
+        //TODO lage ferdig drawerarrayadapter
+        //mDrawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
+        mDrawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
+
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
