@@ -46,7 +46,6 @@ public abstract class DocumentFragment extends ContentFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            DocumentFragment.super.showProgressDialog(this);
             activityCommunicator.onStartRefreshContent();
         }
 
@@ -75,14 +74,12 @@ public abstract class DocumentFragment extends ContentFragment {
                 DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
             }
 
-            DocumentFragment.super.hideProgressDialog();
             activityCommunicator.onEndRefreshContent();
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            DocumentFragment.super.hideProgressDialog();
             activityCommunicator.onEndRefreshContent();
         }
     }

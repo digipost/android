@@ -49,6 +49,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private String[] titles = {"Postkassen","Kjøkkenbenken", "Arkivet", "Kvitteringer"};
 
     private MenuItem refreshButton;
+    private boolean refreshing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +117,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     public boolean onPrepareOptionsMenu(Menu menu) {
         refreshButton = menu.findItem(R.id.menu_refresh);
 
+        if (refreshing) {
+            onStartRefreshContent();
+        }
 
         boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
         menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
@@ -140,11 +144,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     @Override
     public void onStartRefreshContent() {
+        refreshing = true;
         refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
     }
 
     @Override
     public void onEndRefreshContent() {
+        refreshing = false;
         refreshButton.setActionView(null);
     }
 
