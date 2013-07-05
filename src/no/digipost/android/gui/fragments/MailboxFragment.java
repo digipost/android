@@ -15,8 +15,12 @@ public class MailboxFragment extends DocumentFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+        updateAccountMeta();
 
-        super.updateAccountMeta(ApplicationConstants.MAILBOX);
         return view;
+    }
+
+    public void updateAccountMeta() {
+        super.updateAccountMeta(ApplicationConstants.MAILBOX);
     }
 }

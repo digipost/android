@@ -31,31 +31,34 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-public class MainContentActivity extends Activity {
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-    private ActionBarDrawerToggle mDrawerToggle;
+public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
+    private DrawerLayout drawerLayout;
+    private ListView drawerList;
+    private ActionBarDrawerToggle drawerToggle;
 
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
-    private String[] mPlanetTitles = {"Postkassen","Kjøkkenbenken", "Arkivet", "Kvitteringer"};
+    private CharSequence drawerTitle;
+    private CharSequence title;
+    private String[] titles = {"Postkassen","Kjøkkenbenken", "Arkivet", "Kvitteringer"};
+
+    private MenuItem refreshButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_content);
 
-        mTitle = mDrawerTitle = getTitle();
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.main_left_drawer);
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        title = drawerTitle = getTitle();
+        drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        drawerList = (ListView) findViewById(R.id.main_left_drawer);
+        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
 
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, titles));
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -67,19 +70,21 @@ public class MainContentActivity extends Activity {
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         // ToDo fikse open og close string
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.open_external, R.string.close) {
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.open_external, R.string.close) {
             public void onDrawerClosed(View view) {
-                getActionBar().setTitle(mTitle);
+                getActionBar().setTitle(title);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
 
             public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(mDrawerTitle);
+                getActionBar().setTitle(drawerTitle);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
 
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        drawerLayout.setDrawerListener(drawerToggle);
+
+        invalidateOptionsMenu();
 
         if (savedInstanceState == null) {
             selectItem(0);
@@ -100,7 +105,10 @@ public class MainContentActivity extends Activity {
     /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        refreshButton = menu.findItem(R.id.menu_refresh);
+
+
+        boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
         menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
         menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
@@ -110,11 +118,26 @@ public class MainContentActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
         // ActionBarDrawerToggle will take care of this.
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
+        if (item.equals(refreshButton)) {
+            getCurrentFragment().updateAccountMeta();
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStartRefreshContent() {
+        System.out.println("refreshbutton: " + refreshButton);
+        refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
+    }
+
+    @Override
+    public void onEndRefreshContent() {
+        refreshButton.setActionView(null);
     }
 
     /* The click listner for ListView in the navigation drawer */
@@ -146,15 +169,15 @@ public class MainContentActivity extends Activity {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
 
-        mDrawerList.setItemChecked(content, true);
-        setTitle(mPlanetTitles[content]);
-        mDrawerLayout.closeDrawer(mDrawerList);
+        drawerList.setItemChecked(content, true);
+        setTitle(titles[content]);
+        drawerLayout.closeDrawer(drawerList);
     }
 
     @Override
-    public void setTitle(CharSequence title) {
-        mTitle = title;
-        getActionBar().setTitle(mTitle);
+    public void setTitle(CharSequence t) {
+        title = t;
+        getActionBar().setTitle(title);
     }
 
     /**
@@ -166,14 +189,14 @@ public class MainContentActivity extends Activity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
+        drawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     private ContentFragment getCurrentFragment() {

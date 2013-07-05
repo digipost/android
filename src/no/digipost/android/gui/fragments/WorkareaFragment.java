@@ -9,11 +9,16 @@ import no.digipost.android.constants.ApplicationConstants;
 
 public class WorkareaFragment extends DocumentFragment {
     public WorkareaFragment(){}
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+        updateAccountMeta();
 
-        super.updateAccountMeta(ApplicationConstants.WORKAREA);
         return view;
+    }
+
+    public void updateAccountMeta() {
+        super.updateAccountMeta(ApplicationConstants.WORKAREA);
     }
 }

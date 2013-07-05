@@ -40,8 +40,8 @@
     <!-- BaseView -->
     <dimen name="base_padding_bottom_and_top">2dp</dimen>
     <dimen name="base_refreshspinner_width_and_height">30dp</dimen>
-    <dimen name="base_refreshspinner_margin_left">2dp</dimen>
-    <dimen name="base_refreshspinner_margin_right">10dp</dimen>
+    <dimen name="base_refreshspinner_margin_left">13dp</dimen>
+    <dimen name="base_refreshspinner_margin_right">13dp</dimen>
     <dimen name="base_refreshspinner_margin_top">1dp</dimen>
     <dimen name="base_refreshbutton_margin_right">10dp</dimen>
     <dimen name="base_pagertitlestrip_padding">5dp</dimen>

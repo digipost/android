@@ -13,8 +13,12 @@ public class ArchiveFragment extends DocumentFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+        updateAccountMeta();
 
-        super.updateAccountMeta(ApplicationConstants.ARCHIVE);
         return view;
+    }
+
+    public void updateAccountMeta() {
+        super.updateAccountMeta(ApplicationConstants.ARCHIVE);
     }
 }

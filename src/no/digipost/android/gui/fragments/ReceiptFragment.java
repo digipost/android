@@ -33,7 +33,7 @@ public class ReceiptFragment extends ContentFragment{
         return view;
     }
 
-    private void updateAccountMeta(){
+    public void updateAccountMeta(){
         GetReceiptsMetaTask task = new GetReceiptsMetaTask();
         task.execute();
     }
@@ -51,6 +51,7 @@ public class ReceiptFragment extends ContentFragment{
         protected void onPreExecute() {
             super.onPreExecute();
             ReceiptFragment.super.showProgressDialog(this);
+            activityCommunicator.onStartRefreshContent();
         }
 
         @Override
@@ -81,12 +82,14 @@ public class ReceiptFragment extends ContentFragment{
             }
 
             ReceiptFragment.super.hideProgressDialog();
+            activityCommunicator.onEndRefreshContent();
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
             ReceiptFragment.super.hideProgressDialog();
+            activityCommunicator.onEndRefreshContent();
         }
     }
 }

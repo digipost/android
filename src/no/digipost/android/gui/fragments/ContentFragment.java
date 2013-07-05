@@ -18,6 +18,8 @@ import no.digipost.android.gui.adapters.ContentArrayAdapter;
 import no.digipost.android.utilities.DialogUtitities;
 
 public abstract class ContentFragment extends Fragment {
+    ActivityCommunicator activityCommunicator;
+
     protected Context context;
     protected LetterOperations letterOperations;
 
@@ -40,6 +42,12 @@ public abstract class ContentFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        activityCommunicator = (ActivityCommunicator) activity;
+    }
+
     protected void showProgressDialog(final AsyncTask task) {
         progressDialog = DialogUtitities.getProgressDialogWithMessage(context, context.getString(R.string.loading_content));
         progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
@@ -58,5 +66,12 @@ public abstract class ContentFragment extends Fragment {
 
     public void filterList(String filterQuery) {
         listAdapter.getFilter().filter(filterQuery);
+    }
+
+    public abstract void updateAccountMeta();
+
+    public interface ActivityCommunicator {
+        public void onStartRefreshContent();
+        public void onEndRefreshContent();
     }
 }
