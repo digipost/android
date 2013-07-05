@@ -21,6 +21,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +37,9 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
+    private ActionModeCallback actionModeCallback;
+    private ActionMode actionMode;
+
     private DrawerLayout drawerLayout;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
@@ -87,6 +91,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         drawerLayout.setDrawerListener(drawerToggle);
 
+        actionModeCallback = new ActionModeCallback();
+
         invalidateOptionsMenu();
 
         if (savedInstanceState == null) {
@@ -97,7 +103,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.activity_main_content_actionbar, menu);
 
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         setupSearchView(searchView);
@@ -134,13 +140,18 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     @Override
     public void onStartRefreshContent() {
-        System.out.println("refreshbutton: " + refreshButton);
         refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
     }
 
     @Override
     public void onEndRefreshContent() {
         refreshButton.setActionView(null);
+    }
+
+    @Override
+    public void onListLongClick() {
+        System.out.println("activityCommunicator onLongClick");
+        actionMode = startActionMode(actionModeCallback);
     }
 
     /* The click listner for ListView in the navigation drawer */
@@ -154,6 +165,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private void selectItem(int content) {
 
         ContentFragment contentFragment = null;
+
         switch(content){
             case ApplicationConstants.MAILBOX:
                 contentFragment = new MailboxFragment();
@@ -223,6 +235,31 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             getCurrentFragment().filterList(s);
             System.out.println(s);
             return true;
+        }
+    }
+
+    private class ActionModeCallback implements ActionMode.Callback {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            MenuInflater inflater = actionMode.getMenuInflater();
+            inflater.inflate(R.menu.activity_main_content_context, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+            actionMode = null;
         }
     }
 }

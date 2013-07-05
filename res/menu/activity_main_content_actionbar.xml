@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_search"
+          android:title="@string/search"
+          android:icon="@drawable/white_search_48"
+          android:showAsAction="collapseActionView|ifRoom"
+          android:actionViewClass="android.widget.SearchView" />
+
+    <item android:id="@+id/menu_refresh"
+          android:title="@string/base_refreshbutton_contentDescription"
+          android:icon="@drawable/white_refresh_48"
+          android:showAsAction="ifRoom" />
+
+</menu>
