@@ -16,5 +16,5 @@
               android:layout_height="match_parent"
               android:layout_gravity="start"
               android:choiceMode="singleChoice"
-              android:background="#111"/>
+              android:background="@color/main_drawer_grey_background"/>
 </android.support.v4.widget.DrawerLayout>

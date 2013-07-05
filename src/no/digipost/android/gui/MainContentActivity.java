@@ -14,6 +14,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -57,6 +58,9 @@ public class MainContentActivity extends Activity {
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setIcon(R.drawable.ic_launcher);
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.main_actionbar_red_background));
+        getActionBar().getThemedContext();
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
