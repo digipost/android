@@ -71,7 +71,7 @@ public abstract class DocumentFragment extends ContentFragment {
             if(letters != null){
                 DocumentFragment.super.listAdapter.addAll(letters);
             } else {
-                DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
+                DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
             }
 
             DocumentFragment.super.hideProgressDialog();
