@@ -13,12 +13,10 @@ import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.gui.LetterArrayAdapter;
+import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.model.Letter;
 
 public abstract class DocumentFragment extends ContentFragment {
-
-    protected LetterArrayAdapter letterAdapter;
 
     public DocumentFragment(){
     }
@@ -26,8 +24,8 @@ public abstract class DocumentFragment extends ContentFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        letterAdapter = new LetterArrayAdapter(getActivity(), R.layout.mailbox_list_item, new ArrayList<Letter>());
-        super.listView.setAdapter(letterAdapter);
+        super.listAdapter = new LetterArrayAdapter(getActivity(), R.layout.content_list_item);
+        super.listView.setAdapter(listAdapter);
         return view;
     }
 
@@ -66,10 +64,10 @@ public abstract class DocumentFragment extends ContentFragment {
         }
 
         @Override
-        protected void onPostExecute(final ArrayList<Letter> result) {
-            super.onPostExecute(result);
-            if(result != null){
-                letterAdapter.updateList(result,"");
+        protected void onPostExecute(final ArrayList<Letter> letters) {
+            super.onPostExecute(letters);
+            if(letters != null){
+                listAdapter.addAll(letters);
             }
         }
     }

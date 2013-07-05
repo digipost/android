@@ -17,6 +17,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
@@ -174,6 +175,10 @@ public class MainContentActivity extends Activity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
+    private ContentFragment getCurrentFragment() {
+        return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);
+    }
+
     private void setupSearchView(SearchView searchView) {
         searchView.setQueryHint("Søk...");
         searchView.setOnQueryTextListener(new SearchListener());
@@ -188,6 +193,7 @@ public class MainContentActivity extends Activity {
 
         @Override
         public boolean onQueryTextChange(String s) {
+            getCurrentFragment().filterList(s);
             System.out.println(s);
             return true;
         }

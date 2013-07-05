@@ -1,5 +1,6 @@
 package no.digipost.android.gui.fragments;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,10 +10,11 @@ import android.widget.ListView;
 
 import no.digipost.android.R;
 import no.digipost.android.api.LetterOperations;
+import no.digipost.android.gui.adapters.ContentArrayAdapter;
 
 public abstract class ContentFragment extends Fragment {
-
     protected ListView listView;
+    protected ContentArrayAdapter listAdapter;
     protected LetterOperations letterOperations;
 
     public ContentFragment() {
@@ -27,4 +29,7 @@ public abstract class ContentFragment extends Fragment {
         return view;
     }
 
+    public void filterList(String filterQuery) {
+        listAdapter.getFilter().filter(filterQuery);
+    }
 }
