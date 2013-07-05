@@ -5,7 +5,7 @@
     <color name="main_actionbar_red_background">#e32d22</color>
 
     <!-- Drawer -->
-    <color name="main_drawer_grey_background">#404245</color>
+    <color name="main_drawer_grey_background">#393a3d </color>
     <color name="main_drawer_grey_text">#757477</color>
     <color name="main_drawer_blue_selected">#56b4ef</color>
 
