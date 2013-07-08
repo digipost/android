@@ -25,7 +25,9 @@ public class ApplicationConstants {
     public static final int SCREENLOCK_CHOICE_YES = 2;
 
     public static final int MAILBOX = 0;
-    public static final int WORKAREA = 1;
-    public static final int ARCHIVE = 2;
-    public static final int RECEIPTS = 3;
+    public static final int RECEIPTS = 1;
+    public static final int WORKAREA = 2;
+    public static final int ARCHIVE = 3;
+    public static final String[] titles = {"Postkassen","Kvitteringer","Kjøkkenbenken", "Arkivet"};
+
 }

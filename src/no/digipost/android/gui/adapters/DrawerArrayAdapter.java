@@ -17,24 +17,47 @@
 package no.digipost.android.gui.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import no.digipost.android.R;
+import no.digipost.android.constants.ApplicationConstants;
 
 public class DrawerArrayAdapter<String> extends ArrayAdapter<String>{
     protected Context context;
+    private TextView linkView;
 
-    public DrawerArrayAdapter(final Context context, final int resource, final String[] objects) {
-        super(context, resource, objects);
+    public DrawerArrayAdapter(final Context context, final int resource,final String[] links) {
+        super(context, resource, links);
         this.context = context;
     }
 
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         View row = inflater.inflate(R.layout.drawer_list_item, parent, false);
+        linkView = (TextView) row.findViewById(R.id.drawer_link_name);
+        switch (position){
+            case ApplicationConstants.MAILBOX:
+                linkView.setText(R.string.mailbox);
+                linkView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope,0,0,0);
+                break;
+            case ApplicationConstants.RECEIPTS:
+                linkView.setText(R.string.receipts);
+                linkView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.credit_card,0,0,0);
+                break;
+            case ApplicationConstants.WORKAREA:
+                linkView.setText(R.string.workarea);
+                break;
+            case ApplicationConstants.ARCHIVE:
+                linkView.setText(R.string.archive);
+                break;
+        }
+
 
         return row;
     }
