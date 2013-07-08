@@ -112,7 +112,7 @@ public class LetterOperations {
 	}
 
 	public void delete(final Object object) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		if (object instanceof Letter) {
+		if (object instanceof Attachment) {
 			Letter letter = (Letter) object;
 			apiAccess.delete(letter.getDeleteUri());
 		} else {

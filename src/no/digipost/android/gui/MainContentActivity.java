@@ -103,6 +103,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        getCurrentFragment().setLetterOperations(letterOperations);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
