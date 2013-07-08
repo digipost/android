@@ -14,11 +14,12 @@
     <color name="list_focused">#6F7275</color>
     <color name="list_even">#ffffff</color>
     <color name="list_odd">#fafafa</color>
-    <color name="green_price">#7bc144</color>
-    <color name="blue_date">#56b4ef</color>
+    <color name="green">#7bc144</color>
+    <color name="blue">#56b4ef</color>
     <color name="black_subject">#383435</color>
+    <color name="grey_filesize">#B8B8B8</color>
     <color name="grey_creator">#4D484A</color>
-    <color name="list_divider">#eee</color>
+    <color name="list_divider">#DBDBDB</color>
 
     <!-- Emptyslate -->
     <color name="emptyslate_background">#eceef1</color>

@@ -48,7 +48,7 @@
                 android:id="@+id/attachment_filetype"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/blue_date"
+                android:textColor="@color/blue"
                 android:textSize="@dimen/listitem_mail_date_textsize" />
         </LinearLayout>
 

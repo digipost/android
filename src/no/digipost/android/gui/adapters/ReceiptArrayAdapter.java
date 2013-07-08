@@ -20,6 +20,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
+import no.digipost.android.R;
 
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class ReceiptArrayAdapter extends ContentArrayAdapter<Receipt> {
         super.subTitle.setText(getCardsString(receipt));
         super.metaTop.setText(DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()));
         super.metaMiddle.setText(DataFormatUtilities.getFormattedAmount(receipt.getAmount()) + " " + DataFormatUtilities.getFormattedCurrency(receipt.getCurrency()));
-
+        super.metaMiddle.setTextColor(context.getResources().getColor(R.color.green));
         super.setFilterTextColor();
 
         return row;

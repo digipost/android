@@ -14,11 +14,11 @@
   limitations under the License.
   -->
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text"
+    android:id="@+id/drawer_link_name"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:drawableLeft="@drawable/folder_close"
-    android:drawablePadding="5dp"
+    android:drawablePadding="10dp"
     android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center_vertical"
     android:paddingLeft="16dp"

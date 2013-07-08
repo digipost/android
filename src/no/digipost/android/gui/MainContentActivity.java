@@ -62,7 +62,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private CharSequence drawerTitle;
     private CharSequence title;
-    private String[] titles = {"Postkassen","Kjøkkenbenken", "Arkivet", "Kvitteringer"};
 
     private MenuItem refreshButton;
     private boolean refreshing;
@@ -80,7 +79,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         //TODO lage ferdig drawerarrayadapter
         //mDrawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
-        drawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, titles));
+        drawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, ApplicationConstants.titles));
 
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -207,7 +206,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
 
         drawerList.setItemChecked(content, true);
-        setTitle(titles[content]);
+        setTitle(ApplicationConstants.titles[content]);
         drawerLayout.closeDrawer(drawerList);
     }
 

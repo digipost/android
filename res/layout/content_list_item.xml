@@ -19,12 +19,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="fill_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:weightSum="5"
+              android:paddingLeft="15dp"
+              android:paddingTop="10dp"
+              android:paddingRight="15dp"
+              android:paddingBottom="10dp"
+        >
 
     <LinearLayout
             android:orientation="horizontal"
-            android:layout_weight="1"
-            android:layout_width="0sp"
+            android:layout_width="match_parent"
+            android:layout_weight="2"
             android:layout_height="wrap_content">
 
         <LinearLayout
@@ -37,6 +44,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
+                        android:textSize="17dp"
+                        android:textColor="@color/black_subject"
                         android:maxLines="1"
                         android:singleLine="true"/>
 
@@ -44,6 +53,8 @@
                         android:id="@+id/content_subTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="14dp"
+                        android:textColor="@color/grey_creator"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"/>
@@ -52,29 +63,44 @@
 
     <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            >
 
             <TextView
                     android:id="@+id/content_meta_top"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:gravity="right"/>
+                    android:gravity="right"
+                    android:textColor="@color/blue"
+                    android:textSize="12dp"/>
 
             <TextView
                     android:id="@+id/content_meta_middle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
-                    android:gravity="right"/>
+
+                    android:textColor="@color/grey_filesize"
+                    android:gravity="right"
+                    android:autoText="false"
+                    android:textSize="10dp"/>
 
             <ImageView
                     android:id="@+id/content_meta_bottom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:gravity="right"/>
+                    android:visibility="visible"
+
+                    android:src="@drawable/transparent_placeholder"
+                    android:gravity="right"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="false"
+                    android:focusable="false"
+                    />
 
     </LinearLayout>
 </LinearLayout>
