@@ -112,6 +112,8 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
         notifyDataSetChanged();
     }
 
+
+
     @Override
     public void add(final T object) {
         filtered.add(object);
@@ -220,7 +222,6 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
     }
 
     public void clearFilter() {
-        this.filtered = this.objects;
-        notifyDataSetChanged();
+        getFilter().filter("");
     }
 }
