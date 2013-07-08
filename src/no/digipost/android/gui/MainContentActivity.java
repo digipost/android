@@ -32,6 +32,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
@@ -46,10 +47,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
@@ -76,9 +79,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerList = (ListView) findViewById(R.id.main_left_drawer);
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         // set up the drawer's list view with items and click listener
-
-        //TODO lage ferdig drawerarrayadapter
-        //mDrawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
         drawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, ApplicationConstants.titles));
 
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -86,14 +86,14 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setIcon(R.drawable.ic_launcher);
-        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.main_actionbar_red_background));
+        getActionBar().setIcon(R.drawable.actionbar_icon);
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.actionbar_red_background));
         getActionBar().getThemedContext();
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the sliding drawer and the action bar app icon
         // ToDo fikse open og close string
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.open_external, R.string.close) {
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open_external, R.string.close) {
             public void onDrawerClosed(View view) {
                 getActionBar().setTitle(title);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
@@ -240,7 +240,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void setupSearchView(SearchView searchView) {
-        searchView.setQueryHint("Søk...");
+        int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
+        View searchPlate = searchView.findViewById(searchPlateId);
+        searchPlate.setBackgroundResource(R.drawable.search_background);
+        searchView.setQueryHint(getString(R.string.search));
         searchView.setOnQueryTextListener(new SearchListener());
     }
 
@@ -254,7 +257,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         @Override
         public boolean onQueryTextChange(String s) {
             getCurrentFragment().filterList(s);
-            System.out.println(s);
             return true;
         }
     }

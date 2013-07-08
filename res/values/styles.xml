@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Digipost" parent="android:Theme.Holo">
+        <item name="android:actionBarStyle">@style/ActionBarStyle</item>
+    </style>
+
+    <style name="ActionBarStyle" parent="android:style/Widget.Holo.ActionBar">
+        <item name="android:textColor">#FFF</item>
+    </style>
+
+</resources>

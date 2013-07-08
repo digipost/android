@@ -87,7 +87,7 @@
                     android:textColor="@color/grey_filesize"
                     android:gravity="right"
                     android:autoText="false"
-                    android:textSize="10dp"/>
+                    android:textSize="12dp"/>
 
             <ImageView
                     android:id="@+id/content_meta_bottom"

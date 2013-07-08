@@ -36,7 +36,7 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/digipost_icon"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.Holo" >
+        android:theme="@style/Digipost" >
         <activity
             android:name="no.digipost.android.MainActivity"
             android:label="@string/app_name"
@@ -51,7 +51,7 @@
         </activity>
         <activity
             android:name="no.digipost.android.gui.MainContentActivity"
-            android:label="@string/title_activity_base">
+            android:label="@string/app_name">
         </activity>
         <activity
             android:name="no.digipost.android.gui.BaseFragmentActivity"
