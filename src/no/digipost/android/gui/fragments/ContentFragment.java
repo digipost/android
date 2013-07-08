@@ -23,11 +23,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+
+import java.awt.MenuItem;
 
 import no.digipost.android.R;
 import no.digipost.android.api.LetterOperations;
@@ -51,17 +58,12 @@ public abstract class ContentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         context = getActivity();
-        letterOperations = new LetterOperations(context);
 
         View view = inflater.inflate(R.layout.fragment_layout_listview, container, false);
         listView = (ListView) view.findViewById(R.id.fragment_content_listview);
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            public boolean onItemLongClick(AdapterView parent, View view, int position, long id) {
-                activityCommunicator.onListLongClick();
-                return true;
-            }
-        });
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setMultiChoiceModeListener(new ListMultiChoiceModeListener());
 
         return view;
     }
@@ -92,11 +94,62 @@ public abstract class ContentFragment extends Fragment {
         listAdapter.getFilter().filter(filterQuery);
     }
 
+    public void clearFilter() {
+        listAdapter.clearFilter();
+    }
+
+    public void setLetterOperations(LetterOperations letterOperations) {
+        this.letterOperations = letterOperations;
+    }
+
     public abstract void updateAccountMeta();
 
     public interface ActivityCommunicator {
         public void onStartRefreshContent();
         public void onEndRefreshContent();
-        public void onListLongClick();
+    }
+
+    private class ListMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+
+        @Override
+        public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean state) {
+            listAdapter.setChecked(position);
+            actionMode.setTitle(Integer.toString(listAdapter.getCheckedCount()));
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            MenuInflater inflater = actionMode.getMenuInflater();
+            inflater.inflate(R.menu.activity_main_content_context, menu);
+
+            listAdapter.setCheckboxVisible(true);
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+            listAdapter.setCheckboxVisible(false);
+            listAdapter.clearChecked();
+        }
+    }
+
+    protected class CheckBoxOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            int position = listView.getPositionForView(view);
+            listView.setItemChecked(position, !listAdapter.getChecked(position));
+        }
     }
 }

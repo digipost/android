@@ -25,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -43,6 +45,10 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
     protected ArrayList<T> objects;
     protected ArrayList<T> filtered;
 
+    protected boolean[] checked;
+    protected boolean checkboxVisible;
+    private View.OnClickListener onClickListener;
+
     protected TextView title;
     protected TextView subTitle;
     protected TextView metaTop;
@@ -55,12 +61,15 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
     protected String subTitleFilterText;
     protected String metaTopFilterText;
 
-    public ContentArrayAdapter(final Context context, final int resource, final ArrayList<T> objects) {
+    public ContentArrayAdapter(final Context context, final int resource, final ArrayList<T> objects, final View.OnClickListener onClickListener) {
         super(context, resource, objects);
 
         this.context = context;
         this.filtered = objects;
         this.objects = this.filtered;
+
+        this.checked = new boolean[this.filtered.size()];
+        this.onClickListener = onClickListener;
 
         this.titleFilterText = null;
         this.subTitleFilterText = null;
@@ -69,6 +78,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        System.out.println("getView");
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = inflater.inflate(R.layout.content_list_item, parent, false);
 
@@ -78,6 +88,19 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
         this.metaMiddle = (TextView) row.findViewById(R.id.content_meta_middle);
         this.metaBottom = (ImageView) row.findViewById(R.id.content_meta_bottom);
 
+        CheckBox checkBox = (CheckBox) row.findViewById(R.id.content_checkbox);
+        checkBox.setOnClickListener(onClickListener);
+
+        if (checkboxVisible) {
+            if (checked[position]) {
+                checkBox.setChecked(true);
+            }
+
+            checkBox.setVisibility(View.VISIBLE);
+        } else {
+            checkBox.setVisibility(View.GONE);
+        }
+
         return row;
     }
 
@@ -85,12 +108,16 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
         this.filtered.clear();
         this.filtered.addAll(collection);
         this.objects = this.filtered;
+        initializeChecked();
         notifyDataSetChanged();
     }
+
+
 
     @Override
     public void add(final T object) {
         filtered.add(object);
+        initializeChecked();
         notifyDataSetChanged();
     }
 
@@ -107,19 +134,21 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
     @Override
     public void remove(final T object) {
         filtered.remove(object);
+        initializeChecked();
         notifyDataSetChanged();
     }
 
     @Override
     public void addAll(Collection<? extends T> collection) {
         filtered.addAll(collection);
+        initializeChecked();
         notifyDataSetChanged();
     }
 
     @Override
     public abstract Filter getFilter();
 
-    public void setFilterTextColor() {
+    protected void setFilterTextColor() {
         if (titleFilterText != null) {
             setTextViewFilterTextColor(title, titleFilterText);
         }
@@ -144,5 +173,55 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
         Spannable sb = new SpannableString(v.getText().toString());
         sb.setSpan(new BackgroundColorSpan(Color.parseColor(TEXT_HIGHLIGHT_COLOR)), i, i + l, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         v.setText(sb);
+    }
+
+    private void initializeChecked() {
+        checked = new boolean[filtered.size()];
+    }
+
+    public void setCheckboxVisible(boolean state) {
+        checkboxVisible = state;
+        notifyDataSetChanged();
+    }
+
+    public void clearChecked() {
+        initializeChecked();
+        notifyDataSetChanged();
+    }
+
+    public void setChecked(int position) {
+        checked[position] = !checked[position];
+    }
+
+    public boolean getChecked(int position) {
+        return checked[position];
+    }
+
+    public int getCheckedCount() {
+        int count = 0;
+
+        for (boolean state : checked) {
+            if (state) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public ArrayList<T> getCheckedItems() {
+        ArrayList<T> checkedItems =  new ArrayList<T>();
+
+        for (int i = 0; i < checked.length; i++) {
+            if (checked[i]) {
+                checkedItems.add(filtered.get(i));
+            }
+        }
+
+        return checkedItems;
+    }
+
+    public void clearFilter() {
+        getFilter().filter("");
     }
 }

@@ -41,6 +41,12 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String>{
 
         View row = inflater.inflate(R.layout.drawer_list_item, parent, false);
         linkView = (TextView) row.findViewById(R.id.drawer_link_name);
+        setLinkView(linkView, position);
+
+        return row;
+    }
+
+    private void setLinkView(TextView linkView, int position) {
         switch (position){
             case ApplicationConstants.MAILBOX:
                 linkView.setText(R.string.mailbox);
@@ -57,9 +63,5 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String>{
                 linkView.setText(R.string.archive);
                 break;
         }
-
-
-        return row;
     }
-
 }
