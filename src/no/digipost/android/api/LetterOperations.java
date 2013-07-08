@@ -85,16 +85,17 @@ public class LetterOperations {
         return (Letter) apiAccess.getLetterSelf(letter.getSelfUri());
     }
 
-	public byte[] getDocumentContent(final Object object) throws DigipostApiException, DigipostClientException,
+	public byte[] getDocumentContent(final Attachment attachment) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		if (object instanceof Letter) {
-			int filesize = Integer.parseInt(((Letter) object).getFileSize());
-			return apiAccess.getDocumentContent(((Letter) object).getContentUri(), filesize);
-		} else {
-			int filesize = Integer.parseInt(((Attachment) object).getFileSize());
-			return apiAccess.getDocumentContent(((Attachment) object).getContentUri(), filesize);
-		}
+	    int filesize = Integer.parseInt(attachment.getFileSize());
+		return apiAccess.getDocumentContent(attachment.getContentUri(), filesize);
 	}
+
+    public byte[] getDocumentContent(final Object attachment) throws DigipostApiException, DigipostClientException,
+            DigipostAuthenticationException {
+        // ToDo slette metode
+        return null;
+    }
 
 	public String getDocumentContentHTML(final Object object) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {

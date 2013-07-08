@@ -81,6 +81,6 @@ public class DataFormatUtilities {
             return "kr.";
         }
 
-        return "";
+        return currency;
     }
 }

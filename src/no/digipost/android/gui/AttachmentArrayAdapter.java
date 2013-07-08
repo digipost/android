@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.model.Attachment;
+import no.digipost.android.utilities.DataFormatUtilities;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,25 +55,17 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 
 		title.setText(attachment.getSubject());
 		filetype.setText(attachment.getFileType());
-		filesize.setText(getSizeFormatted(attachment.getFileSize()));
+		filesize.setText(DataFormatUtilities.getFormattedFileSize(attachment.getFileSize()));
+
 		return row;
 	}
 
-	private String getSizeFormatted(final String byteString) {
-		long bytes = Long.parseLong(byteString);
-		String[] units = new String[] { "", "KB", "MB" };
-		for (int i = 2; i > 0; i--) {
-			double exp = Math.pow(1024, i);
-			if (bytes > exp) {
-				float n = (float) (bytes / exp);
-				if(i==1){
-					return (int) n + " "+ units[i];
-				}
-				return String.format("%3.1f %s", n, units[i]);
-			}
-		}
-		return Long.toString(bytes);
-	}
+    public void placeMainOnTop() {
+        Attachment main = findMain();
+        remove(main);
+        insert(main, 0);
+        notifyDataSetChanged();
+    }
 
 	public Attachment findMain() {
 		for(Attachment a : attachments) {

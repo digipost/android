@@ -21,12 +21,13 @@ import java.io.IOException;
 import java.util.concurrent.Executor;
 
 import no.digipost.android.R;
+import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.model.Attachment;
 import no.digipost.android.pdf.MuPDFAlert;
 import no.digipost.android.pdf.MuPDFCore;
 import no.digipost.android.pdf.MuPDFPageAdapter;
 import no.digipost.android.pdf.MuPDFReaderView;
 import no.digipost.android.pdf.MuPDFView;
-import no.digipost.android.documentstore.PDFStore;
 import no.digipost.android.pdf.SearchTask;
 import no.digipost.android.pdf.SearchTaskResult;
 import no.digipost.android.utilities.FileUtilities;
@@ -61,8 +62,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
-
-import static no.digipost.android.R.id.basemenu_mailbox;
 
 class ThreadPerTaskExecutor implements Executor {
 	public void execute(Runnable r) {
@@ -102,6 +101,8 @@ public class MuPDFActivity extends Activity
     private RelativeLayout mBottombar;
     private LinearLayout mTopbar;
     private boolean mTopBarIsSelect;
+
+    private Attachment documentMeta;
 
     public void createAlertWaiter() {
 		mAlertsActive = true;
@@ -266,7 +267,7 @@ public class MuPDFActivity extends Activity
 
 		if (core == null) {
 		    intent = getIntent();
-			byte buffer[] = PDFStore.pdf;
+			byte buffer[] = DocumentContentStore.documentContent;
 
 				if (buffer != null) {
 					core = openBuffer(buffer);
@@ -289,6 +290,7 @@ public class MuPDFActivity extends Activity
 			return;
 		}
 
+        documentMeta = DocumentContentStore.documentMeta;
 		createUI(savedInstanceState);
 	}
 
@@ -464,7 +466,8 @@ public class MuPDFActivity extends Activity
 
         mDocView.setLinksEnabled(true);
 
-        final String toolbarType = intent.getExtras().getString(ApiConstants.LOCATION_FROM);
+        //final String toolbarType = intent.getExtras().getString(ApiConstants.LOCATION_FROM);
+        final String toolbarType = ApiConstants.LOCATION_INBOX;
 
         if (toolbarType.equals(ApiConstants.LOCATION_INBOX)) {
             makeInboxToolbar();
@@ -548,7 +551,7 @@ public class MuPDFActivity extends Activity
                         promtSaveToSD();
                         return true;
                     case R.id.pdfmenu_open_external:
-                        openFileWithIntent(PDFStore.pdf_file_type, core.getBuffer());
+                        openFileWithIntent(documentMeta.getFileType(), core.getBuffer());
                         return true;
                 }
                 return false;
@@ -630,7 +633,6 @@ public class MuPDFActivity extends Activity
 		core = null;
 
         if (isFinishing()) {
-            PDFStore.pdf = null;
             FileUtilities.deleteTempFiles();
         }
 
@@ -902,7 +904,7 @@ public class MuPDFActivity extends Activity
             File file = null;
 
             try {
-                file = FileUtilities.writeFileToSD(PDFStore.pdf_name, PDFStore.pdf_file_type, core.getBuffer());
+                file = FileUtilities.writeFileToSD(documentMeta.getSubject(), documentMeta.getFileType(), core.getBuffer());
             } catch (IOException e) {
                 return false;
             }
