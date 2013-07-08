@@ -94,7 +94,7 @@ public class ReceiptArrayAdapter extends ArrayAdapter<Receipt> {
 		TextView date = (TextView) row.findViewById(R.id.mail_date);
 		date.setText(getDateFormatted(receipt.getTimeOfPurchase()));
 		TextView price = (TextView) row.findViewById(R.id.mail_size_price);
-		price.setTextColor(con.getResources().getColor(R.color.green_price));
+		price.setTextColor(con.getResources().getColor(R.color.green));
 		String currency = receipt.getCurrency();
 		if (currency.equals("NOK")) {
 			currency = "kr.";
