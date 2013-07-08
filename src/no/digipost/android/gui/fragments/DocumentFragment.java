@@ -53,10 +53,21 @@ public abstract class DocumentFragment extends ContentFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        super.listAdapter = new LetterArrayAdapter(getActivity(), R.layout.content_list_item);
+        super.listAdapter = new LetterArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
         super.listView.setAdapter(listAdapter);
         super.listView.setOnItemClickListener(new DocumentListOnItemClickListener());
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == getActivity().RESULT_OK) {
+            if (requestCode == REQUESTCODE_INTENT) {
+                // ToDo håndtere handling fra dokumentvisning
+            }
+        }
     }
 
     private void showAttachmentDialog(final ArrayList<Attachment> attachments) {
@@ -174,7 +185,7 @@ public abstract class DocumentFragment extends ContentFragment {
     }
 
     private class DocumentListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+        public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
             findDocumentAttachments((Letter) DocumentFragment.super.listAdapter.getItem(position));
         }
     }

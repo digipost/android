@@ -30,8 +30,8 @@ import no.digipost.android.utilities.DataFormatUtilities;
 
 public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 
-    public LetterArrayAdapter(final Context context, final int resource) {
-        super(context, resource, new ArrayList<Letter>());
+    public LetterArrayAdapter(final Context context, final int resource, final View.OnClickListener onClickListener) {
+        super(context, resource, new ArrayList<Letter>(), onClickListener);
     }
 
     @Override

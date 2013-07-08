@@ -17,6 +17,7 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
+import no.digipost.android.api.LetterOperations;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.fragments.ArchiveFragment;
 import no.digipost.android.gui.fragments.ContentFragment;
@@ -24,6 +25,8 @@ import no.digipost.android.gui.fragments.MailboxFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.gui.fragments.WorkareaFragment;
 import no.digipost.android.gui.adapters.DrawerArrayAdapter;
+import no.digipost.android.model.PrimaryAccount;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -53,8 +56,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
-    private ActionModeCallback actionModeCallback;
-    private ActionMode actionMode;
+    private LetterOperations letterOperations;
 
     private DrawerLayout drawerLayout;
     private ListView drawerList;
@@ -71,43 +73,27 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_content);
 
+        this.letterOperations = new LetterOperations(this);
+
         title = drawerTitle = getTitle();
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerList = (ListView) findViewById(R.id.main_left_drawer);
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // set up the drawer's list view with items and click listener
 
         //TODO lage ferdig drawerarrayadapter
-        //mDrawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
         drawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, ApplicationConstants.titles));
 
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        // enable ActionBar app icon to behave as action to toggle nav drawer
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setIcon(R.drawable.ic_launcher);
         getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.main_actionbar_red_background));
         getActionBar().getThemedContext();
 
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the sliding drawer and the action bar app icon
         // ToDo fikse open og close string
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.open_external, R.string.close) {
-            public void onDrawerClosed(View view) {
-                getActionBar().setTitle(title);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                getActionBar().setTitle(drawerTitle);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-
+        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.open_external, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
-
-        actionModeCallback = new ActionModeCallback();
 
         invalidateOptionsMenu();
 
@@ -127,25 +113,36 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         return super.onCreateOptionsMenu(menu);
     }
 
-    /* Called whenever we call invalidateOptionsMenu() */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         refreshButton = menu.findItem(R.id.menu_refresh);
+        MenuItem searchButton = menu.findItem(R.id.menu_search);
+        searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                getCurrentFragment().clearFilter();
+                return true;
+            }
+        });
 
         if (refreshing) {
             onStartRefreshContent();
         }
 
         boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-        menu.findItem(R.id.menu_search).setVisible(!drawerOpen);
-        menu.findItem(R.id.menu_refresh).setVisible(!drawerOpen);
+        searchButton.setVisible(!drawerOpen);
+        refreshButton.setVisible(!drawerOpen);
+
         return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
-        // ActionBarDrawerToggle will take care of this.
         if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -169,13 +166,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         refreshButton.setActionView(null);
     }
 
-    @Override
-    public void onListLongClick() {
-        System.out.println("activityCommunicator onLongClick");
-        actionMode = startActionMode(actionModeCallback);
-    }
-
-    /* The click listner for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -202,6 +192,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 break;
         }
 
+        contentFragment.setLetterOperations(letterOperations);
+
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
 
@@ -216,22 +208,15 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         getActionBar().setTitle(title);
     }
 
-    /**
-     * When using the ActionBarDrawerToggle, you must call it during
-     * onPostCreate() and onConfigurationChanged()...
-     */
-
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
@@ -240,11 +225,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void setupSearchView(SearchView searchView) {
+        // ToDo eget hint for hvert vindu
         searchView.setQueryHint("Søk...");
-        searchView.setOnQueryTextListener(new SearchListener());
+        searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
     }
 
-    private class SearchListener implements SearchView.OnQueryTextListener {
+    private class SearchViewOnQueryTextListener implements android.widget.SearchView.OnQueryTextListener {
 
         @Override
         public boolean onQueryTextSubmit(String s) {
@@ -254,33 +240,24 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         @Override
         public boolean onQueryTextChange(String s) {
             getCurrentFragment().filterList(s);
-            System.out.println(s);
             return true;
         }
     }
 
-    private class ActionModeCallback implements ActionMode.Callback {
+    private class MainContentActionBarDrawerToggle extends ActionBarDrawerToggle {
 
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            MenuInflater inflater = actionMode.getMenuInflater();
-            inflater.inflate(R.menu.activity_main_content_context, menu);
-            return true;
+        public MainContentActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int drawerImageRes, int openDrawerContentDescRes, int closeDrawerContentDescRes) {
+            super(activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes);
         }
 
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            return false;
+        public void onDrawerClosed(View view) {
+            getActionBar().setTitle(title);
+            invalidateOptionsMenu();
         }
 
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-            actionMode = null;
+        public void onDrawerOpened(View drawerView) {
+            getActionBar().setTitle(drawerTitle);
+            invalidateOptionsMenu();
         }
     }
 }
