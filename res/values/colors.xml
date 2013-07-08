@@ -9,6 +9,9 @@
     <color name="main_drawer_grey_text">#757477</color>
     <color name="main_drawer_blue_selected">#56b4ef</color>
 
+    <!-- ActionBar -->
+    <color name="actionbar_red_background">#e2251b</color>
+
     <!-- ListView -->
     <color name="list_pressed">#E0E0E0</color>
     <color name="list_focused">#6F7275</color>
