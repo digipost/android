@@ -181,6 +181,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 
     public void setCheckboxVisible(boolean state) {
         checkboxVisible = state;
+        initializeChecked();
         notifyDataSetChanged();
     }
 

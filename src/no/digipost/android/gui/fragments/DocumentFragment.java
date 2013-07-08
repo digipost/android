@@ -18,12 +18,15 @@ package no.digipost.android.gui.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -55,6 +58,7 @@ public abstract class DocumentFragment extends ContentFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         super.listAdapter = new LetterArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
         super.listView.setAdapter(listAdapter);
+        super.listView.setMultiChoiceModeListener(new DocumentMultiChoiceModeListener());
         super.listView.setOnItemClickListener(new DocumentListOnItemClickListener());
         return view;
     }
@@ -135,7 +139,12 @@ public abstract class DocumentFragment extends ContentFragment {
 
         public GetAttachmentContentTask(Attachment attachment) {
             this.attachment = attachment;
-            DocumentFragment.super.showProgressDialog(this);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
         }
 
         @Override
@@ -262,6 +271,97 @@ public abstract class DocumentFragment extends ContentFragment {
         protected void onCancelled() {
             super.onCancelled();
             activityCommunicator.onEndRefreshContent();
+        }
+    }
+
+    private class DocumentDeleteTask extends AsyncTask<Void, Integer, String> {
+        private ArrayList<Letter> letters;
+        private boolean invalidToken;
+
+        public DocumentDeleteTask(ArrayList<Letter> letters) {
+            this.letters = letters;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            DocumentFragment.super.showContentProgressDialog(this, "");
+        }
+
+        @Override
+        protected String doInBackground(final Void... params) {
+            try {
+                int progress = 0;
+
+                for (Letter letter : letters) {
+                    publishProgress(++progress);
+                    DocumentFragment.super.letterOperations.delete(letter);
+                }
+
+                return null;
+            } catch (DigipostApiException e) {
+                return e.getMessage();
+            } catch (DigipostClientException e) {
+                return e.getMessage();
+            } catch (DigipostAuthenticationException e) {
+                invalidToken = true;
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+            DocumentFragment.super.progressDialog.setMessage("Sletter " + values[0] + " av " + letters.size());
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            hideProgressDialog();
+        }
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                DialogUtitities.showToast(context, result);
+
+                if (invalidToken) {
+                    // ToDo logge ut
+                }
+            }
+
+            // ToDo oppdatere listen
+            hideProgressDialog();
+        }
+    }
+
+    private void deleteDocuments() {
+        ArrayList<Letter> letters = listAdapter.getCheckedItems();
+
+        DocumentDeleteTask documentDeleteTask = new DocumentDeleteTask(letters);
+        documentDeleteTask.execute();
+    }
+
+    private class DocumentMultiChoiceModeListener extends ContentMultiChoiceModeListener {
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+            super.onActionItemClicked(actionMode, menuItem);
+
+            switch (menuItem.getItemId()) {
+                case R.id.main_context_menu_delete:
+                    deleteDocuments();
+                    break;
+            }
+
+            DocumentFragment.super.listAdapter.setCheckboxVisible(false);
+            actionMode.finish();
+
+            return true;
         }
     }
 }

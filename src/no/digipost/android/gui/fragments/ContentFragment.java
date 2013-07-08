@@ -35,9 +35,13 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import java.awt.MenuItem;
+import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.api.LetterOperations;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.gui.adapters.ContentArrayAdapter;
 import no.digipost.android.utilities.DialogUtitities;
 
@@ -63,7 +67,8 @@ public abstract class ContentFragment extends Fragment {
         listView = (ListView) view.findViewById(R.id.fragment_content_listview);
 
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new ListMultiChoiceModeListener());
+
+        activityCommunicator.requestLetterOperations();
 
         return view;
     }
@@ -74,14 +79,15 @@ public abstract class ContentFragment extends Fragment {
         activityCommunicator = (ActivityCommunicator) activity;
     }
 
-    protected void showProgressDialog(final AsyncTask task) {
-        progressDialog = DialogUtitities.getProgressDialogWithMessage(context, context.getString(R.string.loading_content));
+    protected void showContentProgressDialog(final AsyncTask task, String message) {
+        progressDialog = DialogUtitities.getProgressDialogWithMessage(context, message);
         progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int which) {
                 dialog.dismiss();
                 task.cancel(true);
             }
         });
+
         progressDialog.show();
     }
 
@@ -107,9 +113,10 @@ public abstract class ContentFragment extends Fragment {
     public interface ActivityCommunicator {
         public void onStartRefreshContent();
         public void onEndRefreshContent();
+        public void requestLetterOperations();
     }
 
-    private class ListMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+    protected class ContentMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
         @Override
         public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean state) {

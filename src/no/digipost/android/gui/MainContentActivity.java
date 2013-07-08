@@ -103,12 +103,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        getCurrentFragment().setLetterOperations(letterOperations);
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
@@ -172,6 +166,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         refreshButton.setActionView(null);
     }
 
+    @Override
+    public void requestLetterOperations() {
+        getCurrentFragment().setLetterOperations(letterOperations);
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -197,8 +196,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 contentFragment = new ReceiptFragment();
                 break;
         }
-
-        contentFragment.setLetterOperations(letterOperations);
 
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
