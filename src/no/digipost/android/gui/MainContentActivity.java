@@ -82,7 +82,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.actionbar_red_background));
         getActionBar().getThemedContext();
 
-        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.open_external, R.string.close);
+        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open_external, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
 
         invalidateOptionsMenu();
