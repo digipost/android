@@ -221,11 +221,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
         View searchPlate = searchView.findViewById(searchPlateId);
         searchPlate.setBackgroundResource(R.drawable.search_background);
-        searchView.setQueryHint(getString(R.string.search));
-        searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
 
         // ToDo eget hint for hvert vindu og HINT FARGE.
-        searchView.setQueryHint("Søk...");
+        searchView.setQueryHint(getString(R.string.search));
         searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
     }
 
