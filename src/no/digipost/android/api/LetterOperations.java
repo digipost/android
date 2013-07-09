@@ -129,11 +129,11 @@ public class LetterOperations {
 		}
 	}
 
-    public void deleteDocument(Letter letter) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
-        apiAccess.delete(letter.getDeleteUri());
-    }
-
-    public void deleteReceipt(Receipt receipt) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
-        apiAccess.delete(receipt.getDeleteUri());
+    public void deleteContent(final Object object) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        if (object instanceof Letter) {
+            apiAccess.delete(((Letter) object).getDeleteUri());
+        } else if (object instanceof Receipt) {
+            apiAccess.delete(((Receipt) object).getDeleteUri());
+        }
     }
 }

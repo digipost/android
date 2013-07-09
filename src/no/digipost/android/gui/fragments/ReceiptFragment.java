@@ -115,81 +115,6 @@ public class ReceiptFragment extends ContentFragment{
         }
     }
 
-    private void deleteReceipt() {
-        ArrayList<Receipt> receipts = super.listAdapter.getCheckedItems();
-
-        ReceiptDeleteTask receiptDeleteTask = new ReceiptDeleteTask(receipts);
-        receiptDeleteTask.execute();
-    }
-
-    private class ReceiptDeleteTask extends AsyncTask<Void, Integer, String> {
-        private ArrayList<Receipt> receipts;
-        private boolean invalidToken;
-
-        public ReceiptDeleteTask(ArrayList<Receipt> receipts) {
-            this.receipts = receipts;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            ReceiptFragment.super.showContentProgressDialog(this, "");
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            try {
-                int progress = 0;
-
-                for (Receipt receipt : receipts) {
-                    publishProgress(++progress);
-                    ReceiptFragment.super.letterOperations.deleteReceipt(receipt);
-                }
-
-                return null;
-            } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                invalidToken = true;
-                return e.getMessage();
-            } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                return e.getMessage();
-            } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            ReceiptFragment.super.progressDialog.setMessage(values[0] + " av " + receipts.size() + " slettet");
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            ReceiptFragment.super.hideProgressDialog();
-            updateAccountMeta();
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            if (result != null) {
-                DialogUtitities.showToast(context, result);
-
-                if (invalidToken) {
-                    // ToDo logge ut
-                }
-            }
-
-            ReceiptFragment.super.hideProgressDialog();
-            updateAccountMeta();
-        }
-    }
-
     private class ReceiptMultiChoiceModeListener extends ContentMultiChoiceModeListener {
 
         @Override
@@ -208,7 +133,7 @@ public class ReceiptFragment extends ContentFragment{
 
             switch (menuItem.getItemId()) {
                 case R.id.main_context_menu_delete:
-                    deleteReceipt();
+                    ReceiptFragment.super.deleteContent();
                     onFinishActionMode(actionMode);
                     break;
             }

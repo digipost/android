@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,6 +44,7 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.gui.adapters.ContentArrayAdapter;
+import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
 
 public abstract class ContentFragment extends Fragment {
@@ -77,6 +79,81 @@ public abstract class ContentFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         activityCommunicator = (ActivityCommunicator) activity;
+    }
+
+    protected void deleteContent() {
+        ArrayList<Object> content = listAdapter.getCheckedItems();
+
+        ContentDeleteTask documentDeleteTask = new ContentDeleteTask(content);
+        documentDeleteTask.execute();
+    }
+
+    private class ContentDeleteTask extends AsyncTask<Void, Integer, String> {
+        private ArrayList<Object> content;
+        private boolean invalidToken;
+
+        public ContentDeleteTask(ArrayList<Object> content) {
+            this.content = content;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showContentProgressDialog(this, "");
+        }
+
+        @Override
+        protected String doInBackground(final Void... params) {
+            try {
+                int progress = 0;
+
+                for (Object object : content) {
+                    publishProgress(++progress);
+                    letterOperations.deleteContent(object);
+                }
+
+                return null;
+            } catch (DigipostApiException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                return e.getMessage();
+            } catch (DigipostClientException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                return e.getMessage();
+            } catch (DigipostAuthenticationException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                invalidToken = true;
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progressDialog.setMessage(values[0] + " av " + content.size() + " slettet");
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            hideProgressDialog();
+            updateAccountMeta();
+        }
+
+        @Override
+        protected void onPostExecute(final String result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                DialogUtitities.showToast(context, result);
+
+                if (invalidToken) {
+                    // ToDo logge ut
+                }
+            }
+
+            hideProgressDialog();
+            updateAccountMeta();
+        }
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {

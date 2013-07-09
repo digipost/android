@@ -1131,8 +1131,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
         protected Boolean doInBackground(final Letter... params) {
             try {
                 letter = params[0];
-                // ToDo ??
-                lo.sendOpeningReceipt(letter.getAttachment().get(0));
+                lo.sendOpeningReceipt(letter);
                 return true;
             } catch (DigipostApiException e) {
                 errorMessage = e.getMessage();

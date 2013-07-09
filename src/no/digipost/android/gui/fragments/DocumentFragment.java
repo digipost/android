@@ -112,10 +112,11 @@ public abstract class DocumentFragment extends ContentFragment {
         Dialog attachmentDialog = builder.create();
         attachmentDialog.show();
     }
+
     private void openListItem(final Letter letter){
-        if(letter.getOpeningReceiptUri() != null){
+        if (letter.getOpeningReceiptUri() != null) {
             showOpeningReceiptDialog(letter);
-        }else{
+        } else {
             findDocumentAttachments(letter);
         }
     }
@@ -134,8 +135,9 @@ public abstract class DocumentFragment extends ContentFragment {
         SendOpeningReceiptTask task = new SendOpeningReceiptTask(letter);
         task.execute();
     }
+
     private void showOpeningReceiptDialog(final Letter letter){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(getString(R.string.dialog_answer_opening_receipt_message)).setPositiveButton(getString(R.string.dialog_answer_opening_receipt_yes), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 sendOpeningReceipt(letter);
@@ -297,81 +299,6 @@ public abstract class DocumentFragment extends ContentFragment {
         protected void onCancelled() {
             super.onCancelled();
             activityCommunicator.onEndRefreshContent();
-        }
-    }
-
-    private void deleteDocuments() {
-        ArrayList<Letter> letters = listAdapter.getCheckedItems();
-
-        DocumentDeleteTask documentDeleteTask = new DocumentDeleteTask(letters);
-        documentDeleteTask.execute();
-    }
-
-    private class DocumentDeleteTask extends AsyncTask<Void, Integer, String> {
-        private ArrayList<Letter> letters;
-        private boolean invalidToken;
-
-        public DocumentDeleteTask(ArrayList<Letter> letters) {
-            this.letters = letters;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            DocumentFragment.super.showContentProgressDialog(this, "");
-        }
-
-        @Override
-        protected String doInBackground(final Void... params) {
-            try {
-                int progress = 0;
-
-                for (Letter letter : letters) {
-                    publishProgress(++progress);
-                    DocumentFragment.super.letterOperations.deleteDocument(letter);
-                }
-
-                return null;
-            } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                return e.getMessage();
-            } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                return e.getMessage();
-            } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                invalidToken = true;
-                return e.getMessage();
-            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            DocumentFragment.super.progressDialog.setMessage(values[0] + " av " + letters.size() + " slettet");
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            DocumentFragment.super.hideProgressDialog();
-            updateAccountMeta();
-        }
-
-        @Override
-        protected void onPostExecute(final String result) {
-            super.onPostExecute(result);
-
-            if (result != null) {
-                DialogUtitities.showToast(context, result);
-
-                if (invalidToken) {
-                    // ToDo logge ut
-                }
-            }
-
-            DocumentFragment.super.hideProgressDialog();
-            updateAccountMeta();
         }
     }
 
@@ -571,7 +498,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
             switch (menuItem.getItemId()) {
                 case R.id.main_context_menu_delete:
-                    deleteDocuments();
+                    DocumentFragment.super.deleteContent();
                     onFinishActionMode(actionMode);
                     break;
             }
