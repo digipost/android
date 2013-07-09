@@ -81,9 +81,9 @@ public class LetterOperations {
             DigipostAuthenticationException {
         apiAccess.getMovedDocument(letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
     }
-    public void sendOpeningReceipt(final Letter letter) throws DigipostClientException, DigipostApiException,
+    public void sendOpeningReceipt(final Attachment attachment) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        apiAccess.sendOpeningReceipt(letter.getOpeningReceiptUri());
+        apiAccess.sendOpeningReceipt(attachment.getOpeningReceiptUri());
     }
 
     public Letter getSelfLetter(final Letter letter) throws DigipostClientException, DigipostApiException,

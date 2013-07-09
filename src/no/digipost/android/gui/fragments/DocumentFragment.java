@@ -20,6 +20,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -123,9 +124,33 @@ public abstract class DocumentFragment extends ContentFragment {
         }
     }
 
+    private void sendOpeningReceipt(final Attachment attachment){
+        SendOpeningReceiptTask task = new SendOpeningReceiptTask(attachment);
+        task.execute();
+    }
+    private void showOpeningReceiptDialog(final Attachment attachment){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(getString(R.string.dialog_answer_opening_receipt_message)).setPositiveButton(getString(R.string.dialog_answer_opening_receipt_yes), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                sendOpeningReceipt(attachment);
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     private void openAttachmentContent(final Attachment attachment) {
         if (attachment.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
             // ToDo vise mld om at dokument ikke kan åpnes
+            return;
+        }
+        if(attachment.getOpeningReceiptUri() != null){
+            showOpeningReceiptDialog(attachment);
             return;
         }
 
@@ -423,6 +448,60 @@ public abstract class DocumentFragment extends ContentFragment {
 
             DocumentFragment.super.hideProgressDialog();
             updateAccountMeta();
+        }
+    }
+
+    protected class SendOpeningReceiptTask extends AsyncTask<Void, Void, Boolean> {
+        private String errorMessage;
+        private Attachment attachment;
+        private boolean invalidToken;
+
+        public SendOpeningReceiptTask(final Attachment attachment) {
+            invalidToken = false;
+            this.attachment = attachment;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(final Void... params) {
+            try {
+                DocumentFragment.super.letterOperations.sendOpeningReceipt(attachment);
+                return true;
+            } catch (DigipostApiException e) {
+                errorMessage = e.getMessage();
+                return false;
+            } catch (DigipostClientException e) {
+                errorMessage = e.getMessage();
+                return false;
+            } catch (DigipostAuthenticationException e) {
+                invalidToken = true;
+                errorMessage = e.getMessage();
+                return false;
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean result) {
+            if (result != null) {
+                attachment.clearOpeningReceipt();
+                openAttachmentContent(attachment);
+            } else {
+                if (invalidToken) {
+                    // ToDo logge ut
+                }
+                DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
+            }
+
+            DocumentFragment.super.hideProgressDialog();
         }
     }
 
