@@ -504,7 +504,7 @@ public abstract class DocumentFragment extends ContentFragment {
         }
     }
 
-    private class DocumentMultiChoiceModeListener extends ContentMultiChoiceModeListener {
+    protected class DocumentMultiChoiceModeListener extends ContentMultiChoiceModeListener {
 
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
