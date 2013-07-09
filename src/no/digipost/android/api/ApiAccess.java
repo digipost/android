@@ -96,6 +96,7 @@ public class ApiAccess {
 		} catch (Exception e) {
 			throw new DigipostClientException(context.getString(R.string.error_your_network));
 		}
+
 	}
 
 	public String getApiJsonString(final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {

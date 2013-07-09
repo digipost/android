@@ -99,20 +99,4 @@ public class Attachment {
 		}
 		return null;
 	}
-    public String getOpeningReceiptUri(){
-        for (Link l : link) {
-            if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT)) {
-                return l.getUri();
-            }
-        }
-        return null;
-    }
-
-    public void clearOpeningReceipt(){
-        for(Link l : link){
-            if(l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT)){
-                link.remove(l);
-            }
-        }
-    }
 }
