@@ -119,6 +119,7 @@ public class LetterOperations {
 	}
 
 	public void delete(final Object object) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        // ToDo slette metode
 		if (object instanceof Letter) {
 			Letter letter = (Letter) object;
 			apiAccess.delete(letter.getDeleteUri());
@@ -127,4 +128,12 @@ public class LetterOperations {
 			apiAccess.delete(receipt.getDeleteUri());
 		}
 	}
+
+    public void deleteDocument(Letter letter) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
+        apiAccess.delete(letter.getDeleteUri());
+    }
+
+    public void deleteReceipt(Receipt receipt) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
+        apiAccess.delete(receipt.getDeleteUri());
+    }
 }

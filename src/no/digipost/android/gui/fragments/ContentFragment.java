@@ -149,6 +149,11 @@ public abstract class ContentFragment extends Fragment {
             listAdapter.setCheckboxVisible(false);
             listAdapter.clearChecked();
         }
+
+        public void onFinishActionMode(ActionMode actionMode) {
+            listAdapter.setCheckboxVisible(false);
+            actionMode.finish();
+        }
     }
 
     protected class CheckBoxOnClickListener implements View.OnClickListener {
