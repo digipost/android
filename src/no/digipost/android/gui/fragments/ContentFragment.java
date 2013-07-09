@@ -61,6 +61,9 @@ public abstract class ContentFragment extends Fragment {
     protected ContentArrayAdapter listAdapter;
 
     protected ProgressDialog progressDialog;
+    protected boolean progressDialogIsVisible = false;
+
+
 
     public ContentFragment() {
     }
@@ -193,6 +196,7 @@ public abstract class ContentFragment extends Fragment {
     }
 
     protected void hideProgressDialog() {
+        progressDialogIsVisible = false;
         progressDialog.dismiss();
         progressDialog = null;
     }

@@ -50,6 +50,7 @@ import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
 
 public abstract class DocumentFragment extends ContentFragment {
+
     public DocumentFragment(){
     }
 
@@ -198,7 +199,9 @@ public abstract class DocumentFragment extends ContentFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+            if(!DocumentFragment.super.progressDialogIsVisible)
+                DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+
         }
 
         @Override
@@ -423,6 +426,7 @@ public abstract class DocumentFragment extends ContentFragment {
         protected void onPreExecute() {
             super.onPreExecute();
             DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+            DocumentFragment.super.progressDialogIsVisible = true;
         }
 
         @Override
@@ -450,7 +454,6 @@ public abstract class DocumentFragment extends ContentFragment {
 
         @Override
         protected void onPostExecute(final Boolean result) {
-            DocumentFragment.super.hideProgressDialog();
 
             if (result != null) {
 
@@ -458,6 +461,8 @@ public abstract class DocumentFragment extends ContentFragment {
                 task.execute();
             } else {
                 if (invalidToken) {
+                    DocumentFragment.super.hideProgressDialog();
+                    DocumentFragment.super.progressDialogIsVisible = false;
                     // ToDo logge ut
                 }
                 DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
@@ -478,7 +483,6 @@ public abstract class DocumentFragment extends ContentFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
         }
 
         @Override
@@ -506,12 +510,12 @@ public abstract class DocumentFragment extends ContentFragment {
 
         @Override
         protected void onPostExecute(final Boolean result) {
-            DocumentFragment.super.hideProgressDialog();
 
             if (result != null) {
                 findDocumentAttachments(letter);
             } else {
                 if (invalidToken) {
+                    DocumentFragment.super.hideProgressDialog();
                     // ToDo logge ut
                 }
                 DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
