@@ -222,7 +222,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
         View searchPlate = searchView.findViewById(searchPlateId);
         searchPlate.setBackgroundResource(R.drawable.search_background);
-        searchPlate.setBackgroundColor(getResources().getColor(R.color.white));
         // ToDo HINT FARGE.
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
