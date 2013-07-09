@@ -43,6 +43,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -80,7 +81,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setIcon(R.drawable.actionbar_icon);
         getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.actionbar_red_background));
-        getActionBar().getThemedContext();
 
         drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open_external, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
