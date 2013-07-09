@@ -17,6 +17,7 @@
 package no.digipost.android.gui.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -89,6 +90,26 @@ public abstract class ContentFragment extends Fragment {
 
         ContentDeleteTask documentDeleteTask = new ContentDeleteTask(content);
         documentDeleteTask.execute();
+    }
+
+    protected void showDeleteContentDialog(String message, final ContentMultiChoiceModeListener contentMultiChoiceModeListener, final ActionMode actionMode) {
+        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteContent();
+                contentMultiChoiceModeListener.onDestroyActionMode(actionMode);
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private class ContentDeleteTask extends AsyncTask<Void, Integer, String> {
@@ -229,11 +250,6 @@ public abstract class ContentFragment extends Fragment {
         public void onDestroyActionMode(ActionMode actionMode) {
             listAdapter.setCheckboxVisible(false);
             listAdapter.clearChecked();
-        }
-
-        public void onFinishActionMode(ActionMode actionMode) {
-            listAdapter.setCheckboxVisible(false);
-            actionMode.finish();
         }
     }
 

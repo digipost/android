@@ -133,8 +133,7 @@ public class ReceiptFragment extends ContentFragment{
 
             switch (menuItem.getItemId()) {
                 case R.id.main_context_menu_delete:
-                    ReceiptFragment.super.deleteContent();
-                    onFinishActionMode(actionMode);
+                    ReceiptFragment.super.showDeleteContentDialog(getString(R.string.dialog_prompt_delete_receipts), this, actionMode);
                     break;
             }
 

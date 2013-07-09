@@ -56,12 +56,10 @@ public class MailboxFragment extends DocumentFragment {
 
             switch (menuItem.getItemId()) {
                 case R.id.main_context_menu_workarea:
-                    moveDocuments(ApiConstants.LOCATION_WORKAREA);
-                    onFinishActionMode(actionMode);
+                    showMoveDocumentsDialog(ApiConstants.LOCATION_WORKAREA, this, actionMode);
                     break;
                 case R.id.main_context_menu_archive:
-                    moveDocuments(ApiConstants.LOCATION_ARCHIVE);
-                    onFinishActionMode(actionMode);
+                    showMoveDocumentsDialog(ApiConstants.LOCATION_ARCHIVE, this, actionMode);
                     break;
             }
 
