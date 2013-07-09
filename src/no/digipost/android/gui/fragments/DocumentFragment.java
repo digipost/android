@@ -513,6 +513,7 @@ public abstract class DocumentFragment extends ContentFragment {
             switch (menuItem.getItemId()) {
                 case R.id.main_context_menu_delete:
                     deleteDocuments();
+                    onFinishActionMode(actionMode);
                     break;
             }
 

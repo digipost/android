@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Letter;
 
@@ -54,11 +55,15 @@ public class MailboxFragment extends DocumentFragment {
             super.onActionItemClicked(actionMode, menuItem);
 
             switch (menuItem.getItemId()) {
-
+                case R.id.main_context_menu_workarea:
+                    moveDocuments(ApiConstants.LOCATION_WORKAREA);
+                    onFinishActionMode(actionMode);
+                    break;
+                case R.id.main_context_menu_archive:
+                    moveDocuments(ApiConstants.LOCATION_ARCHIVE);
+                    onFinishActionMode(actionMode);
+                    break;
             }
-
-            MailboxFragment.super.listAdapter.setCheckboxVisible(false);
-            actionMode.finish();
 
             return true;
         }
