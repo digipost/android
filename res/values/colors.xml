@@ -23,6 +23,7 @@
     <color name="grey_filesize">#B8B8B8</color>
     <color name="grey_creator">#4D484A</color>
     <color name="list_divider">#DBDBDB</color>
+    <color name="list_element_opened">#EBEBEB</color>
 
     <!-- Emptyslate -->
     <color name="emptyslate_background">#eceef1</color>

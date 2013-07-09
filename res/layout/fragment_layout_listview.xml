@@ -25,6 +25,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:divider="@color/list_divider"
+            android:background="@color/list_element_opened"
             android:dividerHeight="@dimen/listview_dividerheight" >
     </ListView>
 

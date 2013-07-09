@@ -18,6 +18,7 @@ package no.digipost.android.gui.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
@@ -78,7 +79,6 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        System.out.println("getView");
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = inflater.inflate(R.layout.content_list_item, parent, false);
 
@@ -104,6 +104,11 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
         return row;
     }
 
+    protected void setTitleAndSubTitleBold() {
+        title.setTypeface(null, Typeface.BOLD);
+        subTitle.setTypeface(null, Typeface.BOLD);
+    }
+
     public void replaceAll(Collection<? extends T> collection) {
         this.filtered.clear();
         this.filtered.addAll(collection);
@@ -111,8 +116,6 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
         initializeChecked();
         notifyDataSetChanged();
     }
-
-
 
     @Override
     public void add(final T object) {

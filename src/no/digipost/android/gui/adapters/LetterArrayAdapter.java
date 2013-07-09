@@ -18,9 +18,12 @@ package no.digipost.android.gui.adapters;
 
 import no.digipost.android.R;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
+
+import com.sun.swing.internal.plaf.synth.resources.synth_sv;
 
 import java.util.ArrayList;
 
@@ -44,6 +47,12 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
         super.subTitle.setText(letter.getCreatorName());
         super.metaTop.setText(DataFormatUtilities.getFormattedDate(letter.getCreated()));
         super.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(letter.getFileSize()));
+
+        if (letter.getRead().equals("true")) {
+            row.setBackgroundColor(super.context.getResources().getColor(R.color.list_element_opened));
+        } else {
+            super.setTitleAndSubTitleBold();
+        }
 
         super.setFilterTextColor();
 
