@@ -309,6 +309,26 @@ public abstract class DocumentFragment extends ContentFragment {
         documentMoveTask.execute();
     }
 
+    protected void showMoveDocumentsDialog(final String toLocation, final DocumentMultiChoiceModeListener documentMultiChoiceModeListener, final ActionMode actionMode) {
+        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, getString(R.string.dialog_prompt_move_documents));
+        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                moveDocuments(toLocation);
+                documentMultiChoiceModeListener.onDestroyActionMode(actionMode);
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
     private class DocumentMoveTask extends AsyncTask<Void, Integer, String> {
         private ArrayList<Letter> letters;
         private String toLocation;
@@ -498,8 +518,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
             switch (menuItem.getItemId()) {
                 case R.id.main_context_menu_delete:
-                    DocumentFragment.super.deleteContent();
-                    onFinishActionMode(actionMode);
+                    DocumentFragment.super.showDeleteContentDialog(getString(R.string.dialog_prompt_delete_documents), this, actionMode);
                     break;
             }
 
