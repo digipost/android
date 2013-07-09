@@ -18,6 +18,7 @@ package no.digipost.android.gui.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class ReceiptFragment extends ContentFragment{
         View view = super.onCreateView(inflater, container, savedInstanceState);
         super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
         super.listView.setAdapter(listAdapter);
+        super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
 
         updateAccountMeta();
 
@@ -103,6 +105,14 @@ public class ReceiptFragment extends ContentFragment{
         protected void onCancelled() {
             super.onCancelled();
             activityCommunicator.onEndRefreshContent();
+        }
+    }
+
+    private class ReceiptMultiChoiceModeListener extends ContentMultiChoiceModeListener {
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+            return false;
         }
     }
 }

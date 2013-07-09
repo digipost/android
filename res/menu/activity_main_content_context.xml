@@ -3,6 +3,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/main_context_menu_folder"
+          android:title="@string/base_refreshbutton_contentDescription"
+          android:icon="@drawable/folder_close"
+          android:showAsAction="ifRoom" />
+
     <item android:id="@+id/main_context_menu_delete"
           android:title="@string/base_refreshbutton_contentDescription"
           android:icon="@drawable/remove"

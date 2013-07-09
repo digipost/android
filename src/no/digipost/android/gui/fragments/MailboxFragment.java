@@ -17,12 +17,14 @@
 package no.digipost.android.gui.fragments;
 
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Letter;
 
@@ -34,12 +36,31 @@ public class MailboxFragment extends DocumentFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
+        super.listView.setMultiChoiceModeListener(new MailboxMultiChoiceModeListener());
+
         return view;
     }
 
     @Override
-    protected void updateAccountMeta() {
+    public void updateAccountMeta() {
         GetDocumentMetaTask task = new GetDocumentMetaTask(ApplicationConstants.MAILBOX);
         task.execute();
+    }
+
+    private class MailboxMultiChoiceModeListener extends DocumentMultiChoiceModeListener {
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+            super.onActionItemClicked(actionMode, menuItem);
+
+            switch (menuItem.getItemId()) {
+
+            }
+
+            MailboxFragment.super.listAdapter.setCheckboxVisible(false);
+            actionMode.finish();
+
+            return true;
+        }
     }
 }

@@ -59,7 +59,6 @@ public abstract class DocumentFragment extends ContentFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         super.listAdapter = new LetterArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
         super.listView.setAdapter(listAdapter);
-        super.listView.setMultiChoiceModeListener(new DocumentMultiChoiceModeListener());
         super.listView.setOnItemClickListener(new DocumentListOnItemClickListener());
 
         updateAccountMeta();
@@ -426,7 +425,7 @@ public abstract class DocumentFragment extends ContentFragment {
         }
     }
 
-    private class DocumentMultiChoiceModeListener extends ContentMultiChoiceModeListener {
+    protected class DocumentMultiChoiceModeListener extends ContentMultiChoiceModeListener {
 
         @Override
         public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
@@ -437,9 +436,6 @@ public abstract class DocumentFragment extends ContentFragment {
                     deleteDocuments();
                     break;
             }
-
-            DocumentFragment.super.listAdapter.setCheckboxVisible(false);
-            actionMode.finish();
 
             return true;
         }

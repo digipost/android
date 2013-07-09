@@ -17,6 +17,7 @@
 package no.digipost.android.gui.fragments;
 
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +35,31 @@ public class WorkareaFragment extends DocumentFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
+        super.listView.setMultiChoiceModeListener(new WorkareaMultiChoiceModeListener());
+
         return view;
     }
 
     @Override
-    protected void updateAccountMeta() {
+    public void updateAccountMeta() {
         GetDocumentMetaTask task = new GetDocumentMetaTask(ApplicationConstants.WORKAREA);
         task.execute();
+    }
+
+    private class WorkareaMultiChoiceModeListener extends DocumentMultiChoiceModeListener {
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+            super.onActionItemClicked(actionMode, menuItem);
+
+            switch (menuItem.getItemId()) {
+
+            }
+
+            WorkareaFragment.super.listAdapter.setCheckboxVisible(false);
+            actionMode.finish();
+
+            return true;
+        }
     }
 }
