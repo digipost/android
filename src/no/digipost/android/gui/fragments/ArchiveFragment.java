@@ -45,9 +45,8 @@ public class ArchiveFragment extends DocumentFragment {
     }
 
     @Override
-    public void updateAccountMeta() {
-        GetDocumentMetaTask task = new GetDocumentMetaTask(ApplicationConstants.ARCHIVE);
-        task.execute();
+    protected int getContent() {
+        return ApplicationConstants.ARCHIVE;
     }
 
     private class ArchiveMultiChoiceModeListener extends DocumentMultiChoiceModeListener {

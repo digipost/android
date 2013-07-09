@@ -49,6 +49,9 @@ import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
 
 public abstract class ContentFragment extends Fragment {
+    public static final int INTENT_REQUESTCODE = 0;
+    public static final String INTENT_CONTENT = "content";
+
     ActivityCommunicator activityCommunicator;
 
     protected Context context;

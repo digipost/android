@@ -45,9 +45,8 @@ public class WorkareaFragment extends DocumentFragment {
     }
 
     @Override
-    public void updateAccountMeta() {
-        GetDocumentMetaTask task = new GetDocumentMetaTask(ApplicationConstants.WORKAREA);
-        task.execute();
+    protected int getContent() {
+        return ApplicationConstants.WORKAREA;
     }
 
     private class WorkareaMultiChoiceModeListener extends DocumentMultiChoiceModeListener {

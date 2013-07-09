@@ -43,9 +43,8 @@ public class MailboxFragment extends DocumentFragment {
     }
 
     @Override
-    public void updateAccountMeta() {
-        GetDocumentMetaTask task = new GetDocumentMetaTask(ApplicationConstants.MAILBOX);
-        task.execute();
+    protected int getContent() {
+        return ApplicationConstants.MAILBOX;
     }
 
     private class MailboxMultiChoiceModeListener extends DocumentMultiChoiceModeListener {

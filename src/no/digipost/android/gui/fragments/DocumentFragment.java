@@ -50,10 +50,10 @@ import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
 
 public abstract class DocumentFragment extends ContentFragment {
-    public static final int REQUESTCODE_INTENT = 0;
-
     public DocumentFragment(){
     }
+
+    protected abstract int getContent();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public abstract class DocumentFragment extends ContentFragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == getActivity().RESULT_OK) {
-            if (requestCode == REQUESTCODE_INTENT) {
+            if (requestCode == INTENT_REQUESTCODE) {
                 // ToDo håndtere handling fra dokumentvisning
             }
         }
@@ -173,9 +173,12 @@ public abstract class DocumentFragment extends ContentFragment {
             }
         }
 
-        // ToDo åpne ustøttet
+        if (intent == null) {
+            // ToDo åpne ustøttet
+        }
 
-        startActivityForResult(intent, REQUESTCODE_INTENT);
+        intent.putExtra(super.INTENT_CONTENT, getContent());
+        startActivityForResult(intent, super.INTENT_REQUESTCODE);
     }
 
     private void executeGetAttachmentContentTask(Attachment attachment) {
@@ -242,6 +245,12 @@ public abstract class DocumentFragment extends ContentFragment {
             DocumentFragment.super.hideProgressDialog();
             DocumentContentStore.clearContent();
         }
+    }
+
+    @Override
+    public void updateAccountMeta() {
+        GetDocumentMetaTask task = new GetDocumentMetaTask(getContent());
+        task.execute();
     }
 
     protected class GetDocumentMetaTask extends AsyncTask<Void, Void, ArrayList<Letter>> {
