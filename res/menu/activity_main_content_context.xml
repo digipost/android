@@ -4,23 +4,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/main_context_menu_folder"
-          android:title="@string/base_refreshbutton_contentDescription"
+          android:title="@string/context_folder"
           android:icon="@drawable/folder_close"
           android:showAsAction="ifRoom" >
 
         <menu>
             <item
                     android:id="@+id/main_context_menu_workarea"
-                    android:title="@string/workarea" />
+                    android:title="@string/context_move_to_workarea" />
             <item
                     android:id="@+id/main_context_menu_archive"
-                    android:title="@string/archive" />
+                    android:title="@string/context_move_to_archive" />
         </menu>
     </item>
 
 
     <item android:id="@+id/main_context_menu_delete"
-          android:title="@string/base_refreshbutton_contentDescription"
+          android:title="@string/delete"
           android:icon="@drawable/remove"
           android:showAsAction="ifRoom" />
 

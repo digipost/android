@@ -9,7 +9,7 @@
           android:actionViewClass="android.widget.SearchView" />
 
     <item android:id="@+id/menu_refresh"
-          android:title="@string/base_refreshbutton_contentDescription"
+          android:title="@string/context_refresh"
           android:icon="@drawable/white_refresh_48"
           android:showAsAction="ifRoom" />
 

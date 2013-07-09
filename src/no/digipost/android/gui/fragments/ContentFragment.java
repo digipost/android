@@ -101,7 +101,7 @@ public abstract class ContentFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 deleteContent();
-                contentMultiChoiceModeListener.onDestroyActionMode(actionMode);
+                contentMultiChoiceModeListener.finishActionMode(actionMode);
                 dialogInterface.dismiss();
             }
         });
@@ -253,6 +253,10 @@ public abstract class ContentFragment extends Fragment {
         public void onDestroyActionMode(ActionMode actionMode) {
             listAdapter.setCheckboxVisible(false);
             listAdapter.clearChecked();
+        }
+
+        public void finishActionMode(ActionMode actionMode) {
+            actionMode.finish();
         }
     }
 

@@ -38,6 +38,7 @@
     <string name="copy">Kopier tekst</string>
     <string name="save">Lagre til telefonen</string>
     <string name="open_external">Åpne i en annen app</string>
+    <string name="delete">Slett</string>
 
     <!-- Titles -->
     <string name="title_activity_login_view">LoginView</string>
@@ -71,6 +72,10 @@
     <string name="context_letterlist_delete">Slett brev</string>
     <string name="context_letterlist_abort">Avbryt</string>
     <string name="context_letterlist_move">Flytt til arkiv</string>
+    <string name="context_move_to_archive">Flytt til arkivet</string>
+    <string name="context_move_to_workarea">Flytt til kjøkkenbenken</string>
+    <string name="context_refresh">Oppdater innhold</string>
+    <string name="context_folder">Flytt til mappe</string>
 
     <!-- Emptyslate -->
     <string name="empty_listview_mailbox">Du har ingen brev i din postkasse. Alle brev som sendes til deg i Digipost vil komme hit.</string>

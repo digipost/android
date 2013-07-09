@@ -44,10 +44,12 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -261,7 +263,13 @@ public class MuPDFActivity extends Activity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+        documentMeta = DocumentContentStore.documentMeta;
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setIcon(R.drawable.actionbar_icon);
+        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.actionbar_red_background));
+        getActionBar().setTitle(documentMeta.getSubject());
 
 		mAlertBuilder = new AlertDialog.Builder(this);
 
@@ -290,7 +298,6 @@ public class MuPDFActivity extends Activity
 			return;
 		}
 
-        documentMeta = DocumentContentStore.documentMeta;
 		createUI(savedInstanceState);
 	}
 
@@ -528,8 +535,8 @@ public class MuPDFActivity extends Activity
 		// Stick the document view and the buttons overlay into a parent view
 		RelativeLayout layout = new RelativeLayout(this);
 		layout.addView(mDocView);
-		layout.addView(mButtonsView);
-		layout.setBackgroundResource(android.R.color.black);
+		//layout.addView(mButtonsView);
+		layout.setBackgroundResource(R.color.login_disclamer_registration_layout_background);
 		setContentView(layout);
 	}
 
@@ -826,18 +833,50 @@ public class MuPDFActivity extends Activity
 		return super.onSearchRequested();
 	}
 
-	@Override
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		if (mButtonsVisible && !mTopBarIsSearch) {
-			hideButtons();
-		} else {
-			showButtons();
-			searchModeOff();
-		}
+
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-	@Override
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.pdfmenu_delete:
+
+                return true;
+            case R.id.pdfmenu_archive:
+
+                return true;
+            case R.id.pdfmenu_workarea:
+
+                return true;
+            case R.id.pdfmenu_copy:
+
+                return true;
+            case R.id.pdfmenu_open_external:
+                   openFileWithIntent(documentMeta.getFileType(), core.getBuffer());
+                return true;
+            case R.id.pdfmenu_save:
+                promtSaveToSD();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
 	protected void onStart() {
 		if (core != null)
 		{

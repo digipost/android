@@ -327,7 +327,7 @@ public abstract class DocumentFragment extends ContentFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 moveDocuments(toLocation);
-                documentMultiChoiceModeListener.onDestroyActionMode(actionMode);
+                documentMultiChoiceModeListener.finishActionMode(actionMode);
                 dialogInterface.dismiss();
             }
         });
