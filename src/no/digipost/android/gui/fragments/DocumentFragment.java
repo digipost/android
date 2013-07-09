@@ -39,6 +39,7 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.AttachmentArrayAdapter;
 import no.digipost.android.gui.MuPDFActivity;
@@ -60,6 +61,9 @@ public abstract class DocumentFragment extends ContentFragment {
         super.listView.setAdapter(listAdapter);
         super.listView.setMultiChoiceModeListener(new DocumentMultiChoiceModeListener());
         super.listView.setOnItemClickListener(new DocumentListOnItemClickListener());
+
+        updateAccountMeta();
+
         return view;
     }
 
@@ -71,6 +75,24 @@ public abstract class DocumentFragment extends ContentFragment {
             if (requestCode == REQUESTCODE_INTENT) {
                 // ToDo håndtere handling fra dokumentvisning
             }
+        }
+    }
+
+    private class DocumentListOnItemClickListener implements AdapterView.OnItemClickListener {
+        public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
+            findDocumentAttachments((Letter) DocumentFragment.super.listAdapter.getItem(position));
+        }
+    }
+
+    private class AttachmentListOnItemClickListener implements AdapterView.OnItemClickListener {
+        private AttachmentArrayAdapter attachmentArrayAdapter;
+
+        public AttachmentListOnItemClickListener(AttachmentArrayAdapter attachmentArrayAdapter) {
+            this.attachmentArrayAdapter = attachmentArrayAdapter;
+        }
+
+        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+            executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position));
         }
     }
 
@@ -193,35 +215,12 @@ public abstract class DocumentFragment extends ContentFragment {
         }
     }
 
-    private class DocumentListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
-            findDocumentAttachments((Letter) DocumentFragment.super.listAdapter.getItem(position));
-        }
-    }
-
-    private class AttachmentListOnItemClickListener implements AdapterView.OnItemClickListener {
-        private AttachmentArrayAdapter attachmentArrayAdapter;
-
-        public AttachmentListOnItemClickListener(AttachmentArrayAdapter attachmentArrayAdapter) {
-            this.attachmentArrayAdapter = attachmentArrayAdapter;
-        }
-
-        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-            executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position));
-        }
-    }
-
-    protected void updateAccountMeta(int content){
-        GetAccountMetaTask task = new GetAccountMetaTask(content);
-        task.execute();
-    }
-
-    protected class GetAccountMetaTask extends AsyncTask<Void, Void, ArrayList<Letter>> {
+    protected class GetDocumentMetaTask extends AsyncTask<Void, Void, ArrayList<Letter>> {
         private final int content;
         private String errorMessage;
         private boolean invalidToken;
 
-        public GetAccountMetaTask(final int content) {
+        public GetDocumentMetaTask(final int content) {
             this.content = content;
         }
 
@@ -274,6 +273,13 @@ public abstract class DocumentFragment extends ContentFragment {
         }
     }
 
+    private void deleteDocuments() {
+        ArrayList<Letter> letters = listAdapter.getCheckedItems();
+
+        DocumentDeleteTask documentDeleteTask = new DocumentDeleteTask(letters);
+        documentDeleteTask.execute();
+    }
+
     private class DocumentDeleteTask extends AsyncTask<Void, Integer, String> {
         private ArrayList<Letter> letters;
         private boolean invalidToken;
@@ -300,10 +306,13 @@ public abstract class DocumentFragment extends ContentFragment {
 
                 return null;
             } catch (DigipostApiException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
                 return e.getMessage();
             } catch (DigipostClientException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
                 return e.getMessage();
             } catch (DigipostAuthenticationException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
                 invalidToken = true;
                 return e.getMessage();
             }
@@ -312,14 +321,14 @@ public abstract class DocumentFragment extends ContentFragment {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-
-            DocumentFragment.super.progressDialog.setMessage("Sletter " + values[0] + " av " + letters.size());
+            DocumentFragment.super.progressDialog.setMessage(values[0] + " av " + letters.size() + " slettet");
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            hideProgressDialog();
+            DocumentFragment.super.hideProgressDialog();
+            updateAccountMeta();
         }
 
         @Override
@@ -334,16 +343,87 @@ public abstract class DocumentFragment extends ContentFragment {
                 }
             }
 
-            // ToDo oppdatere listen
-            hideProgressDialog();
+            DocumentFragment.super.hideProgressDialog();
+            updateAccountMeta();
         }
     }
 
-    private void deleteDocuments() {
+    protected void moveDocuments(String toLocation) {
         ArrayList<Letter> letters = listAdapter.getCheckedItems();
 
-        DocumentDeleteTask documentDeleteTask = new DocumentDeleteTask(letters);
-        documentDeleteTask.execute();
+        DocumentMoveTask documentMoveTask = new DocumentMoveTask(letters, toLocation);
+        documentMoveTask.execute();
+    }
+
+    private class DocumentMoveTask extends AsyncTask<Void, Integer, String> {
+        private ArrayList<Letter> letters;
+        private String toLocation;
+        private boolean invalidToken;
+
+        public DocumentMoveTask(ArrayList<Letter> letters, String toLocation) {
+            this.letters = letters;
+            this.toLocation = toLocation;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            DocumentFragment.super.showContentProgressDialog(this, "");
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                Integer progress = 0;
+
+                for (Letter letter : letters) {
+                    publishProgress(++progress);
+                    letter.setLocation(toLocation);
+                    letterOperations.moveDocument(letter);
+                }
+
+                return null;
+            } catch (DigipostAuthenticationException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                invalidToken = true;
+                return e.getMessage();
+            } catch (DigipostApiException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                return e.getMessage();
+            } catch (DigipostClientException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                return e.getMessage();
+            }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            DocumentFragment.super.progressDialog.setMessage(values[0] + " av " + letters.size() + " flyttet");
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            DocumentFragment.super.hideProgressDialog();
+            updateAccountMeta();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                DialogUtitities.showToast(context, result);
+
+                if (invalidToken) {
+                    // ToDo logge ut
+                }
+            }
+
+            DocumentFragment.super.hideProgressDialog();
+            updateAccountMeta();
+        }
     }
 
     private class DocumentMultiChoiceModeListener extends ContentMultiChoiceModeListener {

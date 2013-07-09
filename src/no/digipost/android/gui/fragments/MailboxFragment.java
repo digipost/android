@@ -21,21 +21,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.model.Letter;
 
 public class MailboxFragment extends DocumentFragment {
-    public MailboxFragment(){
+    public MailboxFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        updateAccountMeta();
 
         return view;
     }
 
-    public void updateAccountMeta() {
-        super.updateAccountMeta(ApplicationConstants.MAILBOX);
+    @Override
+    protected void updateAccountMeta() {
+        GetDocumentMetaTask task = new GetDocumentMetaTask(ApplicationConstants.MAILBOX);
+        task.execute();
     }
 }

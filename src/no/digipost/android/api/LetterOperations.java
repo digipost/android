@@ -73,8 +73,14 @@ public class LetterOperations {
 
 	public void moveDocument(final Letter letter, final String toLocation) throws DigipostClientException, DigipostApiException,
 			DigipostAuthenticationException {
+        // ToDo slette metode
 		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
 	}
+
+    public void moveDocument(final Letter letter) throws DigipostClientException, DigipostApiException,
+            DigipostAuthenticationException {
+        apiAccess.getMovedDocument(letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
+    }
     public void sendOpeningReceipt(final Letter letter) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
         apiAccess.sendOpeningReceipt(letter.getOpeningReceiptUri());

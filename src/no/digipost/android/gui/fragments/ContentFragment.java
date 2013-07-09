@@ -108,7 +108,7 @@ public abstract class ContentFragment extends Fragment {
         this.letterOperations = letterOperations;
     }
 
-    public abstract void updateAccountMeta();
+    protected abstract void updateAccountMeta();
 
     public interface ActivityCommunicator {
         public void onStartRefreshContent();
