@@ -30,6 +30,8 @@ import no.digipost.android.model.PrimaryAccount;
 import android.app.Activity;
 import android.app.FragmentManager;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.res.Configuration;
 
 import android.os.Bundle;
@@ -220,9 +222,14 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
         View searchPlate = searchView.findViewById(searchPlateId);
         searchPlate.setBackgroundResource(R.drawable.search_background);
+        searchPlate.setBackgroundColor(getResources().getColor(R.color.white));
+        // ToDo HINT FARGE.
 
-        // ToDo eget hint for hvert vindu og HINT FARGE.
-        searchView.setQueryHint(getString(R.string.search));
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setIconified(false);
+
+        searchView.setQueryHint(getString(R.string.search_in) + title);
         searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
     }
 

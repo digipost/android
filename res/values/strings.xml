@@ -29,6 +29,7 @@
     <string name="search_workarea">Søk i kjøkkenbenken</string>
     <string name="search_archive">Søk i arkivet</string>
     <string name="search_receipts">Søk i kvitteringer</string>
+    <string name="search_in">Søk i\u0020</string>
     <string name="upload">Last opp...</string>
     <string name="letter">\u0020brev\u0020</string>
     <string name="document">\u0020dokument\u0020</string>
