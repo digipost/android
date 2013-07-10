@@ -11,6 +11,7 @@
 
     <!-- ActionBar -->
     <color name="actionbar_red_background">#e2251b</color>
+    <color name="searchbar_grey_hint">#e1e1e1</color>
 
     <!-- ListView -->
     <color name="list_pressed">#E0E0E0</color>
@@ -19,9 +20,9 @@
     <color name="list_odd">#fafafa</color>
     <color name="green">#7bc144</color>
     <color name="blue">#56b4ef</color>
-    <color name="black_subject">#383435</color>
-    <color name="grey_filesize">#B8B8B8</color>
-    <color name="grey_creator">#4D484A</color>
+    <color name="black_subject">#2a2929</color>
+    <color name="grey_filesize">#5f5f5f</color>
+    <color name="grey_creator">#444142</color>
     <color name="list_divider">#DBDBDB</color>
     <color name="list_element_opened">#EBEBEB</color>
 

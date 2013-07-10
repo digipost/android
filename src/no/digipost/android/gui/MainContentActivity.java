@@ -48,8 +48,12 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
+
+import java.lang.reflect.Field;
 
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
@@ -221,17 +225,39 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void setupSearchView(SearchView searchView) {
-        int searchPlateId = searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null);
-        View searchPlate = searchView.findViewById(searchPlateId);
-        searchPlate.setBackgroundResource(R.drawable.search_background);
-        // ToDo HINT FARGE.
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconified(false);
+        try
+        {
+            Field searchField = SearchView.class.getDeclaredField("mSearchButton");
+            searchField.setAccessible(true);
 
-        searchView.setQueryHint(getString(R.string.search_in) + title);
-        searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
+            android.widget.ImageView searchBtn = (android.widget.ImageView) searchField.get(searchView);
+            searchBtn.setImageResource(R.drawable.white_search_48);
+
+            searchField = SearchView.class.getDeclaredField("mSearchPlate");
+            searchField.setAccessible(true);
+
+            LinearLayout searchPlate = (LinearLayout)searchField.get(searchView);
+
+            AutoCompleteTextView searchTextView = (AutoCompleteTextView) searchPlate.getChildAt(0);
+
+            searchTextView.setTextColor(getResources().getColor(R.color.white));
+            searchPlate.setBackgroundResource(R.drawable.search_background);
+
+            searchTextView.setHintTextColor(getResources().getColor(R.color.searchbar_grey_hint));
+            searchView.setQueryHint(getString(R.string.search_in) + title);
+
+            android.widget.ImageView searchViewClearButton = (android.widget.ImageView) searchPlate.getChildAt(1);
+            searchViewClearButton.setImageResource(R.drawable.ic_clear_white);
+
+            searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
+        }
+        catch (NoSuchFieldException e)
+        {
+        }
+        catch (IllegalAccessException e)
+        {
+        }
     }
 
     private class SearchViewOnQueryTextListener implements android.widget.SearchView.OnQueryTextListener {
