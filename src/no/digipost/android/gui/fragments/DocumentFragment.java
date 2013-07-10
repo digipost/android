@@ -129,10 +129,7 @@ public abstract class DocumentFragment extends ContentFragment {
     private void openListItem(final Letter letter){
         if (letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
             showTwoFactorDialog();
-            return;
-        }
-
-        if (letter.getOpeningReceiptUri() != null) {
+        } else if (letter.getOpeningReceiptUri() != null) {
             showOpeningReceiptDialog(letter);
         } else {
             findDocumentAttachments(letter);

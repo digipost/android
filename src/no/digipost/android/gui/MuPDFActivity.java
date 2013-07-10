@@ -50,6 +50,7 @@ import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -98,6 +99,9 @@ public class MuPDFActivity extends Activity
     private boolean mTopBarIsSelect;
 
     private Attachment documentMeta;
+
+    private ActionMode.Callback selectActionModeCallback;
+    private ActionMode selectActionMode;
 
     public void createAlertWaiter() {
 		mAlertsActive = true;
@@ -260,6 +264,8 @@ public class MuPDFActivity extends Activity
 
         getActionBar().setTitle(documentMeta.getSubject());
 
+        selectActionModeCallback = new SelectActionModeCallback();
+
 		mAlertBuilder = new AlertDialog.Builder(this);
 
 		if (core == null) {
@@ -294,6 +300,8 @@ public class MuPDFActivity extends Activity
 		if (core == null)
 			return;
 
+
+        mPageNumberView = new TextView(this);
 		// Now create the UI.
 		// First create the document view
 		mDocView = new MuPDFReaderView(this) {
@@ -489,21 +497,17 @@ public class MuPDFActivity extends Activity
 	}
 
     void selectModeOn() {
-        if (!mTopBarIsSelect) {
             mDocView.setSelectionMode(true);
-            mTopBarIsSelect = true;
-        }
+
     }
 
     void selectModeOff() {
-        if (mTopBarIsSelect) {
             mDocView.setSelectionMode(false);
-            mTopBarIsSelect = false;
 
             MuPDFView pageView = (MuPDFView) mDocView.getDisplayedView();
             if (pageView != null)
                 pageView.deselectText();
-        }
+
     }
 
 	void searchModeOn() {
@@ -561,31 +565,6 @@ public class MuPDFActivity extends Activity
 		}
 		return super.onSearchRequested();
 	}
-
-    public void singleLetterOperation(final String action) {
-        Intent i = new Intent(MuPDFActivity.this, BaseFragmentActivity.class);
-        i.putExtra(ApiConstants.LOCATION_FROM, intent.getExtras().getString(ApiConstants.LOCATION_FROM));
-        i.putExtra(ApiConstants.ACTION, action);
-        i.putExtra(ApiConstants.DOCUMENT_TYPE, ApiConstants.LETTER);
-        setResult(RESULT_OK, i);
-        finish();
-    }
-
-    private void showWarning(final String text, final String action) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                singleLetterOperation(action);
-                dialog.dismiss();
-            }
-        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 
     private void executeAction(String action) {
         Intent i = new Intent(MuPDFActivity.this, MainContentActivity.class);
@@ -653,7 +632,8 @@ public class MuPDFActivity extends Activity
                 promtAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
                 return true;
             case R.id.pdfmenu_copy:
-                // ToDo implementere kopiering
+                selectModeOn();
+                selectActionMode = startActionMode(selectActionModeCallback);
                 return true;
             case R.id.pdfmenu_open_external:
                 openFileWithIntent(documentMeta.getFileType(), core.getBuffer());
@@ -664,6 +644,48 @@ public class MuPDFActivity extends Activity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void copyText() {
+        MuPDFView pageView = (MuPDFView) mDocView.getDisplayedView();
+        boolean copied = false;
+        if (pageView != null)
+            copied = pageView.copySelection();
+
+        DialogUtitities.showToast(this, copied ? getString(R.string.pdf_select_copied) : getString(R.string.pdf_select_no_text_selected));
+    }
+
+    private class SelectActionModeCallback implements ActionMode.Callback {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            MenuInflater inflater = actionMode.getMenuInflater();
+            inflater.inflate(R.menu.activity_mupdf_context, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.mupdf_context_menu_copy:
+                    copyText();
+                    actionMode.finish();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+            selectModeOff();
+            selectActionMode = null;
+        }
     }
 
     @Override
