@@ -26,12 +26,14 @@ import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.gui.fragments.WorkareaFragment;
 import no.digipost.android.gui.adapters.DrawerArrayAdapter;
 import no.digipost.android.model.PrimaryAccount;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 import android.app.Activity;
 import android.app.FragmentManager;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
 import android.os.Bundle;
@@ -55,6 +57,8 @@ import java.lang.reflect.Field;
 
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
+    public static final String FRAGMENT_SELECTED = "fragmentSelected";
+
     private LetterOperations letterOperations;
 
     private DrawerLayout drawerLayout;
@@ -93,9 +97,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         invalidateOptionsMenu();
 
-        if (savedInstanceState == null) {
-            selectItem(0);
-        }
+        selectItem(ApplicationConstants.MAILBOX);
     }
 
     @Override
@@ -175,7 +177,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void selectItem(int content) {
-
         ContentFragment contentFragment = null;
 
         switch(content){

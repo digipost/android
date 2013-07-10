@@ -82,9 +82,6 @@
         <activity android:name="no.digipost.android.gui.WebLoginActivity" />
 
         <activity android:name="no.digipost.android.gui.MuPDFActivity">
-            <meta-data
-                    android:name="android.support.PARENT_ACTIVITY"
-                    android:value="no.digipost.android.gui.MainContentActivity" />
         </activity>
         <activity android:name="no.digipost.android.gui.UnsupportedDocumentFormatActivity"/>
     </application>

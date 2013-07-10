@@ -25,6 +25,7 @@ import android.content.SharedPreferences.Editor;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.MainContentActivity;
 
 public class SharedPreferencesUtilities {
 
@@ -72,6 +73,4 @@ public class SharedPreferencesUtilities {
         edit.commit();
         KeyStore.getInstance().delete(ApiConstants.REFRESH_TOKEN);
     }
-
-
 }
