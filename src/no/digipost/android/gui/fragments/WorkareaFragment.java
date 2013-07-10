@@ -67,7 +67,7 @@ public class WorkareaFragment extends DocumentFragment {
 
             switch (menuItem.getItemId()) {
                 case R.id.main_context_menu_archive:
-                    showMoveDocumentsDialog(ApiConstants.LOCATION_ARCHIVE, this, actionMode);
+                    showMoveDocumentsDialog(ApiConstants.LOCATION_ARCHIVE, getString(R.string.dialog_prompt_move_documents_to_archive), this, actionMode);
                     break;
             }
 

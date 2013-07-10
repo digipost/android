@@ -44,9 +44,11 @@ import no.digipost.android.api.LetterOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.adapters.ContentArrayAdapter;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
 
 public abstract class ContentFragment extends Fragment {
     public static final int INTENT_REQUESTCODE = 0;
@@ -88,6 +90,12 @@ public abstract class ContentFragment extends Fragment {
         activityCommunicator = (ActivityCommunicator) activity;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        FileUtilities.deleteTempFiles();
+    }
+
     protected void deleteContent() {
         ArrayList<Object> content = listAdapter.getCheckedItems();
 
@@ -115,7 +123,7 @@ public abstract class ContentFragment extends Fragment {
         alertDialog.show();
     }
 
-    private class ContentDeleteTask extends AsyncTask<Void, Integer, String> {
+    protected class ContentDeleteTask extends AsyncTask<Void, Integer, String> {
         private ArrayList<Object> content;
         private boolean invalidToken;
 

@@ -74,9 +74,19 @@ public abstract class DocumentFragment extends ContentFragment {
 
         if (resultCode == getActivity().RESULT_OK) {
             if (requestCode == INTENT_REQUESTCODE) {
-                // ToDo håndtere handling fra dokumentvisning
+                String action = data.getStringExtra(ApiConstants.ACTION);
+
+                if (action.equals(ApiConstants.LOCATION_WORKAREA)) {
+                    moveDocument(action, DocumentContentStore.documentParent);
+                } else if (action.equals(ApiConstants.LOCATION_ARCHIVE)) {
+                    moveDocument(action, DocumentContentStore.documentParent);
+                } else if (action.equals(ApiConstants.DELETE)) {
+                    deleteDocument(DocumentContentStore.documentParent);
+                }
             }
         }
+
+        DocumentContentStore.clearContent();
     }
 
     private class DocumentListOnItemClickListener implements AdapterView.OnItemClickListener {
@@ -87,27 +97,29 @@ public abstract class DocumentFragment extends ContentFragment {
 
     private class AttachmentListOnItemClickListener implements AdapterView.OnItemClickListener {
         private AttachmentArrayAdapter attachmentArrayAdapter;
+        private Letter parentLetter;
 
-        public AttachmentListOnItemClickListener(AttachmentArrayAdapter attachmentArrayAdapter) {
+        public AttachmentListOnItemClickListener(AttachmentArrayAdapter attachmentArrayAdapter, Letter parentLetter) {
             this.attachmentArrayAdapter = attachmentArrayAdapter;
+            this.parentLetter = parentLetter;
         }
 
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-            executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position));
+            executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position), parentLetter);
         }
     }
 
-    private void showAttachmentDialog(final ArrayList<Attachment> attachments) {
+    private void showAttachmentDialog(final Letter letter) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(view);
 
         ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
-        AttachmentArrayAdapter attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachentdialog_list_item, attachments);
+        AttachmentArrayAdapter attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachentdialog_list_item, letter.getAttachment());
 
         attachmentListView.setAdapter(attachmentAdapter);
-        attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(attachmentAdapter));
+        attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(attachmentAdapter, letter));
         attachmentAdapter.placeMainOnTop();
 
         Dialog attachmentDialog = builder.create();
@@ -126,9 +138,9 @@ public abstract class DocumentFragment extends ContentFragment {
         ArrayList<Attachment> attachments = letter.getAttachment();
 
         if (attachments.size() > 1) {
-            showAttachmentDialog(letter.getAttachment());
+            showAttachmentDialog(letter);
         } else {
-            executeGetAttachmentContentTask(attachments.get(0));
+            executeGetAttachmentContentTask(attachments.get(0), letter);
         }
     }
 
@@ -182,18 +194,20 @@ public abstract class DocumentFragment extends ContentFragment {
         startActivityForResult(intent, super.INTENT_REQUESTCODE);
     }
 
-    private void executeGetAttachmentContentTask(Attachment attachment) {
-        GetAttachmentContentTask getAttachmentContentTask = new GetAttachmentContentTask(attachment);
+    private void executeGetAttachmentContentTask(Attachment attachment, Letter parentLetter) {
+        GetAttachmentContentTask getAttachmentContentTask = new GetAttachmentContentTask(attachment, parentLetter);
         getAttachmentContentTask.execute();
     }
 
     private class GetAttachmentContentTask extends AsyncTask<Void, Void, byte[]> {
         private Attachment attachment;
+        private Letter parentLetter;
         private String errorMessage;
         private boolean invalidToken;
 
-        public GetAttachmentContentTask(Attachment attachment) {
+        public GetAttachmentContentTask(Attachment attachment, Letter parentLetter) {
             this.attachment = attachment;
+            this.parentLetter = parentLetter;
         }
 
         @Override
@@ -230,7 +244,7 @@ public abstract class DocumentFragment extends ContentFragment {
             DocumentFragment.super.hideProgressDialog();
 
             if (result != null) {
-                DocumentContentStore.setContent(result, attachment);
+                DocumentContentStore.setContent(result, attachment, parentLetter);
                 openAttachmentContent(attachment);
             } else {
                 if (invalidToken) {
@@ -239,6 +253,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
                 DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
             }
+
             updateAccountMeta();
         }
 
@@ -321,8 +336,16 @@ public abstract class DocumentFragment extends ContentFragment {
         documentMoveTask.execute();
     }
 
-    protected void showMoveDocumentsDialog(final String toLocation, final DocumentMultiChoiceModeListener documentMultiChoiceModeListener, final ActionMode actionMode) {
-        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, getString(R.string.dialog_prompt_move_documents));
+    protected void moveDocument(String toLocation, Letter letter) {
+        ArrayList<Letter> letters = new ArrayList<Letter>();
+        letters.add(letter);
+
+        DocumentMoveTask documentMoveTask = new DocumentMoveTask(letters, toLocation);
+        documentMoveTask.execute();
+    }
+
+    protected void showMoveDocumentsDialog(final String toLocation, final String message, final DocumentMultiChoiceModeListener documentMultiChoiceModeListener, final ActionMode actionMode) {
+        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
         alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -410,6 +433,14 @@ public abstract class DocumentFragment extends ContentFragment {
 
             updateAccountMeta();
         }
+    }
+
+    protected void deleteDocument(Letter letter) {
+        ArrayList<Object> letters = new ArrayList<Object>();
+        letters.add(letter);
+
+        ContentDeleteTask contentDeleteTask = new ContentDeleteTask(letters);
+        contentDeleteTask.execute();
     }
 
     protected class SendOpeningReceiptTask extends AsyncTask<Void, Void, Boolean> {

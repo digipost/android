@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.util.concurrent.Executor;
 
 import no.digipost.android.R;
+import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.pdf.MuPDFAlert;
 import no.digipost.android.pdf.MuPDFCore;
@@ -30,6 +32,7 @@ import no.digipost.android.pdf.MuPDFReaderView;
 import no.digipost.android.pdf.MuPDFView;
 import no.digipost.android.pdf.SearchTask;
 import no.digipost.android.pdf.SearchTaskResult;
+import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.constants.ApiConstants;
 
@@ -77,14 +80,10 @@ public class MuPDFActivity extends Activity
 	private MuPDFCore core;
 	private String       mFileName;
 	private MuPDFReaderView mDocView;
-	private View         mButtonsView;
-	private boolean      mButtonsVisible;
 	private TextView     mFilenameView;
 	private TextView     mPageNumberView;
 	private ImageButton  mSearchButton;
-	private ImageButton mOptionsButton;
 	private ImageButton mCopySelectButton;
-	private ViewAnimator mTopBarSwitcher;
 	private boolean      mTopBarIsSearch;
 	private ImageButton  mSearchBack;
 	private ImageButton  mSearchFwd;
@@ -96,12 +95,6 @@ public class MuPDFActivity extends Activity
 	private AsyncTask<Void,Void,MuPDFAlert> mAlertTask;
 	private AlertDialog mAlertDialog;
     private Intent intent;
-    private ImageButton toArchive;
-    private ImageButton toWorkarea;
-    private ImageButton delete;
-    private ImageButton digipostIcon;
-    private RelativeLayout mBottombar;
-    private LinearLayout mTopbar;
     private boolean mTopBarIsSelect;
 
     private Attachment documentMeta;
@@ -319,16 +312,12 @@ public class MuPDFActivity extends Activity
 
 			@Override
 			protected void onTapMainDocArea() {
-				if (!mButtonsVisible) {
-					showButtons();
-				} else {
-					hideButtons();
-				}
+
 			}
 
 			@Override
 			protected void onDocMotion() {
-				hideButtons();
+
 			}
 		};
 		mDocView.setAdapter(new MuPDFPageAdapter(this, core));
@@ -345,29 +334,21 @@ public class MuPDFActivity extends Activity
 			}
 		};
 
-		// Make the buttons overlay, and store all its
-		// controls in variables
-		makeButtonsView();
-        showButtons();
-
-		// Set the file-name text
-		mFilenameView.setText(mFileName);
-
 		// Activate the search-preparing button
-		mSearchButton.setOnClickListener(new View.OnClickListener() {
+		/*mSearchButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				searchModeOn();
 			}
 		});
 
-		/*mCancelSelectButton.setOnClickListener(new View.OnClickListener() {
+		mCancelSelectButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				MuPDFView pageView = (MuPDFView) mDocView.getDisplayedView();
 				if (pageView != null)
 					pageView.deselectText();
 				selectModeOff();
 			}
-		});*/
+		});
 
 		mCopySelectButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -379,18 +360,6 @@ public class MuPDFActivity extends Activity
 				selectModeOff();
 
 				showMessage(copied ? "Copied to clipboard" : "No text selected");
-			}
-		});
-
-		digipostIcon.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-                if (mTopBarIsSearch) {
-                    searchModeOff();
-                } else if (mTopBarIsSelect) {
-                    selectModeOff();
-                } else {
-                    finish();
-                }
 			}
 		});
 
@@ -454,88 +423,13 @@ public class MuPDFActivity extends Activity
 			public void onClick(View v) {
 				search(1);
 			}
-		});
-
-		/*mLinkButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				if (mLinkHighlight) {
-					mLinkButton.setColorFilter(Color.argb(0xFF, 255, 255, 255));
-					mLinkHighlight = false;
-				} else {
-					// LINK_COLOR tint
-					mLinkButton.setColorFilter(Color.argb(0xFF, 172, 114, 37));
-					mLinkHighlight = true;
-				}
-				// Inform pages of the change.
-				mDocView.setLinksEnabled(mLinkHighlight);
-			}
 		});*/
 
         mDocView.setLinksEnabled(true);
 
-        //final String toolbarType = intent.getExtras().getString(ApiConstants.LOCATION_FROM);
-        final String toolbarType = ApiConstants.LOCATION_INBOX;
-
-        if (toolbarType.equals(ApiConstants.LOCATION_INBOX)) {
-            makeInboxToolbar();
-        } else if (toolbarType.equals(ApiConstants.LOCATION_WORKAREA)) {
-            makeWorkareaToolbar();
-        } else if (toolbarType.equals(ApiConstants.LOCATION_ARCHIVE)) {
-            makeArchiveToolbar();
-        }
-
-        mOptionsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMenu(view);
-            }
-        });
-
-        toArchive.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(final View v) {
-                String message = "";
-                if (toolbarType.equals(ApiConstants.LOCATION_INBOX)) {
-                    message = getString(R.string.dialog_prompt_letter_toArchive);
-                } else {
-                    message = getString(R.string.dialog_prompt_document_toArchive);
-                }
-
-                showWarning(message, ApiConstants.LOCATION_ARCHIVE);
-            }
-        });
-
-        toWorkarea.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(final View v) {
-                String message = "";
-                if (toolbarType.equals(ApiConstants.LOCATION_INBOX)) {
-                    message = getString(R.string.dialog_prompt_letter_toWorkarea);
-                } else {
-                    message = getString(R.string.dialog_prompt_document_toWorkarea);
-                }
-                showWarning(message, ApiConstants.LOCATION_WORKAREA);
-            }
-        });
-
-        delete.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(final View v) {
-                String message = "";
-
-                if (toolbarType.equals(ApiConstants.LOCATION_INBOX)) {
-                    message = getString(R.string.dialog_prompt_delete_letter);
-                } else {
-                    message = getString(R.string.dialog_prompt_delete_document);
-                }
-                showWarning(message, ApiConstants.DELETE);
-            }
-        });
-
 		// Stick the document view and the buttons overlay into a parent view
 		RelativeLayout layout = new RelativeLayout(this);
 		layout.addView(mDocView);
-		//layout.addView(mButtonsView);
 		layout.setBackgroundResource(R.color.login_disclamer_registration_layout_background);
 		setContentView(layout);
 	}
@@ -543,29 +437,6 @@ public class MuPDFActivity extends Activity
     private void showMessage(final String message) {
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
         toast.show();
-    }
-
-    public void showMenu(final View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-            public boolean onMenuItemClick(final MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.pdfmenu_copy:
-                        selectModeOn();
-                        return true;
-                    case R.id.pdfmenu_save:
-                        promtSaveToSD();
-                        return true;
-                    case R.id.pdfmenu_open_external:
-                        openFileWithIntent(documentMeta.getFileType(), core.getBuffer());
-                        return true;
-                }
-                return false;
-            }
-        });
-        popup.inflate(R.menu.activity_pdf);
-        popup.show();
     }
 
     private void openFileWithIntent(final String documentFileType, final byte[] data) {
@@ -581,31 +452,6 @@ public class MuPDFActivity extends Activity
         } catch (ActivityNotFoundException e) {
             showMessage(getString(R.string.error_no_activity_to_open_file));
         }
-    }
-
-    public void singleLetterOperation(final String action) {
-        Intent i = new Intent(MuPDFActivity.this, BaseFragmentActivity.class);
-        i.putExtra(ApiConstants.LOCATION_FROM, intent.getExtras().getString(ApiConstants.LOCATION_FROM));
-        i.putExtra(ApiConstants.ACTION, action);
-        i.putExtra(ApiConstants.DOCUMENT_TYPE, ApiConstants.LETTER);
-        setResult(RESULT_OK, i);
-        finish();
-    }
-
-    private void showWarning(final String text, final String action) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                singleLetterOperation(action);
-                dialog.dismiss();
-            }
-        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
 	@Override
@@ -646,82 +492,10 @@ public class MuPDFActivity extends Activity
 		super.onDestroy();
 	}
 
-	void showButtons() {
-		if (core == null)
-			return;
-		if (!mButtonsVisible) {
-			mButtonsVisible = true;
-			// Update page number text and slider
-			int index = mDocView.getDisplayedViewIndex();
-			updatePageNumView(index);
-
-			if (mTopBarIsSearch) {
-				mSearchText.requestFocus();
-				showKeyboard();
-			}
-
-			Animation anim = new TranslateAnimation(0, 0, -mTopbar.getHeight(), 0);
-			anim.setDuration(200);
-			anim.setAnimationListener(new Animation.AnimationListener() {
-				public void onAnimationStart(Animation animation) {
-					mTopbar.setVisibility(View.VISIBLE);
-				}
-				public void onAnimationRepeat(Animation animation) {}
-				public void onAnimationEnd(Animation animation) {}
-			});
-			mTopbar.startAnimation(anim);
-
-			anim = new TranslateAnimation(0, 0, mBottombar.getHeight(), 0);
-			anim.setDuration(200);
-			anim.setAnimationListener(new Animation.AnimationListener() {
-				public void onAnimationStart(Animation animation) {
-					mBottombar.setVisibility(View.VISIBLE);
-				}
-				public void onAnimationRepeat(Animation animation) {}
-				public void onAnimationEnd(Animation animation) {
-					mPageNumberView.setVisibility(View.VISIBLE);
-				}
-			});
-			mBottombar.startAnimation(anim);
-		}
-	}
-
-	void hideButtons() {
-		if (mButtonsVisible) {
-			mButtonsVisible = false;
-			hideKeyboard();
-
-			Animation anim = new TranslateAnimation(0, 0, 0, -mTopbar.getHeight());
-			anim.setDuration(200);
-			anim.setAnimationListener(new Animation.AnimationListener() {
-				public void onAnimationStart(Animation animation) {}
-				public void onAnimationRepeat(Animation animation) {}
-				public void onAnimationEnd(Animation animation) {
-					mTopbar.setVisibility(View.INVISIBLE);
-				}
-			});
-			mTopbar.startAnimation(anim);
-
-			anim = new TranslateAnimation(0, 0, 0, mBottombar.getHeight());
-			anim.setDuration(200);
-			anim.setAnimationListener(new Animation.AnimationListener() {
-				public void onAnimationStart(Animation animation) {
-					mPageNumberView.setVisibility(View.INVISIBLE);
-				}
-				public void onAnimationRepeat(Animation animation) {}
-				public void onAnimationEnd(Animation animation) {
-					mBottombar.setVisibility(View.INVISIBLE);
-				}
-			});
-			mBottombar.startAnimation(anim);
-		}
-	}
-
     void selectModeOn() {
         if (!mTopBarIsSelect) {
             mDocView.setSelectionMode(true);
             mTopBarIsSelect = true;
-            mTopBarSwitcher.setDisplayedChild(2);
         }
     }
 
@@ -729,7 +503,6 @@ public class MuPDFActivity extends Activity
         if (mTopBarIsSelect) {
             mDocView.setSelectionMode(false);
             mTopBarIsSelect = false;
-            mTopBarSwitcher.setDisplayedChild(0);
 
             MuPDFView pageView = (MuPDFView) mDocView.getDisplayedView();
             if (pageView != null)
@@ -743,7 +516,6 @@ public class MuPDFActivity extends Activity
 			//Focus on EditTextWidget
 			mSearchText.requestFocus();
 			showKeyboard();
-			mTopBarSwitcher.setDisplayedChild(1);
 		}
 	}
 
@@ -751,7 +523,6 @@ public class MuPDFActivity extends Activity
 		if (mTopBarIsSearch) {
 			mTopBarIsSearch = false;
 			hideKeyboard();
-			mTopBarSwitcher.setDisplayedChild(0);
 			SearchTaskResult.set(null);
 			// Make the ReaderView act on the change to mSearchTaskResult
 			// via overridden onChildSetup method.
@@ -764,43 +535,6 @@ public class MuPDFActivity extends Activity
 			return;
 		mPageNumberView.setText(String.format("%d / %d", index+1, core.countPages()));
 	}
-
-	void makeButtonsView() {
-        mButtonsView = getLayoutInflater().inflate(R.layout.pdf_buttons, null);
-        mFilenameView = (TextView) mButtonsView.findViewById(R.id.pdf_name);
-        mPageNumberView = (TextView) mButtonsView.findViewById(R.id.pdf_pageNumber);
-        mSearchButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_searchbtn);
-        mTopBarSwitcher = (ViewAnimator) mButtonsView.findViewById(R.id.pdf_switcher);
-        mSearchBack = (ImageButton) mButtonsView.findViewById(R.id.pdf_search_back);
-        mSearchFwd = (ImageButton) mButtonsView.findViewById(R.id.pdf_search_forward);
-        mSearchText = (EditText) mButtonsView.findViewById(R.id.pdf_searchtext);
-        //mBackButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_digipost_icon_back);
-        mBottombar = (RelativeLayout) mButtonsView.findViewById(R.id.pdf_bottombar);
-        mTopbar = (LinearLayout) mButtonsView.findViewById(R.id.pdf_topbar);
-        toWorkarea = (ImageButton) mButtonsView.findViewById(R.id.pdf_toWorkarea);
-        toArchive = (ImageButton) mButtonsView.findViewById(R.id.pdf_toArchive);
-        delete = (ImageButton) mButtonsView.findViewById(R.id.pdf_delete);
-        // share = (ImageButton) buttonsView.findViewById(R.id.pdf_share);
-        digipostIcon = (ImageButton) mButtonsView.findViewById(R.id.pdf_digipost_icon);
-        mOptionsButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_optionsbtn);
-        mCopySelectButton = (ImageButton) mButtonsView.findViewById(R.id.pdf_select_copy);
-
-        mPageNumberView.setVisibility(View.INVISIBLE);
-        mBottombar.setVisibility(View.INVISIBLE);
-        mTopbar.setVisibility(View.INVISIBLE);
-	}
-
-    private void makeInboxToolbar() {
-
-    }
-
-    private void makeArchiveToolbar() {
-        toArchive.setVisibility(View.GONE);
-    }
-
-    private void makeWorkareaToolbar() {
-        toWorkarea.setVisibility(View.GONE);
-    }
 
 	void showKeyboard() {
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -824,14 +558,64 @@ public class MuPDFActivity extends Activity
 
 	@Override
 	public boolean onSearchRequested() {
-		if (mButtonsVisible && mTopBarIsSearch) {
-			hideButtons();
+		if (mTopBarIsSearch) {
+
 		} else {
-			showButtons();
 			searchModeOn();
 		}
 		return super.onSearchRequested();
 	}
+
+    public void singleLetterOperation(final String action) {
+        Intent i = new Intent(MuPDFActivity.this, BaseFragmentActivity.class);
+        i.putExtra(ApiConstants.LOCATION_FROM, intent.getExtras().getString(ApiConstants.LOCATION_FROM));
+        i.putExtra(ApiConstants.ACTION, action);
+        i.putExtra(ApiConstants.DOCUMENT_TYPE, ApiConstants.LETTER);
+        setResult(RESULT_OK, i);
+        finish();
+    }
+
+    private void showWarning(final String text, final String action) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(text).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                singleLetterOperation(action);
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void executeAction(String action) {
+        Intent i = new Intent(MuPDFActivity.this, MainContentActivity.class);
+        i.putExtra(ApiConstants.ACTION, action);
+
+        setResult(RESULT_OK, i);
+        finish();
+    }
+
+    private void promtAction(final String message, final String action) {
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                executeAction(action);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.create().show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -843,8 +627,18 @@ public class MuPDFActivity extends Activity
 
     @Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem toArchive = menu.findItem(R.id.pdfmenu_archive);
+        MenuItem toWorkarea = menu.findItem(R.id.pdfmenu_workarea);
 
-		return super.onPrepareOptionsMenu(menu);
+        int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
+
+        if (content == ApplicationConstants.WORKAREA) {
+            toWorkarea.setVisible(false);
+        } else if (content == ApplicationConstants.ARCHIVE) {
+            toArchive.setVisible(false);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
 	}
 
     @Override
@@ -854,16 +648,16 @@ public class MuPDFActivity extends Activity
                 finish();
                 return true;
             case R.id.pdfmenu_delete:
-
+                promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
                 return true;
             case R.id.pdfmenu_archive:
-
+                promtAction(getString(R.string.dialog_prompt_document_toArchive), ApiConstants.LOCATION_ARCHIVE);
                 return true;
             case R.id.pdfmenu_workarea:
-
+                promtAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
                 return true;
             case R.id.pdfmenu_copy:
-
+                // ToDo implementere kopiering
                 return true;
             case R.id.pdfmenu_open_external:
                 openFileWithIntent(documentMeta.getFileType(), core.getBuffer());

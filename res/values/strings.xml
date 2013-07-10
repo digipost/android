@@ -134,6 +134,7 @@
     <string name="dialog_prompt_send_read_receipt"></string>
     <string name="dialog_prompt_delete_documents">Vil du slette markerte dokumenter?</string>
     <string name="dialog_prompt_delete_receipts">Vil du slette markerte kvitteringer?</string>
-    <string name="dialog_prompt_move_documents">Vil du flytte markerte dokumenter?</string>
+    <string name="dialog_prompt_move_documents_to_archive">Vil du flytte markerte dokumenter til arkivet?</string>
+    <string name="dialog_prompt_move_documents_to_workarea">Vil du flytte markerte dokumenter til kjøkkenbenken?</string>
 
 </resources>
