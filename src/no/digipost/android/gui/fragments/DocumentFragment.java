@@ -256,7 +256,7 @@ public abstract class DocumentFragment extends ContentFragment {
                 openAttachmentContent(attachment);
             } else {
                 if (invalidToken) {
-                    // ToDo logge ut
+                    activityCommunicator.requestLogOut();
                 }
 
                 DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
@@ -321,7 +321,7 @@ public abstract class DocumentFragment extends ContentFragment {
                 DocumentFragment.super.listAdapter.replaceAll(letters);
             } else {
                 if (invalidToken) {
-                    // ToDo logge ut
+                    activityCommunicator.requestLogOut();
                 }
 
                 DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
@@ -435,7 +435,7 @@ public abstract class DocumentFragment extends ContentFragment {
                 DialogUtitities.showToast(context, result);
 
                 if (invalidToken) {
-                    // ToDo logge ut
+                    activityCommunicator.requestLogOut();
                 }
             }
 
@@ -500,10 +500,9 @@ public abstract class DocumentFragment extends ContentFragment {
                 task.execute();
             } else {
                 if (invalidToken) {
-                    DocumentFragment.super.hideProgressDialog();
-                    DocumentFragment.super.progressDialogIsVisible = false;
-                    // ToDo logge ut
+                    activityCommunicator.requestLogOut();
                 }
+
                 DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
             }
         }
@@ -554,8 +553,7 @@ public abstract class DocumentFragment extends ContentFragment {
                 findDocumentAttachments(letter);
             } else {
                 if (invalidToken) {
-                    DocumentFragment.super.hideProgressDialog();
-                    // ToDo logge ut
+                    activityCommunicator.requestLogOut();
                 }
                 DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
             }

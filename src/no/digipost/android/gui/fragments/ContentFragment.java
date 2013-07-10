@@ -182,7 +182,7 @@ public abstract class ContentFragment extends Fragment {
                 DialogUtitities.showToast(context, result);
 
                 if (invalidToken) {
-                    // ToDo logge ut
+                    activityCommunicator.requestLogOut();
                 }
             }
 
@@ -227,6 +227,7 @@ public abstract class ContentFragment extends Fragment {
         public void onStartRefreshContent();
         public void onEndRefreshContent();
         public void requestLetterOperations();
+        public void requestLogOut();
     }
 
     protected class ContentMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {

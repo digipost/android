@@ -13,4 +13,8 @@
           android:icon="@drawable/white_refresh_48"
           android:showAsAction="ifRoom" />
 
+    <item android:id="@+id/menu_logout"
+          android:title="@string/optionsmenu_logout"
+          android:showAsAction="never" />
+
 </menu>

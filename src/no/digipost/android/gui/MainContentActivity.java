@@ -30,6 +30,7 @@ import no.digipost.android.gui.fragments.WorkareaFragment;
 import no.digipost.android.gui.adapters.DrawerArrayAdapter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 import android.app.ActionBar;
@@ -38,6 +39,7 @@ import android.app.FragmentManager;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
@@ -149,8 +151,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             return true;
         }
 
-        if (item.equals(refreshButton)) {
-            getCurrentFragment().updateAccountMeta();
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                getCurrentFragment().updateAccountMeta();
+                return true;
+            case R.id.menu_logout:
+                logOut();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -171,6 +178,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     public void requestLetterOperations() {
         getCurrentFragment().setLetterOperations(letterOperations);
+    }
+
+    @Override
+    public void requestLogOut() {
+        logOut();
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
@@ -226,6 +238,16 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private ContentFragment getCurrentFragment() {
         return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);
+    }
+
+    private void logOut() {
+        FileUtilities.deleteTempFiles();
+        SharedPreferencesUtilities.deleteRefreshtoken(this);
+        SharedPreferencesUtilities.deleteScreenlockChoice(this);
+
+        Intent intent = new Intent(MainContentActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void setupSearchView(SearchView searchView) {
@@ -339,7 +361,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 DialogUtitities.showToast(MainContentActivity.this, errorMessage);
 
                 if (invalidToken) {
-                    // ToDo logge ut
+                    logOut();
                 }
             }
 

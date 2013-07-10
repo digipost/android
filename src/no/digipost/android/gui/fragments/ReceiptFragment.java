@@ -101,7 +101,7 @@ public class ReceiptFragment extends ContentFragment{
                 DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
 
                 if (invalidToken) {
-                    // ToDo logge ut
+                    activityCommunicator.requestLogOut();
                 }
             }
 
