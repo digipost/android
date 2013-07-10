@@ -10,7 +10,7 @@
 
     <item android:id="@+id/pdfmenu_delete"
           android:title="@string/delete"
-          android:icon="@drawable/remove"
+          android:icon="@drawable/ic_action_delete"
           android:showAsAction="never" />
 
     <item

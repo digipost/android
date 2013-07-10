@@ -43,6 +43,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -99,6 +100,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open_external, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
 
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         invalidateOptionsMenu();
 
         executeGetPrimaryAccountTask();
@@ -157,6 +159,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 return true;
             case R.id.menu_logout:
                 logOut();
+                return true;
+            case R.id.menu_help:
+                openHelpWebView();
                 return true;
         }
 
@@ -248,6 +253,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         Intent intent = new Intent(MainContentActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+    private void openHelpWebView(){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/hjelp/#android"));
+        startActivity(browserIntent);
     }
 
     private void setupSearchView(SearchView searchView) {

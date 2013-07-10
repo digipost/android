@@ -10,6 +10,8 @@
     <color name="main_drawer_blue_selected">#56b4ef</color>
 
     <!-- ActionBar -->
+    <color name="actionbar_title_color">#FFF</color>
+    <color name="actionbar_subtitle_color">#f2f2f2</color>
     <color name="actionbar_red_background">#e2251b</color>
     <color name="searchbar_grey_hint">#e1e1e1</color>
     <color name="actionbar_button_pressed_dark_red">#B00</color>

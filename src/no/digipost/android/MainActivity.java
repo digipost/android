@@ -62,7 +62,6 @@ public class MainActivity extends Activity {
     }
 
     private void startBaseActivity() {
-        //Intent i = new Intent(MainActivity.this, BaseFragmentActivity.class);
         Intent i = new Intent(MainActivity.this, MainContentActivity.class);
         startActivity(i);
         finish();

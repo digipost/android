@@ -63,6 +63,7 @@
     <!-- OptionsMenu -->
     <string name="optionsmenu_settings">Innstillinger</string>
     <string name="optionsmenu_logout">Logg ut</string>
+    <string name="optionsmenu_help">Hjelp</string>
     <string name="optionsmenu_moveToArchive">Flytt til arkiv</string>
     <string name="optionsmenu_moveToWorkarea">Flytt til kjøkkenbenken</string>
     <string name="optionsmenu_deleteselected">Slett</string>
