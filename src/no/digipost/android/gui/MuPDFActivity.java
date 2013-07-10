@@ -851,7 +851,7 @@ public class MuPDFActivity extends Activity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
             case R.id.pdfmenu_delete:
 
@@ -866,7 +866,7 @@ public class MuPDFActivity extends Activity
 
                 return true;
             case R.id.pdfmenu_open_external:
-                   openFileWithIntent(documentMeta.getFileType(), core.getBuffer());
+                openFileWithIntent(documentMeta.getFileType(), core.getBuffer());
                 return true;
             case R.id.pdfmenu_save:
                 promtSaveToSD();
