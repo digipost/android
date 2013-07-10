@@ -127,6 +127,11 @@ public abstract class DocumentFragment extends ContentFragment {
     }
 
     private void openListItem(final Letter letter){
+        if (letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+            showTwoFactorDialog();
+            return;
+        }
+
         if (letter.getOpeningReceiptUri() != null) {
             showOpeningReceiptDialog(letter);
         } else {
@@ -165,12 +170,18 @@ public abstract class DocumentFragment extends ContentFragment {
         alert.show();
     }
 
-    private void openAttachmentContent(final Attachment attachment) {
-        if (attachment.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-            // ToDo vise mld om at dokument ikke kan åpnes
-            return;
-        }
+    private void showTwoFactorDialog() {
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(context, getString(R.string.dialog_error_two_factor));
+        builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.create().show();
+    }
 
+    private void openAttachmentContent(final Attachment attachment) {
         String fileType = attachment.getFileType();
         Intent intent = null;
 
