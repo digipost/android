@@ -93,6 +93,9 @@
     <string name="pdf_promt_save_to_sd">Ønsker du å lagre dokumentet?</string>
     <string name="pdf_saved_to_sd">Dokumentet er lagret i Downloads.</string>
     <string name="pdf_save_to_sd_failed">En feil oppstod under lagringen.</string>
+    <string name="pdf_select_copied">Markert tekst kopiert.</string>
+    <string name="pdf_select_no_text_selected">Ingen tekst markert.</string>
+
     
     <!-- Image -->
     <string name="image_open_failed">Kunne ikke åpne bildet.</string>
