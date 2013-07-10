@@ -18,6 +18,9 @@ package no.digipost.android.gui;
 
 import no.digipost.android.R;
 import no.digipost.android.api.LetterOperations;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.fragments.ArchiveFragment;
 import no.digipost.android.gui.fragments.ContentFragment;
@@ -26,8 +29,10 @@ import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.gui.fragments.WorkareaFragment;
 import no.digipost.android.gui.adapters.DrawerArrayAdapter;
 import no.digipost.android.model.PrimaryAccount;
+import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
 
@@ -36,11 +41,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,11 +72,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
 
-    private CharSequence drawerTitle;
     private CharSequence title;
 
     private MenuItem refreshButton;
     private boolean refreshing;
+
+    private PrimaryAccount primaryAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +86,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         this.letterOperations = new LetterOperations(this);
 
-        title = drawerTitle = getTitle();
+        title = getTitle();
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerList = (ListView) findViewById(R.id.main_left_drawer);
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -87,13 +95,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
-        //getActionBar().setHomeButtonEnabled(true);
-
         drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open_external, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
 
         invalidateOptionsMenu();
+
+        executeGetPrimaryAccountTask();
 
         selectItem(ApplicationConstants.MAILBOX);
     }
@@ -279,13 +286,65 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
 
         public void onDrawerClosed(View view) {
-            getActionBar().setTitle(title);
             invalidateOptionsMenu();
         }
 
         public void onDrawerOpened(View drawerView) {
-            getActionBar().setTitle(drawerTitle);
             invalidateOptionsMenu();
+        }
+    }
+
+    private void executeGetPrimaryAccountTask() {
+        GetPrimaryAccountTask getPrimaryAccountTask = new GetPrimaryAccountTask();
+        getPrimaryAccountTask.execute();
+    }
+
+    private class GetPrimaryAccountTask extends AsyncTask<Void, Void, PrimaryAccount> {
+        private String errorMessage;
+        private boolean invalidToken;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            onStartRefreshContent();
+        }
+
+        @Override
+        protected PrimaryAccount doInBackground(Void... voids) {
+            try {
+                return letterOperations.getPrimaryAccount();
+            } catch (DigipostApiException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostClientException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostAuthenticationException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                invalidToken = true;
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(PrimaryAccount result) {
+            super.onPostExecute(primaryAccount);
+
+            if (result != null) {
+                primaryAccount = result;
+                getActionBar().setSubtitle(primaryAccount.getFullName());
+            } else {
+                DialogUtitities.showToast(MainContentActivity.this, errorMessage);
+
+                if (invalidToken) {
+                    // ToDo logge ut
+                }
+            }
+
+            onEndRefreshContent();
         }
     }
 }

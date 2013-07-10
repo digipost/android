@@ -267,6 +267,7 @@ public class MuPDFActivity extends Activity
         getActionBar().setIcon(R.drawable.actionbar_icon);
         getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.actionbar_red_background));
         getActionBar().setTitle(documentMeta.getSubject());
+        getActionBar().setSubtitle(DocumentContentStore.documentParent.getCreatorName());
 
         selectActionModeCallback = new SelectActionModeCallback();
 

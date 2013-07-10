@@ -28,12 +28,19 @@ public class PrimaryAccount {
 	@JsonProperty
 	private String fullName;
 
+    @JsonProperty
+    private String unreadItemsInInbox;
+
 	@JsonProperty
 	private ArrayList<Link> link;
 
 	public String getFullName() {
 		return fullName;
 	}
+
+    public int getUnreadItemsInInbox() {
+        return Integer.parseInt(unreadItemsInInbox);
+    }
 
 	public ArrayList<Link> getLink() {
 		return link;
