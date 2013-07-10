@@ -258,10 +258,6 @@ public class MuPDFActivity extends Activity
 		super.onCreate(savedInstanceState);
         documentMeta = DocumentContentStore.documentMeta;
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setIcon(R.drawable.actionbar_icon);
-        getActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.actionbar_red_background));
         getActionBar().setTitle(documentMeta.getSubject());
 
 		mAlertBuilder = new AlertDialog.Builder(this);

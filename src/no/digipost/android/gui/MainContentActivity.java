@@ -84,11 +84,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         drawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, ApplicationConstants.titles));
-
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
-        //getActionBar().setHomeButtonEnabled(true);
 
         drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open_external, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);

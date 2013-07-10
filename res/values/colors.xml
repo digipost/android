@@ -12,6 +12,7 @@
     <!-- ActionBar -->
     <color name="actionbar_red_background">#e2251b</color>
     <color name="searchbar_grey_hint">#e1e1e1</color>
+    <color name="actionbar_button_pressed_dark_red">#B00</color>
 
     <!-- ListView -->
     <color name="list_pressed">#E0E0E0</color>
