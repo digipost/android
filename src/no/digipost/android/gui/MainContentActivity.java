@@ -90,17 +90,17 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         this.letterOperations = new LetterOperations(this);
 
         title = getTitle();
+
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerList = (ListView) findViewById(R.id.main_left_drawer);
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
         drawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, ApplicationConstants.titles));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
-
         drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open_external, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+
         invalidateOptionsMenu();
 
         executeGetPrimaryAccountTask();
@@ -163,9 +163,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             case R.id.menu_help:
                 openHelpWebView();
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
