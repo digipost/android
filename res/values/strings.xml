@@ -102,8 +102,9 @@
     <string name="image_open_failed">Kunne ikke åpne bildet.</string>
 
     <!-- Unsupported -->
-    <string name="unsupported_header">Ustøttet filtype</string>
-    <string name="unsupported_text">Digipost-appen kan ikke vise denne filtypen.</string>
+    <string name="unsupported_title">Ustøttet filtype</string>
+    <string name="unsupported_message_top">Digipost-appen kan ikke vise denne filtypen</string>
+    <string name="unsupported_message_bottom">Du kan åpne dokumentet dersom du har en app på din telefon hvor denne filtypen kan vises.</string>
 
     <!-- Errors -->
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv igjen.</string>
