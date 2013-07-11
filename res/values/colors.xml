@@ -7,6 +7,7 @@
     <!-- Drawer -->
     <color name="main_drawer_grey_background">#393a3d </color>
     <color name="main_drawer_grey_text">#757477</color>
+    <color name="main_drawer_dark_grey_text">#DDD</color>
     <color name="main_drawer_blue_selected">#56b4ef</color>
 
     <!-- ActionBar -->

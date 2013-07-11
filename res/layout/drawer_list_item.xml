@@ -13,16 +13,32 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_link_name"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:drawableLeft="@drawable/folder_close"
-    android:drawablePadding="10dp"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
-    android:gravity="center_vertical"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:textColor="#fff"
-    android:background="@drawable/main_drawer_listitem"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/main_drawer_listitem"
+        >
+    <TextView
+            android:id="@+id/drawer_link_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textColor="#fff"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+    <TextView
+            android:id="@+id/drawer_link_unread"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="right"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:padding="3dp"/>
+</LinearLayout>

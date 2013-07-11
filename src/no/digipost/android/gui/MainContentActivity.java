@@ -74,6 +74,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private DrawerLayout drawerLayout;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
+    private DrawerArrayAdapter drawerArrayAdapter;
 
     private CharSequence title;
 
@@ -94,7 +95,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerList = (ListView) findViewById(R.id.main_left_drawer);
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        drawerList.setAdapter(new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, ApplicationConstants.titles));
+        drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, ApplicationConstants.titles,0);
+        drawerList.setAdapter(drawerArrayAdapter);
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
         drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open_external, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
@@ -366,6 +368,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             if (result != null) {
                 primaryAccount = result;
                 getActionBar().setSubtitle(primaryAccount.getFullName());
+                drawerArrayAdapter.setUnreadLetters(primaryAccount.getUnreadItemsInInbox());
+                drawerArrayAdapter.notifyDataSetChanged();
             } else {
                 DialogUtitities.showToast(MainContentActivity.this, errorMessage);
 
