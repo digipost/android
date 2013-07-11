@@ -242,6 +242,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
+    public void updateUI(){
+        getActionBar().setSubtitle(primaryAccount.getFullName());
+        drawerArrayAdapter.setUnreadLetters(primaryAccount.getUnreadItemsInInbox());
+        drawerArrayAdapter.notifyDataSetChanged();
+    }
+
     private ContentFragment getCurrentFragment() {
         return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);
     }
@@ -366,9 +372,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             if (result != null) {
                 primaryAccount = result;
-                getActionBar().setSubtitle(primaryAccount.getFullName());
-                drawerArrayAdapter.setUnreadLetters(primaryAccount.getUnreadItemsInInbox());
-                drawerArrayAdapter.notifyDataSetChanged();
+                updateUI();
             } else {
                 DialogUtitities.showToast(MainContentActivity.this, errorMessage);
 

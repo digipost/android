@@ -81,6 +81,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String>{
 
             default:
                 linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_dark_grey_text));
+                linkName.setTextSize(17);
         }
     }
 
