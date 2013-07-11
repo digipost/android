@@ -43,7 +43,7 @@ public class MailboxFragment extends DocumentFragment {
     }
 
     @Override
-    protected int getContent() {
+    public int getContent() {
         return ApplicationConstants.MAILBOX;
     }
 

@@ -54,8 +54,6 @@ public abstract class DocumentFragment extends ContentFragment {
     public DocumentFragment(){
     }
 
-    protected abstract int getContent();
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -275,6 +273,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
     @Override
     public void updateAccountMeta() {
+        System.out.println("updateAccountMeta: " + getContent());
         GetDocumentMetaTask task = new GetDocumentMetaTask(getContent());
         task.execute();
     }

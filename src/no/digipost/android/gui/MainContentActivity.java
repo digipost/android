@@ -67,6 +67,8 @@ import java.lang.reflect.Field;
 
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
+    private final String CURRENT_FRAGMENT = "currentFragment";
+
     private LetterOperations letterOperations;
 
     private DrawerLayout drawerLayout;
@@ -75,7 +77,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private CharSequence title;
 
-    private MenuItem refreshButton;
     private boolean refreshing;
 
     private PrimaryAccount primaryAccount;
@@ -99,18 +100,29 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         getActionBar().setHomeButtonEnabled(true);
 
-        invalidateOptionsMenu();
-
         executeGetPrimaryAccountTask();
-        selectItem(ApplicationConstants.MAILBOX);
+
+        if (getCurrentFragment() == null) {
+            selectItem(ApplicationConstants.MAILBOX);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(CURRENT_FRAGMENT, getCurrentFragment().getContent());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        selectItem(savedInstanceState.getInt(CURRENT_FRAGMENT, ApplicationConstants.MAILBOX));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
-
-        refreshButton = menu.findItem(R.id.menu_refresh);
 
         SearchView menuSearch = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
@@ -135,8 +147,14 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             }
         });
 
+        MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
+
         if (refreshing) {
-            onStartRefreshContent();
+            System.out.println("startRefreshSpinner");
+            refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
+        } else {
+            System.out.println("endRefreshSpinner");
+            refreshButton.setActionView(null);
         }
 
         boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
@@ -170,13 +188,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     public void onStartRefreshContent() {
         refreshing = true;
-        refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
+        invalidateOptionsMenu();
     }
 
     @Override
     public void onEndRefreshContent() {
         refreshing = false;
-        refreshButton.setActionView(null);
+        invalidateOptionsMenu();
     }
 
     @Override

@@ -45,7 +45,7 @@ public class ArchiveFragment extends DocumentFragment {
     }
 
     @Override
-    protected int getContent() {
+    public int getContent() {
         return ApplicationConstants.ARCHIVE;
     }
 

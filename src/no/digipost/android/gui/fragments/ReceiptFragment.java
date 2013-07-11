@@ -54,6 +54,11 @@ public class ReceiptFragment extends ContentFragment{
         return view;
     }
 
+    @Override
+    public int getContent() {
+        return ApplicationConstants.RECEIPTS;
+    }
+
     public void updateAccountMeta(){
         GetReceiptsMetaTask task = new GetReceiptsMetaTask();
         task.execute();

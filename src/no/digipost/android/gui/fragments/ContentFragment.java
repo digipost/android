@@ -68,7 +68,10 @@ public abstract class ContentFragment extends Fragment {
 
 
     public ContentFragment() {
+        setRetainInstance(true);
     }
+
+    public abstract int getContent();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
