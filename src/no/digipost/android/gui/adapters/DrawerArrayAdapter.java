@@ -48,7 +48,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String>{
         this.linkName = (TextView) row.findViewById(R.id.drawer_link_name);
         this.unreadView = (TextView) row.findViewById(R.id.drawer_link_unread);
 
-        setupLinkView(position);
+        setupLinkView(row,position);
         return row;
     }
 
@@ -56,7 +56,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String>{
         this.unreadLetters = unreadLetters;
     }
 
-    private void setupLinkView(int position) {
+    private void setupLinkView(View row, int position) {
 
         linkName.setText((CharSequence) links[position]);
 
@@ -64,6 +64,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String>{
             case ApplicationConstants.MAILBOX:
                 linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope,0,0,0);
                 unreadView.setText((CharSequence) (" "+unreadLetters));
+                unreadView.setVisibility(View.VISIBLE);
                 break;
 
             case ApplicationConstants.RECEIPTS:
@@ -80,7 +81,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String>{
 
             default:
                 linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_dark_grey_text));
-                linkName.setTextSize(17);
+                linkName.setTextSize(15);
         }
     }
 

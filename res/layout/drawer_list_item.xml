@@ -13,31 +13,45 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/main_drawer_listitem"
-        >
+    <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/main_drawer_listitem">
+
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true" >
     <TextView
             android:id="@+id/drawer_link_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:drawablePadding="10dp"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|left"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:textColor="#fff"
-            android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
-    <TextView
-            android:id="@+id/drawer_link_unread"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical|right"
-            android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" >
+        <TextView
+            android:id="@+id/drawer_link_unread"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_gravity="right"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:background="@color/main_drawer_dark_blue"
             android:textSize="20dp"
             android:minHeight="?android:attr/listPreferredItemHeightSmall"
-            android:paddingRight="16dp"
+            android:padding="10dp"
             />
-</LinearLayout>
+        </RelativeLayout>
+</RelativeLayout>
