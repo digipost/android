@@ -25,11 +25,11 @@ public class ApplicationConstants {
     public static final int SCREENLOCK_CHOICE_NO = 1;
     public static final int SCREENLOCK_CHOICE_YES = 2;
 
-    public static final int MAILBOX = 0;
-    public static final int RECEIPTS = 1;
-    public static final int WORKAREA = 2;
-    public static final int ARCHIVE = 3;
+    public static final int MAILBOX = 1;
+    public static final int RECEIPTS = 2;
+    public static final int WORKAREA = 4;
+    public static final int ARCHIVE = 5;
 
-    public static final String[] titles = {"Postkassen","Kvitteringer","Kjøkkenbenken", "Arkivet"};
+    public static final String[] titles = {"INNBOKS","Postkassen","Kvitteringer","MAPPER","Kjøkkenbenken", "Arkivet"};
 
 }

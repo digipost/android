@@ -29,39 +29,74 @@ import no.digipost.android.constants.ApplicationConstants;
 
 public class DrawerArrayAdapter<String> extends ArrayAdapter<String>{
     protected Context context;
-    private TextView linkView;
+    private TextView linkName;
+    private TextView unreadView;
+    private String[] links;
+    private int unreadLetters;
 
-    public DrawerArrayAdapter(final Context context, final int resource,final String[] links) {
+    public DrawerArrayAdapter(final Context context, final int resource,final String[] links, final int unreadLetters) {
         super(context, resource, links);
         this.context = context;
+        this.links = links;
+        this.unreadLetters = unreadLetters;
     }
 
     public View getView(final int position, final View convertView, final ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View row = inflater.inflate(R.layout.drawer_list_item, parent, false);
-        linkView = (TextView) row.findViewById(R.id.drawer_link_name);
-        setLinkView(linkView, position);
+        this.linkName = (TextView) row.findViewById(R.id.drawer_link_name);
+        this.unreadView = (TextView) row.findViewById(R.id.drawer_link_unread);
 
+        setupLinkView(position);
         return row;
     }
 
-    private void setLinkView(TextView linkView, int position) {
+    public void setUnreadLetters(int unreadLetters){
+        this.unreadLetters = unreadLetters;
+    }
+
+    private void setupLinkView(int position) {
+
+        linkName.setText((CharSequence) links[position]);
+
         switch (position){
             case ApplicationConstants.MAILBOX:
-                linkView.setText(R.string.mailbox);
-                linkView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope,0,0,0);
+                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope,0,0,0);
+                unreadView.setText((CharSequence) (" "+unreadLetters));
                 break;
+
             case ApplicationConstants.RECEIPTS:
-                linkView.setText(R.string.receipts);
-                linkView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.credit_card,0,0,0);
+                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.credit_card,0,0,0);
                 break;
+
             case ApplicationConstants.WORKAREA:
-                linkView.setText(R.string.workarea);
+                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close,0,0,0);
                 break;
+
             case ApplicationConstants.ARCHIVE:
-                linkView.setText(R.string.archive);
+                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close,0,0,0);
                 break;
+
+            default:
+                linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_dark_grey_text));
+                linkName.setTextSize(17);
+        }
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        switch (position){
+            case ApplicationConstants.MAILBOX:
+                return true;
+            case ApplicationConstants.RECEIPTS:
+                return true;
+            case ApplicationConstants.WORKAREA:
+                return true;
+            case ApplicationConstants.ARCHIVE:
+                return true;
+            default:
+                return false;
         }
     }
 }
