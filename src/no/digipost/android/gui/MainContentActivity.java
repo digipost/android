@@ -76,8 +76,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private ActionBarDrawerToggle drawerToggle;
     private DrawerArrayAdapter drawerArrayAdapter;
 
-    private CharSequence title;
-
     private boolean refreshing;
 
     private PrimaryAccount primaryAccount;
@@ -88,8 +86,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         setContentView(R.layout.activity_main_content);
 
         this.letterOperations = new LetterOperations(this);
-
-        title = getTitle();
+        this.refreshing = true;
 
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerList = (ListView) findViewById(R.id.main_left_drawer);
@@ -104,21 +101,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         executeGetPrimaryAccountTask();
 
-        if (getCurrentFragment() == null) {
+        if (savedInstanceState == null) {
             selectItem(ApplicationConstants.MAILBOX);
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(CURRENT_FRAGMENT, getCurrentFragment().getContent());
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        selectItem(savedInstanceState.getInt(CURRENT_FRAGMENT, ApplicationConstants.MAILBOX));
     }
 
     @Override
@@ -129,6 +114,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         SearchView menuSearch = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
         setupSearchView(menuSearch);
+        getActionBar().setTitle(ApplicationConstants.titles[getCurrentFragment().getContent()]);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -238,14 +224,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
 
         drawerList.setItemChecked(content, true);
-        setTitle(ApplicationConstants.titles[content]);
         drawerLayout.closeDrawer(drawerList);
-    }
-
-    @Override
-    public void setTitle(CharSequence t) {
-        title = t;
-        getActionBar().setTitle(title);
     }
 
     @Override
@@ -305,7 +284,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             searchPlate.setBackgroundResource(R.drawable.search_background);
 
             searchTextView.setHintTextColor(getResources().getColor(R.color.searchbar_grey_hint));
-            searchView.setQueryHint(getString(R.string.search_in) + title);
+            searchView.setQueryHint(getString(R.string.search_in) + ApplicationConstants.titles[getCurrentFragment().getContent()]);
 
             android.widget.ImageView searchViewClearButton = (android.widget.ImageView) searchPlate.getChildAt(1);
             searchViewClearButton.setImageResource(R.drawable.ic_clear_white);
@@ -398,8 +377,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     logOut();
                 }
             }
-
-            onEndRefreshContent();
         }
     }
 }

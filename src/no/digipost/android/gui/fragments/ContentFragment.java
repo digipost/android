@@ -68,13 +68,14 @@ public abstract class ContentFragment extends Fragment {
 
 
     public ContentFragment() {
-        setRetainInstance(true);
     }
 
     public abstract int getContent();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        System.out.println("ContentFragment onCreateView");
+
         context = getActivity();
 
         View view = inflater.inflate(R.layout.fragment_layout_listview, container, false);
