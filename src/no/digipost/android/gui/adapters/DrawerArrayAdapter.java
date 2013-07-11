@@ -49,7 +49,6 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String>{
         this.unreadView = (TextView) row.findViewById(R.id.drawer_link_unread);
 
         setupLinkView(position);
-
         return row;
     }
 

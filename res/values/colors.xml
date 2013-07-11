@@ -5,10 +5,11 @@
     <color name="main_actionbar_red_background">#e32d22</color>
 
     <!-- Drawer -->
-    <color name="main_drawer_grey_background">#393a3d </color>
+    <color name="main_drawer_grey_background">#393a3d</color>
     <color name="main_drawer_grey_text">#757477</color>
-    <color name="main_drawer_dark_grey_text">#C4C4C4</color>
+    <color name="main_drawer_dark_grey_text">#757477</color>
     <color name="main_drawer_blue_selected">#56b4ef</color>
+    <color name="main_drawer_divider">#343538</color>
 
     <!-- ActionBar -->
     <color name="actionbar_title_color">#FFF</color>

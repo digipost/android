@@ -30,6 +30,6 @@ public class ApplicationConstants {
     public static final int WORKAREA = 4;
     public static final int ARCHIVE = 5;
 
-    public static final String[] titles = {"Innboks","Postkassen","Kvitteringer","Mapper","Kjøkkenbenken", "Arkivet"};
+    public static final String[] titles = {"INNBOKS","Postkassen","Kvitteringer","MAPPER","Kjøkkenbenken", "Arkivet"};
 
 }
