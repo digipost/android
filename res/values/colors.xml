@@ -10,7 +10,7 @@
     <color name="main_drawer_dark_grey_text">#757477</color>
     <color name="main_drawer_blue_selected">#56b4ef</color>
     <color name="main_drawer_dark_blue">#228fd3</color>
-    <color name="main_drawer_divider">#343538</color>
+    <color name="main_drawer_divider">#333436</color>
 
     <!-- ActionBar -->
     <color name="actionbar_title_color">#FFF</color>

@@ -121,6 +121,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        drawerArrayAdapter.updateDrawer(getCurrentFragment().getContent());
+
         MenuItem searchButton = menu.findItem(R.id.menu_search);
         searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
@@ -144,7 +146,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             System.out.println("endRefreshSpinner");
             refreshButton.setActionView(null);
         }
-
         boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
         searchButton.setVisible(!drawerOpen);
         refreshButton.setVisible(!drawerOpen);
@@ -242,7 +243,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     public void updateUI(){
         getActionBar().setSubtitle(primaryAccount.getFullName());
         drawerArrayAdapter.setUnreadLetters(primaryAccount.getUnreadItemsInInbox());
-        drawerArrayAdapter.notifyDataSetChanged();
     }
 
     private ContentFragment getCurrentFragment() {
