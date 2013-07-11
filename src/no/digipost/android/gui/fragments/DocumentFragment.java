@@ -44,6 +44,7 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.AttachmentArrayAdapter;
 import no.digipost.android.gui.MuPDFActivity;
+import no.digipost.android.gui.UnsupportedDocumentFormatActivity;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Letter;
@@ -193,7 +194,7 @@ public abstract class DocumentFragment extends ContentFragment {
         }
 
         if (intent == null) {
-            // ToDo åpne ustøttet
+            intent = new Intent(getActivity(), UnsupportedDocumentFormatActivity.class);
         }
 
         intent.putExtra(super.INTENT_CONTENT, getContent());
