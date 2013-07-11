@@ -18,6 +18,7 @@ package no.digipost.android.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.concurrent.Executor;
 
 import no.digipost.android.R;
@@ -36,6 +37,7 @@ import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.constants.ApiConstants;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -60,11 +62,13 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewAnimator;
@@ -77,6 +81,9 @@ class ThreadPerTaskExecutor implements Executor {
 
 public class MuPDFActivity extends Activity
 {
+    private final String CURRENT_WINDOW = "currentWindow";
+    private int currentVindow;
+
 	/* The core rendering instance */
 	private MuPDFCore core;
 	private String       mFileName;
@@ -264,6 +271,7 @@ public class MuPDFActivity extends Activity
 
         getActionBar().setTitle(documentMeta.getSubject());
         getActionBar().setSubtitle(DocumentContentStore.documentParent.getCreatorName());
+        getActionBar().setHomeButtonEnabled(true);
 
         selectActionModeCallback = new SelectActionModeCallback();
 
@@ -312,6 +320,7 @@ public class MuPDFActivity extends Activity
 					return;
 				mPageNumberView.setText(String.format("%d / %d", i + 1,
 						core.countPages()));
+                currentVindow = i;
 				super.onMoveToChild(i);
 			}
 
@@ -439,23 +448,32 @@ public class MuPDFActivity extends Activity
 		setContentView(layout);
 	}
 
-    private void showMessage(final String message) {
-        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-        toast.show();
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(CURRENT_WINDOW, currentVindow);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mDocView.setDisplayedViewIndex(savedInstanceState.getInt(CURRENT_WINDOW, 0));
     }
 
     private void openFileWithIntent(final String documentFileType, final byte[] data) {
         if (data == null) {
-            showMessage(getString(R.string.error_failed_to_open_with_intent));
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
             finish();
         }
 
         try {
             FileUtilities.openFileWithIntent(this, documentFileType, data);
         } catch (IOException e) {
-            showMessage(getString(R.string.error_failed_to_open_with_intent));
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
         } catch (ActivityNotFoundException e) {
-            showMessage(getString(R.string.error_no_activity_to_open_file));
+            DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
         }
     }
 
@@ -512,23 +530,15 @@ public class MuPDFActivity extends Activity
     }
 
 	void searchModeOn() {
-		if (!mTopBarIsSearch) {
-			mTopBarIsSearch = true;
 			//Focus on EditTextWidget
-			mSearchText.requestFocus();
-			showKeyboard();
-		}
+			//mSearchText.requestFocus();
+			//showKeyboard();
 	}
 
 	void searchModeOff() {
-		if (mTopBarIsSearch) {
-			mTopBarIsSearch = false;
-			hideKeyboard();
+			//hideKeyboard();
 			SearchTaskResult.set(null);
-			// Make the ReaderView act on the change to mSearchTaskResult
-			// via overridden onChildSetup method.
 			mDocView.resetupChildren();
-		}
 	}
 
 	void updatePageNumView(int index) {
@@ -549,23 +559,94 @@ public class MuPDFActivity extends Activity
 			imm.hideSoftInputFromWindow(mSearchText.getWindowToken(), 0);
 	}
 
-	void search(int direction) {
-		hideKeyboard();
+	void search(int direction, String query) {
+		//hideKeyboard();
 		int displayPage = mDocView.getDisplayedViewIndex();
 		SearchTaskResult r = SearchTaskResult.get();
 		int searchPage = r != null ? r.pageNumber : -1;
-		mSearchTask.go(mSearchText.getText().toString(), direction, displayPage, searchPage);
+		mSearchTask.go(query, direction, displayPage, searchPage);
 	}
 
 	@Override
 	public boolean onSearchRequested() {
-		if (mTopBarIsSearch) {
+		searchModeOn();
 
-		} else {
-			searchModeOn();
-		}
 		return super.onSearchRequested();
 	}
+
+    private void setupSearchView(MenuItem menuSearch) {
+        menuSearch.setOnActionExpandListener(new SearchOnActionExpandListener());
+
+        SearchView searchView = (SearchView) menuSearch.getActionView();
+
+        try
+        {
+            Field searchField = SearchView.class.getDeclaredField("mSearchButton");
+            searchField.setAccessible(true);
+
+            android.widget.ImageView searchBtn = (android.widget.ImageView) searchField.get(searchView);
+            searchBtn.setImageResource(R.drawable.white_search_48);
+
+            searchField = SearchView.class.getDeclaredField("mSearchPlate");
+            searchField.setAccessible(true);
+
+            LinearLayout searchPlate = (LinearLayout)searchField.get(searchView);
+
+            AutoCompleteTextView searchTextView = (AutoCompleteTextView) searchPlate.getChildAt(0);
+
+            searchTextView.setTextColor(getResources().getColor(R.color.white));
+            searchPlate.setBackgroundResource(R.drawable.search_background);
+
+            searchTextView.setHintTextColor(getResources().getColor(R.color.searchbar_grey_hint));
+            searchView.setQueryHint(getString(R.string.pdf_search_document));
+
+            android.widget.ImageView searchViewClearButton = (android.widget.ImageView) searchPlate.getChildAt(1);
+            searchViewClearButton.setImageResource(R.drawable.ic_clear_white);
+
+            searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
+        }
+        catch (NoSuchFieldException e)
+        {
+        }
+        catch (IllegalAccessException e)
+        {
+        }
+    }
+
+    private class SearchViewOnQueryTextListener implements android.widget.SearchView.OnQueryTextListener {
+
+        @Override
+        public boolean onQueryTextSubmit(String s) {
+            search(1, s);
+
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String s) {
+            if (SearchTaskResult.get() != null && !s.equals(SearchTaskResult.get().txt)) {
+                SearchTaskResult.set(null);
+                mDocView.resetupChildren();
+            }
+
+            return true;
+        }
+    }
+
+    private class SearchOnActionExpandListener implements MenuItem.OnActionExpandListener {
+
+        @Override
+        public boolean onMenuItemActionExpand(MenuItem menuItem) {
+            searchModeOn();
+            return true;
+        }
+
+        @Override
+        public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+            searchModeOff();
+            return true;
+        }
+    }
 
     private void executeAction(String action) {
         Intent i = new Intent(MuPDFActivity.this, MainContentActivity.class);
@@ -597,6 +678,9 @@ public class MuPDFActivity extends Activity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
+
+        MenuItem menuSearch = menu.findItem(R.id.pdfmenu_search);
+        setupSearchView(menuSearch);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -713,13 +797,7 @@ public class MuPDFActivity extends Activity
 
 	@Override
 	public void onBackPressed() {
-		if (mTopBarIsSearch) {
-            searchModeOff();
-		} else if (mTopBarIsSelect) {
-            selectModeOff();
-        } else {
-			super.onBackPressed();
-		}
+		super.onBackPressed();
 	}
 
     private void promtSaveToSD() {
@@ -771,9 +849,9 @@ public class MuPDFActivity extends Activity
             super.onPostExecute(saved);
 
             if (saved) {
-                showMessage(getString(R.string.pdf_saved_to_sd));
+                DialogUtitities.showToast(MuPDFActivity.this, getString(R.string.pdf_saved_to_sd));
             } else {
-                showMessage(getString(R.string.pdf_save_to_sd_failed));
+                DialogUtitities.showToast(MuPDFActivity.this, getString(R.string.pdf_save_to_sd_failed));
             }
 
             progressDialog.dismiss();

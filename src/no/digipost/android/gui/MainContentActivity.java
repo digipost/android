@@ -67,8 +67,6 @@ import java.lang.reflect.Field;
 
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
-    public static final String FRAGMENT_SELECTED = "fragmentSelected";
-
     private LetterOperations letterOperations;
 
     private DrawerLayout drawerLayout;
@@ -106,7 +104,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         invalidateOptionsMenu();
 
         executeGetPrimaryAccountTask();
-
         selectItem(ApplicationConstants.MAILBOX);
     }
 
@@ -115,15 +112,17 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        setupSearchView(searchView);
+        refreshButton = menu.findItem(R.id.menu_refresh);
+
+        SearchView menuSearch = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+
+        setupSearchView(menuSearch);
 
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        refreshButton = menu.findItem(R.id.menu_refresh);
         MenuItem searchButton = menu.findItem(R.id.menu_search);
         searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
