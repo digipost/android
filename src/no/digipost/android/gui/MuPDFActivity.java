@@ -81,6 +81,9 @@ class ThreadPerTaskExecutor implements Executor {
 
 public class MuPDFActivity extends Activity
 {
+    private final String CURRENT_WINDOW = "currentWindow";
+    private int currentVindow;
+
 	/* The core rendering instance */
 	private MuPDFCore core;
 	private String       mFileName;
@@ -317,6 +320,7 @@ public class MuPDFActivity extends Activity
 					return;
 				mPageNumberView.setText(String.format("%d / %d", i + 1,
 						core.countPages()));
+                currentVindow = i;
 				super.onMoveToChild(i);
 			}
 
@@ -444,23 +448,32 @@ public class MuPDFActivity extends Activity
 		setContentView(layout);
 	}
 
-    private void showMessage(final String message) {
-        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-        toast.show();
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(CURRENT_WINDOW, currentVindow);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        mDocView.setDisplayedViewIndex(savedInstanceState.getInt(CURRENT_WINDOW, 0));
     }
 
     private void openFileWithIntent(final String documentFileType, final byte[] data) {
         if (data == null) {
-            showMessage(getString(R.string.error_failed_to_open_with_intent));
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
             finish();
         }
 
         try {
             FileUtilities.openFileWithIntent(this, documentFileType, data);
         } catch (IOException e) {
-            showMessage(getString(R.string.error_failed_to_open_with_intent));
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
         } catch (ActivityNotFoundException e) {
-            showMessage(getString(R.string.error_no_activity_to_open_file));
+            DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
         }
     }
 
@@ -836,9 +849,9 @@ public class MuPDFActivity extends Activity
             super.onPostExecute(saved);
 
             if (saved) {
-                showMessage(getString(R.string.pdf_saved_to_sd));
+                DialogUtitities.showToast(MuPDFActivity.this, getString(R.string.pdf_saved_to_sd));
             } else {
-                showMessage(getString(R.string.pdf_save_to_sd_failed));
+                DialogUtitities.showToast(MuPDFActivity.this, getString(R.string.pdf_save_to_sd_failed));
             }
 
             progressDialog.dismiss();
