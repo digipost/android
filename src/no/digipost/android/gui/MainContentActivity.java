@@ -67,7 +67,6 @@ import java.lang.reflect.Field;
 
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
-    private final String CURRENT_FRAGMENT = "currentFragment";
 
     private LetterOperations letterOperations;
 
@@ -101,7 +100,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         executeGetPrimaryAccountTask();
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && getCurrentFragment() == null) {
             selectItem(ApplicationConstants.MAILBOX);
         }
     }
@@ -140,10 +139,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
 
         if (refreshing) {
-            System.out.println("startRefreshSpinner");
             refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
         } else {
-            System.out.println("endRefreshSpinner");
             refreshButton.setActionView(null);
         }
         boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
@@ -371,9 +368,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 primaryAccount = result;
                 updateUI();
             } else {
-                DialogUtitities.showToast(MainContentActivity.this, errorMessage);
-
                 if (invalidToken) {
+                    DialogUtitities.showToast(MainContentActivity.this, errorMessage);
                     logOut();
                 }
             }
