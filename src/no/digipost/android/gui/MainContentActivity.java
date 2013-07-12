@@ -98,9 +98,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         getActionBar().setHomeButtonEnabled(true);
 
-        executeGetPrimaryAccountTask();
+        System.out.println("before");
 
-        if (savedInstanceState == null && getCurrentFragment() == null) {
+        if (savedInstanceState == null || getCurrentFragment() == null) {
             selectItem(ApplicationConstants.MAILBOX);
         }
     }
@@ -111,6 +111,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
 
         SearchView menuSearch = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        System.out.println("menuSearch: " + menuSearch);
 
         setupSearchView(menuSearch);
         getActionBar().setTitle(ApplicationConstants.titles[getCurrentFragment().getContent()]);
@@ -191,6 +192,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     public void requestLogOut() {
         logOut();
+    }
+
+    @Override
+    public void onUpdateAccountMeta() {
+        executeGetPrimaryAccountTask();
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
