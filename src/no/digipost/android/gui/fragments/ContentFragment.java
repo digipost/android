@@ -253,6 +253,7 @@ public abstract class ContentFragment extends Fragment {
         public void onEndRefreshContent();
         public void requestLetterOperations();
         public void requestLogOut();
+        public void onUpdateAccountMeta();
     }
 
     protected class ContentMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {

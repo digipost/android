@@ -331,6 +331,7 @@ public abstract class DocumentFragment extends ContentFragment {
                 DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
             }
 
+            activityCommunicator.onUpdateAccountMeta();
             activityCommunicator.onEndRefreshContent();
         }
 

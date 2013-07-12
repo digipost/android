@@ -28,18 +28,17 @@
             android:gravity="center"
             android:padding="@dimen/screenlock_view_padding">
 
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/warning_sign"/>
+
         <TextView
                 android:id="@+id/unsupported_message"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:textSize="@dimen/screenlock_infotext_size"/>
-
-        <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/screenlock_view_padding"
-                android:text="@string/unsupported_message_bottom"
+                android:gravity="left"
                 android:textSize="@dimen/screenlock_infotext_size"/>
 
     </LinearLayout>
@@ -67,7 +66,7 @@
                 android:textStyle="bold"
                 android:layout_marginTop="@dimen/screenlock_view_padding"
                 android:background="@drawable/screenlock_no_button_style"
-                android:text="@string/abort"
+                android:text="@string/back"
                 android:textColor="@color/white"
                 android:id="@+id/unsupported_cancel_button"/>
     </LinearLayout>
