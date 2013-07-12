@@ -20,7 +20,7 @@
               android:orientation="horizontal"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:background="@color/white"
+              android:background="@drawable/content_list_item"
               android:paddingLeft="15dp"
               android:paddingTop="10dp"
               android:paddingRight="15dp"

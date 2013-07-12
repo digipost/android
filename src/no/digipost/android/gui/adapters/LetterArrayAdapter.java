@@ -48,9 +48,8 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
         super.metaTop.setText(DataFormatUtilities.getFormattedDate(letter.getCreated()));
         super.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(letter.getFileSize()));
 
-        if (letter.getRead().equals("true")) {
-            row.setBackgroundColor(super.context.getResources().getColor(R.color.list_element_opened));
-        } else {
+        if (!letter.getRead().equals("true")) {
+            row.setBackgroundResource(R.drawable.content_list_item_unread);
             super.setTitleAndSubTitleBold();
         }
 
