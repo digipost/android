@@ -31,6 +31,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -319,9 +320,12 @@ public abstract class DocumentFragment extends ContentFragment {
             super.onPostExecute(letters);
             if(letters != null){
                 DocumentFragment.super.listAdapter.replaceAll(letters);
+                DocumentFragment.super.setListEmptyViewNoNetwork(false);
             } else {
                 if (invalidToken) {
                     activityCommunicator.requestLogOut();
+                } else if (listAdapter.isEmpty()) {
+                    DocumentFragment.super.setListEmptyViewNoNetwork(true);
                 }
 
                 DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);

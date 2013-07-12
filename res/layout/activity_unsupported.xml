@@ -28,7 +28,6 @@
             android:gravity="center"
             android:padding="@dimen/screenlock_view_padding">
 
-
         <TextView
                 android:id="@+id/unsupported_message"
                 android:layout_width="fill_parent"
@@ -39,7 +38,6 @@
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
                 android:layout_marginTop="@dimen/screenlock_view_padding"
                 android:text="@string/unsupported_message_bottom"
                 android:textSize="@dimen/screenlock_infotext_size"/>

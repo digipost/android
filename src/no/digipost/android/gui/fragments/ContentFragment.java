@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 
@@ -60,6 +61,7 @@ public abstract class ContentFragment extends Fragment {
     protected LetterOperations letterOperations;
 
     protected ListView listView;
+    protected View listEmptyView;
     protected ContentArrayAdapter listAdapter;
 
     protected ProgressDialog progressDialog;
@@ -80,6 +82,15 @@ public abstract class ContentFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_layout_listview, container, false);
         listView = (ListView) view.findViewById(R.id.fragment_content_listview);
+        listEmptyView = view.findViewById(R.id.fragment_content_list_emptyview);
+
+        Button networkRetryButton = (Button) view.findViewById(R.id.fragment_content_network_retry_button);
+        networkRetryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateAccountMeta();
+            }
+        });
 
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
@@ -98,6 +109,16 @@ public abstract class ContentFragment extends Fragment {
     public void onResume() {
         super.onResume();
         FileUtilities.deleteTempFiles();
+    }
+
+    protected void setListEmptyViewNoNetwork(boolean visible) {
+        listView.setEmptyView(listEmptyView);
+
+        if (visible) {
+            listEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            listEmptyView.setVisibility(View.GONE);
+        }
     }
 
     protected void deleteContent() {
