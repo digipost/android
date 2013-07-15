@@ -20,8 +20,12 @@
     <color name="actionbar_button_pressed_dark_red">#B00</color>
 
     <!-- ListView -->
-    <color name="list_pressed">#E0E0E0</color>
-    <color name="list_focused">#6F7275</color>
+    <color name="list_pressed">#cecece</color>
+    <color name="list_multiselected">#c4e1f3</color>
+
+    <color name="list_focused">#cecece</color>
+
+
     <color name="list_even">#ffffff</color>
     <color name="list_odd">#fafafa</color>
     <color name="green">#7bc144</color>

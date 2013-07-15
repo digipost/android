@@ -130,7 +130,7 @@ public abstract class ContentFragment extends Fragment {
 
     protected void showDeleteContentDialog(String message, final ContentMultiChoiceModeListener contentMultiChoiceModeListener, final ActionMode actionMode) {
         AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
-        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 deleteContent();

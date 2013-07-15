@@ -27,6 +27,7 @@ import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
+import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.JSONUtilities;
 
 import android.content.Context;
@@ -67,10 +68,10 @@ public class LetterOperations {
 		}
 	}
 
-	public ArrayList<Receipt> getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException,
+	public Receipts getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
 		PrimaryAccount primaryAccount = getPrimaryAccount();
-		return apiAccess.getReceipts(primaryAccount.getReceiptsUri()).getReceipt();
+		return apiAccess.getReceipts(primaryAccount.getReceiptsUri());
 	}
 
 	public void moveDocument(final Letter letter, final String toLocation) throws DigipostClientException, DigipostApiException,

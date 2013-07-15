@@ -409,7 +409,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected ArrayList<Receipt> doInBackground(final Void... params) {
 			try {
-				return lo.getAccountContentMetaReceipt();
+				return lo.getAccountContentMetaReceipt().getReceipt();
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
 				return null;
@@ -1088,6 +1088,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
                     pdfTask.execute(mletter);
                 } else if (filetype.equals(ApiConstants.FILETYPE_HTML)) {
                     GetHTMLTask htmlTask = new GetHTMLTask();
+                    htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter); htmlTask = new GetHTMLTask();
                     htmlTask.execute(ApiConstants.GET_DOCUMENT, mletter);
                 } else if (filetype.equals(ApiConstants.FILETYPE_PNG) || filetype.equals(ApiConstants.FILETYPE_JPG)
                         || filetype.equals(ApiConstants.FILETYPE_JPEG) || filetype.equals(ApiConstants.FILETYPE_JFIF)

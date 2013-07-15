@@ -1,11 +1,12 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:left="-5dp"
-      android:right="-5dp"
-      android:top="-5dp"
-      android:bottom="0dp">
-    <shape android:shape="rectangle">
-        <stroke android:width="4dp"
-                android:color="@color/main_drawer_divider" />
-    </shape>
-</item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/main_drawer_divider"/>
+        </shape>
+    </item>
+    <item android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/main_drawer_grey_background"/>
+        </shape>
+    </item>
 </layer-list>
