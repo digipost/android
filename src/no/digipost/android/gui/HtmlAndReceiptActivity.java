@@ -22,6 +22,8 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
+import no.digipost.android.model.Receipt;
+import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,8 +39,7 @@ import android.webkit.WebView;
 public class HtmlAndReceiptActivity extends Activity {
 
 	private WebView webView;
-	private Attachment documentMeta;
-	int content_type;
+	private int content_type;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -126,10 +127,14 @@ public class HtmlAndReceiptActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 
 		if (content_type != ApplicationConstants.RECEIPTS) {
-			documentMeta = DocumentContentStore.documentMeta;
+			Attachment documentMeta = DocumentContentStore.documentMeta;
 			getActionBar().setTitle(documentMeta.getSubject());
 			getActionBar().setSubtitle(DocumentContentStore.documentParent.getCreatorName());
-		}
+		} else {
+            Receipt receiptMeta = DocumentContentStore.documentReceipt;
+            getActionBar().setTitle(receiptMeta.getStoreName());
+            getActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+        }
 	}
 
 	private void promptAction(String message,final String action) {
