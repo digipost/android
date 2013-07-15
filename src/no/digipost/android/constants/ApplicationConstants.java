@@ -25,6 +25,9 @@ public class ApplicationConstants {
     public static final int SCREENLOCK_CHOICE_NO = 1;
     public static final int SCREENLOCK_CHOICE_YES = 2;
 
+    public static final String ENCODING = "UTF-8";
+    public static final String MIME = "text/html";
+
     public static final int MAILBOX = 1;
     public static final int RECEIPTS = 2;
     public static final int WORKAREA = 4;

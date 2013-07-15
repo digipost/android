@@ -16,6 +16,20 @@
 
 package no.digipost.android.gui.fragments;
 
+import java.util.ArrayList;
+
+import no.digipost.android.R;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.HtmlAndReceiptActivity;
+import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
+import no.digipost.android.model.Receipt;
+import no.digipost.android.utilities.DialogUtitities;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,124 +41,217 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import java.util.ArrayList;
+public class ReceiptFragment extends ContentFragment {
+	public ReceiptFragment() {
+	}
 
-import no.digipost.android.R;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.gui.adapters.LetterArrayAdapter;
-import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
-import no.digipost.android.model.Letter;
-import no.digipost.android.model.Receipt;
-import no.digipost.android.utilities.DialogUtitities;
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = super.onCreateView(inflater, container, savedInstanceState);
+		super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
+		super.listView.setAdapter(listAdapter);
+		super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
+		super.listView.setOnItemClickListener(new ReceiptListOnItemClickListener());
 
-public class ReceiptFragment extends ContentFragment{
-    public ReceiptFragment(){}
+		updateAccountMeta();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
-        super.listView.setAdapter(listAdapter);
-        super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
+		return view;
+	}
 
-        updateAccountMeta();
+	@Override
+	public int getContent() {
+		return ApplicationConstants.RECEIPTS;
+	}
 
-        return view;
-    }
+	public void updateAccountMeta() {
+		GetReceiptsMetaTask task = new GetReceiptsMetaTask();
+		task.execute();
+	}
 
-    @Override
-    public int getContent() {
-        return ApplicationConstants.RECEIPTS;
-    }
+	private void openListItem(Receipt receipt) {
+		GetReceiptContentTask task = new GetReceiptContentTask(receipt);
+		task.execute();
+	}
 
-    public void updateAccountMeta(){
-        GetReceiptsMetaTask task = new GetReceiptsMetaTask();
+	private void openReceipt(String receiptContent) {
+		Intent intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
+		intent.putExtra(super.INTENT_CONTENT, getContent());
+		intent.putExtra(ApiConstants.GET_RECEIPT, receiptContent);
+		startActivityForResult(intent, super.INTENT_REQUESTCODE);
+	}
+
+	private class GetReceiptContentTask extends AsyncTask<Void, Void, String> {
+		private Receipt receipt;
+		private String errorMessage;
+		private boolean invalidToken;
+
+		public GetReceiptContentTask(Receipt receipt) {
+			this.receipt = receipt;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			if (!ReceiptFragment.super.progressDialogIsVisible)
+				ReceiptFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+
+		}
+
+		@Override
+		protected String doInBackground(Void... voids) {
+			try {
+				return ReceiptFragment.super.letterOperations.getReceiptContentHTML(receipt);
+			} catch (DigipostAuthenticationException e) {
+				Log.e(getClass().getName(), e.getMessage(), e);
+				errorMessage = e.getMessage();
+				invalidToken = true;
+				return null;
+			} catch (DigipostApiException e) {
+				Log.e(getClass().getName(), e.getMessage(), e);
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostClientException e) {
+				Log.e(getClass().getName(), e.getMessage(), e);
+				errorMessage = e.getMessage();
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			ReceiptFragment.super.hideProgressDialog();
+
+			if (result != null) {
+                DocumentContentStore.setContent(receipt);
+                openReceipt(result);
+			} else {
+				if (invalidToken) {
+					activityCommunicator.requestLogOut();
+				}
+
+				DialogUtitities.showToast(ReceiptFragment.this.getActivity(), errorMessage);
+			}
+
+			updateAccountMeta();
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			ReceiptFragment.super.hideProgressDialog();
+		}
+	}
+
+	private class GetReceiptsMetaTask extends AsyncTask<Void, Void, ArrayList<Receipt>> {
+		private String errorMessage;
+		private boolean invalidToken;
+
+		public GetReceiptsMetaTask() {
+			errorMessage = "";
+			invalidToken = false;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			activityCommunicator.onStartRefreshContent();
+		}
+
+		@Override
+		protected ArrayList<Receipt> doInBackground(final Void... params) {
+			try {
+				return ReceiptFragment.super.letterOperations.getAccountContentMetaReceipt();
+			} catch (DigipostApiException e) {
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostClientException e) {
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostAuthenticationException e) {
+				errorMessage = e.getMessage();
+				invalidToken = true;
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(final ArrayList<Receipt> receipts) {
+			super.onPostExecute(receipts);
+
+			if (receipts != null) {
+				ReceiptFragment.super.listAdapter.replaceAll(receipts);
+			} else {
+				DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
+
+				if (invalidToken) {
+					activityCommunicator.requestLogOut();
+				}
+			}
+
+			activityCommunicator.onEndRefreshContent();
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			activityCommunicator.onEndRefreshContent();
+		}
+	}
+
+	private class ReceiptListOnItemClickListener implements AdapterView.OnItemClickListener {
+		public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
+			openListItem((Receipt) ReceiptFragment.super.listAdapter.getItem(position));
+		}
+	}
+
+    private void deleteReceipt(Receipt receipt){
+        ArrayList<Object> receipts = new ArrayList<Object>();
+        receipts.add(receipt);
+
+        ContentDeleteTask task = new ContentDeleteTask(receipts);
         task.execute();
     }
 
-    private class GetReceiptsMetaTask extends AsyncTask<Void, Void, ArrayList<Receipt>> {
-        private String errorMessage;
-        private boolean invalidToken;
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 
-        public GetReceiptsMetaTask() {
-            errorMessage = "";
-            invalidToken = false;
-        }
+		if (resultCode == getActivity().RESULT_OK) {
+			if (requestCode == INTENT_REQUESTCODE) {
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            activityCommunicator.onStartRefreshContent();
-        }
+                String action = data.getStringExtra(ApiConstants.ACTION);
 
-        @Override
-        protected ArrayList<Receipt> doInBackground(final Void... params) {
-            try {
-                return ReceiptFragment.super.letterOperations.getAccountContentMetaReceipt();
-            } catch (DigipostApiException e) {
-                errorMessage = e.getMessage();
-                return null;
-            } catch (DigipostClientException e) {
-                errorMessage = e.getMessage();
-                return null;
-            } catch (DigipostAuthenticationException e) {
-                errorMessage = e.getMessage();
-                invalidToken = true;
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(final ArrayList<Receipt> receipts) {
-            super.onPostExecute(receipts);
-
-            if (receipts != null) {
-                ReceiptFragment.super.listAdapter.replaceAll(receipts);
-            } else {
-                DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
-
-                if (invalidToken) {
-                    activityCommunicator.requestLogOut();
+                if(action.equals(ApiConstants.DELETE)){
+                    deleteReceipt(DocumentContentStore.documentReceipt);
                 }
-            }
+			}
+		}
+	}
 
-            activityCommunicator.onEndRefreshContent();
-        }
+	private class ReceiptMultiChoiceModeListener extends ContentMultiChoiceModeListener {
 
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            activityCommunicator.onEndRefreshContent();
-        }
-    }
+		@Override
+		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+			super.onCreateActionMode(actionMode, menu);
 
-    private class ReceiptMultiChoiceModeListener extends ContentMultiChoiceModeListener {
+			MenuItem moveDocument = menu.findItem(R.id.main_context_menu_folder);
+			moveDocument.setVisible(false);
 
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            super.onCreateActionMode(actionMode, menu);
+			return true;
+		}
 
-            MenuItem moveDocument = menu.findItem(R.id.main_context_menu_folder);
-            moveDocument.setVisible(false);
+		@Override
+		public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+			super.onActionItemClicked(actionMode, menuItem);
 
-            return true;
-        }
+			switch (menuItem.getItemId()) {
+			case R.id.main_context_menu_delete:
+				ReceiptFragment.super.showDeleteContentDialog(getString(R.string.dialog_prompt_delete_receipts), this, actionMode);
+				break;
+			}
 
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
-            super.onActionItemClicked(actionMode, menuItem);
-
-            switch (menuItem.getItemId()) {
-                case R.id.main_context_menu_delete:
-                    ReceiptFragment.super.showDeleteContentDialog(getString(R.string.dialog_prompt_delete_receipts), this, actionMode);
-                    break;
-            }
-
-            return true;
-        }
-    }
+			return true;
+		}
+	}
 }

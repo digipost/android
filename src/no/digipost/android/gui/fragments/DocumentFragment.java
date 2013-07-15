@@ -187,11 +187,7 @@ public abstract class DocumentFragment extends ContentFragment {
         if (fileType.equals(ApiConstants.FILETYPE_PDF)) {
             intent = new Intent(getActivity(), MuPDFActivity.class);
         } else if (fileType.equals(ApiConstants.FILETYPE_HTML)) {
-            // ToDo åpne HTML
             intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
-            intent.putExtra(ApiConstants.DOCUMENT_TYPE, "");
-
-
         } else {
             for (String imageFiletype : ApiConstants.FILETYPES_IMAGE) {
                 if (fileType.equals(imageFiletype)) {
@@ -365,7 +361,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
     protected void showMoveDocumentsDialog(final String toLocation, final String message, final DocumentMultiChoiceModeListener documentMultiChoiceModeListener, final ActionMode actionMode) {
         AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
-        alertDialogBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.move, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 moveDocuments(toLocation);

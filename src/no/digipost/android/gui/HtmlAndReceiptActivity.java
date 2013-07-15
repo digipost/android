@@ -23,7 +23,6 @@ import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.utilities.DialogUtitities;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -33,189 +32,140 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.webkit.WebView;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 
 public class HtmlAndReceiptActivity extends Activity {
 
-    private WebView webView;
+	private WebView webView;
+	private Attachment documentMeta;
+	int content_type;
 
-    private String from;
-    private int content;
-    private Attachment documentMeta;
-    private AlertDialog mAlertDialog;
-    private AlertDialog.Builder mAlertBuilder;
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_html_and_receipt);
 
-    private ActionMode.Callback selectActionModeCallback;
-    private ActionMode selectActionMode;
+		content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
+        setupWebView();
+		setupActionBar();
 
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+		loadContent();
+	}
 
-        setContentView(R.layout.activity_html_and_receipt);
+	private void loadContent() {
+		String html = "";
+        if (content_type == ApplicationConstants.RECEIPTS) {
+			html = getIntent().getStringExtra(ApiConstants.GET_RECEIPT);
+        } else {
+			try {
+				html = new String(DocumentContentStore.documentContent, ApplicationConstants.ENCODING);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
-        documentMeta = DocumentContentStore.documentMeta;
+		webView.loadDataWithBaseURL(null, html, ApplicationConstants.MIME, ApplicationConstants.ENCODING, null);
+	}
 
-        getActionBar().setTitle(documentMeta.getSubject());
-        getActionBar().setSubtitle(DocumentContentStore.documentParent.getCreatorName());
-        getActionBar().setHomeButtonEnabled(true);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_html_actionbar, menu);
 
-        selectActionModeCallback = new SelectActionModeCallback();
+		return super.onCreateOptionsMenu(menu);
+	}
 
-        mAlertBuilder = new AlertDialog.Builder(this);
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem toArchive = menu.findItem(R.id.htmlmenu_archive);
+		MenuItem toWorkarea = menu.findItem(R.id.htmlmenu_workarea);
 
+		if (content_type == ApplicationConstants.WORKAREA) {
+			toArchive.setVisible(true);
+		} else if (content_type == ApplicationConstants.ARCHIVE) {
+			toWorkarea.setVisible(true);
+		}
 
-        String html = getIntent().getExtras().getString(ApiConstants.FILETYPE_HTML);
-        String mime = "text/html";
-        String encoding = "utf-8";
+		return super.onPrepareOptionsMenu(menu);
+	}
 
-        try{
-        html = new String(DocumentContentStore.documentContent, "UTF-8");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		case R.id.htmlmenu_delete:
+			promptAction(getString(R.string.dialog_prompt_delete_document),ApiConstants.DELETE);
+			return true;
+		case R.id.htmlmenu_archive:
+			promptAction(getString(R.string.dialog_prompt_document_toArchive), ApiConstants.LOCATION_ARCHIVE);
+			return true;
+		case R.id.htmlmenu_workarea:
+			promptAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
+			return true;
+		}
 
-        webView = (WebView) findViewById(R.id.web_html);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.getSettings().setSupportZoom(true);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setDisplayZoomControls(true);
-        webView.getSettings().setLoadWithOverviewMode(true);
-        webView.loadDataWithBaseURL(null, html, mime, encoding, null);
-    }
+		return super.onOptionsItemSelected(item);
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
+	private void setupWebView() {
 
-        return super.onCreateOptionsMenu(menu);
-    }
+		webView = (WebView) findViewById(R.id.web_html);
+		webView.getSettings().setJavaScriptEnabled(true);
+		webView.getSettings().setUseWideViewPort(true);
+		webView.getSettings().setSupportZoom(true);
+		webView.getSettings().setBuiltInZoomControls(true);
+		webView.getSettings().setDisplayZoomControls(false);
+		webView.getSettings().setLoadWithOverviewMode(true);
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem toArchive = menu.findItem(R.id.pdfmenu_archive);
-        MenuItem toWorkarea = menu.findItem(R.id.pdfmenu_workarea);
+	}
 
-        int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
+	private void setupActionBar() {
+		getActionBar().setHomeButtonEnabled(true);
 
-        if (content == ApplicationConstants.WORKAREA) {
-            toWorkarea.setVisible(false);
-        } else if (content == ApplicationConstants.ARCHIVE) {
-            toArchive.setVisible(false);
-        }
+		if (content_type != ApplicationConstants.RECEIPTS) {
+			documentMeta = DocumentContentStore.documentMeta;
+			getActionBar().setTitle(documentMeta.getSubject());
+			getActionBar().setSubtitle(DocumentContentStore.documentParent.getCreatorName());
+		}
+	}
 
-        return super.onPrepareOptionsMenu(menu);
-    }
+	private void promptAction(String message,final String action) {
 
+        if(content_type == ApplicationConstants.RECEIPTS)
+            message = getString(R.string.dialog_prompt_delete_receipt);
 
-    private class SelectActionModeCallback implements ActionMode.Callback {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            MenuInflater inflater = actionMode.getMenuInflater();
-            inflater.inflate(R.menu.activity_mupdf_context, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.mupdf_context_menu_copy:
-                    actionMode.finish();
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case R.id.pdfmenu_delete:
-                promptAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
-                return true;
-            case R.id.pdfmenu_archive:
-                promptAction(getString(R.string.dialog_prompt_document_toArchive), ApiConstants.LOCATION_ARCHIVE);
-                return true;
-            case R.id.pdfmenu_workarea:
-                promptAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
-                return true;
+        String positiveButton = getString(R.string.yes);
+        if(action.equals(ApiConstants.DELETE)){
+            positiveButton = getString(R.string.delete);
+        }else if(action.equals(ApiConstants.LOCATION_ARCHIVE) || action.equals(ApiConstants.LOCATION_WORKAREA)){
+            positiveButton = getString(R.string.move);
         }
 
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void promptAction(final String message, final String action) {
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                executeAction(action);
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.create().show();
-    }
+		builder.setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				executeAction(action);
+				dialogInterface.dismiss();
+			}
+		});
+		builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				dialogInterface.cancel();
+			}
+		});
+		builder.create().show();
+	}
 
-    private void executeAction(String action) {
-        Intent i = new Intent(HtmlAndReceiptActivity.this, MainContentActivity.class);
+	private void executeAction(String action) {
+		Intent i = new Intent(HtmlAndReceiptActivity.this, MainContentActivity.class);
         i.putExtra(ApiConstants.ACTION, action);
-
-        setResult(RESULT_OK, i);
-        finish();
-    }
-
-
-    private void singleLetterOperation(final String action) {
-        Intent i = new Intent(HtmlAndReceiptActivity.this, BaseFragmentActivity.class);
-        i.putExtra(ApiConstants.LOCATION_FROM, from);
-        i.putExtra(ApiConstants.ACTION, action);
-        i.putExtra(ApiConstants.CONTENT_TYPE, content);
-        setResult(RESULT_OK, i);
-        finish();
-    }
-
-    private void showWarning(final String text, final String action) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(text).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                singleLetterOperation(action);
-                dialog.dismiss();
-            }
-        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
+        i.putExtra(ContentFragment.INTENT_CONTENT,content_type);
+		setResult(RESULT_OK, i);
+		finish();
+	}
 }
