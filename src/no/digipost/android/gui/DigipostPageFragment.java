@@ -409,7 +409,7 @@ public class DigipostPageFragment extends Fragment implements FragmentCommunicat
 		@Override
 		protected ArrayList<Receipt> doInBackground(final Void... params) {
 			try {
-				return lo.getAccountContentMetaReceipt();
+				return lo.getAccountContentMetaReceipt().getReceipt();
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
 				return null;

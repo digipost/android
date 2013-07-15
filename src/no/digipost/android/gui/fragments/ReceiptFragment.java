@@ -28,6 +28,7 @@ import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.HtmlAndReceiptActivity;
 import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
 import no.digipost.android.model.Receipt;
+import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -61,6 +62,35 @@ public class ReceiptFragment extends ContentFragment {
 	@Override
 	public int getContent() {
 		return ApplicationConstants.RECEIPTS;
+	}
+
+	private void checkStatusAndDisplayReceipts(Receipts receipts) {
+
+		ArrayList<Receipt> receipt = receipts.getReceipt();
+
+		int numberOfCards = Integer.parseInt(receipts.getNumberOfCards());
+		int numberOfCardsReadyForVerification = Integer.parseInt(receipts.getNumberOfCardsReadyForVerification());
+		int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(receipts.getNumberOfReceiptsHiddenUntilVerification());
+
+		if (receipt.size() == 0) {
+
+			if (numberOfCards == 0) {
+
+			} else if (numberOfCardsReadyForVerification > 0) {
+
+			} else {
+
+			}
+		} else{
+
+            if(numberOfCards == 0){
+
+            }else if(numberOfCardsReadyForVerification > 0){
+                
+            }else{
+                ReceiptFragment.super.listAdapter.replaceAll(receipt);
+            }
+        }
 	}
 
 	public void updateAccountMeta() {
@@ -123,8 +153,8 @@ public class ReceiptFragment extends ContentFragment {
 			ReceiptFragment.super.hideProgressDialog();
 
 			if (result != null) {
-                DocumentContentStore.setContent(receipt);
-                openReceipt(result);
+				DocumentContentStore.setContent(receipt);
+				openReceipt(result);
 			} else {
 				if (invalidToken) {
 					activityCommunicator.requestLogOut();
@@ -143,7 +173,7 @@ public class ReceiptFragment extends ContentFragment {
 		}
 	}
 
-	private class GetReceiptsMetaTask extends AsyncTask<Void, Void, ArrayList<Receipt>> {
+	private class GetReceiptsMetaTask extends AsyncTask<Void, Void, Receipts> {
 		private String errorMessage;
 		private boolean invalidToken;
 
@@ -159,7 +189,7 @@ public class ReceiptFragment extends ContentFragment {
 		}
 
 		@Override
-		protected ArrayList<Receipt> doInBackground(final Void... params) {
+		protected Receipts doInBackground(final Void... params) {
 			try {
 				return ReceiptFragment.super.letterOperations.getAccountContentMetaReceipt();
 			} catch (DigipostApiException e) {
@@ -176,11 +206,10 @@ public class ReceiptFragment extends ContentFragment {
 		}
 
 		@Override
-		protected void onPostExecute(final ArrayList<Receipt> receipts) {
+		protected void onPostExecute(final Receipts receipts) {
 			super.onPostExecute(receipts);
-
 			if (receipts != null) {
-				ReceiptFragment.super.listAdapter.replaceAll(receipts);
+                checkStatusAndDisplayReceipts(receipts);
 			} else {
 				DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
 
@@ -205,13 +234,13 @@ public class ReceiptFragment extends ContentFragment {
 		}
 	}
 
-    private void deleteReceipt(Receipt receipt){
-        ArrayList<Object> receipts = new ArrayList<Object>();
-        receipts.add(receipt);
+	private void deleteReceipt(Receipt receipt) {
+		ArrayList<Object> receipts = new ArrayList<Object>();
+		receipts.add(receipt);
 
-        ContentDeleteTask task = new ContentDeleteTask(receipts);
-        task.execute();
-    }
+		ContentDeleteTask task = new ContentDeleteTask(receipts);
+		task.execute();
+	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -220,11 +249,11 @@ public class ReceiptFragment extends ContentFragment {
 		if (resultCode == getActivity().RESULT_OK) {
 			if (requestCode == INTENT_REQUESTCODE) {
 
-                String action = data.getStringExtra(ApiConstants.ACTION);
+				String action = data.getStringExtra(ApiConstants.ACTION);
 
-                if(action.equals(ApiConstants.DELETE)){
-                    deleteReceipt(DocumentContentStore.documentReceipt);
-                }
+				if (action.equals(ApiConstants.DELETE)) {
+					deleteReceipt(DocumentContentStore.documentReceipt);
+				}
 			}
 		}
 	}
