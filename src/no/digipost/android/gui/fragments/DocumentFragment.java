@@ -44,6 +44,8 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.AttachmentArrayAdapter;
+import no.digipost.android.gui.HtmlActivity;
+import no.digipost.android.gui.HtmlAndReceiptActivity;
 import no.digipost.android.gui.MuPDFActivity;
 import no.digipost.android.gui.UnsupportedDocumentFormatActivity;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
@@ -178,7 +180,7 @@ public abstract class DocumentFragment extends ContentFragment {
         builder.create().show();
     }
 
-    private void openAttachmentContent(final Attachment attachment) {
+    private void openAttachmentContent(final Letter parentLetter, final Attachment attachment) {
         String fileType = attachment.getFileType();
         Intent intent = null;
 
@@ -186,6 +188,10 @@ public abstract class DocumentFragment extends ContentFragment {
             intent = new Intent(getActivity(), MuPDFActivity.class);
         } else if (fileType.equals(ApiConstants.FILETYPE_HTML)) {
             // ToDo åpne HTML
+            intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
+            intent.putExtra(ApiConstants.DOCUMENT_TYPE, "");
+
+
         } else {
             for (String imageFiletype : ApiConstants.FILETYPES_IMAGE) {
                 if (fileType.equals(imageFiletype)) {
@@ -253,7 +259,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
             if (result != null) {
                 DocumentContentStore.setContent(result, attachment, parentLetter);
-                openAttachmentContent(attachment);
+                openAttachmentContent(parentLetter,attachment);
             } else {
                 if (invalidToken) {
                     activityCommunicator.requestLogOut();

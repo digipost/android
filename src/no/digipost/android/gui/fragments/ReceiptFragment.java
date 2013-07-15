@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import java.util.ArrayList;
 
@@ -36,6 +37,7 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
+import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.DialogUtitities;
 

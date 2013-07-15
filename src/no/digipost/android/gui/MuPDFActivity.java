@@ -656,7 +656,7 @@ public class MuPDFActivity extends Activity
         finish();
     }
 
-    private void promtAction(final String message, final String action) {
+    private void promptAction(final String message, final String action) {
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
@@ -708,13 +708,13 @@ public class MuPDFActivity extends Activity
                 finish();
                 return true;
             case R.id.pdfmenu_delete:
-                promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
+                promptAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
                 return true;
             case R.id.pdfmenu_archive:
-                promtAction(getString(R.string.dialog_prompt_document_toArchive), ApiConstants.LOCATION_ARCHIVE);
+                promptAction(getString(R.string.dialog_prompt_document_toArchive), ApiConstants.LOCATION_ARCHIVE);
                 return true;
             case R.id.pdfmenu_workarea:
-                promtAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
+                promptAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
                 return true;
             case R.id.pdfmenu_copy:
                 selectModeOn();
