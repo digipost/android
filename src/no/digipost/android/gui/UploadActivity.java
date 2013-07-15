@@ -22,6 +22,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ import no.digipost.android.utilities.DialogUtitities;
 
 public class UploadActivity extends Activity {
     private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
+    private final String[] blockedFileExtensions = {".html"};
 
     private File mDirectory;
     private ArrayList<File> mFiles;
@@ -63,6 +66,7 @@ public class UploadActivity extends Activity {
 
         mDirectory = DEFAULT_INITIAL_DIRECTORY;
         mFiles = new ArrayList<File>();
+
         ListView listView = (ListView) findViewById(R.id.upload_file_list);
         listView.setEmptyView(listEmpty);
         listView.setOnItemClickListener(new ListOnItemClickListener());
@@ -119,6 +123,20 @@ public class UploadActivity extends Activity {
         availableSpace.setText(percentUsed + "% lagringsplass brukt");
     }
 
+    private boolean isAcceptedFileExtension(File file) {
+        if(blockedFileExtensions != null && blockedFileExtensions.length > 0) {
+            for(int i = 0; i < blockedFileExtensions.length; i++) {
+                if(file.getName().toLowerCase().endsWith(blockedFileExtensions[i].toLowerCase())) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return true;
+    }
+
     private void promtUpload(final File file) {
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, "Er du sikker på at du vil laste opp " + file.getName() + "?");
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -129,6 +147,18 @@ public class UploadActivity extends Activity {
             }
         });
         builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    private void showBlockedFileExtensionDialog(File file) {
+        String message = "Denne filtypen (." + FilenameUtils.getExtension(file.getName()) + ") kan ikke lastes opp i Digipost.";
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+        builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -175,7 +205,11 @@ public class UploadActivity extends Activity {
             File newFile = mAdapter.getItem(position);
 
             if(newFile.isFile()) {
-                promtUpload(newFile);
+                if (isAcceptedFileExtension(newFile)) {
+                    promtUpload(newFile);
+                } else {
+                    showBlockedFileExtensionDialog(newFile);
+                }
             } else {
                 mDirectory = newFile;
                 refreshFilesList();
