@@ -38,6 +38,11 @@
             <artifactId>httpclient</artifactId>
             <version>4.2.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.2.5</version>
+        </dependency>
 		<dependency>
 			<groupId>com.github.chrisbanes.photoview</groupId>
 			<artifactId>sample</artifactId>
