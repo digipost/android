@@ -31,7 +31,7 @@ public class FileUtilities {
     public static final String TEMP_FILE_NAME = "temp";
     public static final String TEMP_FILE_DIRECTORY = Environment.getExternalStorageDirectory() + "/digipost/";
 
-    public static void openFileWithIntent(final Context context, final String fileType, final byte[] data) throws ActivityNotFoundException, IOException {
+    public static void openFileWithIntent(final Context context, final String fileType, final byte[] data) throws Exception {
         File file = writeTempFile(fileType, data);
 
         Intent intent = new Intent();
@@ -49,14 +49,17 @@ public class FileUtilities {
         return mime.getMimeTypeFromExtension(ext);
     }
 
-    public static File writeFileToSD(final String fileName, final String fileType, final byte[] data) throws IOException {
+    public static File writeFileToSD(final String fileName, final String fileType, final byte[] data) throws Exception {
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(path, fileName + "." + fileType);
+        File file = new File(path.getAbsolutePath(), fileName + "." + fileType);
+
+        System.out.println(file.getName());
+        System.out.println(file.getAbsolutePath());
 
         return writeData(file, data);
     }
 
-    public static File writeTempFile(final String fileType, final byte[] data) throws IOException {
+    public static File writeTempFile(final String fileType, final byte[] data) throws Exception {
         File path = new File(TEMP_FILE_DIRECTORY);
         path.mkdir();
         File file = new File(path, TEMP_FILE_NAME + "." + fileType);
@@ -79,8 +82,8 @@ public class FileUtilities {
         }
     }
 
-    private static File writeData(File file, byte[] data) throws IOException {
-        FileOutputStream stream = new FileOutputStream(file, true);
+    private static File writeData(File file, byte[] data) throws Exception {
+        FileOutputStream stream = new FileOutputStream(file);
         stream.write(data);
         stream.close();
 

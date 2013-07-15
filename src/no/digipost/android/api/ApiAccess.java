@@ -22,6 +22,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.swing.internal.plaf.synth.resources.synth_sv;
 import com.sun.xml.internal.xsom.impl.Ref;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -285,7 +286,7 @@ public class ApiAccess {
             FileBody filebody = new FileBody(file, ApiConstants.CONTENT_OCTET_STREAM);
 
             MultipartEntity multipartEntity = new MultipartEntity();
-            multipartEntity.addPart("subject", new StringBody(file.getName()));
+            multipartEntity.addPart("subject", new StringBody(FilenameUtils.removeExtension(file.getName())));
             multipartEntity.addPart("file", filebody);
             multipartEntity.addPart("token", new StringBody(Secret.ACCESS_TOKEN));
             httpPost.setEntity(multipartEntity);

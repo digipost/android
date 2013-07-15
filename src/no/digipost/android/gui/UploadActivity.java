@@ -156,7 +156,7 @@ public class UploadActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if(mDirectory.getParentFile() != null) {
+        if(!mDirectory.equals(DEFAULT_INITIAL_DIRECTORY)) {
             mDirectory = mDirectory.getParentFile();
             refreshFilesList();
             return;
