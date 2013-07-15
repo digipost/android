@@ -15,6 +15,7 @@
  */
 package no.digipost.android.api;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -30,19 +31,20 @@ import no.digipost.android.utilities.JSONUtilities;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Environment;
 
 public class LetterOperations {
 
 
-	private PrimaryAccount primaryAccount;
-	private final ApiAccess apiAccess;
+	private static PrimaryAccount primaryAccount;
+	private static ApiAccess apiAccess;
 
 	public LetterOperations(final Context context) {
 		apiAccess = new ApiAccess(context);
 		primaryAccount = null;
 	}
 
-	public PrimaryAccount getPrimaryAccount() throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+	public static PrimaryAccount getPrimaryAccount() throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		if (primaryAccount == null) {
 			primaryAccount = apiAccess.getAccount().getPrimaryAccount();
 		}
@@ -89,7 +91,7 @@ public class LetterOperations {
 
     public Letter getSelfLetter(final Letter letter) throws DigipostClientException, DigipostApiException,
         DigipostAuthenticationException{
-        return (Letter) apiAccess.getLetterSelf(letter.getSelfUri());
+        return apiAccess.getLetterSelf(letter.getSelfUri());
     }
 
 	public byte[] getDocumentContent(final Attachment attachment) throws DigipostApiException, DigipostClientException,
@@ -135,5 +137,10 @@ public class LetterOperations {
         } else if (object instanceof Receipt) {
             apiAccess.delete(((Receipt) object).getDeleteUri());
         }
+    }
+
+    public static void uploadFile(Context context, File file) throws DigipostClientException, DigipostAuthenticationException, DigipostApiException {
+        ApiAccess apiAccess = new ApiAccess(context);
+        apiAccess.uploadFile(getPrimaryAccount().getUploadUri(), file);
     }
 }

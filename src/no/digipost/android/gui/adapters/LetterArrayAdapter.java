@@ -46,7 +46,7 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
         super.title.setText(letter.getSubject());
         super.subTitle.setText(letter.getCreatorName());
         super.metaTop.setText(DataFormatUtilities.getFormattedDate(letter.getCreated()));
-        super.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(letter.getFileSize()));
+        super.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(letter.getFileSize())));
 
         if (letter.getRead().equals("true")) {
             row.setBackgroundColor(super.context.getResources().getColor(R.color.list_element_opened));

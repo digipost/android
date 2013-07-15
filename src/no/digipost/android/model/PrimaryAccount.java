@@ -31,6 +31,12 @@ public class PrimaryAccount {
     @JsonProperty
     private String unreadItemsInInbox;
 
+    @JsonProperty
+    private String usedStorage;
+
+    @JsonProperty
+    private String totalAvailableStorage;
+
 	@JsonProperty
 	private ArrayList<Link> link;
 
@@ -40,6 +46,14 @@ public class PrimaryAccount {
 
     public int getUnreadItemsInInbox() {
         return Integer.parseInt(unreadItemsInInbox);
+    }
+
+    public String getUsedStorage() {
+        return usedStorage;
+    }
+
+    public String getTotalAvailableStorage() {
+        return totalAvailableStorage;
     }
 
 	public ArrayList<Link> getLink() {
@@ -84,4 +98,13 @@ public class PrimaryAccount {
 		}
 		return null;
 	}
+
+    public String getUploadUri() {
+        for (Link l : link) {
+            if (l.getRel().equals("https://www.digipost.no/post/relations/upload_document")) {
+                return l.getUri();
+            }
+        }
+        return null;
+    }
 }

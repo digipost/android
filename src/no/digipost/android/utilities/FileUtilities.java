@@ -37,13 +37,16 @@ public class FileUtilities {
         Intent intent = new Intent();
         intent.setAction(android.content.Intent.ACTION_VIEW);
 
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        String ext=file.getName().substring(file.getName().indexOf(".") + 1).toLowerCase();
-        String type = mime.getMimeTypeFromExtension(ext);
-
-        intent.setDataAndType(Uri.fromFile(file),type);
+        intent.setDataAndType(Uri.fromFile(file), getMimeType(file));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    public static String getMimeType(File file) {
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        String ext=file.getName().substring(file.getName().indexOf(".") + 1).toLowerCase();
+
+        return mime.getMimeTypeFromExtension(ext);
     }
 
     public static File writeFileToSD(final String fileName, final String fileType, final byte[] data) throws IOException {
@@ -55,9 +58,7 @@ public class FileUtilities {
 
     public static File writeTempFile(final String fileType, final byte[] data) throws IOException {
         File path = new File(TEMP_FILE_DIRECTORY);
-        boolean kk = path.mkdir();
-        System.out.println("dir made: " + kk);
-        System.out.println("Cache dir: " + path.toString());
+        path.mkdir();
         File file = new File(path, TEMP_FILE_NAME + "." + fileType);
 
         return writeData(file, data);
@@ -72,11 +73,8 @@ public class FileUtilities {
         }
 
         for (File f : cache) {
-            System.out.println(f.getName());
             if (f.getName().startsWith(TEMP_FILE_NAME)) {
-                System.out.println("Delete: " + f.getName());
-                boolean del = f.delete();
-                System.out.println("Delete successful: " + del);
+                f.delete();
             }
         }
     }

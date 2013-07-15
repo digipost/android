@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/list_element_opened" >
+
+    <TextView
+            android:id="@+id/upload_file_path"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="14dp"
+            android:padding="5dp"
+            android:background="@color/login_disclamer_registration_layout_background"/>
+
+    <ListView
+            android:id="@+id/upload_file_list"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1"/>
+
+    <no.digipost.android.gui.TextProgressBar
+            android:id="@+id/upload_available_space"
+            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:max="100"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:progressDrawable="@drawable/upload_progressbar"
+            android:visibility="gone"/>
+
+</LinearLayout>
