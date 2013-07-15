@@ -112,12 +112,10 @@ public abstract class ContentFragment extends Fragment {
     }
 
     protected void setListEmptyViewNoNetwork(boolean visible) {
-        listView.setEmptyView(listEmptyView);
-
         if (visible) {
-            listEmptyView.setVisibility(View.VISIBLE);
+            listView.setEmptyView(listEmptyView);
         } else {
-            listEmptyView.setVisibility(View.GONE);
+            listView.setEmptyView(null);
         }
     }
 

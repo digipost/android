@@ -20,6 +20,17 @@
             android:layout_height="0sp"
             android:layout_weight="1"/>
 
+    <TextView
+            android:id="@+id/upload_list_empty"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1"
+            android:text="@string/no_files"
+            android:textSize="17dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textColor="@color/login_disclamer_registration_layout_background"/>
+
     <no.digipost.android.gui.TextProgressBar
             android:id="@+id/upload_available_space"
             android:layout_height="30dp"

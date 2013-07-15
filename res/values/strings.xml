@@ -102,7 +102,8 @@
     <!-- Upload -->
     <string name="upload">Last opp</string>
     <string name="uploading">Laster opp...</string>
-    
+    <string name="no_files">Ingen filer</string>
+
     <!-- Image -->
     <string name="image_open_failed">Kunne ikke åpne bildet.</string>
 

@@ -47,6 +47,7 @@ public class UploadActivity extends Activity {
 
     private TextView absolutePath;
     private TextProgressBar availableSpace;
+    private TextView listEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +59,12 @@ public class UploadActivity extends Activity {
 
         absolutePath = (TextView) findViewById(R.id.upload_file_path);
         availableSpace = (TextProgressBar) findViewById(R.id.upload_available_space);
+        listEmpty = (TextView) findViewById(R.id.upload_list_empty);
 
         mDirectory = DEFAULT_INITIAL_DIRECTORY;
         mFiles = new ArrayList<File>();
         ListView listView = (ListView) findViewById(R.id.upload_file_list);
+        listView.setEmptyView(listEmpty);
         listView.setOnItemClickListener(new ListOnItemClickListener());
         mAdapter = new UploadListAdapter(this, mFiles);
         listView.setAdapter(mAdapter);
