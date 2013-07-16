@@ -24,13 +24,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/fragment_content_listview_top_text"
-            android:text=""
             android:textSize="15dp"
+            android:padding="8dp"
             android:visibility="gone"
-            android:background="@color/login_disclamer_registration_layout_background"
-
+            android:background="@color/login_background"
             android:gravity="center_horizontal"
-
             android:textColor="@color/white"/>
     <ListView
             android:id="@+id/fragment_content_listview"
