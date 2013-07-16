@@ -353,13 +353,16 @@ public abstract class DocumentFragment extends ContentFragment {
 
     private void setEmptyViewText(){
         int content_type = getContent();
+        String content = ApplicationConstants.titles[content_type].toLowerCase();
         String text = "";
         if(content_type==ApplicationConstants.MAILBOX){
-            text = "Ingen brev i ";
+            text = "Ingen brev i " + content;
+        }else if(content_type == ApplicationConstants.WORKAREA){
+            text = "Ingen dokumenter på " + content;
         }else{
-            text = "Ingen dokumenter i ";
+            text = "Ingen dokumenter i " + content;
         }
-        DocumentFragment.super.setListEmptyViewText(text+ApplicationConstants.titles[content_type].toLowerCase(),null);
+        DocumentFragment.super.setListEmptyViewText(text,null);
     }
 
 
