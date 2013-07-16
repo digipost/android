@@ -78,19 +78,27 @@ public class ReceiptFragment extends ContentFragment {
 		int numberOfCardsReadyForVerification = Integer.parseInt(receipts.getNumberOfCardsReadyForVerification());
 		int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(receipts.getNumberOfReceiptsHiddenUntilVerification());
 
+
 		if (receipt.size() == 0) {
 			if (numberOfCards == 0) {
-                setListEmptyViewText("Du må legge inn kort på Digipost.no for å få kvitteringer");
+                setListEmptyViewText("Kom i gang med elektroniske kvitteringer",
+                        "Med Digipost har du tilgang til dine kvitteringer der du er. Se kvitteringene på mobilen, via et nettbrett eller på din datamaskin. Tjenesten er gratis å bruke.");
 			} else if (numberOfCardsReadyForVerification > 0) {
-                setListEmptyViewText("Du har"+numberOfReceiptsHiddenUntilVerification + "skjulte kvitteringer, men for at du sksal få se de må du verifisere kortet på Digipost.no");
+                setListEmptyViewText("Verifisering",
+                        "For å se kvitteringer fra dette bankkortet må du verifisere at dette er ditt kort. Du verifiserer kortet ved å taste inn kjøpesummen fra et kjøp som er gjort i en butikk som støtter Elektronisk Kvittering.");
             } else {
-                setListEmptyViewText("Du har ikke mottatt noen kvitteringer enda.");
+                setListEmptyViewText("Registert",
+                        "Neste steg er å betale med kort i en butikk som støtter Elektronisk Kvittering."+"\n"+"\n"+
+                                "Ta vare på kvitteringen fra dette kjøpet. Du kan bruke kvitteringen til å verifisere bankkortet. Du trenger kun å verifisere kortet én gang.");
+
             }
 		} else{
             if(numberOfCards == 0){
-                //showTopMessage("Du vil ikke motta kvitteringer siden du ikke har noen kort registert.");
-            }else if(numberOfCardsReadyForVerification > 0){
-                //showTopMessage("Du har"+numberOfReceiptsHiddenUntilVerification +"skjulte kvitteringer, men for at du sksal få se de må du verifisere kortet på Digipost.no");
+                setTopText("For å motta elektroniske kvitteringer må du registere dine kort");
+            }else if(numberOfReceiptsHiddenUntilVerification == 1){
+                setTopText("En kvittering er skjult. For å se denne må du verifisere kortene dine");
+            }else if(numberOfCardsReadyForVerification > 1){
+                setTopText("Du har"+numberOfReceiptsHiddenUntilVerification +" skjulte kvitteringer, for å se disse må du verifisere kortene dine");
             }
         }
 	}
@@ -212,7 +220,6 @@ public class ReceiptFragment extends ContentFragment {
 			super.onPostExecute(receipts);
 			if (receipts != null) {
                 checkStatusAndDisplayReceipts(receipts);
-                //ReceiptFragment.super.setListEmptyViewNoNetwork(false);
             } else {
 				DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
 

@@ -20,7 +20,18 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:background="@color/list_element_opened">
+    <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_content_listview_top_text"
+            android:text=""
+            android:textSize="15dp"
+            android:visibility="gone"
+            android:background="@color/login_disclamer_registration_layout_background"
 
+            android:gravity="center_horizontal"
+
+            android:textColor="@color/white"/>
     <ListView
             android:id="@+id/fragment_content_listview"
             android:layout_width="fill_parent"
@@ -35,18 +46,24 @@
             android:id="@+id/fragment_content_list_no_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="bottom"
+            android:gravity="center_vertical|center_horizontal"
             android:visibility="gone"
             android:padding="@dimen/screenlock_view_padding">
 
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/fragment_content_list_emptyview_text"
-                android:text="Listen er tom"
-                android:textSize="@dimen/screenlock_infotext_size"
+                android:id="@+id/fragment_content_list_emptyview_title"
+                android:textSize="25dp"
                 android:gravity="center_horizontal"
-                android:textColor="@color/login_disclamer_registration_layout_background"/>
+                android:textColor="@color/black_subject"/>
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_content_list_emptyview_text"
+                android:textSize="17dp"
+                android:textColor="@color/grey_filesize"/>
+
     </LinearLayout>
 
     <LinearLayout

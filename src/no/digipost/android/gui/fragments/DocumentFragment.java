@@ -323,13 +323,12 @@ public abstract class DocumentFragment extends ContentFragment {
         @Override
         protected void onPostExecute(final ArrayList<Letter> letters) {
             super.onPostExecute(letters);
-
             if(letters != null){
                 if(!letters.isEmpty()){
                     DocumentFragment.super.listAdapter.replaceAll(letters);
                     DocumentFragment.super.setListEmptyViewNoNetwork(false);
                 }else{
-                    DocumentFragment.super.setListEmptyViewText(null);
+                    setEmptyViewText();
                 }
             } else {
                 if (invalidToken) {
@@ -351,6 +350,18 @@ public abstract class DocumentFragment extends ContentFragment {
             activityCommunicator.onEndRefreshContent();
         }
     }
+
+    private void setEmptyViewText(){
+        int content_type = getContent();
+        String text = "";
+        if(content_type==ApplicationConstants.MAILBOX){
+            text = "Ingen brev i ";
+        }else{
+            text = "Ingen dokumenter i ";
+        }
+        DocumentFragment.super.setListEmptyViewText(text+ApplicationConstants.titles[content_type].toLowerCase(),null);
+    }
+
 
     protected void moveDocuments(String toLocation) {
         ArrayList<Letter> letters = listAdapter.getCheckedItems();
