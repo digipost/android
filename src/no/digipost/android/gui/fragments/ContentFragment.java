@@ -58,7 +58,10 @@ public abstract class ContentFragment extends Fragment {
 	protected ListView listView;
 	protected View listEmptyViewNoConnection;
 	protected View listEmptyViewNoContent;
+	protected TextView listEmptyViewTitle;
 	protected TextView listEmptyViewText;
+
+	protected TextView listTopText;
 	protected ContentArrayAdapter listAdapter;
 
 	protected ProgressDialog progressDialog;
@@ -77,7 +80,10 @@ public abstract class ContentFragment extends Fragment {
 		listView = (ListView) view.findViewById(R.id.fragment_content_listview);
 		listEmptyViewNoConnection = view.findViewById(R.id.fragment_content_list_emptyview_no_connection);
 		listEmptyViewNoContent = view.findViewById(R.id.fragment_content_list_no_content);
+		listEmptyViewTitle = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_title);
 		listEmptyViewText = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_text);
+		listTopText = (TextView) view.findViewById(R.id.fragment_content_listview_top_text);
+
 		Button networkRetryButton = (Button) view.findViewById(R.id.fragment_content_network_retry_button);
 		networkRetryButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -105,16 +111,25 @@ public abstract class ContentFragment extends Fragment {
 		FileUtilities.deleteTempFiles();
 	}
 
-	protected void setListEmptyViewText(String text) {
-        if(text !=null)
-		    listEmptyViewText.setText(text);
-
-        listView.setEmptyView(listEmptyViewNoContent);
+	protected void setListEmptyViewText(String title, String text) {
+		if (title != null) {
+			listEmptyViewTitle.setText(title);
+		}
+		if (text != null) {
+			listEmptyViewText.setText(text);
+		}
+		listView.setEmptyView(listEmptyViewNoContent);
     }
+
+	protected void setTopText(String text) {
+
+		listTopText.setVisibility(View.VISIBLE);
+		listTopText.setText(text);
+	}
 
 	protected void setListEmptyViewNoNetwork(boolean visible) {
 		if (visible) {
-            listView.setEmptyView(listEmptyViewNoConnection);
+			listView.setEmptyView(listEmptyViewNoConnection);
 		} else {
 			listView.setEmptyView(null);
 		}
