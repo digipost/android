@@ -16,6 +16,16 @@
 
 package no.digipost.android.gui.fragments;
 
+import java.util.ArrayList;
+
+import no.digipost.android.R;
+import no.digipost.android.api.LetterOperations;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.gui.adapters.ContentArrayAdapter;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -32,273 +42,269 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ListView;
-
-import java.awt.MenuItem;
-import java.util.ArrayList;
-
-import no.digipost.android.R;
-import no.digipost.android.api.LetterOperations;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.documentstore.DocumentContentStore;
-import no.digipost.android.gui.adapters.ContentArrayAdapter;
-import no.digipost.android.model.Letter;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
+import android.widget.TextView;
 
 public abstract class ContentFragment extends Fragment {
-    public static final int INTENT_REQUESTCODE = 0;
-    public static final String INTENT_CONTENT = "content";
+	public static final int INTENT_REQUESTCODE = 0;
+	public static final String INTENT_CONTENT = "content";
 
-    ActivityCommunicator activityCommunicator;
+	ActivityCommunicator activityCommunicator;
 
-    protected Context context;
-    protected LetterOperations letterOperations;
+	protected Context context;
+	protected LetterOperations letterOperations;
 
-    protected ListView listView;
-    protected View listEmptyView;
-    protected ContentArrayAdapter listAdapter;
+	protected ListView listView;
+	protected View listEmptyViewNoConnection;
+	protected View listEmptyViewNoContent;
+	protected TextView listEmptyViewText;
+	protected ContentArrayAdapter listAdapter;
 
-    protected ProgressDialog progressDialog;
-    protected boolean progressDialogIsVisible = false;
+	protected ProgressDialog progressDialog;
+	protected boolean progressDialogIsVisible = false;
 
+	public ContentFragment() {
+	}
 
+	public abstract int getContent();
 
-    public ContentFragment() {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		context = getActivity();
+
+		View view = inflater.inflate(R.layout.fragment_layout_listview, container, false);
+		listView = (ListView) view.findViewById(R.id.fragment_content_listview);
+		listEmptyViewNoConnection = view.findViewById(R.id.fragment_content_list_emptyview_no_connection);
+		listEmptyViewNoContent = view.findViewById(R.id.fragment_content_list_no_content);
+		listEmptyViewText = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_text);
+		Button networkRetryButton = (Button) view.findViewById(R.id.fragment_content_network_retry_button);
+		networkRetryButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				updateAccountMeta();
+			}
+		});
+
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+
+		activityCommunicator.requestLetterOperations();
+
+		return view;
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		activityCommunicator = (ActivityCommunicator) activity;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		FileUtilities.deleteTempFiles();
+	}
+
+	protected void setListEmptyViewText(String text) {
+        if(text !=null)
+		    listEmptyViewText.setText(text);
+
+        listView.setEmptyView(listEmptyViewNoContent);
     }
 
-    public abstract int getContent();
+	protected void setListEmptyViewNoNetwork(boolean visible) {
+		if (visible) {
+            listView.setEmptyView(listEmptyViewNoConnection);
+		} else {
+			listView.setEmptyView(null);
+		}
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        System.out.println("ContentFragment onCreateView");
+	protected void deleteContent() {
+		ArrayList<Object> content = listAdapter.getCheckedItems();
 
-        context = getActivity();
+		ContentDeleteTask documentDeleteTask = new ContentDeleteTask(content);
+		documentDeleteTask.execute();
+	}
 
-        View view = inflater.inflate(R.layout.fragment_layout_listview, container, false);
-        listView = (ListView) view.findViewById(R.id.fragment_content_listview);
-        listEmptyView = view.findViewById(R.id.fragment_content_list_emptyview);
+	protected void showDeleteContentDialog(String message, final ContentMultiChoiceModeListener contentMultiChoiceModeListener,
+			final ActionMode actionMode) {
+		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
+		alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				deleteContent();
+				contentMultiChoiceModeListener.finishActionMode(actionMode);
+				dialogInterface.dismiss();
+			}
+		});
+		alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				dialogInterface.cancel();
+			}
+		});
+		AlertDialog alertDialog = alertDialogBuilder.create();
+		alertDialog.show();
+	}
 
-        Button networkRetryButton = (Button) view.findViewById(R.id.fragment_content_network_retry_button);
-        networkRetryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateAccountMeta();
-            }
-        });
+	protected class ContentDeleteTask extends AsyncTask<Void, Integer, String> {
+		private ArrayList<Object> content;
+		private boolean invalidToken;
 
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		public ContentDeleteTask(ArrayList<Object> content) {
+			this.content = content;
+		}
 
-        activityCommunicator.requestLetterOperations();
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			showContentProgressDialog(this, "");
+		}
 
-        return view;
-    }
+		@Override
+		protected String doInBackground(final Void... params) {
+			try {
+				int progress = 0;
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        activityCommunicator = (ActivityCommunicator) activity;
-    }
+				for (Object object : content) {
+					publishProgress(++progress);
+					letterOperations.deleteContent(object);
+				}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        FileUtilities.deleteTempFiles();
-    }
+				return null;
+			} catch (DigipostApiException e) {
+				Log.e(getClass().getName(), e.getMessage(), e);
+				return e.getMessage();
+			} catch (DigipostClientException e) {
+				Log.e(getClass().getName(), e.getMessage(), e);
+				return e.getMessage();
+			} catch (DigipostAuthenticationException e) {
+				Log.e(getClass().getName(), e.getMessage(), e);
+				invalidToken = true;
+				return e.getMessage();
+			}
+		}
 
-    protected void setListEmptyViewNoNetwork(boolean visible) {
-        if (visible) {
-            listView.setEmptyView(listEmptyView);
-        } else {
-            listView.setEmptyView(null);
-        }
-    }
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+			progressDialog.setMessage(values[0] + " av " + content.size() + " slettet");
+		}
 
-    protected void deleteContent() {
-        ArrayList<Object> content = listAdapter.getCheckedItems();
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			hideProgressDialog();
+			updateAccountMeta();
+		}
 
-        ContentDeleteTask documentDeleteTask = new ContentDeleteTask(content);
-        documentDeleteTask.execute();
-    }
+		@Override
+		protected void onPostExecute(final String result) {
+			super.onPostExecute(result);
 
-    protected void showDeleteContentDialog(String message, final ContentMultiChoiceModeListener contentMultiChoiceModeListener, final ActionMode actionMode) {
-        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
-        alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                deleteContent();
-                contentMultiChoiceModeListener.finishActionMode(actionMode);
-                dialogInterface.dismiss();
-            }
-        });
-        alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
+			if (result != null) {
+				DialogUtitities.showToast(context, result);
 
-    protected class ContentDeleteTask extends AsyncTask<Void, Integer, String> {
-        private ArrayList<Object> content;
-        private boolean invalidToken;
+				if (invalidToken) {
+					activityCommunicator.requestLogOut();
+				}
+			}
 
-        public ContentDeleteTask(ArrayList<Object> content) {
-            this.content = content;
-        }
+			hideProgressDialog();
+			updateAccountMeta();
+		}
+	}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showContentProgressDialog(this, "");
-        }
+	protected void showContentProgressDialog(final AsyncTask task, String message) {
+		progressDialog = DialogUtitities.getProgressDialogWithMessage(context, message);
+		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int which) {
+				dialog.dismiss();
+				task.cancel(true);
+			}
+		});
 
-        @Override
-        protected String doInBackground(final Void... params) {
-            try {
-                int progress = 0;
+		progressDialog.show();
+	}
 
-                for (Object object : content) {
-                    publishProgress(++progress);
-                    letterOperations.deleteContent(object);
-                }
+	protected void hideProgressDialog() {
+		progressDialogIsVisible = false;
+		progressDialog.dismiss();
+		progressDialog = null;
+	}
 
-                return null;
-            } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                return e.getMessage();
-            } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                return e.getMessage();
-            } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                invalidToken = true;
-                return e.getMessage();
-            }
-        }
+	public void filterList(String filterQuery) {
+		listAdapter.getFilter().filter(filterQuery);
+	}
 
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            super.onProgressUpdate(values);
-            progressDialog.setMessage(values[0] + " av " + content.size() + " slettet");
-        }
+	public void clearFilter() {
+		listAdapter.clearFilter();
+	}
 
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            hideProgressDialog();
-            updateAccountMeta();
-        }
+	public void setLetterOperations(LetterOperations letterOperations) {
+		this.letterOperations = letterOperations;
+	}
 
-        @Override
-        protected void onPostExecute(final String result) {
-            super.onPostExecute(result);
+	public abstract void updateAccountMeta();
 
-            if (result != null) {
-                DialogUtitities.showToast(context, result);
+	public interface ActivityCommunicator {
+		public void onStartRefreshContent();
 
-                if (invalidToken) {
-                    activityCommunicator.requestLogOut();
-                }
-            }
+		public void onEndRefreshContent();
 
-            hideProgressDialog();
-            updateAccountMeta();
-        }
-    }
+		public void requestLetterOperations();
 
-    protected void showContentProgressDialog(final AsyncTask task, String message) {
-        progressDialog = DialogUtitities.getProgressDialogWithMessage(context, message);
-        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int which) {
-                dialog.dismiss();
-                task.cancel(true);
-            }
-        });
+		public void requestLogOut();
 
-        progressDialog.show();
-    }
+		public void onUpdateAccountMeta();
+	}
 
-    protected void hideProgressDialog() {
-        progressDialogIsVisible = false;
-        progressDialog.dismiss();
-        progressDialog = null;
-    }
+	protected class ContentMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
-    public void filterList(String filterQuery) {
-        listAdapter.getFilter().filter(filterQuery);
-    }
+		@Override
+		public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean state) {
+			listAdapter.setChecked(position);
+			actionMode.setTitle(Integer.toString(listAdapter.getCheckedCount()));
+		}
 
-    public void clearFilter() {
-        listAdapter.clearFilter();
-    }
+		@Override
+		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+			MenuInflater inflater = actionMode.getMenuInflater();
+			inflater.inflate(R.menu.activity_main_content_context, menu);
 
-    public void setLetterOperations(LetterOperations letterOperations) {
-        this.letterOperations = letterOperations;
-    }
+			listAdapter.setCheckboxVisible(true);
 
-    public abstract void updateAccountMeta();
+			return true;
+		}
 
-    public interface ActivityCommunicator {
-        public void onStartRefreshContent();
-        public void onEndRefreshContent();
-        public void requestLetterOperations();
-        public void requestLogOut();
-        public void onUpdateAccountMeta();
-    }
+		@Override
+		public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+			return false;
+		}
 
-    protected class ContentMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+		@Override
+		public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+			return false;
+		}
 
-        @Override
-        public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean state) {
-            listAdapter.setChecked(position);
-            actionMode.setTitle(Integer.toString(listAdapter.getCheckedCount()));
-        }
+		@Override
+		public void onDestroyActionMode(ActionMode actionMode) {
+			listAdapter.setCheckboxVisible(false);
+			listAdapter.clearChecked();
+		}
 
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            MenuInflater inflater = actionMode.getMenuInflater();
-            inflater.inflate(R.menu.activity_main_content_context, menu);
+		public void finishActionMode(ActionMode actionMode) {
+			actionMode.finish();
+		}
+	}
 
-            listAdapter.setCheckboxVisible(true);
+	protected class CheckBoxOnClickListener implements View.OnClickListener {
 
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode actionMode) {
-            listAdapter.setCheckboxVisible(false);
-            listAdapter.clearChecked();
-        }
-
-        public void finishActionMode(ActionMode actionMode) {
-            actionMode.finish();
-        }
-    }
-
-    protected class CheckBoxOnClickListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View view) {
-            int position = listView.getPositionForView(view);
-            listView.setItemChecked(position, !listAdapter.getChecked(position));
-        }
-    }
+		@Override
+		public void onClick(View view) {
+			int position = listView.getPositionForView(view);
+			listView.setItemChecked(position, !listAdapter.getChecked(position));
+		}
+	}
 }

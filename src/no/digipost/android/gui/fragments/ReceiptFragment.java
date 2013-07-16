@@ -26,7 +26,9 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.HtmlAndReceiptActivity;
+import no.digipost.android.gui.LetterArrayAdapter;
 import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
+import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
@@ -41,22 +43,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 public class ReceiptFragment extends ContentFragment {
+    TextView fragment_receipt_emptyview_text;
 	public ReceiptFragment() {
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = super.onCreateView(inflater, container, savedInstanceState);
-		super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
-		super.listView.setAdapter(listAdapter);
-		super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
-		super.listView.setOnItemClickListener(new ReceiptListOnItemClickListener());
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
+        super.listView.setAdapter(listAdapter);
+        super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
+        super.listView.setOnItemClickListener(new ReceiptListOnItemClickListener());
 
-		updateAccountMeta();
+        updateAccountMeta();
 
-		return view;
+        return view;
 	}
 
 	@Override
@@ -67,28 +72,25 @@ public class ReceiptFragment extends ContentFragment {
 	private void checkStatusAndDisplayReceipts(Receipts receipts) {
 
 		ArrayList<Receipt> receipt = receipts.getReceipt();
+        ReceiptFragment.super.listAdapter.replaceAll(receipt);
 
 		int numberOfCards = Integer.parseInt(receipts.getNumberOfCards());
 		int numberOfCardsReadyForVerification = Integer.parseInt(receipts.getNumberOfCardsReadyForVerification());
 		int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(receipts.getNumberOfReceiptsHiddenUntilVerification());
 
 		if (receipt.size() == 0) {
-
 			if (numberOfCards == 0) {
-
+                setListEmptyViewText("Du må legge inn kort på Digipost.no for å få kvitteringer");
 			} else if (numberOfCardsReadyForVerification > 0) {
-
-			} else {
-
-			}
+                setListEmptyViewText("Du har"+numberOfReceiptsHiddenUntilVerification + "skjulte kvitteringer, men for at du sksal få se de må du verifisere kortet på Digipost.no");
+            } else {
+                setListEmptyViewText("Du har ikke mottatt noen kvitteringer enda.");
+            }
 		} else{
-
             if(numberOfCards == 0){
-
+                //showTopMessage("Du vil ikke motta kvitteringer siden du ikke har noen kort registert.");
             }else if(numberOfCardsReadyForVerification > 0){
-                
-            }else{
-                ReceiptFragment.super.listAdapter.replaceAll(receipt);
+                //showTopMessage("Du har"+numberOfReceiptsHiddenUntilVerification +"skjulte kvitteringer, men for at du sksal få se de må du verifisere kortet på Digipost.no");
             }
         }
 	}
@@ -210,7 +212,7 @@ public class ReceiptFragment extends ContentFragment {
 			super.onPostExecute(receipts);
 			if (receipts != null) {
                 checkStatusAndDisplayReceipts(receipts);
-                ReceiptFragment.super.setListEmptyViewNoNetwork(false);
+                //ReceiptFragment.super.setListEmptyViewNoNetwork(false);
             } else {
 				DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
 
