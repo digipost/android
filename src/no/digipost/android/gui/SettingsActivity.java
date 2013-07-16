@@ -11,7 +11,10 @@ import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;
 
 public class SettingsActivity extends Activity {
+    public static final String KEY_PREF_GENERAL_SETTINGS = "pref_generalSettings";
     public static final String KEY_PREF_DEFAULT_SCREEN = "pref_defaultScreen";
+    public static final String KEY_PREF_DOCUMENTS_SETTINGS = "pref_documentsSettings";
+    public static final String KEY_PREF_SHOW_BANK_ID_DOCUMENTS = "pref_showBankIDDocuments";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

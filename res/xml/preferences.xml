@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+            android:title="@string/pref_general_settings"
+            android:key="pref_generalSettings">
+        <ListPreference
+                android:key="pref_defaultScreen"
+                android:title="@string/pref_default_screen_title"
+                android:dialogTitle="@string/pref_default_screen_title"
+                android:entries="@array/pref_default_screen_entries"
+                android:entryValues="@array/pref_default_screen_values"
+                android:defaultValue="@string/pref_default_screen_default" />
 
-    <ListPreference
-            android:key="pref_defaultScreen"
-            android:title="@string/pref_default_screen_title"
-            android:dialogTitle="@string/pref_default_screen_title"
-            android:entries="@array/pref_default_screen_entries"
-            android:entryValues="@array/pref_default_screen_values"
-            android:defaultValue="@string/pref_default_screen_default" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="@string/pref_documents_settings"
+            android:key="pref_documentsSettings">
+
+        <SwitchPreference
+                android:key="pref_showBankIDDocuments"
+                android:title="@string/pref_show_bank_id_documents_title"
+                android:summary="@string/pref_show_bank_id_documents_summary"
+                android:defaultValue="true"/>
+
+    </PreferenceCategory>
 </PreferenceScreen>

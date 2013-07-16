@@ -18,6 +18,7 @@ package no.digipost.android.gui.adapters;
 
 import no.digipost.android.R;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +27,13 @@ import android.widget.Filter;
 import com.sun.swing.internal.plaf.synth.resources.synth_sv;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.gui.SettingsActivity;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DataFormatUtilities;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 
@@ -58,6 +62,26 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
         setMetaBottom(letter);
 
         return row;
+    }
+
+    @Override
+    public void replaceAll(Collection<? extends Letter> collection) {
+        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getSharedPreferences(context);
+        boolean showLettersWithTwoFactor = sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS, true);
+
+        if (!showLettersWithTwoFactor) {
+            ArrayList<Letter> letters = new ArrayList<Letter>();
+
+            for (Letter letter : collection) {
+                if (!letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+                    letters.add(letter);
+                }
+            }
+
+            super.replaceAll(letters);
+        } else {
+            super.replaceAll(collection);
+        }
     }
 
     private void setMetaBottom(Letter letter) {
