@@ -23,6 +23,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.webkit.MimeTypeMap;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,7 +46,7 @@ public class FileUtilities {
 
     public static String getMimeType(File file) {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
-        String ext=file.getName().substring(file.getName().indexOf(".") + 1).toLowerCase();
+        String ext = FilenameUtils.getExtension(file.getName());
 
         return mime.getMimeTypeFromExtension(ext);
     }

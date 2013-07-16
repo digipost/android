@@ -14,8 +14,8 @@ import no.digipost.android.R;
 public class TextProgressBar extends ProgressBar {
 
     private String text = "";
-    private int textColor = R.color.login_disclamer_registration_layout_background;
-    private float textSize = 50;
+    private int textColor = android.R.color.black;
+    private float textSize = 20;
 
     public TextProgressBar(Context context) {
         super(context);
@@ -35,8 +35,8 @@ public class TextProgressBar extends ProgressBar {
         if (attrs != null) {
             TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.TextProgressBar, 0, 0);
             setText(a.getString(R.styleable.TextProgressBar_text));
-            setTextColor(a.getColor(R.styleable.TextProgressBar_textColor, R.color.login_disclamer_registration_layout_background));
-            setTextSize(a.getDimension(R.styleable.TextProgressBar_textSize, 50));
+            setTextColor(a.getColor(R.styleable.TextProgressBar_textColor, textColor));
+            setTextSize(a.getDimension(R.styleable.TextProgressBar_textSize, textSize));
             a.recycle();
         }
     }
