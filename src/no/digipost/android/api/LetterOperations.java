@@ -36,20 +36,14 @@ import android.os.Environment;
 
 public class LetterOperations {
 
-
-	private static PrimaryAccount primaryAccount;
 	private static ApiAccess apiAccess;
 
 	public LetterOperations(final Context context) {
 		apiAccess = new ApiAccess(context);
-		primaryAccount = null;
 	}
 
 	public static PrimaryAccount getPrimaryAccount() throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		if (primaryAccount == null) {
-			primaryAccount = apiAccess.getAccount().getPrimaryAccount();
-		}
-		return primaryAccount;
+        return apiAccess.getAccount().getPrimaryAccount();
 	}
 
 	public ArrayList<Letter> getAccountContentMeta(final int type) throws DigipostApiException, DigipostClientException,

@@ -33,6 +33,7 @@ import no.digipost.android.pdf.MuPDFReaderView;
 import no.digipost.android.pdf.MuPDFView;
 import no.digipost.android.pdf.SearchTask;
 import no.digipost.android.pdf.SearchTaskResult;
+import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.constants.ApiConstants;
@@ -267,6 +268,8 @@ public class MuPDFActivity extends Activity
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
+
         documentMeta = DocumentContentStore.documentMeta;
 
         getActionBar().setTitle(documentMeta.getSubject());

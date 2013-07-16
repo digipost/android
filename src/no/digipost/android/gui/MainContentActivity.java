@@ -29,6 +29,7 @@ import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.gui.fragments.WorkareaFragment;
 import no.digipost.android.gui.adapters.DrawerArrayAdapter;
 import no.digipost.android.model.PrimaryAccount;
+import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
@@ -80,10 +81,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private PrimaryAccount primaryAccount;
 
+    private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_content);
+        ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
 
         this.letterOperations = new LetterOperations(this);
         this.refreshing = true;
@@ -105,6 +109,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             selectItem(content);
         }
+
+        onSharedPreferenceChangeListener = new SettingsChangedlistener();
+        SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
     }
 
     @Override
@@ -206,6 +213,18 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     public void onUpdateAccountMeta() {
         executeGetPrimaryAccountTask();
+    }
+
+    private class SettingsChangedlistener implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS) && getCurrentFragment() != null) {
+                getCurrentFragment().updateAccountMeta();
+            } else if (key.equals(SettingsActivity.KEY_PREF_SCREEN_ROTATION)) {
+                ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
+            }
+        }
     }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {

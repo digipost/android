@@ -2,6 +2,7 @@ package no.digipost.android.gui;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -9,16 +10,20 @@ import android.view.MenuItem;
 
 import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.utilities.ApplicationUtilities;
 
 public class SettingsActivity extends Activity {
     public static final String KEY_PREF_GENERAL_SETTINGS = "pref_generalSettings";
     public static final String KEY_PREF_DEFAULT_SCREEN = "pref_defaultScreen";
+    public static final String KEY_PREF_SCREEN_ROTATION = "pref_screenRotation";
     public static final String KEY_PREF_DOCUMENTS_SETTINGS = "pref_documentsSettings";
     public static final String KEY_PREF_SHOW_BANK_ID_DOCUMENTS = "pref_showBankIDDocuments";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
+
 
         getActionBar().setTitle(R.string.preferences);
         getActionBar().setHomeButtonEnabled(true);
@@ -26,6 +31,7 @@ public class SettingsActivity extends Activity {
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
+
     }
 
     @Override
@@ -53,6 +59,9 @@ public class SettingsActivity extends Activity {
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             setSummary(sharedPreferences, findPreference(key));
 
+            if (key.equals(KEY_PREF_SCREEN_ROTATION)) {
+                ApplicationUtilities.setScreenRotationFromPreferences(getActivity());
+            }
         }
 
         @Override

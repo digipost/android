@@ -230,7 +230,8 @@ public class ReceiptFragment extends ContentFragment {
                 }
 			}
 
-			activityCommunicator.onEndRefreshContent();
+            activityCommunicator.onUpdateAccountMeta();
+            activityCommunicator.onEndRefreshContent();
 		}
 
 		@Override

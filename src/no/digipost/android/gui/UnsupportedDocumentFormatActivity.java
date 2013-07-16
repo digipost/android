@@ -45,6 +45,7 @@ import no.digipost.android.documentstore.ImageStore;
 import no.digipost.android.documentstore.UnsupportedFileStore;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
+import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
@@ -55,6 +56,7 @@ public class UnsupportedDocumentFormatActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unsupported);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
         documentMeta = DocumentContentStore.documentMeta;
 

@@ -37,6 +37,7 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.PrimaryAccount;
+import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
@@ -58,6 +59,7 @@ public class UploadActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
         getActionBar().setTitle(R.string.upload);
         getActionBar().setHomeButtonEnabled(true);

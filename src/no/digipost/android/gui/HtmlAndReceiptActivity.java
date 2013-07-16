@@ -23,6 +23,7 @@ import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Receipt;
+import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import android.app.Activity;
@@ -45,8 +46,9 @@ public class HtmlAndReceiptActivity extends Activity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_html_and_receipt);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-		content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
+        content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
         setupWebView();
 		setupActionBar();
