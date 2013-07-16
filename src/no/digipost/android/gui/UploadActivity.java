@@ -77,7 +77,7 @@ public class UploadActivity extends Activity {
         mAdapter = new UploadListAdapter(this, mFiles);
         listView.setAdapter(mAdapter);
 
-        setAccountInfo();
+        executeSetAccountInfoTask();
     }
 
     @Override
@@ -105,7 +105,6 @@ public class UploadActivity extends Activity {
         File[] files = mDirectory.listFiles();
         if(files != null && files.length > 0) {
             for(File f : files) {
-                System.out.println("MIME: " + FileUtilities.getMimeType(f));
                 if(f.isHidden() && !mShowHiddenFiles) {
                     continue;
                 }
@@ -181,19 +180,39 @@ public class UploadActivity extends Activity {
         uploadTask.execute();
     }
 
-    private void setAccountInfo() {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    PrimaryAccount primaryAccount = LetterOperations.getPrimaryAccount();
-                    setAvailableSpace(primaryAccount);
-                    availableSpace.setVisibility(View.VISIBLE);
-                } catch (Exception e) {
-                    availableSpace.setVisibility(View.GONE);
-                }
+    private void setAccountInfo(PrimaryAccount primaryAccount) {
+        setAvailableSpace(primaryAccount);
+        availableSpace.setVisibility(View.VISIBLE);
+    }
+
+    private void executeSetAccountInfoTask() {
+        SetAccountInfoTask setAccountInfoTask = new SetAccountInfoTask();
+        setAccountInfoTask.execute();
+    }
+
+    private class SetAccountInfoTask extends AsyncTask<Void, Void, PrimaryAccount> {
+
+        @Override
+        protected PrimaryAccount doInBackground(Void... voids) {
+            try {
+                return LetterOperations.getPrimaryAccount();
+            } catch (DigipostApiException e) {
+                return null;
+            } catch (DigipostClientException e) {
+                return null;
+            } catch (DigipostAuthenticationException e) {
+                return null;
             }
-        });
+        }
+
+        @Override
+        protected void onPostExecute(PrimaryAccount primaryAccount) {
+            super.onPostExecute(primaryAccount);
+
+            if (primaryAccount != null) {
+                setAccountInfo(primaryAccount);
+            }
+        }
     }
 
     @Override
@@ -338,7 +357,7 @@ public class UploadActivity extends Activity {
                 DialogUtitities.showToast(UploadActivity.this, result);
             } else {
                 DialogUtitities.showToast(UploadActivity.this, file.getName() + " ble lastet opp til arkivet.");
-                setAccountInfo();
+                executeSetAccountInfoTask();
             }
         }
     }
