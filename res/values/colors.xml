@@ -18,12 +18,13 @@
     <color name="actionbar_red_background">#e2251b</color>
     <color name="searchbar_grey_hint">#e1e1e1</color>
     <color name="actionbar_button_pressed_dark_red">#B00</color>
+    <color name="actionbar_button_pressed_medium_red">#CF0404</color>
 
     <!-- ListView -->
     <color name="list_pressed">#cecece</color>
     <color name="list_multiselected">#c4e1f3</color>
 
-    <color name="list_focused">#cecece</color>
+    <color name="list_focused">#DEDEDE</color>
 
 
     <color name="list_even">#ffffff</color>

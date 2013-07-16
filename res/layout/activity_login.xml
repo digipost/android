@@ -49,8 +49,6 @@
         android:paddingLeft="@dimen/login_padding"
         android:paddingRight="@dimen/login_padding">
 
-
-
         <Button
             android:id="@+id/login_loginButton"
             android:layout_width="match_parent"
@@ -65,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/login_layout_margin"
                 android:text="@string/login_remember_me"
+                android:contentDescription="Avhukingsboks for å velge at applikasjonen skal huske innloggingen"
                 android:id="@+id/login_remember_me"
                 android:layout_gravity="center"
                 android:checked="false"/>
