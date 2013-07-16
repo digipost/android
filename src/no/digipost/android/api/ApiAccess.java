@@ -19,17 +19,33 @@ import android.content.Context;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.swing.internal.plaf.synth.resources.synth_sv;
+import com.sun.xml.internal.xsom.impl.Ref;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
+import org.apache.http.util.EntityUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import javax.activation.MimeType;
+import javax.ws.rs.core.MediaType;
 
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -39,6 +55,7 @@ import no.digipost.android.api.exception.DigipostInvalidTokenException;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
@@ -257,4 +274,36 @@ public class ApiAccess {
 
 		return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());
 	}
+
+    public void uploadFile(String uri, File file) throws DigipostClientException, DigipostAuthenticationException, DigipostApiException {
+        HttpResponse httpResponse = null;
+
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(uri);
+            httpPost.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
+
+            FileBody filebody = new FileBody(file, ApiConstants.CONTENT_OCTET_STREAM);
+
+            MultipartEntity multipartEntity = new MultipartEntity();
+            multipartEntity.addPart("subject", new StringBody(FilenameUtils.removeExtension(file.getName())));
+            multipartEntity.addPart("file", filebody);
+            multipartEntity.addPart("token", new StringBody(Secret.ACCESS_TOKEN));
+            httpPost.setEntity(multipartEntity);
+
+            httpResponse = httpClient.execute(httpPost);
+
+            httpClient.getConnectionManager().shutdown();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DigipostClientException(context.getString(R.string.error_your_network));
+        }
+
+        try {
+            networkUtilities.checkHttpStatusCode(httpResponse.getStatusLine().getStatusCode());
+        } catch (DigipostInvalidTokenException e) {
+            OAuth2.updateAccessToken(context);
+            uploadFile(uri, file);
+        }
+    }
 }

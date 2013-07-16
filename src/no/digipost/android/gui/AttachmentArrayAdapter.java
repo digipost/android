@@ -55,7 +55,7 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 
 		title.setText(attachment.getSubject());
 		filetype.setText(attachment.getFileType());
-		filesize.setText(DataFormatUtilities.getFormattedFileSize(attachment.getFileSize()));
+		filesize.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(attachment.getFileSize())));
 
 		return row;
 	}

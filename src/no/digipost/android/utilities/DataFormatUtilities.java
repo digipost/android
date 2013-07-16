@@ -53,9 +53,8 @@ public class DataFormatUtilities {
         return formatted;
     }
 
-    public static String getFormattedFileSize(final String byteString) {
-        long bytes = Long.parseLong(byteString);
-        String[] units = new String[] { "", "KB", "MB", "GB" };
+    public static String getFormattedFileSize(final long bytes) {
+        String[] units = new String[] { "B", "KB", "MB", "GB" };
         for (int i = 3; i > 0; i--) {
             double exp = Math.pow(1024, i);
             if (bytes > exp) {

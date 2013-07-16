@@ -142,6 +142,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             refreshButton.setActionView(null);
         }
         boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
+        MenuItem uploadButton = menu.findItem(R.id.menu_upload);
+        uploadButton.setVisible(!drawerOpen);
         searchButton.setVisible(!drawerOpen);
         refreshButton.setVisible(!drawerOpen);
 
@@ -163,6 +165,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 return true;
             case R.id.menu_help:
                 openHelpWebView();
+                return true;
+            case R.id.menu_upload:
+                startUploadActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -258,6 +263,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         startActivity(intent);
         finish();
     }
+
+    private void startUploadActivity() {
+        Intent intent = new Intent(MainContentActivity.this, UploadActivity.class);
+        startActivity(intent);
+    }
+
     private void openHelpWebView(){
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/hjelp/#android"));
         startActivity(browserIntent);

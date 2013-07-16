@@ -34,7 +34,6 @@
     <string name="search_archive">Søk i arkivet</string>
     <string name="search_receipts">Søk i kvitteringer</string>
     <string name="search_in">Søk i\u0020</string>
-    <string name="upload">Last opp...</string>
     <string name="letter">\u0020brev\u0020</string>
     <string name="document">\u0020dokument\u0020</string>
     <string name="documents">\u0020dokumenter\u0020</string>
@@ -100,7 +99,11 @@
     <string name="pdf_select_copied">Markert tekst kopiert.</string>
     <string name="pdf_select_no_text_selected">Ingen tekst markert.</string>
 
-    
+    <!-- Upload -->
+    <string name="upload">Last opp</string>
+    <string name="uploading">Laster opp...</string>
+    <string name="no_files">Ingen filer</string>
+
     <!-- Image -->
     <string name="image_open_failed">Kunne ikke åpne bildet.</string>
 

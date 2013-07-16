@@ -470,10 +470,10 @@ public class MuPDFActivity extends Activity
 
         try {
             FileUtilities.openFileWithIntent(this, documentFileType, data);
-        } catch (IOException e) {
-            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
         } catch (ActivityNotFoundException e) {
             DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
+        } catch (Exception e) {
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
         }
     }
 
@@ -835,7 +835,7 @@ public class MuPDFActivity extends Activity
 
             try {
                 file = FileUtilities.writeFileToSD(documentMeta.getSubject(), documentMeta.getFileType(), core.getBuffer());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return false;
             }
 

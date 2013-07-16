@@ -277,7 +277,6 @@ public abstract class DocumentFragment extends ContentFragment {
 
     @Override
     public void updateAccountMeta() {
-        System.out.println("updateAccountMeta: " + getContent());
         GetDocumentMetaTask task = new GetDocumentMetaTask(getContent());
         task.execute();
     }

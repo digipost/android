@@ -297,10 +297,10 @@ public class ImageActivity extends Activity {
 
         try {
             FileUtilities.openFileWithIntent(this, documentFileType, data);
-        } catch (IOException e) {
-            showMessage(getString(R.string.error_failed_to_open_with_intent));
         } catch (ActivityNotFoundException e) {
             showMessage(getString(R.string.error_no_activity_to_open_file));
+        } catch (Exception e) {
+            showMessage(getString(R.string.error_failed_to_open_with_intent));
         }
     }
 
@@ -339,7 +339,7 @@ public class ImageActivity extends Activity {
 
             try {
                 file = FileUtilities.writeFileToSD(ImageStore.imageName, ImageStore.imageFileType, ImageStore.image);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return false;
             }
 

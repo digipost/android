@@ -44,15 +44,19 @@ import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.documentstore.ImageStore;
 import no.digipost.android.documentstore.UnsupportedFileStore;
 import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.model.Attachment;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
 public class UnsupportedDocumentFormatActivity extends Activity {
+    private Attachment documentMeta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unsupported);
+
+        documentMeta = DocumentContentStore.documentMeta;
 
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setTitle(DocumentContentStore.documentMeta.getSubject());
@@ -162,10 +166,10 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 
         try {
             FileUtilities.openFileWithIntent(this, documentFileType, data);
-        } catch (IOException e) {
-            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
         } catch (ActivityNotFoundException e) {
             DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
+        } catch (Exception e) {
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
         }
     }
 
@@ -173,12 +177,12 @@ public class UnsupportedDocumentFormatActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-                new SaveDocumentToSDTask().execute();
                 dialog.dismiss();
+                new SaveDocumentToSDTask().execute();
             }
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
+                dialog.dismiss();
             }
         });
         AlertDialog alert = builder.create();
@@ -186,7 +190,7 @@ public class UnsupportedDocumentFormatActivity extends Activity {
     }
 
     private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
-        ProgressDialog progressDialog;
+        private ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
@@ -203,8 +207,8 @@ public class UnsupportedDocumentFormatActivity extends Activity {
             File file = null;
 
             try {
-                file = FileUtilities.writeFileToSD(UnsupportedFileStore.unsupportedDocumentFileName, UnsupportedFileStore.unsupportedDocumentFileType, UnsupportedFileStore.unsupportedDocument);
-            } catch (IOException e) {
+                file = FileUtilities.writeFileToSD(documentMeta.getSubject(), documentMeta.getFileType(), DocumentContentStore.documentContent);
+            } catch (Exception e) {
                 return false;
             }
 
@@ -216,14 +220,13 @@ public class UnsupportedDocumentFormatActivity extends Activity {
         @Override
         protected void onPostExecute(Boolean saved) {
             super.onPostExecute(saved);
+            progressDialog.dismiss();
 
             if (saved) {
                 DialogUtitities.showToast(UnsupportedDocumentFormatActivity.this, getString(R.string.pdf_saved_to_sd));
             } else {
                 DialogUtitities.showToast(UnsupportedDocumentFormatActivity.this, getString(R.string.pdf_save_to_sd_failed));
             }
-
-            progressDialog.dismiss();
         }
     }
 

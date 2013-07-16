@@ -7,6 +7,11 @@
           android:icon="@drawable/white_refresh_48"
           android:showAsAction="ifRoom" />
 
+    <item android:id="@+id/menu_upload"
+          android:title="@string/upload"
+          android:icon="@drawable/ic_upload"
+          android:showAsAction="ifRoom" />
+
     <item android:id="@+id/menu_search"
           android:title="@string/search"
           android:icon="@drawable/white_search_48"

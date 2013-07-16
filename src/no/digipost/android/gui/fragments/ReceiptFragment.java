@@ -210,12 +210,15 @@ public class ReceiptFragment extends ContentFragment {
 			super.onPostExecute(receipts);
 			if (receipts != null) {
                 checkStatusAndDisplayReceipts(receipts);
-			} else {
+                ReceiptFragment.super.setListEmptyViewNoNetwork(false);
+            } else {
 				DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
 
 				if (invalidToken) {
 					activityCommunicator.requestLogOut();
-				}
+				} else if (listAdapter.isEmpty()) {
+                    ReceiptFragment.super.setListEmptyViewNoNetwork(true);
+                }
 			}
 
 			activityCommunicator.onEndRefreshContent();
