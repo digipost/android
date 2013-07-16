@@ -29,7 +29,7 @@ import no.digipost.android.gui.MainContentActivity;
 
 public class SharedPreferencesUtilities {
 
-    private static SharedPreferences getSharedPreferences(Context context){
+    public static SharedPreferences getSharedPreferences(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
     public static int screenlockChoice(Context context){

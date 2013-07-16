@@ -18,6 +18,10 @@
           android:showAsAction="collapseActionView|ifRoom"
           android:actionViewClass="android.widget.SearchView" />
 
+    <item android:id="@+id/menu_preferences"
+          android:title="@string/preferences"
+          android:showAsAction="never"/>
+
     <item android:id="@+id/menu_help"
           android:title="@string/optionsmenu_help"
           android:showAsAction="never"/>

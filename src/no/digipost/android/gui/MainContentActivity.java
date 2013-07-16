@@ -46,6 +46,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceFragment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -99,7 +100,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         getActionBar().setHomeButtonEnabled(true);
 
         if (savedInstanceState == null || getCurrentFragment() == null) {
-            selectItem(ApplicationConstants.MAILBOX);
+            SharedPreferences sharedPreferences = SharedPreferencesUtilities.getSharedPreferences(this);
+            int content = Integer.parseInt(sharedPreferences.getString(SettingsActivity.KEY_PREF_DEFAULT_SCREEN, Integer.toString(ApplicationConstants.MAILBOX)));
+
+            selectItem(content);
         }
     }
 
@@ -168,6 +172,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 return true;
             case R.id.menu_upload:
                 startUploadActivity();
+                return true;
+            case R.id.menu_preferences:
+                startPreferemcesActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -266,6 +273,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private void startUploadActivity() {
         Intent intent = new Intent(MainContentActivity.this, UploadActivity.class);
+        startActivity(intent);
+    }
+
+    private void startPreferemcesActivity() {
+        Intent intent = new Intent(MainContentActivity.this, SettingsActivity.class);
         startActivity(intent);
     }
 
