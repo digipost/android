@@ -35,13 +35,15 @@ import no.digipost.android.api.LetterOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
 
 public class UploadActivity extends Activity {
     private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
-    private final String[] blockedFileExtensions = {".html"};
+    private final String[] blockedFileContentTypes = {ApiConstants.TEXT_HTML};
 
     private File mDirectory;
     private ArrayList<File> mFiles;
@@ -101,6 +103,7 @@ public class UploadActivity extends Activity {
         File[] files = mDirectory.listFiles();
         if(files != null && files.length > 0) {
             for(File f : files) {
+                System.out.println("MIME: " + FileUtilities.getMimeType(f));
                 if(f.isHidden() && !mShowHiddenFiles) {
                     continue;
                 }
@@ -124,10 +127,14 @@ public class UploadActivity extends Activity {
     }
 
     private boolean isAcceptedFileExtension(File file) {
-        if(blockedFileExtensions != null && blockedFileExtensions.length > 0) {
-            for(int i = 0; i < blockedFileExtensions.length; i++) {
-                if(file.getName().toLowerCase().endsWith(blockedFileExtensions[i].toLowerCase())) {
-                    return false;
+        if(blockedFileContentTypes != null && blockedFileContentTypes.length > 0) {
+            String contentType = FileUtilities.getMimeType(file);
+
+            if (contentType != null) {
+                for(int i = 0; i < blockedFileContentTypes.length; i++) {
+                    if(contentType.equals(blockedFileContentTypes[i])) {
+                        return false;
+                    }
                 }
             }
 
