@@ -5,7 +5,7 @@
         <solid android:color="@color/list_pressed" />
     </shape>
 </item>
-<item android:state_focused="true">
+<item android:state_selected="true">
         <shape>
             <solid android:color="@color/list_focused" />
         </shape>
