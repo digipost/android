@@ -9,5 +9,10 @@
         <shape>
             <solid android:color="@color/main_drawer_blue_selected"/>
         </shape>
+</item>
+<item android:state_focused="true">
+        <shape>
+            <solid android:color="@color/main_drawer_blue_selected"/>
+        </shape>
     </item>
 </selector>

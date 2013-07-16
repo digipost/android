@@ -30,6 +30,7 @@
     <CheckBox
             android:id="@+id/content_checkbox"
             android:layout_height="wrap_content"
+            android:contentDescription="Avhukingsboks for å velge flere listeelementer til mengdeoperasjon som flytt og slett"
             android:layout_width="wrap_content"
             android:gravity="center"
             android:paddingRight="10dp"/>
