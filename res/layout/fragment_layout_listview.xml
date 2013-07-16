@@ -19,7 +19,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:background="@color/list_element_opened" >
+              android:background="@color/list_element_opened">
 
     <ListView
             android:id="@+id/fragment_content_listview"
@@ -27,44 +27,56 @@
             android:layout_height="0sp"
             android:layout_weight="1"
             android:divider="@color/list_divider"
-            android:dividerHeight="@dimen/listview_dividerheight" >
+            android:dividerHeight="@dimen/listview_dividerheight">
     </ListView>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="fill_parent"
-                  android:id="@+id/fragment_content_list_emptyview"
-                  android:visibility="gone">
+    <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/fragment_content_list_no_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:visibility="gone"
+            android:padding="@dimen/screenlock_view_padding">
 
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:padding="@dimen/screenlock_view_padding">
-
-            <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Ingen forbindelse"
-                    android:textSize="@dimen/screenlock_infotext_size"
-                    android:gravity="center_horizontal"
-                    android:textColor="@color/login_disclamer_registration_layout_background"/>
-
-
-            <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/screenlock_yes_button_style"
-                    android:text="Prøv igjen"
-                    android:textStyle="bold"
-                    android:layout_marginTop="@dimen/screenlock_view_padding"
-                    android:textColor="@color/white"
-                    android:id="@+id/fragment_content_network_retry_button"/>
-
-        </LinearLayout>
-
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fragment_content_list_emptyview_text"
+                android:text="Listen er tom"
+                android:textSize="@dimen/screenlock_infotext_size"
+                android:gravity="center_horizontal"
+                android:textColor="@color/login_disclamer_registration_layout_background"/>
     </LinearLayout>
 
+    <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/fragment_content_list_emptyview_no_connection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:visibility="gone"
+
+            android:padding="@dimen/screenlock_view_padding">
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Ingen forbindelse"
+                android:textSize="@dimen/screenlock_infotext_size"
+                android:gravity="center_horizontal"
+                android:textColor="@color/login_disclamer_registration_layout_background"/>
+
+
+        <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/screenlock_yes_button_style"
+                android:text="Prøv igjen"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/screenlock_view_padding"
+                android:textColor="@color/white"
+                android:id="@+id/fragment_content_network_retry_button"/>
+
+    </LinearLayout>
 </LinearLayout>

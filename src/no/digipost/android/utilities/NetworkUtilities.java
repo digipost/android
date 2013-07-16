@@ -45,7 +45,6 @@ public class NetworkUtilities {
 
 	public void checkHttpStatusCode(final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
 			DigipostAuthenticationException {
-        System.out.println("HTTP_STATUS:"+statusCode);
 		if (statusCode == HTTP_STATUS_SUCCESS || statusCode == TEMPORARY_REDIRECT.getStatusCode()) {
 			return;
 		} else if (statusCode == HTTP_STATUS_UNAUTHORIZED) {

@@ -284,6 +284,7 @@ public abstract class DocumentFragment extends ContentFragment {
     protected class GetDocumentMetaTask extends AsyncTask<Void, Void, ArrayList<Letter>> {
         private final int content;
         private String errorMessage;
+        private boolean errorsOccured;
         private boolean invalidToken;
 
         public GetDocumentMetaTask(final int content) {
@@ -303,15 +304,18 @@ public abstract class DocumentFragment extends ContentFragment {
             } catch (DigipostApiException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
+                errorsOccured = true;
                 return null;
             } catch (DigipostClientException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
+                errorsOccured = true;
                 return null;
             } catch (DigipostAuthenticationException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 invalidToken = true;
+                errorsOccured = true;
                 return null;
             }
         }
@@ -319,9 +323,14 @@ public abstract class DocumentFragment extends ContentFragment {
         @Override
         protected void onPostExecute(final ArrayList<Letter> letters) {
             super.onPostExecute(letters);
+
             if(letters != null){
-                DocumentFragment.super.listAdapter.replaceAll(letters);
-                DocumentFragment.super.setListEmptyViewNoNetwork(false);
+                if(!letters.isEmpty()){
+                    DocumentFragment.super.listAdapter.replaceAll(letters);
+                    DocumentFragment.super.setListEmptyViewNoNetwork(false);
+                }else{
+                    DocumentFragment.super.setListEmptyViewText(null);
+                }
             } else {
                 if (invalidToken) {
                     activityCommunicator.requestLogOut();
