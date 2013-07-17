@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@color/list_divider"
-        android:dividerHeight="@dimen/listview_dividerheight"
+        android:dividerHeight="1sp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp" >
     </ListView>

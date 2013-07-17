@@ -36,7 +36,7 @@
             android:layout_height="0sp"
             android:layout_weight="1"
             android:divider="@color/list_divider"
-            android:dividerHeight="@dimen/listview_dividerheight">
+            android:dividerHeight="1sp">
     </ListView>
 
     <LinearLayout
@@ -46,7 +46,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
             android:visibility="gone"
-            android:padding="@dimen/screenlock_view_padding">
+            android:padding="20dp">
 
         <TextView
                 android:layout_width="fill_parent"
@@ -73,24 +73,24 @@
             android:gravity="bottom"
             android:visibility="gone"
 
-            android:padding="@dimen/screenlock_view_padding">
+            android:padding="2dp">
 
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Ingen forbindelse"
-                android:textSize="@dimen/screenlock_infotext_size"
+                android:textSize="20dp"
                 android:gravity="center_horizontal"
-                android:textColor="@color/login_disclamer_registration_layout_background"/>
+                android:textColor="@color/login_background"/>
 
 
         <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/screenlock_yes_button_style"
+                android:background="@drawable/red_button_style"
                 android:text="Prøv igjen"
                 android:textStyle="bold"
-                android:layout_marginTop="@dimen/screenlock_view_padding"
+                android:layout_marginTop="20dp"
                 android:textColor="@color/white"
                 android:id="@+id/fragment_content_network_retry_button"/>
 

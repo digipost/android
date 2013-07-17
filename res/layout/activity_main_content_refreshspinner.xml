@@ -21,10 +21,10 @@
               android:layout_height="wrap_content">
 
     <ProgressBar
-            android:layout_width="@dimen/base_refreshspinner_width_and_height"
-            android:layout_height="@dimen/base_refreshspinner_width_and_height"
-            android:layout_marginLeft="@dimen/base_refreshspinner_margin_left"
-            android:layout_marginRight="@dimen/base_refreshspinner_margin_right"
-            android:layout_marginTop="@dimen/base_refreshspinner_margin_top" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:layout_marginTop="1dp" />
 
 </LinearLayout>
