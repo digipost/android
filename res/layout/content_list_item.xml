@@ -53,7 +53,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:textSize="17dp"
+                        android:textSize="17sp"
                         android:textColor="@color/black_subject"
                         android:maxLines="1"
                         android:singleLine="true"/>
@@ -62,7 +62,7 @@
                         android:id="@+id/content_subTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="14dp"
+                        android:textSize="14sp"
                         android:textColor="@color/grey_creator"
                         android:ellipsize="end"
                         android:maxLines="1"
@@ -84,7 +84,7 @@
                     android:singleLine="true"
                     android:gravity="right"
                     android:textColor="@color/blue"
-                    android:textSize="12dp"/>
+                    android:textSize="12sp"/>
 
             <TextView
                     android:id="@+id/content_meta_middle"
@@ -95,7 +95,7 @@
                     android:textColor="@color/grey_filesize"
                     android:gravity="right"
                     android:autoText="false"
-                    android:textSize="12dp"/>
+                    android:textSize="12sp"/>
 
             <ImageView
                     android:id="@+id/content_meta_bottom"

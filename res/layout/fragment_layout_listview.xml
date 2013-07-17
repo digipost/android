@@ -24,7 +24,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/fragment_content_listview_top_text"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:padding="8dp"
             android:visibility="gone"
             android:background="@color/login_background"
@@ -52,7 +52,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/fragment_content_list_emptyview_title"
-                android:textSize="25dp"
+                android:textSize="25sp"
                 android:padding="10dp"
                 android:gravity="center_horizontal"
                 android:textColor="@color/black_subject"/>
@@ -60,7 +60,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/fragment_content_list_emptyview_text"
-                android:textSize="17dp"
+                android:textSize="17sp"
                 android:textColor="@color/grey_filesize"/>
 
     </LinearLayout>
@@ -79,7 +79,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Ingen forbindelse"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:gravity="center_horizontal"
                 android:textColor="@color/login_background"/>
 
