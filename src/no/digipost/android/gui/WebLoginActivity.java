@@ -27,6 +27,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
@@ -41,8 +42,11 @@ public class WebLoginActivity extends Activity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
         setContentView(R.layout.fragment_web);
+
+        getActionBar().setTitle(R.string.login_loginbutton_text);
+        getActionBar().setHomeButtonEnabled(true);
+
         webViewOauth = (WebView) findViewById(R.id.web_oauth);
         String url = OAuth2.getAuthorizeURL();
         webViewOauth.loadUrl(url);
@@ -51,6 +55,17 @@ public class WebLoginActivity extends Activity {
         settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
         webViewOauth.setWebViewClient(new MyWebViewClient());
 	}
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 	private class MyWebViewClient extends WebViewClient {
 		@Override

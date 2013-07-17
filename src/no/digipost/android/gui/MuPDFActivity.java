@@ -58,6 +58,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -336,7 +337,15 @@ public class MuPDFActivity extends Activity
 			protected void onDocMotion() {
 
 			}
-		};
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                super.onLongPress(e);
+
+                selectModeOn();
+                selectActionMode = startActionMode(selectActionModeCallback);
+            }
+        };
 		mDocView.setAdapter(new MuPDFPageAdapter(this, core));
 
 		mSearchTask = new SearchTask(this, core) {

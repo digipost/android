@@ -73,4 +73,10 @@ public class SharedPreferencesUtilities {
         edit.commit();
         KeyStore.getInstance().delete(ApiConstants.REFRESH_TOKEN);
     }
+
+    public static void clearSharedPreferences(Context context) {
+        Editor editor = getSharedPreferences(context).edit();
+        editor.clear();
+        editor.commit();
+    }
 }
