@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/fragment_content_list_emptyview_title"
                 android:textSize="25dp"
+                android:padding="10dp"
                 android:gravity="center_horizontal"
                 android:textColor="@color/black_subject"/>
         <TextView
