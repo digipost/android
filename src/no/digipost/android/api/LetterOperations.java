@@ -15,6 +15,8 @@
  */
 package no.digipost.android.api;
 
+import android.content.Context;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -28,7 +30,6 @@ import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.JSONUtilities;
-import android.content.Context;
 
 public class LetterOperations {
 

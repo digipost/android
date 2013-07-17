@@ -15,7 +15,20 @@
  */
 package no.digipost.android.api;
 
-import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT;
+import android.content.Context;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,20 +51,7 @@ import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
 
-import org.apache.commons.io.FilenameUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import android.content.Context;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
+import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT;
 
 public class ApiAccess {
 	private final Context context;
@@ -174,64 +174,6 @@ public class ApiAccess {
 
 		return JSONUtilities.getJsonStringFromInputStream(is);
 	}
-
-	/*
-	 * public String moveLetter(final String uri, final StringEntity json)
-	 * throws DigipostClientException, DigipostApiException,
-	 * DigipostAuthenticationException { HttpClient httpClient = new
-	 * DefaultHttpClient(); HttpPost post = new HttpPost(); try {
-	 * post.setURI(new URI(uri)); } catch (URISyntaxException e1) { // Ignore }
-	 * post.addHeader(ApiConstants.CONTENT_TYPE,
-	 * ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
-	 * post.addHeader(ApiConstants.ACCEPT,
-	 * ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
-	 * post.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER +
-	 * Secret.ACCESS_TOKEN); post.setEntity(json);
-	 * 
-	 * HttpResponse response; try { response = httpClient.execute(post); } catch
-	 * (Exception e) { throw new
-	 * DigipostClientException(context.getString(R.string.error_your_network));
-	 * }
-	 * 
-	 * try {
-	 * networkUtilities.checkHttpStatusCode(response.getStatusLine().getStatusCode
-	 * ()); } catch (DigipostInvalidTokenException e) {
-	 * OAuth2.updateAccessToken(context); return moveLetter(uri, json); }
-	 * 
-	 * InputStream is = null; try { is = response.getEntity().getContent(); }
-	 * catch (IllegalStateException e) { // Ignore } catch (IOException e) { //
-	 * Ignore }
-	 * 
-	 * return JSONUtilities.getJsonStringFromInputStream(is); }
-	 * 
-	 * public String sendOpeningReceipt(final String uri) throws
-	 * DigipostClientException, DigipostApiException,
-	 * DigipostAuthenticationException { HttpClient httpClient = new
-	 * DefaultHttpClient(); HttpPost post = new HttpPost(); try {
-	 * post.setURI(new URI(uri)); } catch (URISyntaxException e1) { // Ignore }
-	 * post.addHeader(ApiConstants.CONTENT_TYPE,
-	 * ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
-	 * post.addHeader(ApiConstants.ACCEPT,
-	 * ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
-	 * post.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER +
-	 * Secret.ACCESS_TOKEN);
-	 * 
-	 * HttpResponse response; try { response = httpClient.execute(post); } catch
-	 * (Exception e) { throw new
-	 * DigipostClientException(context.getString(R.string.error_your_network));
-	 * }
-	 * 
-	 * try {
-	 * networkUtilities.checkHttpStatusCode(response.getStatusLine().getStatusCode
-	 * ()); } catch (DigipostInvalidTokenException e) {
-	 * OAuth2.updateAccessToken(context); return sendOpeningReceipt(uri); }
-	 * 
-	 * InputStream is = null; try { is = response.getEntity().getContent(); }
-	 * catch (IllegalStateException e) { // Ignore } catch (IOException e) { //
-	 * Ignore }
-	 * 
-	 * return JSONUtilities.getJsonStringFromInputStream(is); }
-	 */
 
 	public boolean delete(final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
 		Client client = Client.create();
