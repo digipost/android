@@ -237,7 +237,7 @@ public class ApiAccess {
 	}
 
 	public byte[] getDocumentContent(final String uri, final int filesize) throws DigipostApiException, DigipostClientException,
-			DigipostAuthenticationException, OutOfMemoryError {
+			DigipostAuthenticationException {
 		ClientResponse cr = executeGetRequest(uri, ApiConstants.CONTENT_OCTET_STREAM);
 
 		try {

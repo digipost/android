@@ -245,10 +245,6 @@ public abstract class DocumentFragment extends ContentFragment {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 return null;
-            } catch(OutOfMemoryError e){
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = getString(R.string.out_of_memory_exception);
-                return null;
             }
         }
 
