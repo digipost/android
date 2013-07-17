@@ -124,14 +124,14 @@ public class JSONUtilities {
 		return output;
 	}
 
-	public static byte[] inputStreamtoByteArray(Context context, final int size, final InputStream data) throws DigipostClientException {
+	public static byte[] inputStreamtoByteArray(Context context, final int size, final InputStream data) throws DigipostClientException{
 		InputStream is = data;
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
 		int nRead;
-		byte[] byteArray = new byte[size];
 
 		try {
+            byte[] byteArray = new byte[size];
 			while ((nRead = is.read(byteArray, 0, byteArray.length)) != -1) {
 				buffer.write(byteArray, 0, nRead);
 			}

@@ -9,6 +9,7 @@
     <color name="main_drawer_grey_text">#757477</color>
     <color name="main_drawer_dark_grey_text">#757477</color>
     <color name="main_drawer_blue_selected">#56b4ef</color>
+    <color name="main_drawer_blue_focused">#71C2F5</color>
     <color name="main_drawer_dark_blue">#228fd3</color>
     <color name="main_drawer_divider">#333436</color>
 
@@ -23,8 +24,7 @@
     <!-- ListView -->
     <color name="list_pressed">#cecece</color>
     <color name="list_multiselected">#c4e1f3</color>
-
-    <color name="list_focused">#DEDEDE</color>
+    <color name="list_focused">#c4e1f3</color>
 
 
     <color name="list_even">#ffffff</color>

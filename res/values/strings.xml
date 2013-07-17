@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
+
     <!-- App -->
     <string name="app_name">Digipost</string>
     <string name="archive">Arkivet</string>
@@ -49,6 +51,9 @@
     <string name="title_activity_html_veb_view">HtmlVebView</string>
     <string name="title_activity_web_fragment">WebFragment</string>
     <string name="title_activity_login">LoginActivity</string>
+
+    <!-- Exception -->
+    <string name="out_of_memory_exception">Det er ikke nok ledig minne til å åpne filen</string>
 
     <!-- BaseActivity -->
     <string name="base_optionsbutton_contentDescription">Options button</string>
