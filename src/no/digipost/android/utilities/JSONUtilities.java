@@ -124,7 +124,7 @@ public class JSONUtilities {
 		return output;
 	}
 
-	public static byte[] inputStreamtoByteArray(Context context, final int size, final InputStream data) throws DigipostClientException {
+	public static byte[] inputStreamtoByteArray(Context context, final int size, final InputStream data) throws DigipostClientException, OutOfMemoryError{
 		InputStream is = data;
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 

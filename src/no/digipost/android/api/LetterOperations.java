@@ -90,7 +90,7 @@ public class LetterOperations {
     }
 
 	public byte[] getDocumentContent(final Attachment attachment) throws DigipostApiException, DigipostClientException,
-			DigipostAuthenticationException {
+			DigipostAuthenticationException, OutOfMemoryError {
 	    int filesize = Integer.parseInt(attachment.getFileSize());
 		return apiAccess.getDocumentContent(attachment.getContentUri(), filesize);
 	}
