@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:textSize="14dp"
             android:padding="5dp"
-            android:background="@color/login_disclamer_registration_layout_background"/>
+            android:background="@color/login_background"/>
 
     <ListView
             android:id="@+id/upload_file_list"
@@ -30,7 +30,7 @@
             android:textSize="17dp"
             android:gravity="center"
             android:visibility="gone"
-            android:textColor="@color/login_disclamer_registration_layout_background"/>
+            android:textColor="@color/login_background"/>
 
     <no.digipost.android.gui.helpers.TextProgressBar
             android:id="@+id/upload_available_space"
@@ -41,6 +41,6 @@
             android:progressDrawable="@drawable/upload_progressbar"
             android:visibility="gone"
             components:textSize="15dp"
-            components:textColor="@color/login_disclamer_registration_layout_background"/>
+            components:textColor="@color/login_background"/>
 
 </LinearLayout>

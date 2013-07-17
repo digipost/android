@@ -86,12 +86,6 @@
     <string name="context_refresh">Oppdater innhold</string>
     <string name="context_folder">Flytt til mappe</string>
 
-    <!-- Emptyslate -->
-    <string name="empty_listview_mailbox">Du har ingen brev i din postkasse. Alle brev som sendes til deg i Digipost vil komme hit.</string>
-    <string name="empty_listview_archive">Du har ingen dokumenter i arkivet. Her kan du arkivere brev og laste opp dine viktige filer.</string>
-    <string name="empty_listview_workarea">Du har ingen dokumenter på kjøkkenbenken. Her kan du legge ting du vil arbeide videre med.</string>
-    <string name="empty_listview_receipts">Du har ingen kvitteringer tilgjengelig.</string>
-
     <!-- PDF -->
     <string name="pdf_no_further_occurences_found">Ingen flere treff funnet.</string>
     <string name="pdf_text_not_found">Fant ingen treff.</string>

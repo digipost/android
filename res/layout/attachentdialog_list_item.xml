@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/listitem_sub_layout_padding" >
+        android:padding="8sp" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,22 +34,22 @@
 
             <TextView
                 android:id="@+id/attachment_title"
-                android:layout_width="@dimen/listitem_mail_subject_width"
+                android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/black_subject"
-                android:paddingRight="@dimen/listitem_mail_subject_padding_right"
+                android:paddingRight="5sp"
                 android:singleLine="true"
-                android:textSize="@dimen/listitem_mail_subject_textsize" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/attachment_filetype"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/blue"
-                android:textSize="@dimen/listitem_mail_date_textsize" />
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -63,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:paddingLeft="@dimen/listitem_mail_prize_padding_right"
-                android:textSize="@dimen/listitem_mail_prize_textsize" />
+                android:paddingLeft="5sp"
+                android:textSize="13sp" />
 
         </LinearLayout>
     </LinearLayout>

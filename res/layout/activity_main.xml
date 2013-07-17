@@ -19,7 +19,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/splash_bg_color"
+    android:background="@color/actionbar_red_background"
     tools:context=".MainActivity" >
 
     <ImageView
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/main_spinner_margin_bottom" />
+        android:layout_marginBottom="31dp" />
     
 
 </RelativeLayout>

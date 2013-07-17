@@ -23,7 +23,7 @@
     <WebView
             android:id="@+id/web_html"
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/document_webview_height"
+            android:layout_height="0sp"
             android:layout_weight="1" />
 
 </LinearLayout>
