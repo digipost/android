@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android" >
-<item android:state_pressed="true" android:enterFadeDuration="@android:integer/config_mediumAnimTime">
-    <shape>
-        <solid android:color="@color/list_pressed" />
-    </shape>
-</item>
-<item android:state_selected="true">
-        <shape>
-            <solid android:color="@color/list_focused" />
-        </shape>
-</item>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-<item android:state_activated="true">
-    <shape>
-        <solid android:color="@color/list_multiselected"/>
-    </shape>
-</item>
-<item android:drawable="@color/list_element_opened"></item>
+    <item android:state_pressed="true" android:enterFadeDuration="@android:integer/config_mediumAnimTime">
+        <shape>
+            <solid android:color="@color/list_pressed"/>
+        </shape>
+    </item>
+
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="@color/list_focused"/>
+        </shape>
+    </item>
+
+    <item android:state_activated="true">
+        <shape>
+            <solid android:color="@color/list_multiselected"/>
+        </shape>
+    </item>
+    <item android:drawable="@color/list_element_opened"></item>
 
 </selector>
