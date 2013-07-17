@@ -30,11 +30,14 @@ import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
+import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -76,9 +79,9 @@ public abstract class DocumentFragment extends ContentFragment {
 				String action = data.getStringExtra(ApiConstants.ACTION);
 
 				if (action.equals(ApiConstants.LOCATION_WORKAREA)) {
-					moveDocument(action, DocumentContentStore.documentParent);
+					executeDocumentMoveTask(action, DocumentContentStore.documentParent);
 				} else if (action.equals(ApiConstants.LOCATION_ARCHIVE)) {
-					moveDocument(action, DocumentContentStore.documentParent);
+					executeDocumentMoveTask(action, DocumentContentStore.documentParent);
 				} else if (action.equals(ApiConstants.DELETE)) {
 					deleteDocument(DocumentContentStore.documentParent);
 				}
@@ -365,14 +368,16 @@ public abstract class DocumentFragment extends ContentFragment {
 		DocumentFragment.super.setListEmptyViewText(text, null);
 	}
 
-	protected void moveDocuments(String toLocation) {
-		ArrayList<Letter> letters = listAdapter.getCheckedItems();
+	protected void executeDocumentMoveTask(String toLocation) {
+        contentMultiChoiceModeListener.finishActionMode(contentActionMode);
+
+        ArrayList<Letter> letters = listAdapter.getCheckedItems();
 
 		DocumentMoveTask documentMoveTask = new DocumentMoveTask(letters, toLocation);
 		documentMoveTask.execute();
 	}
 
-	protected void moveDocument(String toLocation, Letter letter) {
+	protected void executeDocumentMoveTask(String toLocation, Letter letter) {
 		ArrayList<Letter> letters = new ArrayList<Letter>();
 		letters.add(letter);
 
@@ -380,14 +385,22 @@ public abstract class DocumentFragment extends ContentFragment {
 		documentMoveTask.execute();
 	}
 
-	protected void showMoveDocumentsDialog(final String toLocation, final String message,
-			final DocumentMultiChoiceModeListener documentMultiChoiceModeListener, final ActionMode actionMode) {
+    protected void moveDocument(String toLocation, String message) {
+        boolean confirmMove = SharedPreferencesUtilities.getSharedPreferences(context).getBoolean(SettingsActivity.KEY_PREF_CONFIRM_MOVE, true);
+
+        if (confirmMove) {
+            showMoveDocumentsDialog(toLocation, message);
+        } else {
+            executeDocumentMoveTask(toLocation);
+        }
+    }
+
+	protected void showMoveDocumentsDialog(final String toLocation, final String message) {
 		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
 		alertDialogBuilder.setPositiveButton(R.string.move, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
-				moveDocuments(toLocation);
-				documentMultiChoiceModeListener.finishActionMode(actionMode);
+                executeDocumentMoveTask(toLocation);
 				dialogInterface.dismiss();
 			}
 		});
@@ -597,7 +610,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
 			switch (menuItem.getItemId()) {
 			case R.id.main_context_menu_delete:
-				DocumentFragment.super.showDeleteContentDialog(getString(R.string.dialog_prompt_delete_documents), this, actionMode);
+				DocumentFragment.super.deleteContent(getString(R.string.dialog_prompt_delete_documents));
 				break;
 			}
 

@@ -51,9 +51,12 @@ public class ReceiptFragment extends ContentFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        super.contentMultiChoiceModeListener = new ReceiptMultiChoiceModeListener();
+
 		super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
 		super.listView.setAdapter(listAdapter);
-		super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
+		super.listView.setMultiChoiceModeListener(super.contentMultiChoiceModeListener);
 		super.listView.setOnItemClickListener(new ReceiptListOnItemClickListener());
 
 		updateAccountMeta();
@@ -291,7 +294,7 @@ public class ReceiptFragment extends ContentFragment {
 
 			switch (menuItem.getItemId()) {
 			case R.id.main_context_menu_delete:
-				ReceiptFragment.super.showDeleteContentDialog(getString(R.string.dialog_prompt_delete_receipts), this, actionMode);
+				ReceiptFragment.super.deleteContent(getString(R.string.dialog_prompt_delete_receipts));
 				break;
 			}
 

@@ -24,8 +24,11 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.gui.adapters.ContentArrayAdapter;
+import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -65,6 +68,9 @@ public abstract class ContentFragment extends Fragment {
 
 	protected ProgressDialog progressDialog;
 	protected boolean progressDialogIsVisible = false;
+
+    protected ContentMultiChoiceModeListener contentMultiChoiceModeListener;
+    protected ActionMode contentActionMode;
 
 	public ContentFragment() {
 	}
@@ -132,33 +138,43 @@ public abstract class ContentFragment extends Fragment {
 		}
 	}
 
-	protected void deleteContent() {
+	protected void executeContentDeleteTask() {
+        contentMultiChoiceModeListener.finishActionMode(contentActionMode);
+
 		ArrayList<Object> content = listAdapter.getCheckedItems();
 
 		ContentDeleteTask documentDeleteTask = new ContentDeleteTask(content);
 		documentDeleteTask.execute();
 	}
 
-	protected void showDeleteContentDialog(String message, final ContentMultiChoiceModeListener contentMultiChoiceModeListener,
-			final ActionMode actionMode) {
-		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
-		alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				deleteContent();
-				contentMultiChoiceModeListener.finishActionMode(actionMode);
-				dialogInterface.dismiss();
-			}
-		});
-		alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				dialogInterface.cancel();
-			}
-		});
-		AlertDialog alertDialog = alertDialogBuilder.create();
-		alertDialog.show();
+	protected void deleteContent(String message) {
+        boolean confirmDelete = SharedPreferencesUtilities.getSharedPreferences(context).getBoolean(SettingsActivity.KEY_PREF_CONFIRM_DELETE, true);
+
+        if (confirmDelete) {
+            showDeleteContentDialog(message);
+        } else {
+            executeContentDeleteTask();
+        }
 	}
+
+    protected void showDeleteContentDialog(String message) {
+        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
+        alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                executeContentDeleteTask();
+                dialogInterface.dismiss();
+            }
+        });
+        alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
 
 	protected class ContentDeleteTask extends AsyncTask<Void, Integer, String> {
 		private ArrayList<Object> content;
@@ -231,11 +247,11 @@ public abstract class ContentFragment extends Fragment {
 	protected void showContentProgressDialog(final AsyncTask task, String message) {
 		progressDialog = DialogUtitities.getProgressDialogWithMessage(context, message);
 		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int which) {
-				dialog.dismiss();
-				task.cancel(true);
-			}
-		});
+            public void onClick(final DialogInterface dialog, final int which) {
+                dialog.dismiss();
+                task.cancel(true);
+            }
+        });
 
 		progressDialog.show();
 	}
@@ -276,6 +292,8 @@ public abstract class ContentFragment extends Fragment {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            contentActionMode = actionMode;
+
 			MenuInflater inflater = actionMode.getMenuInflater();
 			inflater.inflate(R.menu.activity_main_content_context, menu);
 
@@ -298,6 +316,8 @@ public abstract class ContentFragment extends Fragment {
 		public void onDestroyActionMode(ActionMode actionMode) {
 			listAdapter.setCheckboxVisible(false);
 			listAdapter.clearChecked();
+
+            contentActionMode = null;
 		}
 
 		public void finishActionMode(ActionMode actionMode) {

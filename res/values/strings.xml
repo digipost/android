@@ -127,6 +127,8 @@
     <string name="pref_show_bank_id_documents_summary">Vis brev som krever innlogging med Bank-ID</string>
     <string name="pref_screen_rotation_title">Skjermrotasjon</string>
     <string name="pref_screen_rotation_summary">Tillat skjermrotasjon</string>
+    <string name="pref_screen_confirm_delete_title">Bekreft før sletting</string>
+    <string name="pref_screen_confirm_move_title">Bekreft før flytting</string>
 
     <!-- Errors -->
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv igjen.</string>

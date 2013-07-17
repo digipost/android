@@ -33,7 +33,9 @@ public class MailboxFragment extends DocumentFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 
-		super.listView.setMultiChoiceModeListener(new MailboxMultiChoiceModeListener());
+        super.contentMultiChoiceModeListener = new MailboxMultiChoiceModeListener();
+
+		super.listView.setMultiChoiceModeListener(super.contentMultiChoiceModeListener);
 
 		return view;
 	}
@@ -51,12 +53,10 @@ public class MailboxFragment extends DocumentFragment {
 
 			switch (menuItem.getItemId()) {
 			case R.id.main_context_menu_workarea:
-				showMoveDocumentsDialog(ApiConstants.LOCATION_WORKAREA, getString(R.string.dialog_prompt_move_documents_to_workarea), this,
-						actionMode);
+                moveDocument(ApiConstants.LOCATION_WORKAREA, getString(R.string.dialog_prompt_move_documents_to_workarea));
 				break;
 			case R.id.main_context_menu_archive:
-				showMoveDocumentsDialog(ApiConstants.LOCATION_ARCHIVE, getString(R.string.dialog_prompt_move_documents_to_archive), this,
-						actionMode);
+                moveDocument(ApiConstants.LOCATION_ARCHIVE, getString(R.string.dialog_prompt_move_documents_to_archive));
 				break;
 			}
 

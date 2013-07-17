@@ -18,6 +18,16 @@
                 android:summary="@string/pref_screen_rotation_summary"
                 android:defaultValue="true"/>
 
+        <SwitchPreference
+                android:key="pref_confirmDelete"
+                android:title="@string/pref_screen_confirm_delete_title"
+                android:defaultValue="true"/>
+
+        <SwitchPreference
+                android:key="pref_confirmMove"
+                android:title="@string/pref_screen_confirm_move_title"
+                android:defaultValue="true"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory
