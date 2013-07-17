@@ -46,6 +46,7 @@ import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.AttachmentArrayAdapter;
 import no.digipost.android.gui.HtmlActivity;
 import no.digipost.android.gui.HtmlAndReceiptActivity;
+import no.digipost.android.gui.ImageActivity;
 import no.digipost.android.gui.MuPDFActivity;
 import no.digipost.android.gui.UnsupportedDocumentFormatActivity;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
@@ -180,7 +181,7 @@ public abstract class DocumentFragment extends ContentFragment {
         builder.create().show();
     }
 
-    private void openAttachmentContent(final Letter parentLetter, final Attachment attachment) {
+    private void openAttachmentContent(final Attachment attachment) {
         String fileType = attachment.getFileType();
         Intent intent = null;
 
@@ -191,7 +192,7 @@ public abstract class DocumentFragment extends ContentFragment {
         } else {
             for (String imageFiletype : ApiConstants.FILETYPES_IMAGE) {
                 if (fileType.equals(imageFiletype)) {
-                    // ToDo åpne bilde
+                    // ToDo ImageAvtivity
                 }
             }
         }
@@ -255,7 +256,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
             if (result != null) {
                 DocumentContentStore.setContent(result, attachment, parentLetter);
-                openAttachmentContent(parentLetter,attachment);
+                openAttachmentContent(attachment);
             } else {
                 if (invalidToken) {
                     activityCommunicator.requestLogOut();

@@ -119,7 +119,7 @@
 
     <!-- Preferences -->
     <string name="preferences">Innstillinger</string>
-    <string name="pref_default_screen_title">Vis skjerm ved oppstart</string>
+    <string name="pref_default_screen_title">Startskjerm ved innlogging</string>
     <string name="pref_default_screen_default">1</string>
     <string name="pref_general_settings">Generelle innstillinger</string>
     <string name="pref_documents_settings">Innstillinger for brev</string>

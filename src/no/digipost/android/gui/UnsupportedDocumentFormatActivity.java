@@ -236,6 +236,8 @@ public class UnsupportedDocumentFormatActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
 
-        FileUtilities.deleteTempFiles();
+        if (isFinishing()) {
+            FileUtilities.deleteTempFiles();
+        }
     }
 }
