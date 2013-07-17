@@ -19,12 +19,14 @@ package no.digipost.android.gui;
 import java.lang.reflect.Field;
 
 import no.digipost.android.R;
-import no.digipost.android.api.LetterOperations;
+import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.DrawerArrayAdapter;
+import no.digipost.android.gui.content.SettingsActivity;
+import no.digipost.android.gui.content.UploadActivity;
 import no.digipost.android.gui.fragments.ArchiveFragment;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.MailboxFragment;
@@ -59,7 +61,7 @@ import android.widget.SearchView;
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
 
-	private LetterOperations letterOperations;
+	private ContentOperations contentOperations;
 
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
@@ -78,7 +80,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		setContentView(R.layout.activity_main_content);
 		ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
 
-		this.letterOperations = new LetterOperations(this);
+		this.contentOperations = new ContentOperations(this);
 		this.refreshing = true;
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
@@ -193,7 +195,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	@Override
 	public void requestLetterOperations() {
-		getCurrentFragment().setLetterOperations(letterOperations);
+		getCurrentFragment().setContentOperations(contentOperations);
 	}
 
 	@Override
@@ -375,7 +377,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		@Override
 		protected PrimaryAccount doInBackground(Void... voids) {
 			try {
-				return letterOperations.getPrimaryAccount();
+				return contentOperations.getPrimaryAccount();
 			} catch (DigipostApiException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();

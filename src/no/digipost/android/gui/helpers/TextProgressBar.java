@@ -1,4 +1,4 @@
-package no.digipost.android.gui;
+package no.digipost.android.gui.helpers;
 
 import no.digipost.android.R;
 import android.content.Context;

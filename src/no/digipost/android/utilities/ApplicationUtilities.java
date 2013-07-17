@@ -1,6 +1,6 @@
 package no.digipost.android.utilities;
 
-import no.digipost.android.gui.SettingsActivity;
+import no.digipost.android.gui.content.SettingsActivity;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;

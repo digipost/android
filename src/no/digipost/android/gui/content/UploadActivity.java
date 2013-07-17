@@ -1,4 +1,4 @@
-package no.digipost.android.gui;
+package no.digipost.android.gui.content;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,11 +6,12 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import no.digipost.android.R;
-import no.digipost.android.api.LetterOperations;
+import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.gui.helpers.TextProgressBar;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DataFormatUtilities;
@@ -190,7 +191,7 @@ public class UploadActivity extends Activity {
 		@Override
 		protected PrimaryAccount doInBackground(Void... voids) {
 			try {
-				return LetterOperations.getPrimaryAccount();
+				return ContentOperations.getPrimaryAccount();
 			} catch (DigipostApiException e) {
 				return null;
 			} catch (DigipostClientException e) {
@@ -319,7 +320,7 @@ public class UploadActivity extends Activity {
 		@Override
 		protected String doInBackground(Void... voids) {
 			try {
-				LetterOperations.uploadFile(UploadActivity.this, file);
+				ContentOperations.uploadFile(UploadActivity.this, file);
 				return null;
 			} catch (DigipostAuthenticationException e) {
 				e.printStackTrace();

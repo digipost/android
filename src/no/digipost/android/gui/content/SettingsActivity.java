@@ -1,4 +1,4 @@
-package no.digipost.android.gui;
+package no.digipost.android.gui.content;
 
 import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;

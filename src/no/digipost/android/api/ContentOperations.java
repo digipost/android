@@ -31,11 +31,11 @@ import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.JSONUtilities;
 
-public class LetterOperations {
+public class ContentOperations {
 
 	private static ApiAccess apiAccess;
 
-	public LetterOperations(final Context context) {
+	public ContentOperations(final Context context) {
 		apiAccess = new ApiAccess(context);
 	}
 
@@ -64,12 +64,6 @@ public class LetterOperations {
 		return apiAccess.getReceipts(primaryAccount.getReceiptsUri());
 	}
 
-	public void moveDocument(final Letter letter, final String toLocation) throws DigipostClientException, DigipostApiException,
-			DigipostAuthenticationException {
-		// ToDo slette metode
-		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
-	}
-
 	public void moveDocument(final Letter letter) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
 		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
 	}
@@ -89,35 +83,9 @@ public class LetterOperations {
 		return apiAccess.getDocumentContent(attachment.getContentUri(), filesize);
 	}
 
-	public byte[] getDocumentContent(final Object attachment) throws DigipostApiException, DigipostClientException,
-			DigipostAuthenticationException {
-		// ToDo slette metode
-		return null;
-	}
-
-	public String getDocumentContentHTML(final Object object) throws DigipostApiException, DigipostClientException,
-			DigipostAuthenticationException {
-		if (object instanceof Letter) {
-			return apiAccess.getDocumentHTML(((Letter) object).getContentUri());
-		} else {
-			return apiAccess.getDocumentHTML(((Attachment) object).getContentUri());
-		}
-	}
-
 	public String getReceiptContentHTML(final Receipt receipt) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
 		return apiAccess.getReceiptHTML(receipt.getContentAsHTMLUri());
-	}
-
-	public void delete(final Object object) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		// ToDo slette metode
-		if (object instanceof Letter) {
-			Letter letter = (Letter) object;
-			apiAccess.delete(letter.getDeleteUri());
-		} else {
-			Receipt receipt = (Receipt) object;
-			apiAccess.delete(receipt.getDeleteUri());
-		}
 	}
 
 	public void deleteContent(final Object object) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {

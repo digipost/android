@@ -25,9 +25,9 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
-import no.digipost.android.gui.HtmlAndReceiptActivity;
-import no.digipost.android.gui.MuPDFActivity;
-import no.digipost.android.gui.UnsupportedDocumentFormatActivity;
+import no.digipost.android.gui.content.HtmlAndReceiptActivity;
+import no.digipost.android.gui.content.MuPDFActivity;
+import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
 import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.model.Attachment;
@@ -231,7 +231,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected byte[] doInBackground(Void... voids) {
 			try {
-				return DocumentFragment.super.letterOperations.getDocumentContent(attachment);
+				return DocumentFragment.super.contentOperations.getDocumentContent(attachment);
 			} catch (DigipostAuthenticationException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();
@@ -299,7 +299,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected ArrayList<Letter> doInBackground(final Void... params) {
 			try {
-				return DocumentFragment.super.letterOperations.getAccountContentMeta(content);
+				return DocumentFragment.super.contentOperations.getAccountContentMeta(content);
 			} catch (DigipostApiException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();
@@ -422,7 +422,7 @@ public abstract class DocumentFragment extends ContentFragment {
 				for (Letter letter : letters) {
 					publishProgress(++progress);
 					letter.setLocation(toLocation);
-					letterOperations.moveDocument(letter);
+					contentOperations.moveDocument(letter);
 				}
 
 				return null;
@@ -497,7 +497,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected Boolean doInBackground(final Void... params) {
 			try {
-				DocumentFragment.super.letterOperations.sendOpeningReceipt(letter);
+				DocumentFragment.super.contentOperations.sendOpeningReceipt(letter);
 				return true;
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
@@ -552,7 +552,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected Boolean doInBackground(final Void... params) {
 			try {
-				letter = DocumentFragment.super.letterOperations.getSelfLetter(letter);
+				letter = DocumentFragment.super.contentOperations.getSelfLetter(letter);
 				return true;
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();

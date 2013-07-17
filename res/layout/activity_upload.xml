@@ -32,7 +32,7 @@
             android:visibility="gone"
             android:textColor="@color/login_disclamer_registration_layout_background"/>
 
-    <no.digipost.android.gui.TextProgressBar
+    <no.digipost.android.gui.helpers.TextProgressBar
             android:id="@+id/upload_available_space"
             android:layout_height="30dp"
             android:layout_width="match_parent"

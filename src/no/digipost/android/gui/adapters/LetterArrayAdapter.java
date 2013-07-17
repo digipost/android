@@ -21,7 +21,7 @@ import java.util.Collection;
 
 import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.gui.SettingsActivity;
+import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;

@@ -25,7 +25,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
-import no.digipost.android.gui.HtmlAndReceiptActivity;
+import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
@@ -41,10 +41,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.TextView;
 
 public class ReceiptFragment extends ContentFragment {
-	TextView fragment_receipt_emptyview_text;
 
 	public ReceiptFragment() {
 	}
@@ -143,7 +141,7 @@ public class ReceiptFragment extends ContentFragment {
 		@Override
 		protected String doInBackground(Void... voids) {
 			try {
-				return ReceiptFragment.super.letterOperations.getReceiptContentHTML(receipt);
+				return ReceiptFragment.super.contentOperations.getReceiptContentHTML(receipt);
 			} catch (DigipostAuthenticationException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();
@@ -204,7 +202,7 @@ public class ReceiptFragment extends ContentFragment {
 		@Override
 		protected Receipts doInBackground(final Void... params) {
 			try {
-				return ReceiptFragment.super.letterOperations.getAccountContentMetaReceipt();
+				return ReceiptFragment.super.contentOperations.getAccountContentMetaReceipt();
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
 				return null;

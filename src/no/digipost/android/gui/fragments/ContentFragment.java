@@ -19,7 +19,7 @@ package no.digipost.android.gui.fragments;
 import java.util.ArrayList;
 
 import no.digipost.android.R;
-import no.digipost.android.api.LetterOperations;
+import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
@@ -53,7 +53,7 @@ public abstract class ContentFragment extends Fragment {
 	ActivityCommunicator activityCommunicator;
 
 	protected Context context;
-	protected LetterOperations letterOperations;
+	protected ContentOperations contentOperations;
 
 	protected ListView listView;
 	protected View listEmptyViewNoConnection;
@@ -184,7 +184,7 @@ public abstract class ContentFragment extends Fragment {
 
 				for (Object object : content) {
 					publishProgress(++progress);
-					letterOperations.deleteContent(object);
+					contentOperations.deleteContent(object);
 				}
 
 				return null;
@@ -257,8 +257,8 @@ public abstract class ContentFragment extends Fragment {
 		listAdapter.clearFilter();
 	}
 
-	public void setLetterOperations(LetterOperations letterOperations) {
-		this.letterOperations = letterOperations;
+	public void setContentOperations(ContentOperations contentOperations) {
+		this.contentOperations = contentOperations;
 	}
 
 	public abstract void updateAccountMeta();

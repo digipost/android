@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui;
+package no.digipost.android.gui.content;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -24,6 +24,7 @@ import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.pdf.MuPDFAlert;

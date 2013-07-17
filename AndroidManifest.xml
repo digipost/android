@@ -57,10 +57,10 @@
         </activity>
         <activity android:name="no.digipost.android.gui.MainContentActivity" />
         <activity android:name="no.digipost.android.gui.WebLoginActivity" />
-        <activity android:name="no.digipost.android.gui.HtmlAndReceiptActivity" />
-        <activity android:name="no.digipost.android.gui.MuPDFActivity" />
-        <activity android:name="no.digipost.android.gui.UnsupportedDocumentFormatActivity"/>
-        <activity android:name="no.digipost.android.gui.UploadActivity"/>
-        <activity android:name="no.digipost.android.gui.SettingsActivity"/>
+        <activity android:name=".gui.content.HtmlAndReceiptActivity" />
+        <activity android:name=".gui.content.MuPDFActivity" />
+        <activity android:name=".gui.content.UnsupportedDocumentFormatActivity"/>
+        <activity android:name=".gui.content.UploadActivity"/>
+        <activity android:name=".gui.content.SettingsActivity"/>
     </application>
 </manifest>
