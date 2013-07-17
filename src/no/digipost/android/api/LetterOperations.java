@@ -81,7 +81,7 @@ public class LetterOperations {
 
     public void sendOpeningReceipt(final Letter letter) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        apiAccess.sendOpeningReceipt(letter.getOpeningReceiptUri());
+        apiAccess.postSendOpeningReceipt(letter.getOpeningReceiptUri());
     }
 
     public Letter getSelfLetter(final Letter letter) throws DigipostClientException, DigipostApiException,
