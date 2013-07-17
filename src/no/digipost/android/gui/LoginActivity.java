@@ -36,7 +36,6 @@ public class LoginActivity extends Activity {
 	private Button loginButton, privacyButton, registrationButton;
 	private CheckBox stayLoggedInCheckBox;
 	private ButtonListener listener;
-	private NetworkUtilities networkUtilities;
 	private KeyStore ks;
 
 	private final int WEB_LOGIN_REQUEST = 1;
@@ -53,7 +52,6 @@ public class LoginActivity extends Activity {
 		privacyButton.setOnClickListener(listener);
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
-		networkUtilities = new NetworkUtilities(this);
 		stayLoggedInCheckBox = (CheckBox) findViewById(R.id.login_remember_me);
 	}
 
@@ -101,7 +99,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void openWebView() {
-		if (networkUtilities.isOnline()) {
+		if (NetworkUtilities.isOnline()) {
 			Intent i = new Intent(this, WebLoginActivity.class);
 			startActivityForResult(i, WEB_LOGIN_REQUEST);
 

@@ -19,6 +19,7 @@ package no.digipost.android.gui.fragments;
 import java.util.ArrayList;
 
 import no.digipost.android.R;
+import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
@@ -141,7 +142,7 @@ public class ReceiptFragment extends ContentFragment {
 		@Override
 		protected String doInBackground(Void... voids) {
 			try {
-				return ReceiptFragment.super.contentOperations.getReceiptContentHTML(receipt);
+				return ContentOperations.getReceiptContentHTML(context, receipt);
 			} catch (DigipostAuthenticationException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();
@@ -202,7 +203,7 @@ public class ReceiptFragment extends ContentFragment {
 		@Override
 		protected Receipts doInBackground(final Void... params) {
 			try {
-				return ReceiptFragment.super.contentOperations.getAccountContentMetaReceipt();
+				return ContentOperations.getAccountContentMetaReceipt(context);
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
 				return null;

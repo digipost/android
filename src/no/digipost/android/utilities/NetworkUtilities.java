@@ -35,13 +35,7 @@ public class NetworkUtilities {
 	public static final int HTTP_STATUS_BAD_REQUEST = 400;
 	public static final int HTTP_STATUS_INTERNAL_ERROR = 500;
 
-	private final Context context;
-
-	public NetworkUtilities(final Context context) {
-		this.context = context;
-	}
-
-	public void checkHttpStatusCode(final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
+	public static void checkHttpStatusCode(Context context, final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
 			DigipostAuthenticationException {
 		if (statusCode == HTTP_STATUS_SUCCESS || statusCode == TEMPORARY_REDIRECT.getStatusCode()) {
 			return;
@@ -58,7 +52,7 @@ public class NetworkUtilities {
 		}
 	}
 
-	public boolean isOnline() {
+	public static boolean isOnline() {
 		IsOnlineTask task = new IsOnlineTask();
 		try {
 			return task.execute().get();
@@ -70,7 +64,7 @@ public class NetworkUtilities {
 		return false;
 	}
 
-	private class IsOnlineTask extends AsyncTask<Void, Void, Boolean> {
+	private static class IsOnlineTask extends AsyncTask<Void, Void, Boolean> {
 
 		@Override
 		protected Boolean doInBackground(final Void... params) {

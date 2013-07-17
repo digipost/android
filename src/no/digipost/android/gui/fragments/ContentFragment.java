@@ -53,7 +53,6 @@ public abstract class ContentFragment extends Fragment {
 	ActivityCommunicator activityCommunicator;
 
 	protected Context context;
-	protected ContentOperations contentOperations;
 
 	protected ListView listView;
 	protected View listEmptyViewNoConnection;
@@ -93,8 +92,6 @@ public abstract class ContentFragment extends Fragment {
 		});
 
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-
-		activityCommunicator.requestLetterOperations();
 
 		return view;
 	}
@@ -184,7 +181,7 @@ public abstract class ContentFragment extends Fragment {
 
 				for (Object object : content) {
 					publishProgress(++progress);
-					contentOperations.deleteContent(object);
+					ContentOperations.deleteContent(context, object);
 				}
 
 				return null;
@@ -257,18 +254,12 @@ public abstract class ContentFragment extends Fragment {
 		listAdapter.clearFilter();
 	}
 
-	public void setContentOperations(ContentOperations contentOperations) {
-		this.contentOperations = contentOperations;
-	}
-
 	public abstract void updateAccountMeta();
 
 	public interface ActivityCommunicator {
 		public void onStartRefreshContent();
 
 		public void onEndRefreshContent();
-
-		public void requestLetterOperations();
 
 		public void requestLogOut();
 

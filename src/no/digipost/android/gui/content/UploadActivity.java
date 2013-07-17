@@ -191,7 +191,7 @@ public class UploadActivity extends Activity {
 		@Override
 		protected PrimaryAccount doInBackground(Void... voids) {
 			try {
-				return ContentOperations.getPrimaryAccount();
+				return ContentOperations.getPrimaryAccountUpdated(UploadActivity.this);
 			} catch (DigipostApiException e) {
 				return null;
 			} catch (DigipostClientException e) {
