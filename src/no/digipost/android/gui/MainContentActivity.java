@@ -61,8 +61,6 @@ import android.widget.SearchView;
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
 
-	private ContentOperations contentOperations;
-
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
 	private ActionBarDrawerToggle drawerToggle;
@@ -80,7 +78,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		setContentView(R.layout.activity_main_content);
 		ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
 
-		this.contentOperations = new ContentOperations(this);
 		this.refreshing = true;
 
 		drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
@@ -191,11 +188,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	public void onEndRefreshContent() {
 		refreshing = false;
 		invalidateOptionsMenu();
-	}
-
-	@Override
-	public void requestLetterOperations() {
-		getCurrentFragment().setContentOperations(contentOperations);
 	}
 
 	@Override
@@ -377,7 +369,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		@Override
 		protected PrimaryAccount doInBackground(Void... voids) {
 			try {
-				return contentOperations.getPrimaryAccount();
+				return ContentOperations.getPrimaryAccountUpdated(MainContentActivity.this);
 			} catch (DigipostApiException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();

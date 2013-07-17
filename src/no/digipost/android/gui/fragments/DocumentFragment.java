@@ -19,18 +19,20 @@ package no.digipost.android.gui.fragments;
 import java.util.ArrayList;
 
 import no.digipost.android.R;
+import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
+import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
 import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
-import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
-import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.model.Attachment;
+import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
 import android.app.AlertDialog;
@@ -153,17 +155,17 @@ public abstract class DocumentFragment extends ContentFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(getString(R.string.dialog_answer_opening_receipt_message))
 				.setPositiveButton(getString(R.string.dialog_answer_opening_receipt_yes), new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        sendOpeningReceipt(letter);
-                        dialog.dismiss();
-                    }
-                })
+					public void onClick(final DialogInterface dialog, final int id) {
+						sendOpeningReceipt(letter);
+						dialog.dismiss();
+					}
+				})
 				.setCancelable(false)
 				.setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        dialog.cancel();
-                    }
-                });
+					public void onClick(final DialogInterface dialog, final int id) {
+						dialog.cancel();
+					}
+				});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
@@ -231,7 +233,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected byte[] doInBackground(Void... voids) {
 			try {
-				return DocumentFragment.super.contentOperations.getDocumentContent(attachment);
+				return ContentOperations.getDocumentContent(context, attachment);
 			} catch (DigipostAuthenticationException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();
@@ -281,7 +283,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		task.execute();
 	}
 
-	protected class GetDocumentMetaTask extends AsyncTask<Void, Void, ArrayList<Letter>> {
+	protected class GetDocumentMetaTask extends AsyncTask<Void, Void, Documents> {
 		private final int content;
 		private String errorMessage;
 		private boolean invalidToken;
@@ -297,9 +299,9 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		@Override
-		protected ArrayList<Letter> doInBackground(final Void... params) {
+		protected Documents doInBackground(final Void... params) {
 			try {
-				return DocumentFragment.super.contentOperations.getAccountContentMeta(content);
+				return ContentOperations.getAccountContentMetaDocument(context, content);
 			} catch (DigipostApiException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();
@@ -317,10 +319,11 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		@Override
-		protected void onPostExecute(final ArrayList<Letter> letters) {
-			super.onPostExecute(letters);
+		protected void onPostExecute(final Documents documents) {
+			super.onPostExecute(documents);
 
-			if (letters != null) {
+			if (documents != null) {
+				ArrayList<Letter> letters = documents.getDocument();
 				DocumentFragment.super.listAdapter.replaceAll(letters);
 				if (!letters.isEmpty()) {
 					DocumentFragment.super.setListEmptyViewNoNetwork(false);
@@ -422,7 +425,7 @@ public abstract class DocumentFragment extends ContentFragment {
 				for (Letter letter : letters) {
 					publishProgress(++progress);
 					letter.setLocation(toLocation);
-					contentOperations.moveDocument(letter);
+					ContentOperations.moveDocument(context, letter);
 				}
 
 				return null;
@@ -497,7 +500,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected Boolean doInBackground(final Void... params) {
 			try {
-				DocumentFragment.super.contentOperations.sendOpeningReceipt(letter);
+				ContentOperations.sendOpeningReceipt(context, letter);
 				return true;
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
@@ -552,7 +555,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected Boolean doInBackground(final Void... params) {
 			try {
-				letter = DocumentFragment.super.contentOperations.getSelfLetter(letter);
+				letter = ContentOperations.getSelfLetter(context, letter);
 				return true;
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();

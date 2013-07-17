@@ -116,10 +116,8 @@ public class OAuth2 {
 			throw new DigipostClientException(context.getString(R.string.error_your_network));
 		}
 
-		NetworkUtilities networkUtilities = new NetworkUtilities(context);
-
 		try {
-			networkUtilities.checkHttpStatusCode(cr.getStatus());
+			NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
 		} catch (DigipostInvalidTokenException e) {
 			// Ignore
 		}

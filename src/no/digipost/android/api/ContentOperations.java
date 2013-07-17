@@ -15,90 +15,96 @@
  */
 package no.digipost.android.api;
 
-import android.content.Context;
-
 import java.io.File;
-import java.util.ArrayList;
 
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Attachment;
+import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.JSONUtilities;
+import android.content.Context;
 
 public class ContentOperations {
+	private static PrimaryAccount primaryAccount = null;
 
-	private static ApiAccess apiAccess;
-
-	public ContentOperations(final Context context) {
-		apiAccess = new ApiAccess(context);
-	}
-
-	public static PrimaryAccount getPrimaryAccount() throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		return apiAccess.getAccount().getPrimaryAccount();
-	}
-
-	public ArrayList<Letter> getAccountContentMeta(final int type) throws DigipostApiException, DigipostClientException,
+	private static PrimaryAccount getPrimaryAccount(Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		PrimaryAccount primaryAccount = getPrimaryAccount();
+		if (primaryAccount == null) {
+			primaryAccount = ApiAccess.getAccount(context).getPrimaryAccount();
+		}
+
+		return primaryAccount;
+	}
+
+	public static PrimaryAccount getPrimaryAccountUpdated(Context context) throws DigipostClientException, DigipostAuthenticationException,
+			DigipostApiException {
+		return ApiAccess.getAccount(context).getPrimaryAccount();
+	}
+
+	public static Documents getAccountContentMetaDocument(Context context, final int type) throws DigipostApiException,
+			DigipostClientException, DigipostAuthenticationException {
+		PrimaryAccount primaryAccount = getPrimaryAccount(context);
 
 		switch (type) {
 		case ApplicationConstants.MAILBOX:
-			return apiAccess.getDocuments(primaryAccount.getInboxUri()).getDocument();
+			return ApiAccess.getDocuments(context, primaryAccount.getInboxUri());
 		case ApplicationConstants.ARCHIVE:
-			return apiAccess.getDocuments(primaryAccount.getArchiveUri()).getDocument();
+			return ApiAccess.getDocuments(context, primaryAccount.getArchiveUri());
 		case ApplicationConstants.WORKAREA:
-			return apiAccess.getDocuments(primaryAccount.getWorkareaUri()).getDocument();
+			return ApiAccess.getDocuments(context, primaryAccount.getWorkareaUri());
 		default:
 			return null;
 		}
 	}
 
-	public Receipts getAccountContentMetaReceipt() throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		PrimaryAccount primaryAccount = getPrimaryAccount();
-		return apiAccess.getReceipts(primaryAccount.getReceiptsUri());
-	}
-
-	public void moveDocument(final Letter letter) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
-		apiAccess.getMovedDocument(letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
-	}
-
-	public void sendOpeningReceipt(final Letter letter) throws DigipostClientException, DigipostApiException,
+	public static Receipts getAccountContentMetaReceipt(Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		apiAccess.postSendOpeningReceipt(letter.getOpeningReceiptUri());
+		return ApiAccess.getReceipts(context, getPrimaryAccount(context).getReceiptsUri());
 	}
 
-	public Letter getSelfLetter(final Letter letter) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
-		return apiAccess.getLetterSelf(letter.getSelfUri());
-	}
-
-	public byte[] getDocumentContent(final Attachment attachment) throws DigipostApiException, DigipostClientException,
+	public static void moveDocument(Context context, final Letter letter) throws DigipostClientException, DigipostApiException,
 			DigipostAuthenticationException {
-		int filesize = Integer.parseInt(attachment.getFileSize());
-		return apiAccess.getDocumentContent(attachment.getContentUri(), filesize);
+		ApiAccess.getMovedDocument(context, letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
 	}
 
-	public String getReceiptContentHTML(final Receipt receipt) throws DigipostApiException, DigipostClientException,
+	public static void sendOpeningReceipt(Context context, final Letter letter) throws DigipostClientException, DigipostApiException,
 			DigipostAuthenticationException {
-		return apiAccess.getReceiptHTML(receipt.getContentAsHTMLUri());
+		ApiAccess.postSendOpeningReceipt(context, letter.getOpeningReceiptUri());
 	}
 
-	public void deleteContent(final Object object) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+	public static Letter getSelfLetter(Context context, final Letter letter) throws DigipostClientException, DigipostApiException,
+			DigipostAuthenticationException {
+		return ApiAccess.getLetterSelf(context, letter.getSelfUri());
+	}
+
+	public static byte[] getDocumentContent(Context context, final Attachment attachment) throws DigipostApiException,
+			DigipostClientException, DigipostAuthenticationException {
+		int fileSize = Integer.parseInt(attachment.getFileSize());
+		return ApiAccess.getDocumentContent(context, attachment.getContentUri(), fileSize);
+	}
+
+	public static String getReceiptContentHTML(Context context, final Receipt receipt) throws DigipostApiException,
+			DigipostClientException, DigipostAuthenticationException {
+		return ApiAccess.getReceiptHTML(context, receipt.getContentAsHTMLUri());
+	}
+
+	public static void deleteContent(Context context, final Object object) throws DigipostApiException, DigipostClientException,
+			DigipostAuthenticationException {
 		if (object instanceof Letter) {
-			apiAccess.delete(((Letter) object).getDeleteUri());
+			ApiAccess.delete(context, ((Letter) object).getDeleteUri());
 		} else if (object instanceof Receipt) {
-			apiAccess.delete(((Receipt) object).getDeleteUri());
+			ApiAccess.delete(context, ((Receipt) object).getDeleteUri());
 		}
 	}
 
 	public static void uploadFile(Context context, File file) throws DigipostClientException, DigipostAuthenticationException,
 			DigipostApiException {
-		ApiAccess apiAccess = new ApiAccess(context);
-		apiAccess.uploadFile(getPrimaryAccount().getUploadUri(), file);
+		ApiAccess.uploadFile(context, getPrimaryAccount(context).getUploadUri(), file);
 	}
 }
