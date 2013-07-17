@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import no.digipost.android.R;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.utilities.DataFormatUtilities;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +31,6 @@ import android.widget.TextView;
 public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 	private final Context con;
 	private final ArrayList<Attachment> attachments;
-
-
 
 	public AttachmentArrayAdapter(final Context context, final int resource, final ArrayList<Attachment> objects) {
 		super(context, resource, objects);
@@ -49,9 +46,9 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 
 		Attachment attachment = attachments.get(position);
 
-		TextView title = (TextView)row.findViewById(R.id.attachment_title);
-		TextView filetype = (TextView)row.findViewById(R.id.attachment_filetype);
-		TextView filesize =  (TextView)row.findViewById(R.id.attachment_filesize);
+		TextView title = (TextView) row.findViewById(R.id.attachment_title);
+		TextView filetype = (TextView) row.findViewById(R.id.attachment_filetype);
+		TextView filesize = (TextView) row.findViewById(R.id.attachment_filesize);
 
 		title.setText(attachment.getSubject());
 		filetype.setText(attachment.getFileType());
@@ -60,16 +57,16 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 		return row;
 	}
 
-    public void placeMainOnTop() {
-        Attachment main = findMain();
-        remove(main);
-        insert(main, 0);
-        notifyDataSetChanged();
-    }
+	public void placeMainOnTop() {
+		Attachment main = findMain();
+		remove(main);
+		insert(main, 0);
+		notifyDataSetChanged();
+	}
 
 	public Attachment findMain() {
-		for(Attachment a : attachments) {
-			if(a.getMainDocument().equals("true")) {
+		for (Attachment a : attachments) {
+			if (a.getMainDocument().equals("true")) {
 				return a;
 			}
 		}

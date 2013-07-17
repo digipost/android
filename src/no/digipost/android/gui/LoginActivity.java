@@ -20,7 +20,6 @@ import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -35,74 +34,76 @@ import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 	private Button loginButton, privacyButton, registrationButton;
-    private CheckBox stayLoggedInCheckBox;
+	private CheckBox stayLoggedInCheckBox;
 	private ButtonListener listener;
 	private NetworkUtilities networkUtilities;
-    private KeyStore ks;
+	private KeyStore ks;
 
-    private final int WEB_LOGIN_REQUEST = 1;
+	private final int WEB_LOGIN_REQUEST = 1;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-        ks = KeyStore.getInstance();
-        listener = new ButtonListener();
-        loginButton = (Button) findViewById(R.id.login_loginButton);
+		ks = KeyStore.getInstance();
+		listener = new ButtonListener();
+		loginButton = (Button) findViewById(R.id.login_loginButton);
 		loginButton.setOnClickListener(listener);
 		privacyButton = (Button) findViewById(R.id.login_privacyButton);
 		privacyButton.setOnClickListener(listener);
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
 		networkUtilities = new NetworkUtilities(this);
-        stayLoggedInCheckBox = (CheckBox)findViewById(R.id.login_remember_me);
-    }
+		stayLoggedInCheckBox = (CheckBox) findViewById(R.id.login_remember_me);
+	}
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        enableCheckBoxIfScreenlock();
-        deleteOldRefreshtoken();
-        stayLoggedInCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(stayLoggedInCheckBox.isChecked()){
-                    KeyStore ks = KeyStore.getInstance();
-                    if (ks.state() != KeyStore.State.UNLOCKED) {
-                        Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
-                        startActivity(i);
-                    }
-                }
-            }
-        });
-    }
+	@Override
+	protected void onResume() {
+		super.onResume();
+		enableCheckBoxIfScreenlock();
+		deleteOldRefreshtoken();
+		stayLoggedInCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (stayLoggedInCheckBox.isChecked()) {
+					KeyStore ks = KeyStore.getInstance();
+					if (ks.state() != KeyStore.State.UNLOCKED) {
+						Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
+						startActivity(i);
+					}
+				}
+			}
+		});
+	}
 
-    private void deleteOldRefreshtoken(){
-        if (ks.state() == KeyStore.State.UNLOCKED) {
-            SharedPreferencesUtilities.deleteRefreshtoken(this);
-        }
-    }
-    private void enableCheckBoxIfScreenlock(){
-        if (ks.state() == KeyStore.State.UNLOCKED) {
-            stayLoggedInCheckBox.setChecked(true);
-        }else{
-            stayLoggedInCheckBox.setChecked(false);
-        }
-    }
+	private void deleteOldRefreshtoken() {
+		if (ks.state() == KeyStore.State.UNLOCKED) {
+			SharedPreferencesUtilities.deleteRefreshtoken(this);
+		}
+	}
 
-    private void startLoginProcess(){
-        if (stayLoggedInCheckBox.isChecked()) {
-            SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_YES);
-            openWebView();
-        }else{
-            SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_NO);
-            openWebView();
-        }
-    }
-    private void openWebView() {
+	private void enableCheckBoxIfScreenlock() {
+		if (ks.state() == KeyStore.State.UNLOCKED) {
+			stayLoggedInCheckBox.setChecked(true);
+		} else {
+			stayLoggedInCheckBox.setChecked(false);
+		}
+	}
+
+	private void startLoginProcess() {
+		if (stayLoggedInCheckBox.isChecked()) {
+			SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_YES);
+			openWebView();
+		} else {
+			SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_NO);
+			openWebView();
+		}
+	}
+
+	private void openWebView() {
 		if (networkUtilities.isOnline()) {
-            Intent i = new Intent(this, WebLoginActivity.class);
-            startActivityForResult(i, WEB_LOGIN_REQUEST);
+			Intent i = new Intent(this, WebLoginActivity.class);
+			startActivityForResult(i, WEB_LOGIN_REQUEST);
 
 		} else {
 			showMessage(getString(R.string.error_your_network));
@@ -110,16 +111,16 @@ public class LoginActivity extends Activity {
 
 	}
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == WEB_LOGIN_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                startBaseActivity();
-            }
-        }
-    }
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == WEB_LOGIN_REQUEST) {
+			if (resultCode == RESULT_OK) {
+				startBaseActivity();
+			}
+		}
+	}
 
-    private void showMessage(final String message) {
+	private void showMessage(final String message) {
 		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 200);
 		toast.show();
@@ -127,9 +128,10 @@ public class LoginActivity extends Activity {
 
 	private void startBaseActivity() {
 		loginButton.setVisibility(View.INVISIBLE);
-		//Intent i = new Intent(LoginActivity.this, BaseFragmentActivity.class);
-        Intent i = new Intent(LoginActivity.this, MainContentActivity.class);
-        startActivity(i);
+		// Intent i = new Intent(LoginActivity.this,
+		// BaseFragmentActivity.class);
+		Intent i = new Intent(LoginActivity.this, MainContentActivity.class);
+		startActivity(i);
 		finish();
 	}
 
@@ -147,7 +149,7 @@ public class LoginActivity extends Activity {
 
 		public void onClick(final View v) {
 			if (v == loginButton) {
-                startLoginProcess();
+				startLoginProcess();
 			} else if (v == privacyButton) {
 				openPrivayBrowser();
 			} else if (v == registrationButton) {

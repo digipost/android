@@ -16,6 +16,8 @@
 
 package no.digipost.android.utilities;
 
+import static javax.ws.rs.core.Response.Status.TEMPORARY_REDIRECT;
+
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.ExecutionException;
@@ -24,18 +26,14 @@ import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostInvalidTokenException;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
-
 import android.content.Context;
 import android.os.AsyncTask;
-
-import static javax.ws.rs.core.Response.Status.TEMPORARY_REDIRECT;
 
 public class NetworkUtilities {
 	public static final int HTTP_STATUS_SUCCESS = 200;
 	public static final int HTTP_STATUS_UNAUTHORIZED = 401;
 	public static final int HTTP_STATUS_BAD_REQUEST = 400;
-    public static final int HTTP_STATUS_INTERNAL_ERROR = 500;
+	public static final int HTTP_STATUS_INTERNAL_ERROR = 500;
 
 	private final Context context;
 
@@ -48,11 +46,11 @@ public class NetworkUtilities {
 		if (statusCode == HTTP_STATUS_SUCCESS || statusCode == TEMPORARY_REDIRECT.getStatusCode()) {
 			return;
 		} else if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
-            if(SharedPreferencesUtilities.screenlockChoiceYes(context)){
-                throw new DigipostInvalidTokenException();
-            }else{
-                throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
-            }
+			if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
+				throw new DigipostInvalidTokenException();
+			} else {
+				throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
+			}
 		} else if (statusCode == HTTP_STATUS_BAD_REQUEST) {
 			throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
 		} else {

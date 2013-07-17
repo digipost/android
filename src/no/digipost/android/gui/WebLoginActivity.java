@@ -17,11 +17,11 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.authentication.OAuth2;
+import no.digipost.android.constants.ApiConstants;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -38,34 +38,34 @@ public class WebLoginActivity extends Activity {
 
 	private WebView webViewOauth;
 
-    @SuppressLint("SetJavaScriptEnabled")
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_web);
+		setContentView(R.layout.fragment_web);
 
-        getActionBar().setTitle(R.string.login_loginbutton_text);
-        getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setTitle(R.string.login_loginbutton_text);
+		getActionBar().setHomeButtonEnabled(true);
 
-        webViewOauth = (WebView) findViewById(R.id.web_oauth);
-        String url = OAuth2.getAuthorizeURL();
-        webViewOauth.loadUrl(url);
-        WebSettings settings = webViewOauth.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-        webViewOauth.setWebViewClient(new MyWebViewClient());
+		webViewOauth = (WebView) findViewById(R.id.web_oauth);
+		String url = OAuth2.getAuthorizeURL();
+		webViewOauth.loadUrl(url);
+		WebSettings settings = webViewOauth.getSettings();
+		settings.setJavaScriptEnabled(true);
+		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+		webViewOauth.setWebViewClient(new MyWebViewClient());
 	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		}
 
-        return super.onOptionsItemSelected(item);
-    }
+		return super.onOptionsItemSelected(item);
+	}
 
 	private class MyWebViewClient extends WebViewClient {
 		@Override
@@ -91,8 +91,8 @@ public class WebLoginActivity extends Activity {
 		@Override
 		public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
 			super.onReceivedError(view, errorCode, description, failingUrl);
-            setResult(RESULT_CANCELED);
-            finish();
+			setResult(RESULT_CANCELED);
+			finish();
 		}
 	}
 
@@ -103,33 +103,33 @@ public class WebLoginActivity extends Activity {
 
 			try {
 				OAuth2.retriveInitialAccessToken(params[0], params[1], WebLoginActivity.this);
-                return null;
+				return null;
 			} catch (DigipostApiException e) {
-                return e.getMessage();
+				return e.getMessage();
 			} catch (DigipostClientException e) {
-                return e.getMessage();
+				return e.getMessage();
 			} catch (DigipostAuthenticationException e) {
-			    return e.getMessage();
+				return e.getMessage();
 			}
 		}
 
 		@Override
 		protected void onPostExecute(final String result) {
-            if (result != null) {
-                showMessage(result);
-                setResult(RESULT_CANCELED);
-            } else {
-                setResult(RESULT_OK);
-            }
+			if (result != null) {
+				showMessage(result);
+				setResult(RESULT_CANCELED);
+			} else {
+				setResult(RESULT_OK);
+			}
 
-            finish();
+			finish();
 		}
 
 	}
 
-    private void showMessage(final String message) {
-        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 200);
-        toast.show();
-    }
+	private void showMessage(final String message) {
+		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 200);
+		toast.show();
+	}
 }

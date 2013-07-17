@@ -16,85 +16,83 @@
 
 package no.digipost.android.utilities;
 
-import android.content.ActivityNotFoundException;
+import java.io.File;
+import java.io.FileOutputStream;
+
+import org.apache.commons.io.FilenameUtils;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.webkit.MimeTypeMap;
 
-import org.apache.commons.io.FilenameUtils;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 public class FileUtilities {
-    public static final String TEMP_FILE_NAME = "temp";
-    public static final String TEMP_FILE_DIRECTORY = Environment.getExternalStorageDirectory() + "/digipost/";
+	public static final String TEMP_FILE_NAME = "temp";
+	public static final String TEMP_FILE_DIRECTORY = Environment.getExternalStorageDirectory() + "/digipost/";
 
-    public static void openFileWithIntent(final Context context, final String fileType, final byte[] data) throws Exception {
-        File file = writeTempFile(fileType, data);
+	public static void openFileWithIntent(final Context context, final String fileType, final byte[] data) throws Exception {
+		File file = writeTempFile(fileType, data);
 
-        Intent intent = new Intent();
-        intent.setAction(android.content.Intent.ACTION_VIEW);
+		Intent intent = new Intent();
+		intent.setAction(android.content.Intent.ACTION_VIEW);
 
-        intent.setDataAndType(Uri.fromFile(file), getMimeType(file));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    }
+		intent.setDataAndType(Uri.fromFile(file), getMimeType(file));
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(intent);
+	}
 
-    public static String getMimeType(File file) {
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        String ext = FilenameUtils.getExtension(file.getName());
+	public static String getMimeType(File file) {
+		MimeTypeMap mime = MimeTypeMap.getSingleton();
+		String ext = FilenameUtils.getExtension(file.getName());
 
-        return mime.getMimeTypeFromExtension(ext);
-    }
+		return mime.getMimeTypeFromExtension(ext);
+	}
 
-    public static File writeFileToSD(final String fileName, final String fileType, final byte[] data) throws Exception {
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(path.getAbsolutePath(), fileName + "." + fileType);
+	public static File writeFileToSD(final String fileName, final String fileType, final byte[] data) throws Exception {
+		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		File file = new File(path.getAbsolutePath(), fileName + "." + fileType);
 
-        System.out.println(file.getName());
-        System.out.println(file.getAbsolutePath());
+		System.out.println(file.getName());
+		System.out.println(file.getAbsolutePath());
 
-        return writeData(file, data);
-    }
+		return writeData(file, data);
+	}
 
-    public static File writeTempFile(final String fileType, final byte[] data) throws Exception {
-        File path = new File(TEMP_FILE_DIRECTORY);
-        path.mkdir();
-        File file = new File(path, TEMP_FILE_NAME + "." + fileType);
+	public static File writeTempFile(final String fileType, final byte[] data) throws Exception {
+		File path = new File(TEMP_FILE_DIRECTORY);
+		path.mkdir();
+		File file = new File(path, TEMP_FILE_NAME + "." + fileType);
 
-        return writeData(file, data);
-    }
+		return writeData(file, data);
+	}
 
-    public static void deleteTempFiles() {
-        File path = new File(TEMP_FILE_DIRECTORY);
-        File[] cache = path.listFiles();
+	public static void deleteTempFiles() {
+		File path = new File(TEMP_FILE_DIRECTORY);
+		File[] cache = path.listFiles();
 
-        if (cache == null) {
-            return;
-        }
+		if (cache == null) {
+			return;
+		}
 
-        for (File f : cache) {
-            if (f.getName().startsWith(TEMP_FILE_NAME)) {
-                f.delete();
-            }
-        }
-    }
+		for (File f : cache) {
+			if (f.getName().startsWith(TEMP_FILE_NAME)) {
+				f.delete();
+			}
+		}
+	}
 
-    private static File writeData(File file, byte[] data) throws Exception {
-        FileOutputStream stream = new FileOutputStream(file);
-        stream.write(data);
-        stream.close();
+	private static File writeData(File file, byte[] data) throws Exception {
+		FileOutputStream stream = new FileOutputStream(file);
+		stream.write(data);
+		stream.close();
 
-        return file;
-    }
+		return file;
+	}
 
-    public static void makeFileVisible(Context context, File file) {
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        intent.setData(Uri.fromFile(file));
-        context.sendBroadcast(intent);
-    }
+	public static void makeFileVisible(Context context, File file) {
+		Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+		intent.setData(Uri.fromFile(file));
+		context.sendBroadcast(intent);
+	}
 }

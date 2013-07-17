@@ -16,15 +16,15 @@
 
 package no.digipost.android;
 
-import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.OAuth2;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
 import no.digipost.android.gui.LoginActivity;
+import no.digipost.android.gui.MainContentActivity;
+import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -32,82 +32,82 @@ import android.os.Bundle;
 
 public class MainActivity extends Activity {
 
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        checkTokenAndScreenlockStatus();
-    }
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		checkTokenAndScreenlockStatus();
+	}
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        FileUtilities.deleteTempFiles();
-    }
+	@Override
+	protected void onStart() {
+		super.onStart();
+		FileUtilities.deleteTempFiles();
+	}
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        finish();
-    }
+	@Override
+	protected void onStop() {
+		super.onStop();
+		finish();
+	}
 
-    private void checkTokenAndScreenlockStatus() {
-        KeyStore ks = KeyStore.getInstance();
-        if (ks.state() == KeyStore.State.UNLOCKED && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
-                new CheckTokenTask().execute();
-        }else{
-            startLoginActivity();
-        }
-    }
+	private void checkTokenAndScreenlockStatus() {
+		KeyStore ks = KeyStore.getInstance();
+		if (ks.state() == KeyStore.State.UNLOCKED && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
+			new CheckTokenTask().execute();
+		} else {
+			startLoginActivity();
+		}
+	}
 
-    private void startBaseActivity() {
-        Intent i = new Intent(MainActivity.this, MainContentActivity.class);
-        startActivity(i);
-        finish();
-    }
+	private void startBaseActivity() {
+		Intent i = new Intent(MainActivity.this, MainContentActivity.class);
+		startActivity(i);
+		finish();
+	}
 
-    private void startLoginActivity() {
-        Intent i = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(i);
-        finish();
-    }
+	private void startLoginActivity() {
+		Intent i = new Intent(MainActivity.this, LoginActivity.class);
+		startActivity(i);
+		finish();
+	}
 
-    private class CheckTokenTask extends AsyncTask<Void, Void, String> {
-        private boolean clearRefreshToken;
+	private class CheckTokenTask extends AsyncTask<Void, Void, String> {
+		private boolean clearRefreshToken;
 
-        public CheckTokenTask() {
-            clearRefreshToken = false;
-        }
+		public CheckTokenTask() {
+			clearRefreshToken = false;
+		}
 
-        @Override
-        protected String doInBackground(final Void... params) {
+		@Override
+		protected String doInBackground(final Void... params) {
 
-            try {
-                OAuth2.updateAccessToken(MainActivity.this);
-                return null;
-            } catch (DigipostApiException e) {
-                return e.getMessage();
-            } catch (DigipostClientException e) {
-                return e.getMessage();
-            } catch (DigipostAuthenticationException e) {
-                clearRefreshToken = true;
-                return e.getMessage();
-            }
+			try {
+				OAuth2.updateAccessToken(MainActivity.this);
+				return null;
+			} catch (DigipostApiException e) {
+				return e.getMessage();
+			} catch (DigipostClientException e) {
+				return e.getMessage();
+			} catch (DigipostAuthenticationException e) {
+				clearRefreshToken = true;
+				return e.getMessage();
+			}
 
-        }
+		}
 
-        @Override
-        protected void onPostExecute(final String result) {
-            if (result == null) {
-                startBaseActivity();
-            } else {
-                if (clearRefreshToken) {
-                    SharedPreferencesUtilities.deleteRefreshtoken(MainActivity.this);
-                    startLoginActivity();
-                } else{
-                    startBaseActivity();
-                }
-            }
-        }
-    }
+		@Override
+		protected void onPostExecute(final String result) {
+			if (result == null) {
+				startBaseActivity();
+			} else {
+				if (clearRefreshToken) {
+					SharedPreferencesUtilities.deleteRefreshtoken(MainActivity.this);
+					startLoginActivity();
+				} else {
+					startBaseActivity();
+				}
+			}
+		}
+	}
 }

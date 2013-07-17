@@ -32,7 +32,7 @@ public abstract class SearchTask {
 	private final MuPDFCore mCore;
 	private final Handler mHandler;
 	private final AlertDialog.Builder mAlertBuilder;
-	private AsyncTask<Void,Integer,SearchTaskResult> mSearchTask;
+	private AsyncTask<Void, Integer, SearchTaskResult> mSearchTask;
 
 	public SearchTask(Context context, MuPDFCore core) {
 		mContext = context;
@@ -69,7 +69,7 @@ public abstract class SearchTask {
 
 		progressDialog.setMax(mCore.countPages());
 
-		mSearchTask = new AsyncTask<Void,Integer,SearchTaskResult>() {
+		mSearchTask = new AsyncTask<Void, Integer, SearchTaskResult>() {
 			@Override
 			protected SearchTaskResult doInBackground(Void... params) {
 				int index = startIndex;
@@ -90,12 +90,12 @@ public abstract class SearchTask {
 			protected void onPostExecute(SearchTaskResult result) {
 				progressDialog.cancel();
 				if (result != null) {
-				    onTextFound(result);
+					onTextFound(result);
 				} else {
-					mAlertBuilder.setTitle(SearchTaskResult.get() == null ? R.string.pdf_text_not_found : R.string.pdf_no_further_occurences_found);
+					mAlertBuilder.setTitle(SearchTaskResult.get() == null ? R.string.pdf_text_not_found
+							: R.string.pdf_no_further_occurences_found);
 					AlertDialog alert = mAlertBuilder.create();
-					alert.setButton(AlertDialog.BUTTON_POSITIVE, "Lukk",
-							(DialogInterface.OnClickListener)null);
+					alert.setButton(AlertDialog.BUTTON_POSITIVE, "Lukk", (DialogInterface.OnClickListener) null);
 					alert.show();
 				}
 			}
@@ -115,8 +115,7 @@ public abstract class SearchTask {
 				super.onPreExecute();
 				mHandler.postDelayed(new Runnable() {
 					public void run() {
-						if (!progressDialog.isCancelled())
-						{
+						if (!progressDialog.isCancelled()) {
 							progressDialog.show();
 							progressDialog.setProgress(startIndex);
 						}

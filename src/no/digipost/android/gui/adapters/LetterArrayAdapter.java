@@ -16,148 +16,144 @@
 
 package no.digipost.android.gui.adapters;
 
-import no.digipost.android.R;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Typeface;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Filter;
-
-import com.sun.swing.internal.plaf.synth.resources.synth_sv;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
+import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.gui.SettingsActivity;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Filter;
 
 public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 
-    public LetterArrayAdapter(final Context context, final int resource, final View.OnClickListener onClickListener) {
-        super(context, resource, new ArrayList<Letter>(), onClickListener);
-    }
+	public LetterArrayAdapter(final Context context, final int resource, final View.OnClickListener onClickListener) {
+		super(context, resource, new ArrayList<Letter>(), onClickListener);
+	}
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View row = super.getView(position, convertView, parent);
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		View row = super.getView(position, convertView, parent);
 
-        Letter letter = super.filtered.get(position);
+		Letter letter = super.filtered.get(position);
 
-        super.title.setText(letter.getSubject());
-        super.subTitle.setText(letter.getCreatorName());
-        super.metaTop.setText(DataFormatUtilities.getFormattedDate(letter.getCreated()));
-        super.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(letter.getFileSize())));
+		super.title.setText(letter.getSubject());
+		super.subTitle.setText(letter.getCreatorName());
+		super.metaTop.setText(DataFormatUtilities.getFormattedDate(letter.getCreated()));
+		super.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(letter.getFileSize())));
 
-        if (!letter.getRead().equals("true")) {
-            row.setBackgroundResource(R.drawable.content_list_item_unread);
-            super.setTitleAndSubTitleBold();
-        }
+		if (!letter.getRead().equals("true")) {
+			row.setBackgroundResource(R.drawable.content_list_item_unread);
+			super.setTitleAndSubTitleBold();
+		}
 
-        super.setFilterTextColor();
+		super.setFilterTextColor();
 
-        setMetaBottom(letter);
+		setMetaBottom(letter);
 
-        return row;
-    }
+		return row;
+	}
 
-    @Override
-    public void replaceAll(Collection<? extends Letter> collection) {
-        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getSharedPreferences(context);
-        boolean showLettersWithTwoFactor = sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS, true);
+	@Override
+	public void replaceAll(Collection<? extends Letter> collection) {
+		SharedPreferences sharedPreferences = SharedPreferencesUtilities.getSharedPreferences(context);
+		boolean showLettersWithTwoFactor = sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS, true);
 
-        if (!showLettersWithTwoFactor) {
-            ArrayList<Letter> letters = new ArrayList<Letter>();
+		if (!showLettersWithTwoFactor) {
+			ArrayList<Letter> letters = new ArrayList<Letter>();
 
-            for (Letter letter : collection) {
-                if (!letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-                    letters.add(letter);
-                }
-            }
+			for (Letter letter : collection) {
+				if (!letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+					letters.add(letter);
+				}
+			}
 
-            super.replaceAll(letters);
-        } else {
-            super.replaceAll(collection);
-        }
-    }
+			super.replaceAll(letters);
+		} else {
+			super.replaceAll(collection);
+		}
+	}
 
-    private void setMetaBottom(Letter letter) {
-        if (letter.getAttachment().size() > 1) {
-            setMetaBottomDrawable(R.drawable.paper_clip_dark);
-        } else if (letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-            setMetaBottomDrawable(R.drawable.lock_dark);
-        } else if (letter.getOpeningReceiptUri() != null) {
-            setMetaBottomDrawable(R.drawable.exclamation_sign_dark);
-        }
-    }
+	private void setMetaBottom(Letter letter) {
+		if (letter.getAttachment().size() > 1) {
+			setMetaBottomDrawable(R.drawable.paper_clip_dark);
+		} else if (letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+			setMetaBottomDrawable(R.drawable.lock_dark);
+		} else if (letter.getOpeningReceiptUri() != null) {
+			setMetaBottomDrawable(R.drawable.exclamation_sign_dark);
+		}
+	}
 
-    private void setMetaBottomDrawable(int resId) {
-        super.metaBottom.setImageDrawable(context.getResources().getDrawable(resId));
-        super.metaBottom.setVisibility(View.VISIBLE);
-    }
+	private void setMetaBottomDrawable(int resId) {
+		super.metaBottom.setImageDrawable(context.getResources().getDrawable(resId));
+		super.metaBottom.setVisibility(View.VISIBLE);
+	}
 
-    @Override
-    public Filter getFilter() {
-        return (super.contentFilter != null) ? super.contentFilter : new LetterFilter();
-    }
+	@Override
+	public Filter getFilter() {
+		return (super.contentFilter != null) ? super.contentFilter : new LetterFilter();
+	}
 
-    private class LetterFilter extends Filter {
-        @Override
-        protected FilterResults performFiltering(final CharSequence constraint) {
-            FilterResults results = new FilterResults();
-            ArrayList<Letter> i = new ArrayList<Letter>();
+	private class LetterFilter extends Filter {
+		@Override
+		protected FilterResults performFiltering(final CharSequence constraint) {
+			FilterResults results = new FilterResults();
+			ArrayList<Letter> i = new ArrayList<Letter>();
 
-            LetterArrayAdapter.super.titleFilterText = null;
-            LetterArrayAdapter.super.subTitleFilterText = null;
-            LetterArrayAdapter.super.metaTopFilterText = null;
+			LetterArrayAdapter.super.titleFilterText = null;
+			LetterArrayAdapter.super.subTitleFilterText = null;
+			LetterArrayAdapter.super.metaTopFilterText = null;
 
-            if ((constraint != null) && (constraint.toString().length() > 0)) {
-                String constraintLowerCase = constraint.toString().toLowerCase();
+			if ((constraint != null) && (constraint.toString().length() > 0)) {
+				String constraintLowerCase = constraint.toString().toLowerCase();
 
-                for (Letter l : LetterArrayAdapter.super.objects) {
-                    boolean addLetter = false;
+				for (Letter l : LetterArrayAdapter.super.objects) {
+					boolean addLetter = false;
 
-                    if (l.getSubject().toLowerCase().contains(constraintLowerCase)) {
-                        LetterArrayAdapter.super.titleFilterText = constraint.toString();
-                        addLetter = true;
-                    }
+					if (l.getSubject().toLowerCase().contains(constraintLowerCase)) {
+						LetterArrayAdapter.super.titleFilterText = constraint.toString();
+						addLetter = true;
+					}
 
-                    if (l.getCreatorName().toLowerCase().contains(constraintLowerCase)) {
-                        LetterArrayAdapter.super.subTitleFilterText = constraint.toString();
-                        addLetter = true;
-                    }
+					if (l.getCreatorName().toLowerCase().contains(constraintLowerCase)) {
+						LetterArrayAdapter.super.subTitleFilterText = constraint.toString();
+						addLetter = true;
+					}
 
-                    if (DataFormatUtilities.getFormattedDate(l.getCreated()).toLowerCase().contains(constraintLowerCase)) {
-                        LetterArrayAdapter.super.metaTopFilterText = constraint.toString();
-                        addLetter = true;
-                    }
+					if (DataFormatUtilities.getFormattedDate(l.getCreated()).toLowerCase().contains(constraintLowerCase)) {
+						LetterArrayAdapter.super.metaTopFilterText = constraint.toString();
+						addLetter = true;
+					}
 
-                    if (addLetter) {
-                        i.add(l);
-                    }
-                }
+					if (addLetter) {
+						i.add(l);
+					}
+				}
 
-                results.values = i;
-                results.count = i.size();
-            } else {
+				results.values = i;
+				results.count = i.size();
+			} else {
 
-                synchronized (LetterArrayAdapter.super.objects) {
-                    results.values = LetterArrayAdapter.super.objects;
-                    results.count = LetterArrayAdapter.super.objects.size();
-                }
-            }
+				synchronized (LetterArrayAdapter.super.objects) {
+					results.values = LetterArrayAdapter.super.objects;
+					results.count = LetterArrayAdapter.super.objects.size();
+				}
+			}
 
-            return results;
-        }
+			return results;
+		}
 
-        @SuppressWarnings("unchecked")
-        @Override
-        protected void publishResults(final CharSequence constraint, final FilterResults results) {
-            filtered = (ArrayList<Letter>) results.values;
-            notifyDataSetChanged();
-        }
-    }
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void publishResults(final CharSequence constraint, final FilterResults results) {
+			filtered = (ArrayList<Letter>) results.values;
+			notifyDataSetChanged();
+		}
+	}
 }

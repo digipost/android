@@ -27,7 +27,6 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.HtmlAndReceiptActivity;
 import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
-import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
@@ -42,25 +41,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 public class ReceiptFragment extends ContentFragment {
-    TextView fragment_receipt_emptyview_text;
+	TextView fragment_receipt_emptyview_text;
+
 	public ReceiptFragment() {
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
-        super.listView.setAdapter(listAdapter);
-        super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
-        super.listView.setOnItemClickListener(new ReceiptListOnItemClickListener());
+		View view = super.onCreateView(inflater, container, savedInstanceState);
+		super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
+		super.listView.setAdapter(listAdapter);
+		super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
+		super.listView.setOnItemClickListener(new ReceiptListOnItemClickListener());
 
-        updateAccountMeta();
+		updateAccountMeta();
 
-        return view;
+		return view;
 	}
 
 	@Override
@@ -71,35 +70,40 @@ public class ReceiptFragment extends ContentFragment {
 	private void checkStatusAndDisplayReceipts(Receipts receipts) {
 
 		ArrayList<Receipt> receipt = receipts.getReceipt();
-        ReceiptFragment.super.listAdapter.replaceAll(receipt);
+		ReceiptFragment.super.listAdapter.replaceAll(receipt);
 
 		int numberOfCards = Integer.parseInt(receipts.getNumberOfCards());
 		int numberOfCardsReadyForVerification = Integer.parseInt(receipts.getNumberOfCardsReadyForVerification());
 		int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(receipts.getNumberOfReceiptsHiddenUntilVerification());
 
-
 		if (receipt.size() == 0) {
 			if (numberOfCards == 0) {
-                setListEmptyViewText("Kom i gang med elektroniske kvitteringer",
-                        "Med Digipost har du tilgang til dine kvitteringer der du er. Se kvitteringene på mobilen, via et nettbrett eller på din datamaskin. Tjenesten er gratis å bruke.");
+				setListEmptyViewText(
+						"Kom i gang med elektroniske kvitteringer",
+						"Med Digipost har du tilgang til dine kvitteringer der du er. Se kvitteringene på mobilen, via et nettbrett eller på din datamaskin. Tjenesten er gratis å bruke.");
 			} else if (numberOfCardsReadyForVerification > 0) {
-                setListEmptyViewText("Verifisering",
-                        "For å se kvitteringer fra dette bankkortet må du verifisere at dette er ditt kort. Du verifiserer kortet ved å taste inn kjøpesummen fra et kjøp som er gjort i en butikk som støtter Elektronisk Kvittering.");
-            } else {
-                setListEmptyViewText("Registert",
-                        "Neste steg er å betale med kort i en butikk som støtter Elektronisk Kvittering."+"\n"+"\n"+
-                                "Ta vare på kvitteringen fra dette kjøpet. Du kan bruke kvitteringen til å verifisere bankkortet. Du trenger kun å verifisere kortet én gang.");
+				setListEmptyViewText(
+						"Verifisering",
+						"For å se kvitteringer fra dette bankkortet må du verifisere at dette er ditt kort. Du verifiserer kortet ved å taste inn kjøpesummen fra et kjøp som er gjort i en butikk som støtter Elektronisk Kvittering.");
+			} else {
+				setListEmptyViewText(
+						"Registert",
+						"Neste steg er å betale med kort i en butikk som støtter Elektronisk Kvittering."
+								+ "\n"
+								+ "\n"
+								+ "Ta vare på kvitteringen fra dette kjøpet. Du kan bruke kvitteringen til å verifisere bankkortet. Du trenger kun å verifisere kortet én gang.");
 
-            }
-		} else{
-            if(numberOfCards == 0){
-                setTopText("For å motta elektroniske kvitteringer må du registere dine kort");
-            }else if(numberOfReceiptsHiddenUntilVerification == 1){
-                setTopText("En kvittering er skjult. For å se denne må du verifisere kortene dine");
-            }else if(numberOfCardsReadyForVerification > 1){
-                setTopText("Du har"+numberOfReceiptsHiddenUntilVerification +" skjulte kvitteringer, for å se disse må du verifisere kortene dine");
-            }
-        }
+			}
+		} else {
+			if (numberOfCards == 0) {
+				setTopText("For å motta elektroniske kvitteringer må du registere dine kort");
+			} else if (numberOfReceiptsHiddenUntilVerification == 1) {
+				setTopText("En kvittering er skjult. For å se denne må du verifisere kortene dine");
+			} else if (numberOfCardsReadyForVerification > 1) {
+				setTopText("Du har" + numberOfReceiptsHiddenUntilVerification
+						+ " skjulte kvitteringer, for å se disse må du verifisere kortene dine");
+			}
+		}
 	}
 
 	public void updateAccountMeta() {
@@ -218,19 +222,19 @@ public class ReceiptFragment extends ContentFragment {
 		protected void onPostExecute(final Receipts receipts) {
 			super.onPostExecute(receipts);
 			if (receipts != null) {
-                checkStatusAndDisplayReceipts(receipts);
-            } else {
+				checkStatusAndDisplayReceipts(receipts);
+			} else {
 				DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
 
 				if (invalidToken) {
 					activityCommunicator.requestLogOut();
 				} else if (listAdapter.isEmpty()) {
-                    ReceiptFragment.super.setListEmptyViewNoNetwork(true);
-                }
+					ReceiptFragment.super.setListEmptyViewNoNetwork(true);
+				}
 			}
 
-            activityCommunicator.onUpdateAccountMeta();
-            activityCommunicator.onEndRefreshContent();
+			activityCommunicator.onUpdateAccountMeta();
+			activityCommunicator.onEndRefreshContent();
 		}
 
 		@Override

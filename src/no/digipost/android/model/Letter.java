@@ -24,7 +24,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonFilter;
 
-@JsonIgnoreProperties(ignoreUnknown = true) @JsonFilter("toJSON")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFilter("toJSON")
 public class Letter {
 
 	@JsonProperty
@@ -140,18 +141,18 @@ public class Letter {
 		this.type = type;
 	}
 
-	public ArrayList<Link> getLink () {
+	public ArrayList<Link> getLink() {
 		return link;
 	}
 
-    public String getSelfUri() {
-        for (Link l : link) {
-            if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_SELF)) {
-                return l.getUri();
-            }
-        }
-        return null;
-    }
+	public String getSelfUri() {
+		for (Link l : link) {
+			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_SELF)) {
+				return l.getUri();
+			}
+		}
+		return null;
+	}
 
 	public String getContentUri() {
 		for (Link l : link) {
@@ -170,14 +171,15 @@ public class Letter {
 		}
 		return null;
 	}
-    public String getOpeningReceiptUri(){
-        for (Link l : link) {
-            if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT)) {
-                return l.getUri();
-            }
-        }
-        return null;
-    }
+
+	public String getOpeningReceiptUri() {
+		for (Link l : link) {
+			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT)) {
+				return l.getUri();
+			}
+		}
+		return null;
+	}
 
 	public String getDeleteUri() {
 		for (Link l : link) {
@@ -197,12 +199,12 @@ public class Letter {
 		return null;
 	}
 
-	/*@Override
-	public String toString() {
-		return "Letter [subject=" + subject + ", creatorName=" + creatorName + ", created=" + created + ", fileType=" + fileType
-				+ ", fileSize=" + fileSize + ", origin=" + origin + ", authenticationLevel=" + authenticationLevel + ", location="
-				+ location + ", read=" + read + ", type=" + type + "]";
-	} */
-
+	/*
+	 * @Override public String toString() { return "Letter [subject=" + subject
+	 * + ", creatorName=" + creatorName + ", created=" + created + ", fileType="
+	 * + fileType + ", fileSize=" + fileSize + ", origin=" + origin +
+	 * ", authenticationLevel=" + authenticationLevel + ", location=" + location
+	 * + ", read=" + read + ", type=" + type + "]"; }
+	 */
 
 }

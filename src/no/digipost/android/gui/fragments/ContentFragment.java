@@ -119,7 +119,7 @@ public abstract class ContentFragment extends Fragment {
 			listEmptyViewText.setText(text);
 		}
 		listView.setEmptyView(listEmptyViewNoContent);
-    }
+	}
 
 	protected void setTopText(String text) {
 

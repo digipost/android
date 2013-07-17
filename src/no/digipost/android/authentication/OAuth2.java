@@ -24,18 +24,17 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.core.MultivaluedMap;
 
 import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.api.exception.DigipostInvalidTokenException;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.utilities.JSONUtilities;
-import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.model.Access;
 import no.digipost.android.model.TokenValue;
+import no.digipost.android.utilities.JSONUtilities;
+import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
-
 import android.content.Context;
 import android.util.Base64;
 
@@ -70,10 +69,10 @@ public class OAuth2 {
 
 		Access data = getAccessData(params, context);
 
-        verifyState(url_state, context);
-        verifyAuthentication(data.getId_token(), context);
+		verifyState(url_state, context);
+		verifyAuthentication(data.getId_token(), context);
 
-        storeTokens(data, context);
+		storeTokens(data, context);
 	}
 
 	public static void retriveAccessToken(final String refresh_token, final Context context) throws DigipostApiException,
@@ -86,24 +85,21 @@ public class OAuth2 {
 
 	private static void storeTokens(final Access data, final Context context) {
 		Secret.ACCESS_TOKEN = data.getAccess_token();
-        if(SharedPreferencesUtilities.screenlockChoiceYes(context)){
-	    	String refresh_token = data.getRefresh_token();
-		    KeyStoreAdapter ksa = new KeyStoreAdapter();
-		    String cipher = ksa.encrypt(refresh_token);
-            SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher,context);
-        }
+		if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
+			String refresh_token = data.getRefresh_token();
+			KeyStoreAdapter ksa = new KeyStoreAdapter();
+			String cipher = ksa.encrypt(refresh_token);
+			SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
+		}
 	}
-
 
 	public static void updateAccessToken(final Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		    String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
-		    KeyStoreAdapter ksa = new KeyStoreAdapter();
-		    String refresh_token = ksa.decrypt(encrypted_refresh_token);
-		    retriveAccessToken(refresh_token, context);
-    }
-
-
+		String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
+		KeyStoreAdapter ksa = new KeyStoreAdapter();
+		String refresh_token = ksa.decrypt(encrypted_refresh_token);
+		retriveAccessToken(refresh_token, context);
+	}
 
 	private static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {
@@ -140,22 +136,22 @@ public class OAuth2 {
 		String signature_dec = new String(Base64.decode(signature_enc.getBytes(), Base64.DEFAULT));
 
 		if (!encryptHmacSHA256(token_value_enc).equals(signature_dec)) {
-            throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-        }
+			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
+		}
 
 		TokenValue data = (TokenValue) JSONUtilities.processJackson(TokenValue.class,
 				new String(Base64.decode(token_value_enc.getBytes(), Base64.DEFAULT)));
 		String aud = data.getAud();
 
 		if (!aud.equals(Secret.CLIENT_ID)) {
-            throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-        }
+			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
+		}
 	}
 
 	private static void verifyState(final String received_state, final Context context) throws DigipostApiException {
 		if (!state.equals(received_state)) {
-            throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-        }
+			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
+		}
 	}
 
 	private static String getSecureRandom(final int num_bytes) {

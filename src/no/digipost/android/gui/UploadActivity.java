@@ -1,31 +1,6 @@
 package no.digipost.android.gui;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ListActivity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Environment;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,323 +17,344 @@ import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
+import org.apache.commons.io.FilenameUtils;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Environment;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
 public class UploadActivity extends Activity {
-    private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
-    private final String[] blockedFileContentTypes = {ApiConstants.TEXT_HTML};
+	private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
+	private final String[] blockedFileContentTypes = { ApiConstants.TEXT_HTML };
 
-    private File mDirectory;
-    private ArrayList<File> mFiles;
-    private boolean mShowHiddenFiles = false;
-    private UploadListAdapter mAdapter;
+	private File mDirectory;
+	private ArrayList<File> mFiles;
+	private boolean mShowHiddenFiles = false;
+	private UploadListAdapter mAdapter;
 
-    private TextView absolutePath;
-    private TextProgressBar availableSpace;
-    private TextView listEmpty;
+	private TextView absolutePath;
+	private TextProgressBar availableSpace;
+	private TextView listEmpty;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload);
-        ApplicationUtilities.setScreenRotationFromPreferences(this);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_upload);
+		ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-        getActionBar().setTitle(R.string.upload);
-        getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setTitle(R.string.upload);
+		getActionBar().setHomeButtonEnabled(true);
 
-        absolutePath = (TextView) findViewById(R.id.upload_file_path);
-        availableSpace = (TextProgressBar) findViewById(R.id.upload_available_space);
-        listEmpty = (TextView) findViewById(R.id.upload_list_empty);
+		absolutePath = (TextView) findViewById(R.id.upload_file_path);
+		availableSpace = (TextProgressBar) findViewById(R.id.upload_available_space);
+		listEmpty = (TextView) findViewById(R.id.upload_list_empty);
 
-        mDirectory = DEFAULT_INITIAL_DIRECTORY;
-        mFiles = new ArrayList<File>();
+		mDirectory = DEFAULT_INITIAL_DIRECTORY;
+		mFiles = new ArrayList<File>();
 
-        ListView listView = (ListView) findViewById(R.id.upload_file_list);
-        listView.setEmptyView(listEmpty);
-        listView.setOnItemClickListener(new ListOnItemClickListener());
-        mAdapter = new UploadListAdapter(this, mFiles);
-        listView.setAdapter(mAdapter);
+		ListView listView = (ListView) findViewById(R.id.upload_file_list);
+		listView.setEmptyView(listEmpty);
+		listView.setOnItemClickListener(new ListOnItemClickListener());
+		mAdapter = new UploadListAdapter(this, mFiles);
+		listView.setAdapter(mAdapter);
 
-        executeSetAccountInfoTask();
-    }
+		executeSetAccountInfoTask();
+	}
 
-    @Override
-    protected void onResume() {
-        refreshFilesList();
-        super.onResume();
-    }
+	@Override
+	protected void onResume() {
+		refreshFilesList();
+		super.onResume();
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		}
 
-        return super.onOptionsItemSelected(item);
-    }
+		return super.onOptionsItemSelected(item);
+	}
 
-    private void refreshFilesList() {
-        absolutePath.setText(mDirectory.getAbsolutePath());
+	private void refreshFilesList() {
+		absolutePath.setText(mDirectory.getAbsolutePath());
 
-        mFiles.clear();
+		mFiles.clear();
 
-        File[] files = mDirectory.listFiles();
-        if(files != null && files.length > 0) {
-            for(File f : files) {
-                if(f.isHidden() && !mShowHiddenFiles) {
-                    continue;
-                }
+		File[] files = mDirectory.listFiles();
+		if (files != null && files.length > 0) {
+			for (File f : files) {
+				if (f.isHidden() && !mShowHiddenFiles) {
+					continue;
+				}
 
-                mFiles.add(f);
-            }
+				mFiles.add(f);
+			}
 
-            Collections.sort(mFiles, new FileComparator());
-        }
-        mAdapter.notifyDataSetChanged();
-    }
+			Collections.sort(mFiles, new FileComparator());
+		}
+		mAdapter.notifyDataSetChanged();
+	}
 
-    private void setAvailableSpace(PrimaryAccount primaryAccount) {
-        long bytesUsed = Long.parseLong(primaryAccount.getUsedStorage());
-        long bytesAvailable = Long.parseLong(primaryAccount.getTotalAvailableStorage());
+	private void setAvailableSpace(PrimaryAccount primaryAccount) {
+		long bytesUsed = Long.parseLong(primaryAccount.getUsedStorage());
+		long bytesAvailable = Long.parseLong(primaryAccount.getTotalAvailableStorage());
 
-        int percentUsed = (int) ((bytesUsed * 100) / bytesAvailable);
+		int percentUsed = (int) ((bytesUsed * 100) / bytesAvailable);
 
-        availableSpace.setProgress(percentUsed);
-        availableSpace.setText(percentUsed + "% lagringsplass brukt");
-    }
+		availableSpace.setProgress(percentUsed);
+		availableSpace.setText(percentUsed + "% lagringsplass brukt");
+	}
 
-    private boolean isAcceptedFileExtension(File file) {
-        if(blockedFileContentTypes != null && blockedFileContentTypes.length > 0) {
-            String contentType = FileUtilities.getMimeType(file);
+	private boolean isAcceptedFileExtension(File file) {
+		if (blockedFileContentTypes != null && blockedFileContentTypes.length > 0) {
+			String contentType = FileUtilities.getMimeType(file);
 
-            if (contentType != null) {
-                for(int i = 0; i < blockedFileContentTypes.length; i++) {
-                    if(contentType.equals(blockedFileContentTypes[i])) {
-                        return false;
-                    }
-                }
-            }
+			if (contentType != null) {
+				for (int i = 0; i < blockedFileContentTypes.length; i++) {
+					if (contentType.equals(blockedFileContentTypes[i])) {
+						return false;
+					}
+				}
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    private void promtUpload(final File file) {
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, "Er du sikker på at du vil laste opp " + file.getName() + "?");
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                executeUploadTask(file);
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        builder.create().show();
-    }
+	private void promtUpload(final File file) {
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this,
+				"Er du sikker på at du vil laste opp " + file.getName() + "?");
+		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				executeUploadTask(file);
+				dialogInterface.dismiss();
+			}
+		});
+		builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				dialogInterface.dismiss();
+			}
+		});
+		builder.create().show();
+	}
 
-    private void showBlockedFileExtensionDialog(File file) {
-        String message = "Denne filtypen (." + FilenameUtils.getExtension(file.getName()) + ") kan ikke lastes opp i Digipost.";
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
-        builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        builder.create().show();
-    }
+	private void showBlockedFileExtensionDialog(File file) {
+		String message = "Denne filtypen (." + FilenameUtils.getExtension(file.getName()) + ") kan ikke lastes opp i Digipost.";
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				dialogInterface.dismiss();
+			}
+		});
+		builder.create().show();
+	}
 
-    private void executeUploadTask(File file) {
-        UploadTask uploadTask = new UploadTask(file);
-        uploadTask.execute();
-    }
+	private void executeUploadTask(File file) {
+		UploadTask uploadTask = new UploadTask(file);
+		uploadTask.execute();
+	}
 
-    private void setAccountInfo(PrimaryAccount primaryAccount) {
-        setAvailableSpace(primaryAccount);
-        availableSpace.setVisibility(View.VISIBLE);
-    }
+	private void setAccountInfo(PrimaryAccount primaryAccount) {
+		setAvailableSpace(primaryAccount);
+		availableSpace.setVisibility(View.VISIBLE);
+	}
 
-    private void executeSetAccountInfoTask() {
-        SetAccountInfoTask setAccountInfoTask = new SetAccountInfoTask();
-        setAccountInfoTask.execute();
-    }
+	private void executeSetAccountInfoTask() {
+		SetAccountInfoTask setAccountInfoTask = new SetAccountInfoTask();
+		setAccountInfoTask.execute();
+	}
 
-    private class SetAccountInfoTask extends AsyncTask<Void, Void, PrimaryAccount> {
+	private class SetAccountInfoTask extends AsyncTask<Void, Void, PrimaryAccount> {
 
-        @Override
-        protected PrimaryAccount doInBackground(Void... voids) {
-            try {
-                return LetterOperations.getPrimaryAccount();
-            } catch (DigipostApiException e) {
-                return null;
-            } catch (DigipostClientException e) {
-                return null;
-            } catch (DigipostAuthenticationException e) {
-                return null;
-            }
-        }
+		@Override
+		protected PrimaryAccount doInBackground(Void... voids) {
+			try {
+				return LetterOperations.getPrimaryAccount();
+			} catch (DigipostApiException e) {
+				return null;
+			} catch (DigipostClientException e) {
+				return null;
+			} catch (DigipostAuthenticationException e) {
+				return null;
+			}
+		}
 
-        @Override
-        protected void onPostExecute(PrimaryAccount primaryAccount) {
-            super.onPostExecute(primaryAccount);
+		@Override
+		protected void onPostExecute(PrimaryAccount primaryAccount) {
+			super.onPostExecute(primaryAccount);
 
-            if (primaryAccount != null) {
-                setAccountInfo(primaryAccount);
-            }
-        }
-    }
+			if (primaryAccount != null) {
+				setAccountInfo(primaryAccount);
+			}
+		}
+	}
 
-    @Override
-    public void onBackPressed() {
-        if(!mDirectory.equals(DEFAULT_INITIAL_DIRECTORY)) {
-            mDirectory = mDirectory.getParentFile();
-            refreshFilesList();
-            return;
-        }
+	@Override
+	public void onBackPressed() {
+		if (!mDirectory.equals(DEFAULT_INITIAL_DIRECTORY)) {
+			mDirectory = mDirectory.getParentFile();
+			refreshFilesList();
+			return;
+		}
 
-        super.onBackPressed();
-    }
+		super.onBackPressed();
+	}
 
-    private class ListOnItemClickListener implements AdapterView.OnItemClickListener {
+	private class ListOnItemClickListener implements AdapterView.OnItemClickListener {
 
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-            File newFile = mAdapter.getItem(position);
+		@Override
+		public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+			File newFile = mAdapter.getItem(position);
 
-            if(newFile.isFile()) {
-                if (isAcceptedFileExtension(newFile)) {
-                    promtUpload(newFile);
-                } else {
-                    showBlockedFileExtensionDialog(newFile);
-                }
-            } else {
-                mDirectory = newFile;
-                refreshFilesList();
-            }
-        }
-    }
+			if (newFile.isFile()) {
+				if (isAcceptedFileExtension(newFile)) {
+					promtUpload(newFile);
+				} else {
+					showBlockedFileExtensionDialog(newFile);
+				}
+			} else {
+				mDirectory = newFile;
+				refreshFilesList();
+			}
+		}
+	}
 
-    private class UploadListAdapter extends ArrayAdapter<File> {
+	private class UploadListAdapter extends ArrayAdapter<File> {
 
-        private ArrayList<File> mObjects;
+		private ArrayList<File> mObjects;
 
-        public UploadListAdapter(Context context, ArrayList<File> objects) {
-            super(context, R.layout.upload_list_item, android.R.id.text1, objects);
-            mObjects = objects;
-        }
+		public UploadListAdapter(Context context, ArrayList<File> objects) {
+			super(context, R.layout.upload_list_item, android.R.id.text1, objects);
+			mObjects = objects;
+		}
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View row = inflater.inflate(R.layout.upload_list_item, parent, false);
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View row = inflater.inflate(R.layout.upload_list_item, parent, false);
 
-            File object = mObjects.get(position);
+			File object = mObjects.get(position);
 
-            TextView name = (TextView)row.findViewById(R.id.upload_file_name);
-            TextView size = (TextView)row.findViewById(R.id.upload_file_size);
+			TextView name = (TextView) row.findViewById(R.id.upload_file_name);
+			TextView size = (TextView) row.findViewById(R.id.upload_file_size);
 
-            name.setText(object.getName());
+			name.setText(object.getName());
 
-            if(object.isFile()) {
-                name.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_grey_file, 0, 0, 0);
-                size.setText(DataFormatUtilities.getFormattedFileSize(object.length()));
-            } else {
-                name.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_grey_folder, 0, 0, 0);
-            }
+			if (object.isFile()) {
+				name.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_grey_file, 0, 0, 0);
+				size.setText(DataFormatUtilities.getFormattedFileSize(object.length()));
+			} else {
+				name.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_grey_folder, 0, 0, 0);
+			}
 
-            return row;
-        }
+			return row;
+		}
 
-    }
+	}
 
-    private class FileComparator implements Comparator<File> {
-        @Override
-        public int compare(File f1, File f2) {
-            if(f1 == f2) {
-                return 0;
-            }
-            if(f1.isDirectory() && f2.isFile()) {
-                return -1;
-            }
-            if(f1.isFile() && f2.isDirectory()) {
-                return 1;
-            }
+	private class FileComparator implements Comparator<File> {
+		@Override
+		public int compare(File f1, File f2) {
+			if (f1 == f2) {
+				return 0;
+			}
+			if (f1.isDirectory() && f2.isFile()) {
+				return -1;
+			}
+			if (f1.isFile() && f2.isDirectory()) {
+				return 1;
+			}
 
-            return f1.getName().compareToIgnoreCase(f2.getName());
-        }
-    }
+			return f1.getName().compareToIgnoreCase(f2.getName());
+		}
+	}
 
-    private class UploadTask extends AsyncTask<Void, Void, String> {
-        private File file;
-        private boolean invalidToken;
+	private class UploadTask extends AsyncTask<Void, Void, String> {
+		private File file;
+		private boolean invalidToken;
 
-        private ProgressDialog progressDialog;
+		private ProgressDialog progressDialog;
 
-        public UploadTask(File file) {
-            this.file = file;
-        }
+		public UploadTask(File file) {
+			this.file = file;
+		}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
 
-            progressDialog = DialogUtitities.getProgressDialogWithMessage(UploadActivity.this, UploadActivity.this.getString(R.string.uploading));
-            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-                public void onClick(final DialogInterface dialog, final int which) {
-                    dialog.dismiss();
-                    UploadTask.this.cancel(true);
-                }
-            });
+			progressDialog = DialogUtitities.getProgressDialogWithMessage(UploadActivity.this,
+					UploadActivity.this.getString(R.string.uploading));
+			progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+				public void onClick(final DialogInterface dialog, final int which) {
+					dialog.dismiss();
+					UploadTask.this.cancel(true);
+				}
+			});
 
-            progressDialog.show();
-        }
+			progressDialog.show();
+		}
 
-        @Override
-        protected String doInBackground(Void... voids) {
-            try {
-                LetterOperations.uploadFile(UploadActivity.this, file);
-                return null;
-            } catch (DigipostAuthenticationException e) {
-                e.printStackTrace();
-                invalidToken = true;
-                return e.getMessage();
-            } catch (DigipostApiException e) {
-                e.printStackTrace();
-                return e.getMessage();
-            } catch (DigipostClientException e) {
-                e.printStackTrace();
-                return e.getMessage();
-            }
-        }
+		@Override
+		protected String doInBackground(Void... voids) {
+			try {
+				LetterOperations.uploadFile(UploadActivity.this, file);
+				return null;
+			} catch (DigipostAuthenticationException e) {
+				e.printStackTrace();
+				invalidToken = true;
+				return e.getMessage();
+			} catch (DigipostApiException e) {
+				e.printStackTrace();
+				return e.getMessage();
+			} catch (DigipostClientException e) {
+				e.printStackTrace();
+				return e.getMessage();
+			}
+		}
 
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            progressDialog.dismiss();
-        }
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			progressDialog.dismiss();
+		}
 
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            progressDialog.dismiss();
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			progressDialog.dismiss();
 
-            if (result != null) {
-                if (invalidToken) {
-                    // ToDo logge ut
-                }
+			if (result != null) {
+				if (invalidToken) {
+					// ToDo logge ut
+				}
 
-                DialogUtitities.showToast(UploadActivity.this, result);
-            } else {
-                DialogUtitities.showToast(UploadActivity.this, file.getName() + " ble lastet opp til arkivet.");
-                executeSetAccountInfoTask();
-            }
-        }
-    }
+				DialogUtitities.showToast(UploadActivity.this, result);
+			} else {
+				DialogUtitities.showToast(UploadActivity.this, file.getName() + " ble lastet opp til arkivet.");
+				executeSetAccountInfoTask();
+			}
+		}
+	}
 }

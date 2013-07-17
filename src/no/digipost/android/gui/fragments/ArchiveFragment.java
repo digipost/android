@@ -16,6 +16,9 @@
 
 package no.digipost.android.gui.fragments;
 
+import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -24,54 +27,48 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
-import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.model.Letter;
-
 public class ArchiveFragment extends DocumentFragment {
-    public ArchiveFragment() {
-    }
+	public ArchiveFragment() {
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        super.listView.setMultiChoiceModeListener(new ArchiveMultiChoiceModeListener());
+		super.listView.setMultiChoiceModeListener(new ArchiveMultiChoiceModeListener());
 
-        return view;
-    }
+		return view;
+	}
 
-    @Override
-    public int getContent() {
-        return ApplicationConstants.ARCHIVE;
-    }
+	@Override
+	public int getContent() {
+		return ApplicationConstants.ARCHIVE;
+	}
 
-    private class ArchiveMultiChoiceModeListener extends DocumentMultiChoiceModeListener {
+	private class ArchiveMultiChoiceModeListener extends DocumentMultiChoiceModeListener {
 
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            super.onCreateActionMode(actionMode, menu);
+		@Override
+		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+			super.onCreateActionMode(actionMode, menu);
 
-            MenuItem toArchive = menu.findItem(R.id.main_context_menu_archive);
-            toArchive.setVisible(false);
+			MenuItem toArchive = menu.findItem(R.id.main_context_menu_archive);
+			toArchive.setVisible(false);
 
-            return true;
-        }
+			return true;
+		}
 
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
-            super.onActionItemClicked(actionMode, menuItem);
+		@Override
+		public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+			super.onActionItemClicked(actionMode, menuItem);
 
-            switch (menuItem.getItemId()) {
-                case R.id.main_context_menu_workarea:
-                    showMoveDocumentsDialog(ApiConstants.LOCATION_WORKAREA, getString(R.string.dialog_prompt_move_documents_to_workarea), this, actionMode);
-                    break;
-            }
+			switch (menuItem.getItemId()) {
+			case R.id.main_context_menu_workarea:
+				showMoveDocumentsDialog(ApiConstants.LOCATION_WORKAREA, getString(R.string.dialog_prompt_move_documents_to_workarea), this,
+						actionMode);
+				break;
+			}
 
-            return true;
-        }
-    }
+			return true;
+		}
+	}
 }

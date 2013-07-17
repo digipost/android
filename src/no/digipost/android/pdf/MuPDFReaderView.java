@@ -16,8 +16,11 @@ public class MuPDFReaderView extends ReaderView {
 	private boolean tapDisabled = false;
 	private int tapPageMargin;
 
-	protected void onTapMainDocArea() {}
-	protected void onDocMotion() {}
+	protected void onTapMainDocArea() {
+	}
+
+	protected void onDocMotion() {
+	}
 
 	public void setLinksEnabled(boolean b) {
 		mLinksEnabled = b;
@@ -40,11 +43,11 @@ public class MuPDFReaderView extends ReaderView {
 		// to ensure we are never more than 1/5 of the screen width.
 		DisplayMetrics dm = new DisplayMetrics();
 		act.getWindowManager().getDefaultDisplay().getMetrics(dm);
-		tapPageMargin = (int)dm.xdpi;
+		tapPageMargin = (int) dm.xdpi;
 		if (tapPageMargin < 100)
 			tapPageMargin = 100;
-		if (tapPageMargin > dm.widthPixels/5)
-			tapPageMargin = dm.widthPixels/5;
+		if (tapPageMargin > dm.widthPixels / 5)
+			tapPageMargin = dm.widthPixels / 5;
 	}
 
 	public boolean onSingleTapUp(MotionEvent e) {
@@ -52,11 +55,9 @@ public class MuPDFReaderView extends ReaderView {
 
 		if (!mSelecting && !tapDisabled) {
 			MuPDFView pageView = (MuPDFView) getDisplayedView();
-			if (MuPDFCore.javascriptSupported()
-					&& pageView.passClickEvent(e.getX(), e.getY())) {
+			if (MuPDFCore.javascriptSupported() && pageView.passClickEvent(e.getX(), e.getY())) {
 				// If the page consumes the event do nothing else
-			} else if (mLinksEnabled && pageView != null
-					&& (link = pageView.hitLink(e.getX(), e.getY())) != null) {
+			} else if (mLinksEnabled && pageView != null && (link = pageView.hitLink(e.getX(), e.getY())) != null) {
 				link.acceptVisitor(new LinkInfoVisitor() {
 					@Override
 					public void visitInternal(LinkInfoInternal li) {
@@ -66,8 +67,7 @@ public class MuPDFReaderView extends ReaderView {
 
 					@Override
 					public void visitExternal(LinkInfoExternal li) {
-						Intent intent = new Intent(Intent.ACTION_VIEW, Uri
-								.parse(li.url));
+						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(li.url));
 						mContext.startActivity(intent);
 					}
 
@@ -91,15 +91,14 @@ public class MuPDFReaderView extends ReaderView {
 		return super.onSingleTapUp(e);
 	}
 
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
 		if (!mSelecting) {
 			if (!tapDisabled)
 				onDocMotion();
 
 			return super.onScroll(e1, e2, distanceX, distanceY);
 		} else {
-			MuPDFView pageView = (MuPDFView)getDisplayedView();
+			MuPDFView pageView = (MuPDFView) getDisplayedView();
 			if (pageView != null)
 				pageView.selectText(e1.getX(), e1.getY(), e2.getX(), e2.getY());
 			return true;
@@ -107,8 +106,7 @@ public class MuPDFReaderView extends ReaderView {
 	}
 
 	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 		if (!mSelecting)
 			return super.onFling(e1, e2, velocityX, velocityY);
 		else
@@ -131,8 +129,7 @@ public class MuPDFReaderView extends ReaderView {
 	}
 
 	protected void onChildSetup(int i, View v) {
-		if (SearchTaskResult.get() != null
-				&& SearchTaskResult.get().pageNumber == i)
+		if (SearchTaskResult.get() != null && SearchTaskResult.get().pageNumber == i)
 			((MuPDFView) v).setSearchBoxes(SearchTaskResult.get().searchBoxes);
 		else
 			((MuPDFView) v).setSearchBoxes(null);
@@ -152,8 +149,7 @@ public class MuPDFReaderView extends ReaderView {
 	}
 
 	protected void onMoveToChild(int i) {
-		if (SearchTaskResult.get() != null
-				&& SearchTaskResult.get().pageNumber != i) {
+		if (SearchTaskResult.get() != null && SearchTaskResult.get().pageNumber != i) {
 			SearchTaskResult.set(null);
 			resetupChildren();
 		}

@@ -51,7 +51,7 @@ public class ApiConstants {
 	public static final String FILETYPE_TIF = "tif";
 	public static final String FILETYPE_JPE = "jpe";
 	public static final String FILETYPE_JFIF = "jfif";
-    public static final String[] FILETYPES_IMAGE = {"jpg", "jpeg", "png", "tiff", "tif", "jpe", "jfif"};
+	public static final String[] FILETYPES_IMAGE = { "jpg", "jpeg", "png", "tiff", "tif", "jpe", "jfif" };
 
 	public static final String GET_DOCUMENT = "document";
 	public static final String GET_RECEIPT = "receipt";
@@ -90,23 +90,20 @@ public class ApiConstants {
 	public static final String CONTENT_OCTET_STREAM = "application/octet-stream";
 	public static final String TEXT_HTML = "text/html";
 
-    public static final String URL = "https://www.digipost.no";
+	public static final String URL = "https://www.digipost.no";
 
-    public static final String URL_API = URL + "/post/api";
+	public static final String URL_API = URL + "/post/api";
 	public static final String URL_RELATIONS_DOCUMENT_INBOX = URL + "/post/relations/document_inbox";
 	public static final String URL_RELATIONS_DOCUMENT_ARCHIVE = URL + "/post/relations/document_archive";
 	public static final String URL_RELATIONS_DOCUMENT_KITCHENBENCH = URL + "/post/relations/document_workarea";
 	public static final String URL_RELATIONS_DOCUMENT_RECEIPTS = URL + "/post/relations/receipts";
 	public static final String URL_RELATIONS_DOCUMENT_GET_CONTENT = URL + "/post/relations/get_document_content";
-    public static final String URL_RELATIONS_DOCUMENT_SELF = URL + "/post/relations/self";
+	public static final String URL_RELATIONS_DOCUMENT_SELF = URL + "/post/relations/self";
 	public static final String URL_RELATIONS_DOCUMENT_UPDATE = URL + "/post/relations/update_document";
 	public static final String URL_RELATIONS_DOCUMENT_DELETE = URL + "/post/relations/delete_document";
-    public static final String URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT = URL + "/post/relations/send_opening_receipt";
-    public static final String URL_RELATIONS_DOCUMENT_GET_ORGANIZATION_LOGO = URL + "/post/relations/organisation_logo";
+	public static final String URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT = URL + "/post/relations/send_opening_receipt";
+	public static final String URL_RELATIONS_DOCUMENT_GET_ORGANIZATION_LOGO = URL + "/post/relations/organisation_logo";
 	public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "/post/api/oauth/authorize/new";
 	public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "/post/api/oauth/accesstoken";
-
-
-
 
 }

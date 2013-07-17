@@ -31,7 +31,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,11 +45,11 @@ public class HtmlAndReceiptActivity extends Activity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_html_and_receipt);
-        ApplicationUtilities.setScreenRotationFromPreferences(this);
+		ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-        content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
+		content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
-        setupWebView();
+		setupWebView();
 		setupActionBar();
 
 		loadContent();
@@ -58,9 +57,9 @@ public class HtmlAndReceiptActivity extends Activity {
 
 	private void loadContent() {
 		String html = "";
-        if (content_type == ApplicationConstants.RECEIPTS) {
+		if (content_type == ApplicationConstants.RECEIPTS) {
 			html = getIntent().getStringExtra(ApiConstants.GET_RECEIPT);
-        } else {
+		} else {
 			try {
 				html = new String(DocumentContentStore.documentContent, ApplicationConstants.ENCODING);
 			} catch (Exception e) {
@@ -100,7 +99,7 @@ public class HtmlAndReceiptActivity extends Activity {
 			finish();
 			return true;
 		case R.id.htmlmenu_delete:
-			promptAction(getString(R.string.dialog_prompt_delete_document),ApiConstants.DELETE);
+			promptAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;
 		case R.id.htmlmenu_archive:
 			promptAction(getString(R.string.dialog_prompt_document_toArchive), ApiConstants.LOCATION_ARCHIVE);
@@ -133,25 +132,25 @@ public class HtmlAndReceiptActivity extends Activity {
 			getActionBar().setTitle(documentMeta.getSubject());
 			getActionBar().setSubtitle(DocumentContentStore.documentParent.getCreatorName());
 		} else {
-            Receipt receiptMeta = DocumentContentStore.documentReceipt;
-            getActionBar().setTitle(receiptMeta.getStoreName());
-            getActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
-        }
+			Receipt receiptMeta = DocumentContentStore.documentReceipt;
+			getActionBar().setTitle(receiptMeta.getStoreName());
+			getActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+		}
 	}
 
-	private void promptAction(String message,final String action) {
+	private void promptAction(String message, final String action) {
 
-        if(content_type == ApplicationConstants.RECEIPTS)
-            message = getString(R.string.dialog_prompt_delete_receipt);
+		if (content_type == ApplicationConstants.RECEIPTS)
+			message = getString(R.string.dialog_prompt_delete_receipt);
 
-        String positiveButton = getString(R.string.yes);
-        if(action.equals(ApiConstants.DELETE)){
-            positiveButton = getString(R.string.delete);
-        }else if(action.equals(ApiConstants.LOCATION_ARCHIVE) || action.equals(ApiConstants.LOCATION_WORKAREA)){
-            positiveButton = getString(R.string.move);
-        }
+		String positiveButton = getString(R.string.yes);
+		if (action.equals(ApiConstants.DELETE)) {
+			positiveButton = getString(R.string.delete);
+		} else if (action.equals(ApiConstants.LOCATION_ARCHIVE) || action.equals(ApiConstants.LOCATION_WORKAREA)) {
+			positiveButton = getString(R.string.move);
+		}
 
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
 		builder.setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -170,8 +169,8 @@ public class HtmlAndReceiptActivity extends Activity {
 
 	private void executeAction(String action) {
 		Intent i = new Intent(HtmlAndReceiptActivity.this, MainContentActivity.class);
-        i.putExtra(ApiConstants.ACTION, action);
-        i.putExtra(ContentFragment.INTENT_CONTENT,content_type);
+		i.putExtra(ApiConstants.ACTION, action);
+		i.putExtra(ContentFragment.INTENT_CONTENT, content_type);
 		setResult(RESULT_OK, i);
 		finish();
 	}
