@@ -323,9 +323,10 @@ public abstract class DocumentFragment extends ContentFragment {
         @Override
         protected void onPostExecute(final ArrayList<Letter> letters) {
             super.onPostExecute(letters);
+
             if(letters != null){
+                DocumentFragment.super.listAdapter.replaceAll(letters);
                 if(!letters.isEmpty()){
-                    DocumentFragment.super.listAdapter.replaceAll(letters);
                     DocumentFragment.super.setListEmptyViewNoNetwork(false);
                 }else{
                     setEmptyViewText();
