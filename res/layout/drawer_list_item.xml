@@ -51,7 +51,7 @@
                 android:textColor="@color/white"
                 android:visibility="gone"
                 android:background="@drawable/transparent_placeholder"
-                android:textSize="20dp"
+                android:textSize="20sp"
                 android:minHeight="?android:attr/listPreferredItemHeightSmall"
                 android:padding="10dp"
                 />

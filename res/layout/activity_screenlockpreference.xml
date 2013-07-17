@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/screenlock"
                 android:drawableLeft="@drawable/lock_white_50"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:id="@+id/textView"
                 android:textColor="@color/white"
                 android:layout_gravity="top"
@@ -56,14 +56,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/screenlock_message1"
                 android:gravity="left"
-                android:textSize="20dp"/>
+                android:textSize="20sp"/>
 
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="@string/screenlock_message2"
-                android:textSize="20dp"/>
+                android:textSize="20sp"/>
     </LinearLayout>
 
     <LinearLayout
