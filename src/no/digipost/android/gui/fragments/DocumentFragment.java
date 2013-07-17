@@ -284,7 +284,6 @@ public abstract class DocumentFragment extends ContentFragment {
     protected class GetDocumentMetaTask extends AsyncTask<Void, Void, ArrayList<Letter>> {
         private final int content;
         private String errorMessage;
-        private boolean errorsOccured;
         private boolean invalidToken;
 
         public GetDocumentMetaTask(final int content) {
@@ -304,18 +303,15 @@ public abstract class DocumentFragment extends ContentFragment {
             } catch (DigipostApiException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
-                errorsOccured = true;
                 return null;
             } catch (DigipostClientException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
-                errorsOccured = true;
                 return null;
             } catch (DigipostAuthenticationException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 invalidToken = true;
-                errorsOccured = true;
                 return null;
             }
         }
