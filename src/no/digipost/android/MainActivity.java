@@ -24,7 +24,6 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
-import no.digipost.android.gui.BaseFragmentActivity;
 import no.digipost.android.gui.LoginActivity;
 import android.app.Activity;
 import android.content.Intent;

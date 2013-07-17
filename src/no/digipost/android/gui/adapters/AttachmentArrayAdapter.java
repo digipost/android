@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui;
+package no.digipost.android.gui.adapters;
 
 import java.util.ArrayList;
 

@@ -41,8 +41,6 @@ import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
-import no.digipost.android.documentstore.ImageStore;
-import no.digipost.android.documentstore.UnsupportedFileStore;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.utilities.ApplicationUtilities;

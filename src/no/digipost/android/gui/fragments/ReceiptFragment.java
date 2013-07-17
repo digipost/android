@@ -26,7 +26,6 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.HtmlAndReceiptActivity;
-import no.digipost.android.gui.LetterArrayAdapter;
 import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
