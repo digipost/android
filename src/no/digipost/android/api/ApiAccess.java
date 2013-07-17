@@ -132,6 +132,8 @@ public class ApiAccess {
 
 	private static String executePostRequest(Context context, int action, final String uri, final StringEntity json) throws DigipostClientException,
 			DigipostApiException, DigipostAuthenticationException {
+        System.out.println("executePost URI: " + uri);
+        System.out.println("executePost ACTION: " + action);
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost post = new HttpPost();
 
@@ -157,6 +159,7 @@ public class ApiAccess {
 		}
 
 		try {
+            System.out.println("executePost STATUS: " + response.getStatusLine().getStatusCode());
 			NetworkUtilities.checkHttpStatusCode(context, response.getStatusLine().getStatusCode());
 		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);

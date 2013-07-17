@@ -24,6 +24,7 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DataFormatUtilities;
+import no.digipost.android.utilities.SettingsUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -62,10 +63,7 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 
 	@Override
 	public void replaceAll(Collection<? extends Letter> collection) {
-		SharedPreferences sharedPreferences = SharedPreferencesUtilities.getSharedPreferences(context);
-		boolean showLettersWithTwoFactor = sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS, true);
-
-		if (!showLettersWithTwoFactor) {
+		if (!SettingsUtilities.getShowBankIDLettersPreference(context)) {
 			ArrayList<Letter> letters = new ArrayList<Letter>();
 
 			for (Letter letter : collection) {

@@ -18,6 +18,7 @@ package no.digipost.android.gui.adapters;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import no.digipost.android.R;
 import android.content.Context;

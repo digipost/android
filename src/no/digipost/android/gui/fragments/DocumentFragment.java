@@ -36,6 +36,7 @@ import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.SettingsUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 import android.app.AlertDialog;
@@ -369,11 +370,11 @@ public abstract class DocumentFragment extends ContentFragment {
 	}
 
 	protected void executeDocumentMoveTask(String toLocation) {
-        contentMultiChoiceModeListener.finishActionMode(contentActionMode);
-
         ArrayList<Letter> letters = listAdapter.getCheckedItems();
 
-		DocumentMoveTask documentMoveTask = new DocumentMoveTask(letters, toLocation);
+        contentActionMode.finish();
+
+        DocumentMoveTask documentMoveTask = new DocumentMoveTask(letters, toLocation);
 		documentMoveTask.execute();
 	}
 
@@ -386,9 +387,7 @@ public abstract class DocumentFragment extends ContentFragment {
 	}
 
     protected void moveDocument(String toLocation, String message) {
-        boolean confirmMove = SharedPreferencesUtilities.getSharedPreferences(context).getBoolean(SettingsActivity.KEY_PREF_CONFIRM_MOVE, true);
-
-        if (confirmMove) {
+        if (SettingsUtilities.getConfirmMovePreference(context)) {
             showMoveDocumentsDialog(toLocation, message);
         } else {
             executeDocumentMoveTask(toLocation);

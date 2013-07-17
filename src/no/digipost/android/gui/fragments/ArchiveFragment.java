@@ -35,9 +35,7 @@ public class ArchiveFragment extends DocumentFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        super.contentMultiChoiceModeListener = new ArchiveMultiChoiceModeListener();
-
-        super.listView.setMultiChoiceModeListener(super.contentMultiChoiceModeListener);
+        super.listView.setMultiChoiceModeListener(new ArchiveMultiChoiceModeListener());
 
         return view;
 	}
@@ -65,7 +63,7 @@ public class ArchiveFragment extends DocumentFragment {
 
 			switch (menuItem.getItemId()) {
 			case R.id.main_context_menu_workarea:
-                moveDocument(ApiConstants.LOCATION_WORKAREA, getString(R.string.dialog_prompt_move_documents_to_workarea));
+				showMoveDocumentsDialog(ApiConstants.LOCATION_WORKAREA, getString(R.string.dialog_prompt_move_documents_to_workarea));
 				break;
 			}
 

@@ -52,11 +52,9 @@ public class ReceiptFragment extends ContentFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        super.contentMultiChoiceModeListener = new ReceiptMultiChoiceModeListener();
-
 		super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
 		super.listView.setAdapter(listAdapter);
-		super.listView.setMultiChoiceModeListener(super.contentMultiChoiceModeListener);
+		super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
 		super.listView.setOnItemClickListener(new ReceiptListOnItemClickListener());
 
 		updateAccountMeta();

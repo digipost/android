@@ -27,6 +27,7 @@ import no.digipost.android.gui.adapters.ContentArrayAdapter;
 import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.SettingsUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 import android.app.Activity;
@@ -69,7 +70,6 @@ public abstract class ContentFragment extends Fragment {
 	protected ProgressDialog progressDialog;
 	protected boolean progressDialogIsVisible = false;
 
-    protected ContentMultiChoiceModeListener contentMultiChoiceModeListener;
     protected ActionMode contentActionMode;
 
 	public ContentFragment() {
@@ -139,18 +139,16 @@ public abstract class ContentFragment extends Fragment {
 	}
 
 	protected void executeContentDeleteTask() {
-        contentMultiChoiceModeListener.finishActionMode(contentActionMode);
-
 		ArrayList<Object> content = listAdapter.getCheckedItems();
 
-		ContentDeleteTask documentDeleteTask = new ContentDeleteTask(content);
+        contentActionMode.finish();
+
+        ContentDeleteTask documentDeleteTask = new ContentDeleteTask(content);
 		documentDeleteTask.execute();
 	}
 
 	protected void deleteContent(String message) {
-        boolean confirmDelete = SharedPreferencesUtilities.getSharedPreferences(context).getBoolean(SettingsActivity.KEY_PREF_CONFIRM_DELETE, true);
-
-        if (confirmDelete) {
+        if (SettingsUtilities.getConfirmDeletePreference(context)) {
             showDeleteContentDialog(message);
         } else {
             executeContentDeleteTask();
@@ -194,6 +192,7 @@ public abstract class ContentFragment extends Fragment {
 		protected String doInBackground(final Void... params) {
 			try {
 				int progress = 0;
+                System.out.println("SelectedCount: " + content.size());
 
 				for (Object object : content) {
 					publishProgress(++progress);
@@ -318,10 +317,6 @@ public abstract class ContentFragment extends Fragment {
 			listAdapter.clearChecked();
 
             contentActionMode = null;
-		}
-
-		public void finishActionMode(ActionMode actionMode) {
-			actionMode.finish();
 		}
 	}
 

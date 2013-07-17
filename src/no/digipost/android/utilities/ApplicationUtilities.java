@@ -8,10 +8,7 @@ import android.content.pm.ActivityInfo;
 public class ApplicationUtilities {
 
 	public static void setScreenRotationFromPreferences(Activity activity) {
-		SharedPreferences sharedPreferences = SharedPreferencesUtilities.getSharedPreferences(activity);
-		boolean allowScreenRotation = sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_SCREEN_ROTATION, true);
-
-		if (allowScreenRotation) {
+		if (SettingsUtilities.getScreenOrientationPreference(activity)) {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 		} else {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

@@ -36,6 +36,7 @@ import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.SettingsUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -68,8 +69,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	private boolean refreshing;
 
-	private PrimaryAccount primaryAccount;
-
 	private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
 	@Override
@@ -93,9 +92,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		getActionBar().setHomeButtonEnabled(true);
 
 		if (savedInstanceState == null || getCurrentFragment() == null) {
-			SharedPreferences sharedPreferences = SharedPreferencesUtilities.getSharedPreferences(this);
-			int content = Integer.parseInt(sharedPreferences.getString(SettingsActivity.KEY_PREF_DEFAULT_SCREEN,
-					Integer.toString(ApplicationConstants.MAILBOX)));
+			int content = Integer.parseInt(SettingsUtilities.getDefaultScreenPreference(this));
 
 			selectItem(content);
 		}
@@ -256,7 +253,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	public void updateUI() {
+	public void updateUI(PrimaryAccount primaryAccount) {
 		getActionBar().setSubtitle(primaryAccount.getFullName());
 		drawerArrayAdapter.setUnreadLetters(primaryAccount.getUnreadItemsInInbox());
 	}
@@ -388,11 +385,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 		@Override
 		protected void onPostExecute(PrimaryAccount result) {
-			super.onPostExecute(primaryAccount);
+			super.onPostExecute(result);
 
 			if (result != null) {
-				primaryAccount = result;
-				updateUI();
+				updateUI(result);
 			} else {
 				if (invalidToken) {
 					DialogUtitities.showToast(MainContentActivity.this, errorMessage);
