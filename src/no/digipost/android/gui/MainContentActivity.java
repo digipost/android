@@ -168,7 +168,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 			startUploadActivity();
 			return true;
 		case R.id.menu_preferences:
-			startPreferemcesActivity();
+            startPreferencesActivity();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -277,7 +277,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		startActivity(intent);
 	}
 
-	private void startPreferemcesActivity() {
+	private void startPreferencesActivity() {
 		Intent intent = new Intent(MainContentActivity.this, SettingsActivity.class);
 		startActivity(intent);
 	}

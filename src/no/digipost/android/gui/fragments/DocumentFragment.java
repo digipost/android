@@ -257,6 +257,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onPostExecute(byte[] result) {
 			super.onPostExecute(result);
+            DocumentFragment.super.taskIsRunning = false;
 			DocumentFragment.super.hideProgressDialog();
 
 			if (result != null) {
@@ -269,7 +270,6 @@ public abstract class DocumentFragment extends ContentFragment {
 
 				DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
 			}
-
 			updateAccountMeta();
 		}
 
@@ -325,7 +325,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onPostExecute(final Documents documents) {
 			super.onPostExecute(documents);
-
+            DocumentFragment.super.taskIsRunning = false;
 			if (documents != null) {
 				ArrayList<Letter> letters = documents.getDocument();
 				DocumentFragment.super.listAdapter.replaceAll(letters);
@@ -470,6 +470,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
+            DocumentFragment.super.taskIsRunning = false;
 			DocumentFragment.super.hideProgressDialog();
 
 			if (result != null) {
