@@ -48,6 +48,7 @@ import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipts;
+import no.digipost.android.model.Settings;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
 
@@ -82,6 +83,10 @@ public class ApiAccess {
 	public static Letter getLetterSelf(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		return (Letter) JSONUtilities.processJackson(Letter.class, getApiJsonString(context, uri));
 	}
+
+    public static Settings getSettings(Context context, final String uri) throws DigipostClientException, DigipostAuthenticationException, DigipostApiException {
+        return (Settings) JSONUtilities.processJackson(Settings.class, getApiJsonString(context, uri));
+    }
 
 	private static ClientResponse executeGetRequest(Context context, final String uri, final String header_accept) throws DigipostClientException,
 			DigipostApiException, DigipostAuthenticationException {
@@ -132,8 +137,6 @@ public class ApiAccess {
 
 	private static String executePostRequest(Context context, int action, final String uri, final StringEntity json) throws DigipostClientException,
 			DigipostApiException, DigipostAuthenticationException {
-        System.out.println("executePost URI: " + uri);
-        System.out.println("executePost ACTION: " + action);
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost post = new HttpPost();
 

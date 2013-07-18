@@ -41,4 +41,20 @@
                 android:defaultValue="true"/>
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+            android:title="Din Digipost-konto">
+
+        <Preference android:title="Personlig informasjon" >
+            <intent android:action="android.intent.action.VIEW"
+                    android:targetClass="no.digipost.android.gui.content.PersonalInformationActivity"
+                    android:targetPackage="no.digipost.android" />
+        </Preference>
+
+        <Preference android:title="Varslingsinnstillinger" >
+            <intent android:action="android.intent.action.VIEW"
+                    android:targetClass="no.digipost.android.gui.content.NotificationSettingsActivity"
+                    android:targetPackage="no.digipost.android" />
+        </Preference>
+    </PreferenceCategory>
 </PreferenceScreen>

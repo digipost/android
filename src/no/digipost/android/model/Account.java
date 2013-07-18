@@ -23,7 +23,14 @@ public class Account {
 	@JsonProperty
 	private PrimaryAccount primaryAccount;
 
+    @JsonProperty
+    private ValidationRules validationRules;
+
 	public PrimaryAccount getPrimaryAccount() {
 		return primaryAccount;
 	}
+
+    public ValidationRules getValidationRules() {
+        return validationRules;
+    }
 }

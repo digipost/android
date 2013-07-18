@@ -366,7 +366,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		@Override
 		protected PrimaryAccount doInBackground(Void... voids) {
 			try {
-				return ContentOperations.getPrimaryAccountUpdated(MainContentActivity.this);
+				return ContentOperations.getAccountUpdated(MainContentActivity.this).getPrimaryAccount();
 			} catch (DigipostApiException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();

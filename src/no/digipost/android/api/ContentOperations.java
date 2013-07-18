@@ -21,35 +21,37 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.model.Account;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
+import no.digipost.android.model.Settings;
 import no.digipost.android.utilities.JSONUtilities;
 import android.content.Context;
 
 public class ContentOperations {
-	private static PrimaryAccount primaryAccount = null;
+	private static Account account = null;
 
-	private static PrimaryAccount getPrimaryAccount(Context context) throws DigipostApiException, DigipostClientException,
+	private static Account getAccount(Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		if (primaryAccount == null) {
-			primaryAccount = ApiAccess.getAccount(context).getPrimaryAccount();
+		if (account == null) {
+            account = ApiAccess.getAccount(context);
 		}
 
-		return primaryAccount;
+		return account;
 	}
 
-	public static PrimaryAccount getPrimaryAccountUpdated(Context context) throws DigipostClientException, DigipostAuthenticationException,
+	public static Account getAccountUpdated(Context context) throws DigipostClientException, DigipostAuthenticationException,
 			DigipostApiException {
-		return ApiAccess.getAccount(context).getPrimaryAccount();
+		return ApiAccess.getAccount(context);
 	}
 
 	public static Documents getAccountContentMetaDocument(Context context, final int type) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {
-		PrimaryAccount primaryAccount = getPrimaryAccount(context);
+		PrimaryAccount primaryAccount = getAccount(context).getPrimaryAccount();
 
 		switch (type) {
 		case ApplicationConstants.MAILBOX:
@@ -65,7 +67,7 @@ public class ContentOperations {
 
 	public static Receipts getAccountContentMetaReceipt(Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		return ApiAccess.getReceipts(context, getPrimaryAccount(context).getReceiptsUri());
+		return ApiAccess.getReceipts(context, getAccount(context).getPrimaryAccount().getReceiptsUri());
 	}
 
 	public static void moveDocument(Context context, final Letter letter) throws DigipostClientException, DigipostApiException,
@@ -105,6 +107,10 @@ public class ContentOperations {
 
 	public static void uploadFile(Context context, File file) throws DigipostClientException, DigipostAuthenticationException,
 			DigipostApiException {
-		ApiAccess.uploadFile(context, getPrimaryAccount(context).getUploadUri(), file);
+		ApiAccess.uploadFile(context, getAccount(context).getPrimaryAccount().getUploadUri(), file);
 	}
+
+    public static Settings getSettings(Context context) throws DigipostClientException, DigipostAuthenticationException, DigipostApiException {
+        return ApiAccess.getSettings(context, getAccount(context).getPrimaryAccount().getSettingsUri());
+    }
 }

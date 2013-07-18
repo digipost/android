@@ -107,4 +107,13 @@ public class PrimaryAccount {
 		}
 		return null;
 	}
+
+    public String getSettingsUri() {
+        for (Link l : link) {
+            if (l.getRel().equals("https://www.digipost.no/post/relations/account_settings")) {
+                return l.getUri();
+            }
+        }
+        return null;
+    }
 }

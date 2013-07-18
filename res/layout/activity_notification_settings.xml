@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:background="@color/screenlock_header_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:padding="10dp"
+            android:paddingLeft="20dp">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Varsling om nye brev"
+                android:textSize="20sp"
+                android:id="@+id/textView"
+                android:textColor="@color/white"
+                android:layout_gravity="top"
+                android:layout_marginLeft="5dp"
+                android:drawablePadding="1dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <CheckBox
+                android:id="@+id/notification_settings_new_letters"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="E-post om nye brev"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Send meg en e-post hvis jeg får et nytt brev."/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <CheckBox
+                android:id="@+id/notification_settings_unread_letters"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Ukentlig e-post om uleste brev"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Send meg en e-post hver uke hvis jeg har uleste brev."/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <CheckBox
+                android:id="@+id/notification_settings_important_letters"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="SMS om ekstra viktige brev"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tillat avsendere å sende meg SMS-varsling om viktige brev."/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:background="@color/screenlock_header_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:padding="10dp"
+            android:paddingLeft="20dp">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kontaktinformasjon"
+                android:textSize="20sp"
+                android:id="@+id/textView"
+                android:textColor="@color/white"
+                android:layout_gravity="top"
+                android:layout_marginLeft="5dp"
+                android:drawablePadding="1dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="10sp">
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
+                android:text="Mobilnummer"
+                android:gravity="right"
+                android:layout_marginRight="10dp"/>
+
+        <EditText
+                android:id="@+id/notification_settings_mobile"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.7"
+                android:hint="Mobilnummer"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="10sp">
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="0.3"
+                android:text="E-postadresser"
+                android:gravity="right"
+                android:layout_marginRight="10dp"/>
+
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="0.7"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <EditText
+                    android:id="@+id/notification_settings_email1"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.7"
+                    android:hint="E-postadresse"/>
+
+            <EditText
+                    android:id="@+id/notification_settings_email2"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.7"
+                    android:hint="E-postadresse"/>
+
+            <EditText
+                    android:id="@+id/notification_settings_email3"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.7"
+                    android:hint="E-postadresse"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/red_button_style"
+            android:text="Lagre varslingsinnstillinger"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:layout_margin="20dp"
+            android:id="@+id/notification_settings_save"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
