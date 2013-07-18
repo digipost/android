@@ -216,19 +216,19 @@ public class NotificationSettingsActivity extends Activity {
     private ArrayList<String> getEmails() {
         ArrayList<String> emails = new ArrayList<String>();
 
-        String stringEmail = email1.getText().toString();
+        String stringEmail = email1.getText().toString().trim();
 
         if (!stringEmail.equals("")) {
             emails.add(stringEmail);
         }
 
-        stringEmail = email2.getText().toString();
+        stringEmail = email2.getText().toString().trim();
 
         if (!stringEmail.equals("")) {
             emails.add(stringEmail);
         }
 
-        stringEmail = email3.getText().toString();
+        stringEmail = email3.getText().toString().trim();
 
         if (!stringEmail.equals("")) {
             emails.add(stringEmail);
@@ -242,7 +242,7 @@ public class NotificationSettingsActivity extends Activity {
         accountSettings.setReminderEmail(Boolean.toString(unreadLetters.isChecked()));
         accountSettings.setNotificationSmsPaidBySender(Boolean.toString(importantLetters.isChecked()));
 
-        String stringMobileNumber = mobileNumber.getText().toString();
+        String stringMobileNumber = mobileNumber.getText().toString().trim();
         validateMobileNumber(stringMobileNumber);
         accountSettings.setPhonenumber(stringMobileNumber);
 
