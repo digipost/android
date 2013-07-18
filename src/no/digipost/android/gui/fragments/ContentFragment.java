@@ -69,6 +69,7 @@ public abstract class ContentFragment extends Fragment {
 
 	protected ProgressDialog progressDialog;
 	protected boolean progressDialogIsVisible = false;
+    protected boolean taskIsRunning = false;
 
     protected ActionMode contentActionMode;
 
@@ -244,10 +245,12 @@ public abstract class ContentFragment extends Fragment {
 	}
 
 	protected void showContentProgressDialog(final AsyncTask task, String message) {
+        taskIsRunning = true;
 		progressDialog = DialogUtitities.getProgressDialogWithMessage(context, message);
 		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int which) {
                 dialog.dismiss();
+                taskIsRunning = false;
                 task.cancel(true);
             }
         });
@@ -256,9 +259,13 @@ public abstract class ContentFragment extends Fragment {
 	}
 
 	protected void hideProgressDialog() {
-		progressDialogIsVisible = false;
-		progressDialog.dismiss();
-		progressDialog = null;
+        if(!taskIsRunning){
+		    progressDialogIsVisible = false;
+            if(progressDialog != null){
+		        progressDialog.dismiss();
+		        progressDialog = null;
+            }
+        }
 	}
 
 	public void filterList(String filterQuery) {

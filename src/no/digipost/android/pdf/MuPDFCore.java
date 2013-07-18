@@ -113,7 +113,8 @@ public class MuPDFCore {
 
 	/* Shim function */
 	private void gotoPage(int page) {
-		if (page > numPages - 1)
+        numPages = countPages();
+        if (page > numPages - 1)
 			page = numPages - 1;
 		else if (page < 0)
 			page = 0;

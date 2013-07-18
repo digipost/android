@@ -64,13 +64,15 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	}
 
 	private void updateUnreadView(View row) {
-		unreadView.setText((CharSequence) (" " + unreadLetters));
-		unreadView.setVisibility(View.VISIBLE);
 
-		if (currentView == ApplicationConstants.MAILBOX) {
-			unreadView.setBackgroundResource(R.color.main_drawer_dark_blue);
-		} else {
-			unreadView.setBackgroundResource(R.drawable.transparent_placeholder);
+		if (unreadLetters != 0) {
+
+			unreadView.setText((CharSequence) (" " + unreadLetters));
+			unreadView.setVisibility(View.VISIBLE);
+
+			if (currentView == ApplicationConstants.MAILBOX) {
+				unreadView.setBackgroundResource(R.color.main_drawer_dark_blue);
+			}
 		}
 	}
 
