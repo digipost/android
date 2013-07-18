@@ -59,6 +59,7 @@ public class ApiAccess {
 
 	public static final int POST_ACTION_MOVE = 0;
 	public static final int POST_ACTION_SEND_OPENING_RECEIPT = 1;
+    public static final int POST_ACTION_UPDATE_SETTINGS = 2;
 
     private static Client getClient() {
         if (jerseyClient == null) {
@@ -135,6 +136,10 @@ public class ApiAccess {
 		return (Letter) JSONUtilities.processJackson(Letter.class, executePostRequest(context, POST_ACTION_MOVE, uri, json));
 	}
 
+    public static void updateAccountSettings(Context context, String uri, StringEntity json) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
+        executePostRequest(context, POST_ACTION_UPDATE_SETTINGS, uri, json);
+    }
+
 	private static String executePostRequest(Context context, int action, final String uri, final StringEntity json) throws DigipostClientException,
 			DigipostApiException, DigipostAuthenticationException {
 		HttpClient httpClient = new DefaultHttpClient();
@@ -150,7 +155,7 @@ public class ApiAccess {
 		post.addHeader(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
 		post.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
 
-		if (action == POST_ACTION_MOVE) {
+		if (action == POST_ACTION_MOVE || action == POST_ACTION_UPDATE_SETTINGS) {
 			post.setEntity(json);
 		}
 

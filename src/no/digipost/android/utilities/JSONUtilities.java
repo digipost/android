@@ -95,10 +95,10 @@ public class JSONUtilities {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static StringEntity createJsonFromJackson(final Letter letter) {
+	public static StringEntity createJsonFromJackson(final Object object) {
 		// ignore-test
 		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
-				"selfUri" };
+				"selfUri", "settingsUri" };
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		FilterProvider filters = new SimpleFilterProvider().addFilter("toJSON", SimpleBeanPropertyFilter.serializeAllExcept(ignore));
@@ -106,7 +106,7 @@ public class JSONUtilities {
 		Writer strWriter = new StringWriter();
 		try {
 
-			objectMapper.filteredWriter(filters).writeValue(strWriter, letter);
+			objectMapper.filteredWriter(filters).writeValue(strWriter, object);
 		} catch (JsonGenerationException e) {
 			// Ignore
 		} catch (JsonMappingException e) {
@@ -122,6 +122,8 @@ public class JSONUtilities {
 		} catch (UnsupportedEncodingException e) {
 			// Ignore
 		}
+        System.out.println(strWriter.toString());
+
 		return output;
 	}
 

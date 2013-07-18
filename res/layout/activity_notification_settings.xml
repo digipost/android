@@ -26,18 +26,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Varsling om nye brev"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:id="@+id/textView"
                 android:textColor="@color/white"
                 android:layout_gravity="top"
-                android:layout_marginLeft="5dp"
-                android:drawablePadding="1dp"/>
+                android:layout_marginLeft="5dp"/>
     </LinearLayout>
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="5dp">
 
         <CheckBox
                 android:id="@+id/notification_settings_new_letters"
@@ -48,6 +48,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="Send meg en e-post hvis jeg får et nytt brev."/>
 
     </LinearLayout>
@@ -55,7 +56,8 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="5dp">
 
         <CheckBox
                 android:id="@+id/notification_settings_unread_letters"
@@ -66,6 +68,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="Send meg en e-post hver uke hvis jeg har uleste brev."/>
 
     </LinearLayout>
@@ -73,7 +76,8 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_margin="5dp">
 
         <CheckBox
                 android:id="@+id/notification_settings_important_letters"
@@ -84,6 +88,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:text="Tillat avsendere å sende meg SMS-varsling om viktige brev."/>
 
     </LinearLayout>
@@ -101,12 +106,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Kontaktinformasjon"
-                android:textSize="20sp"
+                android:textSize="17sp"
                 android:id="@+id/textView"
                 android:textColor="@color/white"
                 android:layout_gravity="top"
-                android:layout_marginLeft="5dp"
-                android:drawablePadding="1dp"/>
+                android:layout_marginLeft="5dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -155,21 +159,18 @@
                     android:id="@+id/notification_settings_email1"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:layout_weight="0.7"
                     android:hint="E-postadresse"/>
 
             <EditText
                     android:id="@+id/notification_settings_email2"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:layout_weight="0.7"
                     android:hint="E-postadresse"/>
 
             <EditText
                     android:id="@+id/notification_settings_email3"
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:layout_weight="0.7"
                     android:hint="E-postadresse"/>
 
         </LinearLayout>
@@ -184,7 +185,10 @@
             android:text="Lagre varslingsinnstillinger"
             android:textStyle="bold"
             android:textColor="@color/white"
-            android:layout_margin="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:id="@+id/notification_settings_save"/>
         </LinearLayout>
     </ScrollView>

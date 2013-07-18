@@ -62,7 +62,8 @@
         <activity android:name=".gui.content.UnsupportedDocumentFormatActivity"/>
         <activity android:name=".gui.content.UploadActivity"/>
         <activity android:name=".gui.content.SettingsActivity"/>
-        <activity android:name=".gui.content.NotificationSettingsActivity"/>
+        <activity android:name=".gui.content.NotificationSettingsActivity"
+                  android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".gui.content.PersonalInformationActivity" />
     </application>
 </manifest>

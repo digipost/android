@@ -35,7 +35,7 @@ import android.content.Context;
 public class ContentOperations {
 	private static Account account = null;
 
-	private static Account getAccount(Context context) throws DigipostApiException, DigipostClientException,
+	public static Account getAccount(Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
 		if (account == null) {
             account = ApiAccess.getAccount(context);
@@ -74,6 +74,10 @@ public class ContentOperations {
 			DigipostAuthenticationException {
 		ApiAccess.getMovedDocument(context, letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
 	}
+
+    public static void updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
+        ApiAccess.updateAccountSettings(context, settings.getSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
+    }
 
 	public static void sendOpeningReceipt(Context context, final Letter letter) throws DigipostClientException, DigipostApiException,
 			DigipostAuthenticationException {

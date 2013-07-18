@@ -129,4 +129,13 @@ public class Settings {
     public void setLink(ArrayList<Link> link) {
         this.link = link;
     }
+
+    public String getSettingsUri() {
+        for (Link l : link) {
+            if (l.getRel().equals("https://www.digipost.no/post/relations/update_account_settings")) {
+                return l.getUri();
+            }
+        }
+        return null;
+    }
 }
