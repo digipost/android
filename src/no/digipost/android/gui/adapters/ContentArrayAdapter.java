@@ -77,7 +77,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View row = inflater.inflate(R.layout.content_list_item, parent, false);
 
@@ -87,14 +87,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		this.metaMiddle = (TextView) row.findViewById(R.id.content_meta_middle);
 		this.metaBottom = (ImageView) row.findViewById(R.id.content_meta_bottom);
 
-		final CheckBox checkBox = (CheckBox) row.findViewById(R.id.content_checkbox);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                checked[position] = true;
-                checkBox.setChecked(true);
-            }
-        });
+		CheckBox checkBox = (CheckBox) row.findViewById(R.id.content_checkbox);
 		checkBox.setOnClickListener(onClickListener);
 
 		if (checkboxVisible) {
