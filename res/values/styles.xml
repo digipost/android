@@ -13,6 +13,7 @@
         <item name="android:titleTextStyle">@style/TitleTextStyle</item>
         <item name="android:subtitleTextStyle">@style/SubtitleTextStyle</item>
         <item name="android:icon">@drawable/actionbar_icon</item>
+        <item name="android:actionBarItemBackground">@drawable/actionbar_item_background</item>
         <item name="android:background">@color/actionbar_red_background</item>
         <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
     </style>
