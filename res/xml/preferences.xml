@@ -21,11 +21,13 @@
         <SwitchPreference
                 android:key="pref_confirmDelete"
                 android:title="@string/pref_screen_confirm_delete_title"
+                android:summary="@string/pref_screen_confirm_delete_summary"
                 android:defaultValue="true"/>
 
         <SwitchPreference
                 android:key="pref_confirmMove"
                 android:title="@string/pref_screen_confirm_move_title"
+                android:summary="@string/pref_screen_confirm_move_summary"
                 android:defaultValue="true"/>
 
         <SwitchPreference
@@ -37,16 +39,20 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-            android:title="Din Digipost-konto">
+            android:title="@string/pref_screen_digipost_account_settings">
 
-        <Preference android:title="Personlige innstillinger">
+        <Preference
+                android:title="@string/pref_screen_personal_settings_title"
+                android:summary="@string/pref_screen_personal_settings_summary">
             <intent
                     android:action="android.intent.action.VIEW"
                     android:targetClass="no.digipost.android.gui.content.PersonalSettingsActivity"
                     android:targetPackage="no.digipost.android"/>
         </Preference>
 
-        <Preference android:title="Varslingsinnstillinger">
+        <Preference
+                android:title="@string/pref_screen_notification_settings_title"
+                android:summary="@string/pref_screen_notification_settings_summary">
             <intent
                     android:action="android.intent.action.VIEW"
                     android:targetClass="no.digipost.android.gui.content.NotificationSettingsActivity"

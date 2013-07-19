@@ -30,7 +30,7 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
 		setContentView(R.layout.activity_personal_settings);
 
 		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle("Personlige innstillinger");
+		getActionBar().setTitle(getString(R.string.pref_screen_personal_settings_title));
 
 		createUI();
 	}
@@ -46,7 +46,7 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
 		acceptsInformation = (CheckBox) findViewById(R.id.personal_settings_acceptsInformation);
 		visibleInSearch = (CheckBox) findViewById(R.id.personal_settings_visibleInSearch);
 
-        settingsButton = (Button) findViewById(R.id.personal_settings_save);
+		settingsButton = (Button) findViewById(R.id.personal_settings_save);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
 		acceptsInformation.setEnabled(state);
 		visibleInSearch.setEnabled(state);
 
-		setButtonState(state, "Lagre innstillinger");
+		setButtonState(state, getString(R.string.pref_personal_settings_button));
 	}
 
 	private String getEmailString(Settings settings) {

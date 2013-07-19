@@ -26,7 +26,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Varsling om nye brev"
+                        android:text="@string/pref_notification_settings_letters_title"
                         android:textSize="17sp"
                         android:id="@+id/textView"
                         android:textColor="@color/white"
@@ -44,13 +44,13 @@
                         android:id="@+id/notification_settings_new_letters"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="E-post om nye brev"/>
+                        android:text="@string/pref_notification_settings_letters_new_title"/>
 
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="Send meg en e-post hvis jeg får et nytt brev."/>
+                        android:text="@string/pref_notification_settings_letters_new_subtitle"/>
 
             </LinearLayout>
 
@@ -64,13 +64,13 @@
                         android:id="@+id/notification_settings_unread_letters"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="Ukentlig e-post om uleste brev"/>
+                        android:text="@string/pref_notification_settings_letters_unread_title"/>
 
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="Send meg en e-post hver uke hvis jeg har uleste brev."/>
+                        android:text="@string/pref_notification_settings_letters_unread_subtitle"/>
 
             </LinearLayout>
 
@@ -84,13 +84,13 @@
                         android:id="@+id/notification_settings_important_letters"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:text="SMS om ekstra viktige brev"/>
+                        android:text="@string/pref_notification_settings_letters_important_title"/>
 
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="Tillat avsendere å sende meg SMS-varsling om viktige brev."/>
+                        android:text="@string/pref_notification_settings_letters_important_subtitle"/>
 
             </LinearLayout>
 
@@ -107,7 +107,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Kontaktinformasjon"
+                        android:text="@string/pref_notification_settings_contact_info_title"
                         android:textSize="17sp"
                         android:id="@+id/textView"
                         android:textColor="@color/white"
@@ -124,7 +124,7 @@
                 <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:text="Mobilnummer"
+                        android:text="@string/pref_notification_settings_contact_info_phone_title"
                         android:textSize="16sp"
                         android:layout_marginBottom="5dp"
                         android:layout_marginRight="10dp"/>
@@ -133,13 +133,13 @@
                         android:id="@+id/notification_settings_mobile"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:hint="Mobilnummer"
+                        android:hint="@string/pref_notification_settings_contact_info_phone_hint"
                         android:inputType="phone"/>
 
                 <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:text="E-postadresser"
+                        android:text="@string/pref_notification_settings_contact_info_email_title"
                         android:textSize="16sp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="5dp"
@@ -150,21 +150,21 @@
                         android:id="@+id/notification_settings_email1"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:hint="E-postadresse"
+                        android:hint="@string/pref_notification_settings_contact_info_email_hint"
                         android:inputType="textEmailAddress"/>
 
                 <EditText
                         android:id="@+id/notification_settings_email2"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:hint="E-postadresse"
+                        android:hint="@string/pref_notification_settings_contact_info_email_hint"
                         android:inputType="textEmailAddress"/>
 
                 <EditText
                         android:id="@+id/notification_settings_email3"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:hint="E-postadresse"
+                        android:hint="@string/pref_notification_settings_contact_info_email_hint"
                         android:inputType="textEmailAddress"/>
 
             </LinearLayout>
@@ -174,7 +174,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/red_button_style"
-                    android:text="Lagre varslingsinnstillinger"
+                    android:text="@string/pref_notification_settings_button"
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     android:layout_marginRight="20dp"

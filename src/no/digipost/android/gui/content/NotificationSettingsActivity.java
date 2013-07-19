@@ -6,9 +6,7 @@ import no.digipost.android.R;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Settings;
 import no.digipost.android.model.ValidationRules;
-
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -22,7 +20,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 	private EditText email2;
 	private EditText email3;
 
-    private ValidationRules validationRules;
+	private ValidationRules validationRules;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +28,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 		setContentView(R.layout.activity_notification_settings);
 
 		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle("Varslingsinnstillinger");
+		getActionBar().setTitle(getString(R.string.pref_screen_notification_settings_title));
 
 		createUI();
 	}
@@ -71,12 +69,12 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 		email2.setEnabled(state);
 		email3.setEnabled(state);
 
-		super.setButtonState(state, "Lagre varslingsinnstillinger");
+		super.setButtonState(state, getString(R.string.pref_notification_settings_button));
 	}
 
 	@Override
 	protected void setAccountInfo(Account account) {
-        validationRules = account.getValidationRules();
+		validationRules = account.getValidationRules();
 	}
 
 	private void validateMobileNumber(String mobileNumber) throws Exception {
