@@ -28,12 +28,6 @@
                 android:title="@string/pref_screen_confirm_move_title"
                 android:defaultValue="true"/>
 
-    </PreferenceCategory>
-
-    <PreferenceCategory
-            android:title="@string/pref_documents_settings"
-            android:key="pref_documentsSettings">
-
         <SwitchPreference
                 android:key="pref_showBankIDDocuments"
                 android:title="@string/pref_show_bank_id_documents_title"

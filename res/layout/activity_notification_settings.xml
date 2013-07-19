@@ -118,68 +118,54 @@
             <LinearLayout
                     android:layout_height="wrap_content"
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_margin="10sp">
 
                 <TextView
                         android:layout_height="wrap_content"
-                        android:layout_width="0dp"
-                        android:layout_weight="0.3"
+                        android:layout_width="match_parent"
                         android:text="Mobilnummer"
-                        android:gravity="right"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="5dp"
                         android:layout_marginRight="10dp"/>
 
                 <EditText
                         android:id="@+id/notification_settings_mobile"
                         android:layout_height="wrap_content"
-                        android:layout_width="0dp"
-                        android:layout_weight="0.7"
+                        android:layout_width="match_parent"
                         android:hint="Mobilnummer"
                         android:inputType="phone"/>
-            </LinearLayout>
-
-            <LinearLayout
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_margin="10sp">
 
                 <TextView
                         android:layout_height="wrap_content"
-                        android:layout_width="0dp"
-                        android:layout_weight="0.3"
+                        android:layout_width="match_parent"
                         android:text="E-postadresser"
-                        android:gravity="right"
+                        android:textSize="16sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp"
                         android:layout_marginRight="10dp"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="0.7"
+
+                <EditText
+                        android:id="@+id/notification_settings_email1"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_width="match_parent"
+                        android:hint="E-postadresse"
+                        android:inputType="textEmailAddress"/>
 
-                    <EditText
-                            android:id="@+id/notification_settings_email1"
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent"
-                            android:hint="E-postadresse"
-                            android:inputType="textEmailAddress"/>
+                <EditText
+                        android:id="@+id/notification_settings_email2"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:hint="E-postadresse"
+                        android:inputType="textEmailAddress"/>
 
-                    <EditText
-                            android:id="@+id/notification_settings_email2"
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent"
-                            android:hint="E-postadresse"
-                            android:inputType="textEmailAddress"/>
-
-                    <EditText
-                            android:id="@+id/notification_settings_email3"
-                            android:layout_height="wrap_content"
-                            android:layout_width="match_parent"
-                            android:hint="E-postadresse"
-                            android:inputType="textEmailAddress"/>
-
-                </LinearLayout>
+                <EditText
+                        android:id="@+id/notification_settings_email3"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:hint="E-postadresse"
+                        android:inputType="textEmailAddress"/>
 
             </LinearLayout>
 
