@@ -20,4 +20,24 @@ public class Address {
 
     @JsonProperty("zip-code")
     private String zipCode;
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
+    public String getAdditionalAddressline() {
+        return additionalAddressline;
+    }
+
+    public String getZipCode() {
+        return zipCode;
+    }
 }

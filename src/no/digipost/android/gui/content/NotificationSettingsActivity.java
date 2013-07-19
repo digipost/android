@@ -3,26 +3,17 @@ package no.digipost.android.gui.content;
 import java.util.ArrayList;
 
 import no.digipost.android.R;
-import no.digipost.android.api.ContentOperations;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.model.Account;
 import no.digipost.android.model.Settings;
 import no.digipost.android.model.ValidationRules;
-import no.digipost.android.utilities.DialogUtitities;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
+
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-public class NotificationSettingsActivity extends Activity {
+public class NotificationSettingsActivity extends DigipostSettingsActivity {
 	private CheckBox newLetters;
 	private CheckBox unreadLetters;
 	private CheckBox importantLetters;
@@ -30,12 +21,8 @@ public class NotificationSettingsActivity extends Activity {
 	private EditText email1;
 	private EditText email2;
 	private EditText email3;
-	private Button settingsButton;
 
-	private Settings accountSettings;
-	private ValidationRules validationRules;
-
-	private ProgressDialog settingsProgressDialog;
+    private ValidationRules validationRules;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +33,6 @@ public class NotificationSettingsActivity extends Activity {
 		getActionBar().setTitle("Varslingsinnstillinger");
 
 		createUI();
-
-		executeGetValidationRulesTask();
 	}
 
 	private void createUI() {
@@ -61,21 +46,23 @@ public class NotificationSettingsActivity extends Activity {
 		settingsButton = (Button) findViewById(R.id.notification_settings_save);
 	}
 
-	private void updateUI() {
-		newLetters.setChecked(Boolean.parseBoolean(accountSettings.getNotificationEmail()));
-		unreadLetters.setChecked(Boolean.parseBoolean(accountSettings.getReminderEmail()));
-		importantLetters.setChecked(Boolean.parseBoolean(accountSettings.getNotificationSmsPaidBySender()));
+	@Override
+	protected void updateUI(Settings settings) {
+		newLetters.setChecked(Boolean.parseBoolean(settings.getNotificationEmail()));
+		unreadLetters.setChecked(Boolean.parseBoolean(settings.getReminderEmail()));
+		importantLetters.setChecked(Boolean.parseBoolean(settings.getNotificationSmsPaidBySender()));
 
-		mobileNumber.setText((accountSettings.getPhonenumber() != null) ? accountSettings.getPhonenumber() : "");
+		mobileNumber.setText((settings.getPhonenumber() != null) ? settings.getPhonenumber() : "");
 
-		ArrayList<String> emails = accountSettings.getEmail();
+		ArrayList<String> emails = settings.getEmail();
 
 		email1.setText((emails.size() > 0) ? emails.get(0) : "");
 		email2.setText((emails.size() > 1) ? emails.get(1) : "");
 		email3.setText((emails.size() > 2) ? emails.get(2) : "");
 	}
 
-	private void setSettingsEnabled(boolean state) {
+	@Override
+	protected void setSettingsEnabled(boolean state) {
 		newLetters.setEnabled(state);
 		unreadLetters.setEnabled(state);
 		importantLetters.setEnabled(state);
@@ -84,136 +71,12 @@ public class NotificationSettingsActivity extends Activity {
 		email2.setEnabled(state);
 		email3.setEnabled(state);
 
-		setButtonState(state);
-	}
-
-	private void setButtonState(boolean state) {
-		if (state) {
-			settingsButton.setText("Lagre varslingsinnstillinger");
-			settingsButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					executeUpdateSettingsTask();
-				}
-			});
-		} else {
-			settingsButton.setText("Prøv igjen");
-			settingsButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					executeGetValidationRulesTask();
-				}
-			});
-		}
+		super.setButtonState(state, "Lagre varslingsinnstillinger");
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		}
-
-		return onOptionsItemSelected(item);
-	}
-
-	private void showSettingsProgressDialog(String message) {
-		settingsProgressDialog = DialogUtitities.getProgressDialogWithMessage(this, message);
-		settingsProgressDialog.show();
-	}
-
-	private void hideSettingsProgressDialog() {
-		settingsProgressDialog.dismiss();
-		settingsProgressDialog = null;
-	}
-
-	private void executeGetValidationRulesTask() {
-		GetValidationRulesTask getValidationRulesTask = new GetValidationRulesTask();
-		getValidationRulesTask.execute();
-	}
-
-	private class GetValidationRulesTask extends AsyncTask<Void, Void, ValidationRules> {
-		private String errorMessage;
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			showSettingsProgressDialog("Laster dine innstillinger...");
-		}
-
-		@Override
-		protected ValidationRules doInBackground(Void... voids) {
-			try {
-				return ContentOperations.getAccount(NotificationSettingsActivity.this).getValidationRules();
-			} catch (DigipostApiException e) {
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostClientException e) {
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostAuthenticationException e) {
-				errorMessage = e.getMessage();
-				return null;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(ValidationRules result) {
-			super.onPostExecute(validationRules);
-
-			if (result == null) {
-				DialogUtitities.showToast(NotificationSettingsActivity.this, errorMessage);
-				// ToDo invalid token
-				setSettingsEnabled(false);
-				hideSettingsProgressDialog();
-			} else {
-				validationRules = result;
-				executeGetSettingsTask();
-			}
-		}
-	}
-
-	private void executeGetSettingsTask() {
-		GetSettingsTask getSettingsTask = new GetSettingsTask();
-		getSettingsTask.execute();
-	}
-
-	private class GetSettingsTask extends AsyncTask<Void, Void, Settings> {
-		private String errorMessage;
-
-		@Override
-		protected Settings doInBackground(Void... voids) {
-			try {
-				return ContentOperations.getSettings(NotificationSettingsActivity.this);
-			} catch (DigipostClientException e) {
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostAuthenticationException e) {
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostApiException e) {
-				errorMessage = e.getMessage();
-				return null;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(Settings settings) {
-			super.onPostExecute(settings);
-			hideSettingsProgressDialog();
-
-			if (settings == null) {
-				DialogUtitities.showToast(NotificationSettingsActivity.this, errorMessage);
-
-				// ToDo invalid token
-				setSettingsEnabled(false);
-			} else {
-				accountSettings = settings;
-				updateUI();
-				setSettingsEnabled(true);
-			}
-		}
+	protected void setAccountInfo(Account account) {
+        validationRules = account.getValidationRules();
 	}
 
 	private void validateMobileNumber(String mobileNumber) throws Exception {
@@ -254,7 +117,8 @@ public class NotificationSettingsActivity extends Activity {
 		return emails;
 	}
 
-	private void setSelectedSettings() throws Exception {
+	@Override
+	protected void setSelectedAccountSettings() throws Exception {
 		accountSettings.setNotificationEmail(Boolean.toString(newLetters.isChecked()));
 		accountSettings.setReminderEmail(Boolean.toString(unreadLetters.isChecked()));
 		accountSettings.setNotificationSmsPaidBySender(Boolean.toString(importantLetters.isChecked()));
@@ -266,63 +130,5 @@ public class NotificationSettingsActivity extends Activity {
 		ArrayList<String> emails = getEmails();
 		validateEmails(emails);
 		accountSettings.setEmail(emails);
-	}
-
-	private void showInvalidFormatDialog(String message) {
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
-		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				dialogInterface.dismiss();
-			}
-		});
-		builder.create().show();
-	}
-
-	private void executeUpdateSettingsTask() {
-		try {
-			setSelectedSettings();
-			UpdateSettingsTask updateSettingsTask = new UpdateSettingsTask();
-			updateSettingsTask.execute();
-		} catch (Exception e) {
-			showInvalidFormatDialog(e.getMessage());
-		}
-	}
-
-	private class UpdateSettingsTask extends AsyncTask<Void, Void, String> {
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			showSettingsProgressDialog("Oppdaterer dine innstillinger...");
-		}
-
-		@Override
-		protected String doInBackground(Void... voids) {
-			try {
-				ContentOperations.updateAccountSettings(NotificationSettingsActivity.this, accountSettings);
-				return null;
-			} catch (DigipostAuthenticationException e) {
-				return e.getMessage();
-			} catch (DigipostClientException e) {
-				return e.getMessage();
-			} catch (DigipostApiException e) {
-				return e.getMessage();
-			}
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			hideSettingsProgressDialog();
-
-			if (result != null) {
-				DialogUtitities.showToast(NotificationSettingsActivity.this, result);
-
-				// ToDo invalid token
-			} else {
-				DialogUtitities.showToast(NotificationSettingsActivity.this, "Dine varslingsinnstillinger ble oppdatert.");
-			}
-		}
 	}
 }
