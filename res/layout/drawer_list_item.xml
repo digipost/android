@@ -17,7 +17,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/main_drawer_listitem">
+        android:background="@drawable/main_drawer_listitem_background">
 
     <RelativeLayout
             android:layout_width="wrap_content"
@@ -28,11 +28,10 @@
                 android:id="@+id/drawer_link_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawablePadding="10dp"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                android:textSize="18sp"
                 android:gravity="center_vertical|left"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:drawablePadding="5dp"
+                android:layout_marginLeft="15dp"
                 android:textColor="@color/white"
                 android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
     </RelativeLayout>

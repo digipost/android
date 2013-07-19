@@ -6,7 +6,7 @@
         </shape>
     </item>
 
-    <item android:bottom="3dp">
+    <item android:bottom="2dp">
         <shape android:shape="rectangle">
             <solid android:color="@color/main_drawer_grey_background"/>
         </shape>
