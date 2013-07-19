@@ -25,8 +25,20 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrimaryAccount {
+    @JsonProperty
+    private String personalidentificationnumberObfuscated;
+
+    @JsonProperty
+    private String digipostaddress;
+
 	@JsonProperty
 	private String fullName;
+
+    @JsonProperty
+    private ArrayList<String> email;
+
+    @JsonProperty
+    private String phonenumber;
 
 	@JsonProperty
 	private String unreadItemsInInbox;
@@ -37,12 +49,31 @@ public class PrimaryAccount {
 	@JsonProperty
 	private String totalAvailableStorage;
 
+    @JsonProperty
+    private ArrayList<Address> address;
+
 	@JsonProperty
 	private ArrayList<Link> link;
+
+    public String getPersonalidentificationnumberObfuscated() {
+        return personalidentificationnumberObfuscated;
+    }
+
+    public String getDigipostaddress() {
+        return digipostaddress;
+    }
 
 	public String getFullName() {
 		return fullName;
 	}
+
+    public ArrayList<String> getEmail() {
+        return email;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
 
 	public int getUnreadItemsInInbox() {
 		return Integer.parseInt(unreadItemsInInbox);
@@ -55,6 +86,10 @@ public class PrimaryAccount {
 	public String getTotalAvailableStorage() {
 		return totalAvailableStorage;
 	}
+
+    public ArrayList<Address> getAddress() {
+        return address;
+    }
 
 	public ArrayList<Link> getLink() {
 		return link;

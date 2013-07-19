@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:background="@color/screenlock_header_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:paddingLeft="20dp">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Personlig informasjon"
+                        android:textSize="17sp"
+                        android:id="@+id/textView"
+                        android:textColor="@color/white"
+                        android:layout_gravity="top"
+                        android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp">
+
+                <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                    <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Fødselsnummer"
+                            android:textColor="@color/white"
+                            android:layout_marginRight="10dp"/>
+
+                    <TextView
+                            android:id="@+id/personal_settings_personalidentificationnumberObfuscated"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                    <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Navn"
+                            android:textColor="@color/white"
+                            android:layout_marginRight="10dp"/>
+
+                    <TextView
+                            android:id="@+id/personal_settings_fullName"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                    <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Adresse"
+                            android:textColor="@color/white"
+                            android:layout_marginRight="10dp"/>
+
+                    <TextView
+                            android:id="@+id/personal_settings_address"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                    <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Telefon"
+                            android:textColor="@color/white"
+                            android:layout_marginRight="10dp"/>
+
+                    <TextView
+                            android:id="@+id/personal_settings_phonenumber"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                    <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="E-post"
+                            android:textColor="@color/white"
+                            android:layout_marginRight="10dp"/>
+
+                    <TextView
+                            android:id="@+id/personal_settings_email"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_margin="5dp">
+
+                    <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:gravity="right"
+                            android:text="Digipostadresse"
+                            android:textColor="@color/white"
+                            android:layout_marginRight="10dp"/>
+
+                    <TextView
+                            android:id="@+id/personal_settings_digipostaddress"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:background="@color/screenlock_header_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:paddingLeft="20dp">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bruk av personlig informasjon"
+                        android:textSize="17sp"
+                        android:id="@+id/textView"
+                        android:textColor="@color/white"
+                        android:layout_gravity="top"
+                        android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_width="match_parent">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="Posten lanserer jevnlig nye produkter og tjenester og kan sende deg informasjon om dette."/>
+
+                <CheckBox
+                        android:id="@+id/personal_settings_acceptsInformation"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="Hold meg oppdatert"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:background="@color/screenlock_header_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:paddingLeft="20dp">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Synlighet i søk"
+                        android:textSize="17sp"
+                        android:id="@+id/textView"
+                        android:textColor="@color/white"
+                        android:layout_gravity="top"
+                        android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_width="match_parent">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="For at andre brukere skal kunne sende deg brev uten å kjenne digipostadressen din, må du være synlig i adressesøket."/>
+
+                <CheckBox
+                        android:id="@+id/personal_settings_visibleInSearch"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:text="Jeg godtar at min adresse er synlig for andre brukere"/>
+
+            </LinearLayout>
+
+            <Button
+                    android:id="@+id/personal_settings_save"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/red_button_style"
+                    android:text="Lagre innstillinger"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

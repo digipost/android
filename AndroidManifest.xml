@@ -64,6 +64,6 @@
         <activity android:name=".gui.content.SettingsActivity"/>
         <activity android:name=".gui.content.NotificationSettingsActivity"
                   android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".gui.content.PersonalInformationActivity" />
+        <activity android:name=".gui.content.PersonalSettingsActivity" />
     </application>
 </manifest>
