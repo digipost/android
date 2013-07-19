@@ -19,11 +19,14 @@ package no.digipost.android.gui.adapters;
 import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.ImageView;
 
 public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	protected Context context;
@@ -47,7 +50,6 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		View row = inflater.inflate(R.layout.drawer_list_item, parent, false);
 		this.linkName = (TextView) row.findViewById(R.id.drawer_link_name);
 		this.unreadView = (TextView) row.findViewById(R.id.drawer_link_unread);
-
 		setupLinkView(row, position);
 
 		return row;
@@ -82,7 +84,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 
 		switch (position) {
 		case ApplicationConstants.MAILBOX:
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope, 0, 0, 0);
+            linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope, 0, 0, 0);
 			updateUnreadView(row);
 			break;
 
@@ -99,8 +101,11 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 			break;
 
 		default:
-			linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_dark_grey_text));
+			linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
 			linkName.setTextSize(13);
+            linkName.setGravity(Gravity.BOTTOM);
+            linkName.setTypeface(null, Typeface.BOLD);
+            linkName.setPadding(0,0,0,5);
 			row.setBackgroundResource(R.drawable.main_drawer_label);
 		}
 	}

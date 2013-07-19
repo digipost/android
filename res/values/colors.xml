@@ -4,6 +4,7 @@
     <!-- Drawer -->
     <color name="main_drawer_grey_background">#393a3d</color>
     <color name="main_drawer_dark_grey_text">#757477</color>
+    <color name="main_drawer_grey_text">#DEDEDE</color>
     <color name="main_drawer_blue_selected">#56b4ef</color>
     <color name="main_drawer_blue_focused">#71C2F5</color>
     <color name="main_drawer_dark_blue">#228fd3</color>
