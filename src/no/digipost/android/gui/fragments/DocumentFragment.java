@@ -30,15 +30,12 @@ import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
-import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.SettingsUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -257,7 +254,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onPostExecute(byte[] result) {
 			super.onPostExecute(result);
-            DocumentFragment.super.taskIsRunning = false;
+			DocumentFragment.super.taskIsRunning = false;
 			DocumentFragment.super.hideProgressDialog();
 
 			if (result != null) {
@@ -325,7 +322,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onPostExecute(final Documents documents) {
 			super.onPostExecute(documents);
-            DocumentFragment.super.taskIsRunning = false;
+			DocumentFragment.super.taskIsRunning = false;
 			if (documents != null) {
 				ArrayList<Letter> letters = documents.getDocument();
 				DocumentFragment.super.listAdapter.replaceAll(letters);
@@ -370,11 +367,11 @@ public abstract class DocumentFragment extends ContentFragment {
 	}
 
 	protected void executeDocumentMoveTask(String toLocation) {
-        ArrayList<Letter> letters = listAdapter.getCheckedItems();
+		ArrayList<Letter> letters = listAdapter.getCheckedItems();
 
-        contentActionMode.finish();
+		contentActionMode.finish();
 
-        DocumentMoveTask documentMoveTask = new DocumentMoveTask(letters, toLocation);
+		DocumentMoveTask documentMoveTask = new DocumentMoveTask(letters, toLocation);
 		documentMoveTask.execute();
 	}
 
@@ -386,20 +383,20 @@ public abstract class DocumentFragment extends ContentFragment {
 		documentMoveTask.execute();
 	}
 
-    protected void moveDocument(String toLocation, String message) {
-        if (SettingsUtilities.getConfirmMovePreference(context)) {
-            showMoveDocumentsDialog(toLocation, message);
-        } else {
-            executeDocumentMoveTask(toLocation);
-        }
-    }
+	protected void moveDocument(String toLocation, String message) {
+		if (SettingsUtilities.getConfirmMovePreference(context)) {
+			showMoveDocumentsDialog(toLocation, message);
+		} else {
+			executeDocumentMoveTask(toLocation);
+		}
+	}
 
 	protected void showMoveDocumentsDialog(final String toLocation, final String message) {
 		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
 		alertDialogBuilder.setPositiveButton(R.string.move, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
-                executeDocumentMoveTask(toLocation);
+				executeDocumentMoveTask(toLocation);
 				dialogInterface.dismiss();
 			}
 		});
@@ -470,7 +467,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-            DocumentFragment.super.taskIsRunning = false;
+			DocumentFragment.super.taskIsRunning = false;
 			DocumentFragment.super.hideProgressDialog();
 
 			if (result != null) {

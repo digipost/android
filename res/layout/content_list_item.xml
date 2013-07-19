@@ -48,25 +48,25 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
 
-                <TextView
-                        android:id="@+id/content_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:textSize="17sp"
-                        android:textColor="@color/black_subject"
-                        android:maxLines="1"
-                        android:singleLine="true"/>
+            <TextView
+                    android:id="@+id/content_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:textSize="17sp"
+                    android:textColor="@color/black_subject"
+                    android:maxLines="1"
+                    android:singleLine="true"/>
 
-                <TextView
-                        android:id="@+id/content_subTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="@color/grey_creator"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:singleLine="true"/>
+            <TextView
+                    android:id="@+id/content_subTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/grey_creator"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -77,38 +77,38 @@
             android:layout_height="match_parent"
             >
 
-            <TextView
-                    android:id="@+id/content_meta_top"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:gravity="right"
-                    android:textColor="@color/blue"
-                    android:textSize="12sp"/>
+        <TextView
+                android:id="@+id/content_meta_top"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:gravity="right"
+                android:textColor="@color/blue"
+                android:textSize="12sp"/>
 
-            <TextView
-                    android:id="@+id/content_meta_middle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
+        <TextView
+                android:id="@+id/content_meta_middle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
 
-                    android:textColor="@color/grey_filesize"
-                    android:gravity="right"
-                    android:autoText="false"
-                    android:textSize="12sp"/>
+                android:textColor="@color/grey_filesize"
+                android:gravity="right"
+                android:autoText="false"
+                android:textSize="12sp"/>
 
-            <ImageView
-                    android:id="@+id/content_meta_bottom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
+        <ImageView
+                android:id="@+id/content_meta_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
 
-                    android:src="@drawable/transparent_placeholder"
-                    android:gravity="right"
-                    android:adjustViewBounds="true"
-                    android:cropToPadding="false"
-                    android:focusable="false"
-                    />
+                android:src="@drawable/transparent_placeholder"
+                android:gravity="right"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:focusable="false"
+                />
 
     </LinearLayout>
 </LinearLayout>

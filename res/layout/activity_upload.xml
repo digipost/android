@@ -5,7 +5,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/list_element_opened" >
+              android:background="@color/list_element_opened">
 
     <TextView
             android:id="@+id/upload_file_path"

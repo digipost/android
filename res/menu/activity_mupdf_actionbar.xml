@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/pdfmenu_search"
-          android:title="@string/search"
-          android:icon="@drawable/white_search_48"
-          android:showAsAction="collapseActionView|ifRoom"
-          android:actionViewClass="android.widget.SearchView" />
+    <item
+            android:id="@+id/pdfmenu_search"
+            android:title="@string/search"
+            android:icon="@drawable/white_search_48"
+            android:showAsAction="collapseActionView|ifRoom"
+            android:actionViewClass="android.widget.SearchView"/>
 
 
-    <item android:id="@+id/pdfmenu_delete"
-          android:title="@string/delete"
-          android:icon="@drawable/ic_action_delete"
-          android:showAsAction="never" />
+    <item
+            android:id="@+id/pdfmenu_delete"
+            android:title="@string/delete"
+            android:icon="@drawable/ic_action_delete"
+            android:showAsAction="never"/>
 
     <item
             android:id="@+id/pdfmenu_workarea"

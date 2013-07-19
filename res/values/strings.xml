@@ -2,7 +2,6 @@
 <resources>
 
 
-
     <!-- App -->
     <string name="app_name">Digipost</string>
     <string name="archive">Arkivet</string>
@@ -11,8 +10,12 @@
     <string name="receipts">Kvitteringer</string>
 
     <!--Screenlock-->
-    <string name="screenlock_message1">For at Digipost-appen skal huske din innlogging må du skru på skjermlås på din mobil.</string>
-    <string name="screenlock_message2">Uten skjermlås må du logge inn med fødselsnummer og passord hver gang du åpner appen.</string>
+    <string name="screenlock_message1">For at Digipost-appen skal huske din innlogging må du skru på
+        skjermlås på din mobil.
+    </string>
+    <string name="screenlock_message2">Uten skjermlås må du logge inn med fødselsnummer og passord
+        hver gang du åpner appen.
+    </string>
     <string name="yes_apply_screenlock">Skru på skjermlås</string>
     <string name="no_dont_use_screenlock">Avbryt</string>
     <string name="screenlock">Skjermlås</string>
@@ -109,7 +112,9 @@
     <!-- Unsupported -->
     <string name="unsupported_title">Ustøttet filtype</string>
     <string name="unsupported_message_top">Digipost-appen kan ikke vise denne filtypen</string>
-    <string name="unsupported_message_bottom">Du kan åpne dokumentet dersom du har en app på din telefon hvor denne filtypen kan vises.</string>
+    <string name="unsupported_message_bottom">Du kan åpne dokumentet dersom du har en app på din
+        telefon hvor denne filtypen kan vises.
+    </string>
 
     <!-- Preferences -->
     <string name="preferences">Innstillinger</string>
@@ -118,36 +123,61 @@
     <string name="pref_general_settings">Generelle innstillinger</string>
     <string name="pref_documents_settings">Innstillinger for brev</string>
     <string name="pref_show_bank_id_documents_title">Bank-ID</string>
-    <string name="pref_show_bank_id_documents_summary">Vis brev som krever innlogging med Bank-ID</string>
+    <string name="pref_show_bank_id_documents_summary">Vis brev som krever innlogging med Bank-ID
+    </string>
     <string name="pref_screen_rotation_title">Skjermrotasjon</string>
     <string name="pref_screen_rotation_summary">Tillat skjermrotasjon</string>
     <string name="pref_screen_confirm_delete_title">Bekreft før sletting</string>
     <string name="pref_screen_confirm_move_title">Bekreft før flytting</string>
 
     <!-- Errors -->
-    <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv igjen.</string>
+    <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv
+        igjen.
+    </string>
     <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.</string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
     <string name="error_invalid_token">Tilgang tilbaketrukket.</string>
     <string name="error_inputstreamtobyarray">En feil oppstod under åpning av innhold</string>
-    <string name="error_no_activity_to_open_file">Din enhet har ingen applikasjoner som kan åpne denne filtypen.</string>
+    <string name="error_no_activity_to_open_file">Din enhet har ingen applikasjoner som kan åpne
+        denne filtypen.
+    </string>
     <string name="error_failed_to_open_with_intent">En feil oppstod under åpning av filen.</string>
 
     <!-- Prompts -->
     <string name="dialog_answer_opening_receipt_yes">Åpne og send kvittering</string>
-    <string name="dialog_answer_opening_receipt_message">Når du åpner dette brevet, vil det bli sendt en lesekvittering til avsenderen.</string>
+    <string name="dialog_answer_opening_receipt_message">Når du åpner dette brevet, vil det bli
+        sendt en lesekvittering til avsenderen.
+    </string>
 
-    <string name="dialog_prompt_letter_toArchive">Er du sikker på at du vil flytte brevet til arkivet?</string>
-    <string name="dialog_prompt_letter_toWorkarea">Er du sikker på at du vil flytte brevet til kjøkkenbenken?</string>
-    <string name="dialog_prompt_image_toArchive">Er du sikker på at du vil flytte bildet til arkivet?</string>
-    <string name="dialog_prompt_image_toWorkarea">Er du sikker på at du vil flytte bildet til kjøkkenbenken?</string>
-    <string name="dialog_prompt_document_toArchive">Er du sikker på at du vil flytte dokumentet til arkivet?</string>
-    <string name="dialog_prompt_document_toWorkarea">Er du sikker på at du vil flytte dokumentet til kjøkkenbenken?</string>
+    <string name="dialog_prompt_letter_toArchive">Er du sikker på at du vil flytte brevet til
+        arkivet?
+    </string>
+    <string name="dialog_prompt_letter_toWorkarea">Er du sikker på at du vil flytte brevet til
+        kjøkkenbenken?
+    </string>
+    <string name="dialog_prompt_image_toArchive">Er du sikker på at du vil flytte bildet til
+        arkivet?
+    </string>
+    <string name="dialog_prompt_image_toWorkarea">Er du sikker på at du vil flytte bildet til
+        kjøkkenbenken?
+    </string>
+    <string name="dialog_prompt_document_toArchive">Er du sikker på at du vil flytte dokumentet til
+        arkivet?
+    </string>
+    <string name="dialog_prompt_document_toWorkarea">Er du sikker på at du vil flytte dokumentet til
+        kjøkkenbenken?
+    </string>
 
-    <string name="dialog_prompt_delete_letter">Er du sikker på at du vil slette dette brevet?</string>
-    <string name="dialog_prompt_delete_image">Er du sikker på at du vil slette dette bildet?</string>
-    <string name="dialog_prompt_delete_receipt">Er du sikker på at du vil slette denne kvitteringen?</string>
-    <string name="dialog_prompt_delete_document">Er du sikker på at du vil slette dette dokumentet?</string>
+    <string name="dialog_prompt_delete_letter">Er du sikker på at du vil slette dette brevet?
+    </string>
+    <string name="dialog_prompt_delete_image">Er du sikker på at du vil slette dette bildet?
+    </string>
+    <string name="dialog_prompt_delete_receipt">Er du sikker på at du vil slette denne
+        kvitteringen?
+    </string>
+    <string name="dialog_prompt_delete_document">Er du sikker på at du vil slette dette
+        dokumentet?
+    </string>
 
     <string name="dialog_prompt_do_you_want_to_delete">Vil du slette\u0020</string>
     <string name="dialog_prompt_do_you_want_to_move">Vil du flytte\u0020</string>
@@ -156,12 +186,20 @@
 
     <string name="dialog_error_header_filetype">Ustøttet filtype</string>
     <string name="dialog_error_header_two_factor">Ustøttet autentisering</string>
-    <string name="dialog_error_not_supported_filetype">Digipost for Android støtter ikke denne filtypen.</string>
-    <string name="dialog_error_two_factor">Dette brevet krever autentisering med Bank ID. Logg inn på Digipost.no for å se innholdet.</string>
+    <string name="dialog_error_not_supported_filetype">Digipost for Android støtter ikke denne
+        filtypen.
+    </string>
+    <string name="dialog_error_two_factor">Dette brevet krever autentisering med Bank ID. Logg inn
+        på Digipost.no for å se innholdet.
+    </string>
     <string name="dialog_prompt_send_read_receipt"></string>
     <string name="dialog_prompt_delete_documents">Vil du slette markerte dokumenter?</string>
     <string name="dialog_prompt_delete_receipts">Vil du slette markerte kvitteringer?</string>
-    <string name="dialog_prompt_move_documents_to_archive">Vil du flytte markerte dokumenter til arkivet?</string>
-    <string name="dialog_prompt_move_documents_to_workarea">Vil du flytte markerte dokumenter til kjøkkenbenken?</string>
+    <string name="dialog_prompt_move_documents_to_archive">Vil du flytte markerte dokumenter til
+        arkivet?
+    </string>
+    <string name="dialog_prompt_move_documents_to_workarea">Vil du flytte markerte dokumenter til
+        kjøkkenbenken?
+    </string>
 
 </resources>

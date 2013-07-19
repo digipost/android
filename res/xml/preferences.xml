@@ -10,7 +10,7 @@
                 android:dialogTitle="@string/pref_default_screen_title"
                 android:entries="@array/pref_default_screen_entries"
                 android:entryValues="@array/pref_default_screen_values"
-                android:defaultValue="@string/pref_default_screen_default" />
+                android:defaultValue="@string/pref_default_screen_default"/>
 
         <SwitchPreference
                 android:key="pref_screenRotation"
@@ -45,16 +45,18 @@
     <PreferenceCategory
             android:title="Din Digipost-konto">
 
-        <Preference android:title="Personlig informasjon" >
-            <intent android:action="android.intent.action.VIEW"
+        <Preference android:title="Personlig informasjon">
+            <intent
+                    android:action="android.intent.action.VIEW"
                     android:targetClass="no.digipost.android.gui.content.PersonalInformationActivity"
-                    android:targetPackage="no.digipost.android" />
+                    android:targetPackage="no.digipost.android"/>
         </Preference>
 
-        <Preference android:title="Varslingsinnstillinger" >
-            <intent android:action="android.intent.action.VIEW"
+        <Preference android:title="Varslingsinnstillinger">
+            <intent
+                    android:action="android.intent.action.VIEW"
                     android:targetClass="no.digipost.android.gui.content.NotificationSettingsActivity"
-                    android:targetPackage="no.digipost.android" />
+                    android:targetPackage="no.digipost.android"/>
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

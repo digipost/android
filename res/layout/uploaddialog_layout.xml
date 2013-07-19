@@ -17,46 +17,46 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/camera_128" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/camera_128"/>
 
         <TextView
-            android:id="@+id/upload_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Kamera"
-            android:textSize="25sp"
-            android:layout_gravity="center" />
+                android:id="@+id/upload_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kamera"
+                android:textSize="25sp"
+                android:layout_gravity="center"/>
     </LinearLayout>
-  
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/folder_128" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/folder_128"/>
 
         <TextView
-            android:id="@+id/upload_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dokument"
-            android:textSize="25sp"
-            android:layout_gravity="center" />
+                android:id="@+id/upload_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dokument"
+                android:textSize="25sp"
+                android:layout_gravity="center"/>
     </LinearLayout>
 
 </LinearLayout>

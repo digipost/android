@@ -14,8 +14,8 @@ public class SettingsActivity extends Activity {
 	public static final String KEY_PREF_GENERAL_SETTINGS = "pref_generalSettings";
 	public static final String KEY_PREF_DEFAULT_SCREEN = "pref_defaultScreen";
 	public static final String KEY_PREF_SCREEN_ROTATION = "pref_screenRotation";
-    public static final String KEY_PREF_CONFIRM_DELETE = "pref_confirmDelete";
-    public static final String KEY_PREF_CONFIRM_MOVE = "pref_confirmMove";
+	public static final String KEY_PREF_CONFIRM_DELETE = "pref_confirmDelete";
+	public static final String KEY_PREF_CONFIRM_MOVE = "pref_confirmMove";
 	public static final String KEY_PREF_DOCUMENTS_SETTINGS = "pref_documentsSettings";
 	public static final String KEY_PREF_SHOW_BANK_ID_DOCUMENTS = "pref_showBankIDDocuments";
 

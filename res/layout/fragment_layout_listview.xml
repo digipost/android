@@ -20,6 +20,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:background="@drawable/content_list_item">
+
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -30,6 +31,7 @@
             android:background="@color/login_background"
             android:gravity="center_horizontal"
             android:textColor="@color/white"/>
+
     <ListView
             android:id="@+id/fragment_content_listview"
             android:layout_width="fill_parent"
@@ -56,6 +58,7 @@
                 android:padding="10dp"
                 android:gravity="center_horizontal"
                 android:textColor="@color/black_subject"/>
+
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
