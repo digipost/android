@@ -251,6 +251,7 @@
                         android:id="@+id/personal_settings_visibleInSearch"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
+                        android:layout_marginRight="5dp"
                         android:text="@string/pref_personal_settings_search_visibility_accepts_title"/>
 
             </LinearLayout>
