@@ -223,6 +223,7 @@ public abstract class ContentFragment extends Fragment {
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
+            taskIsRunning = false;
 			hideProgressDialog();
 			updateAccountMeta();
 		}
@@ -230,7 +231,7 @@ public abstract class ContentFragment extends Fragment {
 		@Override
 		protected void onPostExecute(final String result) {
 			super.onPostExecute(result);
-
+            taskIsRunning = false;
 			if (result != null) {
 				DialogUtitities.showToast(context, result);
 
@@ -299,10 +300,9 @@ public abstract class ContentFragment extends Fragment {
 		@Override
 		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             contentActionMode = actionMode;
-
+            context.setTheme(R.style.Digipost_ActionMode);
 			MenuInflater inflater = actionMode.getMenuInflater();
 			inflater.inflate(R.menu.activity_main_content_context, menu);
-
 			listAdapter.setCheckboxVisible(true);
 
 			return true;
@@ -322,7 +322,7 @@ public abstract class ContentFragment extends Fragment {
 		public void onDestroyActionMode(ActionMode actionMode) {
 			listAdapter.setCheckboxVisible(false);
 			listAdapter.clearChecked();
-
+            context.setTheme(R.style.Digipost);
             contentActionMode = null;
 		}
 	}
