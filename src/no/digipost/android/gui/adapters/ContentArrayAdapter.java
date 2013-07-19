@@ -32,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,7 +77,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View row = inflater.inflate(R.layout.content_list_item, parent, false);
 
@@ -86,7 +87,14 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		this.metaMiddle = (TextView) row.findViewById(R.id.content_meta_middle);
 		this.metaBottom = (ImageView) row.findViewById(R.id.content_meta_bottom);
 
-		CheckBox checkBox = (CheckBox) row.findViewById(R.id.content_checkbox);
+		final CheckBox checkBox = (CheckBox) row.findViewById(R.id.content_checkbox);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                checked[position] = true;
+                checkBox.setChecked(true);
+            }
+        });
 		checkBox.setOnClickListener(onClickListener);
 
 		if (checkboxVisible) {

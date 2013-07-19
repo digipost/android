@@ -92,7 +92,7 @@ public abstract class DocumentFragment extends ContentFragment {
 	private class DocumentListOnItemClickListener implements AdapterView.OnItemClickListener {
 		public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
 			openListItem((Letter) DocumentFragment.super.listAdapter.getItem(position));
-		}
+        }
 	}
 
 	private class AttachmentListOnItemClickListener implements AdapterView.OnItemClickListener {
