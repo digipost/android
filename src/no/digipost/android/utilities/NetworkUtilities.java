@@ -33,7 +33,6 @@ public class NetworkUtilities {
 	public static final int HTTP_STATUS_SUCCESS = 200;
 	public static final int HTTP_STATUS_UNAUTHORIZED = 401;
 	public static final int HTTP_STATUS_BAD_REQUEST = 400;
-	public static final int HTTP_STATUS_INTERNAL_ERROR = 500;
 
 	public static void checkHttpStatusCode(Context context, final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
 			DigipostAuthenticationException {
@@ -70,7 +69,7 @@ public class NetworkUtilities {
 		@Override
 		protected Boolean doInBackground(final Void... params) {
 			try {
-				URL url = new URL("https://www.digipost.no");
+				URL url = new URL("https://www.digipost.no/post/api/session");
 				URLConnection connection = url.openConnection();
 				connection.setConnectTimeout(3000);
 				connection.connect();
