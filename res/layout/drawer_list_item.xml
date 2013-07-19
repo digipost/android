@@ -30,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:textSize="18sp"
                 android:gravity="center_vertical|left"
-                android:drawablePadding="5dp"
+                android:drawablePadding="10dp"
                 android:layout_marginLeft="15dp"
                 android:textColor="@color/white"
                 android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
