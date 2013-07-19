@@ -18,25 +18,26 @@ package no.digipost.android.gui;
 import no.digipost.android.R;
 import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 	private Button loginButton, privacyButton, registrationButton;
 	private CheckBox stayLoggedInCheckBox;
 	private ButtonListener listener;
 	private KeyStore ks;
+    private Context context;
 
 	private final int WEB_LOGIN_REQUEST = 1;
 
@@ -45,6 +46,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		ks = KeyStore.getInstance();
+        context = this;
 		listener = new ButtonListener();
 		loginButton = (Button) findViewById(R.id.login_loginButton);
 		loginButton.setOnClickListener(listener);
@@ -102,9 +104,8 @@ public class LoginActivity extends Activity {
 		if (NetworkUtilities.isOnline()) {
 			Intent i = new Intent(this, WebLoginActivity.class);
 			startActivityForResult(i, WEB_LOGIN_REQUEST);
-
 		} else {
-			showMessage(getString(R.string.error_your_network));
+            DialogUtitities.showToast(context, getString(R.string.error_your_network));
 		}
 
 	}
@@ -113,21 +114,13 @@ public class LoginActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == WEB_LOGIN_REQUEST) {
 			if (resultCode == RESULT_OK) {
-				startBaseActivity();
+                startMainContentActivity();
 			}
 		}
 	}
 
-	private void showMessage(final String message) {
-		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 200);
-		toast.show();
-	}
-
-	private void startBaseActivity() {
+	private void startMainContentActivity() {
 		loginButton.setVisibility(View.INVISIBLE);
-		// Intent i = new Intent(LoginActivity.this,
-		// BaseFragmentActivity.class);
 		Intent i = new Intent(LoginActivity.this, MainContentActivity.class);
 		startActivity(i);
 		finish();

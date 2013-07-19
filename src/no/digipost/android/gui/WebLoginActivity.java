@@ -22,31 +22,38 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.NetworkUtilities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 public class WebLoginActivity extends Activity {
 
 	private WebView webViewOauth;
+	private Context context;
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_web);
+        context = this;
+
+		if (!NetworkUtilities.isOnline()) {
+			DialogUtitities.showToast(context, getString(R.string.error_your_network));
+			finish();
+		}
 
 		getActionBar().setTitle(R.string.login_loginbutton_text);
 		getActionBar().setHomeButtonEnabled(true);
-
 		webViewOauth = (WebView) findViewById(R.id.web_oauth);
 		String url = OAuth2.getAuthorizeURL();
 		webViewOauth.loadUrl(url);
@@ -54,6 +61,7 @@ public class WebLoginActivity extends Activity {
 		settings.setJavaScriptEnabled(true);
 		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
 		webViewOauth.setWebViewClient(new MyWebViewClient());
+
 	}
 
 	@Override
@@ -116,7 +124,7 @@ public class WebLoginActivity extends Activity {
 		@Override
 		protected void onPostExecute(final String result) {
 			if (result != null) {
-				showMessage(result);
+				DialogUtitities.showToast(context, result);
 				setResult(RESULT_CANCELED);
 			} else {
 				setResult(RESULT_OK);
@@ -125,11 +133,5 @@ public class WebLoginActivity extends Activity {
 			finish();
 		}
 
-	}
-
-	private void showMessage(final String message) {
-		Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 200);
-		toast.show();
 	}
 }
