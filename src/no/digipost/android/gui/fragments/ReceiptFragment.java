@@ -163,7 +163,8 @@ public class ReceiptFragment extends ContentFragment {
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-			ReceiptFragment.super.hideProgressDialog();
+            ReceiptFragment.super.taskIsRunning = false;
+            ReceiptFragment.super.hideProgressDialog();
 
 			if (result != null) {
 				DocumentContentStore.setContent(receipt);
@@ -182,6 +183,7 @@ public class ReceiptFragment extends ContentFragment {
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
+            ReceiptFragment.super.taskIsRunning = false;
 			ReceiptFragment.super.hideProgressDialog();
 		}
 	}
