@@ -7,6 +7,8 @@ import no.digipost.android.model.Account;
 import no.digipost.android.model.Address;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Settings;
+import no.digipost.android.utilities.ApplicationUtilities;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -28,6 +30,7 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_settings);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle(getString(R.string.pref_screen_personal_settings_title));

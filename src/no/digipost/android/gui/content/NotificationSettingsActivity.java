@@ -6,6 +6,8 @@ import no.digipost.android.R;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Settings;
 import no.digipost.android.model.ValidationRules;
+import no.digipost.android.utilities.ApplicationUtilities;
+
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -26,6 +28,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notification_settings);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle(getString(R.string.pref_screen_notification_settings_title));
