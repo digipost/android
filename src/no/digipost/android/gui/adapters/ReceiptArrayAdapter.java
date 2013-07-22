@@ -28,8 +28,8 @@ import android.widget.Filter;
 
 public class ReceiptArrayAdapter extends ContentArrayAdapter<Receipt> {
 
-	public ReceiptArrayAdapter(final Context context, final int resource, final View.OnClickListener onClickListener) {
-		super(context, resource, new ArrayList<Receipt>(), onClickListener);
+	public ReceiptArrayAdapter(final Context context, final int resource) {
+		super(context, resource, new ArrayList<Receipt>());
 	}
 
 	@Override

@@ -103,8 +103,9 @@ abstract class TextSelector {
 
 public abstract class PageView extends ViewGroup {
 	private static final int HIGHLIGHT_COLOR = 0x802572AC;
-	private static final int LINK_COLOR = 0x80AC7225;
-	private static final int BACKGROUND_COLOR = 0xFFFFFFFF;
+	//private static final int LINK_COLOR = 0x80AC7225;
+    private static final int LINK_COLOR = 0x80AC7225;
+    private static final int BACKGROUND_COLOR = 0xFFFFFFFF;
 	private static final int PROGRESS_DIALOG_DELAY = 200;
 	private static final float LINE_THICKNESS = 0.07f;
 	private static final float STRIKE_HEIGHT = 0.375f;
@@ -317,10 +318,12 @@ public abstract class PageView extends ViewGroup {
 					}
 
 					if (!mIsBlank && mLinks != null && mHighlightLinks) {
+						/* deaktivert bakgrunnsfarge på lenker
 						paint.setColor(LINK_COLOR);
 						for (LinkInfo link : mLinks)
 							canvas.drawRect(link.rect.left * scale, link.rect.top * scale, link.rect.right * scale, link.rect.bottom
 									* scale, paint);
+					    */
 					}
 
 					if (mSelectBox != null && mText != null) {

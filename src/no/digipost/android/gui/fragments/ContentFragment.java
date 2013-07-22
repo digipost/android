@@ -99,6 +99,7 @@ public abstract class ContentFragment extends Fragment {
 		});
 
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setFastScrollEnabled(true);
 
 		return view;
 	}
@@ -295,7 +296,9 @@ public abstract class ContentFragment extends Fragment {
 		public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean state) {
 			listAdapter.setChecked(position);
 			actionMode.setTitle(Integer.toString(listAdapter.getCheckedCount()));
-		}
+            listAdapter.notifyDataSetChanged();
+        }
+
 
 		@Override
 		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
@@ -324,15 +327,6 @@ public abstract class ContentFragment extends Fragment {
 			listAdapter.clearChecked();
             context.setTheme(R.style.Digipost);
             contentActionMode = null;
-		}
-	}
-
-	protected class CheckBoxOnClickListener implements View.OnClickListener {
-
-		@Override
-		public void onClick(View view) {
-			int position = listView.getPositionForView(view);
-			listView.setItemChecked(position, !listAdapter.getChecked(position));
 		}
 	}
 }

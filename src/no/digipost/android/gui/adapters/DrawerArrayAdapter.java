@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.ImageView;
 
 public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	protected Context context;

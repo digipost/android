@@ -59,7 +59,7 @@ public abstract class DocumentFragment extends ContentFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-		super.listAdapter = new LetterArrayAdapter(getActivity(), R.layout.content_list_item, new CheckBoxOnClickListener());
+		super.listAdapter = new LetterArrayAdapter(getActivity(), R.layout.content_list_item);
 		super.listView.setAdapter(listAdapter);
 		super.listView.setOnItemClickListener(new DocumentListOnItemClickListener());
 
