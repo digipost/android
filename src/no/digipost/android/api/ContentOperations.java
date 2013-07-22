@@ -44,6 +44,10 @@ public class ContentOperations {
 		return account;
 	}
 
+    public static void setAccountToNull(){
+        account = null;
+    }
+
 	public static Account getAccountUpdated(Context context) throws DigipostClientException, DigipostAuthenticationException,
 			DigipostApiException {
 		return ApiAccess.getAccount(context);

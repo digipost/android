@@ -16,7 +16,9 @@
 
 package no.digipost.android.utilities;
 
+import no.digipost.android.api.ContentOperations;
 import no.digipost.android.authentication.KeyStore;
+import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import android.content.Context;
@@ -71,6 +73,8 @@ public class SharedPreferencesUtilities {
 	}
 
 	public static void deleteRefreshtoken(Context context) {
+        Secret.ACCESS_TOKEN = null;
+        ContentOperations.setAccountToNull();
 		Editor edit = getSharedPreferences(context).edit();
 		edit.remove(ApiConstants.REFRESH_TOKEN);
 		edit.commit();
