@@ -66,6 +66,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	private ListView drawerList;
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerArrayAdapter drawerArrayAdapter;
+    private SearchView searchView;
 
 	private boolean refreshing;
 
@@ -106,9 +107,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_main_content_actionbar, menu);
 
-		SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-
+		searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 		setupSearchView(searchView);
+
 		getActionBar().setTitle(ApplicationConstants.titles[getCurrentFragment().getContent()]);
 
 		return super.onCreateOptionsMenu(menu);
@@ -142,8 +143,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 		MenuItem uploadButton = menu.findItem(R.id.menu_upload);
 		uploadButton.setVisible(!drawerOpen);
-		searchButton.setVisible(!drawerOpen);
 		refreshButton.setVisible(!drawerOpen);
+        searchButton.setVisible(!drawerOpen);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -360,7 +361,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			onStartRefreshContent();
 		}
 
 		@Override
@@ -395,8 +395,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 					logOut();
 				}
 			}
-
-            onEndRefreshContent();
 		}
 	}
 }
