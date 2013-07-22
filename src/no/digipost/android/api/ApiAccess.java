@@ -25,6 +25,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -44,6 +46,7 @@ import no.digipost.android.api.exception.DigipostInvalidTokenException;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
@@ -242,11 +245,10 @@ public class ApiAccess {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(uri);
                 httpPost.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
-
                 FileBody filebody = new FileBody(file, ApiConstants.CONTENT_OCTET_STREAM);
 
-                MultipartEntity multipartEntity = new MultipartEntity();
-                multipartEntity.addPart("subject", new StringBody(FilenameUtils.removeExtension(file.getName())));
+                MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,null, Charset.forName(ApplicationConstants.ENCODING));
+                multipartEntity.addPart("subject", new StringBody(FilenameUtils.removeExtension(file.getName()),ApplicationConstants.MIME,Charset.forName(ApplicationConstants.ENCODING)));
                 multipartEntity.addPart("file", filebody);
                 multipartEntity.addPart("token", new StringBody(Secret.ACCESS_TOKEN));
                 httpPost.setEntity(multipartEntity);

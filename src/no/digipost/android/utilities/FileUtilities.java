@@ -53,9 +53,6 @@ public class FileUtilities {
 		File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 		File file = new File(path.getAbsolutePath(), fileName + "." + fileType);
 
-		System.out.println(file.getName());
-		System.out.println(file.getAbsolutePath());
-
 		return writeData(file, data);
 	}
 
