@@ -15,6 +15,9 @@ public class Address {
     @JsonProperty("house-number")
     private String houseNumber;
 
+    @JsonProperty("house-letter")
+    private String houseLetter;
+
     @JsonProperty("additional-addressline")
     private String additionalAddressline;
 
@@ -31,6 +34,10 @@ public class Address {
 
     public String getHouseNumber() {
         return houseNumber;
+    }
+
+    public String getHouseLetter() {
+        return houseLetter;
     }
 
     public String getAdditionalAddressline() {

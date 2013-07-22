@@ -144,9 +144,9 @@
     <string name="pref_notification_settings_letters_important_title">SMS om ekstra viktige brev</string>
     <string name="pref_notification_settings_letters_important_subtitle">Tillat avsendere å sende meg en SMS-melding om viktige brev.</string>
     <string name="pref_notification_settings_contact_info_title">Kontaktinformasjon</string>
-    <string name="pref_notification_settings_contact_info_phone_title">Mobilnummer</string>
+    <string name="pref_notification_settings_contact_info_phone_title">Ditt mobilnummer</string>
     <string name="pref_notification_settings_contact_info_phone_hint">Mobilnummer</string>
-    <string name="pref_notification_settings_contact_info_email_title">E-postadresser</string>
+    <string name="pref_notification_settings_contact_info_email_title">Dine e-postadresser</string>
     <string name="pref_notification_settings_contact_info_email_hint">E-postadresse</string>
     <string name="pref_notification_settings_button">Lagre varslingsinnstillinger</string>
     <string name="pref_personal_settings_info_title">Personlig informasjon</string>

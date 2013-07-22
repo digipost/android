@@ -83,7 +83,10 @@ public abstract class DocumentFragment extends ContentFragment {
 				} else if (action.equals(ApiConstants.DELETE)) {
 					deleteDocument(DocumentContentStore.documentParent);
 				}
-			}
+
+                Letter letter = DocumentContentStore.documentParent;
+                letter.setRead(Boolean.toString(true));
+            }
 		}
 
 		DocumentContentStore.clearContent();
@@ -192,14 +195,6 @@ public abstract class DocumentFragment extends ContentFragment {
 		} else if (fileType.equals(ApiConstants.FILETYPE_HTML)) {
 			intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
 		} else {
-			for (String imageFiletype : ApiConstants.FILETYPES_IMAGE) {
-				if (fileType.equals(imageFiletype)) {
-					// ToDo ImageAvtivity
-				}
-			}
-		}
-
-		if (intent == null) {
 			intent = new Intent(getActivity(), UnsupportedDocumentFormatActivity.class);
 		}
 
