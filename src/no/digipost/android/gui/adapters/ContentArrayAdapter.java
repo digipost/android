@@ -86,6 +86,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 
 		CheckBox checkBox = (CheckBox) row.findViewById(R.id.content_checkbox);
         checkBox.setFocusable(false);
+        checkBox.setClickable(false);
         if (checkboxVisible) {
 			if (checked[position]) {
 				checkBox.setChecked(true);
