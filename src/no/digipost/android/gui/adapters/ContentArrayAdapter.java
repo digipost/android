@@ -46,7 +46,6 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 
 	protected boolean[] checked;
 	protected boolean checkboxVisible;
-	private View.OnClickListener onClickListener;
 
 	protected TextView title;
 	protected TextView subTitle;
@@ -60,8 +59,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 	protected String subTitleFilterText;
 	protected String metaTopFilterText;
 
-	public ContentArrayAdapter(final Context context, final int resource, final ArrayList<T> objects,
-			final View.OnClickListener onClickListener) {
+	public ContentArrayAdapter(final Context context, final int resource, final ArrayList<T> objects) {
 		super(context, resource, objects);
 
 		this.context = context;
@@ -69,7 +67,6 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		this.objects = this.filtered;
 
 		this.checked = new boolean[this.filtered.size()];
-		this.onClickListener = onClickListener;
 
 		this.titleFilterText = null;
 		this.subTitleFilterText = null;
@@ -88,9 +85,8 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		this.metaBottom = (ImageView) row.findViewById(R.id.content_meta_bottom);
 
 		CheckBox checkBox = (CheckBox) row.findViewById(R.id.content_checkbox);
-		checkBox.setOnClickListener(onClickListener);
-
-		if (checkboxVisible) {
+        checkBox.setFocusable(false);
+        if (checkboxVisible) {
 			if (checked[position]) {
 				checkBox.setChecked(true);
 			}
@@ -194,10 +190,6 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 
 	public void setChecked(int position) {
 		checked[position] = !checked[position];
-	}
-
-	public boolean getChecked(int position) {
-		return checked[position];
 	}
 
 	public int getCheckedCount() {
