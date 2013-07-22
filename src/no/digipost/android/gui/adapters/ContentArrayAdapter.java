@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import no.digipost.android.R;
+import no.digipost.android.model.Letter;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -112,6 +114,11 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		initializeChecked();
 		notifyDataSetChanged();
 	}
+
+    public void replaceAtPosition(T object, int position) {
+        filtered.set(position, object);
+        notifyDataSetChanged();
+    }
 
 	@Override
 	public void add(final T object) {

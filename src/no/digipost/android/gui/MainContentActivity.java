@@ -101,14 +101,14 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
 	}
 
-	@Override
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_main_content_actionbar, menu);
 
-		SearchView menuSearch = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+		SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
-		setupSearchView(menuSearch);
+		setupSearchView(searchView);
 		getActionBar().setTitle(ApplicationConstants.titles[getCurrentFragment().getContent()]);
 
 		return super.onCreateOptionsMenu(menu);
@@ -395,6 +395,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 					logOut();
 				}
 			}
+
+            onEndRefreshContent();
 		}
 	}
 }

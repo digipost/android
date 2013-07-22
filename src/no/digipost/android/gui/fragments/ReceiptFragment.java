@@ -176,8 +176,6 @@ public class ReceiptFragment extends ContentFragment {
 
 				DialogUtitities.showToast(ReceiptFragment.this.getActivity(), errorMessage);
 			}
-
-			updateAccountMeta();
 		}
 
 		@Override
@@ -235,7 +233,6 @@ public class ReceiptFragment extends ContentFragment {
 				}
 			}
 
-			activityCommunicator.onUpdateAccountMeta();
 			activityCommunicator.onEndRefreshContent();
 		}
 

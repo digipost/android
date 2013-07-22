@@ -194,7 +194,6 @@ public abstract class ContentFragment extends Fragment {
 		protected String doInBackground(final Void... params) {
 			try {
 				int progress = 0;
-                System.out.println("SelectedCount: " + content.size());
 
 				for (Object object : content) {
 					publishProgress(++progress);
