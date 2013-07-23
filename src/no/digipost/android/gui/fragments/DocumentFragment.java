@@ -27,7 +27,6 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
-import no.digipost.android.gui.adapters.ContentArrayAdapter;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
@@ -51,13 +50,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public abstract class DocumentFragment extends ContentFragment {
 
-    protected ListView attachmentListView;
     protected AttachmentArrayAdapter attachmentAdapter;
-    private boolean openingAttachmentFromAttachmentListView = false;
 
 	public DocumentFragment() {
 	}
@@ -116,27 +112,32 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-            openingAttachmentFromAttachmentListView = true;
-			executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position), parentLetter, parentListPosition);
+            executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position), parentLetter, parentListPosition);
 		}
 	}
 
 	private void showAttachmentDialog(final Letter letter, int listPosition) {
-		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.abort) ,new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
 		builder.setView(view);
 
-		attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
-		attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachentdialog_list_item,
+		ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+		attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item,
 				letter.getAttachment());
 
 		attachmentListView.setAdapter(attachmentAdapter);
-		attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(attachmentAdapter, letter, listPosition));
-		attachmentAdapter.placeMainOnTop();
+        attachmentAdapter.placeMainOnTop();
+        attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(attachmentAdapter, letter, listPosition));
 
 		Dialog attachmentDialog = builder.create();
-		attachmentDialog.show();
+        attachmentDialog.show();
+
 	}
 
 	private void openListItem(final Letter letter, int listPosition) {
@@ -148,16 +149,6 @@ public abstract class DocumentFragment extends ContentFragment {
 			findDocumentAttachments(letter, listPosition);
 		}
 	}
-
-    private void setLetterAndAttachmentUnread(Letter letter, Attachment attachment) {
-        letter.setRead(Boolean.toString(true));
-        attachment.setRead(Boolean.toString(true));
-        listAdapter.notifyDataSetChanged();
-        if(openingAttachmentFromAttachmentListView){
-            attachmentAdapter.notifyDataSetChanged();
-            openingAttachmentFromAttachmentListView = false;
-        }
-    }
 
 	private void findDocumentAttachments(final Letter letter, int listPosition) {
 		ArrayList<Attachment> attachments = letter.getAttachment();
@@ -279,6 +270,13 @@ public abstract class DocumentFragment extends ContentFragment {
                 DocumentContentStore.setContent(result, attachment, parentLetter);
 				openAttachmentContent(attachment);
                 updateAdapterLetter(parentLetter, listPosition);
+                ArrayList<Attachment> attachments = parentLetter.getAttachment();
+
+                System.out.println("attachments"+ attachments.size());
+
+                if(attachments.size() > 1)
+                    attachmentAdapter.setAttachments(attachments);
+
                 activityCommunicator.onUpdateAccountMeta();
 			} else {
 				if (invalidToken) {

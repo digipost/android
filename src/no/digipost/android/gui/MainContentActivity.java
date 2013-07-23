@@ -102,7 +102,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
 
 	    if(SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN){
-            //drawerLayout.openDrawer(GravityCompat.START);
+            drawerLayout.openDrawer(GravityCompat.START);
         }
     }
 
