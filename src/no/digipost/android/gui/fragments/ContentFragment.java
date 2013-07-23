@@ -25,6 +25,9 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.gui.adapters.ContentArrayAdapter;
 import no.digipost.android.gui.content.SettingsActivity;
+import no.digipost.android.model.Letter;
+import no.digipost.android.model.Receipt;
+import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
@@ -175,12 +178,14 @@ public abstract class ContentFragment extends Fragment {
         alertDialog.show();
     }
 
-	protected class ContentDeleteTask extends AsyncTask<Void, Integer, String> {
+	protected class ContentDeleteTask extends AsyncTask<Void, Object, String> {
 		private ArrayList<Object> content;
 		private boolean invalidToken;
+        private int progress;
 
 		public ContentDeleteTask(ArrayList<Object> content) {
 			this.content = content;
+            this.progress = 0;
 		}
 
 		@Override
@@ -192,11 +197,12 @@ public abstract class ContentFragment extends Fragment {
 		@Override
 		protected String doInBackground(final Void... params) {
 			try {
-				int progress = 0;
-
 				for (Object object : content) {
-					publishProgress(++progress);
-					ContentOperations.deleteContent(context, object);
+                    if (!isCancelled()) {
+                        publishProgress(object);
+                        progress++;
+                        ContentOperations.deleteContent(context, object);
+                    }
 				}
 
 				return null;
@@ -214,15 +220,23 @@ public abstract class ContentFragment extends Fragment {
 		}
 
 		@Override
-		protected void onProgressUpdate(Integer... values) {
+		protected void onProgressUpdate(Object... values) {
 			super.onProgressUpdate(values);
-			progressDialog.setMessage(values[0] + " av " + content.size() + " slettet");
+
+            if (values[0] instanceof Letter) {
+                Letter letter = (Letter) values[0];
+                progressDialog.setMessage("Sletter " + letter.getSubject());
+            } else if (values[0] instanceof Receipt) {
+                Receipt receipt = (Receipt) values[0];
+                progressDialog.setMessage("Sletter " + receipt.getStoreName() + " " + DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()));
+            }
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
             taskIsRunning = false;
+            DialogUtitities.showToast(context, progress + " av " + content.size() + " slettet.");
 			hideProgressDialog();
 			updateAccountMeta();
 		}

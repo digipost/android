@@ -416,14 +416,16 @@ public abstract class DocumentFragment extends ContentFragment {
 		alertDialog.show();
 	}
 
-	private class DocumentMoveTask extends AsyncTask<Void, Integer, String> {
+	private class DocumentMoveTask extends AsyncTask<Void, Letter, String> {
 		private ArrayList<Letter> letters;
 		private String toLocation;
 		private boolean invalidToken;
+        private int progress;
 
 		public DocumentMoveTask(ArrayList<Letter> letters, String toLocation) {
 			this.letters = letters;
 			this.toLocation = toLocation;
+            this.progress = 0;
 		}
 
 		@Override
@@ -435,12 +437,13 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected String doInBackground(Void... voids) {
 			try {
-				Integer progress = 0;
-
 				for (Letter letter : letters) {
-					publishProgress(++progress);
-					letter.setLocation(toLocation);
-					ContentOperations.moveDocument(context, letter);
+                    if (!isCancelled()) {
+                        publishProgress(letter);
+                        progress++;
+                        letter.setLocation(toLocation);
+                        ContentOperations.moveDocument(context, letter);
+                    }
 				}
 
 				return null;
@@ -458,15 +461,16 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		@Override
-		protected void onProgressUpdate(Integer... values) {
+		protected void onProgressUpdate(Letter... values) {
 			super.onProgressUpdate(values);
-			DocumentFragment.super.progressDialog.setMessage(values[0] + " av " + letters.size() + " flyttet");
+			DocumentFragment.super.progressDialog.setMessage("Flytter " + values[0].getSubject());
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
 			DocumentFragment.super.hideProgressDialog();
+            DialogUtitities.showToast(context, progress + " av " + letters.size() + " ble flyttet.");
 			updateAccountMeta();
 		}
 
