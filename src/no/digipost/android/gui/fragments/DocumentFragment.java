@@ -26,6 +26,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
@@ -73,7 +74,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == getActivity().RESULT_OK) {
-			if (requestCode == INTENT_REQUESTCODE) {
+			if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
 				String action = data.getStringExtra(ApiConstants.ACTION);
 
 				if (action.equals(ApiConstants.LOCATION_WORKAREA)) {
@@ -83,9 +84,6 @@ public abstract class DocumentFragment extends ContentFragment {
 				} else if (action.equals(ApiConstants.DELETE)) {
 					deleteDocument(DocumentContentStore.documentParent);
 				}
-
-                Letter letter = DocumentContentStore.documentParent;
-                letter.setRead(Boolean.toString(true));
             }
 		}
 
@@ -207,7 +205,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		intent.putExtra(super.INTENT_CONTENT, getContent());
-		startActivityForResult(intent, super.INTENT_REQUESTCODE);
+		startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
 	}
 
 	private void executeGetAttachmentContentTask(Attachment attachment, Letter parentLetter, int listPosition) {

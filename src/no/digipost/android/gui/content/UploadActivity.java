@@ -25,6 +25,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -348,14 +349,21 @@ public class UploadActivity extends Activity {
 
 			if (result != null) {
 				if (invalidToken) {
-					// ToDo logge ut
+					finishActivityWithAction(ApiConstants.LOGOUT);
 				}
 
 				DialogUtitities.showToast(UploadActivity.this, result);
 			} else {
 				DialogUtitities.showToast(UploadActivity.this, file.getName() + " ble lastet opp til arkivet.");
-				executeSetAccountInfoTask();
+				finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
 			}
 		}
 	}
+
+    private void finishActivityWithAction(String action) {
+        Intent intent = new Intent();
+        intent.putExtra(ApiConstants.ACTION, action);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 }

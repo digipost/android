@@ -26,6 +26,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
 import no.digipost.android.model.Receipt;
@@ -120,7 +121,7 @@ public class ReceiptFragment extends ContentFragment {
 		Intent intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
 		intent.putExtra(super.INTENT_CONTENT, getContent());
 		intent.putExtra(ApiConstants.GET_RECEIPT, receiptContent);
-		startActivityForResult(intent, super.INTENT_REQUESTCODE);
+		startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
 	}
 
 	private class GetReceiptContentTask extends AsyncTask<Void, Void, String> {
@@ -262,7 +263,7 @@ public class ReceiptFragment extends ContentFragment {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == getActivity().RESULT_OK) {
-			if (requestCode == INTENT_REQUESTCODE) {
+			if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
 
 				String action = data.getStringExtra(ApiConstants.ACTION);
 

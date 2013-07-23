@@ -51,7 +51,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public abstract class ContentFragment extends Fragment {
-	public static final int INTENT_REQUESTCODE = 0;
 	public static final String INTENT_CONTENT = "content";
 
 	ActivityCommunicator activityCommunicator;
