@@ -27,6 +27,7 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
+import no.digipost.android.gui.adapters.ContentArrayAdapter;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
@@ -50,8 +51,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public abstract class DocumentFragment extends ContentFragment {
+
+    protected ListView attachmentListView;
+    protected AttachmentArrayAdapter attachmentAdapter;
+    private boolean openingAttachmentFromAttachmentListView = false;
 
 	public DocumentFragment() {
 	}
@@ -110,6 +116,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+            openingAttachmentFromAttachmentListView = true;
 			executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position), parentLetter, parentListPosition);
 		}
 	}
@@ -120,8 +127,8 @@ public abstract class DocumentFragment extends ContentFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setView(view);
 
-		ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
-		AttachmentArrayAdapter attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachentdialog_list_item,
+		attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+		attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachentdialog_list_item,
 				letter.getAttachment());
 
 		attachmentListView.setAdapter(attachmentAdapter);
@@ -146,6 +153,10 @@ public abstract class DocumentFragment extends ContentFragment {
         letter.setRead(Boolean.toString(true));
         attachment.setRead(Boolean.toString(true));
         listAdapter.notifyDataSetChanged();
+        if(openingAttachmentFromAttachmentListView){
+            attachmentAdapter.notifyDataSetChanged();
+            openingAttachmentFromAttachmentListView = false;
+        }
     }
 
 	private void findDocumentAttachments(final Letter letter, int listPosition) {
