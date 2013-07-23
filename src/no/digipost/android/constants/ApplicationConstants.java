@@ -26,6 +26,8 @@ public class ApplicationConstants {
 
 	public static final String ENCODING = "UTF-8";
 	public static final String MIME = "text/html";
+    public static final String NUMBER_OF_TIMES_APP_HAS_RUN = "numberOfTimesAppHasRun";
+    public static final int NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN = 1;
 
 	public static final int MAILBOX = 1;
 	public static final int RECEIPTS = 2;
