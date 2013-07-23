@@ -42,19 +42,19 @@
             android:title="@string/pref_screen_digipost_account_settings">
 
         <Preference
+                android:key="pref_personalSettings"
                 android:title="@string/pref_screen_personal_settings_title"
                 android:summary="@string/pref_screen_personal_settings_summary">
             <intent
-                    android:action="android.intent.action.VIEW"
                     android:targetClass="no.digipost.android.gui.content.PersonalSettingsActivity"
                     android:targetPackage="no.digipost.android"/>
         </Preference>
 
         <Preference
+                android:key="pref_notificationSettings"
                 android:title="@string/pref_screen_notification_settings_title"
                 android:summary="@string/pref_screen_notification_settings_summary">
             <intent
-                    android:action="android.intent.action.VIEW"
                     android:targetClass="no.digipost.android.gui.content.NotificationSettingsActivity"
                     android:targetPackage="no.digipost.android"/>
         </Preference>

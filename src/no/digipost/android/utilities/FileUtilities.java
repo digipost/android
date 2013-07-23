@@ -31,15 +31,18 @@ public class FileUtilities {
 	public static final String TEMP_FILE_NAME = "temp";
 	public static final String TEMP_FILE_DIRECTORY = Environment.getExternalStorageDirectory() + "/digipost/";
 
+    public static void openFileWithIntent(Context context, File file) {
+        Intent intent = new Intent();
+        intent.setAction(android.content.Intent.ACTION_VIEW);
+
+        intent.setDataAndType(Uri.fromFile(file), getMimeType(file));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+    }
+
 	public static void openFileWithIntent(final Context context, final String fileType, final byte[] data) throws Exception {
 		File file = writeTempFile(fileType, data);
-
-		Intent intent = new Intent();
-		intent.setAction(android.content.Intent.ACTION_VIEW);
-
-		intent.setDataAndType(Uri.fromFile(file), getMimeType(file));
-		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		context.startActivity(intent);
+        openFileWithIntent(context, file);
 	}
 
 	public static String getMimeType(File file) {

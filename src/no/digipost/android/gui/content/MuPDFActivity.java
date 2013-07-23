@@ -61,6 +61,8 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import org.apache.commons.io.FilenameUtils;
+
 class ThreadPerTaskExecutor implements Executor {
 	public void execute(Runnable r) {
 		new Thread(r).start();
@@ -68,6 +70,8 @@ class ThreadPerTaskExecutor implements Executor {
 }
 
 public class MuPDFActivity extends Activity {
+    public static final String ACTION_OPEN_FILEPATH = "openFilepath";
+
 	private final String CURRENT_WINDOW = "currentWindow";
 	private int currentVindow;
 
@@ -258,26 +262,31 @@ public class MuPDFActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-		documentMeta = DocumentContentStore.documentMeta;
-
-		getActionBar().setTitle(documentMeta.getSubject());
-		getActionBar().setSubtitle(DocumentContentStore.documentParent.getCreatorName());
-		getActionBar().setHomeButtonEnabled(true);
-
 		selectActionModeCallback = new SelectActionModeCallback();
 
 		mAlertBuilder = new AlertDialog.Builder(this);
 
-		if (core == null) {
-			intent = getIntent();
-			byte buffer[] = DocumentContentStore.documentContent;
+        if (core == null) {
+            intent = getIntent();
+            String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
 
-			if (buffer != null) {
-				core = openBuffer(buffer);
-			}
+            if (openFilepath != null) {
+                setActionBar(FilenameUtils.getName(openFilepath), null);
+                core = openFile(openFilepath);
+                SearchTaskResult.set(null);
+            } else {
+                documentMeta = DocumentContentStore.documentMeta;
+                setActionBar(documentMeta.getSubject(), DocumentContentStore.documentParent.getCreatorName());
 
-			SearchTaskResult.set(null);
-		}
+                byte buffer[] = DocumentContentStore.documentContent;
+
+                if (buffer != null) {
+                    core = openBuffer(buffer);
+                }
+
+                SearchTaskResult.set(null);
+            }
+        }
 
 		if (core == null) {
 			AlertDialog alert = mAlertBuilder.create();
@@ -293,6 +302,12 @@ public class MuPDFActivity extends Activity {
 
 		createUI(savedInstanceState);
 	}
+
+    private void setActionBar(String title, String subTitle) {
+        getActionBar().setTitle(title);
+        getActionBar().setSubtitle(subTitle);
+        getActionBar().setHomeButtonEnabled(true);
+    }
 
 	public void createUI(Bundle savedInstanceState) {
 		if (core == null)
@@ -637,11 +652,15 @@ public class MuPDFActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
+        String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
 
-		MenuItem menuSearch = menu.findItem(R.id.pdfmenu_search);
-		setupSearchView(menuSearch);
+        if (openFilepath == null) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
+
+            MenuItem menuSearch = menu.findItem(R.id.pdfmenu_search);
+            setupSearchView(menuSearch);
+        }
 
 		return super.onCreateOptionsMenu(menu);
 	}

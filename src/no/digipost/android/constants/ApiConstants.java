@@ -57,6 +57,8 @@ public class ApiConstants {
 	public static final String GET_RECEIPT = "receipt";
 
 	public static final String DELETE = "delete";
+    public static final String REFRESH_ARCHIVE = "refreshArchive";
+    public static final String LOGOUT = "logout";
 	public static final String LETTER = "letter";
 	public static final String RECEIPT = "receipt";
 	public static final String ACTION = "action";

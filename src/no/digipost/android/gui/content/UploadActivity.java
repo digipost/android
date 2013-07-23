@@ -25,15 +25,22 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,11 +51,13 @@ public class UploadActivity extends Activity {
 	private File mDirectory;
 	private ArrayList<File> mFiles;
 	private boolean mShowHiddenFiles = false;
-	private UploadListAdapter mAdapter;
+	private UploadListAdapter listAdapter;
 
 	private TextView absolutePath;
 	private TextProgressBar availableSpace;
 	private TextView listEmpty;
+
+	private ActionMode uploadActionMode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +78,11 @@ public class UploadActivity extends Activity {
 		ListView listView = (ListView) findViewById(R.id.upload_file_list);
 		listView.setEmptyView(listEmpty);
 		listView.setOnItemClickListener(new ListOnItemClickListener());
-		mAdapter = new UploadListAdapter(this, mFiles);
-		listView.setAdapter(mAdapter);
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		listView.setFastScrollEnabled(true);
+		listView.setMultiChoiceModeListener(new UploadMultiChoiceModeListener());
+		listAdapter = new UploadListAdapter(this, mFiles);
+		listView.setAdapter(listAdapter);
 
 		executeSetAccountInfoTask();
 	}
@@ -109,7 +121,7 @@ public class UploadActivity extends Activity {
 
 			Collections.sort(mFiles, new FileComparator());
 		}
-		mAdapter.notifyDataSetChanged();
+		listAdapter.notifyDataSetChanged();
 	}
 
 	private void setAvailableSpace(PrimaryAccount primaryAccount) {
@@ -141,12 +153,53 @@ public class UploadActivity extends Activity {
 	}
 
 	private void promtUpload(final File file) {
+		final AlertDialog dialog = DialogUtitities.getAlertDialogBuilderWithMessage(this,
+                "Er du sikker på at du vil laste opp " + file.getName() + "?")
+		.setPositiveButton("Last opp", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                executeUploadTask(file);
+                dialogInterface.dismiss();
+            }
+        })
+        .setNeutralButton("Forhåndsvis", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // ignore
+            }
+        })
+		.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        })
+        .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+
+                Button b = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        previewFile(file);
+                    }
+                });
+            }
+        });
+
+        dialog.show();
+	}
+
+	private void promtUpload(final ArrayList<File> files) {
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this,
-				"Er du sikker på at du vil laste opp " + file.getName() + "?");
-		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				"Er du sikker på at du vil laste opp valgte filer?");
+		builder.setPositiveButton("Last opp", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
-				executeUploadTask(file);
+				executeUploadTask(files);
 				dialogInterface.dismiss();
 			}
 		});
@@ -171,8 +224,25 @@ public class UploadActivity extends Activity {
 		builder.create().show();
 	}
 
+    private void previewFile(File file) {
+        if (FilenameUtils.getExtension(file.getName()).equals(ApiConstants.FILETYPE_PDF)) {
+            Intent intent = new Intent(UploadActivity.this, MuPDFActivity.class);
+            intent.putExtra(MuPDFActivity.ACTION_OPEN_FILEPATH, file.getAbsolutePath());
+            startActivity(intent);
+        } else {
+            FileUtilities.openFileWithIntent(this, file);
+        }
+    }
+
 	private void executeUploadTask(File file) {
-		UploadTask uploadTask = new UploadTask(file);
+		ArrayList<File> files = new ArrayList<File>();
+		files.add(file);
+		UploadTask uploadTask = new UploadTask(files);
+		uploadTask.execute();
+	}
+
+	private void executeUploadTask(ArrayList<File> files) {
+		UploadTask uploadTask = new UploadTask(files);
 		uploadTask.execute();
 	}
 
@@ -226,7 +296,7 @@ public class UploadActivity extends Activity {
 
 		@Override
 		public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-			File newFile = mAdapter.getItem(position);
+			File newFile = listAdapter.getItem(position);
 
 			if (newFile.isFile()) {
 				if (isAcceptedFileExtension(newFile)) {
@@ -243,11 +313,15 @@ public class UploadActivity extends Activity {
 
 	private class UploadListAdapter extends ArrayAdapter<File> {
 
-		private ArrayList<File> mObjects;
+		private ArrayList<File> objects;
+		private boolean[] checked;
+		private boolean checkboxVisible;
 
 		public UploadListAdapter(Context context, ArrayList<File> objects) {
 			super(context, R.layout.upload_list_item, android.R.id.text1, objects);
-			mObjects = objects;
+			this.objects = objects;
+			this.checked = new boolean[objects.size()];
+			this.checkboxVisible = false;
 		}
 
 		@Override
@@ -255,7 +329,7 @@ public class UploadActivity extends Activity {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View row = inflater.inflate(R.layout.upload_list_item, parent, false);
 
-			File object = mObjects.get(position);
+			File object = objects.get(position);
 
 			TextView name = (TextView) row.findViewById(R.id.upload_file_name);
 			TextView size = (TextView) row.findViewById(R.id.upload_file_size);
@@ -269,9 +343,70 @@ public class UploadActivity extends Activity {
 				name.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_grey_folder, 0, 0, 0);
 			}
 
+			CheckBox checkBox = (CheckBox) row.findViewById(R.id.upload_checkbox);
+			checkBox.setFocusable(false);
+			checkBox.setClickable(false);
+			if (checkboxVisible) {
+				if (checked[position]) {
+					checkBox.setChecked(true);
+				}
+
+				if (object.isFile()) {
+					checkBox.setVisibility(View.VISIBLE);
+				}
+			} else {
+				checkBox.setVisibility(View.GONE);
+			}
+
 			return row;
 		}
 
+		private void initializeChecked() {
+			checked = new boolean[objects.size()];
+		}
+
+		public void setCheckboxVisible(boolean state) {
+			checkboxVisible = state;
+			initializeChecked();
+			notifyDataSetChanged();
+		}
+
+		public void clearChecked() {
+			initializeChecked();
+			notifyDataSetChanged();
+		}
+
+		public void setChecked(int position) throws UnsupportedOperationException {
+			if (objects.get(position).isFile()) {
+				checked[position] = !checked[position];
+			} else {
+				throw new UnsupportedOperationException("Mapper kan ikke lastes opp");
+			}
+		}
+
+		public int getCheckedCount() {
+			int count = 0;
+
+			for (boolean state : checked) {
+				if (state) {
+					count++;
+				}
+			}
+
+			return count;
+		}
+
+		public ArrayList<File> getCheckedItems() {
+			ArrayList<File> checkedItems = new ArrayList<File>();
+
+			for (int i = 0; i < checked.length; i++) {
+				if (checked[i]) {
+					checkedItems.add(objects.get(i));
+				}
+			}
+
+			return checkedItems;
+		}
 	}
 
 	private class FileComparator implements Comparator<File> {
@@ -291,22 +426,23 @@ public class UploadActivity extends Activity {
 		}
 	}
 
-	private class UploadTask extends AsyncTask<Void, Void, String> {
-		private File file;
+	private class UploadTask extends AsyncTask<Void, File, String> {
+		private ArrayList<File> files;
 		private boolean invalidToken;
+		private int progress;
 
 		private ProgressDialog progressDialog;
 
-		public UploadTask(File file) {
-			this.file = file;
+		public UploadTask(ArrayList<File> files) {
+			this.files = files;
+			this.progress = 0;
 		}
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
 
-			progressDialog = DialogUtitities.getProgressDialogWithMessage(UploadActivity.this,
-					UploadActivity.this.getString(R.string.uploading));
+			progressDialog = DialogUtitities.getProgressDialogWithMessage(UploadActivity.this, "");
 			progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
 				public void onClick(final DialogInterface dialog, final int which) {
 					dialog.dismiss();
@@ -320,7 +456,14 @@ public class UploadActivity extends Activity {
 		@Override
 		protected String doInBackground(Void... voids) {
 			try {
-				ContentOperations.uploadFile(UploadActivity.this, file);
+				for (File file : files) {
+					if (!isCancelled()) {
+						publishProgress(file);
+						progress++;
+						ContentOperations.uploadFile(UploadActivity.this, file);
+					}
+				}
+
 				return null;
 			} catch (DigipostAuthenticationException e) {
 				e.printStackTrace();
@@ -336,9 +479,17 @@ public class UploadActivity extends Activity {
 		}
 
 		@Override
+		protected void onProgressUpdate(File... values) {
+			super.onProgressUpdate(values);
+			progressDialog.setMessage("Laster opp " + values[0].getName());
+		}
+
+		@Override
 		protected void onCancelled() {
 			super.onCancelled();
 			progressDialog.dismiss();
+			DialogUtitities.showToast(UploadActivity.this, progress + " av " + files.size() + " filer ble lastet opp til arkivet.");
+			finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
 		}
 
 		@Override
@@ -348,14 +499,71 @@ public class UploadActivity extends Activity {
 
 			if (result != null) {
 				if (invalidToken) {
-					// ToDo logge ut
+					finishActivityWithAction(ApiConstants.LOGOUT);
 				}
 
 				DialogUtitities.showToast(UploadActivity.this, result);
 			} else {
-				DialogUtitities.showToast(UploadActivity.this, file.getName() + " ble lastet opp til arkivet.");
-				executeSetAccountInfoTask();
+				DialogUtitities.showToast(UploadActivity.this, "Opplastning fullført.");
+				finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
 			}
+		}
+	}
+
+	private void finishActivityWithAction(String action) {
+		Intent intent = new Intent();
+		intent.putExtra(ApiConstants.ACTION, action);
+		setResult(RESULT_OK, intent);
+		finish();
+	}
+
+	protected class UploadMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+
+		@Override
+		public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean state) {
+			try {
+				listAdapter.setChecked(position);
+				actionMode.setTitle(Integer.toString(listAdapter.getCheckedCount()));
+				listAdapter.notifyDataSetChanged();
+			} catch (UnsupportedOperationException e) {
+				DialogUtitities.showToast(UploadActivity.this, e.getMessage());
+				actionMode.finish();
+			}
+		}
+
+		@Override
+		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+			uploadActionMode = actionMode;
+			UploadActivity.this.setTheme(R.style.Digipost_ActionMode);
+			MenuInflater inflater = actionMode.getMenuInflater();
+			inflater.inflate(R.menu.activity_upload_context, menu);
+			listAdapter.setCheckboxVisible(true);
+
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+			switch (menuItem.getItemId()) {
+			case R.id.upload_uploadButton:
+				promtUpload(listAdapter.getCheckedItems());
+				return true;
+			default:
+				return true;
+			}
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode actionMode) {
+			listAdapter.setCheckboxVisible(false);
+			listAdapter.clearChecked();
+			UploadActivity.this.setTheme(R.style.Digipost);
+			uploadActionMode = null;
 		}
 	}
 }

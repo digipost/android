@@ -23,6 +23,7 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.DrawerArrayAdapter;
 import no.digipost.android.gui.content.SettingsActivity;
@@ -61,6 +62,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
+    public static final int INTENT_REQUESTCODE = 0;
 
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
@@ -202,7 +204,24 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		executeGetPrimaryAccountTask();
 	}
 
-	private class SettingsChangedlistener implements SharedPreferences.OnSharedPreferenceChangeListener {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == INTENT_REQUESTCODE) {
+                String action = data.getStringExtra(ApiConstants.ACTION);
+
+                if (action.equals(ApiConstants.REFRESH_ARCHIVE)) {
+                    selectItem(ApplicationConstants.ARCHIVE);
+                } else if (action.equals(ApiConstants.LOGOUT)) {
+                    logOut();
+                }
+            }
+        }
+    }
+
+    private class SettingsChangedlistener implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -279,12 +298,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	private void startUploadActivity() {
 		Intent intent = new Intent(MainContentActivity.this, UploadActivity.class);
-		startActivity(intent);
+		startActivityForResult(intent, INTENT_REQUESTCODE);
 	}
 
 	private void startPreferencesActivity() {
 		Intent intent = new Intent(MainContentActivity.this, SettingsActivity.class);
-		startActivity(intent);
+		startActivityForResult(intent, INTENT_REQUESTCODE);
 	}
 
 	private void openHelpWebView() {

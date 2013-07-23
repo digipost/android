@@ -26,6 +26,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
 import no.digipost.android.gui.adapters.LetterArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
@@ -75,7 +76,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == getActivity().RESULT_OK) {
-			if (requestCode == INTENT_REQUESTCODE) {
+			if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
 				String action = data.getStringExtra(ApiConstants.ACTION);
 
 				if (action.equals(ApiConstants.LOCATION_WORKAREA)) {
@@ -85,9 +86,6 @@ public abstract class DocumentFragment extends ContentFragment {
 				} else if (action.equals(ApiConstants.DELETE)) {
 					deleteDocument(DocumentContentStore.documentParent);
 				}
-
-                Letter letter = DocumentContentStore.documentParent;
-                letter.setRead(Boolean.toString(true));
             }
 		}
 
@@ -209,7 +207,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		intent.putExtra(super.INTENT_CONTENT, getContent());
-		startActivityForResult(intent, super.INTENT_REQUESTCODE);
+		startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
 	}
 
 	private void executeGetAttachmentContentTask(Attachment attachment, Letter parentLetter, int listPosition) {
@@ -427,14 +425,16 @@ public abstract class DocumentFragment extends ContentFragment {
 		alertDialog.show();
 	}
 
-	private class DocumentMoveTask extends AsyncTask<Void, Integer, String> {
+	private class DocumentMoveTask extends AsyncTask<Void, Letter, String> {
 		private ArrayList<Letter> letters;
 		private String toLocation;
 		private boolean invalidToken;
+        private int progress;
 
 		public DocumentMoveTask(ArrayList<Letter> letters, String toLocation) {
 			this.letters = letters;
 			this.toLocation = toLocation;
+            this.progress = 0;
 		}
 
 		@Override
@@ -446,12 +446,13 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected String doInBackground(Void... voids) {
 			try {
-				Integer progress = 0;
-
 				for (Letter letter : letters) {
-					publishProgress(++progress);
-					letter.setLocation(toLocation);
-					ContentOperations.moveDocument(context, letter);
+                    if (!isCancelled()) {
+                        publishProgress(letter);
+                        progress++;
+                        letter.setLocation(toLocation);
+                        ContentOperations.moveDocument(context, letter);
+                    }
 				}
 
 				return null;
@@ -469,15 +470,16 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		@Override
-		protected void onProgressUpdate(Integer... values) {
+		protected void onProgressUpdate(Letter... values) {
 			super.onProgressUpdate(values);
-			DocumentFragment.super.progressDialog.setMessage(values[0] + " av " + letters.size() + " flyttet");
+			DocumentFragment.super.progressDialog.setMessage("Flytter " + values[0].getSubject());
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
 			DocumentFragment.super.hideProgressDialog();
+            DialogUtitities.showToast(context, progress + " av " + letters.size() + " ble flyttet.");
 			updateAccountMeta();
 		}
 
