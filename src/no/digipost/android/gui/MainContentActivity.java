@@ -102,7 +102,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 		onSharedPreferenceChangeListener = new SettingsChangedlistener();
 		SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
-	}
+	    if(SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN){
+            drawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
 
     @Override
 	public boolean onCreateOptionsMenu(Menu menu) {

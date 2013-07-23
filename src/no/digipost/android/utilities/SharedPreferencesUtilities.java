@@ -86,4 +86,13 @@ public class SharedPreferencesUtilities {
 		editor.clear();
 		editor.commit();
 	}
+
+    public static int numberOfTimesAppHasRun(Context context) {
+        Editor editor = getSharedPreferences(context).edit();
+        int numberOfTimesAppHasRun = getSharedPreferences(context).getInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, 1);
+        editor.putInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, numberOfTimesAppHasRun + 1);
+        editor.commit();
+
+        return numberOfTimesAppHasRun;
+    }
 }
