@@ -5,6 +5,7 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Settings;
 import no.digipost.android.utilities.DialogUtitities;
@@ -12,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -144,6 +146,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 
 	private class GetSettingsTask extends AsyncTask<Void, Void, Settings> {
 		private String errorMessage;
+        private boolean invalidToken;
 
 		@Override
 		protected Settings doInBackground(Void... voids) {
@@ -153,6 +156,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 				errorMessage = e.getMessage();
 				return null;
 			} catch (DigipostAuthenticationException e) {
+                invalidToken = true;
 				errorMessage = e.getMessage();
 				return null;
 			} catch (DigipostApiException e) {
@@ -168,9 +172,11 @@ public abstract class DigipostSettingsActivity extends Activity {
 
 			if (settings == null) {
 				DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
+                setSettingsEnabled(false);
 
-				// ToDo invalid token
-				setSettingsEnabled(false);
+                if (invalidToken) {
+                    finishActivityWithAction(ApiConstants.LOGOUT);
+                }
 			} else {
 				accountSettings = settings;
 				updateUI(accountSettings);
@@ -194,6 +200,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 
 	protected class UpdateSettingsTask extends AsyncTask<Void, Void, String> {
 		private Settings settings;
+        private boolean invalidToken;
 
 		public UpdateSettingsTask(Settings settings) {
 			this.settings = settings;
@@ -211,6 +218,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 				ContentOperations.updateAccountSettings(DigipostSettingsActivity.this, settings);
 				return null;
 			} catch (DigipostAuthenticationException e) {
+                invalidToken = true;
 				return e.getMessage();
 			} catch (DigipostClientException e) {
 				return e.getMessage();
@@ -227,10 +235,19 @@ public abstract class DigipostSettingsActivity extends Activity {
 			if (result != null) {
 				DialogUtitities.showToast(DigipostSettingsActivity.this, result);
 
-				// ToDo invalid token
+				if (invalidToken) {
+                    finishActivityWithAction(ApiConstants.LOGOUT);
+                }
 			} else {
 				DialogUtitities.showToast(DigipostSettingsActivity.this, "Dine varslingsinnstillinger ble oppdatert.");
 			}
 		}
 	}
+
+    private void finishActivityWithAction(String action) {
+        Intent intent = new Intent();
+        intent.putExtra(ApiConstants.ACTION, action);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 }

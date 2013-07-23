@@ -302,7 +302,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	private void startPreferencesActivity() {
 		Intent intent = new Intent(MainContentActivity.this, SettingsActivity.class);
-		startActivity(intent);
+		startActivityForResult(intent, INTENT_REQUESTCODE);
 	}
 
 	private void openHelpWebView() {
