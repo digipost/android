@@ -22,6 +22,7 @@ import no.digipost.android.R;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.utilities.DataFormatUtilities;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
-	private final Context con;
-	private final ArrayList<Attachment> attachments;
+    protected Context con;
+	protected ArrayList<Attachment> attachments;
 
 	public AttachmentArrayAdapter(final Context context, final int resource, final ArrayList<Attachment> objects) {
 		super(context, resource, objects);
@@ -42,18 +43,23 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 	public View getView(final int position, final View convertView, final ViewGroup parent) {
 
 		LayoutInflater inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View row = inflater.inflate(R.layout.attachentdialog_list_item, parent, false);
+		View row = inflater.inflate(R.layout.attachmentdialog_list_item, parent, false);
 
 		Attachment attachment = attachments.get(position);
 
 		TextView title = (TextView) row.findViewById(R.id.attachment_title);
-		TextView filetype = (TextView) row.findViewById(R.id.attachment_filetype);
+
+        if (!attachment.getRead().equals("true")) {
+            title.setTypeface(null, Typeface.BOLD);
+            row.setBackgroundResource(R.drawable.content_list_item_unread);
+        }
+
+        TextView filetype = (TextView) row.findViewById(R.id.attachment_filetype);
 		TextView filesize = (TextView) row.findViewById(R.id.attachment_filesize);
 
 		title.setText(attachment.getSubject());
 		filetype.setText(attachment.getFileType());
 		filesize.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(attachment.getFileSize())));
-
 		return row;
 	}
 
@@ -64,7 +70,13 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 		notifyDataSetChanged();
 	}
 
-	public Attachment findMain() {
+    public void setAttachments(final ArrayList<Attachment> attachments) {
+        this.attachments = attachments;
+        notifyDataSetChanged();
+    }
+
+
+    public Attachment findMain() {
 		for (Attachment a : attachments) {
 			if (a.getMainDocument().equals("true")) {
 				return a;
