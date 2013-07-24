@@ -31,23 +31,23 @@ import android.widget.TextView;
 
 public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
     protected Context con;
-	protected ArrayList<Attachment> attachments;
+    protected ArrayList<Attachment> attachments;
 
-	public AttachmentArrayAdapter(final Context context, final int resource, final ArrayList<Attachment> objects) {
-		super(context, resource, objects);
-		con = context;
-		attachments = objects;
-	}
+    public AttachmentArrayAdapter(final Context context, final int resource, final ArrayList<Attachment> objects) {
+        super(context, resource, objects);
+        con = context;
+        attachments = objects;
+    }
 
-	@Override
-	public View getView(final int position, final View convertView, final ViewGroup parent) {
+    @Override
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View row = inflater.inflate(R.layout.attachmentdialog_list_item, parent, false);
+        LayoutInflater inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View row = inflater.inflate(R.layout.attachmentdialog_list_item, parent, false);
 
-		Attachment attachment = attachments.get(position);
+        Attachment attachment = attachments.get(position);
 
-		TextView title = (TextView) row.findViewById(R.id.attachment_title);
+        TextView title = (TextView) row.findViewById(R.id.attachment_title);
 
         if (!attachment.getRead().equals("true")) {
             title.setTypeface(null, Typeface.BOLD);
@@ -55,20 +55,20 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
         }
 
         TextView filetype = (TextView) row.findViewById(R.id.attachment_filetype);
-		TextView filesize = (TextView) row.findViewById(R.id.attachment_filesize);
+        TextView filesize = (TextView) row.findViewById(R.id.attachment_filesize);
 
-		title.setText(attachment.getSubject());
-		filetype.setText(attachment.getFileType());
-		filesize.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(attachment.getFileSize())));
-		return row;
-	}
+        title.setText(attachment.getSubject());
+        filetype.setText(attachment.getFileType());
+        filesize.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(attachment.getFileSize())));
+        return row;
+    }
 
-	public void placeMainOnTop() {
-		Attachment main = findMain();
-		remove(main);
-		insert(main, 0);
-		notifyDataSetChanged();
-	}
+    public void placeMainOnTop() {
+        Attachment main = findMain();
+        remove(main);
+        insert(main, 0);
+        notifyDataSetChanged();
+    }
 
     public void setAttachments(final ArrayList<Attachment> attachments) {
         this.attachments = attachments;
@@ -77,11 +77,11 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 
 
     public Attachment findMain() {
-		for (Attachment a : attachments) {
-			if (a.getMainDocument().equals("true")) {
-				return a;
-			}
-		}
-		return null;
-	}
+        for (Attachment a : attachments) {
+            if (a.getMainDocument().equals("true")) {
+                return a;
+            }
+        }
+        return null;
+    }
 }
