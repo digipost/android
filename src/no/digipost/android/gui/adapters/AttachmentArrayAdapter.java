@@ -30,19 +30,20 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
-    protected Context con;
-    protected ArrayList<Attachment> attachments;
+    private Context context;
+    private ArrayList<Attachment> attachments;
 
     public AttachmentArrayAdapter(final Context context, final int resource, final ArrayList<Attachment> objects) {
         super(context, resource, objects);
-        con = context;
+        this.context = context;
         attachments = objects;
+        placeMainOnTop();
     }
 
     @Override
     public View getView(final int position, final View convertView, final ViewGroup parent) {
 
-        LayoutInflater inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = inflater.inflate(R.layout.attachmentdialog_list_item, parent, false);
 
         Attachment attachment = attachments.get(position);
@@ -51,21 +52,20 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 
         if (!attachment.getRead().equals("true")) {
             title.setTypeface(null, Typeface.BOLD);
-            row.setBackgroundResource(R.drawable.content_list_item_unread);
+            title.setTextColor(context.getResources().getColor(R.color.white));
         }
-
-        TextView filetype = (TextView) row.findViewById(R.id.attachment_filetype);
-        TextView filesize = (TextView) row.findViewById(R.id.attachment_filesize);
-
         title.setText(attachment.getSubject());
-        filetype.setText(attachment.getFileType());
-        filesize.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(attachment.getFileSize())));
+
         return row;
     }
 
     public void placeMainOnTop() {
-        attachments.add(0,findMain());
+        attachments.add(0,getMainAttachment());
         notifyDataSetChanged();
+    }
+
+    public String getMainSubject(){
+        return attachments.get(0).getSubject();
     }
 
     public void setAttachments(final ArrayList<Attachment> attachments) {
@@ -73,8 +73,7 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
         placeMainOnTop();
     }
 
-
-    public Attachment findMain() {
+    public Attachment getMainAttachment() {
         for (Attachment a : attachments) {
             if (a.getMainDocument().equals("true")) {
                 Attachment main = a;

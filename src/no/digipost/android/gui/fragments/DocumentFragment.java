@@ -126,16 +126,14 @@ public abstract class DocumentFragment extends ContentFragment {
 		builder.setView(view);
         ArrayList<Attachment> attachments = letter.getAttachment();
 
-
         ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
 		attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item,
 				letter.getAttachment());
-
 		attachmentListView.setAdapter(attachmentAdapter);
-        attachmentAdapter.placeMainOnTop();
         attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(attachmentAdapter, letter, listPosition));
 
-		Dialog attachmentDialog = builder.create();
+        builder.setTitle(attachmentAdapter.getMainSubject());
+        Dialog attachmentDialog = builder.create();
         attachmentDialog.show();
 
 	}
@@ -180,6 +178,7 @@ public abstract class DocumentFragment extends ContentFragment {
 						dialog.cancel();
 					}
 				});
+        builder.setTitle("Avsender krever lesekvittering");
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
