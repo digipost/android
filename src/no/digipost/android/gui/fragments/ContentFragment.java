@@ -39,6 +39,7 @@ import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,6 +56,9 @@ import android.widget.TextView;
 
 public abstract class ContentFragment extends Fragment {
 	public static final String INTENT_CONTENT = "content";
+
+    private final String KEY_LIST_SCROLL_POSITION = "listScrollPosition";
+    private int listScrollPosition;
 
 	ActivityCommunicator activityCommunicator;
 
@@ -84,6 +88,8 @@ public abstract class ContentFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		context = getActivity();
 
+        listScrollPosition = -1;
+
 		View view = inflater.inflate(R.layout.fragment_layout_listview, container, false);
 		listView = (ListView) view.findViewById(R.id.fragment_content_listview);
 		listEmptyViewNoConnection = view.findViewById(R.id.fragment_content_list_emptyview_no_connection);
@@ -112,13 +118,35 @@ public abstract class ContentFragment extends Fragment {
 		activityCommunicator = (ActivityCommunicator) activity;
 	}
 
-	@Override
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(KEY_LIST_SCROLL_POSITION, listView.getFirstVisiblePosition());
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            listScrollPosition = savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, -1);
+        }
+    }
+
+    @Override
 	public void onResume() {
 		super.onResume();
 		FileUtilities.deleteTempFiles();
 	}
 
-	protected void setListEmptyViewText(String title, String text) {
+    protected void retainListViewScrollPosition() {
+        if (listScrollPosition != -1) {
+            listView.setSelectionFromTop(listScrollPosition, 0);
+            listScrollPosition = -1;
+        }
+    }
+
+    protected void setListEmptyViewText(String title, String text) {
 		if (title != null) {
 			listEmptyViewTitle.setText(title);
 		}
