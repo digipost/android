@@ -31,7 +31,7 @@
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="Bilde av en varselstrekant"
+                android:contentDescription="@string/warning_sign_description"
                 android:src="@drawable/warning_sign"/>
 
         <TextView

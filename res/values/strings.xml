@@ -20,7 +20,6 @@
     <string name="no_dont_use_screenlock">Avbryt</string>
     <string name="screenlock">Skjermlås</string>
 
-    <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjon som flytt og slett</string>
 
     <!-- Misc -->
     <string name="close">Lukk</string>
@@ -50,6 +49,9 @@
     <string name="save">Lagre til telefonen</string>
     <string name="open_external">Åpne i en annen app</string>
 
+    <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjon som flytt og slett</string>
+    <string name="warning_sign_description">Bilde av en varselstrekant</string>
+
     <!-- Titles -->
     <string name="title_activity_login_view">LoginView</string>
     <string name="title_activity_base">BaseActivity</string>
@@ -64,20 +66,20 @@
 
     <!-- EmptyView - Receipt -->
     <string name="emptyview_receipt_intro_title">Kom i gang med elektroniske kvitteringer</string>
-    <string name="emptyview_receipt_intro_message">Med Digipost har du tilgang til dine kvitteringer der du er. Se kvitteringene på mobilen, via et nettbrett eller på din datamaskin. Tjenesten er gratis å bruke.</string>
+    <string name="emptyview_receipt_intro_message">Med Digipost har du tilgang til dine kvitteringer der du er. Se kvitteringer på mobilen, nettbrett eller på din datamaskin. Tjenesten er gratis å bruke.</string>
 
     <string name="emptyview_receipt_verification_title">Verifisering</string>
-    <string name="emptyview_receipt_verification_message">For å se kvitteringer fra dette bankkortet må du verifisere at dette er ditt kort. Du verifiserer kortet ved å taste inn kjøpesummen fra et kjøp som er gjort i en butikk som støtter Elektronisk Kvittering.</string>
+    <string name="emptyview_receipt_verification_message">For å se kvitteringer må du verifisere at de kommer fra ditt bankkort. Du verifiserer kortet ved å taste inn kjøpesummen fra et kjøp som er gjort i en butikk som støtter elektroniske kvitteringer.</string>
 
     <string name="emptyview_receipt_registrated_title">Registert</string>
-    <string name="emptyview_receipt_registrated_message">Neste steg er å betale med kort i en butikk som støtter Elektronisk Kvittering. Ta vare på kvitteringen fra dette kjøpet. Du kan bruke kvitteringen til å verifisere bankkortet. Du trenger kun å verifisere kortet én gang.
+    <string name="emptyview_receipt_registrated_message">Neste steg er å betale med kort i en butikk som støtter elektroniske kvitteringer. Ta vare på kvitteringen fra dette kjøpet. Du kan bruke kvitteringen til å verifisere bankkortet. Du trenger kun å verifisere kortet én gang.
     </string>
 
     <!-- Receipt TopText -->
-    <string name="receipt_toptext_register_cards">For å motta elektroniske kvitteringer må du registere dine kort</string>
-    <string name="receipt_toptext_one_hidden_receipt">En kvittering er skjult. For å se denne må du verifisere kortene dine</string>
+    <string name="receipt_toptext_register_cards">For å motta elektroniske kvitteringer må du legge til et bankkort</string>
+    <string name="receipt_toptext_one_hidden_receipt">En kvittering er skjult. For å se denne må du verifisere ditt bankkort</string>
     <string name="receipt_toptext_multiple_hidden_receipts_start">Du har\u0020</string>
-    <string name="receipt_toptext_multiple_hidden_receipts_end">\u0020skjulte kvitteringer, for å se disse må du verifisere kortene dine</string>
+    <string name="receipt_toptext_multiple_hidden_receipts_end">\u0020skjulte kvitteringer. For å se disse må du verifisere dirt bankkort</string>
 
 
     <!-- Exception -->
@@ -99,8 +101,8 @@
     <string name="optionsmenu_settings">Innstillinger</string>
     <string name="optionsmenu_logout">Logg ut</string>
     <string name="optionsmenu_help">Hjelp</string>
-    <string name="optionsmenu_moveToArchive">Flytt til arkiv</string>
-    <string name="optionsmenu_moveToWorkarea">Flytt til kjøkkenbenken</string>
+    <string name="optionsmenu_moveToArchive">Flytt til Arkivet</string>
+    <string name="optionsmenu_moveToWorkarea">Flytt til Kjøkkenbenken</string>
     <string name="optionsmenu_deleteselected">Slett</string>
     <string name="optionsmenu_screenlockchoice">Slett skjermlås preferanse</string>
 
@@ -108,11 +110,14 @@
     <string name="context_letterlist_show">Vis brev</string>
     <string name="context_letterlist_delete">Slett brev</string>
     <string name="context_letterlist_abort">Avbryt</string>
-    <string name="context_letterlist_move">Flytt til arkiv</string>
-    <string name="context_move_to_archive">Flytt til arkivet</string>
-    <string name="context_move_to_workarea">Flytt til kjøkkenbenken</string>
-    <string name="context_refresh">Oppdater innhold</string>
+    <string name="context_letterlist_move">Flytt til Arkiv</string>
+    <string name="context_move_to_archive">Flytt til Arkivet</string>
+    <string name="context_move_to_workarea">Flytt til Kjøkkenbenken</string>
+    <string name="context_refresh_content">Oppdater innhold</string>
+    <string name="context_refresh">Oppdater</string>
+
     <string name="context_folder">Flytt til mappe</string>
+    <string name="context_move">Flytt</string>
 
     <!-- PDF -->
     <string name="pdf_no_further_occurences_found">Ingen flere treff funnet.</string>
