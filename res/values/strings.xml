@@ -57,6 +57,29 @@
     <string name="title_activity_web_fragment">WebFragment</string>
     <string name="title_activity_login">LoginActivity</string>
 
+    <!-- EmptyView -->
+    <string name="emptyview_mailbox">Ingen brev i\u0020</string>
+    <string name="emptyview_workarea">Ingen dokumenter på\u0020</string>
+    <string name="emptyview_archive">Ingen dokumenter i\u0020</string>
+
+    <!-- EmptyView - Receipt -->
+    <string name="emptyview_receipt_intro_title">Kom i gang med elektroniske kvitteringer</string>
+    <string name="emptyview_receipt_intro_message">Med Digipost har du tilgang til dine kvitteringer der du er. Se kvitteringene på mobilen, via et nettbrett eller på din datamaskin. Tjenesten er gratis å bruke.</string>
+
+    <string name="emptyview_receipt_verification_title">Verifisering</string>
+    <string name="emptyview_receipt_verification_message">For å se kvitteringer fra dette bankkortet må du verifisere at dette er ditt kort. Du verifiserer kortet ved å taste inn kjøpesummen fra et kjøp som er gjort i en butikk som støtter Elektronisk Kvittering.</string>
+
+    <string name="emptyview_receipt_registrated_title">Registert</string>
+    <string name="emptyview_receipt_registrated_message">Neste steg er å betale med kort i en butikk som støtter Elektronisk Kvittering. Ta vare på kvitteringen fra dette kjøpet. Du kan bruke kvitteringen til å verifisere bankkortet. Du trenger kun å verifisere kortet én gang.
+    </string>
+
+    <!-- Receipt TopText -->
+    <string name="receipt_toptext_register_cards">For å motta elektroniske kvitteringer må du registere dine kort</string>
+    <string name="receipt_toptext_one_hidden_receipt">En kvittering er skjult. For å se denne må du verifisere kortene dine</string>
+    <string name="receipt_toptext_multiple_hidden_receipts_start">Du har\u0020</string>
+    <string name="receipt_toptext_multiple_hidden_receipts_end">\u0020skjulte kvitteringer, for å se disse må du verifisere kortene dine</string>
+
+
     <!-- Exception -->
     <string name="out_of_memory_exception">Det er ikke nok ledig minne til å åpne filen</string>
 
@@ -222,11 +245,11 @@
     <string name="dialog_prompt_to_workarea">til kjøkkenbenken?</string>
 
     <string name="dialog_error_header_filetype">Ustøttet filtype</string>
-    <string name="dialog_error_two_factor_title">Sikre brev</string>
+    <string name="dialog_error_two_factor_title">Konfidensielt brev</string>
     <string name="dialog_error_not_supported_filetype">Digipost for Android støtter ikke denne
         filtypen.
     </string>
-    <string name="dialog_error_two_factor_message">Dette brevet krever autentisering med Bank ID. Logg inn
+    <string name="dialog_error_two_factor_message">Dette brevet krever autentisering med BankID. Logg inn
         på Digipost.no for å se innholdet.
     </string>
     <string name="dialog_prompt_send_read_receipt"></string>

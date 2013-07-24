@@ -170,7 +170,6 @@ public class ApiAccess {
 		}
 
 		try {
-            System.out.println("executePost STATUS: " + response.getStatusLine().getStatusCode());
 			NetworkUtilities.checkHttpStatusCode(context, response.getStatusLine().getStatusCode());
 		} catch (DigipostInvalidTokenException e) {
 			OAuth2.updateAccessToken(context);

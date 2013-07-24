@@ -27,8 +27,8 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
+import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
@@ -79,30 +79,25 @@ public class ReceiptFragment extends ContentFragment {
 
 		if (receipt.size() == 0) {
 			if (numberOfCards == 0) {
-				setListEmptyViewText(
-						"Kom i gang med elektroniske kvitteringer",
-						"Med Digipost har du tilgang til dine kvitteringer der du er. Se kvitteringene på mobilen, via et nettbrett eller på din datamaskin. Tjenesten er gratis å bruke.");
+				setListEmptyViewText(getString(R.string.emptyview_receipt_intro_title), getString(R.string.emptyview_receipt_intro_message));
 			} else if (numberOfCardsReadyForVerification > 0) {
-				setListEmptyViewText(
-						"Verifisering",
-						"For å se kvitteringer fra dette bankkortet må du verifisere at dette er ditt kort. Du verifiserer kortet ved å taste inn kjøpesummen fra et kjøp som er gjort i en butikk som støtter Elektronisk Kvittering.");
+				setListEmptyViewText(getString(R.string.emptyview_receipt_verification_title),
+						getString(R.string.emptyview_receipt_verification_message));
 			} else {
-				setListEmptyViewText(
-						"Registert",
-						"Neste steg er å betale med kort i en butikk som støtter Elektronisk Kvittering."
-								+ "\n"
-								+ "\n"
-								+ "Ta vare på kvitteringen fra dette kjøpet. Du kan bruke kvitteringen til å verifisere bankkortet. Du trenger kun å verifisere kortet én gang.");
-
+				setListEmptyViewText(getString(R.string.emptyview_receipt_registrated_title),
+						getString(R.string.emptyview_receipt_registrated_message));
 			}
 		} else {
 			if (numberOfCards == 0) {
-				setTopText("For å motta elektroniske kvitteringer må du registere dine kort");
+
+				setTopText(getString(R.string.receipt_toptext_register_cards));
 			} else if (numberOfReceiptsHiddenUntilVerification == 1) {
-				setTopText("En kvittering er skjult. For å se denne må du verifisere kortene dine");
+
+				setTopText(getString(R.string.receipt_toptext_one_hidden_receipt));
 			} else if (numberOfCardsReadyForVerification > 1) {
-				setTopText("Du har" + numberOfReceiptsHiddenUntilVerification
-						+ " skjulte kvitteringer, for å se disse må du verifisere kortene dine");
+
+				setTopText(getString(R.string.receipt_toptext_multiple_hidden_receipts_start) + numberOfReceiptsHiddenUntilVerification
+						+ getString(R.string.receipt_toptext_multiple_hidden_receipts_end));
 			}
 		}
 	}
@@ -164,8 +159,8 @@ public class ReceiptFragment extends ContentFragment {
 		@Override
 		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
-            ReceiptFragment.super.taskIsRunning = false;
-            ReceiptFragment.super.hideProgressDialog();
+			ReceiptFragment.super.taskIsRunning = false;
+			ReceiptFragment.super.hideProgressDialog();
 
 			if (result != null) {
 				DocumentContentStore.setContent(receipt);
@@ -182,7 +177,7 @@ public class ReceiptFragment extends ContentFragment {
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-            ReceiptFragment.super.taskIsRunning = false;
+			ReceiptFragment.super.taskIsRunning = false;
 			ReceiptFragment.super.hideProgressDialog();
 		}
 	}
