@@ -64,22 +64,22 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
     }
 
     public void placeMainOnTop() {
-        Attachment main = findMain();
-        remove(main);
-        insert(main, 0);
+        attachments.add(0,findMain());
         notifyDataSetChanged();
     }
 
     public void setAttachments(final ArrayList<Attachment> attachments) {
         this.attachments = attachments;
-        notifyDataSetChanged();
+        placeMainOnTop();
     }
 
 
     public Attachment findMain() {
         for (Attachment a : attachments) {
             if (a.getMainDocument().equals("true")) {
-                return a;
+                Attachment main = a;
+                attachments.remove(a);
+                return main;
             }
         }
         return null;

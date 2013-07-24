@@ -124,8 +124,10 @@ public abstract class DocumentFragment extends ContentFragment {
             }
         });
 		builder.setView(view);
+        ArrayList<Attachment> attachments = letter.getAttachment();
 
-		ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+
+        ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
 		attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item,
 				letter.getAttachment());
 
@@ -268,10 +270,8 @@ public abstract class DocumentFragment extends ContentFragment {
                 DocumentContentStore.setContent(result, attachment, parentLetter);
 				openAttachmentContent(attachment);
                 updateAdapterLetter(parentLetter, listPosition);
+
                 ArrayList<Attachment> attachments = parentLetter.getAttachment();
-
-                System.out.println("attachments"+ attachments.size());
-
                 if(attachments.size() > 1)
                     attachmentAdapter.setAttachments(attachments);
 
