@@ -351,6 +351,7 @@ public abstract class DocumentFragment extends ContentFragment {
 				} else {
 					setEmptyViewText();
 				}
+                retainListViewScrollPosition();
 			} else {
 				if (invalidToken) {
 					activityCommunicator.requestLogOut();
