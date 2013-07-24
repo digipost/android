@@ -279,6 +279,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	public void updateUI(PrimaryAccount primaryAccount) {
 		getActionBar().setSubtitle(primaryAccount.getFullName());
+        ApplicationConstants.titles[0] = primaryAccount.getFullName();
 		drawerArrayAdapter.setUnreadLetters(primaryAccount.getUnreadItemsInInbox());
 	}
 

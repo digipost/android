@@ -30,58 +30,57 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
-    protected Context con;
-	protected ArrayList<Attachment> attachments;
+    private Context context;
+    private ArrayList<Attachment> attachments;
 
-	public AttachmentArrayAdapter(final Context context, final int resource, final ArrayList<Attachment> objects) {
-		super(context, resource, objects);
-		con = context;
-		attachments = objects;
-	}
+    public AttachmentArrayAdapter(final Context context, final int resource, final ArrayList<Attachment> objects) {
+        super(context, resource, objects);
+        this.context = context;
+        attachments = objects;
+        placeMainOnTop();
+    }
 
-	@Override
-	public View getView(final int position, final View convertView, final ViewGroup parent) {
+    @Override
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View row = inflater.inflate(R.layout.attachmentdialog_list_item, parent, false);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View row = inflater.inflate(R.layout.attachmentdialog_list_item, parent, false);
 
-		Attachment attachment = attachments.get(position);
+        Attachment attachment = attachments.get(position);
 
-		TextView title = (TextView) row.findViewById(R.id.attachment_title);
+        TextView title = (TextView) row.findViewById(R.id.attachment_title);
 
         if (!attachment.getRead().equals("true")) {
             title.setTypeface(null, Typeface.BOLD);
-            row.setBackgroundResource(R.drawable.content_list_item_unread);
+            title.setTextColor(context.getResources().getColor(R.color.white));
         }
+        title.setText(attachment.getSubject());
 
-        TextView filetype = (TextView) row.findViewById(R.id.attachment_filetype);
-		TextView filesize = (TextView) row.findViewById(R.id.attachment_filesize);
+        return row;
+    }
 
-		title.setText(attachment.getSubject());
-		filetype.setText(attachment.getFileType());
-		filesize.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(attachment.getFileSize())));
-		return row;
-	}
-
-	public void placeMainOnTop() {
-		Attachment main = findMain();
-		remove(main);
-		insert(main, 0);
-		notifyDataSetChanged();
-	}
-
-    public void setAttachments(final ArrayList<Attachment> attachments) {
-        this.attachments = attachments;
+    public void placeMainOnTop() {
+        attachments.add(0,getMainAttachment());
         notifyDataSetChanged();
     }
 
+    public String getMainSubject(){
+        return attachments.get(0).getSubject();
+    }
 
-    public Attachment findMain() {
-		for (Attachment a : attachments) {
-			if (a.getMainDocument().equals("true")) {
-				return a;
-			}
-		}
-		return null;
-	}
+    public void setAttachments(final ArrayList<Attachment> attachments) {
+        this.attachments = attachments;
+        placeMainOnTop();
+    }
+
+    public Attachment getMainAttachment() {
+        for (Attachment a : attachments) {
+            if (a.getMainDocument().equals("true")) {
+                Attachment main = a;
+                attachments.remove(a);
+                return main;
+            }
+        }
+        return null;
+    }
 }

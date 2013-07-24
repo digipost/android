@@ -19,43 +19,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@drawable/content_list_item"
               android:orientation="vertical">
-
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:src="@drawable/paper_clip_dark"/>
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:padding="2dp"
-                android:text="Brev med vedlegg"
-                android:textColor="@color/black_subject"
-                android:textSize="23sp"/>
-    </LinearLayout>
-
-    <View
-            android:layout_width="fill_parent"
-            android:layout_height="3dip"
-            android:background="@color/list_divider"/>
 
     <ListView
             android:id="@+id/attachmentdialog_listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@color/list_divider"
-            android:dividerHeight="1sp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp">
+            android:dividerHeight="1sp">
     </ListView>
 
 </LinearLayout>
