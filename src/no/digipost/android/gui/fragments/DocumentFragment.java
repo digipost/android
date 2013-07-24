@@ -164,9 +164,12 @@ public abstract class DocumentFragment extends ContentFragment {
 	}
 
 	private void showOpeningReceiptDialog(final Letter letter, final int listPosition) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage(getString(R.string.dialog_answer_opening_receipt_message))
-				.setPositiveButton(getString(R.string.dialog_answer_opening_receipt_yes), new DialogInterface.OnClickListener() {
+
+        String message = getString(R.string.dialog_opening_receipt_message);
+        String title = getString(R.string.dialog_opening_receipt_title);
+
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,message,title);
+		builder.setPositiveButton(getString(R.string.dialog_opening_receipt_yes), new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog, final int id) {
 						sendOpeningReceipt(letter, listPosition);
 						dialog.dismiss();
@@ -178,7 +181,6 @@ public abstract class DocumentFragment extends ContentFragment {
 						dialog.cancel();
 					}
 				});
-        builder.setTitle("Avsender krever lesekvittering");
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
