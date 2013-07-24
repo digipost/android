@@ -54,7 +54,7 @@ import android.widget.ListView;
 
 public abstract class DocumentFragment extends ContentFragment {
 
-    protected AttachmentArrayAdapter attachmentAdapter;
+	protected AttachmentArrayAdapter attachmentAdapter;
 
 	public DocumentFragment() {
 	}
@@ -86,7 +86,7 @@ public abstract class DocumentFragment extends ContentFragment {
 				} else if (action.equals(ApiConstants.DELETE)) {
 					deleteDocument(DocumentContentStore.documentParent);
 				}
-            }
+			}
 		}
 
 		DocumentContentStore.clearContent();
@@ -95,46 +95,46 @@ public abstract class DocumentFragment extends ContentFragment {
 	private class DocumentListOnItemClickListener implements AdapterView.OnItemClickListener {
 		public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
 			openListItem((Letter) DocumentFragment.super.listAdapter.getItem(position), position);
-        }
+		}
 	}
 
 	private class AttachmentListOnItemClickListener implements AdapterView.OnItemClickListener {
 		private AttachmentArrayAdapter attachmentArrayAdapter;
 		private Letter parentLetter;
-        private int parentListPosition;
+		private int parentListPosition;
 
 		public AttachmentListOnItemClickListener(AttachmentArrayAdapter attachmentArrayAdapter, Letter parentLetter, int parentListPosition) {
 			this.attachmentArrayAdapter = attachmentArrayAdapter;
 			this.parentLetter = parentLetter;
-            this.parentListPosition = parentListPosition;
+			this.parentListPosition = parentListPosition;
 		}
 
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-            executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position), parentLetter, parentListPosition);
+			executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position), parentLetter, parentListPosition);
 		}
 	}
 
 	private void showAttachmentDialog(final Letter letter, int listPosition) {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.abort) ,new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.abort),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
 		builder.setView(view);
-        ArrayList<Attachment> attachments = letter.getAttachment();
+		ArrayList<Attachment> attachments = letter.getAttachment();
 
-        ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
-		attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item,
-				letter.getAttachment());
+		ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+		attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item, letter.getAttachment());
 		attachmentListView.setAdapter(attachmentAdapter);
-        attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(attachmentAdapter, letter, listPosition));
+		attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(attachmentAdapter, letter, listPosition));
 
-        builder.setTitle(attachmentAdapter.getMainSubject());
-        Dialog attachmentDialog = builder.create();
-        attachmentDialog.show();
+		builder.setTitle(attachmentAdapter.getMainSubject());
+		Dialog attachmentDialog = builder.create();
+		attachmentDialog.show();
 
 	}
 
@@ -165,35 +165,39 @@ public abstract class DocumentFragment extends ContentFragment {
 
 	private void showOpeningReceiptDialog(final Letter letter, final int listPosition) {
 
-        String message = getString(R.string.dialog_opening_receipt_message);
-        String title = getString(R.string.dialog_opening_receipt_title);
+		String title = getString(R.string.dialog_opening_receipt_title);
+		String message = getString(R.string.dialog_opening_receipt_message);
 
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,message,title);
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
+
 		builder.setPositiveButton(getString(R.string.dialog_opening_receipt_yes), new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int id) {
-						sendOpeningReceipt(letter, listPosition);
-						dialog.dismiss();
-					}
-				})
-				.setCancelable(false)
-				.setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-					public void onClick(final DialogInterface dialog, final int id) {
-						dialog.cancel();
-					}
-				});
-		AlertDialog alert = builder.create();
-		alert.show();
+			public void onClick(final DialogInterface dialog, final int id) {
+				sendOpeningReceipt(letter, listPosition);
+				dialog.dismiss();
+			}
+		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+
+		builder.create().show();
 	}
 
 	private void showTwoFactorDialog() {
-		AlertDialog.Builder builder = DialogUtitities
-				.getAlertDialogBuilderWithMessage(context, getString(R.string.dialog_error_two_factor));
+
+		String message = getString(R.string.dialog_error_two_factor_message);
+		String title = getString(R.string.dialog_error_two_factor_title);
+
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
+
 		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
 				dialogInterface.cancel();
 			}
 		});
+
 		builder.create().show();
 	}
 
@@ -223,12 +227,12 @@ public abstract class DocumentFragment extends ContentFragment {
 		private Letter parentLetter;
 		private String errorMessage;
 		private boolean invalidToken;
-        private int listPosition;
+		private int listPosition;
 
 		public GetAttachmentContentTask(Attachment attachment, Letter parentLetter, int listPosition) {
 			this.attachment = attachment;
 			this.parentLetter = parentLetter;
-            this.listPosition = listPosition;
+			this.listPosition = listPosition;
 		}
 
 		@Override
@@ -243,8 +247,8 @@ public abstract class DocumentFragment extends ContentFragment {
 		protected byte[] doInBackground(Void... voids) {
 			try {
 				byte[] bytes = ContentOperations.getDocumentContent(context, attachment);
-                parentLetter = ContentOperations.getSelfLetter(context, parentLetter);
-                return bytes;
+				parentLetter = ContentOperations.getSelfLetter(context, parentLetter);
+				return bytes;
 			} catch (DigipostAuthenticationException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();
@@ -268,15 +272,15 @@ public abstract class DocumentFragment extends ContentFragment {
 			DocumentFragment.super.hideProgressDialog();
 
 			if (result != null) {
-                DocumentContentStore.setContent(result, attachment, parentLetter);
+				DocumentContentStore.setContent(result, attachment, parentLetter);
 				openAttachmentContent(attachment);
-                updateAdapterLetter(parentLetter, listPosition);
+				updateAdapterLetter(parentLetter, listPosition);
 
-                ArrayList<Attachment> attachments = parentLetter.getAttachment();
-                if(attachments.size() > 1)
-                    attachmentAdapter.setAttachments(attachments);
+				ArrayList<Attachment> attachments = parentLetter.getAttachment();
+				if (attachments.size() > 1)
+					attachmentAdapter.setAttachments(attachments);
 
-                activityCommunicator.onUpdateAccountMeta();
+				activityCommunicator.onUpdateAccountMeta();
 			} else {
 				if (invalidToken) {
 					activityCommunicator.requestLogOut();
@@ -430,12 +434,12 @@ public abstract class DocumentFragment extends ContentFragment {
 		private ArrayList<Letter> letters;
 		private String toLocation;
 		private boolean invalidToken;
-        private int progress;
+		private int progress;
 
 		public DocumentMoveTask(ArrayList<Letter> letters, String toLocation) {
 			this.letters = letters;
 			this.toLocation = toLocation;
-            this.progress = 0;
+			this.progress = 0;
 		}
 
 		@Override
@@ -448,12 +452,12 @@ public abstract class DocumentFragment extends ContentFragment {
 		protected String doInBackground(Void... voids) {
 			try {
 				for (Letter letter : letters) {
-                    if (!isCancelled()) {
-                        publishProgress(letter);
-                        progress++;
-                        letter.setLocation(toLocation);
-                        ContentOperations.moveDocument(context, letter);
-                    }
+					if (!isCancelled()) {
+						publishProgress(letter);
+						progress++;
+						letter.setLocation(toLocation);
+						ContentOperations.moveDocument(context, letter);
+					}
 				}
 
 				return null;
@@ -473,14 +477,15 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onProgressUpdate(Letter... values) {
 			super.onProgressUpdate(values);
-			DocumentFragment.super.progressDialog.setMessage("Flytter " + values[0].getSubject() + " (" + progress + "/" + letters.size() + ")");
+			DocumentFragment.super.progressDialog.setMessage("Flytter " + values[0].getSubject() + " (" + progress + "/" + letters.size()
+					+ ")");
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
 			DocumentFragment.super.hideProgressDialog();
-            DialogUtitities.showToast(context, progress + " av " + letters.size() + " ble flyttet.");
+			DialogUtitities.showToast(context, progress + " av " + letters.size() + " ble flyttet.");
 			updateAccountMeta();
 		}
 
@@ -514,12 +519,12 @@ public abstract class DocumentFragment extends ContentFragment {
 		private String errorMessage;
 		private Letter letter;
 		private boolean invalidToken;
-        private int listPosition;
+		private int listPosition;
 
 		public SendOpeningReceiptTask(final Letter letter, int listPosition) {
 			invalidToken = false;
 			this.letter = letter;
-            this.listPosition = listPosition;
+			this.listPosition = listPosition;
 		}
 
 		@Override
@@ -533,7 +538,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		protected Boolean doInBackground(final Void... params) {
 			try {
 				ContentOperations.sendOpeningReceipt(context, letter);
-                letter = ContentOperations.getSelfLetter(context, letter);
+				letter = ContentOperations.getSelfLetter(context, letter);
 				return true;
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
@@ -557,7 +562,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		protected void onPostExecute(final Boolean result) {
 
 			if (result != null) {
-                openListItem(letter, listPosition);
+				openListItem(letter, listPosition);
 
 			} else {
 				if (invalidToken) {
@@ -569,9 +574,9 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 	}
 
-    private void updateAdapterLetter(Letter letter, int listPosition) {
-        listAdapter.replaceAtPosition(letter, listPosition);
-    }
+	private void updateAdapterLetter(Letter letter, int listPosition) {
+		listAdapter.replaceAtPosition(letter, listPosition);
+	}
 
 	protected class DocumentMultiChoiceModeListener extends ContentMultiChoiceModeListener {
 

@@ -222,11 +222,11 @@
     <string name="dialog_prompt_to_workarea">til kjøkkenbenken?</string>
 
     <string name="dialog_error_header_filetype">Ustøttet filtype</string>
-    <string name="dialog_error_header_two_factor">Ustøttet autentisering</string>
+    <string name="dialog_error_two_factor_title">Sikre brev</string>
     <string name="dialog_error_not_supported_filetype">Digipost for Android støtter ikke denne
         filtypen.
     </string>
-    <string name="dialog_error_two_factor">Dette brevet krever autentisering med Bank ID. Logg inn
+    <string name="dialog_error_two_factor_message">Dette brevet krever autentisering med Bank ID. Logg inn
         på Digipost.no for å se innholdet.
     </string>
     <string name="dialog_prompt_send_read_receipt"></string>
