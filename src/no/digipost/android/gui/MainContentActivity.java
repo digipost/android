@@ -62,13 +62,13 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
-    public static final int INTENT_REQUESTCODE = 0;
+	public static final int INTENT_REQUESTCODE = 0;
 
 	private DrawerLayout drawerLayout;
 	private ListView drawerList;
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerArrayAdapter drawerArrayAdapter;
-    private SearchView searchView;
+	private SearchView searchView;
 
 	private boolean refreshing;
 
@@ -103,12 +103,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		onSharedPreferenceChangeListener = new SettingsChangedlistener();
 		SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
 
-	    if(SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN){
-            drawerLayout.openDrawer(GravityCompat.START);
-        }
-    }
+		if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
+			drawerLayout.openDrawer(GravityCompat.START);
+		}
+	}
 
-    @Override
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_main_content_actionbar, menu);
@@ -150,7 +150,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		MenuItem uploadButton = menu.findItem(R.id.menu_upload);
 		uploadButton.setVisible(!drawerOpen);
 		refreshButton.setVisible(!drawerOpen);
-        searchButton.setVisible(!drawerOpen);
+		searchButton.setVisible(!drawerOpen);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -175,7 +175,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 			startUploadActivity();
 			return true;
 		case R.id.menu_preferences:
-            startPreferencesActivity();
+			startPreferencesActivity();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -204,24 +204,24 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		executeGetPrimaryAccountTask();
 	}
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == INTENT_REQUESTCODE) {
-                String action = data.getStringExtra(ApiConstants.ACTION);
+		if (resultCode == RESULT_OK) {
+			if (requestCode == INTENT_REQUESTCODE) {
+				String action = data.getStringExtra(ApiConstants.ACTION);
 
-                if (action.equals(ApiConstants.REFRESH_ARCHIVE)) {
-                    selectItem(ApplicationConstants.ARCHIVE);
-                } else if (action.equals(ApiConstants.LOGOUT)) {
-                    logOut();
-                }
-            }
-        }
-    }
+				if (action.equals(ApiConstants.REFRESH_ARCHIVE)) {
+					selectItem(ApplicationConstants.ARCHIVE);
+				} else if (action.equals(ApiConstants.LOGOUT)) {
+					logOut();
+				}
+			}
+		}
+	}
 
-    private class SettingsChangedlistener implements SharedPreferences.OnSharedPreferenceChangeListener {
+	private class SettingsChangedlistener implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -278,9 +278,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	}
 
 	public void updateUI(PrimaryAccount primaryAccount) {
-		getActionBar().setSubtitle(primaryAccount.getFullName());
-        ApplicationConstants.titles[0] = primaryAccount.getFullName();
-		drawerArrayAdapter.setUnreadLetters(primaryAccount.getUnreadItemsInInbox());
+		if (primaryAccount != null) {
+			getActionBar().setSubtitle(primaryAccount.getFullName());
+			ApplicationConstants.titles[0] = primaryAccount.getFullName();
+			drawerArrayAdapter.setUnreadLetters(primaryAccount.getUnreadItemsInInbox());
+		}
 	}
 
 	private ContentFragment getCurrentFragment() {

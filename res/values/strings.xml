@@ -20,6 +20,8 @@
     <string name="no_dont_use_screenlock">Avbryt</string>
     <string name="screenlock">Skjermlås</string>
 
+    <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjon som flytt og slett</string>
+
     <!-- Misc -->
     <string name="close">Lukk</string>
     <string name="abort">Avbryt</string>
@@ -178,8 +180,9 @@
     <string name="error_failed_to_open_with_intent">En feil oppstod under åpning av filen.</string>
 
     <!-- Prompts -->
-    <string name="dialog_answer_opening_receipt_yes">Åpne og send kvittering</string>
-    <string name="dialog_answer_opening_receipt_message">Når du åpner dette brevet, vil det bli
+    <string name="dialog_opening_receipt_yes">Åpne og send kvittering</string>
+    <string name="dialog_opening_receipt_title">Avsender krever lesekvittering</string>
+    <string name="dialog_opening_receipt_message">Når du åpner dette brevet, vil det bli
         sendt en lesekvittering til avsenderen.
     </string>
 
@@ -235,5 +238,6 @@
     <string name="dialog_prompt_move_documents_to_workarea">Vil du flytte markerte dokumenter til
         kjøkkenbenken?
     </string>
+    <string name="dialog_prompt">Avsender krever lesekvittering</string>
 
 </resources>
