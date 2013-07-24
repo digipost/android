@@ -114,6 +114,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 
 	private class GetAccountTask extends AsyncTask<Void, Void, Account> {
 		private String errorMessage;
+        private boolean invalidToken;
 
 		@Override
 		protected void onPreExecute() {
@@ -132,6 +133,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 				errorMessage = e.getMessage();
 				return null;
 			} catch (DigipostAuthenticationException e) {
+                invalidToken = true;
 				errorMessage = e.getMessage();
 				return null;
 			}
@@ -142,10 +144,14 @@ public abstract class DigipostSettingsActivity extends Activity {
 			super.onPostExecute(result);
 
 			if (result == null) {
+                hideSettingsProgressDialog();
 				DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
-				// ToDo invalid token
+
+                if (invalidToken) {
+                    finishActivityWithAction(ApiConstants.LOGOUT);
+                }
+
 				setSettingsEnabled(false);
-				hideSettingsProgressDialog();
 			} else {
                 userAccount = result;
 				executeGetSettingsTask();
