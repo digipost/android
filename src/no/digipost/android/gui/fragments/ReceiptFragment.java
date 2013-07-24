@@ -231,6 +231,7 @@ public class ReceiptFragment extends ContentFragment {
                 retainListViewScrollPosition();
 			}
 
+            activityCommunicator.onUpdateAccountMeta();
 			activityCommunicator.onEndRefreshContent();
 		}
 

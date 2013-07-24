@@ -63,13 +63,6 @@ public class SettingsActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-    private void finishActivityWithAction(String action) {
-        Intent intent = new Intent();
-        intent.putExtra(ApiConstants.ACTION, action);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
 	public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -138,7 +131,7 @@ public class SettingsActivity extends Activity {
 			String key = preference.getKey();
 
 			if (key.equals(KEY_PREF_DEFAULT_SCREEN)) {
-				preference.setSummary(ApplicationConstants.titles[Integer.parseInt(sharedPreferences.getString(key, "1"))]);
+				preference.setSummary(ApplicationConstants.titles[Integer.parseInt(sharedPreferences.getString(key, Integer.toString(ApplicationConstants.MAILBOX)))]);
 			}
 		}
 

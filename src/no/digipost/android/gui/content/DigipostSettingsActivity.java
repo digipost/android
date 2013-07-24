@@ -73,7 +73,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 	}
 
 	private void showInvalidInputDialog(String message) {
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, "Ugyldig format");
 		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
