@@ -472,7 +472,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onProgressUpdate(Letter... values) {
 			super.onProgressUpdate(values);
-			DocumentFragment.super.progressDialog.setMessage("Flytter " + values[0].getSubject());
+			DocumentFragment.super.progressDialog.setMessage("Flytter " + values[0].getSubject() + " (" + progress + "/" + letters.size() + ")");
 		}
 
 		@Override

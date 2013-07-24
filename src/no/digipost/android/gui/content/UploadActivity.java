@@ -39,9 +39,11 @@ import org.apache.commons.io.FilenameUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -57,12 +59,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageSize;
+import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 public class UploadActivity extends Activity {
 	private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
 	private final String[] blockedFileContentTypes = { ApiConstants.TEXT_HTML };
+    private final String KEY_DIRECTORY = "directory";
 
 	private File mDirectory;
 	private ArrayList<File> mFiles;
@@ -103,13 +113,36 @@ public class UploadActivity extends Activity {
 		executeSetAccountInfoTask();
 	}
 
-	@Override
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_DIRECTORY, mDirectory.getAbsolutePath());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mDirectory = new File(savedInstanceState.getString(KEY_DIRECTORY));
+    }
+
+    @Override
 	protected void onResume() {
 		refreshFilesList();
 		super.onResume();
 	}
 
-	@Override
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (isFinishing()) {
+            ImageLoader imageLoader = ImageLoader.getInstance();
+            imageLoader.clearDiscCache();
+            imageLoader.clearMemoryCache();
+        }
+    }
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -215,6 +248,7 @@ public class UploadActivity extends Activity {
 		builder.setPositiveButton("Last opp", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
+                uploadActionMode.finish();
 				executeUploadTask(files);
 				dialogInterface.dismiss();
 			}
@@ -246,7 +280,11 @@ public class UploadActivity extends Activity {
             intent.putExtra(MuPDFActivity.ACTION_OPEN_FILEPATH, file.getAbsolutePath());
             startActivity(intent);
         } else {
-            FileUtilities.openFileWithIntent(this, file);
+            try {
+                FileUtilities.openFileWithIntent(this, file);
+            } catch (ActivityNotFoundException e) {
+                DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
+            }
         }
     }
 
@@ -333,11 +371,14 @@ public class UploadActivity extends Activity {
 		private boolean[] checked;
 		private boolean checkboxVisible;
 
+        private Context context;
+
 		public UploadListAdapter(Context context, ArrayList<File> objects) {
 			super(context, R.layout.upload_list_item, android.R.id.text1, objects);
 			this.objects = objects;
 			this.checked = new boolean[objects.size()];
 			this.checkboxVisible = false;
+            this.context = context;
 		}
 
 		@Override
@@ -349,14 +390,36 @@ public class UploadActivity extends Activity {
 
 			TextView name = (TextView) row.findViewById(R.id.upload_file_name);
 			TextView size = (TextView) row.findViewById(R.id.upload_file_size);
+            TextView extension = (TextView) row.findViewById(R.id.upload_file_extension);
 
-			name.setText(object.getName());
+			name.setText(FilenameUtils.getBaseName(object.getName()));
+
+            final ImageView thumbnail = (ImageView) row.findViewById(R.id.upload_thumbnail);
 
 			if (object.isFile()) {
-				name.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_grey_file, 0, 0, 0);
+                if (isImage(object)) {
+                    ImageSize targetSize = new ImageSize(50, 50);
+                    ImageLoader.getInstance().loadImage(FileUtilities.getFileUri(object), targetSize, getImageLoaderOptions(), new SimpleImageLoadingListener() {
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                            super.onLoadingComplete(imageUri, view, loadedImage);
+                            thumbnail.setImageBitmap(loadedImage);
+                        }
+
+                        @Override
+                        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                            super.onLoadingFailed(imageUri, view, failReason);
+                            thumbnail.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_grey_file));
+                        }
+                    });
+                } else {
+                    thumbnail.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_grey_file));
+                }
+
 				size.setText(DataFormatUtilities.getFormattedFileSize(object.length()));
+                extension.setText("." + FilenameUtils.getExtension(object.getName()));
 			} else {
-				name.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_grey_folder, 0, 0, 0);
+                thumbnail.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_grey_folder));
 			}
 
 			CheckBox checkBox = (CheckBox) row.findViewById(R.id.upload_checkbox);
@@ -423,6 +486,25 @@ public class UploadActivity extends Activity {
 
 			return checkedItems;
 		}
+
+        private DisplayImageOptions getImageLoaderOptions() {
+            DisplayImageOptions options = new DisplayImageOptions.Builder()
+                    .cacheInMemory(true)
+                    .cacheOnDisc(true)
+                    .build();
+
+            return options;
+        }
+
+        private boolean isImage(File f) {
+            for (String extension : ApiConstants.FILETYPES_IMAGE) {
+                if (FilenameUtils.getExtension(f.getName()).equals(extension)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 	}
 
 	private class FileComparator implements Comparator<File> {
@@ -497,7 +579,7 @@ public class UploadActivity extends Activity {
 		@Override
 		protected void onProgressUpdate(File... values) {
 			super.onProgressUpdate(values);
-			progressDialog.setMessage("Laster opp " + values[0].getName());
+			progressDialog.setMessage("Laster opp " + values[0].getName() + " (" + progress + "/" + files.size() + ")");
 		}
 
 		@Override

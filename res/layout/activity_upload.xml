@@ -5,12 +5,15 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/list_element_opened">
+              android:background="@drawable/content_list_item">
 
     <TextView
             android:id="@+id/upload_file_path"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:ellipsize="start"
+            android:maxLines="1"
+            android:singleLine="true"
             android:textSize="14dp"
             android:padding="5dp"
             android:background="@color/login_background"/>
@@ -19,7 +22,9 @@
             android:id="@+id/upload_file_list"
             android:layout_width="match_parent"
             android:layout_height="0sp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:divider="@color/list_divider"
+            android:dividerHeight="1sp"/>
 
     <TextView
             android:id="@+id/upload_list_empty"

@@ -225,10 +225,10 @@ public abstract class ContentFragment extends Fragment {
 
             if (values[0] instanceof Letter) {
                 Letter letter = (Letter) values[0];
-                progressDialog.setMessage("Sletter " + letter.getSubject());
+                progressDialog.setMessage("Sletter " + letter.getSubject() + " (" + progress + "/" + content.size() + ")");
             } else if (values[0] instanceof Receipt) {
                 Receipt receipt = (Receipt) values[0];
-                progressDialog.setMessage("Sletter " + receipt.getStoreName() + " " + DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()));
+                progressDialog.setMessage("Sletter " + receipt.getStoreName() + " " + DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()) + " (" + progress + "/" + content.size() + ")");
             }
 		}
 

@@ -5,7 +5,7 @@
               android:orientation="horizontal"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:background="@drawable/content_list_item"
+              android:background="@drawable/content_list_item_unread"
               android:paddingLeft="15dp"
               android:paddingTop="10dp"
               android:paddingRight="15dp"
@@ -14,32 +14,57 @@
     <CheckBox
             android:id="@+id/upload_checkbox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:paddingRight="10dp"
             android:visibility="gone"/>
+
+    <ImageView
+            android:id="@+id/upload_thumbnail"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="centerCrop"/>
 
     <TextView
             android:id="@+id/upload_file_name"
             android:layout_width="0sp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:ellipsize="end"
             android:textSize="17sp"
             android:textColor="@color/black_subject"
             android:maxLines="1"
             android:singleLine="true"
-            android:drawablePadding="10dp"
             android:layout_marginRight="5dp"
             android:gravity="center_vertical"/>
 
-    <TextView
-            android:id="@+id/upload_file_size"
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="@color/grey_creator"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:gravity="center_vertical"/>
+            android:layout_height="40dp"
+            android:gravity="right">
+
+        <TextView
+                android:id="@+id/upload_file_size"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:textSize="14sp"
+                android:textColor="@color/grey_creator"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:gravity="right"/>
+
+        <TextView
+                android:id="@+id/upload_file_extension"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:textSize="14sp"
+                android:textColor="@color/grey_creator"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:gravity="right"/>
+
+    </LinearLayout>
 </LinearLayout>

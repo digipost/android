@@ -51,7 +51,7 @@ public class ApiConstants {
 	public static final String FILETYPE_TIF = "tif";
 	public static final String FILETYPE_JPE = "jpe";
 	public static final String FILETYPE_JFIF = "jfif";
-	public static final String[] FILETYPES_IMAGE = { "jpg", "jpeg", "png", "tiff", "tif", "jpe", "jfif" };
+	public static final String[] FILETYPES_IMAGE = { "jpg", "jpeg", "png" };
 
 	public static final String GET_DOCUMENT = "document";
 	public static final String GET_RECEIPT = "receipt";

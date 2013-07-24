@@ -17,10 +17,13 @@
 package no.digipost.android.utilities;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.apache.commons.io.FilenameUtils;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,7 +34,7 @@ public class FileUtilities {
 	public static final String TEMP_FILE_NAME = "temp";
 	public static final String TEMP_FILE_DIRECTORY = Environment.getExternalStorageDirectory() + "/digipost/";
 
-    public static void openFileWithIntent(Context context, File file) {
+    public static void openFileWithIntent(Context context, File file) throws ActivityNotFoundException {
         Intent intent = new Intent();
         intent.setAction(android.content.Intent.ACTION_VIEW);
 
@@ -40,7 +43,7 @@ public class FileUtilities {
         context.startActivity(intent);
     }
 
-	public static void openFileWithIntent(final Context context, final String fileType, final byte[] data) throws Exception {
+	public static void openFileWithIntent(final Context context, final String fileType, final byte[] data) throws ActivityNotFoundException, IOException {
 		File file = writeTempFile(fileType, data);
         openFileWithIntent(context, file);
 	}
@@ -59,7 +62,7 @@ public class FileUtilities {
 		return writeData(file, data);
 	}
 
-	public static File writeTempFile(final String fileType, final byte[] data) throws Exception {
+	public static File writeTempFile(final String fileType, final byte[] data) throws IOException {
 		File path = new File(TEMP_FILE_DIRECTORY);
 		path.mkdir();
 		File file = new File(path, TEMP_FILE_NAME + "." + fileType);
@@ -82,7 +85,7 @@ public class FileUtilities {
 		}
 	}
 
-	private static File writeData(File file, byte[] data) throws Exception {
+	private static File writeData(File file, byte[] data) throws IOException {
 		FileOutputStream stream = new FileOutputStream(file);
 		stream.write(data);
 		stream.close();
@@ -95,4 +98,8 @@ public class FileUtilities {
 		intent.setData(Uri.fromFile(file));
 		context.sendBroadcast(intent);
 	}
+
+    public static String getFileUri(File file) {
+        return Uri.fromFile(file).toString();
+    }
 }
