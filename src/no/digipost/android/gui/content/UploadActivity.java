@@ -202,8 +202,8 @@ public class UploadActivity extends Activity {
 	}
 
 	private void promtUpload(final File file) {
-		final AlertDialog dialog = DialogUtitities.getAlertDialogBuilderWithMessage(this,
-                "Er du sikker på at du vil laste opp " + file.getName() + "?")
+		final AlertDialog dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this,
+                "Er du sikker på at du vil laste opp " + file.getName() + "?", "Last opp")
 		.setPositiveButton("Last opp", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -243,8 +243,8 @@ public class UploadActivity extends Activity {
 	}
 
 	private void promtUpload(final ArrayList<File> files) {
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this,
-				"Er du sikker på at du vil laste opp valgte filer?");
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this,
+				"Er du sikker på at du vil laste opp valgte filer?", "Last opp");
 		builder.setPositiveButton("Last opp", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -264,7 +264,7 @@ public class UploadActivity extends Activity {
 
 	private void showBlockedFileExtensionDialog(File file) {
 		String message = "Denne filtypen (." + FilenameUtils.getExtension(file.getName()) + ") kan ikke lastes opp i Digipost.";
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, "Ustøttet filtype");
 		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
