@@ -101,8 +101,8 @@
     <string name="optionsmenu_settings">Innstillinger</string>
     <string name="optionsmenu_logout">Logg ut</string>
     <string name="optionsmenu_help">Hjelp</string>
-    <string name="optionsmenu_moveToArchive">Flytt til Arkivet</string>
-    <string name="optionsmenu_moveToWorkarea">Flytt til Kjøkkenbenken</string>
+    <string name="optionsmenu_moveToArchive">Flytt til arkivet</string>
+    <string name="optionsmenu_moveToWorkarea">Flytt til kjøkkenbenken</string>
     <string name="optionsmenu_deleteselected">Slett</string>
     <string name="optionsmenu_screenlockchoice">Slett skjermlås preferanse</string>
 
@@ -110,9 +110,9 @@
     <string name="context_letterlist_show">Vis brev</string>
     <string name="context_letterlist_delete">Slett brev</string>
     <string name="context_letterlist_abort">Avbryt</string>
-    <string name="context_letterlist_move">Flytt til Arkiv</string>
-    <string name="context_move_to_archive">Flytt til Arkivet</string>
-    <string name="context_move_to_workarea">Flytt til Kjøkkenbenken</string>
+    <string name="context_letterlist_move">Flytt til arkiv</string>
+    <string name="context_move_to_archive">Flytt til arkivet</string>
+    <string name="context_move_to_workarea">Flytt til kjøkkenbenken</string>
     <string name="context_refresh_content">Oppdater innhold</string>
     <string name="context_refresh">Oppdater</string>
 
