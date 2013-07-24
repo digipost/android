@@ -126,7 +126,7 @@
     <string name="pdf_searching_">Søker...</string>
     <string name="pdf_search_document">Søk i dokumentet</string>
     <string name="pdf_promt_save_to_sd">Ønsker du å lagre dokumentet?</string>
-    <string name="pdf_saved_to_sd">Dokumentet er lagret i Downloads.</string>
+    <string name="pdf_saved_to_sd">Dokumentet er lagret i nedlastingsområde.</string>
     <string name="pdf_save_to_sd_failed">En feil oppstod under lagringen.</string>
     <string name="pdf_select_copied">Markert tekst kopiert.</string>
     <string name="pdf_select_no_text_selected">Ingen tekst markert.</string>
@@ -152,8 +152,8 @@
     <string name="pref_default_screen_default">1</string>
     <string name="pref_general_settings">Generelle innstillinger</string>
     <string name="pref_documents_settings">Innstillinger for brev</string>
-    <string name="pref_show_bank_id_documents_title">Bank-ID</string>
-    <string name="pref_show_bank_id_documents_summary">Vis brev som krever innlogging med Bank-ID
+    <string name="pref_show_bank_id_documents_title">BankID</string>
+    <string name="pref_show_bank_id_documents_summary">Vis brev som krever innlogging med BankID
     </string>
     <string name="pref_screen_rotation_title">Skjermrotasjon</string>
     <string name="pref_screen_rotation_summary">Tillat skjermrotasjon</string>
@@ -165,7 +165,7 @@
     <string name="pref_screen_personal_settings_summary">Endre dine personlige innstillinger i Digipost</string>
     <string name="pref_screen_notification_settings_title">Varslingsinnstillinger</string>
     <string name="pref_screen_notification_settings_summary">Endre dine varslingsinnstillinger i Digipost</string>
-    <string name="pref_screen_digipost_account_settings">Din Digipost-konto</string>
+    <string name="pref_screen_digipost_account_settings">Din konto</string>
     <string name="pref_notification_settings_letters_title">Varsling om nye brev</string>
     <string name="pref_notification_settings_letters_new_title">E-post om nye brev</string>
     <string name="pref_notification_settings_letters_new_subtitle">Send meg en e-post hvis jeg får et nytt brev</string>
