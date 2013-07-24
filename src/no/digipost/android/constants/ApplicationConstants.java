@@ -29,6 +29,7 @@ public class ApplicationConstants {
     public static final String NUMBER_OF_TIMES_APP_HAS_RUN = "numberOfTimesAppHasRun";
     public static final int NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN = 1;
 
+    /*
     public static final int NAME = 0;
 	public static final int MAILBOX = 2;
 	public static final int RECEIPTS = 3;
@@ -36,5 +37,14 @@ public class ApplicationConstants {
 	public static final int ARCHIVE = 6;
 
 	public static String[] titles = { "","INNBOKS", "Postkassen", "Kvitteringer", "MAPPER", "Kjøkkenbenken", "Arkivet" };
+
+	 */
+
+    public static final int MAILBOX = 1;
+    public static final int RECEIPTS = 2;
+    public static final int WORKAREA = 4;
+    public static final int ARCHIVE = 5;
+
+    public static String[] titles = { "INNBOKS", "Postkassen", "Kvitteringer", "MAPPER", "Kjøkkenbenken", "Arkivet" };
 
 }

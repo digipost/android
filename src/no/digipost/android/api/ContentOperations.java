@@ -71,7 +71,7 @@ public class ContentOperations {
 
 	public static Receipts getAccountContentMetaReceipt(Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		return ApiAccess.getReceipts(context, getAccount(context).getPrimaryAccount().getReceiptsUri());
+		return ApiAccess.getReceipts(context, getAccountUpdated(context).getPrimaryAccount().getReceiptsUri());
 	}
 
 	public static void moveDocument(Context context, final Letter letter) throws DigipostClientException, DigipostApiException,

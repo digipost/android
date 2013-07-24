@@ -83,12 +83,13 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		linkName.setText((CharSequence) links[position]);
 
 		switch (position) {
-
+/*
         case ApplicationConstants.NAME:
             linkName.setPadding(0,0,0,5);
             linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
             row.setBackgroundResource(context.getResources().getColor(R.color.transparent));
             break;
+*/
 		case ApplicationConstants.MAILBOX:
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope, 0, 0, 0);
 			updateUnreadView(row);
