@@ -118,15 +118,37 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
 	}
 
 	private String getAddressString(Address address) {
+        String street = address.getStreet();
+        String houseNumber = address.getHouseNumber();
+        String houseLetter = address.getHouseLetter();
+        String zipCode = address.getZipCode();
+        String city = address.getCity();
+
 		StringBuilder output = new StringBuilder();
-		output.append(address.getStreet())
-				.append(" ")
-				.append((address.getHouseNumber() != null) ? address.getHouseNumber() : "")
-                .append(address.getHouseLetter())
-				.append(", ")
-				.append(address.getZipCode())
-				.append(" ")
-				.append(address.getCity());
+
+        if (street != null) {
+            output.append(street);
+
+            if (houseNumber != null) {
+                output.append(" ");
+                output.append(houseNumber);
+
+                if (houseLetter != null) {
+                    output.append(houseLetter);
+                }
+            }
+
+            output.append(", ");
+        }
+
+        if (zipCode != null) {
+            output.append(zipCode);
+            output.append(" ");
+        }
+
+        if (city != null) {
+            output.append(city);
+        }
 
 		return output.toString();
 	}
