@@ -411,7 +411,7 @@ public class UploadActivity extends Activity {
 
 			if (object.isFile()) {
                 if (isImage(object)) {
-                    ImageSize targetSize = new ImageSize(50, 50);
+                    ImageSize targetSize = new ImageSize(40, 40);
                     ImageLoader.getInstance().loadImage(FileUtilities.getFileUri(object), targetSize, getImageLoaderOptions(), new SimpleImageLoadingListener() {
                         @Override
                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {

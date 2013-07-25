@@ -32,6 +32,7 @@ public class DialogUtitities {
 		ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		progressDialog.setMessage(message);
+        progressDialog.setCancelable(false);
 
 		return progressDialog;
 	}
