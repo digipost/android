@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class ScreenlockPreferenceActivity extends Activity {
 	private Button yesButton, noButton;
 	private ButtonListener listener;
@@ -38,7 +40,19 @@ public class ScreenlockPreferenceActivity extends Activity {
 		noButton.setOnClickListener(listener);
 	}
 
-	private void yesButton() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
+
+    private void yesButton() {
 		startActivity(new Intent(KeyStore.UNLOCK_ACTION));
 		finish();
 	}

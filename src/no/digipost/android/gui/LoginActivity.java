@@ -32,6 +32,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class LoginActivity extends Activity {
 	private Button loginButton, privacyButton, registrationButton;
 	private CheckBox stayLoggedInCheckBox;
@@ -76,7 +78,19 @@ public class LoginActivity extends Activity {
 		});
 	}
 
-	private void deleteOldRefreshtoken() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
+
+    private void deleteOldRefreshtoken() {
 		if (ks.state() == KeyStore.State.UNLOCKED) {
 			SharedPreferencesUtilities.deleteRefreshtoken(this);
 		}

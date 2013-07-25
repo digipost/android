@@ -61,6 +61,8 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import org.apache.commons.io.FilenameUtils;
 
 class ThreadPerTaskExecutor implements Executor {
@@ -758,6 +760,8 @@ public class MuPDFActivity extends Activity {
 
 	@Override
 	protected void onStart() {
+        EasyTracker.getInstance().activityStart(this);
+
 		if (core != null) {
 			core.startAlerts();
 			createAlertWaiter();
@@ -768,7 +772,9 @@ public class MuPDFActivity extends Activity {
 
 	@Override
 	protected void onStop() {
-		if (core != null) {
+        EasyTracker.getInstance().activityStop(this);
+
+        if (core != null) {
 			destroyAlertWaiter();
 			core.stopAlerts();
 		}

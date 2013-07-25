@@ -36,6 +36,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public abstract class DigipostSettingsActivity extends Activity {
 
     protected Account userAccount;
@@ -56,6 +58,17 @@ public abstract class DigipostSettingsActivity extends Activity {
         super.onDestroy();
 
         hideSettingsProgressDialog();
+    }
+
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     }
 
     @Override

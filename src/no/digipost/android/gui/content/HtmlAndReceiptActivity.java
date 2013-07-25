@@ -37,6 +37,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.webkit.WebView;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class HtmlAndReceiptActivity extends Activity {
 
 	private WebView webView;
@@ -56,7 +58,19 @@ public class HtmlAndReceiptActivity extends Activity {
 		loadContent();
 	}
 
-	private void loadContent() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
+
+    private void loadContent() {
 		String html = "";
 		if (content_type == ApplicationConstants.RECEIPTS) {
 			html = getIntent().getStringExtra(ApiConstants.GET_RECEIPT);

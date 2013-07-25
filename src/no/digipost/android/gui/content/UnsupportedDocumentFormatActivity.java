@@ -43,6 +43,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class UnsupportedDocumentFormatActivity extends Activity {
 	private Attachment documentMeta;
 
@@ -78,7 +80,20 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 		});
 	}
 
-	@Override
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
+
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_image_html_unsupported_actionbar, menu);

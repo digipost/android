@@ -29,6 +29,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class NotificationSettingsActivity extends DigipostSettingsActivity {
 	private CheckBox newLetters;
 	private CheckBox unreadLetters;
@@ -52,7 +54,19 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 		createUI();
 	}
 
-	private void createUI() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
+
+    private void createUI() {
 		newLetters = (CheckBox) findViewById(R.id.notification_settings_new_letters);
 		unreadLetters = (CheckBox) findViewById(R.id.notification_settings_unread_letters);
 		importantLetters = (CheckBox) findViewById(R.id.notification_settings_important_letters);
