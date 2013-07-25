@@ -121,7 +121,7 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
 		StringBuilder output = new StringBuilder();
 		output.append(address.getStreet())
 				.append(" ")
-				.append(address.getHouseNumber())
+				.append((address.getHouseNumber() != null) ? address.getHouseNumber() : "")
                 .append(address.getHouseLetter())
 				.append(", ")
 				.append(address.getZipCode())
