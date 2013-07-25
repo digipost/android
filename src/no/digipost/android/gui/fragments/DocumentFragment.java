@@ -206,11 +206,11 @@ public abstract class DocumentFragment extends ContentFragment {
 		Intent intent = null;
 
 		if (fileType.equals(ApiConstants.FILETYPE_PDF)) {
-			intent = new Intent(getActivity(), MuPDFActivity.class);
+			intent = new Intent(context, MuPDFActivity.class);
 		} else if (fileType.equals(ApiConstants.FILETYPE_HTML)) {
-			intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
+			intent = new Intent(context, HtmlAndReceiptActivity.class);
 		} else {
-			intent = new Intent(getActivity(), UnsupportedDocumentFormatActivity.class);
+			intent = new Intent(context, UnsupportedDocumentFormatActivity.class);
 		}
 
 		intent.putExtra(super.INTENT_CONTENT, getContent());
@@ -240,7 +240,6 @@ public abstract class DocumentFragment extends ContentFragment {
 			super.onPreExecute();
 			if (!DocumentFragment.super.progressDialogIsVisible)
 				DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
-
 		}
 
 		@Override

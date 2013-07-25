@@ -24,22 +24,18 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.gui.adapters.ContentArrayAdapter;
-import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,8 +53,8 @@ import android.widget.TextView;
 public abstract class ContentFragment extends Fragment {
 	public static final String INTENT_CONTENT = "content";
 
-    private final String KEY_LIST_SCROLL_POSITION = "listScrollPosition";
-    private int listScrollPosition;
+	private final String KEY_LIST_SCROLL_POSITION = "listScrollPosition";
+	private int listScrollPosition;
 
 	ActivityCommunicator activityCommunicator;
 
@@ -75,9 +71,9 @@ public abstract class ContentFragment extends Fragment {
 
 	protected ProgressDialog progressDialog;
 	protected boolean progressDialogIsVisible = false;
-    protected boolean taskIsRunning = false;
+	protected boolean taskIsRunning = false;
 
-    protected ActionMode contentActionMode;
+	protected ActionMode contentActionMode;
 
 	public ContentFragment() {
 	}
@@ -88,7 +84,7 @@ public abstract class ContentFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		context = getActivity();
 
-        listScrollPosition = -1;
+		listScrollPosition = -1;
 
 		View view = inflater.inflate(R.layout.fragment_layout_listview, container, false);
 		listView = (ListView) view.findViewById(R.id.fragment_content_listview);
@@ -107,7 +103,7 @@ public abstract class ContentFragment extends Fragment {
 		});
 
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setFastScrollEnabled(true);
+		listView.setFastScrollEnabled(true);
 
 		return view;
 	}
@@ -118,35 +114,35 @@ public abstract class ContentFragment extends Fragment {
 		activityCommunicator = (ActivityCommunicator) activity;
 	}
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(KEY_LIST_SCROLL_POSITION, listView.getFirstVisiblePosition());
-    }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(KEY_LIST_SCROLL_POSITION, listView.getFirstVisiblePosition());
+	}
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            listScrollPosition = savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, -1);
-        }
-    }
+		if (savedInstanceState != null) {
+			listScrollPosition = savedInstanceState.getInt(KEY_LIST_SCROLL_POSITION, -1);
+		}
+	}
 
-    @Override
+	@Override
 	public void onResume() {
 		super.onResume();
 		FileUtilities.deleteTempFiles();
 	}
 
-    protected void retainListViewScrollPosition() {
-        if (listScrollPosition != -1) {
-            listView.setSelectionFromTop(listScrollPosition, 0);
-            listScrollPosition = -1;
-        }
-    }
+	protected void retainListViewScrollPosition() {
+		if (listScrollPosition != -1) {
+			listView.setSelectionFromTop(listScrollPosition, 0);
+			listScrollPosition = -1;
+		}
+	}
 
-    protected void setListEmptyViewText(String title, String text) {
+	protected void setListEmptyViewText(String title, String text) {
 		if (title != null) {
 			listEmptyViewTitle.setText(title);
 		}
@@ -173,47 +169,47 @@ public abstract class ContentFragment extends Fragment {
 	protected void executeContentDeleteTask() {
 		ArrayList<Object> content = listAdapter.getCheckedItems();
 
-        contentActionMode.finish();
+		contentActionMode.finish();
 
-        ContentDeleteTask documentDeleteTask = new ContentDeleteTask(content);
+		ContentDeleteTask documentDeleteTask = new ContentDeleteTask(content);
 		documentDeleteTask.execute();
 	}
 
 	protected void deleteContent(String message) {
-        if (SettingsUtilities.getConfirmDeletePreference(context)) {
-            showDeleteContentDialog(message);
-        } else {
-            executeContentDeleteTask();
-        }
+		if (SettingsUtilities.getConfirmDeletePreference(context)) {
+			showDeleteContentDialog(message);
+		} else {
+			executeContentDeleteTask();
+		}
 	}
 
-    protected void showDeleteContentDialog(String message) {
-        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
-        alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                executeContentDeleteTask();
-                dialogInterface.dismiss();
-            }
-        });
-        alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
+	protected void showDeleteContentDialog(String message) {
+		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
+		alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				executeContentDeleteTask();
+				dialogInterface.dismiss();
+			}
+		});
+		alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i) {
+				dialogInterface.cancel();
+			}
+		});
+		AlertDialog alertDialog = alertDialogBuilder.create();
+		alertDialog.show();
+	}
 
 	protected class ContentDeleteTask extends AsyncTask<Void, Object, String> {
 		private ArrayList<Object> content;
 		private boolean invalidToken;
-        private int progress;
+		private int progress;
 
 		public ContentDeleteTask(ArrayList<Object> content) {
 			this.content = content;
-            this.progress = 0;
+			this.progress = 0;
 		}
 
 		@Override
@@ -226,11 +222,11 @@ public abstract class ContentFragment extends Fragment {
 		protected String doInBackground(final Void... params) {
 			try {
 				for (Object object : content) {
-                    if (!isCancelled()) {
-                        publishProgress(object);
-                        progress++;
-                        ContentOperations.deleteContent(context, object);
-                    }
+					if (!isCancelled()) {
+						publishProgress(object);
+						progress++;
+						ContentOperations.deleteContent(context, object);
+					}
 				}
 
 				return null;
@@ -251,20 +247,22 @@ public abstract class ContentFragment extends Fragment {
 		protected void onProgressUpdate(Object... values) {
 			super.onProgressUpdate(values);
 
-            if (values[0] instanceof Letter) {
-                Letter letter = (Letter) values[0];
-                progressDialog.setMessage("Sletter " + letter.getSubject() + " (" + progress + "/" + content.size() + ")");
-            } else if (values[0] instanceof Receipt) {
-                Receipt receipt = (Receipt) values[0];
-                progressDialog.setMessage("Sletter " + receipt.getStoreName() + " " + DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()) + " (" + progress + "/" + content.size() + ")");
-            }
+			if (values[0] instanceof Letter) {
+				Letter letter = (Letter) values[0];
+				progressDialog.setMessage("Sletter " + letter.getSubject() + " (" + progress + "/" + content.size() + ")");
+			} else if (values[0] instanceof Receipt) {
+				Receipt receipt = (Receipt) values[0];
+				progressDialog.setMessage("Sletter " + receipt.getStoreName() + " "
+						+ DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()) + " (" + progress + "/" + content.size()
+						+ ")");
+			}
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-            taskIsRunning = false;
-            DialogUtitities.showToast(context, progress + " av " + content.size() + " slettet.");
+			taskIsRunning = false;
+			DialogUtitities.showToast(context, progress + " av " + content.size() + " slettet.");
 			hideProgressDialog();
 			updateAccountMeta();
 		}
@@ -272,7 +270,7 @@ public abstract class ContentFragment extends Fragment {
 		@Override
 		protected void onPostExecute(final String result) {
 			super.onPostExecute(result);
-            taskIsRunning = false;
+			taskIsRunning = false;
 			if (result != null) {
 				DialogUtitities.showToast(context, result);
 
@@ -287,27 +285,27 @@ public abstract class ContentFragment extends Fragment {
 	}
 
 	protected void showContentProgressDialog(final AsyncTask task, String message) {
-        taskIsRunning = true;
+		taskIsRunning = true;
 		progressDialog = DialogUtitities.getProgressDialogWithMessage(context, message);
 		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int which) {
-                dialog.dismiss();
-                taskIsRunning = false;
-                task.cancel(true);
-            }
-        });
+			public void onClick(final DialogInterface dialog, final int which) {
+				dialog.dismiss();
+				taskIsRunning = false;
+				task.cancel(true);
+			}
+		});
 
 		progressDialog.show();
 	}
 
 	protected void hideProgressDialog() {
-        if(!taskIsRunning){
-		    progressDialogIsVisible = false;
-            if(progressDialog != null){
-		        progressDialog.dismiss();
-		        progressDialog = null;
-            }
-        }
+		if (!taskIsRunning) {
+			progressDialogIsVisible = false;
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+				progressDialog = null;
+			}
+		}
 	}
 
 	public void filterList(String filterQuery) {
@@ -336,14 +334,13 @@ public abstract class ContentFragment extends Fragment {
 		public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean state) {
 			listAdapter.setChecked(position);
 			actionMode.setTitle(Integer.toString(listAdapter.getCheckedCount()));
-            listAdapter.notifyDataSetChanged();
-        }
-
+			listAdapter.notifyDataSetChanged();
+		}
 
 		@Override
 		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            contentActionMode = actionMode;
-            context.setTheme(R.style.Digipost_ActionMode);
+			contentActionMode = actionMode;
+			context.setTheme(R.style.Digipost_ActionMode);
 			MenuInflater inflater = actionMode.getMenuInflater();
 			inflater.inflate(R.menu.activity_main_content_context, menu);
 			listAdapter.setCheckboxVisible(true);
@@ -365,8 +362,8 @@ public abstract class ContentFragment extends Fragment {
 		public void onDestroyActionMode(ActionMode actionMode) {
 			listAdapter.setCheckboxVisible(false);
 			listAdapter.clearChecked();
-            context.setTheme(R.style.Digipost);
-            contentActionMode = null;
+			context.setTheme(R.style.Digipost);
+			contentActionMode = null;
 		}
 	}
 }

@@ -45,6 +45,7 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_personal_settings);
         ApplicationUtilities.setScreenRotationFromPreferences(this);
 

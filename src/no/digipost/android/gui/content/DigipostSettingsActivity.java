@@ -42,7 +42,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 	protected Settings accountSettings;
 
 	protected Button settingsButton;
-	private ProgressDialog settingsProgressDialog;
+	protected ProgressDialog settingsProgressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,13 @@ public abstract class DigipostSettingsActivity extends Activity {
 
 		executeGetAccountTask();
 	}
+
+    @Override
+    protected void onPause() {
+        super.onDestroy();
+
+        hideSettingsProgressDialog();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -68,8 +75,10 @@ public abstract class DigipostSettingsActivity extends Activity {
 	}
 
 	private void hideSettingsProgressDialog() {
-		settingsProgressDialog.dismiss();
-		settingsProgressDialog = null;
+        if (settingsProgressDialog != null) {
+            settingsProgressDialog.dismiss();
+            settingsProgressDialog = null;
+        }
 	}
 
 	private void showInvalidInputDialog(String message) {
@@ -170,7 +179,12 @@ public abstract class DigipostSettingsActivity extends Activity {
 		private String errorMessage;
         private boolean invalidToken;
 
-		@Override
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
 		protected Settings doInBackground(Void... voids) {
 			try {
 				return ContentOperations.getSettings(DigipostSettingsActivity.this);
