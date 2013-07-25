@@ -227,8 +227,6 @@ public class ReceiptFragment extends ContentFragment {
 				} else if (listAdapter.isEmpty()) {
 					ReceiptFragment.super.setListEmptyViewNoNetwork(true);
 				}
-
-                retainListViewScrollPosition();
 			}
 
             activityCommunicator.onUpdateAccountMeta();
