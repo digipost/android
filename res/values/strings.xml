@@ -29,7 +29,7 @@
     <string name="yes">Ja</string>
     <string name="delete">Slett</string>
     <string name="move">Flytt</string>
-
+    <string name="open">Åpne</string>
     <string name="back">Tilbake</string>
 
     <string name="no">Nei</string>
@@ -133,7 +133,16 @@
 
     <!-- Upload -->
     <string name="upload">Last opp</string>
-    <string name="uploading">Laster opp...</string>
+    <string name="uploading">Laster opp\u0020</string>
+    <string name="upload_dialog">Er du sikker på at du vil laste opp\u0020</string>
+    <string name="upload_multiple_dialog">Er du sikker på at du vil laste opp valgte filer?</string>
+    <string name="upload_folder_exception">Mapper kan ikke lastes opp</string>
+    <string name="upload_file_type_not_allowed_start">Denne filtypen (.</string>
+    <string name="upload_file_type_not_allowed_end">) kan ikke lastes opp i Digipost.</string>
+    <string name="upload_space_used">% lagringsplass brukt</string>
+    <string name="upload_files_uploaded">\u0020filer ble lastet opp til arkivet.</string>
+    <string name="upload_complete">Opplastning fullført.</string>
+
     <string name="no_files">Ingen filer</string>
 
     <!-- Image -->

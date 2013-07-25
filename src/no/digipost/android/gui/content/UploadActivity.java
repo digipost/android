@@ -193,7 +193,7 @@ public class UploadActivity extends Activity {
 		int percentUsed = (int) ((bytesUsed * 100) / bytesAvailable);
 
 		availableSpace.setProgress(percentUsed);
-		availableSpace.setText(percentUsed + "% lagringsplass brukt");
+		availableSpace.setText(percentUsed + getString(R.string.upload_space_used));
 	}
 
 	private boolean isAcceptedFileExtension(File file) {
@@ -216,15 +216,15 @@ public class UploadActivity extends Activity {
 
 	private void promtUpload(final File file) {
 		final AlertDialog dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this,
-                "Er du sikker på at du vil laste opp " + file.getName() + "?", "Last opp")
-		.setPositiveButton("Last opp", new DialogInterface.OnClickListener() {
+                getString(R.string.upload_dialog) + file.getName() + "?", getString(R.string.upload))
+		.setPositiveButton(R.string.upload, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 executeUploadTask(file);
                 dialogInterface.dismiss();
             }
         })
-        .setNeutralButton("Forhåndsvis", new DialogInterface.OnClickListener() {
+        .setNeutralButton(R.string.open, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
                 // ignore
             }
@@ -257,8 +257,8 @@ public class UploadActivity extends Activity {
 
 	private void promtUpload(final ArrayList<File> files) {
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this,
-				"Er du sikker på at du vil laste opp valgte filer?", "Last opp");
-		builder.setPositiveButton("Last opp", new DialogInterface.OnClickListener() {
+				getString(R.string.upload_multiple_dialog), getString(R.string.upload));
+		builder.setPositiveButton(R.string.upload, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
                 uploadActionMode.finish();
@@ -276,8 +276,8 @@ public class UploadActivity extends Activity {
 	}
 
 	private void showBlockedFileExtensionDialog(File file) {
-		String message = "Denne filtypen (." + FilenameUtils.getExtension(file.getName()) + ") kan ikke lastes opp i Digipost.";
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, "Ustøttet filtype");
+		String message = getString(R.string.upload_file_type_not_allowed_start) + FilenameUtils.getExtension(file.getName()) + getString(R.string.upload_file_type_not_allowed_end);
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, getString(R.string.unsupported_title));
 		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -472,7 +472,7 @@ public class UploadActivity extends Activity {
 			if (objects.get(position).isFile()) {
 				checked[position] = !checked[position];
 			} else {
-				throw new UnsupportedOperationException("Mapper kan ikke lastes opp");
+				throw new UnsupportedOperationException(getString(R.string.upload_folder_exception));
 			}
 		}
 
@@ -592,14 +592,14 @@ public class UploadActivity extends Activity {
 		@Override
 		protected void onProgressUpdate(File... values) {
 			super.onProgressUpdate(values);
-			progressDialog.setMessage("Laster opp " + values[0].getName() + " (" + progress + "/" + files.size() + ")");
+			progressDialog.setMessage(getString(R.string.uploading) + values[0].getName() + " (" + progress + "/" + files.size() + ")");
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
 			progressDialog.dismiss();
-			DialogUtitities.showToast(UploadActivity.this, progress + " av " + files.size() + " filer ble lastet opp til arkivet.");
+			DialogUtitities.showToast(UploadActivity.this, progress + " av " + files.size() + getString(R.string.upload_files_uploaded));
 			finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
 		}
 
@@ -615,7 +615,7 @@ public class UploadActivity extends Activity {
 
 				DialogUtitities.showToast(UploadActivity.this, result);
 			} else {
-				DialogUtitities.showToast(UploadActivity.this, "Opplastning fullført.");
+				DialogUtitities.showToast(UploadActivity.this, getString(R.string.upload_complete));
 				finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
 			}
 		}
