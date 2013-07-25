@@ -35,6 +35,8 @@ import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class WebLoginActivity extends Activity {
 
 	private WebView webViewOauth;
@@ -64,7 +66,19 @@ public class WebLoginActivity extends Activity {
 
 	}
 
-	@Override
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:

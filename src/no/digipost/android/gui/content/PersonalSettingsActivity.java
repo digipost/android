@@ -31,6 +31,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 public class PersonalSettingsActivity extends DigipostSettingsActivity {
 	private TextView personalidentificationnumberObfuscated;
 	private TextView fullName;
@@ -54,7 +56,19 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
 		createUI();
 	}
 
-	private void createUI() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
+
+    private void createUI() {
 		personalidentificationnumberObfuscated = (TextView) findViewById(R.id.personal_settings_personalidentificationnumberObfuscated);
 		fullName = (TextView) findViewById(R.id.personal_settings_fullName);
 		address = (TextView) findViewById(R.id.personal_settings_address);
