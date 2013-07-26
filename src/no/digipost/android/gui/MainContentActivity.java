@@ -51,6 +51,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -241,6 +242,17 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 			}
 		}
 	}
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            if(getCurrentFragment().getContent() != ApplicationConstants.MAILBOX){
+                selectItem(ApplicationConstants.MAILBOX);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     private class SettingsChangedlistener implements SharedPreferences.OnSharedPreferenceChangeListener {
 
