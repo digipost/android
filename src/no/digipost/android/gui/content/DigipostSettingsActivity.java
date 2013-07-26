@@ -141,7 +141,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			showSettingsProgressDialog("Laster dine innstillinger...");
+			showSettingsProgressDialog(getString(R.string.pref_personal_settings_loading));
 		}
 
 		@Override

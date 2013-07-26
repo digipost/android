@@ -379,10 +379,13 @@ public abstract class DocumentFragment extends ContentFragment {
         switch (content_type){
             case ApplicationConstants.MAILBOX:
                 text = getString(R.string.emptyview_mailbox);
+                break;
             case ApplicationConstants.WORKAREA:
                 text = getString(R.string.emptyview_workarea);
+                break;
             case ApplicationConstants.ARCHIVE:
                 text = getString(R.string.emptyview_archive);
+                break;
         }
 
         text += content;

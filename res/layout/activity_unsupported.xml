@@ -31,8 +31,8 @@
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/warning_sign_description"
-                android:src="@drawable/warning_sign"/>
+                android:contentDescription="@string/file_sign_description"
+                android:src="@drawable/ic_file"/>
 
         <TextView
                 android:id="@+id/unsupported_message"

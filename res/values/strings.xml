@@ -51,18 +51,20 @@
 
     <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjon som flytt og slett</string>
     <string name="warning_sign_description">Bilde av en varselstrekant</string>
+    <string name="file_sign_description">Bilde av et fil-ikon</string>
 
     <!-- Titles -->
     <string name="title_activity_login_view">LoginView</string>
     <string name="title_activity_base">BaseActivity</string>
-    <string name="title_activity_html_veb_view">HtmlVebView</string>
+    <string name="title_activity_html_veb_view">HtmlWebView</string>
     <string name="title_activity_web_fragment">WebFragment</string>
     <string name="title_activity_login">LoginActivity</string>
 
     <!-- EmptyView -->
     <string name="emptyview_mailbox">Ingen brev i\u0020</string>
-    <string name="emptyview_workarea">Ingen dokumenter på\u0020</string>
     <string name="emptyview_archive">Ingen dokumenter i\u0020</string>
+    <string name="emptyview_workarea">Ingen dokumenter på\u0020</string>
+
 
     <!-- EmptyView - Receipt -->
     <string name="emptyview_receipt_intro_title">Kom i gang med elektroniske kvitteringer</string>
@@ -79,7 +81,7 @@
     <string name="receipt_toptext_register_cards">For å motta elektroniske kvitteringer må du legge til et bankkort</string>
     <string name="receipt_toptext_one_hidden_receipt">En kvittering er skjult. For å se denne må du verifisere ditt bankkort</string>
     <string name="receipt_toptext_multiple_hidden_receipts_start">Du har\u0020</string>
-    <string name="receipt_toptext_multiple_hidden_receipts_end">\u0020skjulte kvitteringer. For å se disse må du verifisere dirt bankkort</string>
+    <string name="receipt_toptext_multiple_hidden_receipts_end">\u0020skjulte kvitteringer. For å se disse må du verifisere ditt bankkort</string>
 
 
     <!-- Exception -->
@@ -202,6 +204,7 @@
     <string name="pref_personal_settings_search_visibility_accepts_title">Jeg godtar at min adresse er synlig for andre brukere</string>
     <string name="pref_personal_settings_search_visibility_accepts_subtitle">For at andre brukere skal kunne sende deg brev uten å kjenne digipostadressen din, må du være synlig i adressesøket.</string>
     <string name="pref_personal_settings_button">Lagre innstillinger</string>
+    <string name="pref_personal_settings_loading">Laster dine innstillinger...</string>
 
     <!-- Errors -->
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv
