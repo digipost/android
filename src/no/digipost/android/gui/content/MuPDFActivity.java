@@ -97,7 +97,7 @@ public class MuPDFActivity extends Activity {
 	private AlertDialog mAlertDialog;
 	private Intent intent;
 	private boolean searchModeOn;
-    private SearchView searchView;
+    private MenuItem searchMenuItem;
 
 	private Attachment documentMeta;
 
@@ -567,12 +567,12 @@ public class MuPDFActivity extends Activity {
         int displayPage = mDocView.getDisplayedViewIndex();
         SearchTaskResult r = SearchTaskResult.get();
         int searchPage = r != null ? r.pageNumber : -1;
-        mSearchTask.go(searchView.getQuery().toString(), direction, displayPage, searchPage);
+        mSearchTask.go(((SearchView) searchMenuItem.getActionView()).getQuery().toString(), direction, displayPage, searchPage);
     }
 
 	@Override
 	public boolean onSearchRequested() {
-		searchModeOn();
+		searchMenuItem.expandActionView();
 
 		return super.onSearchRequested();
 	}
@@ -580,7 +580,7 @@ public class MuPDFActivity extends Activity {
 	private void setupSearchView(MenuItem menuSearch) {
 		menuSearch.setOnActionExpandListener(new SearchOnActionExpandListener());
 
-		searchView = (SearchView) menuSearch.getActionView();
+		SearchView searchView = (SearchView) menuSearch.getActionView();
 
 		try {
 			Field searchField = SearchView.class.getDeclaredField("mSearchButton");
@@ -680,8 +680,8 @@ public class MuPDFActivity extends Activity {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
 
-            MenuItem menuSearch = menu.findItem(R.id.pdfmenu_search);
-            setupSearchView(menuSearch);
+            searchMenuItem = menu.findItem(R.id.pdfmenu_search);
+            setupSearchView(searchMenuItem);
         }
 
 		return super.onCreateOptionsMenu(menu);
