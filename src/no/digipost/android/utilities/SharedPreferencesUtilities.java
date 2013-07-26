@@ -78,7 +78,10 @@ public class SharedPreferencesUtilities {
 		Editor edit = getSharedPreferences(context).edit();
 		edit.remove(ApiConstants.REFRESH_TOKEN);
 		edit.commit();
-		KeyStore.getInstance().delete(ApiConstants.REFRESH_TOKEN);
+
+        if (!VersionUtilities.IsVersion18()) {
+            KeyStore.getInstance().delete(ApiConstants.REFRESH_TOKEN);
+        }
 	}
 
 	public static void clearSharedPreferences(Context context) {

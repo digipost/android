@@ -25,6 +25,7 @@ import no.digipost.android.gui.LoginActivity;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
+import no.digipost.android.utilities.VersionUtilities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -45,23 +46,29 @@ public class MainActivity extends Activity {
 	protected void onStart() {
 		super.onStart();
 		FileUtilities.deleteTempFiles();
-        EasyTracker.getInstance().activityStart(this);
+		EasyTracker.getInstance().activityStart(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-        EasyTracker.getInstance().activityStop(this);
+		EasyTracker.getInstance().activityStop(this);
 		finish();
 	}
 
 	private void checkTokenAndScreenlockStatus() {
-		KeyStore ks = KeyStore.getInstance();
-		if (ks.state() == KeyStore.State.UNLOCKED && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
-			new CheckTokenTask().execute();
-		} else {
-			startLoginActivity();
-		}
+
+		if (!VersionUtilities.IsVersion18()) {
+
+			KeyStore ks = KeyStore.getInstance();
+			if (ks.state() == KeyStore.State.UNLOCKED && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
+				new CheckTokenTask().execute();
+			} else {
+				startLoginActivity();
+			}
+		}else{
+            startLoginActivity();
+        }
 	}
 
 	private void startBaseActivity() {
