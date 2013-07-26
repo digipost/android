@@ -71,6 +71,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerArrayAdapter drawerArrayAdapter;
 	private SearchView searchView;
+    private MenuItem searchButton;
 
 	private boolean refreshing;
 
@@ -139,7 +140,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		drawerArrayAdapter.updateDrawer(getCurrentFragment().getContent());
 
-		MenuItem searchButton = menu.findItem(R.id.menu_search);
+		searchButton = menu.findItem(R.id.menu_search);
 		searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem menuItem) {
@@ -168,6 +169,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 		return super.onPrepareOptionsMenu(menu);
 	}
+
+    @Override
+    public boolean onSearchRequested() {
+        searchButton.expandActionView();
+        return false;
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
