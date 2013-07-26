@@ -79,7 +79,7 @@
     <string name="receipt_toptext_register_cards">For å motta elektroniske kvitteringer må du legge til et bankkort</string>
     <string name="receipt_toptext_one_hidden_receipt">En kvittering er skjult. For å se denne må du verifisere ditt bankkort</string>
     <string name="receipt_toptext_multiple_hidden_receipts_start">Du har\u0020</string>
-    <string name="receipt_toptext_multiple_hidden_receipts_end">\u0020skjulte kvitteringer. For å se disse må du verifisere dirt bankkort</string>
+    <string name="receipt_toptext_multiple_hidden_receipts_end">\u0020skjulte kvitteringer. For å se disse må du verifisere ditt bankkort</string>
 
 
     <!-- Exception -->

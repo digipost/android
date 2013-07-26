@@ -28,7 +28,7 @@
             android:textSize="15sp"
             android:padding="8dp"
             android:visibility="gone"
-            android:background="@color/login_background"
+            android:background="@color/toptext_background"
             android:gravity="center_horizontal"
             android:textColor="@color/white"/>
 
