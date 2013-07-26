@@ -96,7 +96,8 @@ public class MuPDFActivity extends Activity {
 	private AsyncTask<Void, Void, MuPDFAlert> mAlertTask;
 	private AlertDialog mAlertDialog;
 	private Intent intent;
-	private boolean mTopBarIsSelect;
+	private boolean searchModeOn;
+    private SearchView searchView;
 
 	private Attachment documentMeta;
 
@@ -323,9 +324,19 @@ public class MuPDFActivity extends Activity {
 			protected void onMoveToChild(int i) {
 				if (core == null)
 					return;
-				mPageNumberView.setText(String.format("%d / %d", i + 1, core.countPages()));
-				currentVindow = i;
-				super.onMoveToChild(i);
+                mPageNumberView.setText(String.format("%d / %d", i + 1, core.countPages()));
+
+                if (searchModeOn) {
+                    if (currentVindow < i) {
+                        search(1);
+                    } else {
+                        search(-1);
+                    }
+                    currentVindow = i;
+                } else {
+                    currentVindow = i;
+                    super.onMoveToChild(i);
+                }
 			}
 
 			@Override
@@ -516,10 +527,12 @@ public class MuPDFActivity extends Activity {
 		// Focus on EditTextWidget
 		// mSearchText.requestFocus();
 		// showKeyboard();
+        searchModeOn = true;
 	}
 
 	void searchModeOff() {
-		// hideKeyboard();
+		// hideKeyboard()
+        searchModeOn = false;
 		SearchTaskResult.set(null);
 		mDocView.resetupChildren();
 	}
@@ -550,6 +563,13 @@ public class MuPDFActivity extends Activity {
 		mSearchTask.go(query, direction, displayPage, searchPage);
 	}
 
+    void search(int direction) {
+        int displayPage = mDocView.getDisplayedViewIndex();
+        SearchTaskResult r = SearchTaskResult.get();
+        int searchPage = r != null ? r.pageNumber : -1;
+        mSearchTask.go(searchView.getQuery().toString(), direction, displayPage, searchPage);
+    }
+
 	@Override
 	public boolean onSearchRequested() {
 		searchModeOn();
@@ -560,7 +580,7 @@ public class MuPDFActivity extends Activity {
 	private void setupSearchView(MenuItem menuSearch) {
 		menuSearch.setOnActionExpandListener(new SearchOnActionExpandListener());
 
-		SearchView searchView = (SearchView) menuSearch.getActionView();
+		searchView = (SearchView) menuSearch.getActionView();
 
 		try {
 			Field searchField = SearchView.class.getDeclaredField("mSearchButton");

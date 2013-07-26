@@ -235,7 +235,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 	}
 
-	private class SettingsChangedlistener implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private class SettingsChangedlistener implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
