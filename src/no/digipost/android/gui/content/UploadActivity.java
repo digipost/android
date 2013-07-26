@@ -257,7 +257,7 @@ public class UploadActivity extends Activity {
 
 	private void promtUpload(final ArrayList<File> files) {
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this,
-				getString(R.string.upload_multiple_dialog), getString(R.string.upload));
+				getUploadFileDialogMessage(listAdapter.getCheckedCount()), getString(R.string.upload));
 		builder.setPositiveButton(R.string.upload, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -274,6 +274,14 @@ public class UploadActivity extends Activity {
 		});
 		builder.create().show();
 	}
+
+    private String getUploadFileDialogMessage(int count) {
+        if (count > 1) {
+            return "Vil du laste opp disse " + count + " filene?";
+        }
+
+        return "Vil du laste opp denne filen?";
+    }
 
 	private void showBlockedFileExtensionDialog(File file) {
 		String message = getString(R.string.upload_file_type_not_allowed_start) + FilenameUtils.getExtension(file.getName()) + getString(R.string.upload_file_type_not_allowed_end);

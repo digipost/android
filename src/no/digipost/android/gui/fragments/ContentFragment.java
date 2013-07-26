@@ -23,6 +23,7 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.ContentArrayAdapter;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
@@ -150,16 +151,17 @@ public abstract class ContentFragment extends Fragment {
 		documentDeleteTask.execute();
 	}
 
-	protected void deleteContent(String message) {
+	protected void deleteContent() {
 		if (SettingsUtilities.getConfirmDeletePreference(context)) {
-			showDeleteContentDialog(message);
+			showDeleteContentDialog();
 		} else {
 			executeContentDeleteTask();
 		}
 	}
 
-	protected void showDeleteContentDialog(String message) {
-		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
+	protected void showDeleteContentDialog() {
+		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
+				getDeleteDocumentsDialogMessage(listAdapter.getCheckedCount()), getString(R.string.delete));
 		alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -175,6 +177,30 @@ public abstract class ContentFragment extends Fragment {
 		});
 		AlertDialog alertDialog = alertDialogBuilder.create();
 		alertDialog.show();
+	}
+
+	protected String getDeleteDocumentsDialogMessage(int count) {
+		String type = "";
+
+		if (getContent() == ApplicationConstants.RECEIPTS) {
+			if (count > 1) {
+				type = "kvitteringene";
+			} else {
+				type = "kvitteringen";
+			}
+		} else {
+			if (count > 1) {
+				type = "brevene";
+			} else {
+				type = "brevet";
+			}
+		}
+
+		if (count > 1) {
+			return "Vil du slette disse " + count + " " + type + "?";
+		}
+
+		return "Vil du slette dette " + type + "?";
 	}
 
 	protected class ContentDeleteTask extends AsyncTask<Void, Object, String> {

@@ -176,10 +176,10 @@ public abstract class DocumentFragment extends ContentFragment {
 				dialog.dismiss();
 			}
 		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
+			public void onClick(final DialogInterface dialog, final int id) {
+				dialog.cancel();
+			}
+		});
 
 		builder.create().show();
 	}
@@ -376,19 +376,19 @@ public abstract class DocumentFragment extends ContentFragment {
 		String content = ApplicationConstants.titles[content_type].toLowerCase();
 		String text = "";
 
-        switch (content_type){
-            case ApplicationConstants.MAILBOX:
-                text = getString(R.string.emptyview_mailbox);
-                break;
-            case ApplicationConstants.WORKAREA:
-                text = getString(R.string.emptyview_workarea);
-                break;
-            case ApplicationConstants.ARCHIVE:
-                text = getString(R.string.emptyview_archive);
-                break;
-        }
+		switch (content_type) {
+		case ApplicationConstants.MAILBOX:
+			text = getString(R.string.emptyview_mailbox);
+			break;
+		case ApplicationConstants.WORKAREA:
+			text = getString(R.string.emptyview_workarea);
+			break;
+		case ApplicationConstants.ARCHIVE:
+			text = getString(R.string.emptyview_archive);
+			break;
+		}
 
-        text += content;
+		text += content;
 		DocumentFragment.super.setListEmptyViewText(text, null);
 	}
 
@@ -409,16 +409,17 @@ public abstract class DocumentFragment extends ContentFragment {
 		documentMoveTask.execute();
 	}
 
-	protected void moveDocument(String toLocation, String message) {
+	protected void moveDocument(String toLocation) {
 		if (SettingsUtilities.getConfirmMovePreference(context)) {
-			showMoveDocumentsDialog(toLocation, message);
+			showMoveDocumentsDialog(toLocation);
 		} else {
 			executeDocumentMoveTask(toLocation);
 		}
 	}
 
-	protected void showMoveDocumentsDialog(final String toLocation, final String message) {
-		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessage(context, message);
+	protected void showMoveDocumentsDialog(final String toLocation) {
+		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
+				getMoveDocumentsDialogMessage(toLocation, listAdapter.getCheckedCount()), getString(R.string.move));
 		alertDialogBuilder.setPositiveButton(R.string.move, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -434,6 +435,22 @@ public abstract class DocumentFragment extends ContentFragment {
 		});
 		AlertDialog alertDialog = alertDialogBuilder.create();
 		alertDialog.show();
+	}
+
+	protected String getMoveDocumentsDialogMessage(String toLocation, int count) {
+		String location = "";
+
+		if (toLocation.equals(ApiConstants.LOCATION_ARCHIVE)) {
+			location = "arkivet";
+		} else {
+			location = "kjøkkenbenken";
+		}
+
+		if (count > 1) {
+			return "Vil du flytte disse " + count + " brevene " + location + "?";
+		}
+
+		return "Vil du flytte dette brevet til " + location + "?";
 	}
 
 	private class DocumentMoveTask extends AsyncTask<Void, Letter, String> {
@@ -592,7 +609,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
 			switch (menuItem.getItemId()) {
 			case R.id.main_context_menu_delete:
-				DocumentFragment.super.deleteContent(getString(R.string.dialog_prompt_delete_documents));
+				DocumentFragment.super.deleteContent();
 				break;
 			}
 
