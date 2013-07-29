@@ -110,7 +110,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-			executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position), parentLetter, parentListPosition);
+			openAttachment(attachmentArrayAdapter.getItem(position), parentLetter, parentListPosition);
 		}
 	}
 
@@ -154,9 +154,95 @@ public abstract class DocumentFragment extends ContentFragment {
 		if (attachments.size() > 1) {
 			showAttachmentDialog(letter, listPosition);
 		} else {
-			executeGetAttachmentContentTask(attachments.get(0), letter, listPosition);
+			openAttachment(attachments.get(0), letter, listPosition);
 		}
 	}
+
+	private void openAttachment(Attachment attachment, Letter letter, int listPosition) {
+
+		if (attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null) {
+
+			if (attachment.getInvoice().getPayment() != null) {
+
+				String timePayed = attachment.getInvoice().getPayment().getTimePayed();
+				String debitorBankAccount = attachment.getInvoice().getPayment().getDebitorBankAccount();
+				String bankHomepage = attachment.getInvoice().getPayment().getBankHomepage();
+
+                System.out.println("attachment.getInvoice().getPayment() != null");
+			} else {
+                System.out.println("attachment.getInvoice().getPayment() == null");
+
+                String currentBankAccount = null;
+
+                if (attachment.getInvoice().getSendToBank() != null) {
+                    //SEND TIL NETTBANK
+                    System.out.println("attachment.getInvoice().getSendToBank() != null)");
+
+
+                    String errorMessage = null;
+
+					try {
+						currentBankAccount = ContentOperations.getAccount(context).getPrimaryAccount().getCurrentBankAccountUri();
+
+					} catch (DigipostApiException e) {
+						Log.e(getClass().getName(), e.getMessage(), e);
+						errorMessage = e.getMessage();
+					} catch (DigipostClientException e) {
+						Log.e(getClass().getName(), e.getMessage(), e);
+						errorMessage = e.getMessage();
+					} catch (DigipostAuthenticationException e) {
+						Log.e(getClass().getName(), e.getMessage(), e);
+						errorMessage = e.getMessage();
+					}
+
+                    if(errorMessage == null){
+                        showSendToBankDialog(attachment,letter,listPosition, currentBankAccount);
+                    }else{
+                        DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
+                    }
+				}else{
+                    //IKKE MULIG Å SENDE TIL NETTBANK
+                    showSendToBankDialog(attachment, letter, listPosition, currentBankAccount);
+                }
+			}
+		} else {
+			executeGetAttachmentContentTask(attachment, letter, listPosition);
+		}
+	}
+
+    private void showSendToBankDialog(final Attachment attachment,final Letter letter,final int listPosition, final String currentBankAccount){
+        String title = getString(R.string.dialog_send_to_bank_title);
+        String message = getString(R.string.dialog_send_to_bank_message);
+
+        if(currentBankAccount != null){
+            message += "\nKontonnr" + currentBankAccount;
+        }
+
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
+        builder.setPositiveButton(getString(R.string.dialog_send_to_bank), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+
+                if(currentBankAccount != null){
+                    sendToBank(attachment, letter, listPosition);
+                }else{
+                    //TODO Show error modal, hvordan det gjøres på nett
+                }
+
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+
+        builder.create().show();
+    }
+
+    private void sendToBank(final Attachment attachment,final Letter letter,final int listPosition){
+        SendToBankTask task = new SendToBankTask(attachment,letter,listPosition);
+        task.execute();
+    }
 
 	private void sendOpeningReceipt(final Letter letter, int listPosition) {
 		SendOpeningReceiptTask task = new SendOpeningReceiptTask(letter, listPosition);
@@ -342,6 +428,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		protected void onPostExecute(final Documents documents) {
 			super.onPostExecute(documents);
 			DocumentFragment.super.taskIsRunning = false;
+            System.out.println("documents1"+documents);
 
 			if (documents != null) {
 				ArrayList<Letter> letters = documents.getDocument();
@@ -349,9 +436,9 @@ public abstract class DocumentFragment extends ContentFragment {
 				if (!letters.isEmpty()) {
 					DocumentFragment.super.setListEmptyViewNoNetwork(false);
 				} else {
-                    if(!isDetached()){
-					    setEmptyViewText();
-                    }
+					if (!isDetached()) {
+						setEmptyViewText();
+					}
 				}
 			} else {
 				if (invalidToken) {
@@ -359,8 +446,8 @@ public abstract class DocumentFragment extends ContentFragment {
 				} else if (listAdapter.isEmpty()) {
 					DocumentFragment.super.setListEmptyViewNoNetwork(true);
 				}
-
-				DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
+                System.out.println("documents2"+documents);
+                DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
 			}
 
 			activityCommunicator.onUpdateAccountMeta();
@@ -540,6 +627,71 @@ public abstract class DocumentFragment extends ContentFragment {
 		ContentDeleteTask contentDeleteTask = new ContentDeleteTask(letters);
 		contentDeleteTask.execute();
 	}
+
+    protected class SendToBankTask extends AsyncTask<Void, Void, Boolean> {
+        private String errorMessage;
+        private Letter letter;
+        private Attachment attachment;
+        private boolean invalidToken;
+        private int listPosition;
+
+        public SendToBankTask(final Attachment attachment, final Letter letter, int listPosition) {
+            invalidToken = false;
+            this.letter = letter;
+            this.listPosition = listPosition;
+            this.attachment = attachment;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.sending_to_bank));
+            DocumentFragment.super.progressDialogIsVisible = true;
+        }
+
+        @Override
+        protected Boolean doInBackground(final Void... params) {
+            try {
+                ContentOperations.sendToBank(context, attachment);
+                letter = ContentOperations.getSelfLetter(context, letter);
+                return true;
+            } catch (DigipostApiException e) {
+                errorMessage = e.getMessage();
+                return false;
+            } catch (DigipostClientException e) {
+                errorMessage = e.getMessage();
+                return false;
+            } catch (DigipostAuthenticationException e) {
+                invalidToken = true;
+                errorMessage = e.getMessage();
+                return false;
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+
+            DocumentFragment.super.taskIsRunning = false;
+            DocumentFragment.super.hideProgressDialog();
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean result) {
+
+            DocumentFragment.super.taskIsRunning = false;
+            DocumentFragment.super.hideProgressDialog();
+
+            if (result != null) {
+                updateAdapterLetter(letter,listPosition);
+            } else {
+                if (invalidToken) {
+                    activityCommunicator.requestLogOut();
+                }
+                DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
+            }
+        }
+    }
 
 	protected class SendOpeningReceiptTask extends AsyncTask<Void, Void, Boolean> {
 		private String errorMessage;

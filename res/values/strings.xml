@@ -220,6 +220,10 @@
     <string name="error_failed_to_open_with_intent">En feil oppstod under åpning av filen.</string>
 
     <!-- Prompts -->
+    <string name="sending_to_bank">Sender til nettbank...</string>
+    <string name="dialog_send_to_bank">Send til nettbank</string>
+    <string name="dialog_send_to_bank_title">Send til nettbank</string>
+    <string name="dialog_send_to_bank_message">Vil du sende denne betalingen til nettbank?</string>
     <string name="dialog_opening_receipt_yes">Åpne og send kvittering</string>
     <string name="dialog_opening_receipt_title">Avsender krever lesekvittering</string>
     <string name="dialog_opening_receipt_message">Når du åpner dette brevet, vil det bli

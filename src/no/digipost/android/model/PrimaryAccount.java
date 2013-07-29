@@ -151,4 +151,13 @@ public class PrimaryAccount {
         }
         return null;
     }
+
+    public String getCurrentBankAccountUri(){
+        for (Link l : link) {
+            if (l.getRel().equals(ApiConstants.URL_RELATIONS_CURRENT_BANK_ACCOUNT)) {
+                return l.getUri();
+            }
+        }
+        return null;
+    }
 }

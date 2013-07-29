@@ -63,6 +63,7 @@ public class ApiAccess {
 	public static final int POST_ACTION_MOVE = 0;
 	public static final int POST_ACTION_SEND_OPENING_RECEIPT = 1;
     public static final int POST_ACTION_UPDATE_SETTINGS = 2;
+    public static final int POST_ACTION_SEND_TO_BANK = 3;
 
     private static Client getClient() {
         if (jerseyClient == null) {
@@ -143,6 +144,10 @@ public class ApiAccess {
         executePostRequest(context, POST_ACTION_UPDATE_SETTINGS, uri, json);
     }
 
+    public static void sendToBank(Context context, String uri) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
+        System.out.println("uri"+uri);
+        executePostRequest(context, POST_ACTION_SEND_TO_BANK, uri, null);
+    }
 	private static String executePostRequest(Context context, int action, final String uri, final StringEntity json) throws DigipostClientException,
 			DigipostApiException, DigipostAuthenticationException {
 		HttpClient httpClient = new DefaultHttpClient();

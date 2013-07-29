@@ -43,6 +43,9 @@ public class Attachment {
 	@JsonProperty
 	private ArrayList<Link> link;
 
+    @JsonProperty
+    private Invoice invoice;
+
 	public String getSubject() {
 		return subject;
 	}
@@ -106,6 +109,14 @@ public class Attachment {
 	public void setLink(final ArrayList<Link> link) {
 		this.link = link;
 	}
+
+    public void setInvoice(final Invoice invoice){
+        this.invoice = invoice;
+    }
+
+    public Invoice getInvoice(){
+        return this.invoice;
+    }
 
 	public String getContentUri() {
 		for (Link l : link) {
