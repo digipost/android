@@ -450,10 +450,10 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		if (count > 1) {
-			return "Vil du flytte disse " + count + " brevene " + location + "?";
+			return "Vil du flytte disse " + count + " dokumentene " + location + "?";
 		}
 
-		return "Vil du flytte dette brevet til " + location + "?";
+		return "Vil du flytte dette dokumentet til " + location + "?";
 	}
 
 	private class DocumentMoveTask extends AsyncTask<Void, Letter, String> {

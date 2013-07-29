@@ -190,9 +190,9 @@ public abstract class ContentFragment extends Fragment {
 			}
 		} else {
 			if (count > 1) {
-				type = "brevene";
+				type = "dokumentene";
 			} else {
-				type = "brevet";
+				type = "dokumentet";
 			}
 		}
 
