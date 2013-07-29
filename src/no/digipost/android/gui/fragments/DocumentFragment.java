@@ -342,13 +342,16 @@ public abstract class DocumentFragment extends ContentFragment {
 		protected void onPostExecute(final Documents documents) {
 			super.onPostExecute(documents);
 			DocumentFragment.super.taskIsRunning = false;
+
 			if (documents != null) {
 				ArrayList<Letter> letters = documents.getDocument();
 				DocumentFragment.super.listAdapter.replaceAll(letters);
 				if (!letters.isEmpty()) {
 					DocumentFragment.super.setListEmptyViewNoNetwork(false);
 				} else {
-					setEmptyViewText();
+                    if(!isDetached()){
+					    setEmptyViewText();
+                    }
 				}
 			} else {
 				if (invalidToken) {
@@ -378,13 +381,13 @@ public abstract class DocumentFragment extends ContentFragment {
 
 		switch (content_type) {
 		case ApplicationConstants.MAILBOX:
-			text = getString(R.string.emptyview_mailbox);
+			text = context.getString(R.string.emptyview_mailbox);
 			break;
 		case ApplicationConstants.WORKAREA:
-			text = getString(R.string.emptyview_workarea);
+			text = context.getString(R.string.emptyview_workarea);
 			break;
 		case ApplicationConstants.ARCHIVE:
-			text = getString(R.string.emptyview_archive);
+			text = context.getString(R.string.emptyview_archive);
 			break;
 		}
 
