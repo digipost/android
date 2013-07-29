@@ -18,12 +18,12 @@ This software includes third party software subject to the following licenses:
 **************************************************************************************************************
 APACHE 2 - LICENSE - http://www.apache.org/licenses/LICENSE-2.0.html
 **************************************************************************************************************
-sample:1.2.1 - https://github.com/chrisbanes/PhotoView
+universal-image-loader:1.8.5 - https://github.com/nostra13/Android-Universal-Image-Loader
 
 **************************************************************************************************************
 GNU AFFERO GENERAL PUBLIC LICENSE 3 - LICENSE_GNU_3 - http://www.gnu.org/licenses/agpl-3.0.html
 **************************************************************************************************************
-libmupdf:1.1 - http://www.mupdf.com/
+libmupdf:1.2 - http://www.mupdf.com/
 
 **************************************************************************************************************
 COMMON DEVELOPMENT AND DISTRIBUTION LICENSE 1.1 - LICENSE_CDDL_1.1 - http://glassfish.java.net/public/CDDL+GPL_1_1.html

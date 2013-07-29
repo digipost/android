@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:components="http://schemas.android.com/apk/res/no.digipost.android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/content_list_item">
+
+    <TextView
+            android:id="@+id/upload_file_path"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:ellipsize="start"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textSize="14sp"
+            android:padding="5dp"
+            android:background="@color/login_background"/>
+
+    <ListView
+            android:id="@+id/upload_file_list"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1"
+            android:divider="@color/list_divider"
+            android:dividerHeight="1sp"/>
+
+    <TextView
+            android:id="@+id/upload_list_empty"
+            android:layout_width="match_parent"
+            android:layout_height="0sp"
+            android:layout_weight="1"
+            android:text="@string/no_files"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textColor="@color/login_background"/>
+
+    <no.digipost.android.gui.helpers.TextProgressBar
+            android:id="@+id/upload_available_space"
+            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            android:max="100"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:progressDrawable="@drawable/upload_progressbar"
+            android:visibility="gone"
+            components:textSize="15sp"
+            components:textColor="@color/login_background"/>
+
+</LinearLayout>

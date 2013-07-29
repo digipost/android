@@ -14,6 +14,7 @@ import android.widget.EditText;
 
 abstract class PassClickResultVisitor {
 	public abstract void visitText(PassClickResultText result);
+
 	public abstract void visitChoice(PassClickResultChoice result);
 }
 
@@ -42,10 +43,10 @@ class PassClickResultText extends PassClickResult {
 }
 
 class PassClickResultChoice extends PassClickResult {
-	public final String [] options;
-	public final String [] selected;
+	public final String[] options;
+	public final String[] selected;
 
-	public PassClickResultChoice(boolean _changed, String [] _options, String [] _selected) {
+	public PassClickResultChoice(boolean _changed, String[] _options, String[] _selected) {
 		super(_changed);
 		options = _options;
 		selected = _selected;
@@ -58,15 +59,15 @@ class PassClickResultChoice extends PassClickResult {
 
 public class MuPDFPageView extends PageView implements MuPDFView {
 	private final MuPDFCore mCore;
-	private AsyncTask<Void,Void,PassClickResult> mPassClick;
+	private AsyncTask<Void, Void, PassClickResult> mPassClick;
 	private RectF mWidgetAreas[];
-	private AsyncTask<Void,Void,RectF[]> mLoadWidgetAreas;
+	private AsyncTask<Void, Void, RectF[]> mLoadWidgetAreas;
 	private AlertDialog.Builder mTextEntryBuilder;
 	private AlertDialog.Builder mChoiceEntryBuilder;
 	private AlertDialog mTextEntry;
 	private EditText mEditText;
-	private AsyncTask<String,Void,Boolean> mSetWidgetText;
-	private AsyncTask<String,Void,Void> mSetWidgetChoice;
+	private AsyncTask<String, Void, Boolean> mSetWidgetText;
+	private AsyncTask<String, Void, Void> mSetWidgetChoice;
 	private Runnable changeReporter;
 
 	public MuPDFPageView(Context c, MuPDFCore core, Point parentSize) {
@@ -74,8 +75,8 @@ public class MuPDFPageView extends PageView implements MuPDFView {
 		mCore = core;
 		mTextEntryBuilder = new AlertDialog.Builder(c);
 		mTextEntryBuilder.setTitle("MuPDF: fill out text field");
-		LayoutInflater inflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mEditText = (EditText)inflater.inflate(R.layout.pdf_textentry, null);
+		LayoutInflater inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		mEditText = (EditText) inflater.inflate(R.layout.pdf_textentry, null);
 		mTextEntryBuilder.setView(mEditText);
 		mTextEntryBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -84,11 +85,12 @@ public class MuPDFPageView extends PageView implements MuPDFView {
 		});
 		mTextEntryBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				mSetWidgetText = new AsyncTask<String,Void,Boolean> () {
+				mSetWidgetText = new AsyncTask<String, Void, Boolean>() {
 					@Override
 					protected Boolean doInBackground(String... arg0) {
 						return mCore.setFocusedWidgetText(mPageNumber, arg0[0]);
 					}
+
 					@Override
 					protected void onPostExecute(Boolean result) {
 						changeReporter.run();
@@ -111,14 +113,15 @@ public class MuPDFPageView extends PageView implements MuPDFView {
 		// PageView has had sufficient information to be able to
 		// perform this method directly. Making that change would
 		// make MuPDFCore.hitLinkPage superfluous.
-		float scale = mSourceScale*(float)getWidth()/(float)mSize.x;
-		float docRelX = (x - getLeft())/scale;
-		float docRelY = (y - getTop())/scale;
-
-		for (LinkInfo l: mLinks)
-			if (l.rect.contains(docRelX, docRelY))
-				return l;
-
+		float scale = mSourceScale * (float) getWidth() / (float) mSize.x;
+		float docRelX = (x - getLeft()) / scale;
+		float docRelY = (y - getTop()) / scale;
+		try {
+			for (LinkInfo l : mLinks)
+				if (l.rect.contains(docRelX, docRelY))
+					return l;
+		} catch (NullPointerException e) {
+		}
 		return null;
 	}
 
@@ -128,13 +131,13 @@ public class MuPDFPageView extends PageView implements MuPDFView {
 		mTextEntry.show();
 	}
 
-	private void invokeChoiceDialog(final String [] options) {
+	private void invokeChoiceDialog(final String[] options) {
 		mChoiceEntryBuilder.setItems(options, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				mSetWidgetChoice = new AsyncTask<String,Void,Void>() {
+				mSetWidgetChoice = new AsyncTask<String, Void, Void>() {
 					@Override
 					protected Void doInBackground(String... params) {
-						String [] sel = {params[0]};
+						String[] sel = { params[0] };
 						mCore.setFocusedWidgetChoiceSelected(sel);
 						return null;
 					}
@@ -157,9 +160,9 @@ public class MuPDFPageView extends PageView implements MuPDFView {
 	}
 
 	public boolean passClickEvent(float x, float y) {
-		float scale = mSourceScale*(float)getWidth()/(float)mSize.x;
-		final float docRelX = (x - getLeft())/scale;
-		final float docRelY = (y - getTop())/scale;
+		float scale = mSourceScale * (float) getWidth() / (float) mSize.x;
+		final float docRelX = (x - getLeft()) / scale;
+		final float docRelY = (y - getTop()) / scale;
 		boolean hitWidget = false;
 
 		if (mWidgetAreas != null) {
@@ -169,7 +172,7 @@ public class MuPDFPageView extends PageView implements MuPDFView {
 		}
 
 		if (hitWidget) {
-			mPassClick = new AsyncTask<Void,Void,PassClickResult>() {
+			mPassClick = new AsyncTask<Void, Void, PassClickResult>() {
 				@Override
 				protected PassClickResult doInBackground(Void... arg0) {
 					return mCore.passClickEvent(mPageNumber, docRelX, docRelY);
@@ -202,14 +205,12 @@ public class MuPDFPageView extends PageView implements MuPDFView {
 	}
 
 	@Override
-	protected Bitmap drawPage(int sizeX, int sizeY,
-			int patchX, int patchY, int patchWidth, int patchHeight) {
+	protected Bitmap drawPage(int sizeX, int sizeY, int patchX, int patchY, int patchWidth, int patchHeight) {
 		return mCore.drawPage(mPageNumber, sizeX, sizeY, patchX, patchY, patchWidth, patchHeight);
 	}
 
 	@Override
-	protected Bitmap updatePage(BitmapHolder h, int sizeX, int sizeY,
-			int patchX, int patchY, int patchWidth, int patchHeight) {
+	protected Bitmap updatePage(BitmapHolder h, int sizeX, int sizeY, int patchX, int patchY, int patchWidth, int patchHeight) {
 		return mCore.updatePage(h, mPageNumber, sizeX, sizeY, patchX, patchY, patchWidth, patchHeight);
 	}
 
@@ -230,7 +231,7 @@ public class MuPDFPageView extends PageView implements MuPDFView {
 
 	@Override
 	public void setPage(final int page, PointF size) {
-		mLoadWidgetAreas = new AsyncTask<Void,Void,RectF[]> () {
+		mLoadWidgetAreas = new AsyncTask<Void, Void, RectF[]>() {
 			@Override
 			protected RectF[] doInBackground(Void... arg0) {
 				return mCore.getWidgetAreas(page);

@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Drawer -->
+    <color name="main_drawer_grey_background">#393a3d</color>
+    <color name="main_drawer_dark_grey_text">#757477</color>
+    <color name="main_drawer_grey_text">#DEDEDE</color>
+    <color name="main_drawer_blue_selected">#56b4ef</color>
+    <color name="main_drawer_blue_focused">#71C2F5</color>
+    <color name="main_drawer_dark_blue">#228fd3</color>
+    <color name="main_dark_grey">#2D2E30</color>
+    <color name="main_drawer_divider">#333436</color>
+
+    <!-- ActionBar -->
+    <color name="actionbar_title_color">#FFF</color>
+    <color name="actionbar_subtitle_color">#f2f2f2</color>
+    <color name="actionbar_red_background">#e2251b</color>
+    <color name="searchbar_grey_hint">#e1e1e1</color>
+    <color name="actionbar_button_pressed_dark_red">#B00</color>
+    <color name="actionbar_button_pressed_medium_red">#CF0404</color>
+
     <!-- ListView -->
-    <color name="list_pressed">#E0E0E0</color>
-    <color name="list_focused">#6F7275</color>
-    <color name="list_even">#ffffff</color>
-    <color name="list_odd">#fafafa</color>
-    <color name="green_price">#7bc144</color>
-    <color name="blue_date">#56b4ef</color>
-    <color name="black_subject">#383435</color>
-    <color name="grey_creator">#4D484A</color>
-    <color name="list_divider">#eee</color>
-
-    <!-- Emptyslate -->
-    <color name="emptyslate_background">#eceef1</color>
-    <color name="emptyslate_text">#5E5E5E</color>
-
-    <!-- BottomBar -->
-    <color name="bottom_bar_background">#262626</color>
-    <color name="bottom_bar_search_background">#66686B</color>
+    <color name="list_pressed">#cecece</color>
+    <color name="list_multiselected">#c4e1f3</color>
+    <color name="list_focused">#c4e1f3</color>
+    <color name="green">#7bc144</color>
+    <color name="blue">#56b4ef</color>
+    <color name="black_subject">#2a2929</color>
+    <color name="grey_filesize">#5f5f5f</color>
+    <color name="grey_creator">#444142</color>
+    <color name="list_divider">#DBDBDB</color>
+    <color name="list_element_opened">#EBEBEB</color>
+    <color name="attachment_listview_unread_background">#3B3B3B</color>
+    <color name="toptext_background">#292b2d</color>
 
     <!-- Misc -->
     <color name="transparent">#00000000</color>
     <color name="white">#FFF</color>
-    <color name="search_hint">#DBDBDB</color>
-    <color name="title_strip_background">#262626</color>
-    <color name="background_red">#D80C16</color>
-    <color name="base_searchfield_background">#BA0D16</color>
-    <color name="base_searchfield_background_shadow">#A10B13</color>
-    <color name="splash_bg_color">#e2251b</color>
+    <color name="black">#000</color>
     <color name="busy_indicator">#C0202020</color>
 
     <!-- LoginActivity -->
-    <color name="login_background">#323538</color>
-    <color name="login_loginbutton_drawablebottom">#aa0000</color>
-    <color name="login_disclamer_registration_layout_background">#292b2d</color>
-    <color name="login_disclamer_registration_buttons_text_color_pressed">#8c8c8c</color>
-    <color name="login_disclamer_registration_buttons_background_normal">#5E5E5E</color>
-    <color name="login_disclamer_registration_buttons_background_pressed">#222426</color>
+    <color name="login_background">#292b2d</color>
+    <color name="grey_button_background_normal">#5E5E5E</color>
+    <color name="grey_button_background_pressed">#3B3B3B</color>
 
     <!-- Screenlock -->
     <color name="screenlock_header_background">#1F1F1F</color>

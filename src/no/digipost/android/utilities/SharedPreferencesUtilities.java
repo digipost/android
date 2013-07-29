@@ -16,62 +16,86 @@
 
 package no.digipost.android.utilities;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.content.Context;
-import android.content.SharedPreferences.Editor;
-
-
-import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.api.ContentOperations;
 import no.digipost.android.authentication.KeyStore;
+import no.digipost.android.authentication.Secret;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 
 public class SharedPreferencesUtilities {
 
-    private static SharedPreferences getSharedPreferences(Context context){
-        return PreferenceManager.getDefaultSharedPreferences(context);
-    }
-    public static int screenlockChoice(Context context){
-        return getSharedPreferences(context).getInt(ApplicationConstants.SCREENLOCK_CHOICE, ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET);
-    }
+	public static SharedPreferences getSharedPreferences(Context context) {
+		return PreferenceManager.getDefaultSharedPreferences(context);
+	}
 
-    public static boolean screenlockChoiceYes(Context context){
-        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_YES;
-    }
+	public static int screenlockChoice(Context context) {
+		return getSharedPreferences(context).getInt(ApplicationConstants.SCREENLOCK_CHOICE,
+				ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET);
+	}
 
-    public static boolean screenlockChoiceNo(Context context){
-        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_NO;
-    }
+	public static boolean screenlockChoiceYes(Context context) {
+		return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_YES;
+	}
 
-    public static boolean screenlockChoiceNotTakenYet(Context context){
-        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET;
-    }
-    public static void storeScreenlockChoice(Context context,int choice){
-        SharedPreferences.Editor edit = getSharedPreferences(context).edit();
-        edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE,choice);
-        edit.commit();
-    }
-    public static void deleteScreenlockChoice(Context context){
-        SharedPreferences.Editor edit = getSharedPreferences(context).edit();
-        edit.remove(ApplicationConstants.SCREENLOCK_CHOICE);
-        edit.commit();
-    }
+	public static boolean screenlockChoiceNo(Context context) {
+		return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_NO;
+	}
 
-    public static String getEncryptedRefreshtokenCipher(Context context){
-        String cipher = getSharedPreferences(context).getString(ApiConstants.REFRESH_TOKEN, "");
-        return cipher;
-    }
-    public static void storeEncryptedRefreshtokenCipher(String cipher, Context context){
+	public static boolean screenlockChoiceNotTakenYet(Context context) {
+		return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET;
+	}
+
+	public static void storeScreenlockChoice(Context context, int choice) {
+		SharedPreferences.Editor edit = getSharedPreferences(context).edit();
+		edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE, choice);
+		edit.commit();
+	}
+
+	public static void deleteScreenlockChoice(Context context) {
+		SharedPreferences.Editor edit = getSharedPreferences(context).edit();
+		edit.remove(ApplicationConstants.SCREENLOCK_CHOICE);
+		edit.commit();
+	}
+
+	public static String getEncryptedRefreshtokenCipher(Context context) {
+		String cipher = getSharedPreferences(context).getString(ApiConstants.REFRESH_TOKEN, "");
+		return cipher;
+	}
+
+	public static void storeEncryptedRefreshtokenCipher(String cipher, Context context) {
+		Editor editor = getSharedPreferences(context).edit();
+		editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
+		editor.commit();
+	}
+
+	public static void deleteRefreshtoken(Context context) {
+        Secret.ACCESS_TOKEN = null;
+        ContentOperations.setAccountToNull();
+		Editor edit = getSharedPreferences(context).edit();
+		edit.remove(ApiConstants.REFRESH_TOKEN);
+		edit.commit();
+
+        if (!VersionUtilities.IsVersion18()) {
+            KeyStore.getInstance().delete(ApiConstants.REFRESH_TOKEN);
+        }
+	}
+
+	public static void clearSharedPreferences(Context context) {
+		Editor editor = getSharedPreferences(context).edit();
+		editor.clear();
+		editor.commit();
+	}
+
+    public static int numberOfTimesAppHasRun(Context context) {
         Editor editor = getSharedPreferences(context).edit();
-        editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
+        int numberOfTimesAppHasRun = getSharedPreferences(context).getInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, 1);
+        editor.putInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, numberOfTimesAppHasRun + 1);
         editor.commit();
-    }
-    public static void deleteRefreshtoken(Context context){
-        Editor edit = getSharedPreferences(context).edit();
-        edit.remove(ApiConstants.REFRESH_TOKEN);
-        edit.commit();
-        KeyStore.getInstance().delete(ApiConstants.REFRESH_TOKEN);
-    }
 
-
+        return numberOfTimesAppHasRun;
+    }
 }

@@ -19,36 +19,38 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:weightSum="6"
-              android:background="@color/login_disclamer_registration_layout_background"
+              android:background="@color/login_background"
               android:layout_height="match_parent"
         >
+
     <LinearLayout
             android:orientation="vertical"
             android:background="@color/screenlock_header_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:padding="@dimen/screenlock_header_padding"
-            android:paddingLeft="@dimen/screenlock_view_padding">
+            android:padding="15dp"
+            android:paddingLeft="20dp">
+
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/screenlock"
                 android:drawableLeft="@drawable/lock_white_50"
-                android:textSize="@dimen/screenlock_header_textsize"
+                android:textSize="30sp"
                 android:id="@+id/textView"
                 android:textColor="@color/white"
                 android:layout_gravity="top"
-                android:layout_marginLeft="@dimen/screenlock_header_marginleft"
-                android:drawablePadding="@dimen/screenlock_header_drawablepadding"/>
-        </LinearLayout>
+                android:layout_marginLeft="5dp"
+                android:drawablePadding="1dp"/>
+    </LinearLayout>
 
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="@dimen/screenlock_view_padding">
+            android:padding="20dp">
 
 
         <TextView
@@ -56,39 +58,40 @@
                 android:layout_height="wrap_content"
                 android:text="@string/screenlock_message1"
                 android:gravity="left"
-                android:textSize="@dimen/screenlock_infotext_size"/>
+                android:textSize="20sp"/>
 
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/screenlock_view_padding"
+                android:layout_marginTop="20dp"
                 android:text="@string/screenlock_message2"
-                android:textSize="@dimen/screenlock_infotext_size"/>
+                android:textSize="20sp"/>
     </LinearLayout>
 
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/screenlock_view_padding"
+            android:padding="20dp"
             android:gravity="center_vertical|center_horizontal"
             android:layout_gravity="center">
-    <Button
 
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/screenlock_yes_button_style"
-            android:text="@string/yes_apply_screenlock"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:id="@+id/screenlockactivity_yes_button"/>
+        <Button
+
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/red_button_style"
+                android:text="@string/yes_apply_screenlock"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:id="@+id/screenlockactivity_yes_button"/>
 
         <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:layout_marginTop="@dimen/screenlock_view_padding"
-                android:background="@drawable/screenlock_no_button_style"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/grey_button_style"
                 android:text="@string/no_dont_use_screenlock"
                 android:textColor="@color/white"
                 android:id="@+id/screenlockactivity_no_button"/>

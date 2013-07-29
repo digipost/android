@@ -16,42 +16,55 @@
 
 package no.digipost.android.gui;
 
+import no.digipost.android.R;
+import no.digipost.android.authentication.KeyStore;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import no.digipost.android.R;
-import no.digipost.android.authentication.KeyStore;
 
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class ScreenlockPreferenceActivity extends Activity {
-    private Button yesButton,noButton;
-    private ButtonListener listener;
+	private Button yesButton, noButton;
+	private ButtonListener listener;
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_screenlockpreference);
-        yesButton = (Button) (findViewById(R.id.screenlockactivity_yes_button));
-        noButton = (Button) (findViewById(R.id.screenlockactivity_no_button));
-        listener = new ButtonListener();
-        yesButton.setOnClickListener(listener);
-        noButton.setOnClickListener(listener);
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_screenlockpreference);
+		yesButton = (Button) (findViewById(R.id.screenlockactivity_yes_button));
+		noButton = (Button) (findViewById(R.id.screenlockactivity_no_button));
+		listener = new ButtonListener();
+		yesButton.setOnClickListener(listener);
+		noButton.setOnClickListener(listener);
+	}
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
     }
 
     private void yesButton() {
-        startActivity(new Intent(KeyStore.UNLOCK_ACTION));
-        finish();
-    }
+		startActivity(new Intent(KeyStore.UNLOCK_ACTION));
+		finish();
+	}
 
-    private class ButtonListener implements View.OnClickListener {
+	private class ButtonListener implements View.OnClickListener {
 
-        public void onClick(final View v) {
-            if (v == yesButton) {
-                yesButton();
-            }else{
-                finish();
-            }
-        }
-    }
+		public void onClick(final View v) {
+			if (v == yesButton) {
+				yesButton();
+			} else {
+				finish();
+			}
+		}
+	}
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/htmlmenu_delete"
+            android:title="@string/delete"
+            android:icon="@drawable/ic_action_delete"
+            android:showAsAction="never"/>
+
+    <item
+            android:id="@+id/htmlmenu_workarea"
+            android:title="@string/context_move_to_workarea"
+            android:visible="false"
+            android:showAsAction="never"/>
+    <item
+            android:id="@+id/htmlmenu_archive"
+            android:title="@string/context_move_to_archive"
+            android:visible="false"
+            android:showAsAction="never"/>
+</menu>

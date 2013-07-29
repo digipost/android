@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package no.digipost.android.model;
 
 import java.util.ArrayList;
@@ -24,15 +25,71 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrimaryAccount {
+    @JsonProperty
+    private String personalidentificationnumberObfuscated;
+
+    @JsonProperty
+    private String digipostaddress;
+
 	@JsonProperty
 	private String fullName;
+
+    @JsonProperty
+    private ArrayList<String> email;
+
+    @JsonProperty
+    private String phonenumber;
+
+	@JsonProperty
+	private String unreadItemsInInbox;
+
+	@JsonProperty
+	private String usedStorage;
+
+	@JsonProperty
+	private String totalAvailableStorage;
+
+    @JsonProperty
+    private ArrayList<Address> address;
 
 	@JsonProperty
 	private ArrayList<Link> link;
 
+    public String getPersonalidentificationnumberObfuscated() {
+        return personalidentificationnumberObfuscated;
+    }
+
+    public String getDigipostaddress() {
+        return digipostaddress;
+    }
+
 	public String getFullName() {
 		return fullName;
 	}
+
+    public ArrayList<String> getEmail() {
+        return email;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+	public int getUnreadItemsInInbox() {
+		return Integer.parseInt(unreadItemsInInbox);
+	}
+
+	public String getUsedStorage() {
+		return usedStorage;
+	}
+
+	public String getTotalAvailableStorage() {
+		return totalAvailableStorage;
+	}
+
+    public ArrayList<Address> getAddress() {
+        return address;
+    }
 
 	public ArrayList<Link> getLink() {
 		return link;
@@ -76,4 +133,22 @@ public class PrimaryAccount {
 		}
 		return null;
 	}
+
+	public String getUploadUri() {
+		for (Link l : link) {
+			if (l.getRel().equals("https://www.digipost.no/post/relations/upload_document")) {
+				return l.getUri();
+			}
+		}
+		return null;
+	}
+
+    public String getSettingsUri() {
+        for (Link l : link) {
+            if (l.getRel().equals("https://www.digipost.no/post/relations/account_settings")) {
+                return l.getUri();
+            }
+        }
+        return null;
+    }
 }

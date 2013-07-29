@@ -25,6 +25,7 @@ public class MuPDFAlertInternal {
 	}
 
 	MuPDFAlert toAlert() {
-		return new MuPDFAlert(message, MuPDFAlert.IconType.values()[iconType], MuPDFAlert.ButtonGroupType.values()[buttonGroupType], title, MuPDFAlert.ButtonPressed.values()[buttonPressed]);
+		return new MuPDFAlert(message, MuPDFAlert.IconType.values()[iconType], MuPDFAlert.ButtonGroupType.values()[buttonGroupType], title,
+				MuPDFAlert.ButtonPressed.values()[buttonPressed]);
 	}
 }

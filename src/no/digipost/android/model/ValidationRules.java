@@ -1,0 +1,93 @@
+/**
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package no.digipost.android.model;
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ValidationRules {
+    @JsonProperty
+    private String email;
+
+    @JsonProperty
+    private String birthNumber;
+
+    @JsonProperty
+    private String organisationNumber;
+
+    @JsonProperty
+    private String phoneNumber;
+
+    @JsonProperty
+    private String date;
+
+    @JsonProperty
+    private String nonnegativeInteger;
+
+    @JsonProperty
+    private String integer;
+
+    @JsonProperty
+    private String name;
+
+    @JsonProperty
+    private String digipostAddress;
+
+    @JsonProperty
+    private String percent;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getBirthNumber() {
+        return birthNumber;
+    }
+
+    public String getOrganisationNumber() {
+        return organisationNumber;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getNonnegativeInteger() {
+        return nonnegativeInteger;
+    }
+
+    public String getInteger() {
+        return integer;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDigipostAddress() {
+        return digipostAddress;
+    }
+
+    public String getPercent() {
+        return percent;
+    }
+}

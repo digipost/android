@@ -16,20 +16,6 @@
 
 package no.digipost.android.utilities;
 
-import android.content.Context;
-
-import org.apache.http.entity.StringEntity;
-import org.apache.http.protocol.HTTP;
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ser.FilterProvider;
-import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
-import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,6 +29,20 @@ import java.io.Writer;
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.model.Letter;
+
+import org.apache.http.entity.StringEntity;
+import org.apache.http.protocol.HTTP;
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ser.FilterProvider;
+import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
+import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
+
+import android.content.Context;
 
 public class JSONUtilities {
 	public static String getJsonStringFromInputStream(final InputStream inputStream) {
@@ -95,9 +95,10 @@ public class JSONUtilities {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static StringEntity createJsonFromJackson(final Letter letter) {
+	public static StringEntity createJsonFromJackson(final Object object) {
 		// ignore-test
-		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment","openingReceiptUri","selfUri" };
+		String[] ignore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+				"selfUri", "settingsUri" };
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		FilterProvider filters = new SimpleFilterProvider().addFilter("toJSON", SimpleBeanPropertyFilter.serializeAllExcept(ignore));
@@ -105,7 +106,7 @@ public class JSONUtilities {
 		Writer strWriter = new StringWriter();
 		try {
 
-			objectMapper.filteredWriter(filters).writeValue(strWriter, letter);
+			objectMapper.filteredWriter(filters).writeValue(strWriter, object);
 		} catch (JsonGenerationException e) {
 			// Ignore
 		} catch (JsonMappingException e) {
@@ -121,6 +122,8 @@ public class JSONUtilities {
 		} catch (UnsupportedEncodingException e) {
 			// Ignore
 		}
+        System.out.println(strWriter.toString());
+
 		return output;
 	}
 
@@ -129,18 +132,18 @@ public class JSONUtilities {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
 		int nRead;
-		byte[] byteArray = new byte[size];
 
 		try {
+			byte[] byteArray = new byte[size];
 			while ((nRead = is.read(byteArray, 0, byteArray.length)) != -1) {
 				buffer.write(byteArray, 0, nRead);
 			}
 			buffer.flush();
 		} catch (IOException e) {
 			// Ignore
-		}catch(OutOfMemoryError e){
-            throw new DigipostClientException(context.getString(R.string.error_inputstreamtobyarray));
-        }
+		} catch (OutOfMemoryError e) {
+			throw new DigipostClientException(context.getString(R.string.error_inputstreamtobyarray));
+		}
 		return buffer.toByteArray();
 	}
 }

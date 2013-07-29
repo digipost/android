@@ -1,4 +1,5 @@
 package no.digipost.android.pdf;
+
 import java.util.ArrayList;
 
 import android.graphics.Bitmap;
@@ -6,8 +7,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
-public class MuPDFCore
-{
+public class MuPDFCore {
 	/* load our native library */
 	static {
 		System.loadLibrary("mupdf");
@@ -22,67 +22,85 @@ public class MuPDFCore
 
 	/* The native functions */
 	private native long openFile(String filename);
+
 	private native long openBuffer();
+
 	private native int countPagesInternal();
+
 	private native void gotoPageInternal(int localActionPageNum);
+
 	private native float getPageWidth();
+
 	private native float getPageHeight();
-	private native void drawPage(Bitmap bitmap,
-			int pageW, int pageH,
-			int patchX, int patchY,
-			int patchW, int patchH);
-	private native void updatePageInternal(Bitmap bitmap,
-			int page,
-			int pageW, int pageH,
-			int patchX, int patchY,
-			int patchW, int patchH);
+
+	private native void drawPage(Bitmap bitmap, int pageW, int pageH, int patchX, int patchY, int patchW, int patchH);
+
+	private native void updatePageInternal(Bitmap bitmap, int page, int pageW, int pageH, int patchX, int patchY, int patchW, int patchH);
+
 	private native RectF[] searchPage(String text);
+
 	private native TextChar[][][][] text();
+
 	private native byte[] textAsHtml();
+
 	private native void addStrikeOutAnnotationInternal(RectF[] lines);
+
 	private native int passClickEventInternal(int page, float x, float y);
-	private native void setFocusedWidgetChoiceSelectedInternal(String [] selected);
-	private native String [] getFocusedWidgetChoiceSelected();
-	private native String [] getFocusedWidgetChoiceOptions();
+
+	private native void setFocusedWidgetChoiceSelectedInternal(String[] selected);
+
+	private native String[] getFocusedWidgetChoiceSelected();
+
+	private native String[] getFocusedWidgetChoiceOptions();
+
 	private native int setFocusedWidgetTextInternal(String text);
+
 	private native String getFocusedWidgetTextInternal();
+
 	private native int getFocusedWidgetTypeInternal();
-	private native LinkInfo [] getPageLinksInternal(int page);
+
+	private native LinkInfo[] getPageLinksInternal(int page);
+
 	private native RectF[] getWidgetAreasInternal(int page);
+
 	private native boolean hasOutlineInternal();
+
 	private native boolean needsPasswordInternal();
+
 	private native boolean authenticatePasswordInternal(String password);
+
 	private native MuPDFAlertInternal waitForAlertInternal();
+
 	private native void replyToAlertInternal(MuPDFAlertInternal alert);
+
 	private native void startAlertsInternal();
+
 	private native void stopAlertsInternal();
+
 	private native void destroying();
+
 	private native boolean hasChangesInternal();
+
 	private native void saveInternal();
 
 	public static native boolean javascriptSupported();
 
-	public MuPDFCore(String filename) throws Exception
-	{
+	public MuPDFCore(String filename) throws Exception {
 		globals = openFile(filename);
-		if (globals == 0)
-		{
-			throw new Exception("Failed to open "+filename);
+		if (globals == 0) {
+			throw new Exception("Failed to open " + filename);
 		}
 	}
 
-	public MuPDFCore(byte buffer[]) throws Exception
-	{
+	public MuPDFCore(byte buffer[]) throws Exception {
 		fileBuffer = buffer;
 		globals = openBuffer();
-		if (globals == 0)
-		{
+		if (globals == 0) {
 			throw new Exception("Failed to open buffer");
 		}
 	}
 
-	public  int countPages()
-	{
+	public int countPages() {
 		if (numPages < 0)
 			numPages = countPagesSynchronized();
 
@@ -94,10 +112,10 @@ public class MuPDFCore
 	}
 
 	/* Shim function */
-	private void gotoPage(int page)
-	{
-		if (page > numPages-1)
-			page = numPages-1;
+	private void gotoPage(int page) {
+        numPages = countPages();
+        if (page > numPages - 1)
+			page = numPages - 1;
 		else if (page < 0)
 			page = 0;
 		gotoPageInternal(page);
@@ -132,20 +150,14 @@ public class MuPDFCore
 		globals = 0;
 	}
 
-	public synchronized Bitmap drawPage(int page,
-			int pageW, int pageH,
-			int patchX, int patchY,
-			int patchW, int patchH) {
+	public synchronized Bitmap drawPage(int page, int pageW, int pageH, int patchX, int patchY, int patchW, int patchH) {
 		gotoPage(page);
 		Bitmap bm = Bitmap.createBitmap(patchW, patchH, Config.ARGB_8888);
 		drawPage(bm, pageW, pageH, patchX, patchY, patchW, patchH);
 		return bm;
 	}
 
-	public synchronized Bitmap updatePage(BitmapHolder h, int page,
-			int pageW, int pageH,
-			int patchX, int patchY,
-			int patchW, int patchH) {
+	public synchronized Bitmap updatePage(BitmapHolder h, int page, int pageW, int pageH, int patchX, int patchY, int patchW, int patchH) {
 		Bitmap bm = null;
 		Bitmap old_bm = h.getBm();
 
@@ -162,8 +174,7 @@ public class MuPDFCore
 	public synchronized PassClickResult passClickEvent(int page, float x, float y) {
 		boolean changed = passClickEventInternal(page, x, y) != 0;
 
-		switch (WidgetType.values()[getFocusedWidgetTypeInternal()])
-		{
+		switch (WidgetType.values()[getFocusedWidgetTypeInternal()]) {
 		case TEXT:
 			return new PassClickResultText(changed, getFocusedWidgetTextInternal());
 		case LISTBOX:
@@ -183,19 +194,19 @@ public class MuPDFCore
 		return success;
 	}
 
-	public synchronized void setFocusedWidgetChoiceSelected(String [] selected) {
+	public synchronized void setFocusedWidgetChoiceSelected(String[] selected) {
 		setFocusedWidgetChoiceSelectedInternal(selected);
 	}
 
-	public synchronized LinkInfo [] getPageLinks(int page) {
+	public synchronized LinkInfo[] getPageLinks(int page) {
 		return getPageLinksInternal(page);
 	}
 
-	public synchronized RectF [] getWidgetAreas(int page) {
+	public synchronized RectF[] getWidgetAreas(int page) {
 		return getWidgetAreasInternal(page);
 	}
 
-	public synchronized RectF [] searchPage(int page, String text) {
+	public synchronized RectF[] searchPage(int page, String text) {
 		gotoPage(page);
 		return searchPage(text);
 	}
@@ -205,7 +216,7 @@ public class MuPDFCore
 		return textAsHtml();
 	}
 
-	public synchronized TextWord [][] textLines(int page) {
+	public synchronized TextWord[][] textLines(int page) {
 		gotoPage(page);
 		TextChar[][][][] chars = text();
 
@@ -214,13 +225,13 @@ public class MuPDFCore
 		// the spans, and we need to collect the text into words.
 		ArrayList<TextWord[]> lns = new ArrayList<TextWord[]>();
 
-		for (TextChar[][][] bl: chars) {
-			for (TextChar[][] ln: bl) {
+		for (TextChar[][][] bl : chars) {
+			for (TextChar[][] ln : bl) {
 				ArrayList<TextWord> wds = new ArrayList<TextWord>();
 				TextWord wd = new TextWord();
 
-				for (TextChar[] sp: ln) {
-					for (TextChar tc: sp) {
+				for (TextChar[] sp : ln) {
+					for (TextChar tc : sp) {
 						if (tc.c != ' ') {
 							wd.Add(tc);
 						} else if (wd.w.length() > 0) {
@@ -266,7 +277,7 @@ public class MuPDFCore
 		saveInternal();
 	}
 
-    public synchronized byte[] getBuffer() {
-        return fileBuffer;
-    }
+	public synchronized byte[] getBuffer() {
+		return fileBuffer;
+	}
 }
