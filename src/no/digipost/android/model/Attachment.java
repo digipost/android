@@ -45,7 +45,7 @@ public class Attachment {
 	private String type;
 	@JsonProperty
 	private ArrayList<Link> link;
-
+    @JsonProperty
     private Invoice invoice;
 
 	public String getSubject() {
@@ -111,12 +111,6 @@ public class Attachment {
 	public void setLink(final ArrayList<Link> link) {
 		this.link = link;
 	}
-
-    @JsonProperty
-    public void setInvoice(Invoice invoice){
-        System.out.println("Invoice");
-        this.invoice = invoice;
-    }
 
     public Invoice getInvoice(){
         return invoice;
