@@ -155,6 +155,7 @@ public class PrimaryAccount {
     public String getCurrentBankAccountUri(){
         for (Link l : link) {
             if (l.getRel().equals(ApiConstants.URL_RELATIONS_CURRENT_BANK_ACCOUNT)) {
+                System.out.println("URL_RELATIONS_CURRENT_BANK_ACCOUNT: "+l.getUri());
                 return l.getUri();
             }
         }

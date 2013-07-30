@@ -108,7 +108,7 @@ public class ApiConstants {
 	public static final String URL_RELATIONS_DOCUMENT_GET_ORGANIZATION_LOGO = URL + "/post/relations/organisation_logo";
 	public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "/post/api/oauth/authorize/new";
 	public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "/post/api/oauth/accesstoken";
-    public static final String URL_RELATIONS_CURRENT_BANK_ACCOUNT = URL + "post/relations/current_bank_account";
+    public static final String URL_RELATIONS_CURRENT_BANK_ACCOUNT = URL + "/post/relations/current_bank_account";
     public static final String URL_RELATIONS_BANK_HOMEPAGE = URL + "/post/relations/bank_homepage";
     public static final String URL_RELATIONS_SEND_TO_BANK = URL + "/post/relations/send_to_bank";
 

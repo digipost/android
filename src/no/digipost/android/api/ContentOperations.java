@@ -23,6 +23,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Attachment;
+import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.PrimaryAccount;
@@ -69,6 +70,11 @@ public class ContentOperations {
 		}
 	}
 
+    public static CurrentBankAccount getCurrentBankAccount(Context context) throws DigipostClientException, DigipostAuthenticationException,
+            DigipostApiException {
+        String uri = getAccount(context).getPrimaryAccount().getCurrentBankAccountUri();
+        return ApiAccess.getCurrentBankAccount(context, uri);
+    }
 	public static Receipts getAccountContentMetaReceipt(Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
 		return ApiAccess.getReceipts(context, getAccountUpdated(context).getPrimaryAccount().getReceiptsUri());

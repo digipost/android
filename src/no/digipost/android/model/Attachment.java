@@ -20,9 +20,12 @@ import java.util.ArrayList;
 
 import no.digipost.android.constants.ApiConstants;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Attachment {
 
@@ -43,7 +46,6 @@ public class Attachment {
 	@JsonProperty
 	private ArrayList<Link> link;
 
-    @JsonProperty
     private Invoice invoice;
 
 	public String getSubject() {
@@ -110,12 +112,14 @@ public class Attachment {
 		this.link = link;
 	}
 
-    public void setInvoice(final Invoice invoice){
+    @JsonProperty
+    public void setInvoice(Invoice invoice){
+        System.out.println("Invoice");
         this.invoice = invoice;
     }
 
     public Invoice getInvoice(){
-        return this.invoice;
+        return invoice;
     }
 
 	public String getContentUri() {
