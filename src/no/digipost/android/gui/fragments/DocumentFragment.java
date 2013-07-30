@@ -160,92 +160,7 @@ public abstract class DocumentFragment extends ContentFragment {
 	}
 
 	private void openAttachment(Attachment attachment, Letter letter, int listPosition) {
-
-		if (attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null) {
-			openInvoiceTask(attachment, letter, listPosition);
-		} else {
-			executeGetAttachmentContentTask(attachment, letter, listPosition);
-		}
-	}
-
-	private void openInvoiceContent(Attachment attachment, Letter letter, int listPosition, CurrentBankAccount account) {
-
-		if (attachment.getInvoice().getPayment() != null) {
-
-			String timePayed = attachment.getInvoice().getPayment().getTimePayed();
-			String debitorBankAccount = attachment.getInvoice().getPayment().getDebitorBankAccount();
-			String bankHomepage = attachment.getInvoice().getPayment().getBankHomepage();
-
-		} else {
-
-			String accountNumber = null;
-
-			if (attachment.getInvoice().getSendToBank() != null) {
-				// SEND TIL NETTBANK
-
-                System.out.println("account:"+account);
-
-				if (account != null) {
-					accountNumber = account.getBankAccount().getAccountNumber();
-				}
-
-				System.out.println("accountNumber" + accountNumber);
-
-				showSendToBankDialog(attachment, letter, listPosition, accountNumber);
-
-			} else {
-				// IKKE MULIG Å SENDE TIL NETTBANK
-				showSendToBankDialog(attachment, letter, listPosition, accountNumber);
-			}
-		}
-	}
-
-	private void showSendToBankDialog(final Attachment attachment, final Letter letter, final int listPosition, final String accountNumber) {
-		String title = getString(R.string.dialog_send_to_bank_title);
-		String message = getString(R.string.dialog_send_to_bank_message);
-
-		if (accountNumber != null) {
-			message += "\nKontonnr" + accountNumber;
-		}
-
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
-		builder.setPositiveButton(getString(R.string.dialog_send_to_bank), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-
-				if (accountNumber != null) {
-					sendToBank(attachment, letter, listPosition);
-				} else {
-					showSendToBankIntroDialog();
-				}
-
-				dialog.dismiss();
-			}
-		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-				dialog.cancel();
-			}
-		});
-
-		builder.create().show();
-	}
-
-	private void showSendToBankIntroDialog() {
-		String title = getString(R.string.dialog_send_to_bank_title);
-		String message = getString(R.string.dialog_send_to_bank_intro);
-
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
-		builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-				dialog.cancel();
-			}
-		});
-
-		builder.create().show();
-	}
-
-	private void sendToBank(final Attachment attachment, final Letter letter, final int listPosition) {
-		SendToBankTask task = new SendToBankTask(attachment, letter, listPosition);
-		task.execute();
+		executeGetAttachmentContentTask(attachment, letter, listPosition);
 	}
 
 	private void sendOpeningReceipt(final Letter letter, int listPosition) {
@@ -302,6 +217,10 @@ public abstract class DocumentFragment extends ContentFragment {
 		} else {
 			intent = new Intent(context, UnsupportedDocumentFormatActivity.class);
 		}
+
+        if (attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null) {
+            intent.putExtra(super.INTENT_SEND_TO_BANK, true);
+        }
 
 		intent.putExtra(super.INTENT_CONTENT, getContent());
 		startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
@@ -630,73 +549,6 @@ public abstract class DocumentFragment extends ContentFragment {
 		contentDeleteTask.execute();
 	}
 
-	protected class SendToBankTask extends AsyncTask<Void, Void, Boolean> {
-		private String errorMessage;
-		private Letter letter;
-		private Attachment attachment;
-		private boolean invalidToken;
-		private int listPosition;
-
-		public SendToBankTask(final Attachment attachment, final Letter letter, int listPosition) {
-			invalidToken = false;
-			this.letter = letter;
-			this.listPosition = listPosition;
-			this.attachment = attachment;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.sending_to_bank));
-			DocumentFragment.super.progressDialogIsVisible = true;
-            System.out.println("pre" + letter.getSubject());
-
-        }
-
-		@Override
-		protected Boolean doInBackground(final Void... params) {
-			try {
-				ContentOperations.sendToBank(context, attachment);
-				letter = ContentOperations.getSelfLetter(context, letter);
-                System.out.println("letter" + null);
-				return true;
-			} catch (DigipostApiException e) {
-				errorMessage = e.getMessage();
-				return false;
-			} catch (DigipostClientException e) {
-				errorMessage = e.getMessage();
-				return false;
-			} catch (DigipostAuthenticationException e) {
-				invalidToken = true;
-				errorMessage = e.getMessage();
-				return false;
-			}
-		}
-
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-
-			DocumentFragment.super.taskIsRunning = false;
-			DocumentFragment.super.hideProgressDialog();
-		}
-
-		@Override
-		protected void onPostExecute(final Boolean result) {
-
-			DocumentFragment.super.taskIsRunning = false;
-			DocumentFragment.super.hideProgressDialog();
-            if (result != null) {
-				updateAdapterLetter(letter, listPosition);
-			} else {
-				if (invalidToken) {
-					activityCommunicator.requestLogOut();
-				}
-				DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
-			}
-		}
-	}
-
 	protected class SendOpeningReceiptTask extends AsyncTask<Void, Void, Boolean> {
 		private String errorMessage;
 		private Letter letter;
@@ -752,57 +604,6 @@ public abstract class DocumentFragment extends ContentFragment {
 				}
 
 				DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
-			}
-		}
-	}
-
-	private void openInvoiceTask(Attachment attachment, Letter letter, int listPosition) {
-		OpenInvoiceTask task = new OpenInvoiceTask(attachment, letter, listPosition);
-		task.execute();
-	}
-
-	private class OpenInvoiceTask extends AsyncTask<Void, Void, CurrentBankAccount> {
-		private String errorMessage;
-		private Letter letter;
-		private Attachment attachment;
-		private boolean invalidToken;
-		private int listPosition;
-
-		public OpenInvoiceTask(final Attachment attachment, final Letter letter, int listPosition) {
-			this.invalidToken = false;
-			this.letter = letter;
-			this.listPosition = listPosition;
-			this.attachment = attachment;
-		}
-
-		@Override
-		protected CurrentBankAccount doInBackground(Void... voids) {
-			try {
-				return ContentOperations.getCurrentBankAccount(context);
-			} catch (DigipostApiException e) {
-				Log.e(getClass().getName(), e.getMessage(), e);
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostClientException e) {
-				Log.e(getClass().getName(), e.getMessage(), e);
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostAuthenticationException e) {
-				Log.e(getClass().getName(), e.getMessage(), e);
-				errorMessage = e.getMessage();
-				invalidToken = true;
-				return null;
-			}
-		}
-
-		@Override
-		protected void onPostExecute(CurrentBankAccount currentBankAccount) {
-			super.onPostExecute(currentBankAccount);
-			if (invalidToken) {
-				activityCommunicator.requestLogOut();
-				DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
-			} else {
-				openInvoiceContent(attachment, letter, listPosition, currentBankAccount);
 			}
 		}
 	}

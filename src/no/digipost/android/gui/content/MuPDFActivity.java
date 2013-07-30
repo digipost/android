@@ -71,7 +71,7 @@ class ThreadPerTaskExecutor implements Executor {
 	}
 }
 
-public class MuPDFActivity extends Activity {
+public class MuPDFActivity extends DisplayContentActivity {
     public static final String ACTION_OPEN_FILEPATH = "openFilepath";
 
 	private final String CURRENT_WINDOW = "currentWindow";
@@ -98,8 +98,6 @@ public class MuPDFActivity extends Activity {
 	private Intent intent;
 	private boolean searchModeOn;
     private MenuItem searchMenuItem;
-
-	private Attachment documentMeta;
 
 	private ActionMode.Callback selectActionModeCallback;
 	private ActionMode selectActionMode;
@@ -269,7 +267,7 @@ public class MuPDFActivity extends Activity {
 
 		mAlertBuilder = new AlertDialog.Builder(this);
 
-        if (core == null) {
+        if (core == null && DocumentContentStore.documentContent != null) {
             intent = getIntent();
             String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
 
@@ -278,8 +276,7 @@ public class MuPDFActivity extends Activity {
                 core = openFile(openFilepath);
                 SearchTaskResult.set(null);
             } else {
-                documentMeta = DocumentContentStore.documentMeta;
-                setActionBar(documentMeta.getSubject(), DocumentContentStore.documentParent.getCreatorName());
+                setActionBar(DocumentContentStore.documentMeta.getSubject(), DocumentContentStore.documentParent.getCreatorName());
 
                 byte buffer[] = DocumentContentStore.documentContent;
 
@@ -456,21 +453,6 @@ public class MuPDFActivity extends Activity {
 		super.onRestoreInstanceState(savedInstanceState);
 
 		mDocView.setDisplayedViewIndex(savedInstanceState.getInt(CURRENT_WINDOW, 0));
-	}
-
-	private void openFileWithIntent(final String documentFileType, final byte[] data) {
-		if (data == null) {
-			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
-			finish();
-		}
-
-		try {
-			FileUtilities.openFileWithIntent(this, documentFileType, data);
-		} catch (ActivityNotFoundException e) {
-			DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
-		} catch (Exception e) {
-			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
-		}
 	}
 
 	@Override
@@ -707,7 +689,12 @@ public class MuPDFActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
+            boolean bank = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
+            if (bank) {
+                super.openInvoiceTask();
+            } else {
+                finish();
+            }
 			return true;
 		case R.id.pdfmenu_delete:
 			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
@@ -723,10 +710,10 @@ public class MuPDFActivity extends Activity {
 			selectActionMode = startActionMode(selectActionModeCallback);
 			return true;
 		case R.id.pdfmenu_open_external:
-			openFileWithIntent(documentMeta.getFileType(), core.getBuffer());
+			super.openFileWithIntent();
 			return true;
 		case R.id.pdfmenu_save:
-			promtSaveToSD();
+            super.promtSaveToSD();
 			return true;
 		}
 
@@ -805,63 +792,5 @@ public class MuPDFActivity extends Activity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-	}
-
-	private void promtSaveToSD() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-				new SaveDocumentToSDTask().execute();
-				dialog.dismiss();
-			}
-		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-				dialog.cancel();
-			}
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-	private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
-		ProgressDialog progressDialog;
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-
-			progressDialog = new ProgressDialog(MuPDFActivity.this);
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progressDialog.setMessage(getString(R.string.loading_content));
-			progressDialog.show();
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... parameters) {
-			File file = null;
-
-			try {
-				file = FileUtilities.writeFileToSD(documentMeta.getSubject(), documentMeta.getFileType(), core.getBuffer());
-			} catch (Exception e) {
-				return false;
-			}
-
-			FileUtilities.makeFileVisible(MuPDFActivity.this, file);
-
-			return true;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean saved) {
-			super.onPostExecute(saved);
-
-			if (saved) {
-				DialogUtitities.showToast(MuPDFActivity.this, getString(R.string.pdf_saved_to_sd));
-			} else {
-				DialogUtitities.showToast(MuPDFActivity.this, getString(R.string.pdf_save_to_sd_failed));
-			}
-
-			progressDialog.dismiss();
-		}
 	}
 }

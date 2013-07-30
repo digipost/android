@@ -53,8 +53,7 @@ import android.widget.TextView;
 
 public abstract class ContentFragment extends Fragment {
 	public static final String INTENT_CONTENT = "content";
-
-	private final String KEY_LIST_SCROLL_POSITION = "listScrollPosition";
+    public static final String INTENT_SEND_TO_BANK = "sendToBank";
 
 	ActivityCommunicator activityCommunicator;
 
