@@ -45,8 +45,7 @@ import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class UnsupportedDocumentFormatActivity extends Activity {
-	private Attachment documentMeta;
+public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,10 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 		setContentView(R.layout.activity_unsupported);
 		ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-		documentMeta = DocumentContentStore.documentMeta;
+		if (DocumentContentStore.documentContent == null) {
+            DialogUtitities.showToast(this, "En feil oppstod under åpning av dokumentet.");
+            finish();
+        }
 
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle(DocumentContentStore.documentMeta.getSubject());
@@ -67,7 +69,7 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 		open.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				openFileWithIntent(DocumentContentStore.documentMeta.getFileType(), DocumentContentStore.documentContent);
+				UnsupportedDocumentFormatActivity.super.openFileWithIntent();
 			}
 		});
 
@@ -133,10 +135,10 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 			promtAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
 			return true;
 		case R.id.menu_image_html_unsupported_open_external:
-			openFileWithIntent(DocumentContentStore.documentMeta.getFileType(), DocumentContentStore.documentContent);
+			super.openFileWithIntent();
 			return true;
 		case R.id.menu_image_html_unsupported_save:
-			promtSaveToSD();
+			super.promtSaveToSD();
 			return true;
 		}
 
@@ -167,79 +169,6 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 			}
 		});
 		builder.create().show();
-	}
-
-	private void openFileWithIntent(final String documentFileType, final byte[] data) {
-		if (data == null) {
-			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
-			finish();
-		}
-
-		try {
-			FileUtilities.openFileWithIntent(this, documentFileType, data);
-		} catch (ActivityNotFoundException e) {
-			DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
-		} catch (Exception e) {
-			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
-		}
-	}
-
-	private void promtSaveToSD() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-				dialog.dismiss();
-				new SaveDocumentToSDTask().execute();
-			}
-		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-				dialog.dismiss();
-			}
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-	private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
-		private ProgressDialog progressDialog;
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-
-			progressDialog = new ProgressDialog(UnsupportedDocumentFormatActivity.this);
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progressDialog.setMessage(getString(R.string.loading_content));
-			progressDialog.show();
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... parameters) {
-			File file = null;
-
-			try {
-				file = FileUtilities.writeFileToSD(documentMeta.getSubject(), documentMeta.getFileType(),
-						DocumentContentStore.documentContent);
-			} catch (Exception e) {
-				return false;
-			}
-
-			FileUtilities.makeFileVisible(UnsupportedDocumentFormatActivity.this, file);
-
-			return true;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean saved) {
-			super.onPostExecute(saved);
-			progressDialog.dismiss();
-
-			if (saved) {
-				DialogUtitities.showToast(UnsupportedDocumentFormatActivity.this, getString(R.string.pdf_saved_to_sd));
-			} else {
-				DialogUtitities.showToast(UnsupportedDocumentFormatActivity.this, getString(R.string.pdf_save_to_sd_failed));
-			}
-		}
 	}
 
 	@Override
