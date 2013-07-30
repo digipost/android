@@ -55,7 +55,7 @@
                 <data
                         android:scheme="https"
                         android:host="www.digipost.no"
-                        android:pathPrefix="/app/"/>
+                        android:pathPrefix="/app/#/"/>
             </intent-filter>
         </activity>
         <activity
