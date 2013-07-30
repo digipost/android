@@ -16,25 +16,18 @@
 
 package no.digipost.android.gui.content;
 
-import java.io.File;
-
 import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.model.Attachment;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,9 +47,9 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		ApplicationUtilities.setScreenRotationFromPreferences(this);
 
 		if (DocumentContentStore.documentContent == null) {
-            DialogUtitities.showToast(this, "En feil oppstod under åpning av dokumentet.");
-            finish();
-        }
+			DialogUtitities.showToast(this, "En feil oppstod under åpning av dokumentet.");
+			finish();
+		}
 
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setTitle(DocumentContentStore.documentMeta.getSubject());
@@ -82,20 +75,19 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		});
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+		EasyTracker.getInstance().activityStart(this);
+	}
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EasyTracker.getInstance().activityStart(this);
-    }
+	@Override
+	protected void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop(this);
+	}
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EasyTracker.getInstance().activityStop(this);
-    }
-
-    @Override
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_image_html_unsupported_actionbar, menu);

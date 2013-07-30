@@ -16,7 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.util.concurrent.Executor;
 
@@ -26,7 +25,6 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.model.Attachment;
 import no.digipost.android.pdf.MuPDFAlert;
 import no.digipost.android.pdf.MuPDFCore;
 import no.digipost.android.pdf.MuPDFPageAdapter;
@@ -37,10 +35,10 @@ import no.digipost.android.pdf.SearchTaskResult;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
-import android.app.Activity;
+
+import org.apache.commons.io.FilenameUtils;
+
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -63,8 +61,6 @@ import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
-import org.apache.commons.io.FilenameUtils;
-
 class ThreadPerTaskExecutor implements Executor {
 	public void execute(Runnable r) {
 		new Thread(r).start();
@@ -72,7 +68,7 @@ class ThreadPerTaskExecutor implements Executor {
 }
 
 public class MuPDFActivity extends DisplayContentActivity {
-    public static final String ACTION_OPEN_FILEPATH = "openFilepath";
+	public static final String ACTION_OPEN_FILEPATH = "openFilepath";
 
 	private final String CURRENT_WINDOW = "currentWindow";
 	private int currentVindow;
@@ -97,7 +93,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 	private AlertDialog mAlertDialog;
 	private Intent intent;
 	private boolean searchModeOn;
-    private MenuItem searchMenuItem;
+	private MenuItem searchMenuItem;
 
 	private ActionMode.Callback selectActionModeCallback;
 	private ActionMode selectActionMode;
@@ -267,26 +263,26 @@ public class MuPDFActivity extends DisplayContentActivity {
 
 		mAlertBuilder = new AlertDialog.Builder(this);
 
-        if (core == null && DocumentContentStore.documentContent != null) {
-            intent = getIntent();
-            String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
+		if (core == null && DocumentContentStore.documentContent != null) {
+			intent = getIntent();
+			String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
 
-            if (openFilepath != null) {
-                setActionBar(FilenameUtils.getName(openFilepath), null);
-                core = openFile(openFilepath);
-                SearchTaskResult.set(null);
-            } else {
-                setActionBar(DocumentContentStore.documentMeta.getSubject(), DocumentContentStore.documentParent.getCreatorName());
+			if (openFilepath != null) {
+				setActionBar(FilenameUtils.getName(openFilepath), null);
+				core = openFile(openFilepath);
+				SearchTaskResult.set(null);
+			} else {
+				setActionBar(DocumentContentStore.documentMeta.getSubject(), DocumentContentStore.documentParent.getCreatorName());
 
-                byte buffer[] = DocumentContentStore.documentContent;
+				byte buffer[] = DocumentContentStore.documentContent;
 
-                if (buffer != null) {
-                    core = openBuffer(buffer);
-                }
+				if (buffer != null) {
+					core = openBuffer(buffer);
+				}
 
-                SearchTaskResult.set(null);
-            }
-        }
+				SearchTaskResult.set(null);
+			}
+		}
 
 		if (core == null) {
 			AlertDialog alert = mAlertBuilder.create();
@@ -303,11 +299,11 @@ public class MuPDFActivity extends DisplayContentActivity {
 		createUI(savedInstanceState);
 	}
 
-    private void setActionBar(String title, String subTitle) {
-        getActionBar().setTitle(title);
-        getActionBar().setSubtitle(subTitle);
-        getActionBar().setHomeButtonEnabled(true);
-    }
+	private void setActionBar(String title, String subTitle) {
+		getActionBar().setTitle(title);
+		getActionBar().setSubtitle(subTitle);
+		getActionBar().setHomeButtonEnabled(true);
+	}
 
 	public void createUI(Bundle savedInstanceState) {
 		if (core == null)
@@ -321,19 +317,19 @@ public class MuPDFActivity extends DisplayContentActivity {
 			protected void onMoveToChild(int i) {
 				if (core == null)
 					return;
-                mPageNumberView.setText(String.format("%d / %d", i + 1, core.countPages()));
+				mPageNumberView.setText(String.format("%d / %d", i + 1, core.countPages()));
 
-                if (searchModeOn) {
-                    if (currentVindow < i) {
-                        search(1);
-                    } else {
-                        search(-1);
-                    }
-                    currentVindow = i;
-                } else {
-                    currentVindow = i;
-                    super.onMoveToChild(i);
-                }
+				if (searchModeOn) {
+					if (currentVindow < i) {
+						search(1);
+					} else {
+						search(-1);
+					}
+					currentVindow = i;
+				} else {
+					currentVindow = i;
+					super.onMoveToChild(i);
+				}
 			}
 
 			@Override
@@ -509,12 +505,12 @@ public class MuPDFActivity extends DisplayContentActivity {
 		// Focus on EditTextWidget
 		// mSearchText.requestFocus();
 		// showKeyboard();
-        searchModeOn = true;
+		searchModeOn = true;
 	}
 
 	void searchModeOff() {
 		// hideKeyboard()
-        searchModeOn = false;
+		searchModeOn = false;
 		SearchTaskResult.set(null);
 		mDocView.resetupChildren();
 	}
@@ -545,12 +541,12 @@ public class MuPDFActivity extends DisplayContentActivity {
 		mSearchTask.go(query, direction, displayPage, searchPage);
 	}
 
-    void search(int direction) {
-        int displayPage = mDocView.getDisplayedViewIndex();
-        SearchTaskResult r = SearchTaskResult.get();
-        int searchPage = r != null ? r.pageNumber : -1;
-        mSearchTask.go(((SearchView) searchMenuItem.getActionView()).getQuery().toString(), direction, displayPage, searchPage);
-    }
+	void search(int direction) {
+		int displayPage = mDocView.getDisplayedViewIndex();
+		SearchTaskResult r = SearchTaskResult.get();
+		int searchPage = r != null ? r.pageNumber : -1;
+		mSearchTask.go(((SearchView) searchMenuItem.getActionView()).getQuery().toString(), direction, displayPage, searchPage);
+	}
 
 	@Override
 	public boolean onSearchRequested() {
@@ -656,15 +652,15 @@ public class MuPDFActivity extends DisplayContentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-        String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
+		String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
 
-        if (openFilepath == null) {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
+		if (openFilepath == null) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
 
-            searchMenuItem = menu.findItem(R.id.pdfmenu_search);
-            setupSearchView(searchMenuItem);
-        }
+			searchMenuItem = menu.findItem(R.id.pdfmenu_search);
+			setupSearchView(searchMenuItem);
+		}
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -689,12 +685,12 @@ public class MuPDFActivity extends DisplayContentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-            boolean bank = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
-            if (bank) {
-                super.openInvoiceTask();
-            } else {
-                finish();
-            }
+			boolean bank = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
+			if (bank) {
+				super.openInvoiceTask();
+			} else {
+				finish();
+			}
 			return true;
 		case R.id.pdfmenu_delete:
 			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
@@ -713,7 +709,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 			super.openFileWithIntent();
 			return true;
 		case R.id.pdfmenu_save:
-            super.promtSaveToSD();
+			super.promtSaveToSD();
 			return true;
 		}
 
@@ -735,8 +731,8 @@ public class MuPDFActivity extends DisplayContentActivity {
 		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
 			MenuInflater inflater = actionMode.getMenuInflater();
 			inflater.inflate(R.menu.activity_mupdf_context, menu);
-            setTheme(R.style.Digipost_ActionMode);
-            return true;
+			setTheme(R.style.Digipost_ActionMode);
+			return true;
 		}
 
 		@Override
@@ -760,14 +756,14 @@ public class MuPDFActivity extends DisplayContentActivity {
 		public void onDestroyActionMode(ActionMode actionMode) {
 			selectModeOff();
 			selectActionMode = null;
-            setTheme(R.style.Digipost);
+			setTheme(R.style.Digipost);
 
-        }
+		}
 	}
 
 	@Override
 	protected void onStart() {
-        EasyTracker.getInstance().activityStart(this);
+		EasyTracker.getInstance().activityStart(this);
 
 		if (core != null) {
 			core.startAlerts();
@@ -779,9 +775,9 @@ public class MuPDFActivity extends DisplayContentActivity {
 
 	@Override
 	protected void onStop() {
-        EasyTracker.getInstance().activityStop(this);
+		EasyTracker.getInstance().activityStop(this);
 
-        if (core != null) {
+		if (core != null) {
 			destroyAlertWaiter();
 			core.stopAlerts();
 		}
