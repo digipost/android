@@ -1,7 +1,10 @@
 package no.digipost.android.model;
 
+import com.sun.xml.internal.rngom.ast.builder.Include;
+
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.ArrayList;
 
@@ -11,7 +14,7 @@ import no.digipost.android.constants.ApiConstants;
 public class Invoice {
 
     @JsonProperty
-    private ArrayList<Payment> payment;
+    private Payment payment;
 
     @JsonProperty
     private ArrayList<Link> link;
@@ -44,18 +47,8 @@ public class Invoice {
         return this.dueDate;
     }
 
-    public void setPayment(final ArrayList<Payment> payment){
-        this.payment = payment;
-    }
-
     public Payment getPayment(){
-        if(payment != null)
-            for(Payment p : payment){
-                if(p != null){
-                    return p;
-                }
-            }
-        return null;
+        return payment;
     }
 
     public ArrayList<Link> getLink() {

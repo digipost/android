@@ -68,8 +68,7 @@ public class JSONUtilities {
 			}
 			content = writer.toString();
 		}
-        System.out.println("content : " + content);
-        return content;
+		return content;
 	}
 
 	public static <T> Object processJackson(final Class<T> type, final String data) {

@@ -432,7 +432,6 @@ public abstract class DocumentFragment extends ContentFragment {
 		protected void onPostExecute(final Documents documents) {
 			super.onPostExecute(documents);
 			DocumentFragment.super.taskIsRunning = false;
-			System.out.println("documents" + documents);
 
 			if (documents != null) {
 				ArrayList<Letter> letters = documents.getDocument();
@@ -450,7 +449,6 @@ public abstract class DocumentFragment extends ContentFragment {
 				} else if (listAdapter.isEmpty()) {
 					DocumentFragment.super.setListEmptyViewNoNetwork(true);
 				}
-				System.out.println("documents2" + documents);
 				DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
 			}
 
