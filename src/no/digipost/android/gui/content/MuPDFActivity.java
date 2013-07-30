@@ -669,6 +669,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem toArchive = menu.findItem(R.id.pdfmenu_archive);
 		MenuItem toWorkarea = menu.findItem(R.id.pdfmenu_workarea);
+        MenuItem sendToBank = menu.findItem(R.id.pdfmenu_send_to_bank);
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
@@ -678,20 +679,26 @@ public class MuPDFActivity extends DisplayContentActivity {
 			toArchive.setVisible(false);
 		}
 
-		return super.onPrepareOptionsMenu(menu);
+        boolean sendToBankVisible = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
+
+        if (sendToBankVisible) {
+            sendToBank.setVisible(true);
+        } else {
+            sendToBank.setVisible(false);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			boolean bank = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
-			if (bank) {
-				super.openInvoiceTask();
-			} else {
-				finish();
-			}
+			finish();
 			return true;
+        case R.id.pdfmenu_send_to_bank:
+            super.openInvoiceTask();
+            return true;
 		case R.id.pdfmenu_delete:
 			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;

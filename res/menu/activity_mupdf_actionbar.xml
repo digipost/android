@@ -8,6 +8,11 @@
             android:showAsAction="collapseActionView|ifRoom"
             android:actionViewClass="android.widget.SearchView"/>
 
+    <item
+            android:id="@+id/pdfmenu_send_to_bank"
+            android:title="@string/dialog_send_to_bank"
+            android:icon="@drawable/credit_card"
+            android:showAsAction="ifRoom"/>
 
     <item
             android:id="@+id/pdfmenu_delete"
