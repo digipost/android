@@ -21,7 +21,9 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.CurrentBankAccount;
+import no.digipost.android.model.Invoice;
 import no.digipost.android.model.Letter;
+import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
@@ -55,41 +57,47 @@ public abstract class DisplayContentActivity extends Activity {
     private void openInvoiceContent(Attachment attachment, Letter letter, CurrentBankAccount account) {
 
         if (attachment.getInvoice().getPayment() != null) {
-
-            String timePayed = attachment.getInvoice().getPayment().getTimePayed();
-            String debitorBankAccount = attachment.getInvoice().getPayment().getDebitorBankAccount();
-            String bankHomepage = attachment.getInvoice().getPayment().getBankHomepage();
-
+            showPaidInvoiceDialog(attachment.getInvoice());
         } else {
-
             String accountNumber = null;
 
             if (attachment.getInvoice().getSendToBank() != null) {
                 // SEND TIL NETTBANK
 
-                System.out.println("account:"+account);
-
-                if (account != null) {
-                    accountNumber = account.getBankAccount().getAccountNumber();
-                }
-
-                System.out.println("accountNumber" + accountNumber);
-
-                showSendToBankDialog(attachment, letter, accountNumber);
-
+                showSendToBankDialog(attachment, letter, account.getBankAccount().getAccountNumber());
             } else {
-                // IKKE MULIG Å SENDE TIL NETTBANK
-                showSendToBankDialog(attachment, letter, accountNumber);
+                showSendToBankDialog(attachment, letter, null);
             }
         }
     }
 
+    private void showPaidInvoiceDialog(Invoice invoice){
+        String timePaid = DataFormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
+        String debitorBankAccount = invoice.getPayment().getDebitorBankAccount();
+        String bankHomepage = invoice.getPayment().getBankHomepage();
+
+        System.out.println("timePayed:"+timePaid+"depitorBankAccount:"+debitorBankAccount+"bankHomePage"+bankHomepage);
+
+        String title = getString(R.string.dialog_send_to_bank_paid_title);
+        String message = getString(R.string.dialog_send_to_bank_paid_message_start) + timePaid + "." + "\n"+"\n" + getString(R.string.dialog_send_to_bank_paid_message_end);
+
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
+        builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+
+        builder.create().show();
+
+    }
+
     private void showSendToBankDialog(final Attachment attachment, final Letter letter, final String accountNumber) {
-        String title = getString(R.string.dialog_send_to_bank_title);
-        String message = getString(R.string.dialog_send_to_bank_message);
+        String title = getString(R.string.dialog_send_to_bank_not_paid_title);
+        String message = getString(R.string.dialog_send_to_bank_not_paid_message_start) + "\n\n"+getString(R.string.dialog_send_to_bank_not_paid_message_end);
 
         if (accountNumber != null) {
-            message += "\nKontonnr" + accountNumber;
+            message += "\n"+ accountNumber;
         }
 
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
@@ -99,7 +107,7 @@ public abstract class DisplayContentActivity extends Activity {
                 if (accountNumber != null) {
                     sendToBank(attachment, letter);
                 } else {
-                    showSendToBankIntroDialog();
+                    showSendToBankNotEnabledDialog();
                 }
 
                 dialog.dismiss();
@@ -113,9 +121,9 @@ public abstract class DisplayContentActivity extends Activity {
         builder.create().show();
     }
 
-    private void showSendToBankIntroDialog() {
-        String title = getString(R.string.dialog_send_to_bank_title);
-        String message = getString(R.string.dialog_send_to_bank_intro);
+    private void showSendToBankNotEnabledDialog() {
+        String title = getString(R.string.dialog_send_to_bank_not_enabled_title);
+        String message = getString(R.string.dialog_send_to_bank_not_enabled_message);
 
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
         builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
