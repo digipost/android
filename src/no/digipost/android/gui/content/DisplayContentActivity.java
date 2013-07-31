@@ -185,9 +185,7 @@ public abstract class DisplayContentActivity extends Activity {
 
             hideProgressDialog();
             if (result == true) {
-                //updateAdapterLetter(letter, listPosition);
-                DialogUtitities.showToast(DisplayContentActivity.this, "FY FAEN, DET FUNKA!!");
-                // ToDo
+                DialogUtitities.showToast(DisplayContentActivity.this, "Fakturaen ble lagt i forfallsregisteret.");
             } else {
                 if (invalidToken) {
                     finishActivityWithAction(ApiConstants.LOGOUT);
@@ -289,7 +287,7 @@ public abstract class DisplayContentActivity extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showContentProgressDialog(this, "lagrer...");
+            showContentProgressDialog(this, "Lagrer...");
         }
 
         @Override
