@@ -201,7 +201,7 @@ public abstract class DisplayContentActivity extends Activity {
 
             hideProgressDialog();
             if (result == true) {
-                DialogUtitities.showToast(DisplayContentActivity.this, "Fakturaen ble lagt i forfallsregisteret.");
+                DialogUtitities.showToast(DisplayContentActivity.this, DisplayContentActivity.this.getString(R.string.dialog_send_to_bank_paid_title));
             } else {
                 if (invalidToken) {
                     finishActivityWithAction(ApiConstants.LOGOUT);
@@ -284,7 +284,7 @@ public abstract class DisplayContentActivity extends Activity {
 
     protected void promtSaveToSD() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 new SaveDocumentToSDTask().execute();
                 dialog.dismiss();
@@ -303,7 +303,7 @@ public abstract class DisplayContentActivity extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showContentProgressDialog(this, "Lagrer...");
+            showContentProgressDialog(this, DisplayContentActivity.this.getString(R.string.saving));
         }
 
         @Override

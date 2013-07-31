@@ -48,6 +48,7 @@
     <string name="copy">Kopier tekst</string>
     <string name="save">Lagre til telefonen</string>
     <string name="open_external">Åpne i en annen app</string>
+    <string name="saving">Lagrer...</string>
 
     <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjon som flytt og slett</string>
     <string name="warning_sign_description">Bilde av en varselstrekant</string>
