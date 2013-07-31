@@ -109,7 +109,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-			openAttachment(parentLetter, position, parentListPosition);
+			executeGetAttachmentContentTask(parentLetter, position, parentListPosition);
 		}
 	}
 
@@ -152,12 +152,8 @@ public abstract class DocumentFragment extends ContentFragment {
 		if (attachments.size() > 1) {
 			showAttachmentDialog(letter, listPosition);
 		} else {
-			openAttachment(letter, 0, listPosition);
+			executeGetAttachmentContentTask(letter, 0, listPosition);
 		}
-	}
-
-	private void openAttachment(Letter letter, int attachmentListPosition, int letterListPosition) {
-		executeGetAttachmentContentTask(letter, attachmentListPosition, letterListPosition);
 	}
 
 	private void sendOpeningReceipt(final Letter letter, int listPosition) {
