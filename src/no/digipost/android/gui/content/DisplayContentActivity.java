@@ -59,11 +59,7 @@ public abstract class DisplayContentActivity extends Activity {
         if (attachment.getInvoice().getPayment() != null) {
             showPaidInvoiceDialog(attachment.getInvoice());
         } else {
-            String accountNumber = null;
-
             if (attachment.getInvoice().getSendToBank() != null) {
-                // SEND TIL NETTBANK
-
                 showSendToBankDialog(attachment, letter, account.getBankAccount().getAccountNumber());
             } else {
                 showSendToBankDialog(attachment, letter, null);
