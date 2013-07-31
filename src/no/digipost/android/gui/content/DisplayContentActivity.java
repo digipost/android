@@ -76,8 +76,6 @@ public abstract class DisplayContentActivity extends Activity {
         String debitorBankAccount = invoice.getPayment().getDebitorBankAccount();
         String bankHomepage = invoice.getPayment().getBankHomepage();
 
-        System.out.println("timePayed:"+timePaid+"depitorBankAccount:"+debitorBankAccount+"bankHomePage"+bankHomepage);
-
         String title = getString(R.string.dialog_send_to_bank_paid_title);
         String message = getString(R.string.dialog_send_to_bank_paid_message_start) + timePaid + "." + "\n"+"\n" + getString(R.string.dialog_send_to_bank_paid_message_end);
 
@@ -94,10 +92,10 @@ public abstract class DisplayContentActivity extends Activity {
 
     private void showSendToBankDialog(final Attachment attachment, final Letter letter, final String accountNumber) {
         String title = getString(R.string.dialog_send_to_bank_not_paid_title);
-        String message = getString(R.string.dialog_send_to_bank_not_paid_message_start) + "\n\n"+getString(R.string.dialog_send_to_bank_not_paid_message_end);
+        String message = getString(R.string.dialog_send_to_bank_not_paid_message_start) + "\n\n";
 
         if (accountNumber != null) {
-            message += "\n"+ accountNumber;
+            message += getString(R.string.dialog_send_to_bank_not_paid_message_end) + "\n" + accountNumber;
         }
 
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
@@ -123,7 +121,7 @@ public abstract class DisplayContentActivity extends Activity {
 
     private void showSendToBankNotEnabledDialog() {
         String title = getString(R.string.dialog_send_to_bank_not_enabled_title);
-        String message = getString(R.string.dialog_send_to_bank_not_enabled_message);
+        String message = getString(R.string.dialog_send_to_bank_not_enabled_message_start) + "\n\n" + getString(R.string.dialog_send_to_bank_not_enabled_message_end);;
 
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
         builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {

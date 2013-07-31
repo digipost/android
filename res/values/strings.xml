@@ -227,11 +227,12 @@
     <string name="dialog_send_to_bank_not_paid_message_end">Følgende konto vil belastes:</string>
 
     <string name="dialog_send_to_bank_paid_title">Fakturaen er lagt til forfall</string>
-    <string name="dialog_send_to_bank_paid_message_start">Denne fakturaen ble sendt til nettbanken</string>
+    <string name="dialog_send_to_bank_paid_message_start">Denne fakturaen ble sendt til nettbanken\u0020</string>
     <string name="dialog_send_to_bank_paid_message_end">Hvis du vil endre eller se på selve betalingen, må du logge inn i din nettbank.</string>
 
     <string name="dialog_send_to_bank_not_enabled_title">Send fakturaer til nettbanken med ett trykk</string>
-    <string name="dialog_send_to_bank_not_enabled_message">Dine fakturaer kan nå legges til forfall med kun ett trykk, etter at du har spesifisert hvilken nettbank du bruker. Dette trenger du bare å gjøre en gang, og gjøres enkelt via Innstillinger på digipost.no, ved hjelp av din datamaskin. </string>
+    <string name="dialog_send_to_bank_not_enabled_message_start">Dine fakturaer kan nå legges til forfall med kun ett trykk, etter at du har spesifisert hvilken nettbank du bruker.</string>
+    <string name="dialog_send_to_bank_not_enabled_message_end">Dette trenger du bare å gjøre en gang, og gjøres enkelt via Innstillinger på digipost.no, ved hjelp av din datamaskin.</string>
 
     <string name="dialog_opening_receipt_yes">Åpne og send kvittering</string>
     <string name="dialog_opening_receipt_title">Avsender krever lesekvittering</string>
