@@ -11,7 +11,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class Payment {
 
 	@JsonProperty
-	private String timePayed;
+	private String timePaid;
 
 	@JsonProperty
 	private String debitorBankAccount;
@@ -19,8 +19,8 @@ public class Payment {
 	@JsonProperty
 	ArrayList<Link> link;
 
-	public String getTimePayed() {
-		return timePayed;
+	public String getTimePaid() {
+		return this.timePaid;
 	}
 
 	public String getDebitorBankAccount() {
