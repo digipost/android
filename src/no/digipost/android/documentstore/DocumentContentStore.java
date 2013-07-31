@@ -21,26 +21,45 @@ import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipt;
 
 public class DocumentContentStore {
-	public static byte[] documentContent = null;
-	public static Attachment documentMeta = null;
-	public static Letter documentParent = null;
+	private static byte[] documentContent = null;
+	private static Letter documentParent = null;
+	private static int documentAttachmentPosition = 0;
+	private static Receipt documentReceipt = null;
 
-	public static Receipt documentReceipt = null;
-
-	public static void setContent(byte[] content, Attachment meta, Letter parent) {
+	public static void setContent(byte[] content, Letter parent, int attachmentPosition) {
 		documentContent = content;
-		documentMeta = meta;
 		documentParent = parent;
+		documentAttachmentPosition = attachmentPosition;
 	}
 
-	public static void setContent(Receipt receipt) {
-		documentReceipt = receipt;
-	}
+    public static void setContent(Receipt receipt) {
+        documentReceipt = receipt;
+    }
+
+    public static byte[] getDocumentContent() {
+        return documentContent;
+    }
+
+    public static Letter getDocumentParent() {
+        return documentParent;
+    }
+
+    public static void setDocumentParent(Letter parent) {
+        documentParent = parent;
+    }
+
+    public static Attachment getDocumentAttachment() {
+        return documentParent.getAttachment().get(documentAttachmentPosition);
+    }
+
+    public static Receipt getDocumentReceipt() {
+        return documentReceipt;
+    }
 
 	public static void clearContent() {
 		documentContent = null;
-		documentMeta = null;
 		documentParent = null;
+		documentAttachmentPosition = 0;
 		documentReceipt = null;
 	}
 

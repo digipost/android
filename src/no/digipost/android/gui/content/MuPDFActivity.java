@@ -263,7 +263,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 
 		mAlertBuilder = new AlertDialog.Builder(this);
 
-		if (core == null && DocumentContentStore.documentContent != null) {
+		if (core == null && DocumentContentStore.getDocumentContent() != null) {
 			intent = getIntent();
 			String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
 
@@ -272,9 +272,9 @@ public class MuPDFActivity extends DisplayContentActivity {
 				core = openFile(openFilepath);
 				SearchTaskResult.set(null);
 			} else {
-				setActionBar(DocumentContentStore.documentMeta.getSubject(), DocumentContentStore.documentParent.getCreatorName());
+				setActionBar(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore.getDocumentParent().getCreatorName());
 
-				byte buffer[] = DocumentContentStore.documentContent;
+				byte buffer[] = DocumentContentStore.getDocumentContent();
 
 				if (buffer != null) {
 					core = openBuffer(buffer);

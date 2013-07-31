@@ -76,7 +76,7 @@ public class HtmlAndReceiptActivity extends Activity {
 			html = getIntent().getStringExtra(ApiConstants.GET_RECEIPT);
 		} else {
 			try {
-				html = new String(DocumentContentStore.documentContent, ApplicationConstants.ENCODING);
+				html = new String(DocumentContentStore.getDocumentContent(), ApplicationConstants.ENCODING);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -143,11 +143,11 @@ public class HtmlAndReceiptActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 
 		if (content_type != ApplicationConstants.RECEIPTS) {
-			Attachment documentMeta = DocumentContentStore.documentMeta;
+			Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
 			getActionBar().setTitle(documentMeta.getSubject());
-			getActionBar().setSubtitle(DocumentContentStore.documentParent.getCreatorName());
+			getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
 		} else {
-			Receipt receiptMeta = DocumentContentStore.documentReceipt;
+			Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
 			getActionBar().setTitle(receiptMeta.getStoreName());
 			getActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
 		}

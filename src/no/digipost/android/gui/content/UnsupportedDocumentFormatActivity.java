@@ -46,17 +46,17 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		setContentView(R.layout.activity_unsupported);
 		ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-		if (DocumentContentStore.documentContent == null) {
+		if (DocumentContentStore.getDocumentContent() == null) {
 			DialogUtitities.showToast(this, "En feil oppstod under åpning av dokumentet.");
 			finish();
 		}
 
 		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle(DocumentContentStore.documentMeta.getSubject());
-		getActionBar().setSubtitle(DocumentContentStore.documentParent.getCreatorName());
+		getActionBar().setTitle(DocumentContentStore.getDocumentAttachment().getSubject());
+		getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
 
 		TextView message = (TextView) findViewById(R.id.unsupported_message);
-		message.setText(getString(R.string.unsupported_message_top) + " (." + DocumentContentStore.documentMeta.getFileType() + ").");
+		message.setText(getString(R.string.unsupported_message_top) + " (." + DocumentContentStore.getDocumentAttachment().getFileType() + ").");
 
 		Button open = (Button) findViewById(R.id.unsupported_open_button);
 		open.setOnClickListener(new View.OnClickListener() {

@@ -264,7 +264,7 @@ public class ReceiptFragment extends ContentFragment {
 				String action = data.getStringExtra(ApiConstants.ACTION);
 
 				if (action.equals(ApiConstants.DELETE)) {
-					deleteReceipt(DocumentContentStore.documentReceipt);
+					deleteReceipt(DocumentContentStore.getDocumentReceipt());
 				}
 			}
 		}

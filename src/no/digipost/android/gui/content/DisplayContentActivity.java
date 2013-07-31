@@ -139,7 +139,6 @@ public abstract class DisplayContentActivity extends Activity {
         private boolean invalidToken;
 
         public SendToBankTask(final Attachment attachment, final Letter letter) {
-            invalidToken = false;
             this.letter = letter;
             this.attachment = attachment;
         }
@@ -148,16 +147,13 @@ public abstract class DisplayContentActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             showContentProgressDialog(this, DisplayContentActivity.this.getString(R.string.sending_to_bank));
-            System.out.println("pre" + letter.getSubject());
-
         }
 
         @Override
         protected Boolean doInBackground(final Void... params) {
             try {
                 ContentOperations.sendToBank(DisplayContentActivity.this, attachment);
-                letter = ContentOperations.getSelfLetter(DisplayContentActivity.this, letter);
-                System.out.println("letter" + null);
+                DocumentContentStore.setDocumentParent(ContentOperations.getSelfLetter(DisplayContentActivity.this, letter));
                 return true;
             } catch (DigipostApiException e) {
                 errorMessage = e.getMessage();
@@ -196,7 +192,7 @@ public abstract class DisplayContentActivity extends Activity {
     }
 
     protected void openInvoiceTask() {
-        OpenInvoiceTask task = new OpenInvoiceTask(DocumentContentStore.documentMeta, DocumentContentStore.documentParent);
+        OpenInvoiceTask task = new OpenInvoiceTask(DocumentContentStore.getDocumentAttachment(), DocumentContentStore.getDocumentParent());
         task.execute();
     }
 
@@ -252,13 +248,13 @@ public abstract class DisplayContentActivity extends Activity {
     }
 
     protected void openFileWithIntent() {
-        if (DocumentContentStore.documentContent == null) {
+        if (DocumentContentStore.getDocumentContent() == null) {
             DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
             finish();
         }
 
         try {
-            FileUtilities.openFileWithIntent(this, DocumentContentStore.documentMeta.getFileType(), DocumentContentStore.documentContent);
+            FileUtilities.openFileWithIntent(this, DocumentContentStore.getDocumentAttachment().getFileType(), DocumentContentStore.getDocumentContent());
         } catch (ActivityNotFoundException e) {
             DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
         } catch (Exception e) {
@@ -295,7 +291,7 @@ public abstract class DisplayContentActivity extends Activity {
             File file = null;
 
             try {
-                file = FileUtilities.writeFileToSD(DocumentContentStore.documentMeta.getSubject(), DocumentContentStore.documentMeta.getFileType(), DocumentContentStore.documentContent);
+                file = FileUtilities.writeFileToSD(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore.getDocumentAttachment().getFileType(), DocumentContentStore.getDocumentContent());
             } catch (Exception e) {
                 return false;
             }
