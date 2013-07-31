@@ -63,6 +63,7 @@ public class ApiConstants {
 	public static final String RECEIPT = "receipt";
 	public static final String ACTION = "action";
 	public static final String AUTHENTICATION_LEVEL_TWO_FACTOR = "TWO_FACTOR";
+    public static final String INVOICE = "INVOICE";
 	public static final String DOCUMENT_TYPE = "type";
 
 	public static final int TYPE_LETTER = 1;
@@ -92,7 +93,7 @@ public class ApiConstants {
 	public static final String CONTENT_OCTET_STREAM = "application/octet-stream";
 	public static final String TEXT_HTML = "text/html";
 
-	public static final String URL = "https://www.digipost.no";
+	public static final String URL = "https://qa.digipost.no";
 
 	public static final String URL_API = URL + "/post/api";
 	public static final String URL_RELATIONS_DOCUMENT_INBOX = URL + "/post/relations/document_inbox";
@@ -107,5 +108,8 @@ public class ApiConstants {
 	public static final String URL_RELATIONS_DOCUMENT_GET_ORGANIZATION_LOGO = URL + "/post/relations/organisation_logo";
 	public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "/post/api/oauth/authorize/new";
 	public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "/post/api/oauth/accesstoken";
+    public static final String URL_RELATIONS_CURRENT_BANK_ACCOUNT = URL + "/post/relations/current_bank_account";
+    public static final String URL_RELATIONS_BANK_HOMEPAGE = URL + "/post/relations/bank_homepage";
+    public static final String URL_RELATIONS_SEND_TO_BANK = URL + "/post/relations/send_to_bank";
 
 }

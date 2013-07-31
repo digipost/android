@@ -48,6 +48,7 @@ import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Account;
+import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipts;
@@ -63,6 +64,7 @@ public class ApiAccess {
 	public static final int POST_ACTION_MOVE = 0;
 	public static final int POST_ACTION_SEND_OPENING_RECEIPT = 1;
     public static final int POST_ACTION_UPDATE_SETTINGS = 2;
+    public static final int POST_ACTION_SEND_TO_BANK = 3;
 
     private static Client getClient() {
         if (jerseyClient == null) {
@@ -80,6 +82,9 @@ public class ApiAccess {
 		return (Documents) JSONUtilities.processJackson(Documents.class, getApiJsonString(context, uri));
 	}
 
+    public static CurrentBankAccount getCurrentBankAccount(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        return (CurrentBankAccount) JSONUtilities.processJackson(CurrentBankAccount.class, getApiJsonString(context, uri));
+    }
 	public static Receipts getReceipts(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 		return (Receipts) JSONUtilities.processJackson(Receipts.class, getApiJsonString(context, uri));
 	}
@@ -131,6 +136,7 @@ public class ApiAccess {
 
 	public static String postSendOpeningReceipt(Context context, final String uri) throws DigipostClientException, DigipostApiException,
 			DigipostAuthenticationException {
+
 		return executePostRequest(context, POST_ACTION_SEND_OPENING_RECEIPT, uri, null);
 	}
 
@@ -143,6 +149,9 @@ public class ApiAccess {
         executePostRequest(context, POST_ACTION_UPDATE_SETTINGS, uri, json);
     }
 
+    public static void sendToBank(Context context, String uri) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
+        executePostRequest(context, POST_ACTION_SEND_TO_BANK, uri, null);
+    }
 	private static String executePostRequest(Context context, int action, final String uri, final StringEntity json) throws DigipostClientException,
 			DigipostApiException, DigipostAuthenticationException {
 		HttpClient httpClient = new DefaultHttpClient();

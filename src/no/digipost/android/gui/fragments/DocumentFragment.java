@@ -33,6 +33,7 @@ import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
 import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
 import no.digipost.android.model.Attachment;
+import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
@@ -80,11 +81,11 @@ public abstract class DocumentFragment extends ContentFragment {
 				String action = data.getStringExtra(ApiConstants.ACTION);
 
 				if (action.equals(ApiConstants.LOCATION_WORKAREA)) {
-					executeDocumentMoveTask(action, DocumentContentStore.documentParent);
+					executeDocumentMoveTask(action, DocumentContentStore.getDocumentParent());
 				} else if (action.equals(ApiConstants.LOCATION_ARCHIVE)) {
-					executeDocumentMoveTask(action, DocumentContentStore.documentParent);
+					executeDocumentMoveTask(action, DocumentContentStore.getDocumentParent());
 				} else if (action.equals(ApiConstants.DELETE)) {
-					deleteDocument(DocumentContentStore.documentParent);
+					deleteDocument(DocumentContentStore.getDocumentParent());
 				}
 			}
 		}
@@ -99,18 +100,16 @@ public abstract class DocumentFragment extends ContentFragment {
 	}
 
 	private class AttachmentListOnItemClickListener implements AdapterView.OnItemClickListener {
-		private AttachmentArrayAdapter attachmentArrayAdapter;
 		private Letter parentLetter;
 		private int parentListPosition;
 
-		public AttachmentListOnItemClickListener(AttachmentArrayAdapter attachmentArrayAdapter, Letter parentLetter, int parentListPosition) {
-			this.attachmentArrayAdapter = attachmentArrayAdapter;
+		public AttachmentListOnItemClickListener(Letter parentLetter, int parentListPosition) {
 			this.parentLetter = parentLetter;
 			this.parentListPosition = parentListPosition;
 		}
 
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-			executeGetAttachmentContentTask(attachmentArrayAdapter.getItem(position), parentLetter, parentListPosition);
+			openAttachment(parentLetter, position, parentListPosition);
 		}
 	}
 
@@ -125,12 +124,11 @@ public abstract class DocumentFragment extends ContentFragment {
 					}
 				});
 		builder.setView(view);
-		ArrayList<Attachment> attachments = letter.getAttachment();
 
 		ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
 		attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item, letter.getAttachment());
 		attachmentListView.setAdapter(attachmentAdapter);
-		attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(attachmentAdapter, letter, listPosition));
+		attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(letter, listPosition));
 
 		builder.setTitle(attachmentAdapter.getMainSubject());
 		Dialog attachmentDialog = builder.create();
@@ -154,8 +152,12 @@ public abstract class DocumentFragment extends ContentFragment {
 		if (attachments.size() > 1) {
 			showAttachmentDialog(letter, listPosition);
 		} else {
-			executeGetAttachmentContentTask(attachments.get(0), letter, listPosition);
+			openAttachment(letter, 0, listPosition);
 		}
+	}
+
+	private void openAttachment(Letter letter, int attachmentListPosition, int letterListPosition) {
+		executeGetAttachmentContentTask(letter, attachmentListPosition, letterListPosition);
 	}
 
 	private void sendOpeningReceipt(final Letter letter, int listPosition) {
@@ -213,26 +215,30 @@ public abstract class DocumentFragment extends ContentFragment {
 			intent = new Intent(context, UnsupportedDocumentFormatActivity.class);
 		}
 
+        if (attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null) {
+            intent.putExtra(super.INTENT_SEND_TO_BANK, true);
+        }
+
 		intent.putExtra(super.INTENT_CONTENT, getContent());
 		startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
 	}
 
-	private void executeGetAttachmentContentTask(Attachment attachment, Letter parentLetter, int listPosition) {
-		GetAttachmentContentTask getAttachmentContentTask = new GetAttachmentContentTask(attachment, parentLetter, listPosition);
+	private void executeGetAttachmentContentTask(Letter parentLetter, int attachmentListPosition, int letterListPosition) {
+		GetAttachmentContentTask getAttachmentContentTask = new GetAttachmentContentTask(parentLetter, attachmentListPosition, letterListPosition);
 		getAttachmentContentTask.execute();
 	}
 
 	private class GetAttachmentContentTask extends AsyncTask<Void, Void, byte[]> {
-		private Attachment attachment;
 		private Letter parentLetter;
 		private String errorMessage;
 		private boolean invalidToken;
-		private int listPosition;
+		private int letterListPosition;
+        private int attachmentListPosition;
 
-		public GetAttachmentContentTask(Attachment attachment, Letter parentLetter, int listPosition) {
-			this.attachment = attachment;
+		public GetAttachmentContentTask(Letter parentLetter, int attachmentListPosition, int letterListPosition) {
 			this.parentLetter = parentLetter;
-			this.listPosition = listPosition;
+			this.letterListPosition = letterListPosition;
+            this.attachmentListPosition = attachmentListPosition;
 		}
 
 		@Override
@@ -245,7 +251,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected byte[] doInBackground(Void... voids) {
 			try {
-				byte[] bytes = ContentOperations.getDocumentContent(context, attachment);
+				byte[] bytes = ContentOperations.getDocumentContent(context, parentLetter.getAttachment().get(attachmentListPosition));
 				parentLetter = ContentOperations.getSelfLetter(context, parentLetter);
 				return bytes;
 			} catch (DigipostAuthenticationException e) {
@@ -271,9 +277,9 @@ public abstract class DocumentFragment extends ContentFragment {
 			DocumentFragment.super.hideProgressDialog();
 
 			if (result != null) {
-				DocumentContentStore.setContent(result, attachment, parentLetter);
-				openAttachmentContent(attachment);
-				updateAdapterLetter(parentLetter, listPosition);
+				DocumentContentStore.setContent(result, parentLetter, attachmentListPosition);
+				openAttachmentContent(parentLetter.getAttachment().get(attachmentListPosition));
+				updateAdapterLetter(parentLetter, letterListPosition);
 
 				ArrayList<Attachment> attachments = parentLetter.getAttachment();
 				if (attachments.size() > 1)
@@ -349,9 +355,9 @@ public abstract class DocumentFragment extends ContentFragment {
 				if (!letters.isEmpty()) {
 					DocumentFragment.super.setListEmptyViewNoNetwork(false);
 				} else {
-                    if(!isDetached()){
-					    setEmptyViewText();
-                    }
+					if (!isDetached()) {
+						setEmptyViewText();
+					}
 				}
 			} else {
 				if (invalidToken) {
@@ -359,7 +365,6 @@ public abstract class DocumentFragment extends ContentFragment {
 				} else if (listAdapter.isEmpty()) {
 					DocumentFragment.super.setListEmptyViewNoNetwork(true);
 				}
-
 				DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
 			}
 

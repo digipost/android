@@ -16,25 +16,18 @@
 
 package no.digipost.android.gui.content;
 
-import java.io.File;
-
 import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.model.Attachment;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,8 +38,7 @@ import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class UnsupportedDocumentFormatActivity extends Activity {
-	private Attachment documentMeta;
+public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,20 +46,23 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 		setContentView(R.layout.activity_unsupported);
 		ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-		documentMeta = DocumentContentStore.documentMeta;
+		if (DocumentContentStore.getDocumentContent() == null) {
+			DialogUtitities.showToast(this, "En feil oppstod under åpning av dokumentet.");
+			finish();
+		}
 
 		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle(DocumentContentStore.documentMeta.getSubject());
-		getActionBar().setSubtitle(DocumentContentStore.documentParent.getCreatorName());
+		getActionBar().setTitle(DocumentContentStore.getDocumentAttachment().getSubject());
+		getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
 
 		TextView message = (TextView) findViewById(R.id.unsupported_message);
-		message.setText(getString(R.string.unsupported_message_top) + " (." + DocumentContentStore.documentMeta.getFileType() + ").");
+		message.setText(getString(R.string.unsupported_message_top) + " (." + DocumentContentStore.getDocumentAttachment().getFileType() + ").");
 
 		Button open = (Button) findViewById(R.id.unsupported_open_button);
 		open.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				openFileWithIntent(DocumentContentStore.documentMeta.getFileType(), DocumentContentStore.documentContent);
+				UnsupportedDocumentFormatActivity.super.openFileWithIntent();
 			}
 		});
 
@@ -80,20 +75,19 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 		});
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+		EasyTracker.getInstance().activityStart(this);
+	}
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EasyTracker.getInstance().activityStart(this);
-    }
+	@Override
+	protected void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop(this);
+	}
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EasyTracker.getInstance().activityStop(this);
-    }
-
-    @Override
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_image_html_unsupported_actionbar, menu);
@@ -105,6 +99,7 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem toArchive = menu.findItem(R.id.menu_image_html_unsupported_archive);
 		MenuItem toWorkarea = menu.findItem(R.id.menu_image_html_unsupported_workarea);
+        MenuItem sendToBank = menu.findItem(R.id.menu_image_html_unsupported_send_to_bank);
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
@@ -113,6 +108,14 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 		} else if (content == ApplicationConstants.ARCHIVE) {
 			toArchive.setVisible(false);
 		}
+
+        boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
+
+        if (sendToBankVisible) {
+            sendToBank.setVisible(true);
+        } else {
+            sendToBank.setVisible(false);
+        }
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -123,6 +126,9 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 		case android.R.id.home:
 			finish();
 			return true;
+        case R.id.menu_image_html_unsupported_send_to_bank:
+            super.openInvoiceTask();
+            return true;
 		case R.id.menu_image_html_unsupported_delete:
 			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;
@@ -133,10 +139,10 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 			promtAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
 			return true;
 		case R.id.menu_image_html_unsupported_open_external:
-			openFileWithIntent(DocumentContentStore.documentMeta.getFileType(), DocumentContentStore.documentContent);
+			super.openFileWithIntent();
 			return true;
 		case R.id.menu_image_html_unsupported_save:
-			promtSaveToSD();
+			super.promtSaveToSD();
 			return true;
 		}
 
@@ -167,79 +173,6 @@ public class UnsupportedDocumentFormatActivity extends Activity {
 			}
 		});
 		builder.create().show();
-	}
-
-	private void openFileWithIntent(final String documentFileType, final byte[] data) {
-		if (data == null) {
-			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
-			finish();
-		}
-
-		try {
-			FileUtilities.openFileWithIntent(this, documentFileType, data);
-		} catch (ActivityNotFoundException e) {
-			DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
-		} catch (Exception e) {
-			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
-		}
-	}
-
-	private void promtSaveToSD() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-				dialog.dismiss();
-				new SaveDocumentToSDTask().execute();
-			}
-		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-				dialog.dismiss();
-			}
-		});
-		AlertDialog alert = builder.create();
-		alert.show();
-	}
-
-	private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
-		private ProgressDialog progressDialog;
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-
-			progressDialog = new ProgressDialog(UnsupportedDocumentFormatActivity.this);
-			progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			progressDialog.setMessage(getString(R.string.loading_content));
-			progressDialog.show();
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... parameters) {
-			File file = null;
-
-			try {
-				file = FileUtilities.writeFileToSD(documentMeta.getSubject(), documentMeta.getFileType(),
-						DocumentContentStore.documentContent);
-			} catch (Exception e) {
-				return false;
-			}
-
-			FileUtilities.makeFileVisible(UnsupportedDocumentFormatActivity.this, file);
-
-			return true;
-		}
-
-		@Override
-		protected void onPostExecute(Boolean saved) {
-			super.onPostExecute(saved);
-			progressDialog.dismiss();
-
-			if (saved) {
-				DialogUtitities.showToast(UnsupportedDocumentFormatActivity.this, getString(R.string.pdf_saved_to_sd));
-			} else {
-				DialogUtitities.showToast(UnsupportedDocumentFormatActivity.this, getString(R.string.pdf_save_to_sd_failed));
-			}
-		}
 	}
 
 	@Override

@@ -48,6 +48,7 @@
     <string name="copy">Kopier tekst</string>
     <string name="save">Lagre til telefonen</string>
     <string name="open_external">Åpne i en annen app</string>
+    <string name="saving">Lagrer...</string>
 
     <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjon som flytt og slett</string>
     <string name="warning_sign_description">Bilde av en varselstrekant</string>
@@ -220,6 +221,20 @@
     <string name="error_failed_to_open_with_intent">En feil oppstod under åpning av filen.</string>
 
     <!-- Prompts -->
+    <string name="sending_to_bank">Sender til nettbank...</string>
+    <string name="dialog_send_to_bank">Send til nettbank</string>
+    <string name="dialog_send_to_bank_not_paid_title">Vil du legge fakturaen i forfallsregisteret i nettbanken?</string>
+    <string name="dialog_send_to_bank_not_paid_message_start">Fakturaen vil bli betalt på forfallsdatoen. Hvis du vil endre eller se på selve betalingen senere, må du logge inn i din nettbank.</string>
+    <string name="dialog_send_to_bank_not_paid_message_end">Følgende konto vil belastes:</string>
+
+    <string name="dialog_send_to_bank_paid_title">Fakturaen er lagt til forfall</string>
+    <string name="dialog_send_to_bank_paid_message_start">Denne fakturaen ble sendt til nettbanken\u0020</string>
+    <string name="dialog_send_to_bank_paid_message_end">Hvis du vil endre eller se på selve betalingen, må du logge inn i din nettbank.</string>
+
+    <string name="dialog_send_to_bank_not_enabled_title">Send fakturaer til nettbanken med ett trykk</string>
+    <string name="dialog_send_to_bank_not_enabled_message_start">Dine fakturaer kan nå legges til forfall med kun ett trykk, etter at du har spesifisert hvilken nettbank du bruker.</string>
+    <string name="dialog_send_to_bank_not_enabled_message_end">Dette trenger du bare å gjøre en gang, og gjøres enkelt via innstillinger på digipost.no, ved hjelp av din datamaskin.</string>
+
     <string name="dialog_opening_receipt_yes">Åpne og send kvittering</string>
     <string name="dialog_opening_receipt_title">Avsender krever lesekvittering</string>
     <string name="dialog_opening_receipt_message">Når du åpner dette brevet, vil det bli

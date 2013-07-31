@@ -85,7 +85,9 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 			setMetaBottomDrawable(R.drawable.lock_dark);
 		} else if (letter.getOpeningReceiptUri() != null) {
 			setMetaBottomDrawable(R.drawable.exclamation_sign_dark);
-		}
+		}else if(letter.getType().equals(ApiConstants.INVOICE)){
+            setMetaBottomDrawable(R.drawable.money_dark);
+        }
 	}
 
 	private void setMetaBottomDrawable(int resId) {
