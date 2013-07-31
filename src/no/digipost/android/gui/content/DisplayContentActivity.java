@@ -74,14 +74,10 @@ public abstract class DisplayContentActivity extends Activity {
         if (attachment.getInvoice().getPayment() != null) {
             showPaidInvoiceDialog(attachment.getInvoice());
         } else {
-            String accountNumber = null;
-
             if (attachment.getInvoice().getSendToBank() != null) {
-                // SEND TIL NETTBANK
-
                 showSendToBankDialog(attachment, letter, account.getBankAccount().getAccountNumber());
             } else {
-                showSendToBankDialog(attachment, letter, null);
+                showSendToBankNotEnabledDialog();
             }
         }
     }
@@ -107,22 +103,16 @@ public abstract class DisplayContentActivity extends Activity {
 
     private void showSendToBankDialog(final Attachment attachment, final Letter letter, final String accountNumber) {
         String title = getString(R.string.dialog_send_to_bank_not_paid_title);
-        String message = getString(R.string.dialog_send_to_bank_not_paid_message_start) + "\n\n";
+        String message = getString(R.string.dialog_send_to_bank_not_paid_message_start) + "\n";
 
         if (accountNumber != null) {
-            message += getString(R.string.dialog_send_to_bank_not_paid_message_end) + "\n" + accountNumber;
+            message += "\n" + getString(R.string.dialog_send_to_bank_not_paid_message_end) + "\n" + accountNumber;
         }
 
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
         builder.setPositiveButton(getString(R.string.dialog_send_to_bank), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-
-                if (accountNumber != null) {
-                    sendToBank(attachment, letter);
-                } else {
-                    showSendToBankNotEnabledDialog();
-                }
-
+                sendToBank(attachment, letter);
                 dialog.dismiss();
             }
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
