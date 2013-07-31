@@ -39,7 +39,7 @@ import android.webkit.WebView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class HtmlAndReceiptActivity extends Activity {
+public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
 	private WebView webView;
 	private int content_type;
@@ -97,12 +97,21 @@ public class HtmlAndReceiptActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem toArchive = menu.findItem(R.id.htmlmenu_archive);
 		MenuItem toWorkarea = menu.findItem(R.id.htmlmenu_workarea);
+        MenuItem sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
 
-		if (content_type == ApplicationConstants.WORKAREA) {
+        if (content_type == ApplicationConstants.WORKAREA) {
 			toArchive.setVisible(true);
 		} else if (content_type == ApplicationConstants.ARCHIVE) {
 			toWorkarea.setVisible(true);
 		}
+
+        boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
+
+        if (sendToBankVisible) {
+            sendToBank.setVisible(true);
+        } else {
+            sendToBank.setVisible(false);
+        }
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -113,6 +122,9 @@ public class HtmlAndReceiptActivity extends Activity {
 		case android.R.id.home:
 			finish();
 			return true;
+        case R.id.htmlmenu_send_to_bank:
+            super.openInvoiceTask();
+            return true;
 		case R.id.htmlmenu_delete:
 			promptAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;

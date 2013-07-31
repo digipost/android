@@ -99,6 +99,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem toArchive = menu.findItem(R.id.menu_image_html_unsupported_archive);
 		MenuItem toWorkarea = menu.findItem(R.id.menu_image_html_unsupported_workarea);
+        MenuItem sendToBank = menu.findItem(R.id.menu_image_html_unsupported_send_to_bank);
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
@@ -107,6 +108,14 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		} else if (content == ApplicationConstants.ARCHIVE) {
 			toArchive.setVisible(false);
 		}
+
+        boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
+
+        if (sendToBankVisible) {
+            sendToBank.setVisible(true);
+        } else {
+            sendToBank.setVisible(false);
+        }
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -117,6 +126,9 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		case android.R.id.home:
 			finish();
 			return true;
+        case R.id.menu_image_html_unsupported_send_to_bank:
+            super.openInvoiceTask();
+            return true;
 		case R.id.menu_image_html_unsupported_delete:
 			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;
