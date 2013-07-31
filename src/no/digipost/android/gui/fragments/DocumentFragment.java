@@ -109,7 +109,9 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-			executeGetAttachmentContentTask(parentLetter, position, parentListPosition);
+            System.out.println("attachment position"+position);
+            Attachment attachment = attachmentAdapter.getItem(position);
+            executeGetAttachmentContentTask(parentLetter, position, parentListPosition,attachment);
 		}
 	}
 
@@ -152,7 +154,8 @@ public abstract class DocumentFragment extends ContentFragment {
 		if (attachments.size() > 1) {
 			showAttachmentDialog(letter, listPosition);
 		} else {
-			executeGetAttachmentContentTask(letter, 0, listPosition);
+            Attachment attachment = letter.getAttachment().get(0);
+			executeGetAttachmentContentTask(letter, 0, listPosition,attachment);
 		}
 	}
 
@@ -219,22 +222,24 @@ public abstract class DocumentFragment extends ContentFragment {
 		startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
 	}
 
-	private void executeGetAttachmentContentTask(Letter parentLetter, int attachmentListPosition, int letterListPosition) {
-		GetAttachmentContentTask getAttachmentContentTask = new GetAttachmentContentTask(parentLetter, attachmentListPosition, letterListPosition);
+	private void executeGetAttachmentContentTask(Letter parentLetter, int attachmentListPosition, int letterListPosition, Attachment attachment) {
+		GetAttachmentContentTask getAttachmentContentTask = new GetAttachmentContentTask(parentLetter, attachmentListPosition, letterListPosition,attachment);
 		getAttachmentContentTask.execute();
 	}
 
 	private class GetAttachmentContentTask extends AsyncTask<Void, Void, byte[]> {
 		private Letter parentLetter;
+        private Attachment attachment;
 		private String errorMessage;
 		private boolean invalidToken;
 		private int letterListPosition;
         private int attachmentListPosition;
 
-		public GetAttachmentContentTask(Letter parentLetter, int attachmentListPosition, int letterListPosition) {
+		public GetAttachmentContentTask(Letter parentLetter, int attachmentListPosition, int letterListPosition, Attachment attachment) {
 			this.parentLetter = parentLetter;
 			this.letterListPosition = letterListPosition;
             this.attachmentListPosition = attachmentListPosition;
+            this.attachment = attachment;
 		}
 
 		@Override
@@ -274,7 +279,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
 			if (result != null) {
 				DocumentContentStore.setContent(result, parentLetter, attachmentListPosition);
-				openAttachmentContent(parentLetter.getAttachment().get(attachmentListPosition));
+				openAttachmentContent(attachment)   ;
 				updateAdapterLetter(parentLetter, letterListPosition);
 
 				ArrayList<Attachment> attachments = parentLetter.getAttachment();
