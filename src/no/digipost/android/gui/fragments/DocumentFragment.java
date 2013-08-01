@@ -109,7 +109,6 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-            System.out.println("attachment position"+position);
             Attachment attachment = attachmentAdapter.getItem(position);
             executeGetAttachmentContentTask(parentLetter, position, parentListPosition,attachment);
 		}
