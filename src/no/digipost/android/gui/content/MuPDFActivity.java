@@ -25,7 +25,6 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.model.Payment;
 import no.digipost.android.pdf.MuPDFAlert;
 import no.digipost.android.pdf.MuPDFCore;
 import no.digipost.android.pdf.MuPDFPageAdapter;
@@ -264,25 +263,25 @@ public class MuPDFActivity extends DisplayContentActivity {
 
 		mAlertBuilder = new AlertDialog.Builder(this);
 
-		if (core == null && DocumentContentStore.getDocumentContent() != null) {
-			intent = getIntent();
-			String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
+		intent = getIntent();
+		String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
 
-			if (openFilepath != null) {
-				setActionBar(FilenameUtils.getName(openFilepath), null);
-				core = openFile(openFilepath);
-				SearchTaskResult.set(null);
-			} else {
-				setActionBar(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore.getDocumentParent().getCreatorName());
+		if (openFilepath != null) {
+			setActionBar(FilenameUtils.getName(openFilepath), null);
+			core = openFile(openFilepath);
+			SearchTaskResult.set(null);
+		} else if (core == null && DocumentContentStore.getDocumentContent() != null) {
+			setActionBar(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore
+					.getDocumentParent()
+					.getCreatorName());
 
-				byte buffer[] = DocumentContentStore.getDocumentContent();
+			byte buffer[] = DocumentContentStore.getDocumentContent();
 
-				if (buffer != null) {
-					core = openBuffer(buffer);
-				}
-
-				SearchTaskResult.set(null);
+			if (buffer != null) {
+				core = openBuffer(buffer);
 			}
+
+			SearchTaskResult.set(null);
 		}
 
 		if (core == null) {
@@ -670,7 +669,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem toArchive = menu.findItem(R.id.pdfmenu_archive);
 		MenuItem toWorkarea = menu.findItem(R.id.pdfmenu_workarea);
-        sendToBank = menu.findItem(R.id.pdfmenu_send_to_bank);
+		sendToBank = menu.findItem(R.id.pdfmenu_send_to_bank);
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
@@ -680,15 +679,13 @@ public class MuPDFActivity extends DisplayContentActivity {
 			toArchive.setVisible(false);
 		}
 
-        boolean sendToBankVisible = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
+		boolean sendToBankVisible = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
-        if(ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE){
-            setSendToBankMenuText(sendToBankVisible);
-        }else{
-            setSendToBankMenuText(false);
-        }
+		if (ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE) {
+			super.setSendToBankMenuText(sendToBankVisible);
+		}
 
-        return super.onPrepareOptionsMenu(menu);
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -697,9 +694,9 @@ public class MuPDFActivity extends DisplayContentActivity {
 		case android.R.id.home:
 			finish();
 			return true;
-        case R.id.pdfmenu_send_to_bank:
-            super.openInvoiceTask();
-            return true;
+		case R.id.pdfmenu_send_to_bank:
+			super.openInvoiceTask();
+			return true;
 		case R.id.pdfmenu_delete:
 			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;

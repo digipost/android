@@ -107,9 +107,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 		boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
         if(ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE){
-            setSendToBankMenuText(sendToBankVisible);
-        }else{
-            setSendToBankMenuText(false);
+            super.setSendToBankMenuText(sendToBankVisible);
         }
 
 		return super.onPrepareOptionsMenu(menu);
