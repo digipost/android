@@ -99,7 +99,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem toArchive = menu.findItem(R.id.menu_image_html_unsupported_archive);
 		MenuItem toWorkarea = menu.findItem(R.id.menu_image_html_unsupported_workarea);
-        MenuItem sendToBank = menu.findItem(R.id.menu_image_html_unsupported_send_to_bank);
+        sendToBank = menu.findItem(R.id.menu_image_html_unsupported_send_to_bank);
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
