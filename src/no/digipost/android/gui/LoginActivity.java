@@ -37,7 +37,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 public class LoginActivity extends Activity {
 	private Button loginButton, privacyButton, registrationButton;
-	private CheckBox stayLoggedInCheckBox;
+	private CheckBox rememberMe;
 	private ButtonListener listener;
 	private KeyStore ks;
 	private Context context;
@@ -57,10 +57,10 @@ public class LoginActivity extends Activity {
 		privacyButton.setOnClickListener(listener);
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
-		stayLoggedInCheckBox = (CheckBox) findViewById(R.id.login_remember_me);
+        rememberMe = (CheckBox) findViewById(R.id.login_remember_me);
 
 		if (VersionUtilities.IsVersion18()) {
-			stayLoggedInCheckBox.setVisibility(View.GONE);
+            rememberMe.setVisibility(View.GONE);
 		}
 
 	}
@@ -72,10 +72,10 @@ public class LoginActivity extends Activity {
 
 			enableCheckBoxIfScreenlock();
 			deleteOldRefreshtoken();
-			stayLoggedInCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            rememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if (stayLoggedInCheckBox.isChecked()) {
+					if (rememberMe.isChecked()) {
 						KeyStore ks = KeyStore.getInstance();
 						if (ks.state() != KeyStore.State.UNLOCKED) {
 							Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
@@ -107,14 +107,14 @@ public class LoginActivity extends Activity {
 
 	private void enableCheckBoxIfScreenlock() {
 		if (ks.state() == KeyStore.State.UNLOCKED) {
-			stayLoggedInCheckBox.setChecked(true);
+			//stayLoggedInCheckBox.setChecked(true);
 		} else {
-			stayLoggedInCheckBox.setChecked(false);
+            rememberMe.setChecked(false);
 		}
 	}
 
 	private void startLoginProcess() {
-		if (stayLoggedInCheckBox.isChecked()) {
+		if (rememberMe.isChecked()) {
 			SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_YES);
 			openWebView();
 		} else {
