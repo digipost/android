@@ -13,7 +13,11 @@
         </shape>
     </item>
 
-
+    <item android:state_activated="true">
+        <shape>
+            <solid android:color="@color/list_multiselected"/>
+        </shape>
+    </item>
     <item android:drawable="@color/list_element_opened"></item>
 
 </selector>
