@@ -92,7 +92,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, ApplicationConstants.titles, 0);
 		drawerList.setAdapter(drawerArrayAdapter);
 		drawerList.setOnItemClickListener(new DrawerItemClickListener());
-		drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open_external,
+		drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
 				R.string.close);
 		drawerLayout.setDrawerListener(drawerToggle);
 
