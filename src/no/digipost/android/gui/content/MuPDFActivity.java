@@ -652,24 +652,34 @@ public class MuPDFActivity extends DisplayContentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
 
-		if (openFilepath == null) {
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
 
-			searchMenuItem = menu.findItem(R.id.pdfmenu_search);
-			setupSearchView(searchMenuItem);
-		}
+		searchMenuItem = menu.findItem(R.id.pdfmenu_search);
+		setupSearchView(searchMenuItem);
 
 		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem delete = menu.findItem(R.id.pdfmenu_delete);
 		MenuItem toArchive = menu.findItem(R.id.pdfmenu_archive);
 		MenuItem toWorkarea = menu.findItem(R.id.pdfmenu_workarea);
+        MenuItem openExternal = menu.findItem(R.id.pdfmenu_open_external);
+        MenuItem save = menu.findItem(R.id.pdfmenu_save);
 		sendToBank = menu.findItem(R.id.pdfmenu_send_to_bank);
+
+        String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
+
+        if (openFilepath != null) {
+            delete.setVisible(false);
+            toArchive.setVisible(false);
+            toWorkarea.setVisible(false);
+            openExternal.setVisible(false);
+            save.setVisible(false);
+        }
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
@@ -681,11 +691,9 @@ public class MuPDFActivity extends DisplayContentActivity {
 
 		boolean sendToBankVisible = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
-        if (ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE == false) {
-            sendToBankVisible = false;
-        }
-
-	    super.setSendToBankMenuText(sendToBankVisible);
+		if (ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE) {
+            super.setSendToBankMenuText(sendToBankVisible);
+		}
 
 		return super.onPrepareOptionsMenu(menu);
 	}

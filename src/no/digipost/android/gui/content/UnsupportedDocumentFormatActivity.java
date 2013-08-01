@@ -111,11 +111,9 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
         boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
-        if (ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE == false) {
-            sendToBankVisible = false;
+        if (ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE) {
+            super.setSendToBankMenuText(sendToBankVisible);
         }
-
-        super.setSendToBankMenuText(sendToBankVisible);
 
 		return super.onPrepareOptionsMenu(menu);
 	}

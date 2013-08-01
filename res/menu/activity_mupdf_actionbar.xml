@@ -4,6 +4,7 @@
     <item
             android:id="@+id/pdfmenu_send_to_bank"
             android:title="@string/dialog_send_to_bank"
+            android:visible="false"
             android:showAsAction="ifRoom"/>
 
     <item
