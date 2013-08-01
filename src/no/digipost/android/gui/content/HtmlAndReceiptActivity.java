@@ -27,7 +27,6 @@ import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -58,19 +57,19 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 		loadContent();
 	}
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EasyTracker.getInstance().activityStart(this);
-    }
+	@Override
+	protected void onStart() {
+		super.onStart();
+		EasyTracker.getInstance().activityStart(this);
+	}
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EasyTracker.getInstance().activityStop(this);
-    }
+	@Override
+	protected void onStop() {
+		super.onStop();
+		EasyTracker.getInstance().activityStop(this);
+	}
 
-    private void loadContent() {
+	private void loadContent() {
 		String html = "";
 		if (content_type == ApplicationConstants.RECEIPTS) {
 			html = getIntent().getStringExtra(ApiConstants.GET_RECEIPT);
@@ -97,22 +96,17 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem toArchive = menu.findItem(R.id.htmlmenu_archive);
 		MenuItem toWorkarea = menu.findItem(R.id.htmlmenu_workarea);
-        sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
+		sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
 
-        if (content_type == ApplicationConstants.WORKAREA) {
+		if (content_type == ApplicationConstants.WORKAREA) {
 			toArchive.setVisible(true);
 		} else if (content_type == ApplicationConstants.ARCHIVE) {
 			toWorkarea.setVisible(true);
 		}
 
-        boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
-
-        if (sendToBankVisible) {
-            sendToBank.setVisible(true);
-            setSendToBankMenuText();
-        } else {
-            sendToBank.setVisible(false);
-        }
+		boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
+		setSendToBankMenuText(false);
+		// setSendToBankMenuText(sendToBankVisible);
 
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -123,9 +117,9 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 		case android.R.id.home:
 			finish();
 			return true;
-        case R.id.htmlmenu_send_to_bank:
-            super.openInvoiceTask();
-            return true;
+		case R.id.htmlmenu_send_to_bank:
+			super.openInvoiceTask();
+			return true;
 		case R.id.htmlmenu_delete:
 			promptAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;

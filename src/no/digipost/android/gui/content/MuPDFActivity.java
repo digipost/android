@@ -681,13 +681,8 @@ public class MuPDFActivity extends DisplayContentActivity {
 		}
 
         boolean sendToBankVisible = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
-
-        if (sendToBankVisible) {
-            sendToBank.setVisible(true);
-            setSendToBankMenuText();
-        } else {
-            sendToBank.setVisible(false);
-        }
+        setSendToBankMenuText(false);
+        //setSendToBankMenuText(sendToBankVisible);
 
         return super.onPrepareOptionsMenu(menu);
 	}

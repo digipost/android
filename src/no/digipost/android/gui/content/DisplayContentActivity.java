@@ -26,7 +26,6 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.model.Attachment;
-import no.digipost.android.model.BankAccount;
 import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Invoice;
 import no.digipost.android.model.Letter;
@@ -46,304 +45,318 @@ import android.util.Log;
 import android.view.MenuItem;
 
 public abstract class DisplayContentActivity extends Activity {
-    private ProgressDialog progressDialog;
-    protected MenuItem sendToBank;
+	private ProgressDialog progressDialog;
+	protected MenuItem sendToBank;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
 
+	protected void showContentProgressDialog(final AsyncTask task, String message) {
+		progressDialog = DialogUtitities.getProgressDialogWithMessage(this, message);
+		progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int which) {
+				dialog.dismiss();
+				task.cancel(true);
+			}
+		});
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+		progressDialog.show();
+	}
 
-    protected void showContentProgressDialog(final AsyncTask task, String message) {
-        progressDialog = DialogUtitities.getProgressDialogWithMessage(this, message);
-        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int which) {
-                dialog.dismiss();
-                task.cancel(true);
-            }
-        });
+	protected void hideProgressDialog() {
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+			progressDialog = null;
+		}
+	}
 
-        progressDialog.show();
-    }
+	protected void setSendToBankMenuText(boolean sendToBankVisible) {
 
-    protected void hideProgressDialog() {
-            if (progressDialog != null) {
-                progressDialog.dismiss();
-                progressDialog = null;
-            }
-    }
+		if (sendToBankVisible) {
+			sendToBank.setVisible(true);
+			Payment payment = DocumentContentStore.getDocumentAttachment().getInvoice() == null ? null : DocumentContentStore
+					.getDocumentAttachment()
+					.getInvoice()
+					.getPayment();
+			if (payment != null) {
+				sendToBank.setTitle(getString(R.string.sent_to_bank));
+			}
+		} else {
+			sendToBank.setVisible(false);
+		}
+	}
 
-    protected void setSendToBankMenuText(){
-        Payment payment = DocumentContentStore.getDocumentAttachment().getInvoice() == null ? null : DocumentContentStore.getDocumentAttachment().getInvoice().getPayment();
-        if(payment != null){
-            sendToBank.setTitle(getString(R.string.sent_to_bank));
-        }
-    }
+	private void openInvoiceContent(Attachment attachment, Letter letter, CurrentBankAccount account) {
 
-    private void openInvoiceContent(Attachment attachment, Letter letter, CurrentBankAccount account) {
+		if (attachment.getInvoice().getPayment() != null) {
+			showPaidInvoiceDialog(attachment.getInvoice());
+		} else {
+			if (attachment.getInvoice().getSendToBank() != null) {
 
-        if (attachment.getInvoice().getPayment() != null) {
-            showPaidInvoiceDialog(attachment.getInvoice());
-        } else {
-            if (attachment.getInvoice().getSendToBank() != null) {
+				System.out.println("Account " + account);
+				String accountNumber = account == null ? "***********" : account.getBankAccount().getAccountNumber();
 
-                System.out.println("Account "+account);
-                String accountNumber = account == null ? "***********" : account.getBankAccount().getAccountNumber();
+				showSendToBankDialog(attachment, letter, accountNumber);
+			} else {
+				showSendToBankNotEnabledDialog();
+			}
+		}
+	}
 
-                showSendToBankDialog(attachment, letter, accountNumber);
-            } else {
-                showSendToBankNotEnabledDialog();
-            }
-        }
-    }
+	private void showPaidInvoiceDialog(Invoice invoice) {
+		String timePaid = DataFormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
+		String debitorBankAccount = invoice.getPayment().getDebitorBankAccount();
+		String bankHomepage = invoice.getPayment().getBankHomepage();
 
-    private void showPaidInvoiceDialog(Invoice invoice){
-        String timePaid = DataFormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
-        String debitorBankAccount = invoice.getPayment().getDebitorBankAccount();
-        String bankHomepage = invoice.getPayment().getBankHomepage();
+		String title = getString(R.string.dialog_send_to_bank_paid_title);
+		String message = getString(R.string.dialog_send_to_bank_paid_message_start) + timePaid + "." + "\n" + "\n"
+				+ getString(R.string.dialog_send_to_bank_paid_message_end);
 
-        String title = getString(R.string.dialog_send_to_bank_paid_title);
-        String message = getString(R.string.dialog_send_to_bank_paid_message_start) + timePaid + "." + "\n"+"\n" + getString(R.string.dialog_send_to_bank_paid_message_end);
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
+		builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int id) {
+				dialog.cancel();
+			}
+		});
 
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
-        builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
+		builder.create().show();
 
-        builder.create().show();
+	}
 
-    }
+	private void showSendToBankDialog(final Attachment attachment, final Letter letter, final String accountNumber) {
+		String title = getString(R.string.dialog_send_to_bank_not_paid_title);
+		String message = getString(R.string.dialog_send_to_bank_not_paid_message_start) + "\n";
 
-    private void showSendToBankDialog(final Attachment attachment, final Letter letter, final String accountNumber) {
-        String title = getString(R.string.dialog_send_to_bank_not_paid_title);
-        String message = getString(R.string.dialog_send_to_bank_not_paid_message_start) + "\n";
+		if (accountNumber != null) {
+			message += "\n" + getString(R.string.dialog_send_to_bank_not_paid_message_end) + "\n" + accountNumber;
+		}
 
-        if (accountNumber != null) {
-            message += "\n" + getString(R.string.dialog_send_to_bank_not_paid_message_end) + "\n" + accountNumber;
-        }
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
+		builder.setPositiveButton(getString(R.string.dialog_send_to_bank), new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int id) {
+				sendToBank(attachment, letter);
+				dialog.dismiss();
+			}
+		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int id) {
+				dialog.cancel();
+			}
+		});
 
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
-        builder.setPositiveButton(getString(R.string.dialog_send_to_bank), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                sendToBank(attachment, letter);
-                dialog.dismiss();
-            }
-        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
+		builder.create().show();
+	}
 
-        builder.create().show();
-    }
+	private void showSendToBankNotEnabledDialog() {
+		String title = getString(R.string.dialog_send_to_bank_not_enabled_title);
+		String message = getString(R.string.dialog_send_to_bank_not_enabled_message_start) + "\n\n"
+				+ getString(R.string.dialog_send_to_bank_not_enabled_message_end);
+		;
 
-    private void showSendToBankNotEnabledDialog() {
-        String title = getString(R.string.dialog_send_to_bank_not_enabled_title);
-        String message = getString(R.string.dialog_send_to_bank_not_enabled_message_start) + "\n\n" + getString(R.string.dialog_send_to_bank_not_enabled_message_end);;
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
+		builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int id) {
+				dialog.cancel();
+			}
+		});
 
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
-        builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
+		builder.create().show();
+	}
 
-        builder.create().show();
-    }
+	private void sendToBank(final Attachment attachment, final Letter letter) {
+		SendToBankTask task = new SendToBankTask(attachment, letter);
+		task.execute();
+	}
 
-    private void sendToBank(final Attachment attachment, final Letter letter) {
-        SendToBankTask task = new SendToBankTask(attachment, letter);
-        task.execute();
-    }
+	protected class SendToBankTask extends AsyncTask<Void, Void, Boolean> {
+		private String errorMessage;
+		private Letter letter;
+		private Attachment attachment;
+		private boolean invalidToken;
 
-    protected class SendToBankTask extends AsyncTask<Void, Void, Boolean> {
-        private String errorMessage;
-        private Letter letter;
-        private Attachment attachment;
-        private boolean invalidToken;
+		public SendToBankTask(final Attachment attachment, final Letter letter) {
+			this.letter = letter;
+			this.attachment = attachment;
+		}
 
-        public SendToBankTask(final Attachment attachment, final Letter letter) {
-            this.letter = letter;
-            this.attachment = attachment;
-        }
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			showContentProgressDialog(this, DisplayContentActivity.this.getString(R.string.sending_to_bank));
+		}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showContentProgressDialog(this, DisplayContentActivity.this.getString(R.string.sending_to_bank));
-        }
+		@Override
+		protected Boolean doInBackground(final Void... params) {
+			try {
+				ContentOperations.sendToBank(DisplayContentActivity.this, attachment);
+				DocumentContentStore.setDocumentParent(ContentOperations.getSelfLetter(DisplayContentActivity.this, letter));
+				return true;
+			} catch (DigipostApiException e) {
+				errorMessage = e.getMessage();
+				return false;
+			} catch (DigipostClientException e) {
+				errorMessage = e.getMessage();
+				return false;
+			} catch (DigipostAuthenticationException e) {
+				invalidToken = true;
+				errorMessage = e.getMessage();
+				return false;
+			}
+		}
 
-        @Override
-        protected Boolean doInBackground(final Void... params) {
-            try {
-                ContentOperations.sendToBank(DisplayContentActivity.this, attachment);
-                DocumentContentStore.setDocumentParent(ContentOperations.getSelfLetter(DisplayContentActivity.this, letter));
-                return true;
-            } catch (DigipostApiException e) {
-                errorMessage = e.getMessage();
-                return false;
-            } catch (DigipostClientException e) {
-                errorMessage = e.getMessage();
-                return false;
-            } catch (DigipostAuthenticationException e) {
-                invalidToken = true;
-                errorMessage = e.getMessage();
-                return false;
-            }
-        }
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			hideProgressDialog();
+		}
 
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            hideProgressDialog();
-        }
+		@Override
+		protected void onPostExecute(final Boolean result) {
 
-        @Override
-        protected void onPostExecute(final Boolean result) {
+			hideProgressDialog();
+			if (result == true) {
+				DialogUtitities.showToast(DisplayContentActivity.this,
+						DisplayContentActivity.this.getString(R.string.dialog_send_to_bank_paid_title));
+			} else {
+				if (invalidToken) {
+					finishActivityWithAction(ApiConstants.LOGOUT);
+				}
+				DialogUtitities.showToast(DisplayContentActivity.this, errorMessage);
+			}
+			setSendToBankMenuText(sendToBank.isVisible());
+		}
+	}
 
-            hideProgressDialog();
-            if (result == true) {
-                DialogUtitities.showToast(DisplayContentActivity.this, DisplayContentActivity.this.getString(R.string.dialog_send_to_bank_paid_title));
-            } else {
-                if (invalidToken) {
-                    finishActivityWithAction(ApiConstants.LOGOUT);
-                }
-                DialogUtitities.showToast(DisplayContentActivity.this, errorMessage);
-            }
-            setSendToBankMenuText();
-        }
-    }
+	protected void openInvoiceTask() {
+		OpenInvoiceTask task = new OpenInvoiceTask(DocumentContentStore.getDocumentAttachment(), DocumentContentStore.getDocumentParent());
+		task.execute();
+	}
 
-    protected void openInvoiceTask() {
-        OpenInvoiceTask task = new OpenInvoiceTask(DocumentContentStore.getDocumentAttachment(), DocumentContentStore.getDocumentParent());
-        task.execute();
-    }
+	private class OpenInvoiceTask extends AsyncTask<Void, Void, CurrentBankAccount> {
+		private String errorMessage;
+		private Letter letter;
+		private Attachment attachment;
+		private boolean invalidToken;
 
-    private class OpenInvoiceTask extends AsyncTask<Void, Void, CurrentBankAccount> {
-        private String errorMessage;
-        private Letter letter;
-        private Attachment attachment;
-        private boolean invalidToken;
+		public OpenInvoiceTask(final Attachment attachment, final Letter letter) {
+			this.invalidToken = false;
+			this.letter = letter;
+			this.attachment = attachment;
+		}
 
-        public OpenInvoiceTask(final Attachment attachment, final Letter letter) {
-            this.invalidToken = false;
-            this.letter = letter;
-            this.attachment = attachment;
-        }
+		@Override
+		protected CurrentBankAccount doInBackground(Void... voids) {
+			try {
+				return ContentOperations.getCurrentBankAccount(DisplayContentActivity.this);
+			} catch (DigipostApiException e) {
+				Log.e(getClass().getName(), e.getMessage(), e);
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostClientException e) {
+				Log.e(getClass().getName(), e.getMessage(), e);
+				errorMessage = e.getMessage();
+				return null;
+			} catch (DigipostAuthenticationException e) {
+				Log.e(getClass().getName(), e.getMessage(), e);
+				errorMessage = e.getMessage();
+				invalidToken = true;
+				return null;
+			}
+		}
 
-        @Override
-        protected CurrentBankAccount doInBackground(Void... voids) {
-            try {
-                return ContentOperations.getCurrentBankAccount(DisplayContentActivity.this);
-            } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return null;
-            } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return null;
-            } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                invalidToken = true;
-                return null;
-            }
-        }
+		@Override
+		protected void onPostExecute(CurrentBankAccount currentBankAccount) {
+			super.onPostExecute(currentBankAccount);
+			if (invalidToken) {
+				DialogUtitities.showToast(DisplayContentActivity.this, errorMessage);
+				finishActivityWithAction(ApiConstants.LOGOUT);
+			} else {
+				openInvoiceContent(attachment, letter, currentBankAccount);
+			}
+		}
+	}
 
-        @Override
-        protected void onPostExecute(CurrentBankAccount currentBankAccount) {
-            super.onPostExecute(currentBankAccount);
-            if (invalidToken) {
-                DialogUtitities.showToast(DisplayContentActivity.this, errorMessage);
-                finishActivityWithAction(ApiConstants.LOGOUT);
-            } else {
-                openInvoiceContent(attachment, letter, currentBankAccount);
-            }
-        }
-    }
+	private void finishActivityWithAction(String action) {
+		Intent intent = new Intent();
+		intent.putExtra(ApiConstants.ACTION, action);
+		setResult(RESULT_OK, intent);
+		finish();
+	}
 
-    private void finishActivityWithAction(String action) {
-        Intent intent = new Intent();
-        intent.putExtra(ApiConstants.ACTION, action);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
+	protected void openFileWithIntent() {
+		if (DocumentContentStore.getDocumentContent() == null) {
+			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
+			finish();
+		}
 
-    protected void openFileWithIntent() {
-        if (DocumentContentStore.getDocumentContent() == null) {
-            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
-            finish();
-        }
+		try {
+			FileUtilities.openFileWithIntent(this, DocumentContentStore.getDocumentAttachment().getFileType(),
+					DocumentContentStore.getDocumentContent());
+		} catch (ActivityNotFoundException e) {
+			DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
+		} catch (Exception e) {
+			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
+		}
+	}
 
-        try {
-            FileUtilities.openFileWithIntent(this, DocumentContentStore.getDocumentAttachment().getFileType(), DocumentContentStore.getDocumentContent());
-        } catch (ActivityNotFoundException e) {
-            DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
-        } catch (Exception e) {
-            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
-        }
-    }
+	protected void promtSaveToSD() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int id) {
+				new SaveDocumentToSDTask().execute();
+				dialog.dismiss();
+			}
+		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+			public void onClick(final DialogInterface dialog, final int id) {
+				dialog.cancel();
+			}
+		});
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
 
-    protected void promtSaveToSD() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                new SaveDocumentToSDTask().execute();
-                dialog.dismiss();
-            }
-        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
+	private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
 
-    private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			showContentProgressDialog(this, DisplayContentActivity.this.getString(R.string.saving));
+		}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            showContentProgressDialog(this, DisplayContentActivity.this.getString(R.string.saving));
-        }
+		@Override
+		protected Boolean doInBackground(Void... parameters) {
+			File file = null;
 
-        @Override
-        protected Boolean doInBackground(Void... parameters) {
-            File file = null;
+			try {
+				file = FileUtilities.writeFileToSD(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore
+						.getDocumentAttachment()
+						.getFileType(), DocumentContentStore.getDocumentContent());
+			} catch (Exception e) {
+				return false;
+			}
 
-            try {
-                file = FileUtilities.writeFileToSD(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore.getDocumentAttachment().getFileType(), DocumentContentStore.getDocumentContent());
-            } catch (Exception e) {
-                return false;
-            }
+			FileUtilities.makeFileVisible(DisplayContentActivity.this, file);
 
-            FileUtilities.makeFileVisible(DisplayContentActivity.this, file);
+			return true;
+		}
 
-            return true;
-        }
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			hideProgressDialog();
+		}
 
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            hideProgressDialog();
-        }
+		@Override
+		protected void onPostExecute(Boolean saved) {
+			super.onPostExecute(saved);
 
-        @Override
-        protected void onPostExecute(Boolean saved) {
-            super.onPostExecute(saved);
+			if (saved) {
+				DialogUtitities.showToast(DisplayContentActivity.this, getString(R.string.pdf_saved_to_sd));
+			} else {
+				DialogUtitities.showToast(DisplayContentActivity.this, getString(R.string.pdf_save_to_sd_failed));
+			}
 
-            if (saved) {
-                DialogUtitities.showToast(DisplayContentActivity.this, getString(R.string.pdf_saved_to_sd));
-            } else {
-                DialogUtitities.showToast(DisplayContentActivity.this, getString(R.string.pdf_save_to_sd_failed));
-            }
-
-            hideProgressDialog();
-        }
-    }
+			hideProgressDialog();
+		}
+	}
 }
