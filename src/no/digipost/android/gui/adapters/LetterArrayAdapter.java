@@ -21,6 +21,7 @@ import java.util.Collection;
 
 import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DataFormatUtilities;
@@ -86,7 +87,9 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 		} else if (letter.getOpeningReceiptUri() != null) {
 			setMetaBottomDrawable(R.drawable.exclamation_sign_dark);
 		}else if(letter.getType().equals(ApiConstants.INVOICE)){
-            setMetaBottomDrawable(R.drawable.money_dark);
+            if(ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE){
+                setMetaBottomDrawable(R.drawable.money_dark);
+            }
         }
 	}
 
