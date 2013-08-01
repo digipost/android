@@ -221,6 +221,7 @@
     <string name="error_failed_to_open_with_intent">En feil oppstod under åpning av filen.</string>
 
     <!-- Prompts -->
+    <string name="sent_to_bank">Sendt til nettbank</string>
     <string name="sending_to_bank">Sender til nettbank...</string>
     <string name="dialog_send_to_bank">Send til nettbank</string>
     <string name="dialog_send_to_bank_not_paid_title">Vil du legge fakturaen i forfallsregisteret i nettbanken?</string>

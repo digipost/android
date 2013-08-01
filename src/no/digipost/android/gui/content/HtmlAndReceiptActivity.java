@@ -97,7 +97,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem toArchive = menu.findItem(R.id.htmlmenu_archive);
 		MenuItem toWorkarea = menu.findItem(R.id.htmlmenu_workarea);
-        MenuItem sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
+        sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
 
         if (content_type == ApplicationConstants.WORKAREA) {
 			toArchive.setVisible(true);
@@ -109,6 +109,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
         if (sendToBankVisible) {
             sendToBank.setVisible(true);
+            setSendToBankMenuText();
         } else {
             sendToBank.setVisible(false);
         }

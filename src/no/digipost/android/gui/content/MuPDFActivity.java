@@ -25,6 +25,7 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.model.Payment;
 import no.digipost.android.pdf.MuPDFAlert;
 import no.digipost.android.pdf.MuPDFCore;
 import no.digipost.android.pdf.MuPDFPageAdapter;
@@ -669,7 +670,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem toArchive = menu.findItem(R.id.pdfmenu_archive);
 		MenuItem toWorkarea = menu.findItem(R.id.pdfmenu_workarea);
-        MenuItem sendToBank = menu.findItem(R.id.pdfmenu_send_to_bank);
+        sendToBank = menu.findItem(R.id.pdfmenu_send_to_bank);
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
@@ -683,6 +684,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 
         if (sendToBankVisible) {
             sendToBank.setVisible(true);
+            setSendToBankMenuText();
         } else {
             sendToBank.setVisible(false);
         }

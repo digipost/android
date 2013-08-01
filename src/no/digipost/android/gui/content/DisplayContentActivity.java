@@ -26,9 +26,11 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.model.Attachment;
+import no.digipost.android.model.BankAccount;
 import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Invoice;
 import no.digipost.android.model.Letter;
+import no.digipost.android.model.Payment;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
@@ -41,9 +43,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 public abstract class DisplayContentActivity extends Activity {
     private ProgressDialog progressDialog;
+    protected MenuItem sendToBank;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +74,24 @@ public abstract class DisplayContentActivity extends Activity {
             }
     }
 
+    protected void setSendToBankMenuText(){
+        Payment payment = DocumentContentStore.getDocumentAttachment().getInvoice() == null ? null : DocumentContentStore.getDocumentAttachment().getInvoice().getPayment();
+        if(payment != null){
+            sendToBank.setTitle(getString(R.string.sent_to_bank));
+        }
+    }
+
     private void openInvoiceContent(Attachment attachment, Letter letter, CurrentBankAccount account) {
 
         if (attachment.getInvoice().getPayment() != null) {
             showPaidInvoiceDialog(attachment.getInvoice());
         } else {
             if (attachment.getInvoice().getSendToBank() != null) {
-                showSendToBankDialog(attachment, letter, account.getBankAccount().getAccountNumber());
+
+                System.out.println("Account "+account);
+                String accountNumber = account == null ? "***********" : account.getBankAccount().getAccountNumber();
+
+                showSendToBankDialog(attachment, letter, accountNumber);
             } else {
                 showSendToBankNotEnabledDialog();
             }
@@ -197,6 +213,7 @@ public abstract class DisplayContentActivity extends Activity {
                 }
                 DialogUtitities.showToast(DisplayContentActivity.this, errorMessage);
             }
+            setSendToBankMenuText();
         }
     }
 
