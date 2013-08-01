@@ -427,7 +427,7 @@ public abstract class DocumentFragment extends ContentFragment {
 
 	protected void showMoveDocumentsDialog(final String toLocation) {
 		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
-				getMoveDocumentsDialogMessage(toLocation, listAdapter.getCheckedCount()), getString(R.string.move));
+				getActionMovePromtString(listAdapter.getCheckedCount(), toLocation), getString(R.string.move));
 		alertDialogBuilder.setPositiveButton(R.string.move, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -445,20 +445,19 @@ public abstract class DocumentFragment extends ContentFragment {
 		alertDialog.show();
 	}
 
-	protected String getMoveDocumentsDialogMessage(String toLocation, int count) {
-		String location = "";
+    protected String getToLocationString(String toLocation) {
+        return toLocation.equals(ApiConstants.LOCATION_ARCHIVE) ? "arkivet" : "kjøkkenbenken";
+    }
 
-		if (toLocation.equals(ApiConstants.LOCATION_ARCHIVE)) {
-			location = "arkivet";
-		} else {
-			location = "kjøkkenbenken";
-		}
+    protected String getActionMovePromtString(int count, String toLocation) {
+        String type = getContentTypeString(count);
+        String location = getToLocationString(toLocation);
 
-		if (count > 1) {
-			return "Vil du flytte disse " + count + " dokumentene " + location + "?";
-		}
+        if (count > 1) {
+            return "Vil du flytte disse " + count + " " + type + " til " + location + "?";
+        }
 
-		return "Vil du flytte dette dokumentet til " + location + "?";
+        return "Vil du flytte dette " + type + " til " + location + "?";
 	}
 
 	private class DocumentMoveTask extends AsyncTask<Void, Letter, String> {

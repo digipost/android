@@ -17,6 +17,7 @@
 package no.digipost.android.gui.content;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -171,10 +172,11 @@ public class UploadActivity extends Activity {
 
 		mFiles.clear();
 
-		File[] files = mDirectory.listFiles();
+        File[] files = mDirectory.listFiles();
+
 		if (files != null && files.length > 0) {
 			for (File f : files) {
-				if (f.isHidden() && !mShowHiddenFiles) {
+				if ((f.isHidden() && !mShowHiddenFiles) || !isAcceptedFileExtension(f)) {
 					continue;
 				}
 
@@ -374,11 +376,7 @@ public class UploadActivity extends Activity {
 			File newFile = listAdapter.getItem(position);
 
 			if (newFile.isFile()) {
-				if (isAcceptedFileExtension(newFile)) {
-					promtUpload(newFile);
-				} else {
-					showBlockedFileExtensionDialog(newFile);
-				}
+				promtUpload(newFile);
 			} else {
 				mDirectory = newFile;
 				refreshFilesList();
@@ -640,6 +638,7 @@ public class UploadActivity extends Activity {
 
 		@Override
 		public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean state) {
+
 			try {
 				listAdapter.setChecked(position);
 				actionMode.setTitle(Integer.toString(listAdapter.getCheckedCount()));

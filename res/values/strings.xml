@@ -164,9 +164,8 @@
     <string name="pref_default_screen_default">1</string>
     <string name="pref_general_settings">Generelle innstillinger</string>
     <string name="pref_documents_settings">Innstillinger for brev</string>
-    <string name="pref_show_bank_id_documents_title">BankID</string>
-    <string name="pref_show_bank_id_documents_summary">Vis brev som krever innlogging med BankID
-    </string>
+    <string name="pref_show_bank_id_documents_title">BankID &amp; Buypass</string>
+    <string name="pref_show_bank_id_documents_summary">Vis brev som krever innlogging med BankID eller Buypass</string>
     <string name="pref_screen_rotation_title">Skjermrotasjon</string>
     <string name="pref_screen_rotation_summary">Tillat skjermrotasjon</string>
     <string name="pref_screen_confirm_delete_title">Bekreft før sletting</string>

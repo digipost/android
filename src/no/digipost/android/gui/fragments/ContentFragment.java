@@ -23,6 +23,7 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.ContentArrayAdapter;
 import no.digipost.android.model.Letter;
@@ -160,7 +161,7 @@ public abstract class ContentFragment extends Fragment {
 
 	protected void showDeleteContentDialog() {
 		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
-				getDeleteDocumentsDialogMessage(listAdapter.getCheckedCount()), getString(R.string.delete));
+				getActionDeletePromtString(listAdapter.getCheckedCount()), getString(R.string.delete));
 		alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -178,8 +179,8 @@ public abstract class ContentFragment extends Fragment {
 		alertDialog.show();
 	}
 
-	protected String getDeleteDocumentsDialogMessage(int count) {
-		String type = "";
+    protected String getContentTypeString(int count) {
+        String type = "";
 
         if (getContent() == ApplicationConstants.MAILBOX) {
             if (count > 1) {
@@ -193,19 +194,25 @@ public abstract class ContentFragment extends Fragment {
             } else {
                 type = "kvitteringen";
             }
-		} else {
-			if (count > 1) {
-				type = "dokumentene";
-			} else {
-				type = "dokumentet";
-			}
-		}
+        } else {
+            if (count > 1) {
+                type = "dokumentene";
+            } else {
+                type = "dokumentet";
+            }
+        }
+
+        return type;
+    }
+
+	protected String getActionDeletePromtString(int count) {
+		String type = getContentTypeString(count);
 
 		if (count > 1) {
 			return "Vil du slette disse " + count + " " + type + "?";
 		}
 
-		return "Vil du slette dette " + type + "?";
+		return "Vil du slette" + ((getContent() == ApplicationConstants.RECEIPTS) ? " denne " : " dette ") + type + "?";
 	}
 
 	protected class ContentDeleteTask extends AsyncTask<Void, Object, String> {

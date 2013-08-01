@@ -17,6 +17,9 @@
 package no.digipost.android.constants;
 
 public class ApplicationConstants {
+    public static final int ACTION_DELETE = 0;
+    public static final int ACTION_MOVE = 1;
+
 	public static final String HMACSHA256 = "HmacSHA256";
 
 	public static final String SCREENLOCK_CHOICE = "SCREENLOCK_CHOICE";
