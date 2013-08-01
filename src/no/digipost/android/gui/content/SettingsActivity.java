@@ -84,7 +84,7 @@ public class SettingsActivity extends Activity {
 
 			addPreferencesFromResource(R.xml.preferences);
 
-            Preference personalSettings = findPreference(KEY_PREF_PERSONAL_SETTINGS);
+            /*Preference personalSettings = findPreference(KEY_PREF_PERSONAL_SETTINGS);
             personalSettings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -100,7 +100,7 @@ public class SettingsActivity extends Activity {
                     startActivityForResult(preference.getIntent(), MainContentActivity.INTENT_REQUESTCODE);
                     return true;
                 }
-            });
+            });*/
 
 			setSummary(getPreferenceManager().getSharedPreferences(), findPreference(KEY_PREF_DEFAULT_SCREEN));
 		}
