@@ -5,6 +5,7 @@
     <item
             android:id="@+id/menu_image_html_unsupported_send_to_bank"
             android:title="@string/dialog_send_to_bank"
+            android:visible="false"
             android:showAsAction="ifRoom"/>
 
     <item
