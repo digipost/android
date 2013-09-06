@@ -27,7 +27,7 @@ public class ApplicationConstants {
 	public static final int SCREENLOCK_CHOICE_NO = 1;
 	public static final int SCREENLOCK_CHOICE_YES = 2;
 
-    public static final boolean FEATURE_SEND_TO_BANK_VISIBLE = false;
+    public static final boolean FEATURE_SEND_TO_BANK_VISIBLE = true;
 
 	public static final String ENCODING = "UTF-8";
 	public static final String MIME = "text/html";
