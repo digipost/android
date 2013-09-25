@@ -21,6 +21,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -99,7 +100,7 @@ public class ApiAccess {
 
 	private static ClientResponse executeGetRequest(Context context, final String uri, final String header_accept) throws DigipostClientException,
 			DigipostApiException, DigipostAuthenticationException {
-		if (Secret.ACCESS_TOKEN.equals("")) {
+		if (StringUtils.isBlank(Secret.ACCESS_TOKEN)) {
 			OAuth2.updateAccessToken(context);
 		}
 
