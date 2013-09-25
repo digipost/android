@@ -297,6 +297,10 @@ public class MuPDFActivity extends DisplayContentActivity {
 		}
 
 		createUI(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mDocView.setDisplayedViewIndex(savedInstanceState.getInt(CURRENT_WINDOW, 0));
+        }
 	}
 
 	private void setActionBar(String title, String subTitle) {
@@ -445,13 +449,6 @@ public class MuPDFActivity extends DisplayContentActivity {
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-
-		mDocView.setDisplayedViewIndex(savedInstanceState.getInt(CURRENT_WINDOW, 0));
-	}
-
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode >= 0)
 			mDocView.setDisplayedViewIndex(resultCode);
@@ -468,7 +465,9 @@ public class MuPDFActivity extends DisplayContentActivity {
 	protected void onPause() {
 		super.onPause();
 
-		mSearchTask.stop();
+		if (mSearchTask != null) {
+			mSearchTask.stop();
+		}
 	}
 
 	public void onDestroy() {
