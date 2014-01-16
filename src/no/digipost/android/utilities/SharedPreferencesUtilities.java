@@ -62,8 +62,7 @@ public class SharedPreferencesUtilities {
 	}
 
 	public static String getEncryptedRefreshtokenCipher(Context context) {
-		String cipher = getSharedPreferences(context).getString(ApiConstants.REFRESH_TOKEN, "");
-		return cipher;
+		return getSharedPreferences(context).getString(ApiConstants.REFRESH_TOKEN, "");
 	}
 
 	public static void storeEncryptedRefreshtokenCipher(String cipher, Context context) {

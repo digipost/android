@@ -21,9 +21,11 @@ import java.security.SecureRandom;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import no.digipost.android.R;
+import no.digipost.android.api.Buscador;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
@@ -42,6 +44,9 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.sun.jersey.spi.service.ServiceFinder;
+
+import org.apache.commons.lang.StringUtils;
 
 public class OAuth2 {
 
@@ -85,6 +90,7 @@ public class OAuth2 {
 
 	private static void storeTokens(final Access data, final Context context) {
 		Secret.ACCESS_TOKEN = data.getAccess_token();
+        Secret.REFRESH_TOKEN = data.getRefresh_token();
 		if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
 			String refresh_token = data.getRefresh_token();
 			KeyStoreAdapter ksa = new KeyStoreAdapter();
@@ -95,23 +101,30 @@ public class OAuth2 {
 
 	public static void updateAccessToken(final Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
-		KeyStoreAdapter ksa = new KeyStoreAdapter();
-		String refresh_token = ksa.decrypt(encrypted_refresh_token);
+        String refresh_token = Secret.REFRESH_TOKEN;
+        if (StringUtils.isBlank(refresh_token)) {
+            String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
+            KeyStoreAdapter ksa = new KeyStoreAdapter();
+            refresh_token = ksa.decrypt(encrypted_refresh_token);
+            Secret.REFRESH_TOKEN = refresh_token;
+        }
+        if (StringUtils.isBlank(refresh_token)) {
+            throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
+        }
 		retriveAccessToken(refresh_token, context);
 	}
 
 	private static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {
+        ServiceFinder.setIteratorProvider(new Buscador());
 		Client c = Client.create();
 		WebResource r = c.resource(ApiConstants.URL_API_OAUTH_ACCESSTOKEN);
-		ClientResponse cr = null;
+		ClientResponse cr;
 		try {
-			cr = r.queryParams(params)
-					.header(ApiConstants.POST, ApiConstants.POST_API_ACCESSTOKEN_HTTP)
-					.header(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_FORM_URLENCODED)
+			cr = r
 					.header(ApiConstants.AUTHORIZATION, getB64Auth())
-					.post(ClientResponse.class);
+                    .type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+					.post(ClientResponse.class, params);
 		} catch (Exception e) {
 			throw new DigipostClientException(context.getString(R.string.error_your_network));
 		}
@@ -119,7 +132,7 @@ public class OAuth2 {
 		try {
 			NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
 		} catch (DigipostInvalidTokenException e) {
-			// Ignore
+            throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
 		}
 
 		return (Access) JSONUtilities.processJackson(Access.class, cr.getEntityInputStream());

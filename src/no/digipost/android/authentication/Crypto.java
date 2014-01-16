@@ -90,9 +90,8 @@ public class Crypto {
 			IvParameterSpec ivParams = new IvParameterSpec(iv);
 			cipher.init(Cipher.DECRYPT_MODE, key, ivParams);
 			byte[] plaintext = cipher.doFinal(cipherBytes);
-			String plainrStr = new String(plaintext, "UTF-8");
+			return new String(plaintext, "UTF-8");
 
-			return plainrStr;
 		} catch (GeneralSecurityException e) {
 			throw new RuntimeException(e);
 		} catch (UnsupportedEncodingException e) {
