@@ -39,6 +39,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 
+import javax.ws.rs.core.HttpHeaders;
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
@@ -107,6 +109,7 @@ public class ApiAccess {
 		try {
 			ClientResponse cr = getClient()
 					.resource(uri)
+                    .header(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT)
 					.header(ApiConstants.ACCEPT, header_accept)
 					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
 					.get(ClientResponse.class);

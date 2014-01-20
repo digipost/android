@@ -704,7 +704,7 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 
 	@Override
 	public View getSelectedView() {
-		throw new UnsupportedOperationException("Not supported");
+        return null;
 	}
 
 	@Override
@@ -717,7 +717,6 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 
 	@Override
 	public void setSelection(int arg0) {
-		throw new UnsupportedOperationException("Not supported");
 	}
 
 	private View getCached() {
