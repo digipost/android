@@ -58,6 +58,21 @@
             <artifactId>universal-image-loader</artifactId>
             <version>1.8.5</version>
         </dependency>
+        <dependency>
+            <groupId>google</groupId>
+            <artifactId>libGoogleAnalytics</artifactId>
+            <version>V2</version>        	
+        </dependency>
+        <dependency>
+            <groupId>android-support</groupId>
+            <artifactId>android-support</artifactId>
+            <version>v13</version>        	
+        </dependency>        
+        <dependency>
+            <groupId>facebook</groupId>
+            <artifactId>conceal</artifactId>
+            <version>1</version>        	
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -85,4 +100,12 @@
 			</plugin>
 		</plugins>
 	</build>
+	
+	<repositories>
+		<repository>
+	        <id>local</id>
+	        <url>file://${project.basedir}/libs</url>
+	    </repository>
+	</repositories>
+	
 </project> 

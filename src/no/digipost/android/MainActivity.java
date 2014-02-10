@@ -19,13 +19,12 @@ package no.digipost.android;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.OAuth2;
+import no.digipost.android.authentication.Security;
 import no.digipost.android.gui.LoginActivity;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
-import no.digipost.android.utilities.VersionUtilities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -57,18 +56,11 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkTokenAndScreenlockStatus() {
-
-		if (!VersionUtilities.IsVersion18()) {
-
-			KeyStore ks = KeyStore.getInstance();
-			if (ks.state() == KeyStore.State.UNLOCKED && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
-				new CheckTokenTask().execute();
-			} else {
-				startLoginActivity();
-			}
-		}else{
-            startLoginActivity();
-        }
+		if (Security.canUseRefreshTokens(this) && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
+			new CheckTokenTask().execute();
+		} else {
+			startLoginActivity();
+		}
 	}
 
 	private void startBaseActivity() {

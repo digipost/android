@@ -1,14 +1,12 @@
 package no.digipost.android.model;
 
-import com.sun.xml.internal.rngom.ast.builder.Include;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.ArrayList;
 
 import no.digipost.android.constants.ApiConstants;
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Invoice {
@@ -32,19 +30,19 @@ public class Invoice {
     private String dueDate;
 
     public String getKid(){
-        return this.kid;
+        return kid;
     }
 
     public String getAccountNumber(){
-        return this.accountNumber;
+        return accountNumber;
     }
 
     public String getAmout(){
-        return this.amount;
+        return amount;
     }
 
     public String getDueDate(){
-        return this.dueDate;
+        return dueDate;
     }
 
     public Payment getPayment(){

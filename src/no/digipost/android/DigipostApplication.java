@@ -14,7 +14,7 @@ import no.digipost.android.utilities.AnalyticsExceptionParser;
 public class DigipostApplication extends Application {
 
     public static String USER_AGENT;
-
+    
     @Override
     public void onCreate() {
         super.onCreate();
