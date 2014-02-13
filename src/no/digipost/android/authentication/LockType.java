@@ -6,7 +6,6 @@ import android.app.admin.DevicePolicyManager;
 import android.content.ContentResolver;
 import android.os.Environment;
 import android.provider.Settings;
-import android.util.Log;
 
 public class LockType
 {
@@ -72,7 +71,6 @@ public class LockType
     {
         int mode = android.provider.Settings.Secure.getInt(contentResolver, PASSWORD_TYPE_KEY,
                 DevicePolicyManager.PASSWORD_QUALITY_SOMETHING);
-        Log.i("Yo", "Lo: " + android.provider.Settings.Secure.getInt(contentResolver, Settings.Secure.LOCK_PATTERN_ENABLED, 777));
         if (is(mode, DevicePolicyManager.PASSWORD_QUALITY_SOMETHING))
         {
             if (android.provider.Settings.Secure.getInt(contentResolver, Settings.Secure.LOCK_PATTERN_ENABLED, 0) == 1)
@@ -113,12 +111,10 @@ public class LockType
     }
 
     private static boolean is(final int mode, final int setting) {
-		Log.i("Yo", String.valueOf(mode) + " " + String.valueOf(setting) + " " + String.valueOf(mode & setting));
     		return (mode & setting) == setting;
     }
 
     public static boolean isAboveSlider(final ContentResolver contentResolver) {
-    		Log.i("Yo", String.valueOf(getCurrent(contentResolver)));
     		return getCurrent(contentResolver) > NONE_OR_SLIDER;
     }
 

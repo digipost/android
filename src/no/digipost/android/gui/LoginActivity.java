@@ -17,7 +17,6 @@ package no.digipost.android.gui;
 
 import no.digipost.android.R;
 import no.digipost.android.authentication.KeyStoreAdapter;
-import no.digipost.android.authentication.LockType;
 import no.digipost.android.authentication.Security;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.utilities.DialogUtitities;
@@ -69,11 +68,12 @@ public class LoginActivity extends Activity {
 		super.onResume();
 			enableCheckBoxIfScreenlock();
 			deleteOldRefreshtoken();
+			final Context c = this;
             rememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				@Override
 				public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
 					if (rememberMe.isChecked()) {
-						if (!LockType.isAboveSlider(getContentResolver())) {
+						if (!Security.isAboveSlider(c)) {
 								Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
 								startActivity(i);
 						}
