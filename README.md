@@ -5,7 +5,7 @@ Digipost for Android er en app for Android som gir tilgang til brukerens sikre d
 
 App-en kan lastes ned fra Google Play, https://play.google.com/store/apps/details?id=no.digipost.android.
 
-Kildekoden er her tilgjengelig som fri programvare under lisensen Apache License, Version 2.0, som beskrevet i lisensfilen.
+Kildekoden som er skrevet av Posten er her tilgjengelig som fri programvare under lisensen *Apache License, Version 2.0*, som beskrevet i [lisensfilen](https://github.com/digipost/android/blob/master/LICENSE.txt "LICENSE").
 
 Viktig:
 ------
