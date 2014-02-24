@@ -1,7 +1,11 @@
-android
+Digipost for Android
 =======
 
-Digipost for Android
+Digipost for Android er en app for Android som gir tilgang til brukerens sikre digitale postkasse i Digipost. Bruker må opprette en konto på https://www.digipost.no/.
+
+App-en kan lastes ned fra Google Play, https://play.google.com/store/apps/details?id=no.digipost.android.
+
+Kildekoden er her tilgjengelig som fri programvare under lisensen Apache License, Version 2.0, som beskrevet i lisensfilen.
 
 Viktig:
 ------
