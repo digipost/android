@@ -17,7 +17,6 @@
 package no.digipost.android.utilities;
 
 import no.digipost.android.api.ContentOperations;
-import no.digipost.android.authentication.KeyStore;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
@@ -28,68 +27,64 @@ import android.preference.PreferenceManager;
 
 public class SharedPreferencesUtilities {
 
-	public static SharedPreferences getSharedPreferences(Context context) {
+	public static SharedPreferences getSharedPreferences(final Context context) {
 		return PreferenceManager.getDefaultSharedPreferences(context);
 	}
 
-	public static int screenlockChoice(Context context) {
+	public static int screenlockChoice(final Context context) {
 		return getSharedPreferences(context).getInt(ApplicationConstants.SCREENLOCK_CHOICE,
 				ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET);
 	}
 
-	public static boolean screenlockChoiceYes(Context context) {
+	public static boolean screenlockChoiceYes(final Context context) {
 		return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_YES;
 	}
 
-	public static boolean screenlockChoiceNo(Context context) {
+	public static boolean screenlockChoiceNo(final Context context) {
 		return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_NO;
 	}
 
-	public static boolean screenlockChoiceNotTakenYet(Context context) {
+	public static boolean screenlockChoiceNotTakenYet(final Context context) {
 		return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET;
 	}
 
-	public static void storeScreenlockChoice(Context context, int choice) {
+	public static void storeScreenlockChoice(final Context context, final int choice) {
 		SharedPreferences.Editor edit = getSharedPreferences(context).edit();
 		edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE, choice);
 		edit.commit();
 	}
 
-	public static void deleteScreenlockChoice(Context context) {
+	public static void deleteScreenlockChoice(final Context context) {
 		SharedPreferences.Editor edit = getSharedPreferences(context).edit();
 		edit.remove(ApplicationConstants.SCREENLOCK_CHOICE);
 		edit.commit();
 	}
 
-	public static String getEncryptedRefreshtokenCipher(Context context) {
+	public static String getEncryptedRefreshtokenCipher(final Context context) {
 		return getSharedPreferences(context).getString(ApiConstants.REFRESH_TOKEN, "");
 	}
 
-	public static void storeEncryptedRefreshtokenCipher(String cipher, Context context) {
+	public static void storeEncryptedRefreshtokenCipher(final String cipher, final Context context) {
 		Editor editor = getSharedPreferences(context).edit();
 		editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
 		editor.commit();
 	}
 
-	public static void deleteRefreshtoken(Context context) {
+	public static void deleteRefreshtoken(final Context context) {
         Secret.ACCESS_TOKEN = null;
         ContentOperations.setAccountToNull();
 		Editor edit = getSharedPreferences(context).edit();
 		edit.remove(ApiConstants.REFRESH_TOKEN);
 		edit.commit();
-
-        if (!VersionUtilities.IsVersion18()) {
-            KeyStore.getInstance().delete(ApiConstants.REFRESH_TOKEN);
-        }
 	}
 
-	public static void clearSharedPreferences(Context context) {
+	public static void clearSharedPreferences(final Context context) {
 		Editor editor = getSharedPreferences(context).edit();
 		editor.clear();
 		editor.commit();
 	}
 
-    public static int numberOfTimesAppHasRun(Context context) {
+    public static int numberOfTimesAppHasRun(final Context context) {
         Editor editor = getSharedPreferences(context).edit();
         int numberOfTimesAppHasRun = getSharedPreferences(context).getInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, 1);
         editor.putInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, numberOfTimesAppHasRun + 1);

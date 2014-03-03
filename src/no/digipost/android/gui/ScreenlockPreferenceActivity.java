@@ -17,7 +17,6 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
-import no.digipost.android.authentication.KeyStore;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,10 +26,12 @@ import android.widget.Button;
 import com.google.analytics.tracking.android.EasyTracker;
 
 public class ScreenlockPreferenceActivity extends Activity {
+	private static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
 	private Button yesButton, noButton;
 	private ButtonListener listener;
 
-	public void onCreate(Bundle savedInstanceState) {
+	@Override
+	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_screenlockpreference);
 		yesButton = (Button) (findViewById(R.id.screenlockactivity_yes_button));
@@ -53,7 +54,7 @@ public class ScreenlockPreferenceActivity extends Activity {
     }
 
     private void yesButton() {
-		startActivity(new Intent(KeyStore.UNLOCK_ACTION));
+    		startActivity(new Intent(UNLOCK_ACTION));
 		finish();
 	}
 

@@ -37,6 +37,9 @@ import no.digipost.android.model.TokenValue;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
+
+import org.apache.commons.lang.StringUtils;
+
 import android.content.Context;
 import android.util.Base64;
 
@@ -45,8 +48,6 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import com.sun.jersey.spi.service.ServiceFinder;
-
-import org.apache.commons.lang.StringUtils;
 
 public class OAuth2 {
 
@@ -93,7 +94,7 @@ public class OAuth2 {
         Secret.REFRESH_TOKEN = data.getRefresh_token();
 		if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
 			String refresh_token = data.getRefresh_token();
-			KeyStoreAdapter ksa = new KeyStoreAdapter();
+			KeyStoreAdapter ksa = new KeyStoreAdapter(context);
 			String cipher = ksa.encrypt(refresh_token);
 			SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
 		}
@@ -104,7 +105,7 @@ public class OAuth2 {
         String refresh_token = Secret.REFRESH_TOKEN;
         if (StringUtils.isBlank(refresh_token)) {
             String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
-            KeyStoreAdapter ksa = new KeyStoreAdapter();
+            KeyStoreAdapter ksa = new KeyStoreAdapter(context);
             refresh_token = ksa.decrypt(encrypted_refresh_token);
             Secret.REFRESH_TOKEN = refresh_token;
         }

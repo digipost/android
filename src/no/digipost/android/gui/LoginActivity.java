@@ -1,6 +1,6 @@
 /**
  * Copyright (C) Posten Norge AS
- *	
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,12 +16,12 @@
 package no.digipost.android.gui;
 
 import no.digipost.android.R;
-import no.digipost.android.authentication.KeyStore;
+import no.digipost.android.authentication.KeyStoreAdapter;
+import no.digipost.android.authentication.Security;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
-import no.digipost.android.utilities.VersionUtilities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -39,7 +39,7 @@ public class LoginActivity extends Activity {
 	private Button loginButton, privacyButton, registrationButton;
 	private CheckBox rememberMe;
 	private ButtonListener listener;
-	private KeyStore ks;
+	private KeyStoreAdapter ks;
 	private Context context;
 
 	private final int WEB_LOGIN_REQUEST = 1;
@@ -48,8 +48,8 @@ public class LoginActivity extends Activity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		ks = KeyStore.getInstance();
 		context = this;
+		ks = new KeyStoreAdapter(this);
 		listener = new ButtonListener();
 		loginButton = (Button) findViewById(R.id.login_loginButton);
 		loginButton.setOnClickListener(listener);
@@ -58,33 +58,29 @@ public class LoginActivity extends Activity {
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
         rememberMe = (CheckBox) findViewById(R.id.login_remember_me);
-
-		if (VersionUtilities.IsVersion18()) {
-            rememberMe.setVisibility(View.GONE);
-		}
-
+        if (!ks.isAvailable()) {
+        		rememberMe.setVisibility(View.GONE);
+        }
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (!VersionUtilities.IsVersion18()) {
-
 			enableCheckBoxIfScreenlock();
 			deleteOldRefreshtoken();
+			final Context c = this;
             rememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
 					if (rememberMe.isChecked()) {
-						KeyStore ks = KeyStore.getInstance();
-						if (ks.state() != KeyStore.State.UNLOCKED) {
-							Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
-							startActivity(i);
+						if (!Security.isAboveSlider(c)) {
+								Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
+								startActivity(i);
 						}
 					}
 				}
 			});
-		}
+
 	}
 
 	@Override
@@ -100,13 +96,13 @@ public class LoginActivity extends Activity {
 	}
 
 	private void deleteOldRefreshtoken() {
-		if (ks.state() == KeyStore.State.UNLOCKED) {
+		if (ks.isAvailable()) {
 			SharedPreferencesUtilities.deleteRefreshtoken(this);
 		}
 	}
 
 	private void enableCheckBoxIfScreenlock() {
-		if (ks.state() == KeyStore.State.UNLOCKED) {
+		if (Security.canUseRefreshTokens(this)) {
 			//stayLoggedInCheckBox.setChecked(true);
 		} else {
             rememberMe.setChecked(false);
@@ -134,7 +130,7 @@ public class LoginActivity extends Activity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		if (requestCode == WEB_LOGIN_REQUEST) {
 			if (resultCode == RESULT_OK) {
 				startMainContentActivity();

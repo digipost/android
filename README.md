@@ -18,4 +18,5 @@ Når du har fått client id og client secret er du nødt til å opprette en fil 
       public static final String CLIENT_SECRET = "";
       public static final String REDIRECT_URI = "http://localhost:1979";
       public static String ACCESS_TOKEN = "";
+      public static String REFRESH_TOKEN = "";
     }
