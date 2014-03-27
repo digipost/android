@@ -96,66 +96,36 @@ public class PrimaryAccount {
 	}
 
 	public String getInboxUri() {
-		for (Link l : link) {
-			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_INBOX)) {
-				return l.getUri();
-			}
-		}
-
-		return null;
+		return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_INBOX);
 	}
 
 	public String getArchiveUri() {
-		for (Link l : link) {
-			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_ARCHIVE)) {
-				return l.getUri();
-			}
-		}
-
-		return null;
+		return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_ARCHIVE);
 	}
 
 	public String getWorkareaUri() {
-		for (Link l : link) {
-			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_KITCHENBENCH)) {
-				return l.getUri();
-			}
-		}
-
-		return null;
+		return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_WORKAREA);
 	}
 
 	public String getReceiptsUri() {
-		for (Link l : link) {
-			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_RECEIPTS)) {
-				return l.getUri();
-			}
-		}
-		return null;
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_RECEIPTS);
 	}
 
 	public String getUploadUri() {
-		for (Link l : link) {
-			if (l.getRel().equals("https://www.digipost.no/post/relations/upload_document")) {
-				return l.getUri();
-			}
-		}
-		return null;
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_UPLOAD);
 	}
 
     public String getSettingsUri() {
-        for (Link l : link) {
-            if (l.getRel().equals("https://www.digipost.no/post/relations/account_settings")) {
-                return l.getUri();
-            }
-        }
-        return null;
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_ACCOUNT_SETTINGS);
     }
 
     public String getCurrentBankAccountUri(){
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_CURRENT_BANK_ACCOUNT);
+    }
+
+    private String getLinkByRelation(String relation) {
         for (Link l : link) {
-            if (l.getRel().equals(ApiConstants.URL_RELATIONS_CURRENT_BANK_ACCOUNT)) {
-                System.out.println("URL_RELATIONS_CURRENT_BANK_ACCOUNT: "+l.getUri());
+            if (l.getRel().equals(relation)) {
                 return l.getUri();
             }
         }

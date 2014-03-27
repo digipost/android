@@ -146,65 +146,28 @@ public class Letter {
 	}
 
 	public String getSelfUri() {
-		for (Link l : link) {
-			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_SELF)) {
-				return l.getUri();
-			}
-		}
-		return null;
-	}
-
-	public String getContentUri() {
-		for (Link l : link) {
-			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_GET_CONTENT)) {
-				return l.getUri();
-			}
-		}
-		return null;
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_SELF);
 	}
 
 	public String getUpdateUri() {
-		for (Link l : link) {
-			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_UPDATE)) {
-				return l.getUri();
-			}
-		}
-		return null;
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_UPDATE);
 	}
 
 	public String getOpeningReceiptUri() {
-		for (Link l : link) {
-			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT)) {
-				return l.getUri();
-			}
-		}
-		return null;
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT);
 	}
 
 	public String getDeleteUri() {
-		for (Link l : link) {
-			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_DELETE)) {
-				return l.getUri();
-			}
-		}
-		return null;
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_DELETE);
 	}
 
-	public String getOrganizationLogo() {
-		for (Link l : link) {
-			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_GET_ORGANIZATION_LOGO)) {
-				return l.getUri();
-			}
-		}
-		return null;
-	}
-
-	/*
-	 * @Override public String toString() { return "Letter [subject=" + subject
-	 * + ", creatorName=" + creatorName + ", created=" + created + ", fileType="
-	 * + fileType + ", fileSize=" + fileSize + ", origin=" + origin +
-	 * ", authenticationLevel=" + authenticationLevel + ", location=" + location
-	 * + ", read=" + read + ", type=" + type + "]"; }
-	 */
+    private String getLinkByRelation(String relation) {
+        for (Link l : link) {
+            if (l.getRel().equals(relation)) {
+                return l.getUri();
+            }
+        }
+        return null;
+    }
 
 }

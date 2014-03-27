@@ -37,7 +37,6 @@ public class ApiConstants {
 	public static final String RESPONSE_TYPE = "response_type";
 	public static final String CLIENT_ID = "client_id";
 	public static final String NONCE = "nonce";
-	public static final String POST = "POST";
 	public static final String ACCESS_TOKEN = "access_token";
 	public static final String REFRESH_TOKEN = "refresh_token";
 	public static final String REDIRECT_URI = "redirect_uri";
@@ -45,8 +44,6 @@ public class ApiConstants {
 	public static final String CONTENT_TYPE = "Content-Type";
 	public static final String ACCEPT = "Accept";
 	public static final String AUTHORIZATION = "Authorization";
-	public static final String POST_API_ACCESSTOKEN_HTTP = "/post/api/oauth/accesstoken HTTP/1.1";
-	public static final String APPLICATION_FORM_URLENCODED = "application/x-www-form-urlencoded";
 	public static final String BEARER = "Bearer ";
 	public static final String BASIC = "Basic ";
 	public static final String APPLICATION_VND_DIGIPOST_V2_JSON = "application/vnd.digipost-v2+json";
@@ -56,20 +53,25 @@ public class ApiConstants {
 	public static final String URL = "https://www.digipost.no/post/";
 
 	public static final String URL_API = URL + "api";
-	public static final String URL_RELATIONS_DOCUMENT_INBOX = URL + "relations/document_inbox";
-	public static final String URL_RELATIONS_DOCUMENT_ARCHIVE = URL + "relations/document_archive";
-	public static final String URL_RELATIONS_DOCUMENT_KITCHENBENCH = URL + "relations/document_workarea";
-	public static final String URL_RELATIONS_DOCUMENT_RECEIPTS = URL + "relations/receipts";
-	public static final String URL_RELATIONS_DOCUMENT_GET_CONTENT = URL + "relations/get_document_content";
-	public static final String URL_RELATIONS_DOCUMENT_SELF = URL + "relations/self";
-	public static final String URL_RELATIONS_DOCUMENT_UPDATE = URL + "relations/update_document";
-	public static final String URL_RELATIONS_DOCUMENT_DELETE = URL + "relations/delete_document";
-	public static final String URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT = URL + "relations/send_opening_receipt";
-	public static final String URL_RELATIONS_DOCUMENT_GET_ORGANIZATION_LOGO = URL + "relations/organisation_logo";
+    public static final String URL_RELATIONS = URL + "relations/";
+	public static final String URL_RELATIONS_DOCUMENT_INBOX = URL_RELATIONS + "document_inbox";
+	public static final String URL_RELATIONS_DOCUMENT_ARCHIVE = URL_RELATIONS + "document_archive";
+	public static final String URL_RELATIONS_DOCUMENT_WORKAREA = URL_RELATIONS + "document_workarea";
+	public static final String URL_RELATIONS_DOCUMENT_RECEIPTS = URL_RELATIONS + "receipts";
+	public static final String URL_RELATIONS_DOCUMENT_UPLOAD = URL_RELATIONS + "upload_document";
+	public static final String URL_RELATIONS_DOCUMENT_GET_CONTENT = URL_RELATIONS + "get_document_content";
+	public static final String URL_RELATIONS_DOCUMENT_SELF = URL_RELATIONS + "self";
+	public static final String URL_RELATIONS_DOCUMENT_UPDATE = URL_RELATIONS + "update_document";
+	public static final String URL_RELATIONS_DOCUMENT_DELETE = URL_RELATIONS + "delete_document";
+	public static final String URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT = URL_RELATIONS + "send_opening_receipt";
+	public static final String URL_RELATIONS_ACCOUNT_SETTINGS = URL_RELATIONS + "account_settings";
+    public static final String URL_RELATIONS_CURRENT_BANK_ACCOUNT = URL_RELATIONS + "current_bank_account";
+    public static final String URL_RELATIONS_BANK_HOMEPAGE = URL_RELATIONS + "bank_homepage";
+    public static final String URL_RELATIONS_SEND_TO_BANK = URL_RELATIONS + "send_to_bank";
+    public static final String URL_RELATIONS_RECEIPT_HTML = URL_RELATIONS + "get_receipt_as_html";
+    public static final String URL_RELATIONS_RECEIPT_DELETE = URL_RELATIONS + "delete_receipt";
+
 	public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "api/oauth/authorize/new";
 	public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "api/oauth/accesstoken";
-    public static final String URL_RELATIONS_CURRENT_BANK_ACCOUNT = URL + "relations/current_bank_account";
-    public static final String URL_RELATIONS_BANK_HOMEPAGE = URL + "relations/bank_homepage";
-    public static final String URL_RELATIONS_SEND_TO_BANK = URL + "relations/send_to_bank";
 
 }

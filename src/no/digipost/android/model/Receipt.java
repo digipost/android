@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import no.digipost.android.constants.ApiConstants;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Receipt {
 
@@ -101,30 +103,20 @@ public class Receipt {
 		this.currency = currency;
 	}
 
-	public String getContentAsPDFUri() {
-		for (Link l : link) {
-			if (l.getRel().equals("https://www.digipost.no/post/relations/get_receipt_as_pdf")) {
-				return l.getUri();
-			}
-		}
-		return null;
-	}
-
-	public String getContentAsHTMLUri() {
-		for (Link l : link) {
-			if (l.getRel().equals("https://www.digipost.no/post/relations/get_receipt_as_html")) {
-				return l.getUri();
-			}
-		}
-		return null;
+    public String getContentAsHTMLUri() {
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_RECEIPT_HTML);
 	}
 
 	public String getDeleteUri() {
-		for (Link l : link) {
-			if (l.getRel().equals("https://www.digipost.no/post/relations/delete_receipt")) {
-				return l.getUri();
-			}
-		}
-		return null;
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_RECEIPT_DELETE);
 	}
+
+    private String getLinkByRelation(String relation) {
+        for (Link l : link) {
+            if (l.getRel().equals(relation)) {
+                return l.getUri();
+            }
+        }
+        return null;
+    }
 }
