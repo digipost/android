@@ -153,11 +153,7 @@ public class Letter {
         return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_UPDATE);
 	}
 
-	public String getOpeningReceiptUri() {
-        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT);
-	}
-
-	public String getDeleteUri() {
+    public String getDeleteUri() {
         return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_DELETE);
 	}
 
@@ -169,5 +165,15 @@ public class Letter {
         }
         return null;
     }
+
+    public boolean hasOpeningReceipt() {
+        for (Attachment a : attachment) {
+            if(a.getOpeningReceiptUri() != null){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

@@ -33,10 +33,10 @@ import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
 import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
 import no.digipost.android.model.Attachment;
-import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Letter;
 import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -110,7 +110,11 @@ public abstract class DocumentFragment extends ContentFragment {
 
 		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
             Attachment attachment = attachmentAdapter.getItem(position);
-            executeGetAttachmentContentTask(parentLetter, position, parentListPosition,attachment);
+            if(attachment.getOpeningReceiptUri() != null) {
+                showOpeningReceiptDialog(parentLetter, attachment, parentListPosition, position);
+            } else {
+                executeGetAttachmentContentTask(parentLetter, position, parentListPosition, attachment);
+            }
 		}
 	}
 
@@ -140,8 +144,8 @@ public abstract class DocumentFragment extends ContentFragment {
 	private void openListItem(final Letter letter, int listPosition) {
 		if (letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
 			showTwoFactorDialog();
-		} else if (letter.getOpeningReceiptUri() != null) {
-			showOpeningReceiptDialog(letter, listPosition);
+		} else if (letter.getAttachment().size() == 1 && letter.getAttachment().get(0).getOpeningReceiptUri() != null) {
+			showOpeningReceiptDialog(letter, letter.getAttachment().get(0), listPosition, 0);
 		} else {
 			findDocumentAttachments(letter, listPosition);
 		}
@@ -154,35 +158,35 @@ public abstract class DocumentFragment extends ContentFragment {
 			showAttachmentDialog(letter, listPosition);
 		} else {
             Attachment attachment = letter.getAttachment().get(0);
-			executeGetAttachmentContentTask(letter, 0, listPosition,attachment);
+			executeGetAttachmentContentTask(letter, 0, listPosition, attachment);
 		}
 	}
 
-	private void sendOpeningReceipt(final Letter letter, int listPosition) {
-		SendOpeningReceiptTask task = new SendOpeningReceiptTask(letter, listPosition);
-		task.execute();
-	}
+    private void sendOpeningReceipt(final Letter letter, final Attachment attachment, int listPosition, int attachmentPosition) {
+        SendOpeningReceiptTask task = new SendOpeningReceiptTask(letter, attachment, listPosition, attachmentPosition);
+        task.execute();
+    }
 
-	private void showOpeningReceiptDialog(final Letter letter, final int listPosition) {
+    private void showOpeningReceiptDialog(final Letter letter, final Attachment attachment, final int listPosition, final int attachmentPosition) {
 
-		String title = getString(R.string.dialog_opening_receipt_title);
-		String message = getString(R.string.dialog_opening_receipt_message);
+        String title = getString(R.string.dialog_opening_receipt_title);
+        String message = getString(R.string.dialog_opening_receipt_message);
 
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
 
-		builder.setPositiveButton(getString(R.string.dialog_opening_receipt_yes), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-				sendOpeningReceipt(letter, listPosition);
-				dialog.dismiss();
-			}
-		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-			public void onClick(final DialogInterface dialog, final int id) {
-				dialog.cancel();
-			}
-		});
+        builder.setPositiveButton(getString(R.string.dialog_opening_receipt_yes), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                sendOpeningReceipt(letter, attachment, listPosition, attachmentPosition);
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
 
-		builder.create().show();
-	}
+        builder.create().show();
+    }
 
 	private void showTwoFactorDialog() {
 
@@ -244,14 +248,15 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			if (!DocumentFragment.super.progressDialogIsVisible)
-				DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+			if (!DocumentFragment.super.progressDialogIsVisible) {
+                DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+            }
 		}
 
 		@Override
 		protected byte[] doInBackground(Void... voids) {
 			try {
-				byte[] bytes = ContentOperations.getDocumentContent(context, parentLetter.getAttachment().get(attachmentListPosition));
+				byte[] bytes = ContentOperations.getDocumentContent(context, attachment);
 				parentLetter = ContentOperations.getSelfLetter(context, parentLetter);
 				return bytes;
 			} catch (DigipostAuthenticationException e) {
@@ -546,63 +551,72 @@ public abstract class DocumentFragment extends ContentFragment {
 	}
 
 	protected class SendOpeningReceiptTask extends AsyncTask<Void, Void, Boolean> {
-		private String errorMessage;
-		private Letter letter;
-		private boolean invalidToken;
-		private int listPosition;
+        private String errorMessage;
+        private Letter letter;
+        private Attachment attachment;
+        private boolean invalidToken;
+        private int listPosition, attachmentPosition;
 
-		public SendOpeningReceiptTask(final Letter letter, int listPosition) {
-			invalidToken = false;
-			this.letter = letter;
-			this.listPosition = listPosition;
-		}
+        public SendOpeningReceiptTask(final Letter letter, final Attachment attachment, int listPosition, int attachmentPosition) {
+            invalidToken = false;
+            this.letter = letter;
+            this.attachment = attachment;
+            this.listPosition = listPosition;
+            this.attachmentPosition = attachmentPosition;
+        }
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
-			DocumentFragment.super.progressDialogIsVisible = true;
-		}
 
-		@Override
-		protected Boolean doInBackground(final Void... params) {
-			try {
-				ContentOperations.sendOpeningReceipt(context, letter);
-				letter = ContentOperations.getSelfLetter(context, letter);
-				return true;
-			} catch (DigipostApiException e) {
-				errorMessage = e.getMessage();
-				return false;
-			} catch (DigipostClientException e) {
-				errorMessage = e.getMessage();
-				return false;
-			} catch (DigipostAuthenticationException e) {
-				invalidToken = true;
-				errorMessage = e.getMessage();
-				return false;
-			}
-		}
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (!DocumentFragment.super.progressDialogIsVisible) {
+                DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+            }
+            DocumentFragment.super.progressDialogIsVisible = true;
+        }
 
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-		}
+        @Override
+        protected Boolean doInBackground(final Void... params) {
+            try {
+                letter = (Letter) JSONUtilities.processJackson(Letter.class, ContentOperations.sendOpeningReceipt(context, attachment));
+                attachment = letter.getAttachment().get(attachmentPosition);
 
-		@Override
-		protected void onPostExecute(final Boolean result) {
+                return true;
+            } catch (DigipostApiException e) {
+                errorMessage = e.getMessage();
+                return false;
+            } catch (DigipostClientException e) {
+                errorMessage = e.getMessage();
+                return false;
+            } catch (DigipostAuthenticationException e) {
+                invalidToken = true;
+                errorMessage = e.getMessage();
+                return false;
+            }
+        }
 
-			if (result != null) {
-				openListItem(letter, listPosition);
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            DocumentFragment.super.hideProgressDialog();
+            DocumentContentStore.clearContent();
+        }
 
-			} else {
-				if (invalidToken) {
-					activityCommunicator.requestLogOut();
-				}
+        @Override
+        protected void onPostExecute(final Boolean result) {
+            super.onPostExecute(result);
 
-				DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
-			}
-		}
-	}
+            if(result){
+                executeGetAttachmentContentTask(letter, attachmentPosition, listPosition, attachment);
+            } else {
+                if (invalidToken) {
+                    activityCommunicator.requestLogOut();
+                }
+
+                DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
+            }
+        }
+    }
 
 	private void updateAdapterLetter(Letter letter, int listPosition) {
 		listAdapter.replaceAtPosition(letter, listPosition);

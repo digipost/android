@@ -84,7 +84,7 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 			setMetaBottomDrawable(R.drawable.paper_clip_dark);
 		} else if (letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
 			setMetaBottomDrawable(R.drawable.lock_dark);
-		} else if (letter.getOpeningReceiptUri() != null) {
+		} else if (letter.hasOpeningReceipt()) {
 			setMetaBottomDrawable(R.drawable.exclamation_sign_dark);
 		}else if(letter.getType().equals(ApiConstants.INVOICE)){
             if(ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE){
