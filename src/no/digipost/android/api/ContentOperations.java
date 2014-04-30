@@ -89,11 +89,6 @@ public class ContentOperations {
         ApiAccess.updateAccountSettings(context, settings.getSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
     }
 
-	public static void sendOpeningReceipt(Context context, final Letter letter) throws DigipostClientException, DigipostApiException,
-			DigipostAuthenticationException {
-		ApiAccess.postSendOpeningReceipt(context, letter.getOpeningReceiptUri());
-	}
-
     public static String sendOpeningReceipt(Context context, final Attachment attachment) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
         return ApiAccess.postSendOpeningReceipt(context, attachment.getOpeningReceiptUri());

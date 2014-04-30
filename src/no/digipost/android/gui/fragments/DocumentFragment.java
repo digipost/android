@@ -114,7 +114,6 @@ public abstract class DocumentFragment extends ContentFragment {
                 showOpeningReceiptDialog(parentLetter, attachment, parentListPosition, position);
             } else {
                 executeGetAttachmentContentTask(parentLetter, position, parentListPosition, attachment);
-
             }
 		}
 	}
@@ -249,8 +248,9 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			if (!DocumentFragment.super.progressDialogIsVisible)
-				DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+			if (!DocumentFragment.super.progressDialogIsVisible) {
+                DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+            }
 		}
 
 		@Override
@@ -569,8 +569,9 @@ public abstract class DocumentFragment extends ContentFragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if (!DocumentFragment.super.progressDialogIsVisible)
+            if (!DocumentFragment.super.progressDialogIsVisible) {
                 DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+            }
             DocumentFragment.super.progressDialogIsVisible = true;
         }
 

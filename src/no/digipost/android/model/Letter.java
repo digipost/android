@@ -200,12 +200,11 @@ public class Letter {
 	}
 
     public boolean hasOpeningReceipt() {
-        for (Attachment attachment1 : attachment) {
-            if(attachment1.getOpeningReceiptUri() != null){
+        for (Attachment a : attachment) {
+            if(a.getOpeningReceiptUri() != null){
                 return true;
             }
         }
-
         return false;
     }
 
