@@ -199,6 +199,16 @@ public class Letter {
 		return null;
 	}
 
+    public boolean hasOpeningReceipt() {
+        for (Attachment attachment1 : attachment) {
+            if(attachment1.getOpeningReceiptUri() != null){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 	/*
 	 * @Override public String toString() { return "Letter [subject=" + subject
 	 * + ", creatorName=" + creatorName + ", created=" + created + ", fileType="

@@ -94,15 +94,20 @@ public class ContentOperations {
 		ApiAccess.postSendOpeningReceipt(context, letter.getOpeningReceiptUri());
 	}
 
+    public static String sendOpeningReceipt(Context context, final Attachment attachment) throws DigipostClientException, DigipostApiException,
+            DigipostAuthenticationException {
+        return ApiAccess.postSendOpeningReceipt(context, attachment.getOpeningReceiptUri());
+    }
+
     public static void sendToBank(Context context, final Attachment attachment) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
         ApiAccess.sendToBank(context, attachment.getInvoice().getSendToBank());
     }
 
 	public static Letter getSelfLetter(Context context, final Letter letter) throws DigipostClientException, DigipostApiException,
-			DigipostAuthenticationException {
-		return ApiAccess.getLetterSelf(context, letter.getSelfUri());
-	}
+            DigipostAuthenticationException {
+        return ApiAccess.getLetterSelf(context, letter.getSelfUri());
+    }
 
 	public static byte[] getDocumentContent(Context context, final Attachment attachment) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {

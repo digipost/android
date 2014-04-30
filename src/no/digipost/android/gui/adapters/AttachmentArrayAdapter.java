@@ -73,6 +73,11 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
         placeMainOnTop();
     }
 
+    @Override
+    public Attachment getItem(int position) {
+        return attachments.get(position);
+    }
+
     public Attachment getMainAttachment() {
         for (Attachment a : attachments) {
             if (a.getMainDocument().equals("true")) {
