@@ -16,28 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import java.lang.reflect.Field;
-import java.util.concurrent.Executor;
-
-import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.documentstore.DocumentContentStore;
-import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.pdf.MuPDFAlert;
-import no.digipost.android.pdf.MuPDFCore;
-import no.digipost.android.pdf.MuPDFPageAdapter;
-import no.digipost.android.pdf.MuPDFReaderView;
-import no.digipost.android.pdf.MuPDFView;
-import no.digipost.android.pdf.SearchTask;
-import no.digipost.android.pdf.SearchTaskResult;
-import no.digipost.android.utilities.ApplicationUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
-
-import org.apache.commons.io.FilenameUtils;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,6 +38,28 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
+
+import org.apache.commons.io.FilenameUtils;
+
+import java.lang.reflect.Field;
+import java.util.concurrent.Executor;
+
+import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.MainContentActivity;
+import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.pdf.MuPDFAlert;
+import no.digipost.android.pdf.MuPDFCore;
+import no.digipost.android.pdf.MuPDFPageAdapter;
+import no.digipost.android.pdf.MuPDFReaderView;
+import no.digipost.android.pdf.MuPDFView;
+import no.digipost.android.pdf.SearchTask;
+import no.digipost.android.pdf.SearchTaskResult;
+import no.digipost.android.utilities.ApplicationUtilities;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
 
 class ThreadPerTaskExecutor implements Executor {
 	public void execute(Runnable r) {
@@ -682,11 +682,14 @@ public class MuPDFActivity extends DisplayContentActivity {
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
+        //TODO FIX
+        /*
 		if (content == ApplicationConstants.WORKAREA) {
 			toWorkarea.setVisible(false);
 		} else if (content == ApplicationConstants.ARCHIVE) {
 			toArchive.setVisible(false);
 		}
+		*/
 
 		boolean sendToBankVisible = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 

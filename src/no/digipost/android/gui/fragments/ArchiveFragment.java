@@ -16,9 +16,6 @@
 
 package no.digipost.android.gui.fragments;
 
-import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -27,6 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
+
 public class ArchiveFragment extends DocumentFragment {
 	public ArchiveFragment() {
 	}
@@ -34,15 +34,15 @@ public class ArchiveFragment extends DocumentFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-
         super.listView.setMultiChoiceModeListener(new ArchiveMultiChoiceModeListener());
-
         return view;
 	}
 
 	@Override
 	public int getContent() {
-		return ApplicationConstants.ARCHIVE;
+        //TODO FIX
+        return 0;
+		//return ApplicationConstants.ARCHIVE;
 	}
 
 	private class ArchiveMultiChoiceModeListener extends DocumentMultiChoiceModeListener {

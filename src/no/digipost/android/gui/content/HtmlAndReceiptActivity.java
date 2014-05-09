@@ -16,6 +16,17 @@
 
 package no.digipost.android.gui.content;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.webkit.WebView;
+
+import com.google.analytics.tracking.android.EasyTracker;
+
 import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
@@ -27,16 +38,6 @@ import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.webkit.WebView;
-
-import com.google.analytics.tracking.android.EasyTracker;
 
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
@@ -98,11 +99,14 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 		MenuItem toWorkarea = menu.findItem(R.id.htmlmenu_workarea);
 		sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
 
+        //TODO FIX
+        /*
 		if (content_type == ApplicationConstants.WORKAREA) {
 			toArchive.setVisible(true);
 		} else if (content_type == ApplicationConstants.ARCHIVE) {
 			toWorkarea.setVisible(true);
 		}
+		*/
 
         boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 

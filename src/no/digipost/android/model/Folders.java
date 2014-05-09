@@ -11,4 +11,8 @@ public class Folders {
     
     @JsonProperty
     private ArrayList<Folder> folder;
+
+    public ArrayList<Folder> getFolder(){
+        return folder;
+    }
 }

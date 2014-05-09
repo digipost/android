@@ -16,15 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.documentstore.DocumentContentStore;
-import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.utilities.ApplicationUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,6 +28,16 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
+
+import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.MainContentActivity;
+import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.utilities.ApplicationUtilities;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
 
 public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
@@ -103,11 +104,15 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
+        //TODO FIX
+        /*
 		if (content == ApplicationConstants.WORKAREA) {
 			toWorkarea.setVisible(false);
 		} else if (content == ApplicationConstants.ARCHIVE) {
 			toArchive.setVisible(false);
 		}
+		}
+		*/
 
         boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 

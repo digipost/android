@@ -17,16 +17,16 @@
 package no.digipost.android.documentstore;
 
 import no.digipost.android.model.Attachment;
-import no.digipost.android.model.Letter;
+import no.digipost.android.model.Document;
 import no.digipost.android.model.Receipt;
 
 public class DocumentContentStore {
 	private static byte[] documentContent = null;
-	private static Letter documentParent = null;
+	private static Document documentParent = null;
 	private static int documentAttachmentPosition = 0;
 	private static Receipt documentReceipt = null;
 
-	public static void setContent(byte[] content, Letter parent, int attachmentPosition) {
+	public static void setContent(byte[] content, Document parent, int attachmentPosition) {
 		documentContent = content;
 		documentParent = parent;
 		documentAttachmentPosition = attachmentPosition;
@@ -40,11 +40,11 @@ public class DocumentContentStore {
         return documentContent;
     }
 
-    public static Letter getDocumentParent() {
+    public static Document getDocumentParent() {
         return documentParent;
     }
 
-    public static void setDocumentParent(Letter parent) {
+    public static void setDocumentParent(Document parent) {
         documentParent = parent;
     }
 

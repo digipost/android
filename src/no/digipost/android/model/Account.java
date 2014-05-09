@@ -34,6 +34,24 @@ public class Account {
     public ArrayList<Mailbox> getMailbox(){return mailbox;
     }
 
+    public Mailbox getMailboxByDigipostAddress(String digipostAddress){
+        for(Mailbox m : mailbox){
+            if(m.getDigipostaddress().equals(digipostAddress)){
+                return m;
+            }
+        }
+        return null;
+    }
+
+    public Mailbox getMailboxByName(String name){
+        for(Mailbox m : mailbox){
+            if(m.getName().equals(name)){
+                return m;
+            }
+        }
+        return null;
+    }
+
 	public PrimaryAccount getPrimaryAccount() {
 		return primaryAccount;
 	}

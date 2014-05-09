@@ -16,9 +16,6 @@
 
 package no.digipost.android.gui.adapters;
 
-import no.digipost.android.R;
-import no.digipost.android.api.ContentOperations;
-import no.digipost.android.constants.ApplicationConstants;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.Gravity;
@@ -28,6 +25,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import no.digipost.android.R;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.model.Folder;
+
 public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	protected Context context;
 	private TextView linkName;
@@ -36,7 +39,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	private int unreadLetters;
 	private int currentView;
 
-	public DrawerArrayAdapter(final Context context, final int resource, final String[] links, final int unreadLetters) {
+	public DrawerArrayAdapter(final Context context, final int resource, final String[] links,ArrayList<Folder> folders, final int unreadLetters) {
 		super(context, resource, links);
 		this.context = context;
 		this.links = links;
@@ -94,42 +97,36 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope, 0, 0, 0);
 			updateUnreadView(row);
 			break;
-
 		case ApplicationConstants.RECEIPTS:
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.credit_card, 0, 0, 0);
 			break;
-
-		case ApplicationConstants.WORKAREA:
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close, 0, 0, 0);
-			break;
-
-		case ApplicationConstants.ARCHIVE:
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close, 0, 0, 0);
-			break;
-
+        case 0:
+            drawCategory(row);
+            break;
+        case 3:
+            drawCategory(row);
+            break;
 		default:
-			linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
-			linkName.setTextSize(13);
-            linkName.setGravity(Gravity.BOTTOM);
-            linkName.setTypeface(null, Typeface.BOLD);
-            linkName.setPadding(0,0,0,5);
-			row.setBackgroundResource(R.drawable.main_drawer_label);
-		}
+            linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close, 0, 0, 0);
+            break;
+        }
 	}
+
+    private void drawCategory(View row){
+        linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
+        linkName.setTextSize(13);
+        linkName.setGravity(Gravity.BOTTOM);
+        linkName.setTypeface(null, Typeface.BOLD);
+        linkName.setPadding(0,0,0,5);
+        row.setBackgroundResource(R.drawable.main_drawer_label);
+    }
 
 	@Override
 	public boolean isEnabled(int position) {
-		switch (position) {
-		case ApplicationConstants.MAILBOX:
-			return true;
-		case ApplicationConstants.RECEIPTS:
-			return true;
-		case ApplicationConstants.WORKAREA:
-			return true;
-		case ApplicationConstants.ARCHIVE:
-			return true;
-		default:
-			return false;
-		}
+        if(position != 0 && position != 3){
+            return true;
+        }else{
+            return false;
+        }
 	}
 }

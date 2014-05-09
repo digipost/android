@@ -16,13 +16,6 @@
 
 package no.digipost.android.gui.adapters;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
-import no.digipost.android.R;
-import no.digipost.android.model.Letter;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -34,10 +27,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import no.digipost.android.R;
 
 public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 	public static final String TEXT_HIGHLIGHT_COLOR = "#EBEB86";
@@ -108,11 +105,13 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	public void replaceAll(Collection<? extends T> collection) {
-		this.filtered.clear();
-		this.filtered.addAll(collection);
-		this.objects = this.filtered;
-		initializeChecked();
-		notifyDataSetChanged();
+        if(collection != null) {
+            this.filtered.clear();
+            this.filtered.addAll(collection);
+            this.objects = this.filtered;
+            initializeChecked();
+            notifyDataSetChanged();
+        }
 	}
 
     public void replaceAtPosition(T object, int position) {

@@ -16,6 +16,17 @@
 
 package no.digipost.android.gui.content;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+
 import java.io.File;
 
 import no.digipost.android.R;
@@ -27,22 +38,12 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.CurrentBankAccount;
+import no.digipost.android.model.Document;
 import no.digipost.android.model.Invoice;
-import no.digipost.android.model.Letter;
 import no.digipost.android.model.Payment;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 
 public abstract class DisplayContentActivity extends Activity {
 	private ProgressDialog progressDialog;
@@ -87,7 +88,7 @@ public abstract class DisplayContentActivity extends Activity {
 		}
 	}
 
-	private void openInvoiceContent(Attachment attachment, Letter letter, CurrentBankAccount account) {
+	private void openInvoiceContent(Attachment attachment, Document document, CurrentBankAccount account) {
 
 		if (attachment.getInvoice().getPayment() != null) {
 			showPaidInvoiceDialog(attachment.getInvoice());
@@ -97,7 +98,7 @@ public abstract class DisplayContentActivity extends Activity {
 				System.out.println("Account " + account);
 				String accountNumber = account == null ? "***********" : account.getBankAccount().getAccountNumber();
 
-				showSendToBankDialog(attachment, letter, accountNumber);
+				showSendToBankDialog(attachment, document, accountNumber);
 			} else {
 				showSendToBankNotEnabledDialog();
 			}
@@ -124,7 +125,7 @@ public abstract class DisplayContentActivity extends Activity {
 
 	}
 
-	private void showSendToBankDialog(final Attachment attachment, final Letter letter, final String accountNumber) {
+	private void showSendToBankDialog(final Attachment attachment, final Document document, final String accountNumber) {
 		String title = getString(R.string.dialog_send_to_bank_not_paid_title);
 		String message = getString(R.string.dialog_send_to_bank_not_paid_message_start) + "\n";
 
@@ -135,7 +136,7 @@ public abstract class DisplayContentActivity extends Activity {
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
 		builder.setPositiveButton(getString(R.string.dialog_send_to_bank), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
-				sendToBank(attachment, letter);
+				sendToBank(attachment, document);
 				dialog.dismiss();
 			}
 		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
@@ -163,19 +164,19 @@ public abstract class DisplayContentActivity extends Activity {
 		builder.create().show();
 	}
 
-	private void sendToBank(final Attachment attachment, final Letter letter) {
-		SendToBankTask task = new SendToBankTask(attachment, letter);
+	private void sendToBank(final Attachment attachment, final Document document) {
+		SendToBankTask task = new SendToBankTask(attachment, document);
 		task.execute();
 	}
 
 	protected class SendToBankTask extends AsyncTask<Void, Void, Boolean> {
 		private String errorMessage;
-		private Letter letter;
+		private Document document;
 		private Attachment attachment;
 		private boolean invalidToken;
 
-		public SendToBankTask(final Attachment attachment, final Letter letter) {
-			this.letter = letter;
+		public SendToBankTask(final Attachment attachment, final Document document) {
+			this.document = document;
 			this.attachment = attachment;
 		}
 
@@ -189,7 +190,7 @@ public abstract class DisplayContentActivity extends Activity {
 		protected Boolean doInBackground(final Void... params) {
 			try {
 				ContentOperations.sendToBank(DisplayContentActivity.this, attachment);
-				DocumentContentStore.setDocumentParent(ContentOperations.getSelfLetter(DisplayContentActivity.this, letter));
+				DocumentContentStore.setDocumentParent(ContentOperations.getDocumentSelf(DisplayContentActivity.this, document));
 				return true;
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
@@ -234,13 +235,13 @@ public abstract class DisplayContentActivity extends Activity {
 
 	private class OpenInvoiceTask extends AsyncTask<Void, Void, CurrentBankAccount> {
 		private String errorMessage;
-		private Letter letter;
+		private Document document;
 		private Attachment attachment;
 		private boolean invalidToken;
 
-		public OpenInvoiceTask(final Attachment attachment, final Letter letter) {
+		public OpenInvoiceTask(final Attachment attachment, final Document document) {
 			this.invalidToken = false;
-			this.letter = letter;
+			this.document = document;
 			this.attachment = attachment;
 		}
 
@@ -271,7 +272,7 @@ public abstract class DisplayContentActivity extends Activity {
 				DialogUtitities.showToast(DisplayContentActivity.this, errorMessage);
 				finishActivityWithAction(ApiConstants.LOGOUT);
 			} else {
-				openInvoiceContent(attachment, letter, currentBankAccount);
+				openInvoiceContent(attachment, document, currentBankAccount);
 			}
 		}
 	}

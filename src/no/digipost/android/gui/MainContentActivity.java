@@ -16,29 +16,6 @@
 
 package no.digipost.android.gui;
 
-import java.lang.reflect.Field;
-
-import no.digipost.android.R;
-import no.digipost.android.api.ContentOperations;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.gui.adapters.DrawerArrayAdapter;
-import no.digipost.android.gui.content.SettingsActivity;
-import no.digipost.android.gui.content.UploadActivity;
-import no.digipost.android.gui.fragments.ArchiveFragment;
-import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.gui.fragments.MailboxFragment;
-import no.digipost.android.gui.fragments.ReceiptFragment;
-import no.digipost.android.gui.fragments.WorkareaFragment;
-import no.digipost.android.model.PrimaryAccount;
-import no.digipost.android.utilities.ApplicationUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
-import no.digipost.android.utilities.SettingsUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -64,6 +41,33 @@ import android.widget.SearchView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
+import no.digipost.android.R;
+import no.digipost.android.api.ContentOperations;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.adapters.DrawerArrayAdapter;
+import no.digipost.android.gui.content.SettingsActivity;
+import no.digipost.android.gui.content.UploadActivity;
+import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.gui.fragments.FolderFragment;
+import no.digipost.android.gui.fragments.MailboxFragment;
+import no.digipost.android.gui.fragments.ReceiptFragment;
+import no.digipost.android.model.Account;
+import no.digipost.android.model.Folder;
+import no.digipost.android.model.Folders;
+import no.digipost.android.model.Mailbox;
+import no.digipost.android.utilities.ApplicationUtilities;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.SettingsUtilities;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
+
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
 	public static final int INTENT_REQUESTCODE = 0;
 
@@ -73,8 +77,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	private DrawerArrayAdapter drawerArrayAdapter;
 	private SearchView searchView;
     private MenuItem searchButton;
-
 	private boolean refreshing;
+    public static String[] drawerListitems;
+    private Mailbox mailbox;
 
 	private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
@@ -85,13 +90,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
 
 		this.refreshing = true;
-
 		drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 		drawerList = (ListView) findViewById(R.id.main_left_drawer);
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, ApplicationConstants.titles, 0);
-		drawerList.setAdapter(drawerArrayAdapter);
-		drawerList.setOnItemClickListener(new DrawerItemClickListener());
+        updateDrawerListItems();
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
 		drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
 				R.string.close);
 		drawerLayout.setDrawerListener(drawerToggle);
@@ -100,7 +103,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 		if (savedInstanceState == null || getCurrentFragment() == null) {
 			int content = Integer.parseInt(SettingsUtilities.getDefaultScreenPreference(this));
-
 			selectItem(content);
 		}
 
@@ -132,7 +134,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 		setupSearchView(searchView);
 
-		getActionBar().setTitle(ApplicationConstants.titles[getCurrentFragment().getContent()]);
+		getActionBar().setTitle(drawerListitems[getCurrentFragment().getContent()]);
 
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -223,7 +225,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	@Override
 	public void onUpdateAccountMeta() {
-		executeGetPrimaryAccountTask();
+		executeGetAccountTask();
 	}
 
 	@Override
@@ -235,7 +237,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 				String action = data.getStringExtra(ApiConstants.ACTION);
 
 				if (action.equals(ApiConstants.REFRESH_ARCHIVE)) {
-					selectItem(ApplicationConstants.ARCHIVE);
+					//TODO FIX selectItem(ApplicationConstants.ARCHIVE);
 				} else if (action.equals(ApiConstants.LOGOUT)) {
 					logOut();
 				}
@@ -277,21 +279,18 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	private void selectItem(int content) {
 		ContentFragment contentFragment = null;
+        try {
+            if (content == ApplicationConstants.MAILBOX) {
+                contentFragment = new MailboxFragment();
+            } else if (content == ApplicationConstants.RECEIPTS) {
+                contentFragment = new ReceiptFragment();
+            } else if (content != 0 && content != 3) {
+                contentFragment = new FolderFragment(content);
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
 
-		switch (content) {
-		case ApplicationConstants.MAILBOX:
-			contentFragment = new MailboxFragment();
-			break;
-		case ApplicationConstants.WORKAREA:
-			contentFragment = new WorkareaFragment();
-			break;
-		case ApplicationConstants.ARCHIVE:
-			contentFragment = new ArchiveFragment();
-			break;
-		case ApplicationConstants.RECEIPTS:
-			contentFragment = new ReceiptFragment();
-			break;
-		}
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
@@ -312,13 +311,45 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	public void updateUI(PrimaryAccount primaryAccount) {
-		if (primaryAccount != null) {
-			getActionBar().setSubtitle(primaryAccount.getFullName());
-			//ApplicationConstants.titles[0] = primaryAccount.getFullName();
-			drawerArrayAdapter.setUnreadLetters(primaryAccount.getUnreadItemsInInbox());
+	public void updateUI(Account account) {
+		if (account != null) {
+			getActionBar().setSubtitle(account.getPrimaryAccount().getFullName());
+            mailbox = account.getMailboxByDigipostAddress(ContentOperations.digipostAddress);
+            updateDrawerListItems();
 		}
 	}
+
+    private void updateDrawerListItems(){
+        ArrayList<Folder> fs = null;
+
+        if(mailbox != null) {
+            Folders folders = mailbox.getFolders();
+            drawerListitems = new String[folders.getFolder().size() + 4];
+            drawerListitems[0] = "Innboks";
+            drawerListitems[1] = "Postkassen";
+            drawerListitems[2] = "E-Kvitteringer";
+            drawerListitems[3] = "Mine mapper";
+
+            //ADD FOLDERS
+            fs = folders.getFolder();
+            for (int i = 0; i < fs.size(); i++) {
+                String name = fs.get(i).getName();
+                drawerListitems[i+4] = name;
+            }
+
+            drawerArrayAdapter.setUnreadLetters(mailbox.getUnreadItemsInInbox());
+
+        }else{
+            drawerListitems = new String[4];
+            drawerListitems[0] = "Innboks";
+            drawerListitems[1] = "Postkassen";
+            drawerListitems[2] = "E-Kvitteringer";
+            drawerListitems[3] = "Mine mapper";
+        }
+
+        drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, drawerListitems,fs, 0);
+        drawerList.setAdapter(drawerArrayAdapter);
+    }
 
 	private ContentFragment getCurrentFragment() {
 		return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);
@@ -369,7 +400,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 			searchPlate.setBackgroundResource(R.drawable.search_background);
 
 			searchTextView.setHintTextColor(getResources().getColor(R.color.searchbar_grey_hint));
-			searchView.setQueryHint(getString(R.string.search_in) + ApplicationConstants.titles[getCurrentFragment().getContent()]);
+			searchView.setQueryHint(getString(R.string.search_in) + drawerListitems[getCurrentFragment().getContent()]);
 
 			android.widget.ImageView searchViewClearButton = (android.widget.ImageView) searchPlate.getChildAt(1);
 			searchViewClearButton.setImageResource(R.drawable.ic_clear_white);
@@ -410,12 +441,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 	}
 
-	private void executeGetPrimaryAccountTask() {
-		GetPrimaryAccountTask getPrimaryAccountTask = new GetPrimaryAccountTask();
-		getPrimaryAccountTask.execute();
+	private void executeGetAccountTask() {
+		GetAccountTask getAccountTask = new GetAccountTask();
+		getAccountTask.execute();
 	}
 
-	private class GetPrimaryAccountTask extends AsyncTask<Void, Void, PrimaryAccount> {
+	private class GetAccountTask extends AsyncTask<Void, Void, Account> {
 		private String errorMessage;
 		private boolean invalidToken;
 
@@ -425,9 +456,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 
 		@Override
-		protected PrimaryAccount doInBackground(Void... voids) {
+		protected Account doInBackground(Void... voids) {
 			try {
-				return ContentOperations.getAccountUpdated(MainContentActivity.this).getPrimaryAccount();
+				return ContentOperations.getAccountUpdated(MainContentActivity.this);
 			} catch (DigipostApiException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();
@@ -445,7 +476,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 
 		@Override
-		protected void onPostExecute(PrimaryAccount result) {
+		protected void onPostExecute(Account result) {
 			super.onPostExecute(result);
 
 			if (result != null) {

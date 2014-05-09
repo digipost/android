@@ -14,6 +14,9 @@ public class Mailbox  {
     private String name;
 
     @JsonProperty
+    private String digipostaddress;
+
+    @JsonProperty
     private String unreadItemsInInbox;
 
     @JsonProperty
@@ -27,6 +30,12 @@ public class Mailbox  {
 
     @JsonProperty
     private Folders folders;
+    public String getName(){
+        return name;
+    }
+    public String getDigipostaddress(){
+        return digipostaddress;
+    }
 
     public int getUnreadItemsInInbox() {
         return Integer.parseInt(unreadItemsInInbox);
@@ -50,14 +59,6 @@ public class Mailbox  {
 
     public String getInboxUri() {
         return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_INBOX);
-    }
-
-    public String getArchiveUri() {
-        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_ARCHIVE);
-    }
-
-    public String getWorkareaUri() {
-        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_WORKAREA);
     }
 
     public String getReceiptsUri() {

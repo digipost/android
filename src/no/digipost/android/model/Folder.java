@@ -18,6 +18,9 @@ public class Folder {
     private String icon;
 
     @JsonProperty
+    private Documents documents;
+
+    @JsonProperty
     private ArrayList<Link> link;
 
     public String getName(){
@@ -34,6 +37,14 @@ public class Folder {
 
     public ArrayList<Link> getLink() {
         return link;
+    }
+
+    public String getSelfUri(){
+        return getLinkByRelation("https://www.digipost.no/post/relations/self");
+    }
+
+    public Documents getDocuments(){
+        return documents;
     }
 
     private String getLinkByRelation(String relation) {

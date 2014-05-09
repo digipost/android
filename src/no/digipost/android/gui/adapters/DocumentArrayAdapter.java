@@ -16,77 +16,75 @@
 
 package no.digipost.android.gui.adapters;
 
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Filter;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
 import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.gui.content.SettingsActivity;
-import no.digipost.android.model.Letter;
+import no.digipost.android.model.Document;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Filter;
 
-public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
+public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
 
-	public LetterArrayAdapter(final Context context, final int resource) {
-		super(context, resource, new ArrayList<Letter>());
+	public DocumentArrayAdapter(final Context context, final int resource) {
+		super(context, resource, new ArrayList<Document>());
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View row = super.getView(position, convertView, parent);
 
-		Letter letter = super.filtered.get(position);
+        Document document = super.filtered.get(position);
 
-		super.title.setText(letter.getSubject());
-		super.subTitle.setText(letter.getCreatorName());
-		super.metaTop.setText(DataFormatUtilities.getFormattedDate(letter.getCreated()));
-		super.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(letter.getFileSize())));
+		super.title.setText(document.getSubject());
+		super.subTitle.setText(document.getCreatorName());
+		super.metaTop.setText(DataFormatUtilities.getFormattedDate(document.getCreated()));
+		super.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(document.getFileSize())));
 
-		if (!letter.getRead().equals("true")) {
+		if (!document.getRead().equals("true")) {
 			row.setBackgroundResource(R.drawable.content_list_item_unread);
 			super.setTitleAndSubTitleBold();
 		}
 
 		super.setFilterTextColor();
 
-		setMetaBottom(letter);
+		setMetaBottom(document);
 
 		return row;
 	}
 
 	@Override
-	public void replaceAll(Collection<? extends Letter> collection) {
+	public void replaceAll(Collection<? extends Document> collection) {
 		if (!SettingsUtilities.getShowBankIDLettersPreference(context)) {
-			ArrayList<Letter> letters = new ArrayList<Letter>();
+			ArrayList<Document> documents = new ArrayList<Document>();
 
-			for (Letter letter : collection) {
-				if (!letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
-					letters.add(letter);
+			for (Document document : collection) {
+				if (!document.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+					documents.add(document);
 				}
 			}
 
-			super.replaceAll(letters);
+			super.replaceAll(documents);
 		} else {
 			super.replaceAll(collection);
 		}
 	}
 
-	private void setMetaBottom(Letter letter) {
-		if (letter.getAttachment().size() > 1) {
+	private void setMetaBottom(Document document) {
+		if (document.getAttachment().size() > 1) {
 			setMetaBottomDrawable(R.drawable.paper_clip_dark);
-		} else if (letter.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+		} else if (document.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
 			setMetaBottomDrawable(R.drawable.lock_dark);
-		} else if (letter.hasOpeningReceipt()) {
+		} else if (document.hasOpeningReceipt()) {
 			setMetaBottomDrawable(R.drawable.exclamation_sign_dark);
-		}else if(letter.getType().equals(ApiConstants.INVOICE)){
+		}else if(document.getType().equals(ApiConstants.INVOICE)){
             if(ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE){
                 setMetaBottomDrawable(R.drawable.money_dark);
             }
@@ -100,41 +98,41 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 
 	@Override
 	public Filter getFilter() {
-		return (super.contentFilter != null) ? super.contentFilter : new LetterFilter();
+		return (super.contentFilter != null) ? super.contentFilter : new DocumentFilter();
 	}
 
-	private class LetterFilter extends Filter {
+	private class DocumentFilter extends Filter {
 		@Override
 		protected FilterResults performFiltering(final CharSequence constraint) {
 			FilterResults results = new FilterResults();
-			ArrayList<Letter> i = new ArrayList<Letter>();
+			ArrayList<Document> i = new ArrayList<Document>();
 
-			LetterArrayAdapter.super.titleFilterText = null;
-			LetterArrayAdapter.super.subTitleFilterText = null;
-			LetterArrayAdapter.super.metaTopFilterText = null;
+			DocumentArrayAdapter.super.titleFilterText = null;
+			DocumentArrayAdapter.super.subTitleFilterText = null;
+			DocumentArrayAdapter.super.metaTopFilterText = null;
 
 			if ((constraint != null) && (constraint.toString().length() > 0)) {
 				String constraintLowerCase = constraint.toString().toLowerCase();
 
-				for (Letter l : LetterArrayAdapter.super.objects) {
-					boolean addLetter = false;
+				for (Document l : DocumentArrayAdapter.super.objects) {
+					boolean addDocument = false;
 
 					if (l.getSubject().toLowerCase().contains(constraintLowerCase)) {
-						LetterArrayAdapter.super.titleFilterText = constraint.toString();
-						addLetter = true;
+						DocumentArrayAdapter.super.titleFilterText = constraint.toString();
+						addDocument = true;
 					}
 
 					if (l.getCreatorName().toLowerCase().contains(constraintLowerCase)) {
-						LetterArrayAdapter.super.subTitleFilterText = constraint.toString();
-						addLetter = true;
+						DocumentArrayAdapter.super.subTitleFilterText = constraint.toString();
+						addDocument = true;
 					}
 
 					if (DataFormatUtilities.getFormattedDate(l.getCreated()).toLowerCase().contains(constraintLowerCase)) {
-						LetterArrayAdapter.super.metaTopFilterText = constraint.toString();
-						addLetter = true;
+						DocumentArrayAdapter.super.metaTopFilterText = constraint.toString();
+						addDocument = true;
 					}
 
-					if (addLetter) {
+					if (addDocument) {
 						i.add(l);
 					}
 				}
@@ -143,9 +141,9 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 				results.count = i.size();
 			} else {
 
-				synchronized (LetterArrayAdapter.super.objects) {
-					results.values = LetterArrayAdapter.super.objects;
-					results.count = LetterArrayAdapter.super.objects.size();
+				synchronized (DocumentArrayAdapter.super.objects) {
+					results.values = DocumentArrayAdapter.super.objects;
+					results.count = DocumentArrayAdapter.super.objects.size();
 				}
 			}
 
@@ -155,7 +153,7 @@ public class LetterArrayAdapter extends ContentArrayAdapter<Letter> {
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void publishResults(final CharSequence constraint, final FilterResults results) {
-			filtered = (ArrayList<Letter>) results.values;
+			filtered = (ArrayList<Document>) results.values;
 			notifyDataSetChanged();
 		}
 	}

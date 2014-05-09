@@ -16,9 +16,6 @@
 
 package no.digipost.android.gui.fragments;
 
-import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -26,6 +23,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
 
 public class WorkareaFragment extends DocumentFragment {
 	public WorkareaFragment() {
@@ -42,7 +42,9 @@ public class WorkareaFragment extends DocumentFragment {
 
 	@Override
 	public int getContent() {
-		return ApplicationConstants.WORKAREA;
+		//return ApplicationConstants.WORKAREA;
+        //TODO FIX
+        return 0;
 	}
 
 	private class WorkareaMultiChoiceModeListener extends DocumentMultiChoiceModeListener {

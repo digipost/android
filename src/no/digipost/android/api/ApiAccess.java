@@ -40,6 +40,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 
 import javax.ws.rs.core.HttpHeaders;
+
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -52,7 +53,9 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.CurrentBankAccount;
+import no.digipost.android.model.Document;
 import no.digipost.android.model.Documents;
+import no.digipost.android.model.Folder;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.model.Settings;
@@ -92,9 +95,13 @@ public class ApiAccess {
 		return (Receipts) JSONUtilities.processJackson(Receipts.class, getApiJsonString(context, uri));
 	}
 
-	public static Letter getLetterSelf(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		return (Letter) JSONUtilities.processJackson(Letter.class, getApiJsonString(context, uri));
-	}
+    public static Folder getFolderSelf(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        return (Folder) JSONUtilities.processJackson(Folder.class, getApiJsonString(context, uri));
+    }
+
+    public static Document getDocumentSelf(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        return (Document) JSONUtilities.processJackson(Document.class, getApiJsonString(context, uri));
+    }
 
     public static Settings getSettings(Context context, final String uri) throws DigipostClientException, DigipostAuthenticationException, DigipostApiException {
         return (Settings) JSONUtilities.processJackson(Settings.class, getApiJsonString(context, uri));

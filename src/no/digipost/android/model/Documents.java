@@ -16,17 +16,17 @@
 
 package no.digipost.android.model;
 
-import java.util.ArrayList;
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Documents {
 	@JsonProperty
-	private ArrayList<Letter> document;
+	private ArrayList<Document> document;
 
-	public ArrayList<Letter> getDocument() {
+	public ArrayList<Document> getDocument() {
 		return document;
 	}
 }

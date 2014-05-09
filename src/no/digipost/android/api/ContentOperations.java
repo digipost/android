@@ -18,6 +18,7 @@ package no.digipost.android.api;
 import android.content.Context;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
@@ -26,7 +27,9 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.CurrentBankAccount;
+import no.digipost.android.model.Document;
 import no.digipost.android.model.Documents;
+import no.digipost.android.model.Folder;
 import no.digipost.android.model.Letter;
 import no.digipost.android.model.Mailbox;
 import no.digipost.android.model.Receipt;
@@ -37,10 +40,11 @@ import no.digipost.android.utilities.JSONUtilities;
 public class ContentOperations {
 	private static Account account = null;
     private static Mailbox mailbox = null;
-    public static int activeAccount = 0;
+    public static String digipostAddress = null;
 
 	public static Account getAccount(Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
+
 		if (account == null) {
             account = ApiAccess.getAccount(context);
 		}
@@ -52,10 +56,11 @@ public class ContentOperations {
             DigipostAuthenticationException {
 
         if (mailbox == null) {
-            mailbox = getAccount(context).getMailbox().get(activeAccount);
+            if(digipostAddress == null) {
+                digipostAddress = getAccount(context).getPrimaryAccount().getDigipostaddress();
+            }
+            mailbox = getAccount(context).getMailboxByDigipostAddress(digipostAddress);
         }
-
-        System.out.println("Mailbox"+mailbox);
 
         return mailbox;
     }
@@ -69,22 +74,22 @@ public class ContentOperations {
 		return ApiAccess.getAccount(context);
 	}
 
-	public static Documents getAccountContentMetaDocument(Context context, final int type) throws DigipostApiException,
+	public static Documents getAccountContentMetaDocument(Context context, final int content) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {
 
 
-        mailbox = getMailbox(context);
+        getMailbox(context);
 
-		switch (type) {
-		case ApplicationConstants.MAILBOX:
-			return ApiAccess.getDocuments(context, mailbox.getInboxUri());
-		case ApplicationConstants.ARCHIVE:
-			return ApiAccess.getDocuments(context, mailbox.getArchiveUri());
-		case ApplicationConstants.WORKAREA:
-			return ApiAccess.getDocuments(context, mailbox.getWorkareaUri());
-		default:
-			return null;
-		}
+        if(content == ApplicationConstants.MAILBOX){
+            return ApiAccess.getDocuments(context, mailbox.getInboxUri());
+        }else {
+            ArrayList<Folder> folders = mailbox.getFolders().getFolder();
+
+            Folder folder = folders.get(content - 4);
+            folder = ApiAccess.getFolderSelf(context, folder.getSelfUri());
+
+            return folder.getDocuments();
+        }
 	}
 
     public static CurrentBankAccount getCurrentBankAccount(Context context) throws DigipostClientException, DigipostAuthenticationException,
@@ -97,9 +102,9 @@ public class ContentOperations {
 		return ApiAccess.getReceipts(context, getMailbox(context).getReceiptsUri());
 	}
 
-	public static void moveDocument(Context context, final Letter letter) throws DigipostClientException, DigipostApiException,
+	public static void moveDocument(Context context, final Document document) throws DigipostClientException, DigipostApiException,
 			DigipostAuthenticationException {
-		ApiAccess.getMovedDocument(context, letter.getUpdateUri(), JSONUtilities.createJsonFromJackson(letter));
+		ApiAccess.getMovedDocument(context, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document));
 	}
 
     public static void updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
@@ -116,9 +121,9 @@ public class ContentOperations {
         ApiAccess.sendToBank(context, attachment.getInvoice().getSendToBank());
     }
 
-	public static Letter getSelfLetter(Context context, final Letter letter) throws DigipostClientException, DigipostApiException,
+	public static Document getDocumentSelf(Context context, final Document document) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        return ApiAccess.getLetterSelf(context, letter.getSelfUri());
+        return ApiAccess.getDocumentSelf(context, document.getSelfUri());
     }
 
 	public static byte[] getDocumentContent(Context context, final Attachment attachment) throws DigipostApiException,

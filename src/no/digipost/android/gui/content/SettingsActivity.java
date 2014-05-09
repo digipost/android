@@ -16,11 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.utilities.ApplicationUtilities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,6 +25,12 @@ import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 
 import com.google.analytics.tracking.android.EasyTracker;
+
+import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.MainContentActivity;
+import no.digipost.android.utilities.ApplicationUtilities;
 
 public class SettingsActivity extends Activity {
 	public static final String KEY_PREF_GENERAL_SETTINGS = "pref_generalSettings";
@@ -145,7 +146,7 @@ public class SettingsActivity extends Activity {
 			String key = preference.getKey();
 
 			if (key.equals(KEY_PREF_DEFAULT_SCREEN)) {
-				preference.setSummary(ApplicationConstants.titles[Integer.parseInt(sharedPreferences.getString(key, Integer.toString(ApplicationConstants.MAILBOX)))]);
+				preference.setSummary(MainContentActivity.drawerListitems[Integer.parseInt(sharedPreferences.getString(key, Integer.toString(ApplicationConstants.MAILBOX)))]);
 			}
 		}
 

@@ -51,10 +51,7 @@ public class ApplicationConstants {
 
     public static final int MAILBOX = 1;
     public static final int RECEIPTS = 2;
-    public static final int WORKAREA = 4;
-    public static final int ARCHIVE = 5;
 
-    public static String[] titles = { "INNBOKS", "Postkassen", "Kvitteringer", "MAPPER", "Kjøkkenbenken", "Arkivet" };
 
     /*
 
