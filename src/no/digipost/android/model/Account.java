@@ -18,6 +18,8 @@ package no.digipost.android.model;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.util.ArrayList;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Account {
 	@JsonProperty
@@ -25,6 +27,12 @@ public class Account {
 
     @JsonProperty
     private ValidationRules validationRules;
+
+    @JsonProperty
+    private ArrayList<Mailbox> mailbox;
+
+    public ArrayList<Mailbox> getMailbox(){return mailbox;
+    }
 
 	public PrimaryAccount getPrimaryAccount() {
 		return primaryAccount;
