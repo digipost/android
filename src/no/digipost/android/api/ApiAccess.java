@@ -56,7 +56,6 @@ import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Folder;
-import no.digipost.android.model.Letter;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.model.Settings;
 import no.digipost.android.utilities.JSONUtilities;
@@ -151,9 +150,9 @@ public class ApiAccess {
 		return executePostRequest(context, POST_ACTION_SEND_OPENING_RECEIPT, uri, null);
 	}
 
-	public static Letter getMovedDocument(Context context, final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
+	public static Document getMovedDocument(Context context, final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
 			DigipostAuthenticationException {
-		return (Letter) JSONUtilities.processJackson(Letter.class, executePostRequest(context, POST_ACTION_MOVE, uri, json));
+		return (Document) JSONUtilities.processJackson(Document.class, executePostRequest(context, POST_ACTION_MOVE, uri, json));
 	}
 
     public static void updateAccountSettings(Context context, String uri, StringEntity json) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {

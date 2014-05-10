@@ -30,7 +30,6 @@ import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Folder;
-import no.digipost.android.model.Letter;
 import no.digipost.android.model.Mailbox;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
@@ -139,8 +138,8 @@ public class ContentOperations {
 
 	public static void deleteContent(Context context, final Object object) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-		if (object instanceof Letter) {
-			ApiAccess.delete(context, ((Letter) object).getDeleteUri());
+		if (object instanceof Document) {
+			ApiAccess.delete(context, ((Document) object).getDeleteUri());
 		} else if (object instanceof Receipt) {
 			ApiAccess.delete(context, ((Receipt) object).getDeleteUri());
 		}
