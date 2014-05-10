@@ -393,21 +393,14 @@ public abstract class DocumentFragment extends ContentFragment {
 		switch (content_type) {
 		case ApplicationConstants.MAILBOX:
 			text = context.getString(R.string.emptyview_mailbox);
+            text+= "Postkassen";
 			break;
             default:
                 text = "Ingen dokumenter";
-        //TODO FIX
-        /*
-		case ApplicationConstants.WORKAREA:
-			text = context.getString(R.string.emptyview_workarea);
-			break;
-		case ApplicationConstants.ARCHIVE:
-			text = context.getString(R.string.emptyview_archive);
-			break;
-        */
 		}
 
-		text += content;
+		//text += content;
+        //TODO BESTEM INGEN DOKUMENTER I MAPPEN?
 		DocumentFragment.super.setListEmptyViewText(text, null);
 	}
 

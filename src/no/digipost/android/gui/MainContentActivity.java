@@ -56,11 +56,9 @@ import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.gui.content.UploadActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.FolderFragment;
-import no.digipost.android.gui.fragments.MailboxFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Folder;
-import no.digipost.android.model.Folders;
 import no.digipost.android.model.Mailbox;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
@@ -281,16 +279,15 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		ContentFragment contentFragment = null;
         try {
             if (content == ApplicationConstants.MAILBOX) {
-                contentFragment = new MailboxFragment();
+                contentFragment = new FolderFragment(ApplicationConstants.MAILBOX);
             } else if (content == ApplicationConstants.RECEIPTS) {
                 contentFragment = new ReceiptFragment();
-            } else if (content != 0 && content != 3) {
+            } else if (content != ApplicationConstants.MAILBOX_LABEL && content != ApplicationConstants.FOLDERS_LABEL) {
                 contentFragment = new FolderFragment(content);
             }
         }catch(Exception e) {
             e.printStackTrace();
         }
-
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
@@ -321,35 +318,29 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private void updateDrawerListItems(){
         ArrayList<Folder> fs = null;
+        ArrayList<String> items = new ArrayList<String>();
+        items.add("Innboks");
+        items.add("Postkassen");
+        items.add("E-Kvitteringer");
+        items.add("Mine mapper");
 
         if(mailbox != null) {
-            Folders folders = mailbox.getFolders();
-            drawerListitems = new String[folders.getFolder().size() + 4];
-            drawerListitems[0] = "Innboks";
-            drawerListitems[1] = "Postkassen";
-            drawerListitems[2] = "E-Kvitteringer";
-            drawerListitems[3] = "Mine mapper";
-
-            //ADD FOLDERS
-            fs = folders.getFolder();
+            fs = mailbox.getFolders().getFolder();
             for (int i = 0; i < fs.size(); i++) {
                 String name = fs.get(i).getName();
-                drawerListitems[i+4] = name;
+                items.add(name);
             }
-
-            drawerArrayAdapter.setUnreadLetters(mailbox.getUnreadItemsInInbox());
-
-        }else{
-            drawerListitems = new String[4];
-            drawerListitems[0] = "Innboks";
-            drawerListitems[1] = "Postkassen";
-            drawerListitems[2] = "E-Kvitteringer";
-            drawerListitems[3] = "Mine mapper";
         }
+        drawerListitems = new String[items.size()];
+        drawerListitems = items.toArray(drawerListitems);
 
         drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, drawerListitems,fs, 0);
         drawerList.setAdapter(drawerArrayAdapter);
+        if(mailbox!= null) {
+            drawerArrayAdapter.setUnreadLetters(mailbox.getUnreadItemsInInbox());
+        }
     }
+
 
 	private ContentFragment getCurrentFragment() {
 		return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);

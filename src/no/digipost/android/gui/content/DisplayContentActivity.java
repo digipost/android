@@ -94,10 +94,7 @@ public abstract class DisplayContentActivity extends Activity {
 			showPaidInvoiceDialog(attachment.getInvoice());
 		} else {
 			if (attachment.getInvoice().getSendToBank() != null) {
-
-				System.out.println("Account " + account);
 				String accountNumber = account == null ? "***********" : account.getBankAccount().getAccountNumber();
-
 				showSendToBankDialog(attachment, document, accountNumber);
 			} else {
 				showSendToBankNotEnabledDialog();

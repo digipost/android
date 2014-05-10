@@ -2,15 +2,11 @@
 <resources>
     <string-array name="pref_default_screen_entries">
         <item>Postkassen</item>
-        <item>Kvitteringer</item>
-        <item>Kjøkkenbenken</item>
-        <item>Arkivet</item>
+        <item>E-Kvitteringer</item>
     </string-array>
 
     <string-array name="pref_default_screen_values">
         <item>1</item>
         <item>2</item>
-        <item>4</item>
-        <item>5</item>
     </string-array>
 </resources>
