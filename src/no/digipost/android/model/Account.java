@@ -43,6 +43,10 @@ public class Account {
         return null;
     }
 
+    public Mailbox getMailboxByIndex(int index){
+        return mailbox.get(index);
+    }
+
     public Mailbox getMailboxByName(String name){
         for(Mailbox m : mailbox){
             if(m.getName().equals(name)){

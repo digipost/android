@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Folder;
 
 public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
@@ -37,14 +38,19 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	private TextView unreadView;
 	private String[] links;
 	private int unreadLetters;
+    private int numberOfMailboxes;
 	private int currentView;
+    private ArrayList<Folder> folders;
 
-	public DrawerArrayAdapter(final Context context, final int resource, final String[] links,ArrayList<Folder> folders, final int unreadLetters) {
+
+	public DrawerArrayAdapter(final Context context, final int resource, final String[] links,ArrayList<Folder> folders, final int numberOfMailboxes, final int unreadLetters) {
 		super(context, resource, links);
 		this.context = context;
 		this.links = links;
 		this.unreadLetters = unreadLetters;
 		currentView = ApplicationConstants.MAILBOX;
+        this.folders = folders;
+        this.numberOfMailboxes = numberOfMailboxes;
 	}
 
 	public View getView(final int position, final View convertView, final ViewGroup parent) {
@@ -76,7 +82,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 			unreadView.setVisibility(View.VISIBLE);
 
 			if (currentView == ApplicationConstants.MAILBOX) {
-				unreadView.setBackgroundResource(R.color.main_drawer_dark_blue);
+				unreadView.setBackgroundResource(R.color.main_dark_grey);
 			}
 		}
 	}
@@ -85,36 +91,30 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 
 		linkName.setText((CharSequence) links[position]);
 
-		switch (position) {
-/*
-        case ApplicationConstants.NAME:
-            linkName.setPadding(0,0,0,5);
-            linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
-            row.setBackgroundResource(context.getResources().getColor(R.color.transparent));
-            break;
-*/
-		case ApplicationConstants.MAILBOX:
+		if(position == ApplicationConstants.MAILBOX+numberOfMailboxes) {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope, 0, 0, 0);
-			updateUnreadView(row);
-			break;
-		case ApplicationConstants.RECEIPTS:
+            updateUnreadView(row);
+
+        }else if(position == ApplicationConstants.RECEIPTS+numberOfMailboxes){
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.credit_card, 0, 0, 0);
-			break;
-        case 0:
+
+        }else if(position == ApplicationConstants.MAILBOX_LABEL+numberOfMailboxes){
             drawCategory(row);
-            break;
-        case 3:
+
+        }else if(position == ApplicationConstants.FOLDERS_LABEL+numberOfMailboxes) {
             drawCategory(row);
-            break;
-		default:
+
+        }else if(position < MainContentActivity.numberOfMailboxes+numberOfMailboxes) {
+            //Mailbox
+
+        }else{
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close, 0, 0, 0);
-            break;
         }
 	}
 
     private void drawCategory(View row){
         linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
-        linkName.setTextSize(13);
+        linkName.setTextSize(14);
         linkName.setGravity(Gravity.BOTTOM);
         linkName.setTypeface(null, Typeface.BOLD);
         linkName.setPadding(0,0,0,5);
@@ -123,7 +123,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 
 	@Override
 	public boolean isEnabled(int position) {
-        if(position != 0 && position != 3){
+        if(position != ApplicationConstants.MAILBOX_LABEL+numberOfMailboxes && position != ApplicationConstants.FOLDERS_LABEL+numberOfMailboxes){
             return true;
         }else{
             return false;

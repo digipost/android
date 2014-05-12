@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
 
 public class FolderFragment extends DocumentFragment {
     private int content = 0;
@@ -45,10 +47,8 @@ public class FolderFragment extends DocumentFragment {
         public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
             super.onActionItemClicked(actionMode, menuItem);
 
-            switch (menuItem.getItemId()) {
-                case R.id.main_context_menu_workarea:
-                   // moveDocument(ApiConstants.LOCATION_WORKAREA);
-                    break;
+            if(menuItem.getItemId() == ApplicationConstants.MAILBOX){
+                   moveDocument(ApiConstants.LOCATION_WORKAREA);
             }
 
             return true;

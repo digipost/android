@@ -390,13 +390,10 @@ public abstract class DocumentFragment extends ContentFragment {
 		String content = MainContentActivity.drawerListitems[content_type].toLowerCase();
 		String text = "";
 
-		switch (content_type) {
-		case ApplicationConstants.MAILBOX:
-			text = context.getString(R.string.emptyview_mailbox);
-            text+= "Postkassen";
-			break;
-            default:
-                text = "Ingen dokumenter";
+		if(content_type == ApplicationConstants.MAILBOX) {
+            text = "Ingen dokumenter i Postkassen";
+        }else{
+            text = "Ingen dokumenter i mappen";
 		}
 
 		//text += content;
@@ -431,7 +428,8 @@ public abstract class DocumentFragment extends ContentFragment {
 
 	protected void showMoveDocumentsDialog(final String toLocation) {
 		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
-				getActionMovePromtString(listAdapter.getCheckedCount(), toLocation), getString(R.string.move));
+				getActionMovePromptString(listAdapter.getCheckedCount(), toLocation), getString(R.string.move));
+
 		alertDialogBuilder.setPositiveButton(R.string.move, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -453,7 +451,7 @@ public abstract class DocumentFragment extends ContentFragment {
         return toLocation.equals(ApiConstants.LOCATION_ARCHIVE) ? "arkivet" : "kjøkkenbenken";
     }
 
-    protected String getActionMovePromtString(int count, String toLocation) {
+    protected String getActionMovePromptString(int count, String toLocation) {
         String type = getContentTypeString(count);
         String location = getToLocationString(toLocation);
 

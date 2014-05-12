@@ -30,6 +30,8 @@ public class Document {
     @JsonProperty
     private String location;
     @JsonProperty
+    private String folderId;
+    @JsonProperty
     private String read;
     @JsonProperty
     private String type;
@@ -44,6 +46,9 @@ public class Document {
 
     public void setAttachment(final ArrayList<Attachment> attachment) {
         this.attachment = attachment;
+    }
+    public int getFolderId(){
+        return Integer.parseInt(folderId);
     }
 
     public String getSubject() {
@@ -108,6 +113,10 @@ public class Document {
 
     public void setLocation(final String location) {
         this.location = location;
+    }
+
+    public void setFolderId(final int folderId){
+        this.folderId = ""+folderId;
     }
 
     public String getRead() {

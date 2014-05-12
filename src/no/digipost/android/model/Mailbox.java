@@ -17,6 +17,9 @@ public class Mailbox  {
     private String digipostaddress;
 
     @JsonProperty
+    private String owner;
+
+    @JsonProperty
     private String unreadItemsInInbox;
 
     @JsonProperty
@@ -63,6 +66,10 @@ public class Mailbox  {
 
     public String getReceiptsUri() {
         return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_RECEIPTS);
+    }
+
+    public boolean getOwner(){
+        return owner.equals("true");
     }
 
     public String getUploadUri() {

@@ -34,10 +34,16 @@ public class ApplicationConstants {
     public static final String NUMBER_OF_TIMES_APP_HAS_RUN = "numberOfTimesAppHasRun";
     public static final int NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN = 1;
 
-    public static final int MAILBOX_LABEL = 0;
-    public static final int FOLDERS_LABEL = 3;
-
+    //STATIC FOLDERS
+    public static final int MAILBOX_LABEL = 0;//INNBOKS
     public static final int MAILBOX = 1;
     public static final int RECEIPTS = 2;
+    public static final int FOLDERS_LABEL = 3; //MINE MAPPER
+
+    public static final int numberOfStaticFolders = 4;
+
+
+
+
 
 }
