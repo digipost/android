@@ -359,7 +359,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         ArrayList<Folder> fs = null;
         if(account != null) {
             mailbox = account.getMailboxByDigipostAddress(ContentOperations.digipostAddress);
-            getActionBar().setSubtitle(mailbox.getName());
+            try {
+                getActionBar().setSubtitle(mailbox.getName());
+            }catch(NullPointerException e){
+                //IGNORE
+            }
             if (mailbox != null) {
                 fs = mailbox.getFolders().getFolder();
                 for (int i = 0; i < fs.size(); i++) {
