@@ -300,12 +300,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     contentFragment = new ReceiptFragment();
                 } else if (content > ApplicationConstants.FOLDERS_LABEL+numberOfMailboxes) {
                     contentFragment = new FolderFragment(content);
+                }else{
+                    contentFragment = new FolderFragment(ApplicationConstants.MAILBOX);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
@@ -325,8 +326,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		super.onConfigurationChanged(newConfig);
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
-
-
 
     private void updateDrawerListItems(){
         ArrayList<String> drawerItems = new ArrayList<String>();
