@@ -103,7 +103,7 @@ public class SettingsActivity extends Activity {
                 }
             });*/
 
-			setSummary(getPreferenceManager().getSharedPreferences(), findPreference(KEY_PREF_DEFAULT_SCREEN));
+			//setSummary(getPreferenceManager().getSharedPreferences(), findPreference(KEY_PREF_DEFAULT_SCREEN));
 		}
 
 		@Override

@@ -93,7 +93,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 		drawerList = (ListView) findViewById(R.id.main_left_drawer);
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        updateDrawerListItems();
+        updateUI();
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 		drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
 				R.string.close);
@@ -101,10 +101,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 		getActionBar().setHomeButtonEnabled(true);
 
-		if (savedInstanceState == null || getCurrentFragment() == null) {
-			int content = Integer.parseInt(SettingsUtilities.getDefaultScreenPreference(this));
-			selectItem(content);
-		}
+        selectItem(ApplicationConstants.MAILBOX);
 
 		onSharedPreferenceChangeListener = new SettingsChangedlistener();
 		SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
@@ -329,10 +326,23 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
-    private void updateDrawerListItems(){
-        ArrayList<String> drawerItems = new ArrayList<String>();
+    private void updateUI(){
 
+        //Update Actionbar subtitle
         if(account != null) {
+            try {
+                getActionBar().setSubtitle(mailbox.getName());
+            } catch (NullPointerException e) {
+                //IGNORE//IGNORE      }
+            }
+        }
+
+
+        //Update Drawer - add items to drawer
+
+        ArrayList<String> drawerItems = new ArrayList<String>();
+        if(account != null) {
+
             //Add Mailbox accounts
             ArrayList<Mailbox> mailboxes = account.getMailbox();
 
@@ -359,11 +369,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         ArrayList<Folder> fs = null;
         if(account != null) {
             mailbox = account.getMailboxByDigipostAddress(ContentOperations.digipostAddress);
-            try {
-                getActionBar().setSubtitle(mailbox.getName());
-            }catch(NullPointerException e){
-                //IGNORE
-            }
+
             if (mailbox != null) {
                 fs = mailbox.getFolders().getFolder();
                 for (int i = 0; i < fs.size(); i++) {
@@ -517,7 +523,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 			if (result != null) {
                 account = result;
-                updateDrawerListItems();
+                updateUI();
 			} else {
 				if (invalidToken) {
 					DialogUtitities.showToast(MainContentActivity.this, errorMessage);
