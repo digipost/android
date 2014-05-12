@@ -16,19 +16,7 @@
 
 package no.digipost.android.utilities;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-
-import no.digipost.android.R;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.model.Letter;
+import android.content.Context;
 
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HTTP;
@@ -42,7 +30,18 @@ import org.codehaus.jackson.map.ser.FilterProvider;
 import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 
-import android.content.Context;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+
+import no.digipost.android.R;
+import no.digipost.android.api.exception.DigipostClientException;
 
 public class JSONUtilities {
 	public static String getJsonStringFromInputStream(final InputStream inputStream) {

@@ -17,7 +17,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/main_drawer_listitem_background">
+        android:background="@drawable/main_drawer_listitem_background"
+    >
 
     <RelativeLayout
             android:layout_width="wrap_content"
@@ -33,14 +34,15 @@
                 android:gravity="center_vertical|left"
                 android:drawablePadding="10dp"
                 android:layout_marginLeft="15dp"
-                android:textColor="@color/white"
+                android:textColor="@color/main_drawer_text"
                 android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
     </RelativeLayout>
 
     <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:background="@color/main_drawer_focused">
 
         <TextView
                 android:id="@+id/drawer_link_unread"
@@ -48,7 +50,8 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:layout_gravity="right"
-                android:textColor="@color/white"
+                android:textColor="@color/main_drawer_text"
+
                 android:visibility="gone"
                 android:background="@drawable/transparent_placeholder"
                 android:textSize="18sp"

@@ -34,7 +34,7 @@ public class ApplicationConstants {
     public static final String NUMBER_OF_TIMES_APP_HAS_RUN = "numberOfTimesAppHasRun";
     public static final int NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN = 1;
 
-    //STATIC FOLDERS
+    //STATIC FOLDERS Blir lagt til i MainContentActivity updateDrawerListItems
     public static final int MAILBOX_LABEL = 0;//INNBOKS
     public static final int MAILBOX = 1;
     public static final int RECEIPTS = 2;

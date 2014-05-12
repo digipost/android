@@ -2,18 +2,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/main_drawer_dark_blue"/>
+            <solid android:color="@color/main_drawer_focused"/>
         </shape>
     </item>
     <item android:state_activated="true">
         <shape>
-            <solid android:color="@color/main_drawer_blue_selected"/>
+            <solid android:color="@color/main_drawer_grey_background"/>
         </shape>
     </item>
 
-    <item android:state_selected="true">
-        <shape>
-            <solid android:color="@color/main_drawer_blue_focused"/>
-        </shape>
-    </item>
 </selector>

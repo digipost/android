@@ -75,16 +75,8 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	}
 
 	private void updateUnreadView(View row) {
-
-		if (unreadLetters != 0) {
-
-			unreadView.setText((CharSequence) (" " + unreadLetters));
-			unreadView.setVisibility(View.VISIBLE);
-
-			if (currentView == ApplicationConstants.MAILBOX) {
-				unreadView.setBackgroundResource(R.color.main_dark_grey);
-			}
-		}
+        unreadView.setText((CharSequence) (" " + unreadLetters));
+        unreadView.setVisibility(View.VISIBLE);
 	}
 
 	private void setupLinkView(View row, int position) {
@@ -105,8 +97,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
             drawCategory(row);
 
         }else if(position < MainContentActivity.numberOfMailboxes+numberOfMailboxes) {
-            //Mailbox
-
+            //Mailbox account
         }else{
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close, 0, 0, 0);
         }
@@ -114,11 +105,10 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 
     private void drawCategory(View row){
         linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
-        linkName.setTextSize(14);
+        linkName.setTextSize(16);
         linkName.setGravity(Gravity.BOTTOM);
         linkName.setTypeface(null, Typeface.BOLD);
         linkName.setPadding(0,0,0,5);
-        row.setBackgroundResource(R.drawable.main_drawer_label);
     }
 
 	@Override

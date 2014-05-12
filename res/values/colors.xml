@@ -2,14 +2,13 @@
 <resources>
 
     <!-- Drawer -->
-    <color name="main_drawer_grey_background">#393a3d</color>
-    <color name="main_drawer_dark_grey_text">#757477</color>
-    <color name="main_drawer_grey_text">#DEDEDE</color>
-    <color name="main_drawer_blue_selected">#56b4ef</color>
-    <color name="main_drawer_blue_focused">#71C2F5</color>
-    <color name="main_drawer_dark_blue">#228fd3</color>
+    <color name="main_drawer_grey_background">#292B2B</color>
+    <color name="main_drawer_grey_text">#595959</color>
+    <color name="main_drawer_text">#F5F5F5</color>
+    <color name="main_drawer_focused">#17191A</color>
     <color name="main_dark_grey">#2D2E30</color>
     <color name="main_drawer_divider">#333436</color>
+    <color name="main_drawer_unread">#1F1F1F</color>
 
     <!-- ActionBar -->
     <color name="actionbar_title_color">#FFF</color>
@@ -23,8 +22,8 @@
     <color name="list_pressed">#cecece</color>
     <color name="list_multiselected">#c4e1f3</color>
     <color name="list_focused">#c4e1f3</color>
-    <color name="green">#7bc144</color>
-    <color name="blue">#56b4ef</color>
+    <color name="green">#2a2929</color>
+    <color name="blue">#2a2929</color>
     <color name="black_subject">#2a2929</color>
     <color name="grey_filesize">#5f5f5f</color>
     <color name="grey_creator">#444142</color>

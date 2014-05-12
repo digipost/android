@@ -291,6 +291,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     if (ContentOperations.changeMailbox(account.getMailboxByIndex(content).getDigipostaddress())) {
                         executeGetAccountTask();
                         drawerList.setItemChecked(content, true);
+                    }else{
+                        drawerLayout.closeDrawer(drawerList);
                     }
 
                     return;
@@ -377,7 +379,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             drawerArrayAdapter.setUnreadLetters(mailbox.getUnreadItemsInInbox());
         }
     }
-
 
 	private ContentFragment getCurrentFragment() {
 		return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);
