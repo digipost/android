@@ -97,6 +97,12 @@ public class ContentOperations {
         }
 	}
 
+    public static void resetState(){
+        digipostAddress = null;
+        account = null;
+        mailbox = null;
+    }
+
     public static boolean changeMailbox(String newDigipostAddress){
         if(!digipostAddress.equals(newDigipostAddress)) {
             digipostAddress = newDigipostAddress;

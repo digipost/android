@@ -283,7 +283,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	}
 
 	private void selectItem(int content) {
-        ContentFragment contentFragment = null;
+        ContentFragment contentFragment = new FolderFragment(ApplicationConstants.MAILBOX);
 
             try {
                 if (content <= numberOfMailboxes) {
@@ -388,7 +388,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		FileUtilities.deleteTempFiles();
 		SharedPreferencesUtilities.deleteRefreshtoken(this);
 		SharedPreferencesUtilities.deleteScreenlockChoice(this);
-
+        ContentOperations.resetState();
+        numberOfMailboxes = 0;
+        mailbox = null;
+        account = null;
 		Intent intent = new Intent(MainContentActivity.this, LoginActivity.class);
 		startActivity(intent);
 		finish();
