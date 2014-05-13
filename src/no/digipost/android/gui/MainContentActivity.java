@@ -101,7 +101,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
 				R.string.close);
 		drawerLayout.setDrawerListener(drawerToggle);
-        getActionBar().setSubtitle("");
+       // getActionBar().setSubtitle("");
 		getActionBar().setHomeButtonEnabled(true);
 
         selectItem(ApplicationConstants.MAILBOX);
@@ -330,23 +330,19 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private void updateTitles(){
         if(account != null) {
             try {
+                if(showActionBarName){
+                    getActionBar().setTitle(mailbox.getName());
+                }else {
+                    if (getActionBar().getTitle().equals("Digipost")) {
+                        fragmentName = "Postkassen";
+                    } else if (getCurrentFragment().getContent() < numberOfMailboxes + ApplicationConstants.numberOfStaticFolders) {
+                        fragmentName = drawerListitems[getCurrentFragment().getContent() + numberOfMailboxes];
+                    } else {
+                        fragmentName = drawerListitems[getCurrentFragment().getContent()];
+                    }
 
-                if(getActionBar().getTitle().equals("Digipost")){
-                    fragmentName = "Postkassen";
-                }else if (getCurrentFragment().getContent() < numberOfMailboxes + ApplicationConstants.numberOfStaticFolders) {
-                    fragmentName = drawerListitems[getCurrentFragment().getContent() + numberOfMailboxes];
-                } else {
-                    fragmentName = drawerListitems[getCurrentFragment().getContent()];
+                    getActionBar().setTitle(fragmentName);
                 }
-
-                getActionBar().setTitle(fragmentName);
-
-                if(showActionBarName) {
-                    getActionBar().setSubtitle(mailbox.getName());
-                }else{
-                    getActionBar().setSubtitle("");
-                }
-
             } catch (NullPointerException e) {
                 //IGNORE
             }
