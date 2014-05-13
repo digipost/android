@@ -164,7 +164,8 @@ public class ApiAccess {
     }
 	private static String executePostRequest(Context context, int action, final String uri, final StringEntity json) throws DigipostClientException,
 			DigipostApiException, DigipostAuthenticationException {
-		HttpClient httpClient = new DefaultHttpClient();
+
+        HttpClient httpClient = new DefaultHttpClient();
 		HttpPost post = new HttpPost();
 
 		try {

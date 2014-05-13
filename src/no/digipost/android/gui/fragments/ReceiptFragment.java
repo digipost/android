@@ -16,6 +16,18 @@
 
 package no.digipost.android.gui.fragments;
 
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.ActionMode;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+
 import java.util.ArrayList;
 
 import no.digipost.android.R;
@@ -32,17 +44,6 @@ import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 public class ReceiptFragment extends ContentFragment {
 
@@ -261,7 +262,7 @@ public class ReceiptFragment extends ContentFragment {
 		if (resultCode == getActivity().RESULT_OK) {
 			if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
 
-				String action = data.getStringExtra(ApiConstants.ACTION);
+				String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
 				if (action.equals(ApiConstants.DELETE)) {
 					deleteReceipt(DocumentContentStore.getDocumentReceipt());
@@ -276,7 +277,7 @@ public class ReceiptFragment extends ContentFragment {
 		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
 			super.onCreateActionMode(actionMode, menu);
 
-			MenuItem moveDocument = menu.findItem(R.id.main_context_menu_folder);
+			MenuItem moveDocument = menu.findItem(R.id.main_context_menu_move);
 			moveDocument.setVisible(false);
 
 			return true;

@@ -47,8 +47,8 @@ public class Document {
     public void setAttachment(final ArrayList<Attachment> attachment) {
         this.attachment = attachment;
     }
-    public int getFolderId(){
-        return Integer.parseInt(folderId);
+    public String getFolderId(){
+        return folderId;
     }
 
     public String getSubject() {
@@ -115,8 +115,8 @@ public class Document {
         this.location = location;
     }
 
-    public void setFolderId(final int folderId){
-        this.folderId = ""+folderId;
+    public void setFolderId(String folderId){
+        this.folderId = folderId;
     }
 
     public String getRead() {

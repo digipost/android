@@ -42,7 +42,7 @@ public class ReceiptArrayAdapter extends ContentArrayAdapter<Receipt> {
 		super.title.setText(receipt.getStoreName());
 		super.subTitle.setText(DataFormatUtilities.getFormattedAmount(receipt.getAmount()) + " "
                 + DataFormatUtilities.getFormattedCurrency(receipt.getCurrency()));
-		super.metaTop.setText(DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()));
+		super.metaTop.setText(DataFormatUtilities.getFormattedDate(receipt.getTimeOfPurchase()));
 		super.subTitle.setTextColor(context.getResources().getColor(R.color.green));
 		super.setFilterTextColor();
 
@@ -95,7 +95,7 @@ public class ReceiptArrayAdapter extends ContentArrayAdapter<Receipt> {
 						addReceipt = true;
 					}
 
-					if (DataFormatUtilities.getFormattedDateTime(r.getTimeOfPurchase()).toLowerCase().contains(constraintLowerCase)) {
+					if (DataFormatUtilities.getFormattedDate(r.getTimeOfPurchase()).toLowerCase().contains(constraintLowerCase)) {
 						ReceiptArrayAdapter.super.metaTopFilterText = constraint.toString();
 						addReceipt = true;
 					}

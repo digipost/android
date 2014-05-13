@@ -16,8 +16,11 @@
 
 package no.digipost.android.documentstore;
 
+import java.util.ArrayList;
+
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
+import no.digipost.android.model.Folder;
 import no.digipost.android.model.Receipt;
 
 public class DocumentContentStore {
@@ -25,6 +28,7 @@ public class DocumentContentStore {
 	private static Document documentParent = null;
 	private static int documentAttachmentPosition = 0;
 	private static Receipt documentReceipt = null;
+    private static ArrayList<Folder> moveFolders;
 
 	public static void setContent(byte[] content, Document parent, int attachmentPosition) {
 		documentContent = content;
@@ -38,6 +42,14 @@ public class DocumentContentStore {
 
     public static byte[] getDocumentContent() {
         return documentContent;
+    }
+
+    public static ArrayList<Folder> getMoveFolders(){
+        return moveFolders;
+    }
+
+    public static void setMoveFolders(ArrayList<Folder> folders){
+        moveFolders = folders;
     }
 
     public static Document getDocumentParent() {

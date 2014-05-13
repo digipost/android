@@ -43,6 +43,10 @@ public class Folder {
         return getLinkByRelation("https://www.digipost.no/post/relations/self");
     }
 
+    public void setName(String name){
+        this.name = name;
+    }
+
     public Documents getDocuments(){
         return documents;
     }

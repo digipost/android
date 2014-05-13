@@ -625,7 +625,10 @@ public class MuPDFActivity extends DisplayContentActivity {
 
 	private void executeAction(String action) {
 		Intent i = new Intent(MuPDFActivity.this, MainContentActivity.class);
-		i.putExtra(ApiConstants.ACTION, action);
+		i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
+        if(action == ApiConstants.MOVE){
+
+        }
 
 		setResult(RESULT_OK, i);
 		finish();
@@ -664,8 +667,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem delete = menu.findItem(R.id.pdfmenu_delete);
-		MenuItem toArchive = menu.findItem(R.id.pdfmenu_archive);
-		MenuItem toWorkarea = menu.findItem(R.id.pdfmenu_workarea);
+        MenuItem move = menu.findItem(R.id.pdfmenu_move);
         MenuItem openExternal = menu.findItem(R.id.pdfmenu_open_external);
         MenuItem save = menu.findItem(R.id.pdfmenu_save);
 		sendToBank = menu.findItem(R.id.pdfmenu_send_to_bank);
@@ -674,22 +676,12 @@ public class MuPDFActivity extends DisplayContentActivity {
 
         if (openFilepath != null) {
             delete.setVisible(false);
-            toArchive.setVisible(false);
-            toWorkarea.setVisible(false);
+            move.setVisible(false);
             openExternal.setVisible(false);
             save.setVisible(false);
         }
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
-
-        //TODO FIX
-        /*
-		if (content == ApplicationConstants.WORKAREA) {
-			toWorkarea.setVisible(false);
-		} else if (content == ApplicationConstants.ARCHIVE) {
-			toArchive.setVisible(false);
-		}
-		*/
 
 		boolean sendToBankVisible = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
@@ -712,11 +704,8 @@ public class MuPDFActivity extends DisplayContentActivity {
 		case R.id.pdfmenu_delete:
 			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;
-		case R.id.pdfmenu_archive:
-			promtAction(getString(R.string.dialog_prompt_document_toArchive), ApiConstants.LOCATION_ARCHIVE);
-			return true;
-		case R.id.pdfmenu_workarea:
-			promtAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
+		case R.id.pdfmenu_move:
+            showMoveToFolderDialog();
 			return true;
 		case R.id.pdfmenu_copy:
 			selectModeOn();

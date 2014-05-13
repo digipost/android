@@ -629,7 +629,7 @@ public class UploadActivity extends Activity {
 
 	private void finishActivityWithAction(String action) {
 		Intent intent = new Intent();
-		intent.putExtra(ApiConstants.ACTION, action);
+		intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
 		setResult(RESULT_OK, intent);
 		finish();
 	}

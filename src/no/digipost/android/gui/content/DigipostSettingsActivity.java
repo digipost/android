@@ -16,15 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import no.digipost.android.R;
-import no.digipost.android.api.ContentOperations;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.model.Account;
-import no.digipost.android.model.Settings;
-import no.digipost.android.utilities.DialogUtitities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -37,6 +28,16 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.analytics.tracking.android.EasyTracker;
+
+import no.digipost.android.R;
+import no.digipost.android.api.ContentOperations;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.model.Account;
+import no.digipost.android.model.Settings;
+import no.digipost.android.utilities.DialogUtitities;
 
 public abstract class DigipostSettingsActivity extends Activity {
 
@@ -295,7 +296,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 
     private void finishActivityWithAction(String action) {
         Intent intent = new Intent();
-        intent.putExtra(ApiConstants.ACTION, action);
+        intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
         setResult(RESULT_OK, intent);
         finish();
     }

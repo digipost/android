@@ -20,14 +20,20 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
@@ -36,9 +42,11 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.adapters.FolderArrayAdapter;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Document;
+import no.digipost.android.model.Folder;
 import no.digipost.android.model.Invoice;
 import no.digipost.android.model.Payment;
 import no.digipost.android.utilities.DataFormatUtilities;
@@ -47,7 +55,12 @@ import no.digipost.android.utilities.FileUtilities;
 
 public abstract class DisplayContentActivity extends Activity {
 	private ProgressDialog progressDialog;
+    private AlertDialog alertDialog;
+    private FolderArrayAdapter folderAdapter;
 	protected MenuItem sendToBank;
+    private String location;
+    private String folderId;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -276,10 +289,64 @@ public abstract class DisplayContentActivity extends Activity {
 
 	private void finishActivityWithAction(String action) {
 		Intent intent = new Intent();
-		intent.putExtra(ApiConstants.ACTION, action);
+		intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
+
+        if(action.equals(ApiConstants.MOVE)){
+            intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION, location);
+            intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID, folderId);
+        }
+
 		setResult(RESULT_OK, intent);
 		finish();
 	}
+
+    protected void showMoveToFolderDialog(){
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setNegativeButton(getString(R.string.close),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.setView(view);
+
+        ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+
+        ArrayList<Folder> folders = DocumentContentStore.getMoveFolders();
+        folderAdapter = new FolderArrayAdapter(this, R.layout.attachmentdialog_list_item, folders);
+        moveToFolderListView.setAdapter(folderAdapter);
+        moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
+
+        builder.setTitle("Flytt");
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private class MoveToFolderListOnItemClickListener implements AdapterView.OnItemClickListener {
+        public MoveToFolderListOnItemClickListener() {
+
+        }
+
+        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+
+            Folder folder = folderAdapter.getItem(position);
+            folderId = folder.getId();
+            if(folderId == null){
+                location = "INBOX";
+            }else{
+                location = "FOLDER";
+            }
+
+            alertDialog.dismiss();
+            alertDialog = null;
+            finishActivityWithAction(ApiConstants.MOVE);
+
+        }
+    }
 
 	protected void openFileWithIntent() {
 		if (DocumentContentStore.getDocumentContent() == null) {

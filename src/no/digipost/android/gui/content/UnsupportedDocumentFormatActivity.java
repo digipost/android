@@ -154,7 +154,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
 	private void executeAction(String action) {
 		Intent i = new Intent(UnsupportedDocumentFormatActivity.this, MainContentActivity.class);
-		i.putExtra(ApiConstants.ACTION, action);
+		i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
 
 		setResult(RESULT_OK, i);
 		finish();

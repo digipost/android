@@ -26,10 +26,13 @@ public class ApiConstants {
 
 	public static final String GET_RECEIPT = "receipt";
 
+    public static final String MOVE = "move";
 	public static final String DELETE = "delete";
     public static final String REFRESH_ARCHIVE = "refreshArchive";
     public static final String LOGOUT = "logout";
-	public static final String ACTION = "action";
+	public static final String FRAGMENT_ACTIVITY_RESULT_ACTION = "action";
+    public static final String FRAGMENT_ACTIVITY_RESULT_LOCATION = "location";
+    public static final String FRAGMENT_ACTIVITY_RESULT_FOLDERID = "folderid";
 	public static final String AUTHENTICATION_LEVEL_TWO_FACTOR = "TWO_FACTOR";
     public static final String INVOICE = "INVOICE";
 	public static final String GRANT_TYPE = "grant_type";

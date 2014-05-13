@@ -4,19 +4,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-            android:id="@+id/main_context_menu_folder"
+            android:id="@+id/main_context_menu_move"
             android:title="@string/context_move"
             android:icon="@drawable/ic_folder"
             android:showAsAction="ifRoom">
-
-        <menu>
-            <item
-                    android:id="@+id/main_context_menu_workarea"
-                    android:title="@string/context_move_to_workarea"/>
-            <item
-                    android:id="@+id/main_context_menu_archive"
-                    android:title="@string/context_move_to_archive"/>
-        </menu>
     </item>
 
 

@@ -55,7 +55,7 @@ import no.digipost.android.gui.adapters.DrawerArrayAdapter;
 import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.gui.content.UploadActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.gui.fragments.FolderFragment;
+import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Folder;
@@ -76,19 +76,22 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	private SearchView searchView;
     private MenuItem searchButton;
 	private boolean refreshing;
-    public static String[] drawerListitems;
+    private static String[] drawerListitems;
+    public static ArrayList<Folder> folders;
     public static int numberOfMailboxes = 0;
+    private boolean showActionBarName;
     private Mailbox mailbox;
     private Account account;
+    public static String fragmentName;
 
 	private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main_content);
 		ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
-
 		this.refreshing = true;
 		drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 		drawerList = (ListView) findViewById(R.id.main_left_drawer);
@@ -98,7 +101,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
 				R.string.close);
 		drawerLayout.setDrawerListener(drawerToggle);
-
+        getActionBar().setSubtitle("");
 		getActionBar().setHomeButtonEnabled(true);
 
         selectItem(ApplicationConstants.MAILBOX);
@@ -130,16 +133,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 		searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 		setupSearchView(searchView);
-        int content = getCurrentFragment().getContent();
-
-        if(content < numberOfMailboxes+ApplicationConstants.numberOfStaticFolders) {
-            getActionBar().setTitle(drawerListitems[getCurrentFragment().getContent()+numberOfMailboxes]);
-        }else{
-            getActionBar().setTitle(drawerListitems[getCurrentFragment().getContent()]);
-        }
+        updateTitles();
 
 		return super.onCreateOptionsMenu(menu);
 	}
+
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
@@ -236,11 +234,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 		if (resultCode == RESULT_OK) {
 			if (requestCode == INTENT_REQUESTCODE) {
-				String action = data.getStringExtra(ApiConstants.ACTION);
+				String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
-				if (action.equals(ApiConstants.REFRESH_ARCHIVE)) {
-					//TODO FIX selectItem(ApplicationConstants.ARCHIVE);
-				} else if (action.equals(ApiConstants.LOGOUT)) {
+				if (action.equals(ApiConstants.LOGOUT)) {
 					logOut();
 				}
 			}
@@ -280,32 +276,31 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	}
 
 	private void selectItem(int content) {
-        ContentFragment contentFragment = new FolderFragment(ApplicationConstants.MAILBOX);
+        ContentFragment contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
 
+        if(account != null) {
             try {
                 if (content <= numberOfMailboxes) {
 
                     if (ContentOperations.changeMailbox(account.getMailboxByIndex(content).getDigipostaddress())) {
+                        account = null;
                         executeGetAccountTask();
                         drawerList.setItemChecked(content, true);
-                    }else{
-                        drawerLayout.closeDrawer(drawerList);
                     }
-
-                    return;
-                }else if(content == ApplicationConstants.MAILBOX+numberOfMailboxes) {
-                    contentFragment = new FolderFragment(ApplicationConstants.MAILBOX);
-                } else if (content == ApplicationConstants.RECEIPTS+numberOfMailboxes) {
+                } else if (content == ApplicationConstants.MAILBOX + numberOfMailboxes) {
+                    contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
+                } else if (content == ApplicationConstants.RECEIPTS + numberOfMailboxes) {
                     contentFragment = new ReceiptFragment();
-                } else if (content > ApplicationConstants.FOLDERS_LABEL+numberOfMailboxes) {
-                    contentFragment = new FolderFragment(content);
-                }else{
-                    contentFragment = new FolderFragment(ApplicationConstants.MAILBOX);
+                } else if (content > ApplicationConstants.FOLDERS_LABEL + numberOfMailboxes) {
+                    contentFragment = new DocumentFragment(content);
+                } else {
+                    contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
@@ -327,20 +322,42 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	}
 
     private void updateUI(){
+        updateDrawer();
+        updateTitles();
 
-        //Update Actionbar subtitle
+    }
+
+    private void updateTitles(){
         if(account != null) {
             try {
-                getActionBar().setSubtitle(mailbox.getName());
+
+                if(getActionBar().getTitle().equals("Digipost")){
+                    fragmentName = "Postkassen";
+                }else if (getCurrentFragment().getContent() < numberOfMailboxes + ApplicationConstants.numberOfStaticFolders) {
+                    fragmentName = drawerListitems[getCurrentFragment().getContent() + numberOfMailboxes];
+                } else {
+                    fragmentName = drawerListitems[getCurrentFragment().getContent()];
+                }
+
+                getActionBar().setTitle(fragmentName);
+
+                if(showActionBarName) {
+                    getActionBar().setSubtitle(mailbox.getName());
+                }else{
+                    getActionBar().setSubtitle("");
+                }
+
             } catch (NullPointerException e) {
-                //IGNORE//IGNORE      }
+                //IGNORE
             }
         }
+    }
 
-
-        //Update Drawer - add items to drawer
+    private void updateDrawer(){
+        folders = new ArrayList<Folder>();
 
         ArrayList<String> drawerItems = new ArrayList<String>();
+
         if(account != null) {
 
             //Add Mailbox accounts
@@ -372,9 +389,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             if (mailbox != null) {
                 fs = mailbox.getFolders().getFolder();
+
                 for (int i = 0; i < fs.size(); i++) {
                     String name = fs.get(i).getName();
                     drawerItems.add(name);
+                    folders.add(fs.get(i));
                 }
             }
         }
@@ -475,10 +494,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 
 		public void onDrawerClosed(View view) {
+            showActionBarName = false;
 			invalidateOptionsMenu();
+
 		}
 
 		public void onDrawerOpened(View drawerView) {
+            showActionBarName = true;
 			invalidateOptionsMenu();
 		}
 	}

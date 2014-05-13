@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -44,27 +45,38 @@ import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
 import no.digipost.android.gui.adapters.DocumentArrayAdapter;
+import no.digipost.android.gui.adapters.FolderArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
 import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Documents;
+import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.JSONUtilities;
-import no.digipost.android.utilities.SettingsUtilities;
 
-public abstract class DocumentFragment extends ContentFragment {
+public class DocumentFragment extends ContentFragment {
 
 	protected AttachmentArrayAdapter attachmentAdapter;
+    protected FolderArrayAdapter folderAdapter;
+    private int content = 0;
+    private Dialog folderDialog;
 
-	public DocumentFragment() {
+	public DocumentFragment(int content) {
+        this.content = content;
 	}
+
+    @Override
+    public int getContent() {
+        return content;
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = super.onCreateView(inflater, container, savedInstanceState);
-		super.listAdapter = new DocumentArrayAdapter(getActivity(), R.layout.content_list_item);
+        super.listView.setMultiChoiceModeListener(new MultiChoiceModeListener());
+        super.listAdapter = new DocumentArrayAdapter(getActivity(), R.layout.content_list_item);
 		super.listView.setAdapter(listAdapter);
 		super.listView.setOnItemClickListener(new DocumentListOnItemClickListener());
 
@@ -73,20 +85,45 @@ public abstract class DocumentFragment extends ContentFragment {
 		return view;
 	}
 
+    private class MultiChoiceModeListener extends ContentMultiChoiceModeListener {
+
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            super.onCreateActionMode(actionMode, menu);
+
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+            super.onActionItemClicked(actionMode, menuItem);
+            switch (menuItem.getItemId()) {
+                case R.id.main_context_menu_delete:
+                    DocumentFragment.super.deleteContent();
+                    break;
+                case R.id.main_context_menu_move:
+                    showMoveToFolderDialog();
+                    break;
+            }
+
+            return true;
+        }
+    }
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == getActivity().RESULT_OK) {
 			if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
-				String action = data.getStringExtra(ApiConstants.ACTION);
+				String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
-				if (action.equals(ApiConstants.LOCATION_WORKAREA)) {
-					executeDocumentMoveTask(action, DocumentContentStore.getDocumentParent());
-				} else if (action.equals(ApiConstants.LOCATION_ARCHIVE)) {
-					executeDocumentMoveTask(action, DocumentContentStore.getDocumentParent());
-				} else if (action.equals(ApiConstants.DELETE)) {
-					deleteDocument(DocumentContentStore.getDocumentParent());
+                if(action.equals(ApiConstants.MOVE)){
+                    String toLocation = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION);
+                    String folderId = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID);
+                    executeDocumentMoveTask(DocumentContentStore.getDocumentParent(),toLocation,folderId);
+
+                }else if (action.equals(ApiConstants.DELETE)) {
+                    deleteDocument(DocumentContentStore.getDocumentParent());
 				}
 			}
 		}
@@ -100,24 +137,83 @@ public abstract class DocumentFragment extends ContentFragment {
 		}
 	}
 
-	private class AttachmentListOnItemClickListener implements AdapterView.OnItemClickListener {
-		private Document parentDocument;
-		private int parentListPosition;
+    private void showMoveToFolderDialog(){
+        folderDialog = null;
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
 
-		public AttachmentListOnItemClickListener(Document parentDocument, int parentListPosition) {
-			this.parentDocument = parentDocument;
-			this.parentListPosition = parentListPosition;
-		}
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.close),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
 
-		public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-            Attachment attachment = attachmentAdapter.getItem(position);
-            if(attachment.getOpeningReceiptUri() != null) {
-                showOpeningReceiptDialog(parentDocument, attachment, parentListPosition, position);
-            } else {
-                executeGetAttachmentContentTask(parentDocument, position, parentListPosition, attachment);
+        builder.setView(view);
+
+        ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+
+        ArrayList<Folder> folders = getMoveFolders();
+        folderAdapter = new FolderArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item, folders);
+        moveToFolderListView.setAdapter(folderAdapter);
+        moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
+
+        builder.setTitle("Flytt");
+        folderDialog = builder.create();
+        folderDialog.show();
+    }
+
+    private ArrayList<Folder> getMoveFolders(){
+        ArrayList<Folder> folders = new ArrayList<Folder>();
+
+        if(MainContentActivity.folders != null){
+            if(MainContentActivity.fragmentName != null) {
+
+                //Postkassen
+                if (!MainContentActivity.fragmentName.equals("Postkassen")) {
+                    Folder postkassen = new Folder();
+                    postkassen.setName("Postkassen");
+                    folders.add(0, postkassen);
+                }
+
+                //Mapper
+                for (Folder f : MainContentActivity.folders) {
+                    if (!MainContentActivity.fragmentName.equals(f.getName())) {
+                        folders.add(f);
+                    }
+                }
             }
-		}
-	}
+            return folders;
+        }else{
+            return null;
+        }
+    }
+
+    private class MoveToFolderListOnItemClickListener implements AdapterView.OnItemClickListener {
+        public MoveToFolderListOnItemClickListener() {
+
+        }
+
+        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+
+            Folder folder = folderAdapter.getItem(position);
+            String folderId = folder.getId();
+            String location;
+
+            if(folderId == null){
+                location = "INBOX";
+            }else{
+                location = "FOLDER";
+            }
+
+            String name = folder.getName();
+
+            moveDocument(location,folderId,name);
+            folderDialog.dismiss();
+            folderDialog = null;
+        }
+    }
 
 	private void showAttachmentDialog(final Document document, int listPosition) {
 		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -141,6 +237,25 @@ public abstract class DocumentFragment extends ContentFragment {
 		attachmentDialog.show();
 
 	}
+
+    private class AttachmentListOnItemClickListener implements AdapterView.OnItemClickListener {
+        private Document parentDocument;
+        private int parentListPosition;
+
+        public AttachmentListOnItemClickListener(Document parentDocument, int parentListPosition) {
+            this.parentDocument = parentDocument;
+            this.parentListPosition = parentListPosition;
+        }
+
+        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+            Attachment attachment = attachmentAdapter.getItem(position);
+            if(attachment.getOpeningReceiptUri() != null) {
+                showOpeningReceiptDialog(parentDocument, attachment, parentListPosition, position);
+            } else {
+                executeGetAttachmentContentTask(parentDocument, position, parentListPosition, attachment);
+            }
+        }
+    }
 
 	private void openListItem(final Document document, int listPosition) {
 		if (document.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
@@ -284,7 +399,8 @@ public abstract class DocumentFragment extends ContentFragment {
 
 			if (result != null) {
 				DocumentContentStore.setContent(result, parentDocument, attachmentListPosition);
-				openAttachmentContent(attachment)   ;
+                DocumentContentStore.setMoveFolders(getMoveFolders());
+				openAttachmentContent(attachment);
 				updateAdapterDocument(parentDocument, documentListPosition);
 
 				ArrayList<Attachment> attachments = parentDocument.getAttachment();
@@ -387,7 +503,8 @@ public abstract class DocumentFragment extends ContentFragment {
 
 	private void setEmptyViewText() {
 		int content_type = getContent();
-		String content = MainContentActivity.drawerListitems[content_type].toLowerCase();
+		//String content = MainContentActivity.drawerListitems[content_type].toLowerCase();
+
 		String text = "";
 
 		if(content_type == ApplicationConstants.MAILBOX) {
@@ -401,49 +518,55 @@ public abstract class DocumentFragment extends ContentFragment {
 		DocumentFragment.super.setListEmptyViewText(text, null);
 	}
 
-	protected void executeDocumentMoveTask(String toLocation) {
+	protected void executeDocumentMoveTask(String toLocation,String folderId) {
 		ArrayList<Document> documents = listAdapter.getCheckedItems();
 
 		contentActionMode.finish();
 
-		DocumentMoveTask documentMoveTask = new DocumentMoveTask(documents, toLocation);
+		DocumentMoveTask documentMoveTask = new DocumentMoveTask(documents, toLocation, folderId);
 		documentMoveTask.execute();
 	}
 
-	protected void executeDocumentMoveTask(String toLocation, Document document) {
+	protected void executeDocumentMoveTask(Document document,String toLocation,String folderId) {
 		ArrayList<Document> documents = new ArrayList<Document>();
         documents.add(document);
 
-		DocumentMoveTask documentMoveTask = new DocumentMoveTask(documents, toLocation);
+		DocumentMoveTask documentMoveTask = new DocumentMoveTask(documents, toLocation,folderId);
 		documentMoveTask.execute();
 	}
 
-	protected void moveDocument(String toLocation) {
-		if (SettingsUtilities.getConfirmMovePreference(context)) {
-			showMoveDocumentsDialog(toLocation);
+	protected void moveDocument(String toLocation, String folderId,String name) {
+        //TODO HA BEKREFTELSE PÅ FLYTTING?
+
+		//if (SettingsUtilities.getConfirmMovePreference(context)) {
+        if(false){
+			showMoveDocumentsDialog(toLocation,folderId,name);
 		} else {
-			executeDocumentMoveTask(toLocation);
+			executeDocumentMoveTask(toLocation,folderId);
 		}
 	}
 
-	protected void showMoveDocumentsDialog(final String toLocation) {
+	protected void showMoveDocumentsDialog(final String toLocation, final String folderId, final String name) {
+
 		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
-				getActionMovePromptString(listAdapter.getCheckedCount(), toLocation), getString(R.string.move));
+				getActionMovePromptString(listAdapter.getCheckedCount(), name), getString(R.string.move));
 
 		alertDialogBuilder.setPositiveButton(R.string.move, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
-				executeDocumentMoveTask(toLocation);
+				executeDocumentMoveTask(toLocation,folderId);
 				dialogInterface.dismiss();
 			}
 		});
+
 		alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
 				dialogInterface.cancel();
 			}
 		});
-		AlertDialog alertDialog = alertDialogBuilder.create();
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
 		alertDialog.show();
 	}
 
@@ -465,12 +588,14 @@ public abstract class DocumentFragment extends ContentFragment {
 	private class DocumentMoveTask extends AsyncTask<Void, Document, String> {
 		private ArrayList<Document> documents;
 		private String toLocation;
+        private String folderId;
 		private boolean invalidToken;
 		private int progress;
 
-		public DocumentMoveTask(ArrayList<Document> documents, String toLocation) {
+		public DocumentMoveTask(ArrayList<Document> documents, String toLocation, String folderId) {
 			this.documents = documents;
 			this.toLocation = toLocation;
+            this.folderId = folderId;
 			this.progress = 0;
 		}
 
@@ -488,6 +613,7 @@ public abstract class DocumentFragment extends ContentFragment {
 						publishProgress(document);
 						progress++;
                         document.setLocation(toLocation);
+                        document.setFolderId(folderId);
 						ContentOperations.moveDocument(context, document);
 					}
 				}
@@ -509,6 +635,7 @@ public abstract class DocumentFragment extends ContentFragment {
 		@Override
 		protected void onProgressUpdate(Document... values) {
 			super.onProgressUpdate(values);
+
 			DocumentFragment.super.progressDialog.setMessage("Flytter " + values[0].getSubject() + " (" + progress + "/" + documents.size()
 					+ ")");
 		}
@@ -617,21 +744,5 @@ public abstract class DocumentFragment extends ContentFragment {
 
 	private void updateAdapterDocument(Document document, int listPosition) {
 		listAdapter.replaceAtPosition(document, listPosition);
-	}
-
-	protected class DocumentMultiChoiceModeListener extends ContentMultiChoiceModeListener {
-
-		@Override
-		public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
-			super.onActionItemClicked(actionMode, menuItem);
-
-			switch (menuItem.getItemId()) {
-			case R.id.main_context_menu_delete:
-				DocumentFragment.super.deleteContent();
-				break;
-			}
-
-			return true;
-		}
 	}
 }

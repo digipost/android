@@ -15,13 +15,9 @@
             android:showAsAction="never"/>
 
     <item
-            android:id="@+id/htmlmenu_workarea"
-            android:title="@string/context_move_to_workarea"
+            android:id="@+id/htmlmenu_move"
+            android:title="@string/move"
             android:visible="false"
             android:showAsAction="never"/>
-    <item
-            android:id="@+id/htmlmenu_archive"
-            android:title="@string/context_move_to_archive"
-            android:visible="false"
-            android:showAsAction="never"/>
+
 </menu>
