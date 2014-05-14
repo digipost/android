@@ -109,6 +109,7 @@ public class DocumentFragment extends ContentFragment {
             return true;
         }
     }
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -142,7 +143,7 @@ public class DocumentFragment extends ContentFragment {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.close),
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.abort),
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -159,7 +160,7 @@ public class DocumentFragment extends ContentFragment {
         moveToFolderListView.setAdapter(folderAdapter);
         moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
 
-        builder.setTitle("Flytt");
+        builder.setTitle("Flytt til");
         folderDialog = builder.create();
         folderDialog.show();
     }
@@ -503,7 +504,6 @@ public class DocumentFragment extends ContentFragment {
 
 	private void setEmptyViewText() {
 		int content_type = getContent();
-		//String content = MainContentActivity.drawerListitems[content_type].toLowerCase();
 
 		String text = "";
 
@@ -536,53 +536,7 @@ public class DocumentFragment extends ContentFragment {
 	}
 
 	protected void moveDocument(String toLocation, String folderId,String name) {
-        //TODO HA BEKREFTELSE PÅ FLYTTING?
-
-		//if (SettingsUtilities.getConfirmMovePreference(context)) {
-        if(false){
-			showMoveDocumentsDialog(toLocation,folderId,name);
-		} else {
-			executeDocumentMoveTask(toLocation,folderId);
-		}
-	}
-
-	protected void showMoveDocumentsDialog(final String toLocation, final String folderId, final String name) {
-
-		AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
-				getActionMovePromptString(listAdapter.getCheckedCount(), name), getString(R.string.move));
-
-		alertDialogBuilder.setPositiveButton(R.string.move, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				executeDocumentMoveTask(toLocation,folderId);
-				dialogInterface.dismiss();
-			}
-		});
-
-		alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				dialogInterface.cancel();
-			}
-		});
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-		alertDialog.show();
-	}
-
-    protected String getToLocationString(String toLocation) {
-        return toLocation.equals(ApiConstants.LOCATION_ARCHIVE) ? "arkivet" : "kjøkkenbenken";
-    }
-
-    protected String getActionMovePromptString(int count, String toLocation) {
-        String type = getContentTypeString(count);
-        String location = getToLocationString(toLocation);
-
-        if (count > 1) {
-            return "Vil du flytte disse " + count + " " + type + " til " + location + "?";
-        }
-
-        return "Vil du flytte dette " + type + " til " + location + "?";
+        executeDocumentMoveTask(toLocation,folderId);
 	}
 
 	private class DocumentMoveTask extends AsyncTask<Void, Document, String> {

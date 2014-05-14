@@ -61,7 +61,7 @@ public class Mailbox  {
     }
 
     public String getInboxUri() {
-        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_INBOX);
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_UPLOAD_TO_INBOX);
     }
 
     public String getReceiptsUri() {

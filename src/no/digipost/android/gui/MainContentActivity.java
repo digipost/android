@@ -17,7 +17,11 @@
 package no.digipost.android.gui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -29,6 +33,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -52,6 +57,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.DrawerArrayAdapter;
+import no.digipost.android.gui.adapters.MailboxArrayAdapter;
 import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.gui.content.UploadActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
@@ -73,14 +79,18 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	private ListView drawerList;
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerArrayAdapter drawerArrayAdapter;
+    protected MailboxArrayAdapter mailboxAdapter;
 	private SearchView searchView;
     private MenuItem searchButton;
 	private boolean refreshing;
     private static String[] drawerListitems;
     public static ArrayList<Folder> folders;
-    public static int numberOfMailboxes = 0;
+    private Dialog mailboxDialog;
+    public static int numberOfFolders;
+    private int numberOfAccountItemsInDrawer;
     private boolean showActionBarName;
     private Mailbox mailbox;
+    private ArrayList<Mailbox> mailboxes;
     private Account account;
     public static String fragmentName;
 
@@ -101,7 +111,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
 				R.string.close);
 		drawerLayout.setDrawerListener(drawerToggle);
-       // getActionBar().setSubtitle("");
 		getActionBar().setHomeButtonEnabled(true);
 
         selectItem(ApplicationConstants.MAILBOX);
@@ -130,9 +139,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_main_content_actionbar, menu);
-
 		searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-		setupSearchView(searchView);
+
+        setupSearchView(searchView);
         updateTitles();
 
 		return super.onCreateOptionsMenu(menu);
@@ -189,18 +198,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		case R.id.menu_refresh:
 			getCurrentFragment().updateAccountMeta();
 			return true;
-		case R.id.menu_logout:
-			logOut();
-			return true;
-		case R.id.menu_help:
-			openHelpWebView();
-			return true;
-		case R.id.menu_upload:
-			startUploadActivity();
-			return true;
-		case R.id.menu_preferences:
-			startPreferencesActivity();
-			return true;
+        case R.id.menu_upload:
+                startUploadActivity();
+                return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -236,9 +236,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 			if (requestCode == INTENT_REQUESTCODE) {
 				String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
-				if (action.equals(ApiConstants.LOGOUT)) {
+                if(action.equals(ApiConstants.UPLOAD)){
+                    selectItem(getCurrentFragment().getContent());
+                }else if (action.equals(ApiConstants.LOGOUT)) {
 					logOut();
 				}
+
 			}
 		}
 	}
@@ -275,28 +278,87 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 	}
 
+    private void selectMailbox(String digipostAddress,String name){
+        if (ContentOperations.changeMailbox(digipostAddress)) {
+            getActionBar().setTitle(name);
+            account = null;
+            executeGetAccountTask();
+            selectItem(ApplicationConstants.MAILBOX);
+        }
+    }
+
+    private void openMailboxSelection(){
+        mailboxDialog = null;
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setNegativeButton(getString(R.string.abort),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.setView(view);
+
+        ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+
+        mailboxAdapter = new MailboxArrayAdapter(this, R.layout.attachmentdialog_list_item, mailboxes);
+        moveToFolderListView.setAdapter(mailboxAdapter);
+        moveToFolderListView.setOnItemClickListener(new ChangeMailboxListOnItemClickListener());
+
+        builder.setTitle(ApplicationConstants.DRAWER_CHANGE_ACCOUNT);
+        mailboxDialog = builder.create();
+        mailboxDialog.show();
+
+    }
+
+    private class ChangeMailboxListOnItemClickListener implements AdapterView.OnItemClickListener {
+        public ChangeMailboxListOnItemClickListener() {}
+
+        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+            Mailbox mailbox = mailboxAdapter.getItem(position);
+            selectMailbox(mailbox.getDigipostaddress(),mailbox.getName());
+            mailboxDialog.dismiss();
+            mailboxDialog = null;
+        }
+    }
+
 	private void selectItem(int content) {
         ContentFragment contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
 
         if(account != null) {
             try {
-                if (content <= numberOfMailboxes) {
 
-                    if (ContentOperations.changeMailbox(account.getMailboxByIndex(content).getDigipostaddress())) {
-                        account = null;
-                        executeGetAccountTask();
-                        drawerList.setItemChecked(content, true);
-                    }
-                } else if (content == ApplicationConstants.MAILBOX + numberOfMailboxes) {
+                int inboxReceiptsAndFolders = (numberOfFolders+ApplicationConstants.numberOfStaticFolders);
+
+                if (content == ApplicationConstants.MAILBOX) {
                     contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
-                } else if (content == ApplicationConstants.RECEIPTS + numberOfMailboxes) {
+
+                } else if (content == ApplicationConstants.RECEIPTS) {
                     contentFragment = new ReceiptFragment();
-                } else if (content > ApplicationConstants.FOLDERS_LABEL + numberOfMailboxes) {
-                    contentFragment = new DocumentFragment(content);
-                } else {
-                    contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
-                }
 
+                } else if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders ) {
+                    contentFragment = new DocumentFragment(content);
+
+                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_CHANGE_ACCOUNT)) {
+                    openMailboxSelection();
+                    return;
+
+                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_SETTINGS)) {
+                    startPreferencesActivity();
+                    return;
+
+                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_HELP)) {
+                    openHelpWebView();
+                    return;
+
+                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_LOGOUT)) {
+                    logOut();
+                    return;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -334,9 +396,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     getActionBar().setTitle(mailbox.getName());
                 }else {
                     if (getActionBar().getTitle().equals("Digipost")) {
-                        fragmentName = "Postkassen";
-                    } else if (getCurrentFragment().getContent() < numberOfMailboxes + ApplicationConstants.numberOfStaticFolders) {
-                        fragmentName = drawerListitems[getCurrentFragment().getContent() + numberOfMailboxes];
+                        fragmentName = ApplicationConstants.DRAWER_INBOX;
+                    } else if (getCurrentFragment().getContent() < ApplicationConstants.numberOfStaticFolders) {
+                        fragmentName = drawerListitems[getCurrentFragment().getContent()];
                     } else {
                         fragmentName = drawerListitems[getCurrentFragment().getContent()];
                     }
@@ -354,50 +416,51 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         ArrayList<String> drawerItems = new ArrayList<String>();
 
-        if(account != null) {
-
-            //Add Mailbox accounts
-            ArrayList<Mailbox> mailboxes = account.getMailbox();
-
-            if (mailboxes.size() > 1) {
-                numberOfMailboxes = mailboxes.size();
-
-                for (Mailbox m : mailboxes) {
-                    if (m.getOwner()) {
-                        drawerItems.add("Min konto");
-                    } else {
-                        drawerItems.add(m.getName());
-                    }
-                }
-            }
-        }
-
         //Add main menu
-        drawerItems.add("INNBOKS");
-        drawerItems.add("Postkassen");
-        drawerItems.add("E-Kvitteringer");
-        drawerItems.add("MAPPER");
+        drawerItems.add(ApplicationConstants.DRAWER_INBOX);
+        drawerItems.add(ApplicationConstants.DRAWER_RECEIPTS);
+        drawerItems.add(ApplicationConstants.DRAWER_MY_ACCOUNT);
 
-        //Add folders
         ArrayList<Folder> fs = null;
         if(account != null) {
+
+            //Add folders
             mailbox = account.getMailboxByDigipostAddress(ContentOperations.digipostAddress);
 
             if (mailbox != null) {
                 fs = mailbox.getFolders().getFolder();
-
+                numberOfFolders = 0;
                 for (int i = 0; i < fs.size(); i++) {
                     String name = fs.get(i).getName();
                     drawerItems.add(name);
                     folders.add(fs.get(i));
+                    numberOfFolders++;
                 }
             }
+
+            //Add account settings
+            drawerItems.add(ApplicationConstants.DRAWER_MY_ACCOUNT);
+            numberOfAccountItemsInDrawer = 1;
+
+            mailboxes = account.getMailbox();
+
+            if (mailboxes.size() > 1) {
+                drawerItems.add(ApplicationConstants.DRAWER_CHANGE_ACCOUNT);
+                numberOfAccountItemsInDrawer+=1;
+            }
+
+            drawerItems.add(ApplicationConstants.DRAWER_SETTINGS);
+            drawerItems.add(ApplicationConstants.DRAWER_HELP);
+            drawerItems.add(ApplicationConstants.DRAWER_LOGOUT);
+
+            numberOfAccountItemsInDrawer+=3;
         }
 
         //Add items to drawer
         drawerListitems = new String[drawerItems.size()];
         drawerListitems = drawerItems.toArray(drawerListitems);
-        drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, drawerListitems,fs,numberOfMailboxes, 0);
+
+        drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, drawerListitems,fs, 0);
         drawerList.setAdapter(drawerArrayAdapter);
 
         if(mailbox!= null) {
@@ -414,7 +477,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		SharedPreferencesUtilities.deleteRefreshtoken(this);
 		SharedPreferencesUtilities.deleteScreenlockChoice(this);
         ContentOperations.resetState();
-        numberOfMailboxes = 0;
         mailbox = null;
         account = null;
 		Intent intent = new Intent(MainContentActivity.this, LoginActivity.class);
@@ -424,6 +486,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	private void startUploadActivity() {
 		Intent intent = new Intent(MainContentActivity.this, UploadActivity.class);
+        intent.putExtra(ApiConstants.UPLOAD,getCurrentFragment().getContent());
 		startActivityForResult(intent, INTENT_REQUESTCODE);
 	}
 

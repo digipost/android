@@ -18,8 +18,6 @@ package no.digipost.android.constants;
 
 public class ApiConstants {
 
-	public static final String LOCATION_ARCHIVE = "ARCHIVE";
-	public static final String LOCATION_WORKAREA = "WORKAREA";
 	public static final String FILETYPE_PDF = "pdf";
 	public static final String FILETYPE_HTML = "html";
 	public static final String[] FILETYPES_IMAGE = { "jpg", "jpeg", "png" };
@@ -28,6 +26,7 @@ public class ApiConstants {
 
     public static final String MOVE = "move";
 	public static final String DELETE = "delete";
+    public static final String UPLOAD = "upload";
     public static final String REFRESH_ARCHIVE = "refreshArchive";
     public static final String LOGOUT = "logout";
 	public static final String FRAGMENT_ACTIVITY_RESULT_ACTION = "action";
@@ -62,6 +61,7 @@ public class ApiConstants {
 	public static final String URL_RELATIONS_DOCUMENT_WORKAREA = URL_RELATIONS + "document_workarea";
 	public static final String URL_RELATIONS_DOCUMENT_RECEIPTS = URL_RELATIONS + "receipts";
 	public static final String URL_RELATIONS_DOCUMENT_UPLOAD = URL_RELATIONS + "upload_document";
+    public static final String URL_RELATIONS_DOCUMENT_UPLOAD_TO_INBOX = URL_RELATIONS + "upload_document_to_inbox";
 	public static final String URL_RELATIONS_DOCUMENT_GET_CONTENT = URL_RELATIONS + "get_document_content";
 	public static final String URL_RELATIONS_DOCUMENT_SELF = URL_RELATIONS + "self";
 	public static final String URL_RELATIONS_DOCUMENT_UPDATE = URL_RELATIONS + "update_document";

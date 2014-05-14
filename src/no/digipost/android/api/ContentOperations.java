@@ -24,7 +24,6 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.CurrentBankAccount;
@@ -82,20 +81,28 @@ public class ContentOperations {
         if(content == ApplicationConstants.MAILBOX){
             return ApiAccess.getDocuments(context, mailbox.getInboxUri());
         }else {
-            content-=ApplicationConstants.numberOfStaticFolders;
-
+            content-= ApplicationConstants.numberOfStaticFolders;
             ArrayList<Folder> folders = mailbox.getFolders().getFolder();
-
-            if(MainContentActivity.numberOfMailboxes > 1) {
-                content -= MainContentActivity.numberOfMailboxes;
-            }
-
             Folder folder = folders.get(content);
             folder = ApiAccess.getFolderSelf(context, folder.getSelfUri());
 
             return folder.getDocuments();
         }
 	}
+
+    public static String getUploadUri(Context context, int content)throws DigipostApiException,
+            DigipostClientException, DigipostAuthenticationException {
+
+        getCurrentMailbox(context);
+
+        if(content == ApplicationConstants.MAILBOX){
+            return mailbox.getUploadUri();
+        }else {
+            content-=ApplicationConstants.numberOfStaticFolders;
+            ArrayList<Folder> folders = mailbox.getFolders().getFolder();
+            return folders.get(content).getUploadUri();
+        }
+    }
 
     public static void resetState(){
         digipostAddress = null;
@@ -172,9 +179,11 @@ public class ContentOperations {
 		}
 	}
 
-	public static void uploadFile(Context context, File file) throws DigipostClientException, DigipostAuthenticationException,
+	public static void uploadFile(Context context, File file, int content) throws DigipostClientException, DigipostAuthenticationException,
 			DigipostApiException {
-		ApiAccess.uploadFile(context, getCurrentMailbox(context).getUploadUri(), file);
+        String uploadUri = getUploadUri(context,content);
+        System.out.println("UploadUri:"+uploadUri);
+		ApiAccess.uploadFile(context, uploadUri, file);
 	}
 
     public static Settings getSettings(Context context) throws DigipostClientException, DigipostAuthenticationException, DigipostApiException {

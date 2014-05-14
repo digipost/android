@@ -16,27 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import no.digipost.android.R;
-import no.digipost.android.api.ContentOperations;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.gui.helpers.TextProgressBar;
-import no.digipost.android.model.PrimaryAccount;
-import no.digipost.android.utilities.ApplicationUtilities;
-import no.digipost.android.utilities.DataFormatUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
-
-import org.apache.commons.io.FilenameUtils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -71,6 +50,27 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import no.digipost.android.R;
+import no.digipost.android.api.ContentOperations;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.helpers.TextProgressBar;
+import no.digipost.android.model.PrimaryAccount;
+import no.digipost.android.utilities.ApplicationUtilities;
+import no.digipost.android.utilities.DataFormatUtilities;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
+
 public class UploadActivity extends Activity {
 	private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
 	private final String[] blockedFileContentTypes = { ApiConstants.TEXT_HTML };
@@ -84,6 +84,7 @@ public class UploadActivity extends Activity {
 	private TextView absolutePath;
 	private TextProgressBar availableSpace;
 	private TextView listEmpty;
+    private int content = 0;
 
 	private ActionMode uploadActionMode;
 
@@ -111,7 +112,7 @@ public class UploadActivity extends Activity {
 		listView.setMultiChoiceModeListener(new UploadMultiChoiceModeListener());
 		listAdapter = new UploadListAdapter(this, mFiles);
 		listView.setAdapter(listAdapter);
-
+        content = getIntent().getIntExtra(ApiConstants.UPLOAD,ApplicationConstants.MAILBOX);
 		executeSetAccountInfoTask();
 	}
 
@@ -314,12 +315,12 @@ public class UploadActivity extends Activity {
 	private void executeUploadTask(File file) {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(file);
-		UploadTask uploadTask = new UploadTask(files);
+		UploadTask uploadTask = new UploadTask(files,content);
 		uploadTask.execute();
 	}
 
 	private void executeUploadTask(ArrayList<File> files) {
-		UploadTask uploadTask = new UploadTask(files);
+		UploadTask uploadTask = new UploadTask(files,content);
 		uploadTask.execute();
 	}
 
@@ -547,13 +548,15 @@ public class UploadActivity extends Activity {
 		private ArrayList<File> files;
 		private boolean invalidToken;
 		private int progress;
+        private int content;
 
 		private ProgressDialog progressDialog;
 
-		public UploadTask(ArrayList<File> files) {
+		public UploadTask(ArrayList<File> files,int content) {
 			this.files = files;
 			this.progress = 0;
-		}
+            this.content = content;
+        }
 
 		@Override
 		protected void onPreExecute() {
@@ -577,7 +580,7 @@ public class UploadActivity extends Activity {
 					if (!isCancelled()) {
 						publishProgress(file);
 						progress++;
-						ContentOperations.uploadFile(UploadActivity.this, file);
+						ContentOperations.uploadFile(UploadActivity.this, file,content);
 					}
 				}
 

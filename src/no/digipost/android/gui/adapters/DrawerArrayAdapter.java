@@ -38,19 +38,17 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	private TextView unreadView;
 	private String[] links;
 	private int unreadLetters;
-    private int numberOfMailboxes;
 	private int currentView;
     private ArrayList<Folder> folders;
 
 
-	public DrawerArrayAdapter(final Context context, final int resource, final String[] links,ArrayList<Folder> folders, final int numberOfMailboxes, final int unreadLetters) {
+	public DrawerArrayAdapter(final Context context, final int resource, final String[] links,ArrayList<Folder> folders, final int unreadLetters) {
 		super(context, resource, links);
 		this.context = context;
 		this.links = links;
 		this.unreadLetters = unreadLetters;
 		currentView = ApplicationConstants.MAILBOX;
         this.folders = folders;
-        this.numberOfMailboxes = numberOfMailboxes;
 	}
 
 	public View getView(final int position, final View convertView, final ViewGroup parent) {
@@ -83,27 +81,29 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 
 		linkName.setText((CharSequence) links[position]);
 
-		if(position == ApplicationConstants.MAILBOX+numberOfMailboxes) {
+		if(position == ApplicationConstants.MAILBOX) {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope, 0, 0, 0);
             updateUnreadView(row);
-
-        }else if(position == ApplicationConstants.RECEIPTS+numberOfMailboxes){
+        }else if(position == ApplicationConstants.RECEIPTS){
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.credit_card, 0, 0, 0);
+        }else if(links[position].equals(ApplicationConstants.DRAWER_MY_FOLDERS)){
+            drawLabel(row);
+        }else if(links[position].equals(ApplicationConstants.DRAWER_MY_ACCOUNT)) {
+            drawLabel(row);
+        }else if(links[position].equals(ApplicationConstants.DRAWER_CHANGE_ACCOUNT)){
 
-        }else if(position == ApplicationConstants.MAILBOX_LABEL+numberOfMailboxes){
-            drawCategory(row);
+        }else if(links[position].equals(ApplicationConstants.DRAWER_SETTINGS)){
 
-        }else if(position == ApplicationConstants.FOLDERS_LABEL+numberOfMailboxes) {
-            drawCategory(row);
+        }else if(links[position].equals(ApplicationConstants.DRAWER_HELP)){
 
-        }else if(position < MainContentActivity.numberOfMailboxes+numberOfMailboxes) {
-            //Mailbox account
+        }else if(links[position].equals(ApplicationConstants.DRAWER_LOGOUT)) {
+
         }else{
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close, 0, 0, 0);
         }
 	}
 
-    private void drawCategory(View row){
+    private void drawLabel(View row){
         linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
         linkName.setTextSize(16);
         linkName.setGravity(Gravity.BOTTOM);
@@ -113,7 +113,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 
 	@Override
 	public boolean isEnabled(int position) {
-        if(position != ApplicationConstants.MAILBOX_LABEL+numberOfMailboxes && position != ApplicationConstants.FOLDERS_LABEL+numberOfMailboxes){
+        if(position != ApplicationConstants.FOLDERS_LABEL && position != MainContentActivity.numberOfFolders+ApplicationConstants.numberOfStaticFolders){
             return true;
         }else{
             return false;

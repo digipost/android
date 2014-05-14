@@ -98,22 +98,9 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem toArchive = menu.findItem(R.id.menu_image_html_unsupported_archive);
-		MenuItem toWorkarea = menu.findItem(R.id.menu_image_html_unsupported_workarea);
+		MenuItem move = menu.findItem(R.id.menu_image_html_move);
         sendToBank = menu.findItem(R.id.menu_image_html_unsupported_send_to_bank);
-
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
-
-        //TODO FIX
-        /*
-		if (content == ApplicationConstants.WORKAREA) {
-			toWorkarea.setVisible(false);
-		} else if (content == ApplicationConstants.ARCHIVE) {
-			toArchive.setVisible(false);
-		}
-		}
-		*/
-
         boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
         if (ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE) {
@@ -135,11 +122,8 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		case R.id.menu_image_html_unsupported_delete:
 			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;
-		case R.id.menu_image_html_unsupported_archive:
-			promtAction(getString(R.string.dialog_prompt_document_toArchive), ApiConstants.LOCATION_ARCHIVE);
-			return true;
-		case R.id.menu_image_html_unsupported_workarea:
-			promtAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
+		case R.id.menu_image_html_move:
+			showMoveToFolderDialog();
 			return true;
 		case R.id.menu_image_html_unsupported_open_external:
 			super.openFileWithIntent();

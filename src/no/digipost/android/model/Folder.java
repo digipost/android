@@ -5,6 +5,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.ArrayList;
 
+import no.digipost.android.constants.ApiConstants;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 
 public class Folder {
@@ -49,6 +51,10 @@ public class Folder {
 
     public Documents getDocuments(){
         return documents;
+    }
+
+    public String getUploadUri(){
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_UPLOAD);
     }
 
     private String getLinkByRelation(String relation) {
