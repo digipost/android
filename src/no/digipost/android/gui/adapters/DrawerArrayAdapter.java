@@ -37,6 +37,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	private TextView linkName;
 	private TextView unreadView;
 	private String[] links;
+    private View line;
 	private int unreadLetters;
 	private int currentView;
 	private ArrayList<Folder> folders;
@@ -57,6 +58,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		View row = inflater.inflate(R.layout.drawer_list_item, parent, false);
 		this.linkName = (TextView) row.findViewById(R.id.drawer_link_name);
 		this.unreadView = (TextView) row.findViewById(R.id.drawer_link_unread);
+        this.line = (View) row.findViewById(R.id.drawer_line);
 		setupLinkView(row, position);
 
 		return row;
@@ -147,7 +149,8 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		linkName.setGravity(Gravity.BOTTOM);
 		linkName.setTypeface(null, Typeface.BOLD);
 		linkName.setPadding(0, 0, 0, 5);
-	}
+        line.setVisibility(View.GONE);
+    }
 
 	@Override
 	public boolean isEnabled(int position) {
