@@ -70,37 +70,38 @@ public class ReceiptFragment extends ContentFragment {
 	}
 
 	private void checkStatusAndDisplayReceipts(Receipts receipts) {
+        if(isAdded()) {
+            ArrayList<Receipt> receipt = receipts.getReceipt();
+            ReceiptFragment.super.listAdapter.replaceAll(receipt);
 
-		ArrayList<Receipt> receipt = receipts.getReceipt();
-		ReceiptFragment.super.listAdapter.replaceAll(receipt);
+            int numberOfCards = Integer.parseInt(receipts.getNumberOfCards());
+            int numberOfCardsReadyForVerification = Integer.parseInt(receipts.getNumberOfCardsReadyForVerification());
+            int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(receipts.getNumberOfReceiptsHiddenUntilVerification());
 
-		int numberOfCards = Integer.parseInt(receipts.getNumberOfCards());
-		int numberOfCardsReadyForVerification = Integer.parseInt(receipts.getNumberOfCardsReadyForVerification());
-		int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(receipts.getNumberOfReceiptsHiddenUntilVerification());
+            if (receipt.size() == 0) {
+                if (numberOfCards == 0) {
+                    setListEmptyViewText(getString(R.string.emptyview_receipt_intro_title), getString(R.string.emptyview_receipt_intro_message));
+                } else if (numberOfCardsReadyForVerification > 0) {
+                    setListEmptyViewText(getString(R.string.emptyview_receipt_verification_title),
+                            getString(R.string.emptyview_receipt_verification_message));
+                } else {
+                    setListEmptyViewText(getString(R.string.emptyview_receipt_registrated_title),
+                            getString(R.string.emptyview_receipt_registrated_message));
+                }
+            } else {
+                if (numberOfCards == 0) {
 
-		if (receipt.size() == 0) {
-			if (numberOfCards == 0) {
-				setListEmptyViewText(getString(R.string.emptyview_receipt_intro_title), getString(R.string.emptyview_receipt_intro_message));
-			} else if (numberOfCardsReadyForVerification > 0) {
-				setListEmptyViewText(getString(R.string.emptyview_receipt_verification_title),
-						getString(R.string.emptyview_receipt_verification_message));
-			} else {
-				setListEmptyViewText(getString(R.string.emptyview_receipt_registrated_title),
-						getString(R.string.emptyview_receipt_registrated_message));
-			}
-		} else {
-			if (numberOfCards == 0) {
+                    setTopText(getString(R.string.receipt_toptext_register_cards));
+                } else if (numberOfReceiptsHiddenUntilVerification == 1) {
 
-				setTopText(getString(R.string.receipt_toptext_register_cards));
-			} else if (numberOfReceiptsHiddenUntilVerification == 1) {
+                    setTopText(getString(R.string.receipt_toptext_one_hidden_receipt));
+                } else if (numberOfCardsReadyForVerification > 1) {
 
-				setTopText(getString(R.string.receipt_toptext_one_hidden_receipt));
-			} else if (numberOfCardsReadyForVerification > 1) {
-
-				setTopText(getString(R.string.receipt_toptext_multiple_hidden_receipts_start) + numberOfReceiptsHiddenUntilVerification
-						+ getString(R.string.receipt_toptext_multiple_hidden_receipts_end));
-			}
-		}
+                    setTopText(getString(R.string.receipt_toptext_multiple_hidden_receipts_start) + numberOfReceiptsHiddenUntilVerification
+                            + getString(R.string.receipt_toptext_multiple_hidden_receipts_end));
+                }
+            }
+        }
 	}
 
 	public void updateAccountMeta() {

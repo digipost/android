@@ -211,8 +211,10 @@ public class DocumentFragment extends ContentFragment {
             String name = folder.getName();
 
             moveDocument(location,folderId,name);
-            folderDialog.dismiss();
-            folderDialog = null;
+            if(folderDialog != null) {
+                folderDialog.dismiss();
+                folderDialog = null;
+            }
         }
     }
 

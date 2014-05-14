@@ -323,8 +323,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
             Mailbox mailbox = mailboxAdapter.getItem(position);
             selectMailbox(mailbox.getDigipostaddress(),mailbox.getName());
-            mailboxDialog.dismiss();
-            mailboxDialog = null;
+            if(mailboxDialog != null) {
+                mailboxDialog.dismiss();
+                mailboxDialog = null;
+            }
         }
     }
 
