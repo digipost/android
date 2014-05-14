@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import no.digipost.android.constants.ApiConstants;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class Folder {
     @JsonProperty
     private String name;
