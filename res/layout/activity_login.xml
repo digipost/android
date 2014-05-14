@@ -20,15 +20,15 @@
     android:layout_height="match_parent"
     android:background="#D7DADE"
     android:orientation="vertical"
-    android:weightSum="6">
+    android:weightSum="13">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/actionbar_red_background"
         android:gravity="center"
+        android:layout_weight="6"
         android:orientation="vertical">
-
         <ImageView
             android:id="@+id/posten_logo"
             android:layout_width="111dp"
@@ -43,7 +43,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="469dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:background="@color/white"
         android:gravity="center"
         android:orientation="vertical">
@@ -123,15 +124,23 @@
         </LinearLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/login_privacyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#D7DADE"
-        android:focusable="true"
-        android:gravity="center|center_horizontal"
-        android:text="@string/login_privacybutton_text"
-        android:textColor="@color/login_grey_text"
-        android:textSize="18sp"
-        android:layout_gravity="center" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_weight="6"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/login_privacyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#D7DADE"
+            android:focusable="true"
+            android:gravity="center|center_horizontal"
+            android:text="@string/login_privacybutton_text"
+            android:textColor="@color/login_grey_text"
+            android:textSize="18sp"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
 </LinearLayout>
