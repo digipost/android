@@ -68,6 +68,7 @@
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:background="#3B3B3B"
+        android:layout_marginLeft="15dp"
         android:visibility="visible"
         />
 </RelativeLayout>
