@@ -19,13 +19,13 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:weightSum="6"
-              android:background="@color/login_background"
+              android:background="@color/white"
               android:layout_height="match_parent"
         >
 
     <LinearLayout
             android:orientation="vertical"
-            android:background="@color/screenlock_header_background"
+            android:background="@color/actionbar_red_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -57,13 +57,15 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/screenlock_message1"
-                android:gravity="left"
+                android:textColor="#000000"
+            android:gravity="left"
                 android:textSize="20sp"/>
 
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:textColor="#000000"
                 android:text="@string/screenlock_message2"
                 android:textSize="20sp"/>
     </LinearLayout>
@@ -72,7 +74,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
+            android:padding="40dp"
             android:gravity="center_vertical|center_horizontal"
             android:layout_gravity="center">
 

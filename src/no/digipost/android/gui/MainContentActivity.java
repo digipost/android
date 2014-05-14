@@ -391,14 +391,15 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private void updateTitles(){
         if(account != null) {
+            fragmentName = "";
             try {
                 if(showActionBarName){
-                    getActionBar().setTitle(mailbox.getName());
+                    fragmentName = mailbox.getName();
                 }else {
                     if (getActionBar().getTitle().equals("Digipost")) {
-                        fragmentName = ApplicationConstants.DRAWER_INBOX;
-                    } else if (getCurrentFragment().getContent() < ApplicationConstants.numberOfStaticFolders) {
-                        fragmentName = drawerListitems[getCurrentFragment().getContent()];
+
+                    } else if (drawerListitems[getCurrentFragment().getContent()].equals(ApplicationConstants.DRAWER_INBOX)) {
+                        fragmentName = mailbox.getName();
                     } else {
                         fragmentName = drawerListitems[getCurrentFragment().getContent()];
                     }
@@ -419,9 +420,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         //Add main menu
         drawerItems.add(ApplicationConstants.DRAWER_INBOX);
         drawerItems.add(ApplicationConstants.DRAWER_RECEIPTS);
-        drawerItems.add(ApplicationConstants.DRAWER_MY_ACCOUNT);
+        drawerItems.add(ApplicationConstants.DRAWER_MY_FOLDERS);
 
         ArrayList<Folder> fs = null;
+
         if(account != null) {
 
             //Add folders
