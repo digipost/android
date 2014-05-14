@@ -82,8 +82,8 @@ public class LoginActivity extends Activity {
 					}
 				}
 			});
-        privacyButton.setTextColor(getResources().getColor(R.color.black));
-        registrationButton.setTextColor(getResources().getColor(R.color.black));
+        privacyButton.setTextColor(getResources().getColor(R.color.login_grey_text));
+        registrationButton.setTextColor(getResources().getColor(R.color.login_grey_text));
 
 	}
 

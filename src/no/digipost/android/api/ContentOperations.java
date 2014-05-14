@@ -121,7 +121,6 @@ public class ContentOperations {
 
     public static ArrayList<Mailbox> getMailboxes(Context context) throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
-
         return getAccount(context).getMailbox();
     }
 

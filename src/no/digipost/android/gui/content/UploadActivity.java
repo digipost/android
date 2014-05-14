@@ -65,7 +65,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.helpers.TextProgressBar;
-import no.digipost.android.model.PrimaryAccount;
+import no.digipost.android.model.Mailbox;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
@@ -189,9 +189,9 @@ public class UploadActivity extends Activity {
 		listAdapter.notifyDataSetChanged();
 	}
 
-	private void setAvailableSpace(PrimaryAccount primaryAccount) {
-		long bytesUsed = Long.parseLong(primaryAccount.getUsedStorage());
-		long bytesAvailable = Long.parseLong(primaryAccount.getTotalAvailableStorage());
+	private void setAvailableSpace(Mailbox mailbox) {
+		long bytesUsed = Long.parseLong(mailbox.getUsedStorage());
+		long bytesAvailable = Long.parseLong(mailbox.getTotalAvailableStorage());
 
 		int percentUsed = (int) ((bytesUsed * 100) / bytesAvailable);
 
@@ -324,8 +324,8 @@ public class UploadActivity extends Activity {
 		uploadTask.execute();
 	}
 
-	private void setAccountInfo(PrimaryAccount primaryAccount) {
-		setAvailableSpace(primaryAccount);
+	private void setAccountInfo(Mailbox mailbox) {
+		setAvailableSpace(mailbox);
 		availableSpace.setVisibility(View.VISIBLE);
 	}
 
@@ -334,12 +334,12 @@ public class UploadActivity extends Activity {
 		setAccountInfoTask.execute();
 	}
 
-	private class SetAccountInfoTask extends AsyncTask<Void, Void, PrimaryAccount> {
+	private class SetAccountInfoTask extends AsyncTask<Void, Void, Mailbox> {
 
 		@Override
-		protected PrimaryAccount doInBackground(Void... voids) {
+		protected Mailbox doInBackground(Void... voids) {
 			try {
-				return ContentOperations.getAccountUpdated(UploadActivity.this).getPrimaryAccount();
+				return ContentOperations.getCurrentMailbox(UploadActivity.this);
 			} catch (DigipostApiException e) {
 				return null;
 			} catch (DigipostClientException e) {
@@ -350,11 +350,11 @@ public class UploadActivity extends Activity {
 		}
 
 		@Override
-		protected void onPostExecute(PrimaryAccount primaryAccount) {
-			super.onPostExecute(primaryAccount);
+		protected void onPostExecute(Mailbox mailbox) {
+			super.onPostExecute(mailbox);
 
-			if (primaryAccount != null) {
-				setAccountInfo(primaryAccount);
+			if (mailbox != null) {
+				setAccountInfo(mailbox);
 			}
 		}
 	}
