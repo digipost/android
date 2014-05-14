@@ -401,7 +401,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     fragmentName = mailbox.getName();
                 }else {
                     if (getActionBar().getTitle().equals("Digipost") || getActionBar().getTitle().equals("")) {
-
+                        if(mailbox != null){
+                            fragmentName = mailbox.getName();
+                        }
                     } else if (drawerListitems[getCurrentFragment().getContent()].equals(ApplicationConstants.DRAWER_INBOX)) {
                         fragmentName = mailbox.getName();
                     } else {
