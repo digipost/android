@@ -273,10 +273,9 @@ public class ApiAccess {
                 httpPost.setEntity(multipartEntity);
 
                 HttpResponse httpResponse = httpClient.execute(httpPost);
-
                 httpClient.getConnectionManager().shutdown();
-
                 NetworkUtilities.checkHttpStatusCode(context, httpResponse.getStatusLine().getStatusCode());
+
             } catch (DigipostInvalidTokenException e) {
                 OAuth2.updateAccessToken(context);
                 uploadFile(context, uri, file);

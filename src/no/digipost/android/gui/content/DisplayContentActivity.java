@@ -321,7 +321,7 @@ public abstract class DisplayContentActivity extends Activity {
         moveToFolderListView.setAdapter(folderAdapter);
         moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
 
-        builder.setTitle("Flytt");
+        builder.setTitle("Flytt til");
         alertDialog = builder.create();
         alertDialog.show();
     }

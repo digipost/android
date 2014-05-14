@@ -96,7 +96,7 @@ public class ContentOperations {
         getCurrentMailbox(context);
 
         if(content == ApplicationConstants.MAILBOX){
-            return mailbox.getUploadUri();
+            return mailbox.getUploadToInboxUri();
         }else {
             content-=ApplicationConstants.numberOfStaticFolders;
             ArrayList<Folder> folders = mailbox.getFolders().getFolder();
@@ -181,7 +181,6 @@ public class ContentOperations {
 	public static void uploadFile(Context context, File file, int content) throws DigipostClientException, DigipostAuthenticationException,
 			DigipostApiException {
         String uploadUri = getUploadUri(context,content);
-        System.out.println("UploadUri:"+uploadUri);
 		ApiAccess.uploadFile(context, uploadUri, file);
 	}
 

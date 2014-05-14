@@ -241,7 +241,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 }else if (action.equals(ApiConstants.LOGOUT)) {
 					logOut();
 				}
-
 			}
 		}
 	}

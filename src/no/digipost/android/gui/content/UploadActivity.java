@@ -625,7 +625,7 @@ public class UploadActivity extends Activity {
 				DialogUtitities.showToast(UploadActivity.this, result);
 			} else {
 				DialogUtitities.showToast(UploadActivity.this, getString(R.string.upload_complete));
-				finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
+				finishActivityWithAction(ApiConstants.UPLOAD);
 			}
 		}
 	}
