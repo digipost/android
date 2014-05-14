@@ -182,13 +182,7 @@ public abstract class ContentFragment extends Fragment {
     protected String getContentTypeString(int count) {
         String type = "";
 
-        if (getContent() == ApplicationConstants.MAILBOX) {
-            if (count > 1) {
-                type = "brevene";
-            } else {
-                type = "brevet";
-            }
-        } else if (getContent() == ApplicationConstants.RECEIPTS) {
+       if(getContent() == ApplicationConstants.RECEIPTS) {
             if (count > 1) {
                 type = "kvitteringene";
             } else {

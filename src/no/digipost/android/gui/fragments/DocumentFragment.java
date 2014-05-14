@@ -172,9 +172,9 @@ public class DocumentFragment extends ContentFragment {
             if(MainContentActivity.fragmentName != null) {
 
                 //Postkassen
-                if (!MainContentActivity.fragmentName.equals("Postkassen")) {
+                if (!MainContentActivity.fragmentName.equals(ApplicationConstants.DRAWER_INBOX)) {
                     Folder postkassen = new Folder();
-                    postkassen.setName("Postkassen");
+                    postkassen.setName(ApplicationConstants.DRAWER_INBOX);
                     folders.add(0, postkassen);
                 }
 
@@ -219,7 +219,7 @@ public class DocumentFragment extends ContentFragment {
 	private void showAttachmentDialog(final Document document, int listPosition) {
 		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.close),
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.abort),
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -312,7 +312,7 @@ public class DocumentFragment extends ContentFragment {
 
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
 
-		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+		builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
 				dialogInterface.cancel();
