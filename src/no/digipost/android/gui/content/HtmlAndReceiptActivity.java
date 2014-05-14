@@ -121,7 +121,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
             deleteAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;
 		case R.id.htmlmenu_move:
-
+            showMoveToFolderDialog();
 			return true;
 		}
 

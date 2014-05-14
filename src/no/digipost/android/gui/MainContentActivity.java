@@ -87,7 +87,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     public static ArrayList<Folder> folders;
     private Dialog mailboxDialog;
     public static int numberOfFolders;
-    private int numberOfAccountItemsInDrawer;
     private boolean showActionBarName;
     private Mailbox mailbox;
     private ArrayList<Mailbox> mailboxes;
@@ -175,8 +174,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 		MenuItem uploadButton = menu.findItem(R.id.menu_upload);
-		uploadButton.setVisible(!drawerOpen);
-		refreshButton.setVisible(!drawerOpen);
+        if(getCurrentFragment().getContent()==ApplicationConstants.RECEIPTS){
+            uploadButton.setVisible(false);
+        }else {
+            uploadButton.setVisible(!drawerOpen);
+        }
+        refreshButton.setVisible(!drawerOpen);
 		searchButton.setVisible(!drawerOpen);
 
 		return super.onPrepareOptionsMenu(menu);
@@ -441,20 +444,17 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             //Add account settings
             drawerItems.add(ApplicationConstants.DRAWER_MY_ACCOUNT);
-            numberOfAccountItemsInDrawer = 1;
 
             mailboxes = account.getMailbox();
 
             if (mailboxes.size() > 1) {
                 drawerItems.add(ApplicationConstants.DRAWER_CHANGE_ACCOUNT);
-                numberOfAccountItemsInDrawer+=1;
             }
 
             drawerItems.add(ApplicationConstants.DRAWER_SETTINGS);
             drawerItems.add(ApplicationConstants.DRAWER_HELP);
             drawerItems.add(ApplicationConstants.DRAWER_LOGOUT);
 
-            numberOfAccountItemsInDrawer+=3;
         }
 
         //Add items to drawer
