@@ -36,7 +36,6 @@
         android:icon="@drawable/ic_launcher"
         android:label=""
         android:vmSafeMode="true"
-        android:allowClearUserData="true"
         android:hardwareAccelerated="true"
         android:theme="@style/Digipost">
 
