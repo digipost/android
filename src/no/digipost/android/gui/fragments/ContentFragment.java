@@ -351,6 +351,7 @@ public abstract class ContentFragment extends Fragment {
 			MenuInflater inflater = actionMode.getMenuInflater();
 			inflater.inflate(R.menu.activity_main_content_context, menu);
 			listAdapter.setCheckboxVisible(true);
+            listAdapter.setContentTypeImageVisible(false);
 
 			return true;
 		}
@@ -368,6 +369,7 @@ public abstract class ContentFragment extends Fragment {
 		@Override
 		public void onDestroyActionMode(ActionMode actionMode) {
 			listAdapter.setCheckboxVisible(false);
+            listAdapter.setContentTypeImageVisible(true);
 			listAdapter.clearChecked();
 			context.setTheme(R.style.Digipost);
 			contentActionMode = null;

@@ -45,12 +45,14 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 
 	protected boolean[] checked;
 	protected boolean checkboxVisible;
+    protected boolean hideContentTypeImage;
 
 	protected TextView title;
 	protected TextView subTitle;
 	protected TextView metaTop;
 	protected TextView metaMiddle;
 	protected ImageView metaBottom;
+    protected ImageView contentTypeImage;
 
 	protected Filter contentFilter;
 
@@ -82,6 +84,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		this.metaTop = (TextView) row.findViewById(R.id.content_meta_top);
 		this.metaMiddle = (TextView) row.findViewById(R.id.content_meta_middle);
 		this.metaBottom = (ImageView) row.findViewById(R.id.content_meta_bottom);
+        this.contentTypeImage = (ImageView) row.findViewById((R.id.content_type_image));
 
 		CheckBox checkBox = (CheckBox) row.findViewById(R.id.content_checkbox);
         checkBox.setFocusable(false);
@@ -189,6 +192,12 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		initializeChecked();
 		notifyDataSetChanged();
 	}
+
+    public void setContentTypeImageVisible(boolean state){
+        hideContentTypeImage = !state;
+        initializeChecked();
+        notifyDataSetChanged();
+    }
 
 	public void clearChecked() {
 		initializeChecked();
