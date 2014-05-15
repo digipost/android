@@ -400,7 +400,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 if(showActionBarName){
                     fragmentName = mailbox.getName();
                 }else {
-                    if (getActionBar().getTitle().equals("Digipost") || getActionBar().getTitle().equals("")) {
+                    if (getActionBar().getTitle().equals("")) {
                         if(mailbox != null){
                             fragmentName = mailbox.getName();
                         }
@@ -444,21 +444,23 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     numberOfFolders++;
                 }
             }
+        }
 
-            //Add account settings
-            drawerItems.add(ApplicationConstants.DRAWER_MY_ACCOUNT);
+        //Add account settings
+        drawerItems.add(ApplicationConstants.DRAWER_MY_ACCOUNT);
 
+        if(account != null) {
             mailboxes = account.getMailbox();
 
             if (mailboxes.size() > 1) {
                 drawerItems.add(ApplicationConstants.DRAWER_CHANGE_ACCOUNT);
             }
-
-            drawerItems.add(ApplicationConstants.DRAWER_SETTINGS);
-            drawerItems.add(ApplicationConstants.DRAWER_HELP);
-            drawerItems.add(ApplicationConstants.DRAWER_LOGOUT);
-
         }
+
+        drawerItems.add(ApplicationConstants.DRAWER_SETTINGS);
+        drawerItems.add(ApplicationConstants.DRAWER_HELP);
+        drawerItems.add(ApplicationConstants.DRAWER_LOGOUT);
+
 
         //Add items to drawer
         drawerListitems = new String[drawerItems.size()];

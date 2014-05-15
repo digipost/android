@@ -5,6 +5,7 @@
     <color name="main_drawer_grey_background">#292B2B</color>
     <color name="main_drawer_grey_text">#595959</color>
     <color name="main_drawer_text">#F5F5F5</color>
+    <color name="main_drawer_account_text">#A1A1A1</color>
     <color name="main_drawer_focused">#17191A</color>
     <color name="main_dark_grey">#2D2E30</color>
     <color name="main_drawer_divider">#333436</color>
@@ -14,7 +15,7 @@
     <color name="actionbar_title_color">#FFF</color>
     <color name="actionbar_subtitle_color">#f2f2f2</color>
     <color name="actionbar_red_background">#e2251b</color>
-    <color name="searchbar_grey_hint">#e1e1e1</color>
+    <color name="searchbar_grey_hint">#FFF</color>
     <color name="actionbar_button_pressed_dark_red">#B00</color>
     <color name="actionbar_button_pressed_medium_red">#CF0404</color>
 

@@ -44,7 +44,11 @@ public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
         Document document = super.filtered.get(position);
 
 		super.title.setText(document.getSubject());
-		super.subTitle.setText(document.getCreatorName());
+        if("UPLOADED".equals(document.getOrigin())){
+            super.subTitle.setText("Opplastet");
+        }else {
+            super.subTitle.setText(document.getCreatorName());
+        }
 		super.metaTop.setText(DataFormatUtilities.getFormattedDate(document.getCreated()));
 		super.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(document.getFileSize())));
 
@@ -83,7 +87,7 @@ public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
 		} else if (document.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
 			setMetaBottomDrawable(R.drawable.lock_dark);
 		} else if (document.hasOpeningReceipt()) {
-			setMetaBottomDrawable(R.drawable.exclamation_sign_dark);
+			setMetaBottomDrawable(R.drawable.aapningskvittering_32);
 		}else if(document.getType().equals(ApiConstants.INVOICE)){
             if(ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE){
                 setMetaBottomDrawable(R.drawable.money_dark);

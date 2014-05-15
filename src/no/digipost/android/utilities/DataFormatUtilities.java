@@ -76,7 +76,7 @@ public class DataFormatUtilities {
 	}
 
 	public static String getFormattedCurrency(final String currency) {
-		if (currency.equals("NOK")) {
+		if ("NOK".equals(currency)) {
 			return "kr.";
 		}
 

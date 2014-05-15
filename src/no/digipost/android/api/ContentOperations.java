@@ -61,6 +61,8 @@ public class ContentOperations {
             mailbox = getAccount(context).getMailboxByDigipostAddress(digipostAddress);
         }
 
+
+
         return mailbox;
     }
 
@@ -70,18 +72,21 @@ public class ContentOperations {
 
 	public static Account getAccountUpdated(Context context) throws DigipostClientException, DigipostAuthenticationException,
 			DigipostApiException {
-		return ApiAccess.getAccount(context);
+
+        mailbox = null;
+        account = ApiAccess.getAccount(context);
+		return account;
 	}
 
 	public static Documents getAccountContentMetaDocument(Context context, int content) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {
-
         getCurrentMailbox(context);
 
         if(content == ApplicationConstants.MAILBOX){
             return ApiAccess.getDocuments(context, mailbox.getInboxUri());
         }else {
             content-= ApplicationConstants.numberOfStaticFolders;
+            mailbox = getCurrentMailbox(context);
             ArrayList<Folder> folders = mailbox.getFolders().getFolder();
             Folder folder = folders.get(content);
             folder = ApiAccess.getFolderSelf(context, folder.getSelfUri());

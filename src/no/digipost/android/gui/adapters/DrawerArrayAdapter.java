@@ -84,11 +84,11 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		linkName.setText((CharSequence) links[position]);
 
 		if (position == ApplicationConstants.MAILBOX) {
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope, 0, 0, 0);
+			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.inbox_32, 0, 0, 0);
 			updateUnreadView(row);
 
 		} else if (position == ApplicationConstants.RECEIPTS) {
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.credit_card, 0, 0, 0);
+			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tag_32, 0, 0, 0);
 
 		} else if (links[position].equals(ApplicationConstants.DRAWER_MY_FOLDERS)) {
 			drawLabel(row);
@@ -98,15 +98,20 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 
 		} else if (links[position].equals(ApplicationConstants.DRAWER_CHANGE_ACCOUNT)) {
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.account_32px, 0, 0, 0);
+            drawAccountItem();
 
 		} else if (links[position].equals(ApplicationConstants.DRAWER_SETTINGS)) {
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.admin_32px, 0, 0, 0);
+            drawAccountItem();
 
 		} else if (links[position].equals(ApplicationConstants.DRAWER_HELP)) {
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.help_32px, 0, 0, 0);
+            drawAccountItem();
 
 		} else if (links[position].equals(ApplicationConstants.DRAWER_LOGOUT)) {
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.logout_32px, 0, 0, 0);
+            line.setVisibility(View.GONE);
+            drawAccountItem();
 		} else {
 
 			CharSequence type = "FOLDER";
@@ -136,12 +141,15 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 			} else if (type.equals("CAMERA")) {
 				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.camera32, 0, 0, 0);
 			} else if (type.equals("MONEY")) {
-                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.usa_32, 0, 0, 0);
+                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.usd_32, 0, 0, 0);
 			} else {
 				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close, 0, 0, 0);
 			}
 		}
 	}
+    private void drawAccountItem(){
+        //linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_account_text));
+    }
 
 	private void drawLabel(View row) {
 		linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
