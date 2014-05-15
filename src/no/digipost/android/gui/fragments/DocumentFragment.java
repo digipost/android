@@ -166,26 +166,35 @@ public class DocumentFragment extends ContentFragment {
     }
 
     private ArrayList<Folder> getMoveFolders(){
-        ArrayList<Folder> folders = new ArrayList<Folder>();
+        ArrayList<Folder> moveLocations = new ArrayList<Folder>();
 
         if(MainContentActivity.folders != null){
             if(MainContentActivity.fragmentName != null) {
 
-                //Postkassen
-                if (!MainContentActivity.fragmentName.equals(ApplicationConstants.DRAWER_INBOX)) {
-                    Folder postkassen = new Folder();
-                    postkassen.setName(ApplicationConstants.DRAWER_INBOX);
-                    folders.add(0, postkassen);
-                }
 
-                //Mapper
-                for (Folder f : MainContentActivity.folders) {
-                    if (!MainContentActivity.fragmentName.equals(f.getName())) {
-                        folders.add(f);
+                if(MainContentActivity.folders != null) {
+
+                    //Mapper
+                    ArrayList<Folder> folders = new ArrayList<Folder>();
+                    for (Folder f : MainContentActivity.folders) {
+                        if (!MainContentActivity.fragmentName.equals(f.getName())) {
+                            folders.add(f);
+                        }
+                    }
+
+                    //Postkassen
+                    if (folders.size() != MainContentActivity.folders.size()) {
+                        Folder postkassen = new Folder();
+                        postkassen.setName(ApplicationConstants.DRAWER_INBOX);
+                        moveLocations.add(0, postkassen);
+                    }
+
+                    for(Folder f: folders){
+                        moveLocations.add(f);
                     }
                 }
             }
-            return folders;
+            return moveLocations;
         }else{
             return null;
         }
@@ -221,7 +230,7 @@ public class DocumentFragment extends ContentFragment {
 	private void showAttachmentDialog(final Document document, int listPosition) {
 		LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.abort),
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.close),
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {

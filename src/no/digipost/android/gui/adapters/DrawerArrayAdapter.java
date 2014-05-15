@@ -118,7 +118,9 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 			if (type.equals("PAPER")) {
 				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.file_32, 0, 0, 0);
 			} else if (type.equals("TAGS")) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tags_32, 0, 0, 0);
+                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tags_32, 0, 0, 0);
+            }else if(type.equals("LETTER")) {
+                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope_32, 0, 0, 0);
 			} else if (type.equals("HEART")) {
 				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.heart_32, 0, 0, 0);
 			} else if (type.equals("TROPHY")) {
@@ -133,10 +135,8 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.suitcase_32, 0, 0, 0);
 			} else if (type.equals("CAMERA")) {
 				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.camera32, 0, 0, 0);
-			} else if (type.equals("TICKET")) {
-				// TODO LEGG INN TICKET BILDE
-				// linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ticket,
-				// 0, 0, 0);
+			} else if (type.equals("MONEY")) {
+                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.usa_32, 0, 0, 0);
 			} else {
 				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close, 0, 0, 0);
 			}

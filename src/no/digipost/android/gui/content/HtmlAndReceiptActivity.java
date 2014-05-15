@@ -97,7 +97,10 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
         MenuItem move = menu.findItem(R.id.htmlmenu_move);
-        move.setVisible(true);
+
+        if (content_type != ApplicationConstants.RECEIPTS) {
+            move.setVisible(true);
+        }
 
         boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
@@ -151,6 +154,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 			Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
 			getActionBar().setTitle(receiptMeta.getStoreName());
 			getActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+
 		}
 	}
 

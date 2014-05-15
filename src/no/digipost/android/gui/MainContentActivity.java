@@ -305,11 +305,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         builder.setView(view);
 
-        ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+        ListView mailboxListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
 
         mailboxAdapter = new MailboxArrayAdapter(this, R.layout.attachmentdialog_list_item, mailboxes);
-        moveToFolderListView.setAdapter(mailboxAdapter);
-        moveToFolderListView.setOnItemClickListener(new ChangeMailboxListOnItemClickListener());
+        mailboxListView.setAdapter(mailboxAdapter);
+        mailboxListView.setOnItemClickListener(new ChangeMailboxListOnItemClickListener());
 
         builder.setTitle(ApplicationConstants.DRAWER_CHANGE_ACCOUNT);
         mailboxDialog = builder.create();
