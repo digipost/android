@@ -28,6 +28,7 @@
     <color name="list_divider">#DBDBDB</color>
     <color name="list_element_opened">#EBEBEB</color>
     <color name="toptext_background">#292b2d</color>
+    <color name="search_highlight_color">#EBEB86</color>
 
     <!-- Misc -->
     <color name="transparent">#00000000</color>

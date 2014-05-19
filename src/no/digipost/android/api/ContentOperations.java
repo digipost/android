@@ -124,11 +124,6 @@ public class ContentOperations {
         return false;
     }
 
-    public static ArrayList<Mailbox> getMailboxes(Context context) throws DigipostClientException, DigipostAuthenticationException,
-            DigipostApiException {
-        return getAccount(context).getMailbox();
-    }
-
     public static CurrentBankAccount getCurrentBankAccount(Context context) throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
         String uri = getCurrentMailbox(context).getCurrentBankAccountUri();

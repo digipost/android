@@ -46,6 +46,10 @@ public class ReceiptArrayAdapter extends ContentArrayAdapter<Receipt> {
 		super.subTitle.setTextColor(context.getResources().getColor(R.color.green));
 		super.setFilterTextColor();
 
+        if (super.hideContentTypeImage) {
+            super.contentTypeImage.setVisibility(View.GONE);
+        }
+
 		return row;
 	}
 

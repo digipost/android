@@ -39,6 +39,8 @@ import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
+import static java.lang.String.format;
+
 public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
 	@Override
@@ -48,7 +50,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		ApplicationUtilities.setScreenRotationFromPreferences(this);
 
 		if (DocumentContentStore.getDocumentContent() == null) {
-			DialogUtitities.showToast(this, "En feil oppstod under åpning av dokumentet.");
+			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
 			finish();
 		}
 
@@ -57,7 +59,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
 
 		TextView message = (TextView) findViewById(R.id.unsupported_message);
-		message.setText(getString(R.string.unsupported_message_top) + " (." + DocumentContentStore.getDocumentAttachment().getFileType() + ").");
+		message.setText(format(getString(R.string.unsupported_message_top), DocumentContentStore.getDocumentAttachment().getFileType()));
 
 		Button open = (Button) findViewById(R.id.unsupported_open_button);
 		open.setOnClickListener(new View.OnClickListener() {

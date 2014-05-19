@@ -24,6 +24,7 @@
     <string name="yes">Ja</string>
     <string name="delete">Slett</string>
     <string name="move">Flytt</string>
+    <string name="move_to">Flytt til</string>
     <string name="open">Åpne</string>
     <string name="back">Tilbake</string>
     <string name="preview">Forhåndsvis</string>
@@ -33,6 +34,7 @@
     <string name="save">Lagre til telefonen</string>
     <string name="open_external">Åpne i en annen app</string>
     <string name="saving">Lagrer…</string>
+    <string name="uploaded">Opplastet</string>
 
     <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjon som flytt og slett</string>
 
@@ -55,9 +57,18 @@
     <!-- Receipt TopText -->
     <string name="receipt_toptext_register_cards">For å motta elektroniske kvitteringer må du legge til et bankkort</string>
     <string name="receipt_toptext_one_hidden_receipt">En kvittering er skjult. For å se denne må du verifisere ditt bankkort</string>
-    <string name="receipt_toptext_multiple_hidden_receipts_start">Du har\u0020</string>
-    <string name="receipt_toptext_multiple_hidden_receipts_end">\u0020skjulte kvitteringer. For å se disse må du verifisere ditt bankkort</string>
+    <string name="receipt_toptext_multiple_hidden_receipts">Du har %1$d skjulte kvitteringer. For å se disse må du verifisere ditt bankkort</string>
 
+    <!-- ContentFragment -->
+    <string name="receipt_singular">kvitteringen</string>
+    <string name="receipt_plural">kvitteringene</string>
+    <string name="document_singular">dokumentet</string>
+    <string name="document_plural">dokumentene</string>
+    <string name="delete_multiple">Vil du slette disse %1$d %2$s?</string>
+    <string name="delete_single">Vil du slette %1$s %2$s?</string>
+    <string name="delete_progress_document">Sletter %1$s (%2$d/%3$d)</string>
+    <string name="delete_progress_receipt">Sletter %1$s %2$s (%3$d/%4$d)</string>
+    <string name="delete_cancelled">%1$d av %2$d slettet.</string>
 
     <!-- LoginActivity -->
     <string name="login_loginbutton_text">Logg inn</string>
@@ -69,7 +80,6 @@
 
     <!-- ContextMenu -->
     <string name="context_refresh">Oppdater</string>
-    <string name="context_move_to">Flytt til</string>
 
     <!-- PDF -->
     <string name="pdf_no_further_occurences_found">Ingen flere treff funnet.</string>
@@ -85,17 +95,19 @@
 
     <!-- Upload -->
     <string name="upload">Last opp</string>
-    <string name="uploading">Laster opp\u0020</string>
+    <string name="uploading">Laster opp %1$s (%2$d/%3$d)</string>
     <string name="upload_dialog">Er du sikker på at du vil laste opp\u0020</string>
     <string name="upload_folder_exception">Mapper kan ikke lastes opp</string>
     <string name="upload_space_used">% lagringsplass brukt</string>
-    <string name="upload_files_uploaded">\u0020filer ble lastet opp.</string>
+    <string name="upload_files_uploaded">%1$d av %2$d filer ble lastet opp.</string>
     <string name="upload_complete">Opplastning fullført.</string>
+    <string name="upload_confirm_single">Vil du laste opp denne filen?</string>
+    <string name="upload_confirm_multiple">Vil du laste opp disse %1$d filene?</string>
 
     <string name="no_files">Ingen filer</string>
 
     <!-- Unsupported -->
-    <string name="unsupported_message_top">Digipost-appen kan ikke vise denne filtypen</string>
+    <string name="unsupported_message_top">Digipost-appen kan ikke vise denne filtypen (.%1$s).</string>
 
     <!-- Preferences -->
     <string name="preferences">Innstillinger</string>
@@ -148,8 +160,10 @@
         denne filtypen.
     </string>
     <string name="error_failed_to_open_with_intent">En feil oppstod under åpning av filen.</string>
+    <string name="error_failed_to_open_document">En feil oppstod under åpning av dokumentet.</string>
     <string name="error_no_connection">Ingen forbindelse</string>
     <string name="error_try_again">Prøv igjen</string>
+    <string name="error_invalid_format">Ugyldig format</string>
 
     <!-- Prompts -->
     <string name="sent_to_bank">Sendt til nettbank</string>
@@ -157,15 +171,14 @@
     <string name="dialog_send_to_bank">Send til nettbank</string>
     <string name="dialog_send_to_bank_not_paid_title">Vil du legge fakturaen i forfallsregisteret i nettbanken?</string>
     <string name="dialog_send_to_bank_not_paid_message_start">Fakturaen vil bli betalt på forfallsdatoen. Hvis du vil endre eller se på selve betalingen senere, må du logge inn i din nettbank.</string>
-    <string name="dialog_send_to_bank_not_paid_message_end">Følgende konto vil belastes:</string>
+    <string name="dialog_send_to_bank_not_paid_message_end">Følgende konto vil belastes:\n%1$s</string>
 
     <string name="dialog_send_to_bank_paid_title">Fakturaen er lagt til forfall</string>
-    <string name="dialog_send_to_bank_paid_message_start">Denne fakturaen ble sendt til nettbanken\u0020</string>
-    <string name="dialog_send_to_bank_paid_message_end">Hvis du vil endre eller se på selve betalingen, må du logge inn i din nettbank.</string>
+    <string name="dialog_send_to_bank_paid_message">Denne fakturaen ble sendt til nettbanken %1$s.\n\nHvis du vil endre eller se på selve betalingen, må du logge inn i din nettbank.</string>
 
     <string name="dialog_send_to_bank_not_enabled_title">Send fakturaer til nettbanken med ett trykk</string>
-    <string name="dialog_send_to_bank_not_enabled_message_start">Dine fakturaer kan nå legges til forfall med kun ett trykk, etter at du har spesifisert hvilken nettbank du bruker.</string>
-    <string name="dialog_send_to_bank_not_enabled_message_end">Dette trenger du bare å gjøre en gang, og gjøres enkelt via innstillinger på digipost.no, ved hjelp av din datamaskin.</string>
+    <string name="dialog_send_to_bank_not_enabled_message">Dine fakturaer kan nå legges til forfall med kun ett trykk, etter at du har spesifisert hvilken nettbank du bruker.\n\n
+        Dette trenger du bare å gjøre en gang, og gjøres enkelt via innstillinger på digipost.no, ved hjelp av din datamaskin.</string>
 
     <string name="dialog_opening_receipt_yes">Åpne og send kvittering</string>
     <string name="dialog_opening_receipt_title">Avsender krever lesekvittering</string>

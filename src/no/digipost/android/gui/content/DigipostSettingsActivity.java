@@ -96,7 +96,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 	}
 
 	private void showInvalidInputDialog(String message) {
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, "Ugyldig format");
+		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, getString(R.string.error_invalid_format));
 		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i) {
@@ -118,7 +118,7 @@ public abstract class DigipostSettingsActivity extends Activity {
 				}
 			});
 		} else {
-			settingsButton.setText("Prøv igjen");
+			settingsButton.setText(R.string.error_try_again);
 			settingsButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {

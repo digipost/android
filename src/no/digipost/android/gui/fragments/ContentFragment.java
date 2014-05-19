@@ -52,6 +52,8 @@ import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
 
+import static java.lang.String.format;
+
 public abstract class ContentFragment extends Fragment {
 	public static final String INTENT_CONTENT = "content";
     public static final String INTENT_SEND_TO_BANK = "sendToBank";
@@ -180,33 +182,32 @@ public abstract class ContentFragment extends Fragment {
 	}
 
     protected String getContentTypeString(int count) {
-        String type;
-
-       if(getContent() == ApplicationConstants.RECEIPTS) {
+        int res;
+        if (getContent() == ApplicationConstants.RECEIPTS) {
             if (count > 1) {
-                type = "kvitteringene";
+                res = R.string.receipt_plural;
             } else {
-                type = "kvitteringen";
+                res = R.string.receipt_singular;
             }
         } else {
             if (count > 1) {
-                type = "dokumentene";
+                res = R.string.document_plural;
             } else {
-                type = "dokumentet";
+                res = R.string.document_singular;
             }
         }
-
-        return type;
+        return getString(res);
     }
 
 	protected String getActionDeletePromtString(int count) {
 		String type = getContentTypeString(count);
 
 		if (count > 1) {
-			return "Vil du slette disse " + count + " " + type + "?";
+			return format(getString(R.string.delete_multiple), count, type);
 		}
 
-		return "Vil du slette" + ((getContent() == ApplicationConstants.RECEIPTS) ? " denne " : " dette ") + type + "?";
+        String pronomen = getContent() == ApplicationConstants.RECEIPTS ? "denne" : "dette";
+        return format(getString(R.string.delete_single), pronomen, type);
 	}
 
 	protected class ContentDeleteTask extends AsyncTask<Void, Object, String> {
@@ -256,12 +257,12 @@ public abstract class ContentFragment extends Fragment {
 
 			if (values[0] instanceof Document) {
                 Document document = (Document) values[0];
-				progressDialog.setMessage("Sletter " + document.getSubject() + " (" + progress + "/" + content.size() + ")");
+				progressDialog.setMessage(format(getString(R.string.delete_progress_document), document.getSubject(),
+                        progress, content.size()));
 			} else if (values[0] instanceof Receipt) {
 				Receipt receipt = (Receipt) values[0];
-				progressDialog.setMessage("Sletter " + receipt.getStoreName() + " "
-						+ DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()) + " (" + progress + "/" + content.size()
-						+ ")");
+                progressDialog.setMessage(format(getString(R.string.delete_progress_receipt), receipt.getStoreName(),
+                        DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()), progress, content.size()));
 			}
 		}
 
@@ -269,7 +270,7 @@ public abstract class ContentFragment extends Fragment {
 		protected void onCancelled() {
 			super.onCancelled();
 			taskIsRunning = false;
-			DialogUtitities.showToast(context, progress + " av " + content.size() + " slettet.");
+			DialogUtitities.showToast(context, format(getString(R.string.delete_cancelled), progress, content.size()));
 			hideProgressDialog();
 			updateAccountMeta();
 		}

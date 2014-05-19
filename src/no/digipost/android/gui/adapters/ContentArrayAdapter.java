@@ -37,8 +37,6 @@ import java.util.Collection;
 import no.digipost.android.R;
 
 public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
-	public static final String TEXT_HIGHLIGHT_COLOR = "#EBEB86";
-
 	protected Context context;
 	protected ArrayList<T> objects;
 	protected ArrayList<T> filtered;
@@ -179,7 +177,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		}
 
 		Spannable sb = new SpannableString(v.getText().toString());
-		sb.setSpan(new BackgroundColorSpan(Color.parseColor(TEXT_HIGHLIGHT_COLOR)), i, i + l, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		sb.setSpan(new BackgroundColorSpan(getContext().getResources().getColor(R.color.search_highlight_color)), i, i + l, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		v.setText(sb);
 	}
 

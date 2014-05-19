@@ -45,7 +45,7 @@ public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
 		super.title.setText(document.getSubject());
 
         if("UPLOADED".equals(document.getOrigin())){
-            super.subTitle.setText("Opplastet");
+            super.subTitle.setText(R.string.uploaded);
         }else {
             super.subTitle.setText(document.getCreatorName());
         }

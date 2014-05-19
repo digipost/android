@@ -53,6 +53,8 @@ import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
+import static java.lang.String.format;
+
 public abstract class DisplayContentActivity extends Activity {
 	private ProgressDialog progressDialog;
     private AlertDialog alertDialog;
@@ -119,8 +121,7 @@ public abstract class DisplayContentActivity extends Activity {
 		String timePaid = DataFormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
 
 		String title = getString(R.string.dialog_send_to_bank_paid_title);
-		String message = getString(R.string.dialog_send_to_bank_paid_message_start) + timePaid + "." + "\n" + "\n"
-				+ getString(R.string.dialog_send_to_bank_paid_message_end);
+		String message = format(getString(R.string.dialog_send_to_bank_paid_message), timePaid);
 
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
 		builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
@@ -138,7 +139,7 @@ public abstract class DisplayContentActivity extends Activity {
 		String message = getString(R.string.dialog_send_to_bank_not_paid_message_start) + "\n";
 
 		if (accountNumber != null) {
-			message += "\n" + getString(R.string.dialog_send_to_bank_not_paid_message_end) + "\n" + accountNumber;
+			message += "\n" + String.format(getString(R.string.dialog_send_to_bank_not_paid_message_end), accountNumber);
 		}
 
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
@@ -158,8 +159,7 @@ public abstract class DisplayContentActivity extends Activity {
 
 	private void showSendToBankNotEnabledDialog() {
 		String title = getString(R.string.dialog_send_to_bank_not_enabled_title);
-		String message = getString(R.string.dialog_send_to_bank_not_enabled_message_start) + "\n\n"
-				+ getString(R.string.dialog_send_to_bank_not_enabled_message_end);
+		String message = getString(R.string.dialog_send_to_bank_not_enabled_message);
 
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
 		builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
@@ -318,7 +318,7 @@ public abstract class DisplayContentActivity extends Activity {
         moveToFolderListView.setAdapter(folderAdapter);
         moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
 
-        builder.setTitle("Flytt til");
+        builder.setTitle(R.string.move_to);
         alertDialog = builder.create();
         alertDialog.show();
     }

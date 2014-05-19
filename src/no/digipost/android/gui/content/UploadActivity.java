@@ -71,6 +71,8 @@ import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
+import static java.lang.String.format;
+
 public class UploadActivity extends Activity {
 	private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
 	private final String[] blockedFileContentTypes = { ApiConstants.TEXT_HTML };
@@ -280,10 +282,10 @@ public class UploadActivity extends Activity {
 
     private String getUploadFileDialogMessage(int count) {
         if (count > 1) {
-            return "Vil du laste opp disse " + count + " filene?";
+            return format(getString(R.string.upload_confirm_multiple), count);
         }
 
-        return "Vil du laste opp denne filen?";
+        return getString(R.string.upload_confirm_single);
     }
 
     private void previewFile(File file) {
@@ -589,14 +591,14 @@ public class UploadActivity extends Activity {
 		@Override
 		protected void onProgressUpdate(File... values) {
 			super.onProgressUpdate(values);
-			progressDialog.setMessage(getString(R.string.uploading) + values[0].getName() + " (" + progress + "/" + files.size() + ")");
+			progressDialog.setMessage(format(getString(R.string.uploading), values[0].getName(), progress, files.size()));
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
 			progressDialog.dismiss();
-			DialogUtitities.showToast(UploadActivity.this, progress + " av " + files.size() + getString(R.string.upload_files_uploaded));
+			DialogUtitities.showToast(UploadActivity.this, format(getString(R.string.upload_files_uploaded), progress, files.size()));
 			finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
 		}
 

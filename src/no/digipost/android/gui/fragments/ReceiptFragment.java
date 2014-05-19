@@ -98,8 +98,7 @@ public class ReceiptFragment extends ContentFragment {
                     setTopText(getString(R.string.receipt_toptext_one_hidden_receipt));
                 } else if (numberOfCardsReadyForVerification > 1) {
 
-                    setTopText(getString(R.string.receipt_toptext_multiple_hidden_receipts_start) + numberOfReceiptsHiddenUntilVerification
-                            + getString(R.string.receipt_toptext_multiple_hidden_receipts_end));
+                    setTopText(String.format(getString(R.string.receipt_toptext_multiple_hidden_receipts), numberOfReceiptsHiddenUntilVerification));
                 }
             }
         }

@@ -162,7 +162,7 @@ public class DocumentFragment extends ContentFragment {
         moveToFolderListView.setAdapter(folderAdapter);
         moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
 
-        builder.setTitle(getString(R.string.context_move_to));
+        builder.setTitle(getString(R.string.move_to));
         folderDialog = builder.create();
         folderDialog.show();
     }

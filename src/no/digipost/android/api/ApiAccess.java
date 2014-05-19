@@ -121,7 +121,7 @@ public class ApiAccess {
 					.get(ClientResponse.class);
 
 			if (cr.getStatus() == TEMPORARY_REDIRECT.getStatusCode()) {
-				return executeGetRequest(context, cr.getHeaders().getFirst("Location"), header_accept);
+				return executeGetRequest(context, cr.getHeaders().getFirst(HttpHeaders.LOCATION), header_accept);
 			}
 
 			return cr;
