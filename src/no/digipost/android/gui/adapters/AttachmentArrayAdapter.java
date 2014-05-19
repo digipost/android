@@ -16,11 +16,6 @@
 
 package no.digipost.android.gui.adapters;
 
-import java.util.ArrayList;
-
-import no.digipost.android.R;
-import no.digipost.android.model.Attachment;
-import no.digipost.android.utilities.DataFormatUtilities;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -28,6 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import no.digipost.android.R;
+import no.digipost.android.model.Attachment;
 
 public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
     private Context context;

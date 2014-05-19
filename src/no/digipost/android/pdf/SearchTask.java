@@ -107,7 +107,7 @@ public abstract class SearchTask {
 
 			@Override
 			protected void onProgressUpdate(Integer... values) {
-				progressDialog.setProgress(values[0].intValue());
+				progressDialog.setProgress(values[0]);
 			}
 
 			@Override

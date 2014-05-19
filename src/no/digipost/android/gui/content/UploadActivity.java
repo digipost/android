@@ -204,8 +204,8 @@ public class UploadActivity extends Activity {
 			String contentType = FileUtilities.getMimeType(file);
 
 			if (contentType != null) {
-				for (int i = 0; i < blockedFileContentTypes.length; i++) {
-					if (contentType.equals(blockedFileContentTypes[i])) {
+				for (String blockedFileContentType : blockedFileContentTypes) {
+					if (contentType.equals(blockedFileContentType)) {
 						return false;
 					}
 				}
@@ -285,18 +285,6 @@ public class UploadActivity extends Activity {
 
         return "Vil du laste opp denne filen?";
     }
-
-	private void showBlockedFileExtensionDialog(File file) {
-		String message = getString(R.string.upload_file_type_not_allowed_start) + FilenameUtils.getExtension(file.getName()) + getString(R.string.upload_file_type_not_allowed_end);
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, getString(R.string.unsupported_title));
-		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				dialogInterface.dismiss();
-			}
-		});
-		builder.create().show();
-	}
 
     private void previewFile(File file) {
         if (FilenameUtils.getExtension(file.getName()).equals(ApiConstants.FILETYPE_PDF)) {

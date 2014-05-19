@@ -211,7 +211,7 @@ public class ApiAccess {
 
 	public static void delete(Context context, final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
 		Client client = Client.create();
-		ClientResponse cr = null;
+		ClientResponse cr;
 
 		try {
 			cr = client

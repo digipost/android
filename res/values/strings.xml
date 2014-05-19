@@ -63,9 +63,8 @@
     <string name="title_activity_login">LoginActivity</string>
 
     <!-- EmptyView -->
-    <string name="emptyview_mailbox">Ingen brev i\u0020</string>
-    <string name="emptyview_archive">Ingen dokumenter i\u0020</string>
-    <string name="emptyview_workarea">Ingen dokumenter på\u0020</string>
+    <string name="emptyview_mailbox">Ingen dokumenter i postkassen</string>
+    <string name="emptyview_folder">Ingen dokumenter i mappen</string>
 
 
     <!-- EmptyView - Receipt -->

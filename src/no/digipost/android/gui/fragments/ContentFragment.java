@@ -180,7 +180,7 @@ public abstract class ContentFragment extends Fragment {
 	}
 
     protected String getContentTypeString(int count) {
-        String type = "";
+        String type;
 
        if(getContent() == ApplicationConstants.RECEIPTS) {
             if (count > 1) {

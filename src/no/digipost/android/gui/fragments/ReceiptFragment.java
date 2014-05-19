@@ -16,6 +16,7 @@
 
 package no.digipost.android.gui.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -116,7 +117,7 @@ public class ReceiptFragment extends ContentFragment {
 
 	private void openReceipt(String receiptContent) {
 		Intent intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
-		intent.putExtra(super.INTENT_CONTENT, getContent());
+		intent.putExtra(INTENT_CONTENT, getContent());
 		intent.putExtra(ApiConstants.GET_RECEIPT, receiptContent);
 		startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
 	}
@@ -260,7 +261,7 @@ public class ReceiptFragment extends ContentFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == getActivity().RESULT_OK) {
+		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
 
 				String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);

@@ -514,19 +514,9 @@ public class DocumentFragment extends ContentFragment {
 	}
 
 	private void setEmptyViewText() {
-		int content_type = getContent();
-
-		String text = "";
-
-		if(content_type == ApplicationConstants.MAILBOX) {
-            text = "Ingen dokumenter i Postkassen";
-        }else{
-            text = "Ingen dokumenter i mappen";
-		}
-
-		//text += content;
-        //TODO BESTEM INGEN DOKUMENTER I MAPPEN?
-		DocumentFragment.super.setListEmptyViewText(text, null);
+		int contentType = getContent();
+        int textResource = contentType == ApplicationConstants.MAILBOX ? R.string.emptyview_mailbox : R.string.emptyview_folder;
+		setListEmptyViewText(getString(textResource), null);
 	}
 
 	protected void executeDocumentMoveTask(String toLocation,String folderId) {

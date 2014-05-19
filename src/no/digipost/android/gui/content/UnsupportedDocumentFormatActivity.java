@@ -98,9 +98,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem move = menu.findItem(R.id.menu_image_html_move);
         sendToBank = menu.findItem(R.id.menu_image_html_unsupported_send_to_bank);
-		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
         boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
         if (ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE) {
