@@ -29,17 +29,17 @@ import no.digipost.android.R;
 
 public class ScreenlockPreferenceActivity extends Activity {
 	private static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
-	private Button yesButton, noButton, privacyButton;
-	private ButtonListener listener;
+	private Button yesButton;
+    private Button privacyButton;
 
-	@Override
+    @Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_screenlockpreference);
 		yesButton = (Button) (findViewById(R.id.screenlockactivity_yes_button));
-		noButton = (Button) (findViewById(R.id.screenlockactivity_no_button));
+        Button noButton = (Button) (findViewById(R.id.screenlockactivity_no_button));
         privacyButton = (Button) findViewById(R.id.login_privacyButton);
-		listener = new ButtonListener();
+        ButtonListener listener = new ButtonListener();
 		yesButton.setOnClickListener(listener);
 		noButton.setOnClickListener(listener);
         privacyButton.setOnClickListener(listener);
@@ -58,7 +58,7 @@ public class ScreenlockPreferenceActivity extends Activity {
     }
 
     private void yesButton() {
-    		startActivity(new Intent(UNLOCK_ACTION));
+        startActivity(new Intent(UNLOCK_ACTION));
 		finish();
 	}
 

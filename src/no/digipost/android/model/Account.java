@@ -31,32 +31,20 @@ public class Account {
     @JsonProperty
     private ArrayList<Mailbox> mailbox;
 
-    public ArrayList<Mailbox> getMailbox(){return mailbox;
+    public ArrayList<Mailbox> getMailbox() {
+        return mailbox;
     }
 
-    public Mailbox getMailboxByDigipostAddress(String digipostAddress){
-        for(Mailbox m : mailbox){
-            if(m.getDigipostaddress().equals(digipostAddress)){
+    public Mailbox getMailboxByDigipostAddress(String digipostAddress) {
+        for (Mailbox m : mailbox) {
+            if (m.getDigipostaddress().equals(digipostAddress)) {
                 return m;
             }
         }
         return null;
     }
 
-    public Mailbox getMailboxByIndex(int index){
-        return mailbox.get(index);
-    }
-
-    public Mailbox getMailboxByName(String name){
-        for(Mailbox m : mailbox){
-            if(m.getName().equals(name)){
-                return m;
-            }
-        }
-        return null;
-    }
-
-	public PrimaryAccount getPrimaryAccount() {
+    public PrimaryAccount getPrimaryAccount() {
 		return primaryAccount;
 	}
 

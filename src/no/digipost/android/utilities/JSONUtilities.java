@@ -101,11 +101,10 @@ public class JSONUtilities {
         String[] ignore = { "link", "folderId","contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
                 "selfUri", "settingsUri" };
 
-        if(object instanceof Document){
-            if(((Document) object).getFolderId() != null){
-                String[] tempIgnore = { "link", "contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
-                        "selfUri", "settingsUri" };
-                ignore = tempIgnore;
+        if (object instanceof Document) {
+            if (((Document) object).getFolderId() != null) {
+                ignore = new String[]{"link", "contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+                        "selfUri", "settingsUri"};
             }
         }
 

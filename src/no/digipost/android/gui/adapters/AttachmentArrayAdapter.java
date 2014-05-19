@@ -81,9 +81,8 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
     public Attachment getMainAttachment() {
         for (Attachment a : attachments) {
             if (a.getMainDocument().equals("true")) {
-                Attachment main = a;
                 attachments.remove(a);
-                return main;
+                return a;
             }
         }
         return null;

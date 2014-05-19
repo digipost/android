@@ -117,8 +117,6 @@ public abstract class DisplayContentActivity extends Activity {
 
 	private void showPaidInvoiceDialog(Invoice invoice) {
 		String timePaid = DataFormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
-		String debitorBankAccount = invoice.getPayment().getDebitorBankAccount();
-		String bankHomepage = invoice.getPayment().getBankHomepage();
 
 		String title = getString(R.string.dialog_send_to_bank_paid_title);
 		String message = getString(R.string.dialog_send_to_bank_paid_message_start) + timePaid + "." + "\n" + "\n"
@@ -162,7 +160,6 @@ public abstract class DisplayContentActivity extends Activity {
 		String title = getString(R.string.dialog_send_to_bank_not_enabled_title);
 		String message = getString(R.string.dialog_send_to_bank_not_enabled_message_start) + "\n\n"
 				+ getString(R.string.dialog_send_to_bank_not_enabled_message_end);
-		;
 
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
 		builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
@@ -225,7 +222,7 @@ public abstract class DisplayContentActivity extends Activity {
 		protected void onPostExecute(final Boolean result) {
 
 			hideProgressDialog();
-			if (result == true) {
+			if (result) {
 				DialogUtitities.showToast(DisplayContentActivity.this,
 						DisplayContentActivity.this.getString(R.string.dialog_send_to_bank_paid_title));
 			} else {
@@ -390,7 +387,7 @@ public abstract class DisplayContentActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... parameters) {
-			File file = null;
+			File file;
 
 			try {
 				file = FileUtilities.writeFileToSD(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore

@@ -39,8 +39,7 @@ import no.digipost.android.utilities.SharedPreferencesUtilities;
 public class LoginActivity extends Activity {
 	private Button loginButton, privacyButton, registrationButton;
 	private CheckBox rememberMe;
-	private ButtonListener listener;
-	private KeyStoreAdapter ks;
+    private KeyStoreAdapter ks;
 	private Context context;
 
 	private final int WEB_LOGIN_REQUEST = 1;
@@ -51,7 +50,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 		context = this;
 		ks = new KeyStoreAdapter(this);
-		listener = new ButtonListener();
+        ButtonListener listener = new ButtonListener();
 		loginButton = (Button) findViewById(R.id.login_loginButton);
 		loginButton.setOnClickListener(listener);
 		privacyButton = (Button) findViewById(R.id.login_privacyButton);

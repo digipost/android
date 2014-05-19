@@ -39,8 +39,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	private String[] links;
     private View line;
 	private int unreadLetters;
-	private int currentView;
-	private ArrayList<Folder> folders;
+    private ArrayList<Folder> folders;
 
 	public DrawerArrayAdapter(final Context context, final int resource, final String[] links, ArrayList<Folder> folders,
 			final int unreadLetters) {
@@ -48,8 +47,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		this.context = context;
 		this.links = links;
 		this.unreadLetters = unreadLetters;
-		currentView = ApplicationConstants.MAILBOX;
-		this.folders = folders;
+        this.folders = folders;
 	}
 
 	public View getView(final int position, final View convertView, final ViewGroup parent) {
@@ -58,8 +56,8 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		View row = inflater.inflate(R.layout.drawer_list_item, parent, false);
 		this.linkName = (TextView) row.findViewById(R.id.drawer_link_name);
 		this.unreadView = (TextView) row.findViewById(R.id.drawer_link_unread);
-        this.line = (View) row.findViewById(R.id.drawer_line);
-		setupLinkView(row, position);
+        this.line = row.findViewById(R.id.drawer_line);
+		setupLinkView(position);
 
 		return row;
 	}
@@ -69,55 +67,41 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		notifyDataSetChanged();
 	}
 
-	public void updateDrawer(int currentView) {
-		this.currentView = currentView;
-		notifyDataSetChanged();
+	public void updateDrawer() {
+        notifyDataSetChanged();
 	}
 
-	private void updateUnreadView(View row) {
-		unreadView.setText((CharSequence) (" " + unreadLetters));
+	private void updateUnreadView() {
+		unreadView.setText(" " + unreadLetters);
 		unreadView.setVisibility(View.VISIBLE);
 	}
 
-	private void setupLinkView(View row, int position) {
-
+	private void setupLinkView(int position) {
 		linkName.setText((CharSequence) links[position]);
 
 		if (position == ApplicationConstants.MAILBOX) {
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.inbox_32, 0, 0, 0);
-			updateUnreadView(row);
-
+			updateUnreadView();
 		} else if (position == ApplicationConstants.RECEIPTS) {
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tag_32, 0, 0, 0);
-
 		} else if (links[position].equals(ApplicationConstants.DRAWER_MY_FOLDERS)) {
-			drawLabel(row);
-
+			drawLabel();
 		} else if (links[position].equals(ApplicationConstants.DRAWER_MY_ACCOUNT)) {
-			drawLabel(row);
-
+			drawLabel();
 		} else if (links[position].equals(ApplicationConstants.DRAWER_CHANGE_ACCOUNT)) {
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.account_32px, 0, 0, 0);
-            drawAccountItem();
-
 		} else if (links[position].equals(ApplicationConstants.DRAWER_SETTINGS)) {
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.admin_32px, 0, 0, 0);
-            drawAccountItem();
-
 		} else if (links[position].equals(ApplicationConstants.DRAWER_HELP)) {
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.help_32px, 0, 0, 0);
-            drawAccountItem();
-
 		} else if (links[position].equals(ApplicationConstants.DRAWER_LOGOUT)) {
 			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.logout_32px, 0, 0, 0);
             line.setVisibility(View.GONE);
-            drawAccountItem();
 		} else {
-
 			CharSequence type = "FOLDER";
 
             if(folders != null){
-                type = (CharSequence) folders.get(position - ApplicationConstants.numberOfStaticFolders).getIcon();
+                type = folders.get(position - ApplicationConstants.numberOfStaticFolders).getIcon();
             }
 
 			if (type.equals("PAPER")) {
@@ -147,11 +131,8 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 			}
 		}
 	}
-    private void drawAccountItem(){
-        //linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_account_text));
-    }
 
-	private void drawLabel(View row) {
+	private void drawLabel() {
 		linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
 		linkName.setTextSize(16);
 		linkName.setGravity(Gravity.BOTTOM);
@@ -162,11 +143,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 
 	@Override
 	public boolean isEnabled(int position) {
-		if (position != ApplicationConstants.FOLDERS_LABEL
-				&& position != MainContentActivity.numberOfFolders + ApplicationConstants.numberOfStaticFolders) {
-			return true;
-		} else {
-			return false;
-		}
+        return position != ApplicationConstants.FOLDERS_LABEL
+                && position != MainContentActivity.numberOfFolders + ApplicationConstants.numberOfStaticFolders;
 	}
 }

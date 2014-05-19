@@ -56,6 +56,8 @@ import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.JSONUtilities;
 
+import static android.app.Activity.RESULT_OK;
+
 public class DocumentFragment extends ContentFragment {
 
 	protected AttachmentArrayAdapter attachmentAdapter;
@@ -114,7 +116,7 @@ public class DocumentFragment extends ContentFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == getActivity().RESULT_OK) {
+		if (resultCode == RESULT_OK) {
 			if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
 				String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
@@ -160,7 +162,7 @@ public class DocumentFragment extends ContentFragment {
         moveToFolderListView.setAdapter(folderAdapter);
         moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
 
-        builder.setTitle("Flytt til");
+        builder.setTitle(getString(R.string.context_move_to));
         folderDialog = builder.create();
         folderDialog.show();
     }
@@ -217,9 +219,7 @@ public class DocumentFragment extends ContentFragment {
                 location = "FOLDER";
             }
 
-            String name = folder.getName();
-
-            moveDocument(location,folderId,name);
+            moveDocument(location,folderId);
             if(folderDialog != null) {
                 folderDialog.dismiss();
                 folderDialog = null;
@@ -335,7 +335,7 @@ public class DocumentFragment extends ContentFragment {
 
 	private void openAttachmentContent(final Attachment attachment) {
 		String fileType = attachment.getFileType();
-		Intent intent = null;
+		Intent intent;
 
 		if (fileType.equals(ApiConstants.FILETYPE_PDF)) {
 			intent = new Intent(context, MuPDFActivity.class);
@@ -346,10 +346,10 @@ public class DocumentFragment extends ContentFragment {
 		}
 
         if (attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null) {
-            intent.putExtra(super.INTENT_SEND_TO_BANK, true);
+            intent.putExtra(INTENT_SEND_TO_BANK, true);
         }
 
-		intent.putExtra(super.INTENT_CONTENT, getContent());
+		intent.putExtra(INTENT_CONTENT, getContent());
 		startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
 	}
 
@@ -546,7 +546,7 @@ public class DocumentFragment extends ContentFragment {
 		documentMoveTask.execute();
 	}
 
-	protected void moveDocument(String toLocation, String folderId,String name) {
+	protected void moveDocument(String toLocation, String folderId) {
         executeDocumentMoveTask(toLocation,folderId);
 	}
 

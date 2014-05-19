@@ -72,6 +72,8 @@ import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
+import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
 	public static final int INTENT_REQUESTCODE = 0;
 
@@ -80,7 +82,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerArrayAdapter drawerArrayAdapter;
     protected MailboxArrayAdapter mailboxAdapter;
-	private SearchView searchView;
     private MenuItem searchButton;
 	private boolean refreshing;
     private static String[] drawerListitems;
@@ -93,9 +94,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private Account account;
     public static String fragmentName;
 
-	private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
-
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -114,8 +113,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         selectItem(ApplicationConstants.MAILBOX);
 
-		onSharedPreferenceChangeListener = new SettingsChangedlistener();
-		SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+        SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
 
 		if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
 			drawerLayout.openDrawer(GravityCompat.START);
@@ -138,7 +136,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_main_content_actionbar, menu);
-		searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
         setupSearchView(searchView);
         updateTitles();
@@ -149,7 +147,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		drawerArrayAdapter.updateDrawer(getCurrentFragment().getContent());
+		drawerArrayAdapter.updateDrawer();
 
 		searchButton = menu.findItem(R.id.menu_search);
 		searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
@@ -261,7 +259,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         return super.onKeyDown(keyCode, event);
     }
 
-    private class SettingsChangedlistener implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private class SettingsChangedlistener implements OnSharedPreferenceChangeListener {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -436,12 +434,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             if (mailbox != null) {
                 fs = mailbox.getFolders().getFolder();
-                numberOfFolders = 0;
-                for (int i = 0; i < fs.size(); i++) {
-                    String name = fs.get(i).getName();
+                numberOfFolders = fs.size();
+                for (Folder f : fs) {
+                    String name = f.getName();
                     drawerItems.add(name);
-                    folders.add(fs.get(i));
-                    numberOfFolders++;
+                    folders.add(f);
                 }
             }
         }
@@ -449,7 +446,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         //Add account settings
         drawerItems.add(ApplicationConstants.DRAWER_MY_ACCOUNT);
 
-        if(account != null) {
+        if (account != null) {
             mailboxes = account.getMailbox();
 
             if (mailboxes.size() > 1) {

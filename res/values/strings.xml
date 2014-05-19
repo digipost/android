@@ -122,12 +122,13 @@
 
     <string name="context_folder">Flytt til mappe</string>
     <string name="context_move">Flytt</string>
+    <string name="context_move_to">Flytt til</string>
 
     <!-- PDF -->
     <string name="pdf_no_further_occurences_found">Ingen flere treff funnet.</string>
     <string name="pdf_text_not_found">Fant ingen treff.</string>
     <string name="pdf_open_failed">Kunne ikke åpne dokumentet.</string>
-    <string name="pdf_searching_">Søker...</string>
+    <string name="pdf_searching_">Søker…</string>
     <string name="pdf_search_document">Søk i dokumentet</string>
     <string name="pdf_promt_save_to_sd">Ønsker du å lagre dokumentet?</string>
     <string name="pdf_saved_to_sd">Dokumentet er lagret i nedlastingsområde.</string>

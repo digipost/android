@@ -258,7 +258,7 @@ public class ApiAccess {
 		return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());
 	}
 
-	public static void uploadFile(Context context, String uri, File file) throws DigipostClientException, DigipostAuthenticationException, DigipostApiException {
+	public static void uploadFile(Context context, String uri, File file) throws DigipostClientException {
 		try {
             try {
                 HttpClient httpClient = new DefaultHttpClient();

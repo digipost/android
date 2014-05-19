@@ -34,7 +34,7 @@
     <application
         android:name="DigipostApplication"
         android:icon="@drawable/ic_launcher"
-        android:label=""
+        android:label="@string/app_name"
         android:vmSafeMode="true"
         android:hardwareAccelerated="true"
         android:theme="@style/Digipost">
