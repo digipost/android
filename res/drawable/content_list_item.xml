@@ -19,6 +19,6 @@
         </shape>
     </item>
 
-    <item android:drawable="@color/list_element_opened"></item>
+    <item android:drawable="@color/list_element_opened"/>
 
 </selector>

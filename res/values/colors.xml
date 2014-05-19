@@ -5,11 +5,8 @@
     <color name="main_drawer_grey_background">#292B2B</color>
     <color name="main_drawer_grey_text">#595959</color>
     <color name="main_drawer_text">#F5F5F5</color>
-    <color name="main_drawer_account_text">#A1A1A1</color>
     <color name="main_drawer_focused">#17191A</color>
-    <color name="main_dark_grey">#2D2E30</color>
     <color name="main_drawer_divider">#333436</color>
-    <color name="main_drawer_unread">#1F1F1F</color>
 
     <!-- ActionBar -->
     <color name="actionbar_title_color">#FFF</color>
@@ -30,7 +27,6 @@
     <color name="grey_creator">#444142</color>
     <color name="list_divider">#DBDBDB</color>
     <color name="list_element_opened">#EBEBEB</color>
-    <color name="attachment_listview_unread_background">#3B3B3B</color>
     <color name="toptext_background">#292b2d</color>
 
     <!-- Misc -->
