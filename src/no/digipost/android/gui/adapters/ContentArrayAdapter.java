@@ -16,15 +16,7 @@
 
 package no.digipost.android.gui.adapters;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
-import no.digipost.android.R;
-import no.digipost.android.model.Letter;
-
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -34,26 +26,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
-	public static final String TEXT_HIGHLIGHT_COLOR = "#EBEB86";
+import java.util.ArrayList;
+import java.util.Collection;
 
+import no.digipost.android.R;
+
+public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 	protected Context context;
 	protected ArrayList<T> objects;
 	protected ArrayList<T> filtered;
 
 	protected boolean[] checked;
 	protected boolean checkboxVisible;
+    protected boolean hideContentTypeImage;
 
 	protected TextView title;
 	protected TextView subTitle;
 	protected TextView metaTop;
 	protected TextView metaMiddle;
 	protected ImageView metaBottom;
+    protected ImageView contentTypeImage;
 
 	protected Filter contentFilter;
 
@@ -85,6 +81,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		this.metaTop = (TextView) row.findViewById(R.id.content_meta_top);
 		this.metaMiddle = (TextView) row.findViewById(R.id.content_meta_middle);
 		this.metaBottom = (ImageView) row.findViewById(R.id.content_meta_bottom);
+        this.contentTypeImage = (ImageView) row.findViewById((R.id.content_type_image));
 
 		CheckBox checkBox = (CheckBox) row.findViewById(R.id.content_checkbox);
         checkBox.setFocusable(false);
@@ -108,11 +105,13 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 	}
 
 	public void replaceAll(Collection<? extends T> collection) {
-		this.filtered.clear();
-		this.filtered.addAll(collection);
-		this.objects = this.filtered;
-		initializeChecked();
-		notifyDataSetChanged();
+        if(collection != null) {
+            this.filtered.clear();
+            this.filtered.addAll(collection);
+            this.objects = this.filtered;
+            initializeChecked();
+            notifyDataSetChanged();
+        }
 	}
 
     public void replaceAtPosition(T object, int position) {
@@ -177,7 +176,7 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		}
 
 		Spannable sb = new SpannableString(v.getText().toString());
-		sb.setSpan(new BackgroundColorSpan(Color.parseColor(TEXT_HIGHLIGHT_COLOR)), i, i + l, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		sb.setSpan(new BackgroundColorSpan(getContext().getResources().getColor(R.color.search_highlight_color)), i, i + l, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		v.setText(sb);
 	}
 
@@ -190,6 +189,12 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
 		initializeChecked();
 		notifyDataSetChanged();
 	}
+
+    public void setContentTypeImageVisible(boolean state){
+        hideContentTypeImage = !state;
+        initializeChecked();
+        notifyDataSetChanged();
+    }
 
 	public void clearChecked() {
 		initializeChecked();

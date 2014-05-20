@@ -16,15 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.documentstore.DocumentContentStore;
-import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.utilities.ApplicationUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +29,18 @@ import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.MainContentActivity;
+import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.utilities.ApplicationUtilities;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
+
+import static java.lang.String.format;
+
 public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
 	@Override
@@ -47,7 +50,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		ApplicationUtilities.setScreenRotationFromPreferences(this);
 
 		if (DocumentContentStore.getDocumentContent() == null) {
-			DialogUtitities.showToast(this, "En feil oppstod under åpning av dokumentet.");
+			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
 			finish();
 		}
 
@@ -56,7 +59,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
 
 		TextView message = (TextView) findViewById(R.id.unsupported_message);
-		message.setText(getString(R.string.unsupported_message_top) + " (." + DocumentContentStore.getDocumentAttachment().getFileType() + ").");
+		message.setText(format(getString(R.string.unsupported_message_top), DocumentContentStore.getDocumentAttachment().getFileType()));
 
 		Button open = (Button) findViewById(R.id.unsupported_open_button);
 		open.setOnClickListener(new View.OnClickListener() {
@@ -97,18 +100,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		MenuItem toArchive = menu.findItem(R.id.menu_image_html_unsupported_archive);
-		MenuItem toWorkarea = menu.findItem(R.id.menu_image_html_unsupported_workarea);
         sendToBank = menu.findItem(R.id.menu_image_html_unsupported_send_to_bank);
-
-		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
-
-		if (content == ApplicationConstants.WORKAREA) {
-			toWorkarea.setVisible(false);
-		} else if (content == ApplicationConstants.ARCHIVE) {
-			toArchive.setVisible(false);
-		}
-
         boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
         if (ApplicationConstants.FEATURE_SEND_TO_BANK_VISIBLE) {
@@ -130,11 +122,8 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 		case R.id.menu_image_html_unsupported_delete:
 			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;
-		case R.id.menu_image_html_unsupported_archive:
-			promtAction(getString(R.string.dialog_prompt_document_toArchive), ApiConstants.LOCATION_ARCHIVE);
-			return true;
-		case R.id.menu_image_html_unsupported_workarea:
-			promtAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
+		case R.id.menu_image_html_move:
+			showMoveToFolderDialog();
 			return true;
 		case R.id.menu_image_html_unsupported_open_external:
 			super.openFileWithIntent();
@@ -149,7 +138,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
 	private void executeAction(String action) {
 		Intent i = new Intent(UnsupportedDocumentFormatActivity.this, MainContentActivity.class);
-		i.putExtra(ApiConstants.ACTION, action);
+		i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
 
 		setResult(RESULT_OK, i);
 		finish();

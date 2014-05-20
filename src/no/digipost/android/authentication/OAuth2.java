@@ -52,9 +52,8 @@ import com.sun.jersey.spi.service.ServiceFinder;
 public class OAuth2 {
 
 	private static String state = "";
-	private static String nonce = "";
 
-	private static SecureRandom random = new SecureRandom();
+    private static SecureRandom random = new SecureRandom();
 
 	public static String getAuthorizeURL() {
 		state = getSecureRandom(20);
@@ -65,7 +64,7 @@ public class OAuth2 {
 
 	public static void retriveInitialAccessToken(final String url_state, final String url_code, final Context context)
 			throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		nonce = getSecureRandom(20);
+        String nonce = getSecureRandom(20);
 
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.CODE);

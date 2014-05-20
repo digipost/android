@@ -16,7 +16,24 @@
 
 package no.digipost.android.gui.content;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
 import java.io.File;
+import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
@@ -25,28 +42,27 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.adapters.FolderArrayAdapter;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.CurrentBankAccount;
+import no.digipost.android.model.Document;
+import no.digipost.android.model.Folder;
 import no.digipost.android.model.Invoice;
-import no.digipost.android.model.Letter;
 import no.digipost.android.model.Payment;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
+
+import static java.lang.String.format;
 
 public abstract class DisplayContentActivity extends Activity {
 	private ProgressDialog progressDialog;
+    private AlertDialog alertDialog;
+    private FolderArrayAdapter folderAdapter;
 	protected MenuItem sendToBank;
+    private String location;
+    private String folderId;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,17 +103,14 @@ public abstract class DisplayContentActivity extends Activity {
 		}
 	}
 
-	private void openInvoiceContent(Attachment attachment, Letter letter, CurrentBankAccount account) {
+	private void openInvoiceContent(Attachment attachment, Document document, CurrentBankAccount account) {
 
 		if (attachment.getInvoice().getPayment() != null) {
 			showPaidInvoiceDialog(attachment.getInvoice());
 		} else {
 			if (attachment.getInvoice().getSendToBank() != null) {
-
-				System.out.println("Account " + account);
 				String accountNumber = account == null ? "***********" : account.getBankAccount().getAccountNumber();
-
-				showSendToBankDialog(attachment, letter, accountNumber);
+				showSendToBankDialog(attachment, document, accountNumber);
 			} else {
 				showSendToBankNotEnabledDialog();
 			}
@@ -106,12 +119,9 @@ public abstract class DisplayContentActivity extends Activity {
 
 	private void showPaidInvoiceDialog(Invoice invoice) {
 		String timePaid = DataFormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
-		String debitorBankAccount = invoice.getPayment().getDebitorBankAccount();
-		String bankHomepage = invoice.getPayment().getBankHomepage();
 
 		String title = getString(R.string.dialog_send_to_bank_paid_title);
-		String message = getString(R.string.dialog_send_to_bank_paid_message_start) + timePaid + "." + "\n" + "\n"
-				+ getString(R.string.dialog_send_to_bank_paid_message_end);
+		String message = format(getString(R.string.dialog_send_to_bank_paid_message), timePaid);
 
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
 		builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
@@ -124,18 +134,18 @@ public abstract class DisplayContentActivity extends Activity {
 
 	}
 
-	private void showSendToBankDialog(final Attachment attachment, final Letter letter, final String accountNumber) {
+	private void showSendToBankDialog(final Attachment attachment, final Document document, final String accountNumber) {
 		String title = getString(R.string.dialog_send_to_bank_not_paid_title);
 		String message = getString(R.string.dialog_send_to_bank_not_paid_message_start) + "\n";
 
 		if (accountNumber != null) {
-			message += "\n" + getString(R.string.dialog_send_to_bank_not_paid_message_end) + "\n" + accountNumber;
+			message += "\n" + String.format(getString(R.string.dialog_send_to_bank_not_paid_message_end), accountNumber);
 		}
 
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
 		builder.setPositiveButton(getString(R.string.dialog_send_to_bank), new DialogInterface.OnClickListener() {
 			public void onClick(final DialogInterface dialog, final int id) {
-				sendToBank(attachment, letter);
+				sendToBank(attachment, document);
 				dialog.dismiss();
 			}
 		}).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
@@ -149,9 +159,7 @@ public abstract class DisplayContentActivity extends Activity {
 
 	private void showSendToBankNotEnabledDialog() {
 		String title = getString(R.string.dialog_send_to_bank_not_enabled_title);
-		String message = getString(R.string.dialog_send_to_bank_not_enabled_message_start) + "\n\n"
-				+ getString(R.string.dialog_send_to_bank_not_enabled_message_end);
-		;
+		String message = getString(R.string.dialog_send_to_bank_not_enabled_message);
 
 		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
 		builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
@@ -163,19 +171,19 @@ public abstract class DisplayContentActivity extends Activity {
 		builder.create().show();
 	}
 
-	private void sendToBank(final Attachment attachment, final Letter letter) {
-		SendToBankTask task = new SendToBankTask(attachment, letter);
+	private void sendToBank(final Attachment attachment, final Document document) {
+		SendToBankTask task = new SendToBankTask(attachment, document);
 		task.execute();
 	}
 
 	protected class SendToBankTask extends AsyncTask<Void, Void, Boolean> {
 		private String errorMessage;
-		private Letter letter;
+		private Document document;
 		private Attachment attachment;
 		private boolean invalidToken;
 
-		public SendToBankTask(final Attachment attachment, final Letter letter) {
-			this.letter = letter;
+		public SendToBankTask(final Attachment attachment, final Document document) {
+			this.document = document;
 			this.attachment = attachment;
 		}
 
@@ -189,7 +197,7 @@ public abstract class DisplayContentActivity extends Activity {
 		protected Boolean doInBackground(final Void... params) {
 			try {
 				ContentOperations.sendToBank(DisplayContentActivity.this, attachment);
-				DocumentContentStore.setDocumentParent(ContentOperations.getSelfLetter(DisplayContentActivity.this, letter));
+				DocumentContentStore.setDocumentParent(ContentOperations.getDocumentSelf(DisplayContentActivity.this, document));
 				return true;
 			} catch (DigipostApiException e) {
 				errorMessage = e.getMessage();
@@ -214,7 +222,7 @@ public abstract class DisplayContentActivity extends Activity {
 		protected void onPostExecute(final Boolean result) {
 
 			hideProgressDialog();
-			if (result == true) {
+			if (result) {
 				DialogUtitities.showToast(DisplayContentActivity.this,
 						DisplayContentActivity.this.getString(R.string.dialog_send_to_bank_paid_title));
 			} else {
@@ -234,13 +242,13 @@ public abstract class DisplayContentActivity extends Activity {
 
 	private class OpenInvoiceTask extends AsyncTask<Void, Void, CurrentBankAccount> {
 		private String errorMessage;
-		private Letter letter;
+		private Document document;
 		private Attachment attachment;
 		private boolean invalidToken;
 
-		public OpenInvoiceTask(final Attachment attachment, final Letter letter) {
+		public OpenInvoiceTask(final Attachment attachment, final Document document) {
 			this.invalidToken = false;
-			this.letter = letter;
+			this.document = document;
 			this.attachment = attachment;
 		}
 
@@ -271,17 +279,71 @@ public abstract class DisplayContentActivity extends Activity {
 				DialogUtitities.showToast(DisplayContentActivity.this, errorMessage);
 				finishActivityWithAction(ApiConstants.LOGOUT);
 			} else {
-				openInvoiceContent(attachment, letter, currentBankAccount);
+				openInvoiceContent(attachment, document, currentBankAccount);
 			}
 		}
 	}
 
 	private void finishActivityWithAction(String action) {
 		Intent intent = new Intent();
-		intent.putExtra(ApiConstants.ACTION, action);
+		intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
+
+        if(action.equals(ApiConstants.MOVE)){
+            intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION, location);
+            intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID, folderId);
+        }
+
 		setResult(RESULT_OK, intent);
 		finish();
 	}
+
+    protected void showMoveToFolderDialog(){
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setNegativeButton(getString(R.string.close),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.setView(view);
+
+        ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+
+        ArrayList<Folder> folders = DocumentContentStore.getMoveFolders();
+        folderAdapter = new FolderArrayAdapter(this, R.layout.attachmentdialog_list_item, folders);
+        moveToFolderListView.setAdapter(folderAdapter);
+        moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
+
+        builder.setTitle(R.string.move_to);
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private class MoveToFolderListOnItemClickListener implements AdapterView.OnItemClickListener {
+        public MoveToFolderListOnItemClickListener() {
+
+        }
+
+        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+
+            Folder folder = folderAdapter.getItem(position);
+            folderId = folder.getId();
+            if(folderId == null){
+                location = "INBOX";
+            }else{
+                location = "FOLDER";
+            }
+
+            alertDialog.dismiss();
+            alertDialog = null;
+            finishActivityWithAction(ApiConstants.MOVE);
+
+        }
+    }
 
 	protected void openFileWithIntent() {
 		if (DocumentContentStore.getDocumentContent() == null) {
@@ -325,7 +387,7 @@ public abstract class DisplayContentActivity extends Activity {
 
 		@Override
 		protected Boolean doInBackground(Void... parameters) {
-			File file = null;
+			File file;
 
 			try {
 				file = FileUtilities.writeFileToSD(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore

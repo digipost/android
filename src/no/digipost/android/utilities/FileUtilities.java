@@ -16,19 +16,18 @@
 
 package no.digipost.android.utilities;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import org.apache.commons.io.FilenameUtils;
-
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.webkit.MimeTypeMap;
+
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class FileUtilities {
 	public static final String TEMP_FILE_NAME = "temp";

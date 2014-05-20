@@ -15,85 +15,130 @@
  * limitations under the License.
  */
 -->
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/login_background"
-        android:weightSum="5">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D7DADE"
+    android:orientation="vertical"
+    android:weightSum="13">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center|center_vertical|center_horizontal"
-            android:id="@+id/linearLayout"
-            android:layout_weight="3"
-            android:padding="5dp">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/actionbar_red_background"
+        android:gravity="center"
+        android:layout_weight="6"
+        android:orientation="vertical">
         <ImageView
-                android:id="@+id/login_logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/login_header_logo_contentdescription"
-                android:src="@drawable/postbox_white_medium"
-                android:layout_centerHorizontal="true"/>
+            android:id="@+id/posten_logo"
+            android:layout_width="111dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/login_header_logo_contentdescription"
+            android:cropToPadding="false"
+            android:gravity="center|center_vertical|center_horizontal"
+            android:src="@drawable/posten_logo" />
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/login_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/login_loginlogo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="2"
-            android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:contentDescription="@string/login_header_logo_contentdescription"
+            android:cropToPadding="false"
+            android:adjustViewBounds="true"
+            android:gravity="center|center_vertical|center_horizontal"
+            android:paddingLeft="35dp"
+            android:paddingRight="35dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/digipost_rod_big" />
 
-        <Button
+        <LinearLayout
+            android:id="@+id/login_disclaimer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp">
+
+            <Button
                 android:id="@+id/login_loginButton"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/red_button_style"
                 android:text="@string/login_loginbutton_text"
                 android:textColor="@color/white"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
-        <CheckBox
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/login_remember_me"
-                android:contentDescription="Avhukingsboks for å velge at applikasjonen skal huske innloggingen"
-                android:id="@+id/login_remember_me"
-                android:layout_gravity="center"
-                android:checked="false"/>
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/login_remember_me"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/login_remember_me_contentdescription"
+                    android:text="@string/login_remember_me"
+                    android:textColor="@color/login_grey_text"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="1dip"
+                    android:layout_height="fill_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#BFBFBF" />
+
+                <Button
+                    android:id="@+id/login_registrationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:focusable="true"
+                    android:text="@string/login_registrationbutton_text"
+                    android:textColor="@color/login_grey_text"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/login_disclaimer_layout"
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_weight="6"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/login_privacyButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="2"
-            android:orientation="vertical"
-            android:layout_margin="20dp">
-
-        <Button
-                android:id="@+id/login_registrationButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/grey_button_style"
-                android:text="@string/login_registrationbutton_text"
-                android:textColor="@color/white"/>
-
-        <Button
-                android:id="@+id/login_privacyButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/grey_button_style"
-                android:text="@string/login_privacybutton_text"
-                android:textColor="@color/white"
-                android:layout_marginTop="20dp"/>
+            android:background="#D7DADE"
+            android:focusable="true"
+            android:gravity="center|center_horizontal"
+            android:text="@string/login_privacybutton_text"
+            android:textColor="@color/login_grey_text"
+            android:textSize="18sp"
+            android:layout_gravity="center" />
     </LinearLayout>
+
 </LinearLayout>

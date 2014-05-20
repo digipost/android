@@ -55,14 +55,12 @@ public class DataFormatUtilities {
 
 	public static String getFormattedFileSize(final long bytes) {
 		String[] units = new String[] { "B", "KB", "MB", "GB" };
-		for (int i = 3; i > 0; i--) {
+		for (int i = 3; i >= 0; i--) {
 			double exp = Math.pow(1024, i);
 			if (bytes > exp) {
 				float n = (float) (bytes / exp);
-				if (i == 1) {
-					return (int) n + " " + units[i];
-				}
-				return String.format("%3.1f %s", n, units[i]);
+                String format = i > 1 ? "%3.1f" : "%3.0f";
+                return String.format(format, n) + " " + units[i];
 			}
 		}
 		return Long.toString(bytes);
@@ -76,7 +74,7 @@ public class DataFormatUtilities {
 	}
 
 	public static String getFormattedCurrency(final String currency) {
-		if (currency.equals("NOK")) {
+		if ("NOK".equals(currency)) {
 			return "kr.";
 		}
 

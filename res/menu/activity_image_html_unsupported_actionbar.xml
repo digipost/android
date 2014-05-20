@@ -15,12 +15,8 @@
             android:showAsAction="never"/>
 
     <item
-            android:id="@+id/menu_image_html_unsupported_workarea"
-            android:title="@string/context_move_to_workarea"
-            android:showAsAction="never"/>
-    <item
-            android:id="@+id/menu_image_html_unsupported_archive"
-            android:title="@string/context_move_to_archive"
+            android:id="@+id/menu_image_html_move"
+            android:title="@string/move"
             android:showAsAction="never"/>
 
     <item

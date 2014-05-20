@@ -16,29 +16,33 @@
 
 package no.digipost.android.gui;
 
-import no.digipost.android.R;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import no.digipost.android.R;
+
 public class ScreenlockPreferenceActivity extends Activity {
 	private static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
-	private Button yesButton, noButton;
-	private ButtonListener listener;
+	private Button yesButton;
+    private Button privacyButton;
 
-	@Override
+    @Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_screenlockpreference);
 		yesButton = (Button) (findViewById(R.id.screenlockactivity_yes_button));
-		noButton = (Button) (findViewById(R.id.screenlockactivity_no_button));
-		listener = new ButtonListener();
+        Button noButton = (Button) (findViewById(R.id.screenlockactivity_no_button));
+        privacyButton = (Button) findViewById(R.id.login_privacyButton);
+        ButtonListener listener = new ButtonListener();
 		yesButton.setOnClickListener(listener);
 		noButton.setOnClickListener(listener);
+        privacyButton.setOnClickListener(listener);
 	}
 
     @Override
@@ -54,16 +58,23 @@ public class ScreenlockPreferenceActivity extends Activity {
     }
 
     private void yesButton() {
-    		startActivity(new Intent(UNLOCK_ACTION));
+        startActivity(new Intent(UNLOCK_ACTION));
 		finish();
 	}
+
+    private void openPrivayBrowser() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/juridisk/"));
+        startActivity(browserIntent);
+    }
 
 	private class ButtonListener implements View.OnClickListener {
 
 		public void onClick(final View v) {
 			if (v == yesButton) {
 				yesButton();
-			} else {
+			} else if(v== privacyButton){
+                openPrivayBrowser();
+            } else{
 				finish();
 			}
 		}

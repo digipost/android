@@ -4,10 +4,6 @@
 
     <!-- App -->
     <string name="app_name">Digipost</string>
-    <string name="archive">Arkivet</string>
-    <string name="workarea">Kjøkkenbenken</string>
-    <string name="mailbox">Postkassen</string>
-    <string name="receipts">Kvitteringer</string>
 
     <!--Screenlock-->
     <string name="screenlock_message1">For at Digipost-appen skal huske din innlogging må du skru på
@@ -18,54 +14,33 @@
     </string>
     <string name="yes_apply_screenlock">Skru på skjermlås</string>
     <string name="no_dont_use_screenlock">Avbryt</string>
-    <string name="screenlock">Skjermlås</string>
 
 
     <!-- Misc -->
     <string name="close">Lukk</string>
     <string name="abort">Avbryt</string>
-    <string name="loading_content">Laster innhold...</string>
+    <string name="loading_content">Laster innhold…</string>
     <string name="search">Søk</string>
     <string name="yes">Ja</string>
     <string name="delete">Slett</string>
     <string name="move">Flytt</string>
+    <string name="move_to">Flytt til</string>
     <string name="open">Åpne</string>
     <string name="back">Tilbake</string>
     <string name="preview">Forhåndsvis</string>
 
-    <string name="no">Nei</string>
-    <string name="please_wait">Vennligst vent...</string>
-    <string name="attachment">Vedlegg</string>
-    <string name="search_mailbox">Søk i postkassen</string>
-    <string name="search_workarea">Søk i kjøkkenbenken</string>
-    <string name="search_archive">Søk i arkivet</string>
-    <string name="search_receipts">Søk i kvitteringer</string>
     <string name="search_in">Søk i\u0020</string>
-    <string name="letter">\u0020brev\u0020</string>
-    <string name="document">\u0020dokument\u0020</string>
-    <string name="documents">\u0020dokumenter\u0020</string>
-    <string name="receipt">\u0020kvittering?</string>
-    <string name="receiptss">\u0020kvitteringer?</string>
     <string name="copy">Kopier tekst</string>
     <string name="save">Lagre til telefonen</string>
     <string name="open_external">Åpne i en annen app</string>
-    <string name="saving">Lagrer...</string>
+    <string name="saving">Lagrer…</string>
+    <string name="uploaded">Opplastet</string>
 
     <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjon som flytt og slett</string>
-    <string name="warning_sign_description">Bilde av en varselstrekant</string>
-    <string name="file_sign_description">Bilde av et fil-ikon</string>
-
-    <!-- Titles -->
-    <string name="title_activity_login_view">LoginView</string>
-    <string name="title_activity_base">BaseActivity</string>
-    <string name="title_activity_html_veb_view">HtmlWebView</string>
-    <string name="title_activity_web_fragment">WebFragment</string>
-    <string name="title_activity_login">LoginActivity</string>
 
     <!-- EmptyView -->
-    <string name="emptyview_mailbox">Ingen brev i\u0020</string>
-    <string name="emptyview_archive">Ingen dokumenter i\u0020</string>
-    <string name="emptyview_workarea">Ingen dokumenter på\u0020</string>
+    <string name="emptyview_mailbox">Ingen dokumenter i postkassen</string>
+    <string name="emptyview_folder">Ingen dokumenter i mappen</string>
 
 
     <!-- EmptyView - Receipt -->
@@ -82,52 +57,35 @@
     <!-- Receipt TopText -->
     <string name="receipt_toptext_register_cards">For å motta elektroniske kvitteringer må du legge til et bankkort</string>
     <string name="receipt_toptext_one_hidden_receipt">En kvittering er skjult. For å se denne må du verifisere ditt bankkort</string>
-    <string name="receipt_toptext_multiple_hidden_receipts_start">Du har\u0020</string>
-    <string name="receipt_toptext_multiple_hidden_receipts_end">\u0020skjulte kvitteringer. For å se disse må du verifisere ditt bankkort</string>
+    <string name="receipt_toptext_multiple_hidden_receipts">Du har %1$d skjulte kvitteringer. For å se disse må du verifisere ditt bankkort</string>
 
-
-    <!-- Exception -->
-    <string name="out_of_memory_exception">Det er ikke nok ledig minne til å åpne filen</string>
-
-    <!-- BaseActivity -->
-    <string name="base_optionsbutton_contentDescription">Options button</string>
-    <string name="base_logobutton_contentDescription">Digipost logo"</string>
-    <string name="base_refreshbutton_contentDescription">Refresh button"</string>
+    <!-- ContentFragment -->
+    <string name="receipt_singular">kvitteringen</string>
+    <string name="receipt_plural">kvitteringene</string>
+    <string name="document_singular">dokumentet</string>
+    <string name="document_plural">dokumentene</string>
+    <string name="delete_multiple">Vil du slette disse %1$d %2$s?</string>
+    <string name="delete_single">Vil du slette %1$s %2$s?</string>
+    <string name="delete_progress_document">Sletter %1$s (%2$d/%3$d)</string>
+    <string name="delete_progress_receipt">Sletter %1$s %2$s (%3$d/%4$d)</string>
+    <string name="delete_cancelled">%1$d av %2$d slettet.</string>
 
     <!-- LoginActivity -->
-    <string name="login_loginbutton_text">Logg inn i Digipost</string>
-    <string name="login_registrationbutton_text">Ikke registrert? Registrer deg nå!</string>
+    <string name="login_loginbutton_text">Logg inn</string>
+    <string name="login_registrationbutton_text">Ny bruker</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
     <string name="login_remember_me">Husk meg</string>
-
-    <!-- OptionsMenu -->
-    <string name="optionsmenu_settings">Innstillinger</string>
-    <string name="optionsmenu_logout">Logg ut</string>
-    <string name="optionsmenu_help">Hjelp</string>
-    <string name="optionsmenu_moveToArchive">Flytt til arkivet</string>
-    <string name="optionsmenu_moveToWorkarea">Flytt til kjøkkenbenken</string>
-    <string name="optionsmenu_deleteselected">Slett</string>
-    <string name="optionsmenu_screenlockchoice">Slett skjermlås preferanse</string>
+    <string name="login_remember_me_contentdescription">Avhukingsboks for å velge at applikasjonen skal huske innloggingen</string>
 
     <!-- ContextMenu -->
-    <string name="context_letterlist_show">Vis brev</string>
-    <string name="context_letterlist_delete">Slett brev</string>
-    <string name="context_letterlist_abort">Avbryt</string>
-    <string name="context_letterlist_move">Flytt til arkiv</string>
-    <string name="context_move_to_archive">Flytt til arkivet</string>
-    <string name="context_move_to_workarea">Flytt til kjøkkenbenken</string>
-    <string name="context_refresh_content">Oppdater innhold</string>
     <string name="context_refresh">Oppdater</string>
-
-    <string name="context_folder">Flytt til mappe</string>
-    <string name="context_move">Flytt</string>
 
     <!-- PDF -->
     <string name="pdf_no_further_occurences_found">Ingen flere treff funnet.</string>
     <string name="pdf_text_not_found">Fant ingen treff.</string>
     <string name="pdf_open_failed">Kunne ikke åpne dokumentet.</string>
-    <string name="pdf_searching_">Søker...</string>
+    <string name="pdf_searching_">Søker…</string>
     <string name="pdf_search_document">Søk i dokumentet</string>
     <string name="pdf_promt_save_to_sd">Ønsker du å lagre dokumentet?</string>
     <string name="pdf_saved_to_sd">Dokumentet er lagret i nedlastingsområde.</string>
@@ -137,47 +95,31 @@
 
     <!-- Upload -->
     <string name="upload">Last opp</string>
-    <string name="uploading">Laster opp\u0020</string>
+    <string name="uploading">Laster opp %1$s (%2$d/%3$d)</string>
     <string name="upload_dialog">Er du sikker på at du vil laste opp\u0020</string>
-    <string name="upload_multiple_dialog">Er du sikker på at du vil laste opp valgte filer?</string>
     <string name="upload_folder_exception">Mapper kan ikke lastes opp</string>
-    <string name="upload_file_type_not_allowed_start">Denne filtypen (.</string>
-    <string name="upload_file_type_not_allowed_end">) kan ikke lastes opp i Digipost.</string>
     <string name="upload_space_used">% lagringsplass brukt</string>
-    <string name="upload_files_uploaded">\u0020filer ble lastet opp til arkivet.</string>
+    <string name="upload_files_uploaded">%1$d av %2$d filer ble lastet opp.</string>
     <string name="upload_complete">Opplastning fullført.</string>
+    <string name="upload_confirm_single">Vil du laste opp denne filen?</string>
+    <string name="upload_confirm_multiple">Vil du laste opp disse %1$d filene?</string>
 
     <string name="no_files">Ingen filer</string>
 
-    <!-- Image -->
-    <string name="image_open_failed">Kunne ikke åpne bildet.</string>
-
     <!-- Unsupported -->
-    <string name="unsupported_title">Ustøttet filtype</string>
-    <string name="unsupported_message_top">Digipost-appen kan ikke vise denne filtypen</string>
-    <string name="unsupported_message_bottom">Du kan åpne dokumentet dersom du har en app på din
-        telefon hvor denne filtypen kan vises.
-    </string>
+    <string name="unsupported_message_top">Digipost-appen kan ikke vise denne filtypen (.%1$s).</string>
 
     <!-- Preferences -->
     <string name="preferences">Innstillinger</string>
-    <string name="pref_default_screen_title">Startskjerm ved innlogging</string>
-    <string name="pref_default_screen_default">1</string>
     <string name="pref_general_settings">Generelle innstillinger</string>
-    <string name="pref_documents_settings">Innstillinger for brev</string>
     <string name="pref_show_bank_id_documents_title">BankID &amp; Buypass</string>
     <string name="pref_show_bank_id_documents_summary">Vis brev som krever innlogging med BankID eller Buypass</string>
     <string name="pref_screen_rotation_title">Skjermrotasjon</string>
     <string name="pref_screen_rotation_summary">Tillat skjermrotasjon</string>
     <string name="pref_screen_confirm_delete_title">Bekreft før sletting</string>
     <string name="pref_screen_confirm_delete_summary">Vis bekreftelsesdialog før sletting</string>
-    <string name="pref_screen_confirm_move_title">Bekreft før flytting</string>
-    <string name="pref_screen_confirm_move_summary">Vis bekreftelsesdialog før flytting</string>
     <string name="pref_screen_personal_settings_title">Personlige innstillinger</string>
-    <string name="pref_screen_personal_settings_summary">Endre dine personlige innstillinger i Digipost</string>
     <string name="pref_screen_notification_settings_title">Varslingsinnstillinger</string>
-    <string name="pref_screen_notification_settings_summary">Endre dine varslingsinnstillinger i Digipost</string>
-    <string name="pref_screen_digipost_account_settings">Din konto</string>
     <string name="pref_notification_settings_letters_title">Varsling om nye brev</string>
     <string name="pref_notification_settings_letters_new_title">E-post om nye brev</string>
     <string name="pref_notification_settings_letters_new_subtitle">Send meg en e-post hvis jeg får et nytt brev</string>
@@ -205,13 +147,12 @@
     <string name="pref_personal_settings_search_visibility_accepts_title">Jeg godtar at min adresse er synlig for andre brukere</string>
     <string name="pref_personal_settings_search_visibility_accepts_subtitle">For at andre brukere skal kunne sende deg brev uten å kjenne digipostadressen din, må du være synlig i adressesøket.</string>
     <string name="pref_personal_settings_button">Lagre innstillinger</string>
-    <string name="pref_personal_settings_loading">Laster dine innstillinger...</string>
+    <string name="pref_personal_settings_loading">Laster dine innstillinger…</string>
 
     <!-- Errors -->
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv
         igjen.
     </string>
-    <string name="error_wrong_credentials">Innlogging feilet, prøv igjen.</string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
     <string name="error_invalid_token">Tilgang tilbaketrukket.</string>
     <string name="error_inputstreamtobyarray">En feil oppstod under åpning av innhold</string>
@@ -219,22 +160,25 @@
         denne filtypen.
     </string>
     <string name="error_failed_to_open_with_intent">En feil oppstod under åpning av filen.</string>
+    <string name="error_failed_to_open_document">En feil oppstod under åpning av dokumentet.</string>
+    <string name="error_no_connection">Ingen forbindelse</string>
+    <string name="error_try_again">Prøv igjen</string>
+    <string name="error_invalid_format">Ugyldig format</string>
 
     <!-- Prompts -->
     <string name="sent_to_bank">Sendt til nettbank</string>
-    <string name="sending_to_bank">Sender til nettbank...</string>
+    <string name="sending_to_bank">Sender til nettbank…</string>
     <string name="dialog_send_to_bank">Send til nettbank</string>
     <string name="dialog_send_to_bank_not_paid_title">Vil du legge fakturaen i forfallsregisteret i nettbanken?</string>
     <string name="dialog_send_to_bank_not_paid_message_start">Fakturaen vil bli betalt på forfallsdatoen. Hvis du vil endre eller se på selve betalingen senere, må du logge inn i din nettbank.</string>
-    <string name="dialog_send_to_bank_not_paid_message_end">Følgende konto vil belastes:</string>
+    <string name="dialog_send_to_bank_not_paid_message_end">Følgende konto vil belastes:\n%1$s</string>
 
     <string name="dialog_send_to_bank_paid_title">Fakturaen er lagt til forfall</string>
-    <string name="dialog_send_to_bank_paid_message_start">Denne fakturaen ble sendt til nettbanken\u0020</string>
-    <string name="dialog_send_to_bank_paid_message_end">Hvis du vil endre eller se på selve betalingen, må du logge inn i din nettbank.</string>
+    <string name="dialog_send_to_bank_paid_message">Denne fakturaen ble sendt til nettbanken %1$s.\n\nHvis du vil endre eller se på selve betalingen, må du logge inn i din nettbank.</string>
 
     <string name="dialog_send_to_bank_not_enabled_title">Send fakturaer til nettbanken med ett trykk</string>
-    <string name="dialog_send_to_bank_not_enabled_message_start">Dine fakturaer kan nå legges til forfall med kun ett trykk, etter at du har spesifisert hvilken nettbank du bruker.</string>
-    <string name="dialog_send_to_bank_not_enabled_message_end">Dette trenger du bare å gjøre en gang, og gjøres enkelt via innstillinger på digipost.no, ved hjelp av din datamaskin.</string>
+    <string name="dialog_send_to_bank_not_enabled_message">Dine fakturaer kan nå legges til forfall med kun ett trykk, etter at du har spesifisert hvilken nettbank du bruker.\n\n
+        Dette trenger du bare å gjøre en gang, og gjøres enkelt via innstillinger på digipost.no, ved hjelp av din datamaskin.</string>
 
     <string name="dialog_opening_receipt_yes">Åpne og send kvittering</string>
     <string name="dialog_opening_receipt_title">Avsender krever lesekvittering</string>
@@ -242,29 +186,6 @@
         sendt en lesekvittering til avsenderen.
     </string>
 
-    <string name="dialog_prompt_letter_toArchive">Er du sikker på at du vil flytte brevet til
-        arkivet?
-    </string>
-    <string name="dialog_prompt_letter_toWorkarea">Er du sikker på at du vil flytte brevet til
-        kjøkkenbenken?
-    </string>
-    <string name="dialog_prompt_image_toArchive">Er du sikker på at du vil flytte bildet til
-        arkivet?
-    </string>
-    <string name="dialog_prompt_image_toWorkarea">Er du sikker på at du vil flytte bildet til
-        kjøkkenbenken?
-    </string>
-    <string name="dialog_prompt_document_toArchive">Er du sikker på at du vil flytte dokumentet til
-        arkivet?
-    </string>
-    <string name="dialog_prompt_document_toWorkarea">Er du sikker på at du vil flytte dokumentet til
-        kjøkkenbenken?
-    </string>
-
-    <string name="dialog_prompt_delete_letter">Er du sikker på at du vil slette dette brevet?
-    </string>
-    <string name="dialog_prompt_delete_image">Er du sikker på at du vil slette dette bildet?
-    </string>
     <string name="dialog_prompt_delete_receipt">Er du sikker på at du vil slette denne
         kvitteringen?
     </string>
@@ -272,28 +193,10 @@
         dokumentet?
     </string>
 
-    <string name="dialog_prompt_do_you_want_to_delete">Vil du slette\u0020</string>
-    <string name="dialog_prompt_do_you_want_to_move">Vil du flytte\u0020</string>
-    <string name="dialog_prompt_to_archive">til arkivet?</string>
-    <string name="dialog_prompt_to_workarea">til kjøkkenbenken?</string>
 
-    <string name="dialog_error_header_filetype">Ustøttet filtype</string>
     <string name="dialog_error_two_factor_title">Konfidensielt brev</string>
-    <string name="dialog_error_not_supported_filetype">Digipost for Android støtter ikke denne
-        filtypen.
-    </string>
     <string name="dialog_error_two_factor_message">Dette brevet krever autentisering med BankID. Logg inn
         på Digipost.no for å se innholdet.
     </string>
-    <string name="dialog_prompt_send_read_receipt"></string>
-    <string name="dialog_prompt_delete_documents">Vil du slette markerte dokumenter?</string>
-    <string name="dialog_prompt_delete_receipts">Vil du slette markerte kvitteringer?</string>
-    <string name="dialog_prompt_move_documents_to_archive">Vil du flytte markerte dokumenter til
-        arkivet?
-    </string>
-    <string name="dialog_prompt_move_documents_to_workarea">Vil du flytte markerte dokumenter til
-        kjøkkenbenken?
-    </string>
-    <string name="dialog_prompt">Avsender krever lesekvittering</string>
 
 </resources>

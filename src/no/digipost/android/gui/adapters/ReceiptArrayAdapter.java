@@ -16,15 +16,16 @@
 
 package no.digipost.android.gui.adapters;
 
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Filter;
+
 import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.DataFormatUtilities;
-import android.content.Context;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Filter;
 
 public class ReceiptArrayAdapter extends ContentArrayAdapter<Receipt> {
 
@@ -39,12 +40,15 @@ public class ReceiptArrayAdapter extends ContentArrayAdapter<Receipt> {
 		Receipt receipt = super.filtered.get(position);
 
 		super.title.setText(receipt.getStoreName());
-		super.subTitle.setText(getCardsString(receipt));
-		super.metaTop.setText(DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()));
-		super.metaMiddle.setText(DataFormatUtilities.getFormattedAmount(receipt.getAmount()) + " "
-				+ DataFormatUtilities.getFormattedCurrency(receipt.getCurrency()));
-		super.metaMiddle.setTextColor(context.getResources().getColor(R.color.green));
+		super.subTitle.setText(DataFormatUtilities.getFormattedAmount(receipt.getAmount()) + " "
+                + DataFormatUtilities.getFormattedCurrency(receipt.getCurrency()));
+		super.metaTop.setText(DataFormatUtilities.getFormattedDate(receipt.getTimeOfPurchase()));
+		super.subTitle.setTextColor(context.getResources().getColor(R.color.green));
 		super.setFilterTextColor();
+
+        if (super.hideContentTypeImage) {
+            super.contentTypeImage.setVisibility(View.GONE);
+        }
 
 		return row;
 	}
@@ -95,7 +99,7 @@ public class ReceiptArrayAdapter extends ContentArrayAdapter<Receipt> {
 						addReceipt = true;
 					}
 
-					if (DataFormatUtilities.getFormattedDateTime(r.getTimeOfPurchase()).toLowerCase().contains(constraintLowerCase)) {
+					if (DataFormatUtilities.getFormattedDate(r.getTimeOfPurchase()).toLowerCase().contains(constraintLowerCase)) {
 						ReceiptArrayAdapter.super.metaTopFilterText = constraint.toString();
 						addReceipt = true;
 					}

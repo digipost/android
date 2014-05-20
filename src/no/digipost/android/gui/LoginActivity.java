@@ -15,13 +15,6 @@
  */
 package no.digipost.android.gui;
 
-import no.digipost.android.R;
-import no.digipost.android.authentication.KeyStoreAdapter;
-import no.digipost.android.authentication.Security;
-import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.NetworkUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -35,11 +28,18 @@ import android.widget.CompoundButton;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import no.digipost.android.R;
+import no.digipost.android.authentication.KeyStoreAdapter;
+import no.digipost.android.authentication.Security;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.NetworkUtilities;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
+
 public class LoginActivity extends Activity {
 	private Button loginButton, privacyButton, registrationButton;
 	private CheckBox rememberMe;
-	private ButtonListener listener;
-	private KeyStoreAdapter ks;
+    private KeyStoreAdapter ks;
 	private Context context;
 
 	private final int WEB_LOGIN_REQUEST = 1;
@@ -50,7 +50,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 		context = this;
 		ks = new KeyStoreAdapter(this);
-		listener = new ButtonListener();
+        ButtonListener listener = new ButtonListener();
 		loginButton = (Button) findViewById(R.id.login_loginButton);
 		loginButton.setOnClickListener(listener);
 		privacyButton = (Button) findViewById(R.id.login_privacyButton);
@@ -58,6 +58,7 @@ public class LoginActivity extends Activity {
 		registrationButton = (Button) findViewById(R.id.login_registrationButton);
 		registrationButton.setOnClickListener(listener);
         rememberMe = (CheckBox) findViewById(R.id.login_remember_me);
+
         if (!ks.isAvailable()) {
         		rememberMe.setVisibility(View.GONE);
         }
@@ -80,6 +81,8 @@ public class LoginActivity extends Activity {
 					}
 				}
 			});
+        privacyButton.setTextColor(getResources().getColor(R.color.login_grey_text));
+        registrationButton.setTextColor(getResources().getColor(R.color.login_grey_text));
 
 	}
 
@@ -161,8 +164,10 @@ public class LoginActivity extends Activity {
 			if (v == loginButton) {
 				startLoginProcess();
 			} else if (v == privacyButton) {
+                privacyButton.setTextColor(getResources().getColor(R.color.grey_filesize));
 				openPrivayBrowser();
 			} else if (v == registrationButton) {
+                registrationButton.setTextColor(getResources().getColor(R.color.grey_filesize));
 				openRegistrationDialog();
 			}
 		}

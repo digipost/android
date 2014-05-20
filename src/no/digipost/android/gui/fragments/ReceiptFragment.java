@@ -16,6 +16,19 @@
 
 package no.digipost.android.gui.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.ActionMode;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+
 import java.util.ArrayList;
 
 import no.digipost.android.R;
@@ -32,17 +45,6 @@ import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 public class ReceiptFragment extends ContentFragment {
 
@@ -69,37 +71,37 @@ public class ReceiptFragment extends ContentFragment {
 	}
 
 	private void checkStatusAndDisplayReceipts(Receipts receipts) {
+        if(isAdded()) {
+            ArrayList<Receipt> receipt = receipts.getReceipt();
+            ReceiptFragment.super.listAdapter.replaceAll(receipt);
 
-		ArrayList<Receipt> receipt = receipts.getReceipt();
-		ReceiptFragment.super.listAdapter.replaceAll(receipt);
+            int numberOfCards = Integer.parseInt(receipts.getNumberOfCards());
+            int numberOfCardsReadyForVerification = Integer.parseInt(receipts.getNumberOfCardsReadyForVerification());
+            int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(receipts.getNumberOfReceiptsHiddenUntilVerification());
 
-		int numberOfCards = Integer.parseInt(receipts.getNumberOfCards());
-		int numberOfCardsReadyForVerification = Integer.parseInt(receipts.getNumberOfCardsReadyForVerification());
-		int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(receipts.getNumberOfReceiptsHiddenUntilVerification());
+            if (receipt.size() == 0) {
+                if (numberOfCards == 0) {
+                    setListEmptyViewText(getString(R.string.emptyview_receipt_intro_title), getString(R.string.emptyview_receipt_intro_message));
+                } else if (numberOfCardsReadyForVerification > 0) {
+                    setListEmptyViewText(getString(R.string.emptyview_receipt_verification_title),
+                            getString(R.string.emptyview_receipt_verification_message));
+                } else {
+                    setListEmptyViewText(getString(R.string.emptyview_receipt_registrated_title),
+                            getString(R.string.emptyview_receipt_registrated_message));
+                }
+            } else {
+                if (numberOfCards == 0) {
 
-		if (receipt.size() == 0) {
-			if (numberOfCards == 0) {
-				setListEmptyViewText(getString(R.string.emptyview_receipt_intro_title), getString(R.string.emptyview_receipt_intro_message));
-			} else if (numberOfCardsReadyForVerification > 0) {
-				setListEmptyViewText(getString(R.string.emptyview_receipt_verification_title),
-						getString(R.string.emptyview_receipt_verification_message));
-			} else {
-				setListEmptyViewText(getString(R.string.emptyview_receipt_registrated_title),
-						getString(R.string.emptyview_receipt_registrated_message));
-			}
-		} else {
-			if (numberOfCards == 0) {
+                    setTopText(getString(R.string.receipt_toptext_register_cards));
+                } else if (numberOfReceiptsHiddenUntilVerification == 1) {
 
-				setTopText(getString(R.string.receipt_toptext_register_cards));
-			} else if (numberOfReceiptsHiddenUntilVerification == 1) {
+                    setTopText(getString(R.string.receipt_toptext_one_hidden_receipt));
+                } else if (numberOfCardsReadyForVerification > 1) {
 
-				setTopText(getString(R.string.receipt_toptext_one_hidden_receipt));
-			} else if (numberOfCardsReadyForVerification > 1) {
-
-				setTopText(getString(R.string.receipt_toptext_multiple_hidden_receipts_start) + numberOfReceiptsHiddenUntilVerification
-						+ getString(R.string.receipt_toptext_multiple_hidden_receipts_end));
-			}
-		}
+                    setTopText(String.format(getString(R.string.receipt_toptext_multiple_hidden_receipts), numberOfReceiptsHiddenUntilVerification));
+                }
+            }
+        }
 	}
 
 	public void updateAccountMeta() {
@@ -114,7 +116,7 @@ public class ReceiptFragment extends ContentFragment {
 
 	private void openReceipt(String receiptContent) {
 		Intent intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
-		intent.putExtra(super.INTENT_CONTENT, getContent());
+		intent.putExtra(INTENT_CONTENT, getContent());
 		intent.putExtra(ApiConstants.GET_RECEIPT, receiptContent);
 		startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
 	}
@@ -258,10 +260,10 @@ public class ReceiptFragment extends ContentFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == getActivity().RESULT_OK) {
+		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
 
-				String action = data.getStringExtra(ApiConstants.ACTION);
+				String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
 				if (action.equals(ApiConstants.DELETE)) {
 					deleteReceipt(DocumentContentStore.getDocumentReceipt());
@@ -276,7 +278,7 @@ public class ReceiptFragment extends ContentFragment {
 		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
 			super.onCreateActionMode(actionMode, menu);
 
-			MenuItem moveDocument = menu.findItem(R.id.main_context_menu_folder);
+			MenuItem moveDocument = menu.findItem(R.id.main_context_menu_move);
 			moveDocument.setVisible(false);
 
 			return true;

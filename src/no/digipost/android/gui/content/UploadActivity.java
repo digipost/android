@@ -16,27 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import no.digipost.android.R;
-import no.digipost.android.api.ContentOperations;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.gui.helpers.TextProgressBar;
-import no.digipost.android.model.PrimaryAccount;
-import no.digipost.android.utilities.ApplicationUtilities;
-import no.digipost.android.utilities.DataFormatUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
-
-import org.apache.commons.io.FilenameUtils;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -71,6 +50,29 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import no.digipost.android.R;
+import no.digipost.android.api.ContentOperations;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.helpers.TextProgressBar;
+import no.digipost.android.model.Mailbox;
+import no.digipost.android.utilities.ApplicationUtilities;
+import no.digipost.android.utilities.DataFormatUtilities;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
+
+import static java.lang.String.format;
+
 public class UploadActivity extends Activity {
 	private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
 	private final String[] blockedFileContentTypes = { ApiConstants.TEXT_HTML };
@@ -84,6 +86,7 @@ public class UploadActivity extends Activity {
 	private TextView absolutePath;
 	private TextProgressBar availableSpace;
 	private TextView listEmpty;
+    private int content = 0;
 
 	private ActionMode uploadActionMode;
 
@@ -111,7 +114,7 @@ public class UploadActivity extends Activity {
 		listView.setMultiChoiceModeListener(new UploadMultiChoiceModeListener());
 		listAdapter = new UploadListAdapter(this, mFiles);
 		listView.setAdapter(listAdapter);
-
+        content = getIntent().getIntExtra(ApiConstants.UPLOAD,ApplicationConstants.MAILBOX);
 		executeSetAccountInfoTask();
 	}
 
@@ -188,9 +191,9 @@ public class UploadActivity extends Activity {
 		listAdapter.notifyDataSetChanged();
 	}
 
-	private void setAvailableSpace(PrimaryAccount primaryAccount) {
-		long bytesUsed = Long.parseLong(primaryAccount.getUsedStorage());
-		long bytesAvailable = Long.parseLong(primaryAccount.getTotalAvailableStorage());
+	private void setAvailableSpace(Mailbox mailbox) {
+		long bytesUsed = Long.parseLong(mailbox.getUsedStorage());
+		long bytesAvailable = Long.parseLong(mailbox.getTotalAvailableStorage());
 
 		int percentUsed = (int) ((bytesUsed * 100) / bytesAvailable);
 
@@ -203,8 +206,8 @@ public class UploadActivity extends Activity {
 			String contentType = FileUtilities.getMimeType(file);
 
 			if (contentType != null) {
-				for (int i = 0; i < blockedFileContentTypes.length; i++) {
-					if (contentType.equals(blockedFileContentTypes[i])) {
+				for (String blockedFileContentType : blockedFileContentTypes) {
+					if (contentType.equals(blockedFileContentType)) {
 						return false;
 					}
 				}
@@ -279,23 +282,11 @@ public class UploadActivity extends Activity {
 
     private String getUploadFileDialogMessage(int count) {
         if (count > 1) {
-            return "Vil du laste opp disse " + count + " filene?";
+            return format(getString(R.string.upload_confirm_multiple), count);
         }
 
-        return "Vil du laste opp denne filen?";
+        return getString(R.string.upload_confirm_single);
     }
-
-	private void showBlockedFileExtensionDialog(File file) {
-		String message = getString(R.string.upload_file_type_not_allowed_start) + FilenameUtils.getExtension(file.getName()) + getString(R.string.upload_file_type_not_allowed_end);
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, getString(R.string.unsupported_title));
-		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				dialogInterface.dismiss();
-			}
-		});
-		builder.create().show();
-	}
 
     private void previewFile(File file) {
         if (FilenameUtils.getExtension(file.getName()).equals(ApiConstants.FILETYPE_PDF)) {
@@ -314,17 +305,17 @@ public class UploadActivity extends Activity {
 	private void executeUploadTask(File file) {
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(file);
-		UploadTask uploadTask = new UploadTask(files);
+		UploadTask uploadTask = new UploadTask(files,content);
 		uploadTask.execute();
 	}
 
 	private void executeUploadTask(ArrayList<File> files) {
-		UploadTask uploadTask = new UploadTask(files);
+		UploadTask uploadTask = new UploadTask(files,content);
 		uploadTask.execute();
 	}
 
-	private void setAccountInfo(PrimaryAccount primaryAccount) {
-		setAvailableSpace(primaryAccount);
+	private void setAccountInfo(Mailbox mailbox) {
+		setAvailableSpace(mailbox);
 		availableSpace.setVisibility(View.VISIBLE);
 	}
 
@@ -333,12 +324,12 @@ public class UploadActivity extends Activity {
 		setAccountInfoTask.execute();
 	}
 
-	private class SetAccountInfoTask extends AsyncTask<Void, Void, PrimaryAccount> {
+	private class SetAccountInfoTask extends AsyncTask<Void, Void, Mailbox> {
 
 		@Override
-		protected PrimaryAccount doInBackground(Void... voids) {
+		protected Mailbox doInBackground(Void... voids) {
 			try {
-				return ContentOperations.getAccountUpdated(UploadActivity.this).getPrimaryAccount();
+				return ContentOperations.getCurrentMailbox(UploadActivity.this);
 			} catch (DigipostApiException e) {
 				return null;
 			} catch (DigipostClientException e) {
@@ -349,11 +340,11 @@ public class UploadActivity extends Activity {
 		}
 
 		@Override
-		protected void onPostExecute(PrimaryAccount primaryAccount) {
-			super.onPostExecute(primaryAccount);
+		protected void onPostExecute(Mailbox mailbox) {
+			super.onPostExecute(mailbox);
 
-			if (primaryAccount != null) {
-				setAccountInfo(primaryAccount);
+			if (mailbox != null) {
+				setAccountInfo(mailbox);
 			}
 		}
 	}
@@ -547,13 +538,15 @@ public class UploadActivity extends Activity {
 		private ArrayList<File> files;
 		private boolean invalidToken;
 		private int progress;
+        private int content;
 
 		private ProgressDialog progressDialog;
 
-		public UploadTask(ArrayList<File> files) {
+		public UploadTask(ArrayList<File> files,int content) {
 			this.files = files;
 			this.progress = 0;
-		}
+            this.content = content;
+        }
 
 		@Override
 		protected void onPreExecute() {
@@ -577,7 +570,7 @@ public class UploadActivity extends Activity {
 					if (!isCancelled()) {
 						publishProgress(file);
 						progress++;
-						ContentOperations.uploadFile(UploadActivity.this, file);
+						ContentOperations.uploadFile(UploadActivity.this, file,content);
 					}
 				}
 
@@ -598,14 +591,14 @@ public class UploadActivity extends Activity {
 		@Override
 		protected void onProgressUpdate(File... values) {
 			super.onProgressUpdate(values);
-			progressDialog.setMessage(getString(R.string.uploading) + values[0].getName() + " (" + progress + "/" + files.size() + ")");
+			progressDialog.setMessage(format(getString(R.string.uploading), values[0].getName(), progress, files.size()));
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
 			progressDialog.dismiss();
-			DialogUtitities.showToast(UploadActivity.this, progress + " av " + files.size() + getString(R.string.upload_files_uploaded));
+			DialogUtitities.showToast(UploadActivity.this, format(getString(R.string.upload_files_uploaded), progress, files.size()));
 			finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
 		}
 
@@ -622,14 +615,14 @@ public class UploadActivity extends Activity {
 				DialogUtitities.showToast(UploadActivity.this, result);
 			} else {
 				DialogUtitities.showToast(UploadActivity.this, getString(R.string.upload_complete));
-				finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
+				finishActivityWithAction(ApiConstants.UPLOAD);
 			}
 		}
 	}
 
 	private void finishActivityWithAction(String action) {
 		Intent intent = new Intent();
-		intent.putExtra(ApiConstants.ACTION, action);
+		intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
 		setResult(RESULT_OK, intent);
 		finish();
 	}

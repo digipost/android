@@ -12,6 +12,6 @@
         </shape>
     </item>
 
-    <item android:drawable="@color/white"></item>
+    <item android:drawable="@color/white"/>
 
 </selector>

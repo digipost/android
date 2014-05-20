@@ -16,12 +16,12 @@
 
 package no.digipost.android.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import java.util.ArrayList;
 
 import no.digipost.android.constants.ApiConstants;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrimaryAccount {
@@ -33,6 +33,9 @@ public class PrimaryAccount {
 
 	@JsonProperty
 	private String fullName;
+
+    @JsonProperty
+    private String firstName;
 
     @JsonProperty
     private ArrayList<String> email;
@@ -66,6 +69,8 @@ public class PrimaryAccount {
 	public String getFullName() {
 		return fullName;
 	}
+
+    public String getFirstName(){return firstName;}
 
     public ArrayList<String> getEmail() {
         return email;

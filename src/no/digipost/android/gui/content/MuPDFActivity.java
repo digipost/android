@@ -16,28 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import java.lang.reflect.Field;
-import java.util.concurrent.Executor;
-
-import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.documentstore.DocumentContentStore;
-import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.pdf.MuPDFAlert;
-import no.digipost.android.pdf.MuPDFCore;
-import no.digipost.android.pdf.MuPDFPageAdapter;
-import no.digipost.android.pdf.MuPDFReaderView;
-import no.digipost.android.pdf.MuPDFView;
-import no.digipost.android.pdf.SearchTask;
-import no.digipost.android.pdf.SearchTaskResult;
-import no.digipost.android.utilities.ApplicationUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
-
-import org.apache.commons.io.FilenameUtils;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,6 +38,28 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
+
+import org.apache.commons.io.FilenameUtils;
+
+import java.lang.reflect.Field;
+import java.util.concurrent.Executor;
+
+import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.MainContentActivity;
+import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.pdf.MuPDFAlert;
+import no.digipost.android.pdf.MuPDFCore;
+import no.digipost.android.pdf.MuPDFPageAdapter;
+import no.digipost.android.pdf.MuPDFReaderView;
+import no.digipost.android.pdf.MuPDFView;
+import no.digipost.android.pdf.SearchTask;
+import no.digipost.android.pdf.SearchTaskResult;
+import no.digipost.android.utilities.ApplicationUtilities;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
 
 class ThreadPerTaskExecutor implements Executor {
 	public void execute(Runnable r) {
@@ -625,7 +625,10 @@ public class MuPDFActivity extends DisplayContentActivity {
 
 	private void executeAction(String action) {
 		Intent i = new Intent(MuPDFActivity.this, MainContentActivity.class);
-		i.putExtra(ApiConstants.ACTION, action);
+		i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
+        if(action == ApiConstants.MOVE){
+
+        }
 
 		setResult(RESULT_OK, i);
 		finish();
@@ -664,8 +667,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem delete = menu.findItem(R.id.pdfmenu_delete);
-		MenuItem toArchive = menu.findItem(R.id.pdfmenu_archive);
-		MenuItem toWorkarea = menu.findItem(R.id.pdfmenu_workarea);
+        MenuItem move = menu.findItem(R.id.pdfmenu_move);
         MenuItem openExternal = menu.findItem(R.id.pdfmenu_open_external);
         MenuItem save = menu.findItem(R.id.pdfmenu_save);
 		sendToBank = menu.findItem(R.id.pdfmenu_send_to_bank);
@@ -674,19 +676,12 @@ public class MuPDFActivity extends DisplayContentActivity {
 
         if (openFilepath != null) {
             delete.setVisible(false);
-            toArchive.setVisible(false);
-            toWorkarea.setVisible(false);
+            move.setVisible(false);
             openExternal.setVisible(false);
             save.setVisible(false);
         }
 
 		int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
-
-		if (content == ApplicationConstants.WORKAREA) {
-			toWorkarea.setVisible(false);
-		} else if (content == ApplicationConstants.ARCHIVE) {
-			toArchive.setVisible(false);
-		}
 
 		boolean sendToBankVisible = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
@@ -709,11 +704,8 @@ public class MuPDFActivity extends DisplayContentActivity {
 		case R.id.pdfmenu_delete:
 			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
 			return true;
-		case R.id.pdfmenu_archive:
-			promtAction(getString(R.string.dialog_prompt_document_toArchive), ApiConstants.LOCATION_ARCHIVE);
-			return true;
-		case R.id.pdfmenu_workarea:
-			promtAction(getString(R.string.dialog_prompt_document_toWorkarea), ApiConstants.LOCATION_WORKAREA);
+		case R.id.pdfmenu_move:
+            showMoveToFolderDialog();
 			return true;
 		case R.id.pdfmenu_copy:
 			selectModeOn();

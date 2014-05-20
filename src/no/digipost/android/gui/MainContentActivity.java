@@ -16,31 +16,12 @@
 
 package no.digipost.android.gui;
 
-import java.lang.reflect.Field;
-
-import no.digipost.android.R;
-import no.digipost.android.api.ContentOperations;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.gui.adapters.DrawerArrayAdapter;
-import no.digipost.android.gui.content.SettingsActivity;
-import no.digipost.android.gui.content.UploadActivity;
-import no.digipost.android.gui.fragments.ArchiveFragment;
-import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.gui.fragments.MailboxFragment;
-import no.digipost.android.gui.fragments.ReceiptFragment;
-import no.digipost.android.gui.fragments.WorkareaFragment;
-import no.digipost.android.model.PrimaryAccount;
-import no.digipost.android.utilities.ApplicationUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
-import no.digipost.android.utilities.SettingsUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -52,6 +33,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -64,6 +46,34 @@ import android.widget.SearchView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
+import no.digipost.android.R;
+import no.digipost.android.api.ContentOperations;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.adapters.DrawerArrayAdapter;
+import no.digipost.android.gui.adapters.MailboxArrayAdapter;
+import no.digipost.android.gui.content.SettingsActivity;
+import no.digipost.android.gui.content.UploadActivity;
+import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.gui.fragments.DocumentFragment;
+import no.digipost.android.gui.fragments.ReceiptFragment;
+import no.digipost.android.model.Account;
+import no.digipost.android.model.Folder;
+import no.digipost.android.model.Mailbox;
+import no.digipost.android.utilities.ApplicationUtilities;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.SettingsUtilities;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
+
+import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
 	public static final int INTENT_REQUESTCODE = 0;
 
@@ -71,41 +81,39 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	private ListView drawerList;
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerArrayAdapter drawerArrayAdapter;
-	private SearchView searchView;
+    protected MailboxArrayAdapter mailboxAdapter;
     private MenuItem searchButton;
-
 	private boolean refreshing;
+    private static String[] drawerListitems;
+    public static ArrayList<Folder> folders;
+    private Dialog mailboxDialog;
+    public static int numberOfFolders;
+    private boolean showActionBarName;
+    private Mailbox mailbox;
+    private ArrayList<Mailbox> mailboxes;
+    private Account account;
+    public static String fragmentName;
 
-	private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
-
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.activity_main_content);
 		ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
-
 		this.refreshing = true;
-
 		drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 		drawerList = (ListView) findViewById(R.id.main_left_drawer);
 		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, ApplicationConstants.titles, 0);
-		drawerList.setAdapter(drawerArrayAdapter);
-		drawerList.setOnItemClickListener(new DrawerItemClickListener());
+        updateUI();
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
 		drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
 				R.string.close);
 		drawerLayout.setDrawerListener(drawerToggle);
-
 		getActionBar().setHomeButtonEnabled(true);
 
-		if (savedInstanceState == null || getCurrentFragment() == null) {
-			int content = Integer.parseInt(SettingsUtilities.getDefaultScreenPreference(this));
+        selectItem(ApplicationConstants.MAILBOX);
 
-			selectItem(content);
-		}
-
-		onSharedPreferenceChangeListener = new SettingsChangedlistener();
-		SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+        SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
 
 		if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
 			drawerLayout.openDrawer(GravityCompat.START);
@@ -128,18 +136,18 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_main_content_actionbar, menu);
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
-		searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-		setupSearchView(searchView);
-
-		getActionBar().setTitle(ApplicationConstants.titles[getCurrentFragment().getContent()]);
+        setupSearchView(searchView);
+        updateTitles();
 
 		return super.onCreateOptionsMenu(menu);
 	}
 
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		drawerArrayAdapter.updateDrawer(getCurrentFragment().getContent());
+		drawerArrayAdapter.updateDrawer();
 
 		searchButton = menu.findItem(R.id.menu_search);
 		searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
@@ -164,8 +172,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
 		MenuItem uploadButton = menu.findItem(R.id.menu_upload);
-		uploadButton.setVisible(!drawerOpen);
-		refreshButton.setVisible(!drawerOpen);
+        if(getCurrentFragment().getContent()==ApplicationConstants.RECEIPTS){
+            uploadButton.setVisible(false);
+        }else {
+            uploadButton.setVisible(!drawerOpen);
+        }
+        refreshButton.setVisible(!drawerOpen);
 		searchButton.setVisible(!drawerOpen);
 
 		return super.onPrepareOptionsMenu(menu);
@@ -187,18 +199,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		case R.id.menu_refresh:
 			getCurrentFragment().updateAccountMeta();
 			return true;
-		case R.id.menu_logout:
-			logOut();
-			return true;
-		case R.id.menu_help:
-			openHelpWebView();
-			return true;
-		case R.id.menu_upload:
-			startUploadActivity();
-			return true;
-		case R.id.menu_preferences:
-			startPreferencesActivity();
-			return true;
+        case R.id.menu_upload:
+                startUploadActivity();
+                return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -223,7 +226,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	@Override
 	public void onUpdateAccountMeta() {
-		executeGetPrimaryAccountTask();
+		executeGetAccountTask();
 	}
 
 	@Override
@@ -232,11 +235,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 		if (resultCode == RESULT_OK) {
 			if (requestCode == INTENT_REQUESTCODE) {
-				String action = data.getStringExtra(ApiConstants.ACTION);
+				String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
-				if (action.equals(ApiConstants.REFRESH_ARCHIVE)) {
-					selectItem(ApplicationConstants.ARCHIVE);
-				} else if (action.equals(ApiConstants.LOGOUT)) {
+                if(action.equals(ApiConstants.UPLOAD)){
+                    selectItem(getCurrentFragment().getContent());
+                }else if (action.equals(ApiConstants.LOGOUT)) {
 					logOut();
 				}
 			}
@@ -256,7 +259,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         return super.onKeyDown(keyCode, event);
     }
 
-    private class SettingsChangedlistener implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private class SettingsChangedlistener implements OnSharedPreferenceChangeListener {
 
 		@Override
 		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -275,23 +278,93 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 	}
 
-	private void selectItem(int content) {
-		ContentFragment contentFragment = null;
+    private void selectMailbox(String digipostAddress,String name){
+        if (ContentOperations.changeMailbox(digipostAddress)) {
+            getActionBar().setTitle(name);
+            account = null;
+            executeGetAccountTask();
+            selectItem(ApplicationConstants.MAILBOX);
+        }
+    }
 
-		switch (content) {
-		case ApplicationConstants.MAILBOX:
-			contentFragment = new MailboxFragment();
-			break;
-		case ApplicationConstants.WORKAREA:
-			contentFragment = new WorkareaFragment();
-			break;
-		case ApplicationConstants.ARCHIVE:
-			contentFragment = new ArchiveFragment();
-			break;
-		case ApplicationConstants.RECEIPTS:
-			contentFragment = new ReceiptFragment();
-			break;
-		}
+    private void openMailboxSelection(){
+        mailboxDialog = null;
+
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setNegativeButton(getString(R.string.abort),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.setView(view);
+
+        ListView mailboxListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+
+        mailboxAdapter = new MailboxArrayAdapter(this, R.layout.attachmentdialog_list_item, mailboxes);
+        mailboxListView.setAdapter(mailboxAdapter);
+        mailboxListView.setOnItemClickListener(new ChangeMailboxListOnItemClickListener());
+
+        builder.setTitle(ApplicationConstants.DRAWER_CHANGE_ACCOUNT);
+        mailboxDialog = builder.create();
+        mailboxDialog.show();
+
+    }
+
+    private class ChangeMailboxListOnItemClickListener implements AdapterView.OnItemClickListener {
+        public ChangeMailboxListOnItemClickListener() {}
+
+        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+            Mailbox mailbox = mailboxAdapter.getItem(position);
+            selectMailbox(mailbox.getDigipostaddress(),mailbox.getName());
+            if(mailboxDialog != null) {
+                mailboxDialog.dismiss();
+                mailboxDialog = null;
+            }
+        }
+    }
+
+	private void selectItem(int content) {
+        ContentFragment contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
+
+        if(account != null) {
+            try {
+
+                int inboxReceiptsAndFolders = (numberOfFolders+ApplicationConstants.numberOfStaticFolders);
+
+                if (content == ApplicationConstants.MAILBOX) {
+                    contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
+
+                } else if (content == ApplicationConstants.RECEIPTS) {
+                    contentFragment = new ReceiptFragment();
+
+                } else if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders ) {
+                    contentFragment = new DocumentFragment(content);
+
+                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_CHANGE_ACCOUNT)) {
+                    openMailboxSelection();
+                    return;
+
+                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_SETTINGS)) {
+                    startPreferencesActivity();
+                    return;
+
+                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_HELP)) {
+                    openHelpWebView();
+                    return;
+
+                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_LOGOUT)) {
+                    logOut();
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
 		FragmentManager fragmentManager = getFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
@@ -312,13 +385,91 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		drawerToggle.onConfigurationChanged(newConfig);
 	}
 
-	public void updateUI(PrimaryAccount primaryAccount) {
-		if (primaryAccount != null) {
-			getActionBar().setSubtitle(primaryAccount.getFullName());
-			//ApplicationConstants.titles[0] = primaryAccount.getFullName();
-			drawerArrayAdapter.setUnreadLetters(primaryAccount.getUnreadItemsInInbox());
-		}
-	}
+    private void updateUI(){
+        updateDrawer();
+        updateTitles();
+
+    }
+
+    private void updateTitles(){
+        if(account != null) {
+            fragmentName = "";
+            try {
+                if(showActionBarName){
+                    fragmentName = mailbox.getName();
+                }else {
+                    if (getActionBar().getTitle().equals("")) {
+                        if(mailbox != null){
+                            fragmentName = mailbox.getName();
+                        }
+                    } else if (drawerListitems[getCurrentFragment().getContent()].equals(ApplicationConstants.DRAWER_INBOX)) {
+                        fragmentName = mailbox.getName();
+                    } else {
+                        fragmentName = drawerListitems[getCurrentFragment().getContent()];
+                    }
+                }
+                getActionBar().setTitle(fragmentName);
+            } catch (NullPointerException e) {
+                //IGNORE
+            }
+        }
+    }
+
+    private void updateDrawer(){
+        folders = new ArrayList<Folder>();
+
+        ArrayList<String> drawerItems = new ArrayList<String>();
+
+        //Add main menu
+        drawerItems.add(ApplicationConstants.DRAWER_INBOX);
+        drawerItems.add(ApplicationConstants.DRAWER_RECEIPTS);
+        drawerItems.add(ApplicationConstants.DRAWER_MY_FOLDERS);
+
+        ArrayList<Folder> fs = null;
+
+        if(account != null) {
+
+            //Add folders
+            mailbox = account.getMailboxByDigipostAddress(ContentOperations.digipostAddress);
+
+            if (mailbox != null) {
+                fs = mailbox.getFolders().getFolder();
+                numberOfFolders = fs.size();
+                for (Folder f : fs) {
+                    String name = f.getName();
+                    drawerItems.add(name);
+                    folders.add(f);
+                }
+            }
+        }
+
+        //Add account settings
+        drawerItems.add(ApplicationConstants.DRAWER_MY_ACCOUNT);
+
+        if (account != null) {
+            mailboxes = account.getMailbox();
+
+            if (mailboxes.size() > 1) {
+                drawerItems.add(ApplicationConstants.DRAWER_CHANGE_ACCOUNT);
+            }
+        }
+
+        drawerItems.add(ApplicationConstants.DRAWER_SETTINGS);
+        drawerItems.add(ApplicationConstants.DRAWER_HELP);
+        drawerItems.add(ApplicationConstants.DRAWER_LOGOUT);
+
+
+        //Add items to drawer
+        drawerListitems = new String[drawerItems.size()];
+        drawerListitems = drawerItems.toArray(drawerListitems);
+
+        drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, drawerListitems,fs, 0);
+        drawerList.setAdapter(drawerArrayAdapter);
+
+        if(mailbox!= null) {
+            drawerArrayAdapter.setUnreadLetters(mailbox.getUnreadItemsInInbox());
+        }
+    }
 
 	private ContentFragment getCurrentFragment() {
 		return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);
@@ -328,7 +479,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		FileUtilities.deleteTempFiles();
 		SharedPreferencesUtilities.deleteRefreshtoken(this);
 		SharedPreferencesUtilities.deleteScreenlockChoice(this);
-
+        ContentOperations.resetState();
+        mailbox = null;
+        account = null;
 		Intent intent = new Intent(MainContentActivity.this, LoginActivity.class);
 		startActivity(intent);
 		finish();
@@ -336,6 +489,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
 	private void startUploadActivity() {
 		Intent intent = new Intent(MainContentActivity.this, UploadActivity.class);
+        intent.putExtra(ApiConstants.UPLOAD,getCurrentFragment().getContent());
 		startActivityForResult(intent, INTENT_REQUESTCODE);
 	}
 
@@ -369,7 +523,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 			searchPlate.setBackgroundResource(R.drawable.search_background);
 
 			searchTextView.setHintTextColor(getResources().getColor(R.color.searchbar_grey_hint));
-			searchView.setQueryHint(getString(R.string.search_in) + ApplicationConstants.titles[getCurrentFragment().getContent()]);
+			searchView.setQueryHint(getString(R.string.search_in) + drawerListitems[getCurrentFragment().getContent()]);
 
 			android.widget.ImageView searchViewClearButton = (android.widget.ImageView) searchPlate.getChildAt(1);
 			searchViewClearButton.setImageResource(R.drawable.ic_clear_white);
@@ -402,20 +556,23 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 
 		public void onDrawerClosed(View view) {
+            showActionBarName = false;
 			invalidateOptionsMenu();
+
 		}
 
 		public void onDrawerOpened(View drawerView) {
+            showActionBarName = true;
 			invalidateOptionsMenu();
 		}
 	}
 
-	private void executeGetPrimaryAccountTask() {
-		GetPrimaryAccountTask getPrimaryAccountTask = new GetPrimaryAccountTask();
-		getPrimaryAccountTask.execute();
+	private void executeGetAccountTask() {
+		GetAccountTask getAccountTask = new GetAccountTask();
+		getAccountTask.execute();
 	}
 
-	private class GetPrimaryAccountTask extends AsyncTask<Void, Void, PrimaryAccount> {
+	private class GetAccountTask extends AsyncTask<Void, Void, Account> {
 		private String errorMessage;
 		private boolean invalidToken;
 
@@ -425,9 +582,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 
 		@Override
-		protected PrimaryAccount doInBackground(Void... voids) {
+		protected Account doInBackground(Void... voids) {
 			try {
-				return ContentOperations.getAccountUpdated(MainContentActivity.this).getPrimaryAccount();
+				return ContentOperations.getAccountUpdated(MainContentActivity.this);
 			} catch (DigipostApiException e) {
 				Log.e(getClass().getName(), e.getMessage(), e);
 				errorMessage = e.getMessage();
@@ -445,11 +602,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 		}
 
 		@Override
-		protected void onPostExecute(PrimaryAccount result) {
+		protected void onPostExecute(Account result) {
 			super.onPostExecute(result);
 
 			if (result != null) {
-				updateUI(result);
+                account = result;
+                updateUI();
 			} else {
 				if (invalidToken) {
 					DialogUtitities.showToast(MainContentActivity.this, errorMessage);

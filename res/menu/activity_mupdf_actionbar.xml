@@ -21,12 +21,8 @@
             android:showAsAction="never"/>
 
     <item
-            android:id="@+id/pdfmenu_workarea"
-            android:title="@string/context_move_to_workarea"
-            android:showAsAction="never"/>
-    <item
-            android:id="@+id/pdfmenu_archive"
-            android:title="@string/context_move_to_archive"
+            android:id="@+id/pdfmenu_move"
+            android:title="@string/move"
             android:showAsAction="never"/>
 
     <item

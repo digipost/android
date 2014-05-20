@@ -17,97 +17,98 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/content_list_item"
-              android:paddingLeft="15dp"
-              android:paddingTop="10dp"
-              android:paddingRight="15dp"
-              android:paddingBottom="10dp"
-        >
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/content_list_item"
+    android:orientation="horizontal"
+    android:paddingBottom="10dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="15dp"
+    android:paddingTop="10dp">
 
     <CheckBox
-            android:id="@+id/content_checkbox"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/move_checkbox_description"
-            android:layout_width="wrap_content"
-            android:gravity="center"
-            android:paddingRight="10dp"/>
+        android:id="@+id/content_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/move_checkbox_description"
+        android:gravity="center"
+        android:paddingRight="10dp" />
+
+    <ImageView
+        android:id="@+id/content_type_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:paddingRight="10dp"
+        android:src="@drawable/blank_32px" />
 
     <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="0sp"
-            android:layout_weight="1"
-            android:layout_marginRight="15dp"
+        android:layout_width="0sp"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="15dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/content_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top">
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/black_subject"
+            android:textSize="17sp" />
 
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-            <TextView
-                    android:id="@+id/content_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:textSize="17sp"
-                    android:textColor="@color/black_subject"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
-
-            <TextView
-                    android:id="@+id/content_subTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp"
-                    android:textColor="@color/grey_creator"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
-        </LinearLayout>
+        <TextView
+            android:id="@+id/content_subTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/grey_creator"
+            android:textSize="14sp" />
     </LinearLayout>
 
     <LinearLayout
-            android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="1dp"
+        android:gravity="right|top"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/content_meta_top"
             android:layout_width="wrap_content"
-            android:gravity="right|top"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:singleLine="true"
+            android:textColor="@color/blue"
+            android:textSize="12sp" />
 
         <TextView
-                android:id="@+id/content_meta_top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:gravity="right"
-                android:textColor="@color/blue"
-                android:textSize="12sp"/>
-
-        <TextView
-                android:id="@+id/content_meta_middle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:textColor="@color/grey_filesize"
-                android:gravity="right"
-                android:autoText="false"
-                android:textSize="12sp"/>
+            android:id="@+id/content_meta_middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:singleLine="true"
+            android:textColor="@color/grey_filesize"
+            android:textSize="12sp" />
 
         <ImageView
-                android:id="@+id/content_meta_bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="visible"
+            android:id="@+id/content_meta_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
 
-                android:src="@drawable/transparent_placeholder"
-                android:gravity="right"
-                android:adjustViewBounds="true"
-                android:cropToPadding="false"
-                android:focusable="false"
-                />
+            android:cropToPadding="false"
+            android:focusable="false"
+            android:gravity="right"
+            android:src="@drawable/transparent_placeholder"
+            android:visibility="visible" />
 
     </LinearLayout>
 </LinearLayout>

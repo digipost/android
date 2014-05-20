@@ -17,8 +17,6 @@
 package no.digipost.android.constants;
 
 public class ApplicationConstants {
-    public static final int ACTION_DELETE = 0;
-    public static final int ACTION_MOVE = 1;
 
 	public static final String HMACSHA256 = "HmacSHA256";
 
@@ -34,37 +32,21 @@ public class ApplicationConstants {
     public static final String NUMBER_OF_TIMES_APP_HAS_RUN = "numberOfTimesAppHasRun";
     public static final int NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN = 1;
 
-    /*
-    //Om det gjøres endringer i drawer så må koden hvor man velger favoritt startside endres.
-
-    //Uten overskrifter (INNBOKS, MAPPER) og fullt navn. Bruk den utkommenterte linjen med setSubtitle i MainContentActivity
-
-    public static final int NAME = 0;
-	public static final int MAILBOX = 2;
-	public static final int RECEIPTS = 3;
-	public static final int WORKAREA = 5;
-	public static final int ARCHIVE = 6;
-
-	public static String[] titles = { "","INNBOKS", "Postkassen", "Kvitteringer", "MAPPER", "Kjøkkenbenken", "Arkivet" };
-
-	 */
-
-    public static final int MAILBOX = 1;
-    public static final int RECEIPTS = 2;
-    public static final int WORKAREA = 4;
-    public static final int ARCHIVE = 5;
-
-    public static String[] titles = { "INNBOKS", "Postkassen", "Kvitteringer", "MAPPER", "Kjøkkenbenken", "Arkivet" };
-
-    /*
-
-    //Uten overskrifter (INNBOKS, MAPPER)
-
     public static final int MAILBOX = 0;
     public static final int RECEIPTS = 1;
-    public static final int WORKAREA = 2;
-    public static final int ARCHIVE = 3;
+    public static final int FOLDERS_LABEL = 2; //MINE MAPPER
 
-    public static String[] titles = { "Postkassen", "Kvitteringer", "Kjøkkenbenken", "Arkivet" };
-    */
+    public static final String DRAWER_INBOX = "Postkassen";
+    public static final String DRAWER_RECEIPTS = "E-Kvitteringer";
+
+    public static final String DRAWER_MY_FOLDERS = "MINE MAPPER";
+    public static final String DRAWER_MY_ACCOUNT = "MIN KONTO";
+
+    public static final String DRAWER_CHANGE_ACCOUNT = "Bytt konto";
+    public static final String DRAWER_SETTINGS = "Innstillinger";
+    public static final String DRAWER_HELP ="Hjelp";
+    public static final String DRAWER_LOGOUT = "Logg ut";
+
+    public static final int numberOfStaticFolders = 3;
+
 }

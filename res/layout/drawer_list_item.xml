@@ -13,47 +13,60 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   -->
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="2dp"
+    android:background="@drawable/main_drawer_listitem_background">
+
+
+    <RelativeLayout
+        android:id="@+id/drawer_item"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/main_drawer_listitem_background">
-
-    <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true">
+        android:layout_alignParentLeft="true">
 
         <TextView
-                android:id="@+id/drawer_link_name"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textSize="18sp"
-                android:ellipsize="end"
-                android:gravity="center_vertical|left"
-                android:drawablePadding="10dp"
-                android:layout_marginLeft="15dp"
-                android:textColor="@color/white"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+            android:id="@+id/drawer_link_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:drawablePadding="10dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical|left"
+            android:minHeight="?android:attr/listPreferredItemHeight"
+            android:textColor="@color/main_drawer_text"
+            android:textSize="18sp" />
     </RelativeLayout>
 
     <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@color/main_drawer_focused">
 
         <TextView
-                android:id="@+id/drawer_link_unread"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_gravity="right"
-                android:textColor="@color/white"
-                android:visibility="gone"
-                android:background="@drawable/transparent_placeholder"
-                android:textSize="18sp"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall"
-                android:padding="10dp"
-                />
+            android:id="@+id/drawer_link_unread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:background="@drawable/transparent_placeholder"
+            android:gravity="center"
+            android:minHeight="?android:attr/listPreferredItemHeight"
+            android:minWidth="?android:attr/listPreferredItemHeightSmall"
+            android:padding="10dp"
+            android:textColor="@color/main_drawer_text"
+            android:textSize="18sp"
+            android:visibility="gone" />
     </RelativeLayout>
+
+    <View
+        android:id="@+id/drawer_line"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_alignBottom="@id/drawer_item"
+        android:layout_marginLeft="15dp"
+        android:background="#3B3B3B"
+        android:visibility="visible" />
 </RelativeLayout>

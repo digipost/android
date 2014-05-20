@@ -16,63 +16,62 @@
  */
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:weightSum="6"
-              android:background="@color/login_background"
-              android:layout_height="match_parent"
-        >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D7DADE"
+    android:orientation="vertical"
+    android:weightSum="13">
 
     <LinearLayout
-            android:orientation="vertical"
-            android:background="@color/screenlock_header_background"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:padding="15dp"
-            android:paddingLeft="20dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/actionbar_red_background"
+        android:gravity="center"
+        android:layout_weight="6"
+        android:orientation="vertical">
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/screenlock"
-                android:drawableLeft="@drawable/lock_white_50"
-                android:textSize="30sp"
-                android:id="@+id/textView"
-                android:textColor="@color/white"
-                android:layout_gravity="top"
-                android:layout_marginLeft="5dp"
-                android:drawablePadding="1dp"/>
+        <ImageView
+            android:id="@+id/posten_logo"
+            android:layout_width="111dp"
+            android:layout_height="32dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@string/login_header_logo_contentdescription"
+            android:cropToPadding="false"
+            android:gravity="center|center_vertical|center_horizontal"
+            android:src="@drawable/posten_logo" />
     </LinearLayout>
 
     <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="20dp">
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:gravity="center"
+        android:padding="20dp"
+        android:orientation="vertical">
 
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/screenlock_message1"
-                android:gravity="left"
-                android:textSize="20sp"/>
+                android:textColor="#000000"
+            android:gravity="left"
+                android:textSize="18sp"/>
 
         <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:textColor="#000000"
                 android:text="@string/screenlock_message2"
-                android:textSize="20sp"/>
-    </LinearLayout>
+                android:textSize="18sp"/>
 
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
+            android:layout_marginTop="40dp"
             android:gravity="center_vertical|center_horizontal"
             android:layout_gravity="center">
 
@@ -95,7 +94,27 @@
                 android:text="@string/no_dont_use_screenlock"
                 android:textColor="@color/white"
                 android:id="@+id/screenlockactivity_no_button"/>
+        </LinearLayout>
     </LinearLayout>
 
 
-</LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="6"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/login_privacyButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#D7DADE"
+                android:focusable="true"
+                android:gravity="center|center_horizontal"
+                android:text="@string/login_privacybutton_text"
+                android:textColor="@color/login_grey_text"
+                android:textSize="18sp"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+    </LinearLayout>
