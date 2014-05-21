@@ -126,7 +126,7 @@ public class ContentOperations {
 
     public static CurrentBankAccount getCurrentBankAccount(Context context) throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
-        String uri = getCurrentMailbox(context).getCurrentBankAccountUri();
+        String uri = getAccount(context).getPrimaryAccount().getCurrentBankAccountUri();
         return ApiAccess.getCurrentBankAccount(context, uri);
     }
 	public static Receipts getAccountContentMetaReceipt(Context context) throws DigipostApiException, DigipostClientException,

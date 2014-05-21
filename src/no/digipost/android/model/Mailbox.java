@@ -84,10 +84,6 @@ public class Mailbox  {
         return getLinkByRelation(ApiConstants.URL_RELATIONS_ACCOUNT_SETTINGS);
     }
 
-    public String getCurrentBankAccountUri(){
-        return getLinkByRelation(ApiConstants.URL_RELATIONS_CURRENT_BANK_ACCOUNT);
-    }
-
     private String getLinkByRelation(String relation) {
         for (Link l : link) {
             if (l.getRel().equals(relation)) {
