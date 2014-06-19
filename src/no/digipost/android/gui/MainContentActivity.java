@@ -19,7 +19,10 @@ package no.digipost.android.gui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -62,8 +65,11 @@ import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.gui.content.UploadActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
+import no.digipost.android.gui.fragments.EditFolderFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.model.Account;
+import no.digipost.android.model.Attachment;
+import no.digipost.android.model.Document;
 import no.digipost.android.model.Folder;
 import no.digipost.android.model.Mailbox;
 import no.digipost.android.utilities.ApplicationUtilities;
@@ -75,15 +81,15 @@ import no.digipost.android.utilities.SharedPreferencesUtilities;
 import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
-	public static final int INTENT_REQUESTCODE = 0;
+    public static final int INTENT_REQUESTCODE = 0;
 
-	private DrawerLayout drawerLayout;
-	private ListView drawerList;
-	private ActionBarDrawerToggle drawerToggle;
-	private DrawerArrayAdapter drawerArrayAdapter;
+    private DrawerLayout drawerLayout;
+    private ListView drawerList;
+    private ActionBarDrawerToggle drawerToggle;
+    private DrawerArrayAdapter drawerArrayAdapter;
     protected MailboxArrayAdapter mailboxAdapter;
     private MenuItem searchButton;
-	private boolean refreshing;
+    private boolean refreshing;
     private static String[] drawerListitems;
     public static ArrayList<Folder> folders;
     private Dialog mailboxDialog;
@@ -93,32 +99,34 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private ArrayList<Mailbox> mailboxes;
     private Account account;
     public static String fragmentName;
+    private int mStackLevel;
 
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_main_content);
-		ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
-		this.refreshing = true;
-		drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-		drawerList = (ListView) findViewById(R.id.main_left_drawer);
-		drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        setContentView(R.layout.activity_main_content);
+        ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
+        this.refreshing = true;
+        drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        drawerList = (ListView) findViewById(R.id.main_left_drawer);
+        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
         updateUI();
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
-		drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
-				R.string.close);
-		drawerLayout.setDrawerListener(drawerToggle);
-		getActionBar().setHomeButtonEnabled(true);
+        drawerList.setOnItemLongClickListener(new DrawerItemLongClickListener());
+        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
+                R.string.close);
+        drawerLayout.setDrawerListener(drawerToggle);
+        getActionBar().setHomeButtonEnabled(true);
 
         selectItem(ApplicationConstants.MAILBOX);
 
         SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
 
-		if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
-			drawerLayout.openDrawer(GravityCompat.START);
-		}
-	}
+        if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
+            drawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -133,55 +141,55 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     @Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_main_content_actionbar, menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_main_content_actionbar, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
         setupSearchView(searchView);
         updateTitles();
 
-		return super.onCreateOptionsMenu(menu);
-	}
+        return super.onCreateOptionsMenu(menu);
+    }
 
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		drawerArrayAdapter.updateDrawer();
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        drawerArrayAdapter.updateDrawer();
 
-		searchButton = menu.findItem(R.id.menu_search);
-		searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-			@Override
-			public boolean onMenuItemActionExpand(MenuItem menuItem) {
-				return true;
-			}
+        searchButton = menu.findItem(R.id.menu_search);
+        searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                return true;
+            }
 
-			@Override
-			public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-				getCurrentFragment().clearFilter();
-				return true;
-			}
-		});
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                getCurrentFragment().clearFilter();
+                return true;
+            }
+        });
 
-		MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
+        MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
 
-		if (refreshing) {
-			refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
-		} else {
-			refreshButton.setActionView(null);
-		}
-		boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-		MenuItem uploadButton = menu.findItem(R.id.menu_upload);
-        if(getCurrentFragment().getContent()==ApplicationConstants.RECEIPTS){
+        if (refreshing) {
+            refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
+        } else {
+            refreshButton.setActionView(null);
+        }
+        boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
+        MenuItem uploadButton = menu.findItem(R.id.menu_upload);
+        if (getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS) {
             uploadButton.setVisible(false);
-        }else {
+        } else {
             uploadButton.setVisible(!drawerOpen);
         }
         refreshButton.setVisible(!drawerOpen);
-		searchButton.setVisible(!drawerOpen);
+        searchButton.setVisible(!drawerOpen);
 
-		return super.onPrepareOptionsMenu(menu);
-	}
+        return super.onPrepareOptionsMenu(menu);
+    }
 
     @Override
     public boolean onSearchRequested() {
@@ -189,69 +197,69 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         return false;
     }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (drawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
 
-		switch (item.getItemId()) {
-		case R.id.menu_refresh:
-			getCurrentFragment().updateAccountMeta();
-			return true;
-        case R.id.menu_upload:
+        switch (item.getItemId()) {
+            case R.id.menu_refresh:
+                getCurrentFragment().updateAccountMeta();
+                return true;
+            case R.id.menu_upload:
                 startUploadActivity();
                 return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-	@Override
-	public void onStartRefreshContent() {
-		refreshing = true;
-		invalidateOptionsMenu();
-	}
+    @Override
+    public void onStartRefreshContent() {
+        refreshing = true;
+        invalidateOptionsMenu();
+    }
 
-	@Override
-	public void onEndRefreshContent() {
-		refreshing = false;
-		invalidateOptionsMenu();
-	}
+    @Override
+    public void onEndRefreshContent() {
+        refreshing = false;
+        invalidateOptionsMenu();
+    }
 
-	@Override
-	public void requestLogOut() {
-		logOut();
-	}
+    @Override
+    public void requestLogOut() {
+        logOut();
+    }
 
-	@Override
-	public void onUpdateAccountMeta() {
-		executeGetAccountTask();
-	}
+    @Override
+    public void onUpdateAccountMeta() {
+        executeGetAccountTask();
+    }
 
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == RESULT_OK) {
-			if (requestCode == INTENT_REQUESTCODE) {
-				String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == INTENT_REQUESTCODE) {
+                String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
-                if(action.equals(ApiConstants.UPLOAD)){
+                if (action.equals(ApiConstants.UPLOAD)) {
                     selectItem(getCurrentFragment().getContent());
-                }else if (action.equals(ApiConstants.LOGOUT)) {
-					logOut();
-				}
-			}
-		}
-	}
+                } else if (action.equals(ApiConstants.LOGOUT)) {
+                    logOut();
+                }
+            }
+        }
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             int defaultScreen = Integer.parseInt(SettingsUtilities.getDefaultScreenPreference(this));
 
-            if(getCurrentFragment().getContent() != defaultScreen){
+            if (getCurrentFragment().getContent() != defaultScreen) {
                 selectItem(defaultScreen);
                 return true;
             }
@@ -261,24 +269,32 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private class SettingsChangedlistener implements OnSharedPreferenceChangeListener {
 
-		@Override
-		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-			if (key.equals(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS) && getCurrentFragment() != null) {
-				getCurrentFragment().updateAccountMeta();
-			} else if (key.equals(SettingsActivity.KEY_PREF_SCREEN_ROTATION)) {
-				ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
-			}
-		}
-	}
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS) && getCurrentFragment() != null) {
+                getCurrentFragment().updateAccountMeta();
+            } else if (key.equals(SettingsActivity.KEY_PREF_SCREEN_ROTATION)) {
+                ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
+            }
+        }
+    }
 
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			selectItem(position);
-		}
-	}
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
 
-    private void selectMailbox(String digipostAddress,String name){
+    private class DrawerItemLongClickListener implements ListView.OnItemLongClickListener {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                       int position, long id) {
+            return longSelectItem(position);
+        }
+    }
+
+    private void selectMailbox(String digipostAddress, String name) {
         if (ContentOperations.changeMailbox(digipostAddress)) {
             getActionBar().setTitle(name);
             account = null;
@@ -287,7 +303,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
-    private void openMailboxSelection(){
+    private void openMailboxSelection() {
         mailboxDialog = null;
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -299,7 +315,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                });
+                }
+        );
 
         builder.setView(view);
 
@@ -316,25 +333,82 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private class ChangeMailboxListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public ChangeMailboxListOnItemClickListener() {}
+        public ChangeMailboxListOnItemClickListener() {
+        }
 
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
             Mailbox mailbox = mailboxAdapter.getItem(position);
-            selectMailbox(mailbox.getDigipostaddress(),mailbox.getName());
-            if(mailboxDialog != null) {
+            selectMailbox(mailbox.getDigipostaddress(), mailbox.getName());
+            if (mailboxDialog != null) {
                 mailboxDialog.dismiss();
                 mailboxDialog = null;
             }
         }
     }
 
-	private void selectItem(int content) {
+    private boolean longSelectItem(int content) {
+        if (account != null) {
+            int inboxReceiptsAndFolders = (numberOfFolders + ApplicationConstants.numberOfStaticFolders);
+            if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders) {
+                showEditDialog(content);
+            } else if (clickDrawerAccountOption(content)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void showEditDialog(int content) {
+
+        mStackLevel++;
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("editFolderFragment");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        DialogFragment editFolderFragment = EditFolderFragment.newInstance(content);
+        editFolderFragment.show(ft, "editFolderFragment");
+    }
+
+    public void saveEditFolder(Folder folder){
+
+    }
+
+    public void deleteEditFolder(Folder folder){
+
+    }
+
+
+    private boolean clickDrawerAccountOption(int content) {
+        if (drawerListitems[content].equals(ApplicationConstants.DRAWER_CHANGE_ACCOUNT)) {
+            openMailboxSelection();
+            return true;
+
+        } else if (drawerListitems[content].equals(ApplicationConstants.DRAWER_SETTINGS)) {
+            startPreferencesActivity();
+            return true;
+
+        } else if (drawerListitems[content].equals(ApplicationConstants.DRAWER_HELP)) {
+            openHelpWebView();
+            return true;
+
+        } else if (drawerListitems[content].equals(ApplicationConstants.DRAWER_LOGOUT)) {
+            logOut();
+            return true;
+        }
+        return false;
+    }
+
+    private void selectItem(int content) {
         ContentFragment contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
 
-        if(account != null) {
+        if (account != null) {
             try {
 
-                int inboxReceiptsAndFolders = (numberOfFolders+ApplicationConstants.numberOfStaticFolders);
+                int inboxReceiptsAndFolders = (numberOfFolders + ApplicationConstants.numberOfStaticFolders);
 
                 if (content == ApplicationConstants.MAILBOX) {
                     contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
@@ -342,23 +416,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 } else if (content == ApplicationConstants.RECEIPTS) {
                     contentFragment = new ReceiptFragment();
 
-                } else if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders ) {
+                } else if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders) {
                     contentFragment = new DocumentFragment(content);
 
-                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_CHANGE_ACCOUNT)) {
-                    openMailboxSelection();
-                    return;
-
-                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_SETTINGS)) {
-                    startPreferencesActivity();
-                    return;
-
-                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_HELP)) {
-                    openHelpWebView();
-                    return;
-
-                }else if(drawerListitems[content].equals(ApplicationConstants.DRAWER_LOGOUT)) {
-                    logOut();
+                } else if (clickDrawerAccountOption(content)) {
                     return;
                 }
             } catch (Exception e) {
@@ -366,40 +427,40 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             }
         }
 
-		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
 
-		drawerList.setItemChecked(content, true);
-		drawerLayout.closeDrawer(drawerList);
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		drawerToggle.syncState();
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		drawerToggle.onConfigurationChanged(newConfig);
-	}
-
-    private void updateUI(){
-        updateDrawer();
-        updateTitles();
-
+        drawerList.setItemChecked(content, true);
+        drawerLayout.closeDrawer(drawerList);
     }
 
-    private void updateTitles(){
-        if(account != null) {
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    private void updateUI() {
+        updateDrawer();
+        updateTitles();
+    }
+
+    private void updateTitles() {
+        if (account != null) {
             fragmentName = "";
             try {
-                if(showActionBarName){
+                if (showActionBarName) {
                     fragmentName = mailbox.getName();
-                }else {
+                } else {
                     if (getActionBar().getTitle().equals("")) {
-                        if(mailbox != null){
+                        if (mailbox != null) {
                             fragmentName = mailbox.getName();
                         }
                     } else if (drawerListitems[getCurrentFragment().getContent()].equals(ApplicationConstants.DRAWER_INBOX)) {
@@ -415,7 +476,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
-    private void updateDrawer(){
+    private void updateDrawer() {
         folders = new ArrayList<Folder>();
 
         ArrayList<String> drawerItems = new ArrayList<String>();
@@ -427,7 +488,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         ArrayList<Folder> fs = null;
 
-        if(account != null) {
+        if (account != null) {
 
             //Add folders
             mailbox = account.getMailboxByDigipostAddress(ContentOperations.digipostAddress);
@@ -458,162 +519,217 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerItems.add(ApplicationConstants.DRAWER_HELP);
         drawerItems.add(ApplicationConstants.DRAWER_LOGOUT);
 
-
         //Add items to drawer
         drawerListitems = new String[drawerItems.size()];
         drawerListitems = drawerItems.toArray(drawerListitems);
 
-        drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, drawerListitems,fs, 0);
+        drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, drawerListitems, fs, 0);
         drawerList.setAdapter(drawerArrayAdapter);
 
-        if(mailbox!= null) {
+        if (mailbox != null) {
             drawerArrayAdapter.setUnreadLetters(mailbox.getUnreadItemsInInbox());
         }
     }
 
-	private ContentFragment getCurrentFragment() {
-		return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);
-	}
+    private ContentFragment getCurrentFragment() {
+        return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);
+    }
 
-	private void logOut() {
-		FileUtilities.deleteTempFiles();
-		SharedPreferencesUtilities.deleteRefreshtoken(this);
-		SharedPreferencesUtilities.deleteScreenlockChoice(this);
+    private void logOut() {
+        FileUtilities.deleteTempFiles();
+        SharedPreferencesUtilities.deleteRefreshtoken(this);
+        SharedPreferencesUtilities.deleteScreenlockChoice(this);
         ContentOperations.resetState();
         mailbox = null;
         account = null;
-		Intent intent = new Intent(MainContentActivity.this, LoginActivity.class);
-		startActivity(intent);
-		finish();
-	}
+        Intent intent = new Intent(MainContentActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
-	private void startUploadActivity() {
-		Intent intent = new Intent(MainContentActivity.this, UploadActivity.class);
-        intent.putExtra(ApiConstants.UPLOAD,getCurrentFragment().getContent());
-		startActivityForResult(intent, INTENT_REQUESTCODE);
-	}
+    private void startUploadActivity() {
+        Intent intent = new Intent(MainContentActivity.this, UploadActivity.class);
+        intent.putExtra(ApiConstants.UPLOAD, getCurrentFragment().getContent());
+        startActivityForResult(intent, INTENT_REQUESTCODE);
+    }
 
-	private void startPreferencesActivity() {
-		Intent intent = new Intent(MainContentActivity.this, SettingsActivity.class);
-		startActivityForResult(intent, INTENT_REQUESTCODE);
-	}
+    private void startPreferencesActivity() {
+        Intent intent = new Intent(MainContentActivity.this, SettingsActivity.class);
+        startActivityForResult(intent, INTENT_REQUESTCODE);
+    }
 
-	private void openHelpWebView() {
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/hjelp/#android"));
-		startActivity(browserIntent);
-	}
+    private void openHelpWebView() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/hjelp/#android"));
+        startActivity(browserIntent);
+    }
 
-	private void setupSearchView(SearchView searchView) {
+    private void setupSearchView(SearchView searchView) {
 
-		try {
-			Field searchField = SearchView.class.getDeclaredField("mSearchButton");
-			searchField.setAccessible(true);
+        try {
+            Field searchField = SearchView.class.getDeclaredField("mSearchButton");
+            searchField.setAccessible(true);
 
-			android.widget.ImageView searchBtn = (android.widget.ImageView) searchField.get(searchView);
-			searchBtn.setImageResource(R.drawable.white_search_48);
+            android.widget.ImageView searchBtn = (android.widget.ImageView) searchField.get(searchView);
+            searchBtn.setImageResource(R.drawable.white_search_48);
 
-			searchField = SearchView.class.getDeclaredField("mSearchPlate");
-			searchField.setAccessible(true);
+            searchField = SearchView.class.getDeclaredField("mSearchPlate");
+            searchField.setAccessible(true);
 
-			LinearLayout searchPlate = (LinearLayout) searchField.get(searchView);
+            LinearLayout searchPlate = (LinearLayout) searchField.get(searchView);
 
-			AutoCompleteTextView searchTextView = (AutoCompleteTextView) searchPlate.getChildAt(0);
+            AutoCompleteTextView searchTextView = (AutoCompleteTextView) searchPlate.getChildAt(0);
 
-			searchTextView.setTextColor(getResources().getColor(R.color.white));
-			searchPlate.setBackgroundResource(R.drawable.search_background);
+            searchTextView.setTextColor(getResources().getColor(R.color.white));
+            searchPlate.setBackgroundResource(R.drawable.search_background);
 
-			searchTextView.setHintTextColor(getResources().getColor(R.color.searchbar_grey_hint));
-			searchView.setQueryHint(getString(R.string.search_in) + drawerListitems[getCurrentFragment().getContent()]);
+            searchTextView.setHintTextColor(getResources().getColor(R.color.searchbar_grey_hint));
+            searchView.setQueryHint(getString(R.string.search_in) + drawerListitems[getCurrentFragment().getContent()]);
 
-			android.widget.ImageView searchViewClearButton = (android.widget.ImageView) searchPlate.getChildAt(1);
-			searchViewClearButton.setImageResource(R.drawable.ic_clear_white);
+            android.widget.ImageView searchViewClearButton = (android.widget.ImageView) searchPlate.getChildAt(1);
+            searchViewClearButton.setImageResource(R.drawable.ic_clear_white);
 
-			searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
-		} catch (NoSuchFieldException e) {
-		} catch (IllegalAccessException e) {
-		}
-	}
+            searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalAccessException e) {
+        }
+    }
 
-	private class SearchViewOnQueryTextListener implements android.widget.SearchView.OnQueryTextListener {
+    private class SearchViewOnQueryTextListener implements android.widget.SearchView.OnQueryTextListener {
 
-		@Override
-		public boolean onQueryTextSubmit(String s) {
-			return false;
-		}
+        @Override
+        public boolean onQueryTextSubmit(String s) {
+            return false;
+        }
 
-		@Override
-		public boolean onQueryTextChange(String s) {
-			getCurrentFragment().filterList(s);
-			return true;
-		}
-	}
+        @Override
+        public boolean onQueryTextChange(String s) {
+            getCurrentFragment().filterList(s);
+            return true;
+        }
+    }
 
-	private class MainContentActionBarDrawerToggle extends ActionBarDrawerToggle {
+    private class MainContentActionBarDrawerToggle extends ActionBarDrawerToggle {
 
-		public MainContentActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int drawerImageRes,
-				int openDrawerContentDescRes, int closeDrawerContentDescRes) {
-			super(activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes);
-		}
+        public MainContentActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int drawerImageRes,
+                                                int openDrawerContentDescRes, int closeDrawerContentDescRes) {
+            super(activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes);
+        }
 
-		public void onDrawerClosed(View view) {
+        public void onDrawerClosed(View view) {
             showActionBarName = false;
-			invalidateOptionsMenu();
+            invalidateOptionsMenu();
 
-		}
+        }
 
-		public void onDrawerOpened(View drawerView) {
+        public void onDrawerOpened(View drawerView) {
             showActionBarName = true;
-			invalidateOptionsMenu();
-		}
-	}
+            invalidateOptionsMenu();
+        }
+    }
 
-	private void executeGetAccountTask() {
-		GetAccountTask getAccountTask = new GetAccountTask();
-		getAccountTask.execute();
-	}
+    private void executeGetAccountTask() {
+        GetAccountTask getAccountTask = new GetAccountTask();
+        getAccountTask.execute();
+    }
 
-	private class GetAccountTask extends AsyncTask<Void, Void, Account> {
-		private String errorMessage;
-		private boolean invalidToken;
+    private class GetAccountTask extends AsyncTask<Void, Void, Account> {
+        private String errorMessage;
+        private boolean invalidToken;
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-		}
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-		@Override
-		protected Account doInBackground(Void... voids) {
-			try {
-				return ContentOperations.getAccountUpdated(MainContentActivity.this);
-			} catch (DigipostApiException e) {
-				Log.e(getClass().getName(), e.getMessage(), e);
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostClientException e) {
-				Log.e(getClass().getName(), e.getMessage(), e);
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostAuthenticationException e) {
-				Log.e(getClass().getName(), e.getMessage(), e);
-				errorMessage = e.getMessage();
-				invalidToken = true;
-				return null;
-			}
-		}
+        @Override
+        protected Account doInBackground(Void... voids) {
+            try {
+                return ContentOperations.getAccountUpdated(MainContentActivity.this);
+            } catch (DigipostApiException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostClientException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostAuthenticationException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                invalidToken = true;
+                return null;
+            }
+        }
 
-		@Override
-		protected void onPostExecute(Account result) {
-			super.onPostExecute(result);
+        @Override
+        protected void onPostExecute(Account result) {
+            super.onPostExecute(result);
 
-			if (result != null) {
+            if (result != null) {
                 account = result;
                 updateUI();
-			} else {
-				if (invalidToken) {
-					DialogUtitities.showToast(MainContentActivity.this, errorMessage);
-					logOut();
-				}
-			}
-		}
-	}
+            } else {
+                if (invalidToken) {
+                    DialogUtitities.showToast(MainContentActivity.this, errorMessage);
+                    logOut();
+                }
+            }
+        }
+    }
+
+    private void executeChangeDeleteFolderTask(Folder folder,String action) {
+        ChangeDeleteFolderTask changeDeleteFolderTask = new ChangeDeleteFolderTask(folder,action);
+        changeDeleteFolderTask.execute();
+    }
+
+    private class ChangeDeleteFolderTask extends AsyncTask<Void, Void, Boolean> {
+        private String errorMessage;
+        private boolean invalidToken;
+        private String action;
+        private Folder folder;
+
+        public ChangeDeleteFolderTask(final Folder folder, final String action) {
+            this.folder = folder;
+            this.action = action;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                return ContentOperations.changeDeleteFolder(MainContentActivity.this,folder,action);
+            } catch (DigipostApiException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostClientException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostAuthenticationException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                invalidToken = true;
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+
+            if (result) {
+                executeGetAccountTask();
+            } else {
+                if (invalidToken) {
+                    DialogUtitities.showToast(MainContentActivity.this, errorMessage);
+                    logOut();
+                }
+            }
+        }
+    }
 }

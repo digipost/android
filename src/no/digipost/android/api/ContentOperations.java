@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Attachment;
@@ -60,8 +61,6 @@ public class ContentOperations {
             }
             mailbox = getAccount(context).getMailboxByDigipostAddress(digipostAddress);
         }
-
-
 
         return mailbox;
     }
@@ -138,6 +137,19 @@ public class ContentOperations {
 			DigipostAuthenticationException {
 		ApiAccess.getMovedDocument(context, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document));
 	}
+
+    public static boolean changeDeleteFolder(Context context, final Folder folder, final String action) throws DigipostClientException, DigipostApiException,
+            DigipostAuthenticationException {
+        if(action.equals(ApiConstants.CHANGE)){
+            if(ApiAccess.changeFolder(context, folder.getChangeUri(), JSONUtilities.createJsonFromJackson(folder)) != null){
+                return true;
+            }
+        }else if(action.equals(ApiConstants.DELETE)){
+            ApiAccess.deleteFolder(context, folder.getDeleteUri());
+            return true;
+        }
+        return false;
+    }
 
     public static void updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
         ApiAccess.updateAccountSettings(context, settings.getSettingsUri(), JSONUtilities.createJsonFromJackson(settings));

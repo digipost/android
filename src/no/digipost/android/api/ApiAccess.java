@@ -231,6 +231,32 @@ public class ApiAccess {
 		}
 	}
 
+    public static String changeFolder(Context context, final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
+            DigipostAuthenticationException {
+        return executePostRequest(context, POST_ACTION_MOVE, uri, json);
+    }
+
+    public static void deleteFolder(Context context,final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
+        Client client = Client.create();
+        ClientResponse cr;
+
+        try {
+            cr = client
+                    .resource(uri)
+                    .header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
+                    .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
+                    .delete(ClientResponse.class);
+        } catch (Exception e) {
+            throw new DigipostClientException(context.getString(R.string.error_your_network));
+        }
+
+        try {
+            NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
+        } catch (DigipostInvalidTokenException e) {
+            OAuth2.updateAccessToken(context);
+            deleteFolder(context, uri);
+        }
+    }
 	public static byte[] getDocumentContent(Context context, final String uri, final int filesize) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
 		ClientResponse cr = executeGetRequest(context, uri, ApiConstants.CONTENT_OCTET_STREAM);

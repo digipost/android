@@ -41,7 +41,7 @@ public class Folder {
     }
 
     public String getSelfUri(){
-        return getLinkByRelation("https://www.digipost.no/post/relations/self");
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_SELF);
     }
 
     public void setName(String name){
@@ -50,6 +50,19 @@ public class Folder {
 
     public Documents getDocuments(){
         return documents;
+    }
+
+    public void setIcon(String icon){
+        this.icon = icon;
+
+    }
+
+    public String getChangeUri(){
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_FOLDER_CHANGE);
+    }
+
+    public String getDeleteUri(){
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_FOLDER_DELETE);
     }
 
     public String getUploadUri(){
