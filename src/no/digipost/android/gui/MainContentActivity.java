@@ -68,8 +68,6 @@ import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.fragments.EditFolderFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.model.Account;
-import no.digipost.android.model.Attachment;
-import no.digipost.android.model.Document;
 import no.digipost.android.model.Folder;
 import no.digipost.android.model.Mailbox;
 import no.digipost.android.utilities.ApplicationUtilities;
@@ -290,7 +288,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                        int position, long id) {
-            return longSelectItem(position);
+            return selectItemLongPress(position);
         }
     }
 
@@ -346,12 +344,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
-    private boolean longSelectItem(int content) {
+    private boolean selectItemLongPress(int content) {
         if (account != null) {
             int inboxReceiptsAndFolders = (numberOfFolders + ApplicationConstants.numberOfStaticFolders);
             if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders) {
                 showEditDialog(content);
-            } else if (clickDrawerAccountOption(content)) {
+            } else if (selectAccountItem(content)) {
                 return true;
             }
         }
@@ -374,15 +372,14 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     public void saveEditFolder(Folder folder){
-
+        executeEditDeleteFolderTask(folder, ApiConstants.EDIT);
     }
 
     public void deleteEditFolder(Folder folder){
-
+        executeEditDeleteFolderTask(folder, ApiConstants.DELETE);
     }
 
-
-    private boolean clickDrawerAccountOption(int content) {
+    private boolean selectAccountItem(int content) {
         if (drawerListitems[content].equals(ApplicationConstants.DRAWER_CHANGE_ACCOUNT)) {
             openMailboxSelection();
             return true;
@@ -419,7 +416,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 } else if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders) {
                     contentFragment = new DocumentFragment(content);
 
-                } else if (clickDrawerAccountOption(content)) {
+                } else if (selectAccountItem(content)) {
                     return;
                 }
             } catch (Exception e) {
@@ -677,18 +674,18 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
-    private void executeChangeDeleteFolderTask(Folder folder,String action) {
-        ChangeDeleteFolderTask changeDeleteFolderTask = new ChangeDeleteFolderTask(folder,action);
-        changeDeleteFolderTask.execute();
+    private void executeEditDeleteFolderTask(Folder folder,String action) {
+        EditDeleteFolderTask editDeleteFolderTask = new EditDeleteFolderTask(folder,action);
+        editDeleteFolderTask.execute();
     }
 
-    private class ChangeDeleteFolderTask extends AsyncTask<Void, Void, Boolean> {
+    private class EditDeleteFolderTask extends AsyncTask<Void, Void, Integer> {
         private String errorMessage;
         private boolean invalidToken;
         private String action;
         private Folder folder;
 
-        public ChangeDeleteFolderTask(final Folder folder, final String action) {
+        public EditDeleteFolderTask(final Folder folder, final String action) {
             this.folder = folder;
             this.action = action;
         }
@@ -699,33 +696,36 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
+        protected Integer doInBackground(Void... voids) {
             try {
-                return ContentOperations.changeDeleteFolder(MainContentActivity.this,folder,action);
+                return ContentOperations.editDeleteFolder(MainContentActivity.this, folder, action);
             } catch (DigipostApiException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
-                return null;
+                return ApplicationConstants.BAD_REQUEST;
             } catch (DigipostClientException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
-                return null;
+                return ApplicationConstants.BAD_REQUEST;
             } catch (DigipostAuthenticationException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 invalidToken = true;
-                return null;
+                return ApplicationConstants.BAD_REQUEST;
             }
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(Integer result) {
             super.onPostExecute(result);
 
-            if (result) {
+            if (result == ApplicationConstants.OK) {
                 executeGetAccountTask();
             } else {
-                if (invalidToken) {
+
+                if(result == ApplicationConstants.BAD_REQUEST_DELETE) {
+                    DialogUtitities.showToast(MainContentActivity.this, getString(R.string.error_documents_in_delete_Folder));
+                }else if (invalidToken) {
                     DialogUtitities.showToast(MainContentActivity.this, errorMessage);
                     logOut();
                 }

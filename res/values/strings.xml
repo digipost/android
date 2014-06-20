@@ -156,6 +156,7 @@
     </string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
     <string name="error_invalid_token">Tilgang tilbaketrukket.</string>
+    <string name="error_bad_request">En feil oppstod.</string>
     <string name="error_inputstreamtobyarray">En feil oppstod under åpning av innhold</string>
     <string name="error_no_activity_to_open_file">Din enhet har ingen applikasjoner som kan åpne
         denne filtypen.
@@ -165,6 +166,7 @@
     <string name="error_no_connection">Ingen forbindelse</string>
     <string name="error_try_again">Prøv igjen</string>
     <string name="error_invalid_format">Ugyldig format</string>
+    <string name="error_documents_in_delete_Folder">Kunne ikke slette mappen. Mappen inneholder dokumenter. Du må flytte eller slette disse før mappen kan slettes.</string>
 
     <!-- Prompts -->
     <string name="sent_to_bank">Sendt til nettbank</string>
@@ -194,6 +196,8 @@
         dokumentet?
     </string>
 
+    <string name="dialog_edit_folder_title">Velg navn og ikon</string>
+    <string name="dialog_edit_folder_invalid_folder_name">Ugyldig navn</string>
 
     <string name="dialog_error_two_factor_title">Konfidensielt brev</string>
     <string name="dialog_error_two_factor_message">Dette brevet krever autentisering med BankID. Logg inn

@@ -21,11 +21,15 @@
             android:id="@+id/edit_folder_fragment_gridview"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:columnWidth="60dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:columnWidth="50dp"
             android:numColumns="4"
             android:verticalSpacing="5dp"
             android:horizontalSpacing="5dp"
             android:stretchMode="columnWidth"
+            android:focusable="true"
+            android:drawSelectorOnTop="true"
             android:gravity="center"
             />
 
@@ -40,12 +44,14 @@
             android:id="@+id/edit_folder_fragment_save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:text="@string/save" />
 
         <Button
             android:id="@+id/edit_folder_fragment_delete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:text="@string/delete" />
     </LinearLayout>
 </LinearLayout>

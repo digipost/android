@@ -24,7 +24,7 @@ public class ApiConstants {
 
 	public static final String GET_RECEIPT = "receipt";
 
-    public static final String CHANGE ="change";
+    public static final String EDIT ="edit";
     public static final String MOVE = "move";
 	public static final String DELETE = "delete";
     public static final String UPLOAD = "upload";

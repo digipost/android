@@ -16,7 +16,8 @@
 
 package no.digipost.android.utilities;
 
-import static javax.ws.rs.core.Response.Status.TEMPORARY_REDIRECT;
+import android.content.Context;
+import android.os.AsyncTask;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -26,8 +27,8 @@ import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostInvalidTokenException;
-import android.content.Context;
-import android.os.AsyncTask;
+
+import static javax.ws.rs.core.Response.Status.TEMPORARY_REDIRECT;
 
 public class NetworkUtilities {
 	public static final int HTTP_STATUS_SUCCESS = 200;
@@ -45,8 +46,8 @@ public class NetworkUtilities {
 				throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
 			}
 		} else if (statusCode == HTTP_STATUS_BAD_REQUEST) {
-			throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
-		} else {
+			throw new DigipostAuthenticationException(context.getString(R.string.error_bad_request));
+		}else{
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
 	}

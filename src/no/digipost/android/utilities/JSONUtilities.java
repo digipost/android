@@ -19,7 +19,6 @@ package no.digipost.android.utilities;
 import android.content.Context;
 
 import org.apache.http.entity.StringEntity;
-import org.apache.http.protocol.HTTP;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
@@ -37,12 +36,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.model.Document;
+import no.digipost.android.model.Folder;
 
 public class JSONUtilities {
 	public static String getJsonStringFromInputStream(final InputStream inputStream) {
@@ -94,51 +93,43 @@ public class JSONUtilities {
 		return processJackson(type, getJsonStringFromInputStream(data));
 	}
 
-	@SuppressWarnings("deprecation")
 	public static StringEntity createJsonFromJackson(final Object object) {
 		// ignore-test
 
-        String[] ignore = { "link", "folderId","contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
-                "selfUri", "settingsUri" };
+        String[] ignore = { "link","folderId","contentUri", "documents","changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+                "selfUri", "uploadUri","settingsUri" };
 
         if (object instanceof Document) {
             if (((Document) object).getFolderId() != null) {
-                ignore = new String[]{"link", "contentUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+                ignore = new String[]{"link", "contentUri", "changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
                         "selfUri", "settingsUri"};
             }
+        }else if(object instanceof Folder){
+            ignore = new String[]{"link","contentUri", "documents","changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+                    "selfUri", "uploadUri","settingsUri" };
+
         }
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        FilterProvider filters = new SimpleFilterProvider().addFilter("toJSON", SimpleBeanPropertyFilter.serializeAllExcept(ignore));
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		FilterProvider filters = new SimpleFilterProvider().addFilter("toJSON", SimpleBeanPropertyFilter.serializeAllExcept(ignore));
-
-		Writer strWriter = new StringWriter();
-		try {
-
-			objectMapper.filteredWriter(filters).writeValue(strWriter, object);
-		} catch (JsonGenerationException e) {
+        StringEntity output = null;
+        try {
+            output = new StringEntity(objectMapper.writer(filters).writeValueAsString(object));
+        } catch (JsonGenerationException e) {
             e.printStackTrace();
-			// Ignore
-		} catch (JsonMappingException e) {
+            // Ignore
+        } catch (JsonMappingException e) {
             e.printStackTrace();
-			// Ignore
-		} catch (IOException e) {
+            // Ignore
+        } catch (IOException e) {
             e.printStackTrace();
-			// Ignore
-		}catch(Exception e){
+            // Ignore
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-		StringEntity output = null;
-
-		try {
-			output = new StringEntity(strWriter.toString(), HTTP.UTF_8);
-		} catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-			// Ignore
-		}
-
-		return output;
+        return output;
 	}
 
 	public static byte[] inputStreamtoByteArray(Context context, final int size, final InputStream data) throws DigipostClientException {

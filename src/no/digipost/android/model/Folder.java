@@ -2,12 +2,14 @@ package no.digipost.android.model;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonFilter;
 
 import java.util.ArrayList;
 
 import no.digipost.android.constants.ApiConstants;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonFilter("toJSON")
 public class Folder {
     @JsonProperty
     private String name;
@@ -54,7 +56,6 @@ public class Folder {
 
     public void setIcon(String icon){
         this.icon = icon;
-
     }
 
     public String getChangeUri(){

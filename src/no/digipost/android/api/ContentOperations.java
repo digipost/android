@@ -138,17 +138,23 @@ public class ContentOperations {
 		ApiAccess.getMovedDocument(context, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document));
 	}
 
-    public static boolean changeDeleteFolder(Context context, final Folder folder, final String action) throws DigipostClientException, DigipostApiException,
+    public static int editDeleteFolder(Context context, final Folder folder, final String action) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        if(action.equals(ApiConstants.CHANGE)){
-            if(ApiAccess.changeFolder(context, folder.getChangeUri(), JSONUtilities.createJsonFromJackson(folder)) != null){
-                return true;
+
+        if(action.equals(ApiConstants.EDIT)){
+            if(ApiAccess.editFolder(context, folder.getChangeUri(), JSONUtilities.createJsonFromJackson(folder)) != null){
+                return ApplicationConstants.OK;
+            }else{
+                return ApplicationConstants.BAD_REQUEST;
             }
         }else if(action.equals(ApiConstants.DELETE)){
-            ApiAccess.deleteFolder(context, folder.getDeleteUri());
-            return true;
+            if(ApiAccess.deleteFolder(context, folder.getDeleteUri()) != null){
+                return ApplicationConstants.OK;
+            }else{
+                return ApplicationConstants.BAD_REQUEST_DELETE;
+            }
         }
-        return false;
+        return ApplicationConstants.OK;
     }
 
     public static void updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
