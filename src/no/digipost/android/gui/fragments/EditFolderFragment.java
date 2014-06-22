@@ -24,8 +24,9 @@ public class EditFolderFragment extends DialogFragment {
     Folder folder;
     View editName;
     String folderIcon;
+    GridView gridView;
 
-    private Integer[] mThumbIds = {
+    private Integer[] iconsNormal = {
             R.drawable.folder_128, R.drawable.envelope_128,
             R.drawable.file_128, R.drawable.star_128,
             R.drawable.tags_128, R.drawable.usd_128,
@@ -33,7 +34,17 @@ public class EditFolderFragment extends DialogFragment {
             R.drawable.archive_128, R.drawable.trophy_128,
             R.drawable.suitcase_128, R.drawable.camera_128
     };
-    private String[] iconName ={
+
+    private Integer[] iconsSelected = {
+            R.drawable.folder_128_selected, R.drawable.envelope_128_selected,
+            R.drawable.file_128_selected, R.drawable.star_128_selected,
+            R.drawable.tags_128_selected, R.drawable.usd_128_selected,
+            R.drawable.heart_128_selected, R.drawable.home_128_selected,
+            R.drawable.archive_128_selected, R.drawable.trophy_128_selected,
+            R.drawable.suitcase_128_selected, R.drawable.camera_128_selected
+    };
+
+    private String[] iconNames ={
             "FOLDER","ENVELOPE",
             "PAPER","STAR",
             "TAGS","MONEY",
@@ -73,16 +84,15 @@ public class EditFolderFragment extends DialogFragment {
         ((EditText)editName).setText(folder.getName());
         folderIcon = folder.getIcon();
 
-        final GridView gridView = (GridView) view.findViewById(R.id.edit_folder_fragment_gridview);
+        gridView = (GridView) view.findViewById(R.id.edit_folder_fragment_gridview);
         final ImageAdapter imageAdapter = new ImageAdapter();
-        gridView.setAdapter(imageAdapter);
         gridView.requestFocusFromTouch();
-        gridView.setSelection(imageAdapter.getCurrentPosition());
+        gridView.setAdapter(imageAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                folderIcon = iconName[position];
+            public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
+                folderIcon = iconNames[position];
                 gridView.setItemChecked(position, true);
+                imageAdapter.notifyDataSetChanged();
             }
         });
 
@@ -119,25 +129,24 @@ public class EditFolderFragment extends DialogFragment {
         }
 
         public int getCount() {
-            return mThumbIds.length;
+            return iconsNormal.length;
         }
 
         public Object getItem(int position) {
+            String newFolderIcon = folderIcon;
+
             try{
-                folderIcon = iconName[position];
-                notifyDataSetChanged();
-                return iconName[position];
+                folderIcon = iconNames[position];
+                return iconNames[position];
             }catch(IndexOutOfBoundsException e){
-                folderIcon = iconName[position];
-                notifyDataSetChanged();
                 return "FOLDER";
             }
 
         }
 
         public int getCurrentPosition(){
-            for(int i = 0; i < iconName.length;i++){
-                if(iconName[i].equals(folderIcon)){
+            for(int i = 0; i < iconNames.length;i++){
+                if(iconNames[i].equals(folderIcon)){
                     return i;
                 }
             }
@@ -160,7 +169,11 @@ public class EditFolderFragment extends DialogFragment {
                 imageView = (ImageView) convertView;
             }
 
-            imageView.setImageResource(mThumbIds[position]);
+            if(position == getCurrentPosition()){
+                imageView.setImageResource(iconsSelected[position]);
+            }else{
+                imageView.setImageResource(iconsNormal[position]);
+            }
             return imageView;
         }
     }
