@@ -37,9 +37,9 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	private TextView linkName;
 	private TextView unreadView;
 	private String[] links;
-    private View line;
+	private View line;
 	private int unreadLetters;
-    private ArrayList<Folder> folders;
+	private ArrayList<Folder> folders;
 
 	public DrawerArrayAdapter(final Context context, final int resource, final String[] links, ArrayList<Folder> folders,
 			final int unreadLetters) {
@@ -47,7 +47,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		this.context = context;
 		this.links = links;
 		this.unreadLetters = unreadLetters;
-        this.folders = folders;
+		this.folders = folders;
 	}
 
 	public View getView(final int position, final View convertView, final ViewGroup parent) {
@@ -56,7 +56,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		View row = inflater.inflate(R.layout.drawer_list_item, parent, false);
 		this.linkName = (TextView) row.findViewById(R.id.drawer_link_name);
 		this.unreadView = (TextView) row.findViewById(R.id.drawer_link_unread);
-        this.line = row.findViewById(R.id.drawer_line);
+		this.line = row.findViewById(R.id.drawer_line);
 		setupLinkView(position);
 
 		return row;
@@ -68,7 +68,7 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	}
 
 	public void updateDrawer() {
-        notifyDataSetChanged();
+		notifyDataSetChanged();
 	}
 
 	private void updateUnreadView() {
@@ -79,58 +79,88 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 	private void setupLinkView(int position) {
 		linkName.setText((CharSequence) links[position]);
 
-		if (position == ApplicationConstants.MAILBOX) {
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.inbox_32, 0, 0, 0);
-			updateUnreadView();
-		} else if (position == ApplicationConstants.RECEIPTS) {
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tag_32, 0, 0, 0);
-		} else if (links[position].equals(ApplicationConstants.DRAWER_MY_FOLDERS)) {
-			drawLabel();
-		} else if (links[position].equals(ApplicationConstants.DRAWER_MY_ACCOUNT)) {
-			drawLabel();
-		} else if (links[position].equals(ApplicationConstants.DRAWER_CHANGE_ACCOUNT)) {
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.account_32px, 0, 0, 0);
-		} else if (links[position].equals(ApplicationConstants.DRAWER_SETTINGS)) {
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.admin_32px, 0, 0, 0);
-		} else if (links[position].equals(ApplicationConstants.DRAWER_HELP)) {
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.help_32px, 0, 0, 0);
-		} else if (links[position].equals(ApplicationConstants.DRAWER_LOGOUT)) {
-			linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.logout_32px, 0, 0, 0);
-            line.setVisibility(View.GONE);
-		} else {
-			CharSequence type = "FOLDER";
+		int foldersStart = ApplicationConstants.numberOfStaticFolders;
+        int foldersEnd = foldersStart;
 
-            if(folders != null){
-                type = folders.get(position - ApplicationConstants.numberOfStaticFolders).getIcon();
+        if(folders != null) {
+            foldersEnd += folders.size();
+        }
+
+		if (position < foldersStart) {
+			if (position == ApplicationConstants.MAILBOX) {
+				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.inbox_32, 0, 0, 0);
+				updateUnreadView();
+			} else if (position == ApplicationConstants.RECEIPTS) {
+				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tag_32, 0, 0, 0);
+
+			} else if (position < ApplicationConstants.numberOfStaticFolders
+					&& links[position].equals(context.getResources().getString(R.string.drawer_my_folders))) {
+				drawLabel();
+			}
+		} else if (position > foldersStart && position < foldersEnd) {
+            CharSequence type = context.getResources().getString(R.string.icon_folder);
+
+            if (folders != null) {
+                int folderIndex = position - ApplicationConstants.numberOfStaticFolders;
+                if (folderIndex >= 0) {
+                    type = folders.get(folderIndex).getIcon();
+                }
             }
 
-			if (type.equals("PAPER")) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.file_32, 0, 0, 0);
-			} else if (type.equals("TAGS")) {
-                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tags_32, 0, 0, 0);
-            }else if(type.equals("LETTER")) {
-                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.envelope_32, 0, 0, 0);
-			} else if (type.equals("HEART")) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.heart_32, 0, 0, 0);
-			} else if (type.equals("TROPHY")) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.trophy_32, 0, 0, 0);
-			} else if (type.equals("BOX")) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.archive_32, 0, 0, 0);
-			} else if (type.equals("HOME")) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.home_32, 0, 0, 0);
-			} else if (type.equals("STAR")) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.star_32, 0, 0, 0);
-			} else if (type.equals("SUITCASE")) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.suitcase_32, 0, 0, 0);
-			} else if (type.equals("CAMERA")) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.camera32, 0, 0, 0);
-			} else if (type.equals("MONEY")) {
-                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.usd_32, 0, 0, 0);
-			} else {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.folder_close, 0, 0, 0);
-			}
+            linkName.setCompoundDrawablesWithIntrinsicBounds(getFolderIcon(type), 0, 0, 0);
+
+		} else if (position > foldersEnd) {
+            getIconBelowFolders(position);
 		}
 	}
+
+    private int getIconBelowFolders(int position){
+        if (links[position].equals(context.getResources().getString(R.string.drawer_create_folder))) {
+
+        } else if (links[position].equals(context.getResources().getString(R.string.drawer_my_account))) {
+            drawLabel();
+        } else if (links[position].equals(context.getResources().getString(R.string.drawer_change_account))) {
+            linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.account_32px, 0, 0, 0);
+        } else if (links[position].equals(context.getResources().getString(R.string.drawer_settings))) {
+            linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.admin_32px, 0, 0, 0);
+        } else if (links[position].equals(context.getResources().getString(R.string.drawer_help))) {
+            linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.help_32px, 0, 0, 0);
+        } else if (links[position].equals(context.getResources().getString(R.string.drawer_logout))) {
+            linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.logout_32px, 0, 0, 0);
+
+        }
+
+        return 0;
+    }
+
+    private int getFolderIcon(CharSequence type){
+
+        if (type.equals("PAPER")) {
+            return R.drawable.file_32;
+        } else if (type.equals("TAGS")) {
+            return R.drawable.tags_32;
+        } else if (type.equals("LETTER")) {
+            return R.drawable.envelope_32;
+        } else if (type.equals("HEART")) {
+            return R.drawable.heart_32;
+        } else if (type.equals("TROPHY")) {
+            return R.drawable.trophy_32;
+        } else if (type.equals("BOX")) {
+           return R.drawable.archive_32;
+        } else if (type.equals("HOME")) {
+            return R.drawable.home_32;
+        } else if (type.equals("STAR")) {
+            return R.drawable.star_32;
+        } else if (type.equals("SUITCASE")) {
+            return R.drawable.suitcase_32;
+        } else if (type.equals("CAMERA")) {
+            return R.drawable.camera32;
+        } else if (type.equals("MONEY")) {
+            return R.drawable.usd_32;
+        } else {
+            return R.drawable.folder_close;
+        }
+    }
 
 	private void drawLabel() {
 		linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
@@ -138,12 +168,12 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 		linkName.setGravity(Gravity.BOTTOM);
 		linkName.setTypeface(null, Typeface.BOLD);
 		linkName.setPadding(0, 0, 0, 5);
-        line.setVisibility(View.GONE);
-    }
+		line.setVisibility(View.GONE);
+	}
 
 	@Override
 	public boolean isEnabled(int position) {
-        return position != ApplicationConstants.FOLDERS_LABEL
-                && position != MainContentActivity.numberOfFolders + ApplicationConstants.numberOfStaticFolders;
+		return position != ApplicationConstants.FOLDERS_LABEL
+				&& position != MainContentActivity.numberOfFolders + ApplicationConstants.numberOfStaticFolders;
 	}
 }

@@ -76,13 +76,13 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 			html = getIntent().getStringExtra(ApiConstants.GET_RECEIPT);
 		} else {
 			try {
-				html = new String(DocumentContentStore.getDocumentContent(), ApplicationConstants.ENCODING);
+				html = new String(DocumentContentStore.getDocumentContent(), ApiConstants.ENCODING);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
-		webView.loadDataWithBaseURL(null, html, ApplicationConstants.MIME, ApplicationConstants.ENCODING, null);
+		webView.loadDataWithBaseURL(null, html, ApiConstants.MIME, ApiConstants.ENCODING, null);
 	}
 
 	@Override

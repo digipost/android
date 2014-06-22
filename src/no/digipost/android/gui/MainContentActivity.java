@@ -97,7 +97,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private ArrayList<Mailbox> mailboxes;
     private Account account;
     public static String fragmentName;
-    private int mStackLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -324,7 +323,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         mailboxListView.setAdapter(mailboxAdapter);
         mailboxListView.setOnItemClickListener(new ChangeMailboxListOnItemClickListener());
 
-        builder.setTitle(ApplicationConstants.DRAWER_CHANGE_ACCOUNT);
+        builder.setTitle(getResources().getString(R.string.drawer_change_account));
         mailboxDialog = builder.create();
         mailboxDialog.show();
 
@@ -360,8 +359,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private void showEditDialog(int content) {
 
-        mStackLevel++;
-
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("editFolderFragment");
         if (prev != null) {
@@ -381,19 +378,19 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private boolean selectAccountItem(int content) {
-        if (drawerListitems[content].equals(ApplicationConstants.DRAWER_CHANGE_ACCOUNT)) {
+        if (drawerListitems[content].equals(getResources().getString(R.string.drawer_change_account))) {
             openMailboxSelection();
             return true;
 
-        } else if (drawerListitems[content].equals(ApplicationConstants.DRAWER_SETTINGS)) {
+        } else if (drawerListitems[content].equals(getResources().getString(R.string.drawer_settings))) {
             startPreferencesActivity();
             return true;
 
-        } else if (drawerListitems[content].equals(ApplicationConstants.DRAWER_HELP)) {
+        } else if (drawerListitems[content].equals(getResources().getString(R.string.drawer_help))) {
             openHelpWebView();
             return true;
 
-        } else if (drawerListitems[content].equals(ApplicationConstants.DRAWER_LOGOUT)) {
+        } else if (drawerListitems[content].equals(getResources().getString(R.string.drawer_logout))) {
             logOut();
             return true;
         }
@@ -461,7 +458,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                         if (mailbox != null) {
                             fragmentName = mailbox.getName();
                         }
-                    } else if (drawerListitems[getCurrentFragment().getContent()].equals(ApplicationConstants.DRAWER_INBOX)) {
+                    } else if (drawerListitems[getCurrentFragment().getContent()].equals(getResources().getString(R.string.drawer_inbox))) {
                         fragmentName = mailbox.getName();
                     } else {
                         fragmentName = drawerListitems[getCurrentFragment().getContent()];
@@ -480,9 +477,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         ArrayList<String> drawerItems = new ArrayList<String>();
 
         //Add main menu
-        drawerItems.add(ApplicationConstants.DRAWER_INBOX);
-        drawerItems.add(ApplicationConstants.DRAWER_RECEIPTS);
-        drawerItems.add(ApplicationConstants.DRAWER_MY_FOLDERS);
+        drawerItems.add(getResources().getString(R.string.drawer_inbox));
+        drawerItems.add(getResources().getString(R.string.drawer_receipts));
+        drawerItems.add(getResources().getString(R.string.drawer_my_folders));
 
         ArrayList<Folder> fs = null;
 
@@ -500,22 +497,23 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     folders.add(f);
                 }
             }
+            drawerItems.add(getResources().getString(R.string.drawer_create_folder));
         }
 
         //Add account settings
-        drawerItems.add(ApplicationConstants.DRAWER_MY_ACCOUNT);
+        drawerItems.add(getResources().getString(R.string.drawer_my_account));
 
         if (account != null) {
             mailboxes = account.getMailbox();
 
             if (mailboxes.size() > 1) {
-                drawerItems.add(ApplicationConstants.DRAWER_CHANGE_ACCOUNT);
+                drawerItems.add(getResources().getString(R.string.drawer_change_account));
             }
         }
 
-        drawerItems.add(ApplicationConstants.DRAWER_SETTINGS);
-        drawerItems.add(ApplicationConstants.DRAWER_HELP);
-        drawerItems.add(ApplicationConstants.DRAWER_LOGOUT);
+        drawerItems.add(getResources().getString(R.string.drawer_settings));
+        drawerItems.add(getResources().getString(R.string.drawer_help));
+        drawerItems.add(getResources().getString(R.string.drawer_logout));
 
         //Add items to drawer
         drawerListitems = new String[drawerItems.size()];

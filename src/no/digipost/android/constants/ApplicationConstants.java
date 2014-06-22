@@ -29,29 +29,13 @@ public class ApplicationConstants {
     public static final int BAD_REQUEST = 1;
     public static final int BAD_REQUEST_DELETE = 2;
 
-
     public static final boolean FEATURE_SEND_TO_BANK_VISIBLE = true;
-
-	public static final String ENCODING = "UTF-8";
-	public static final String MIME = "text/html";
     public static final String NUMBER_OF_TIMES_APP_HAS_RUN = "numberOfTimesAppHasRun";
     public static final int NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN = 1;
 
     public static final int MAILBOX = 0;
     public static final int RECEIPTS = 1;
-    public static final int FOLDERS_LABEL = 2; //MINE MAPPER
-
-    public static final String DRAWER_INBOX = "Postkassen";
-    public static final String DRAWER_RECEIPTS = "E-Kvitteringer";
-
-    public static final String DRAWER_MY_FOLDERS = "MINE MAPPER";
-    public static final String DRAWER_MY_ACCOUNT = "MIN KONTO";
-
-    public static final String DRAWER_CHANGE_ACCOUNT = "Bytt konto";
-    public static final String DRAWER_SETTINGS = "Innstillinger";
-    public static final String DRAWER_HELP ="Hjelp";
-    public static final String DRAWER_LOGOUT = "Logg ut";
-
+    public static final int FOLDERS_LABEL = 2;
     public static final int numberOfStaticFolders = 3;
 
 }

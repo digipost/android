@@ -21,6 +21,8 @@ public class ApiConstants {
 	public static final String FILETYPE_PDF = "pdf";
 	public static final String FILETYPE_HTML = "html";
 	public static final String[] FILETYPES_IMAGE = { "jpg", "jpeg", "png" };
+    public static final String ENCODING = "UTF-8";
+    public static final String MIME = "text/html";
 
 	public static final String GET_RECEIPT = "receipt";
 

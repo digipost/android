@@ -187,7 +187,7 @@ public class DocumentFragment extends ContentFragment {
                     //Postkassen
                     if (folders.size() != MainContentActivity.folders.size()) {
                         Folder postkassen = new Folder();
-                        postkassen.setName(ApplicationConstants.DRAWER_INBOX);
+                        postkassen.setName(getString(R.string.drawer_inbox));
                         moveLocations.add(0, postkassen);
                     }
 

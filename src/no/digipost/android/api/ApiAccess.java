@@ -54,7 +54,6 @@ import no.digipost.android.api.exception.DigipostInvalidTokenException;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Document;
@@ -302,8 +301,8 @@ public class ApiAccess {
                 httpPost.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
                 FileBody filebody = new FileBody(file, ApiConstants.CONTENT_OCTET_STREAM);
 
-                MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,null, Charset.forName(ApplicationConstants.ENCODING));
-                multipartEntity.addPart("subject", new StringBody(FilenameUtils.removeExtension(file.getName()),ApplicationConstants.MIME,Charset.forName(ApplicationConstants.ENCODING)));
+                MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,null, Charset.forName(ApiConstants.ENCODING));
+                multipartEntity.addPart("subject", new StringBody(FilenameUtils.removeExtension(file.getName()), ApiConstants.MIME,Charset.forName(ApiConstants.ENCODING)));
                 multipartEntity.addPart("file", filebody);
                 multipartEntity.addPart("token", new StringBody(Secret.ACCESS_TOKEN));
                 httpPost.setEntity(multipartEntity);
