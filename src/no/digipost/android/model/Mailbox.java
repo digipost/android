@@ -33,6 +33,7 @@ public class Mailbox  {
 
     @JsonProperty
     private Folders folders;
+
     public String getName(){
         return name;
     }

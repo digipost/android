@@ -93,11 +93,11 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 			} else if (position == ApplicationConstants.RECEIPTS) {
 				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tag_32, 0, 0, 0);
 
-			} else if (position < ApplicationConstants.numberOfStaticFolders
+			} else if (position < foldersStart
 					&& links[position].equals(context.getResources().getString(R.string.drawer_my_folders))) {
 				drawLabel();
 			}
-		} else if (position > foldersStart && position < foldersEnd) {
+		} else if (position >= foldersStart && position < foldersEnd) {
             CharSequence type = context.getResources().getString(R.string.icon_folder);
 
             if (folders != null) {
@@ -173,7 +173,12 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 
 	@Override
 	public boolean isEnabled(int position) {
-		return position != ApplicationConstants.FOLDERS_LABEL
-				&& position != MainContentActivity.numberOfFolders + ApplicationConstants.numberOfStaticFolders;
+        if (position != ApplicationConstants.FOLDERS_LABEL){
+
+            if(position != MainContentActivity.numberOfFolders + ApplicationConstants.numberOfStaticFolders +1){
+                return true;
+            }
+        }
+        return false;
 	}
 }

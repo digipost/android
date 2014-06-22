@@ -59,11 +59,11 @@ public class Folder {
     }
 
     public String getChangeUri(){
-        return getLinkByRelation(ApiConstants.URL_RELATIONS_FOLDER_CHANGE);
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_CHANGE_FOLDER);
     }
 
     public String getDeleteUri(){
-        return getLinkByRelation(ApiConstants.URL_RELATIONS_FOLDER_DELETE);
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_DELETE_FOLDER);
     }
 
     public String getUploadUri(){

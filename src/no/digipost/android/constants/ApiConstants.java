@@ -26,6 +26,7 @@ public class ApiConstants {
 
 	public static final String GET_RECEIPT = "receipt";
 
+    public static final String CREATE ="create";
     public static final String EDIT ="edit";
     public static final String MOVE = "move";
 	public static final String DELETE = "delete";
@@ -77,8 +78,9 @@ public class ApiConstants {
     public static final String URL_RELATIONS_RECEIPT_HTML = URL_RELATIONS + "get_receipt_as_html";
     public static final String URL_RELATIONS_RECEIPT_DELETE = URL_RELATIONS + "delete_receipt";
 
-    public static final String URL_RELATIONS_FOLDER_CHANGE = URL_RELATIONS + "change_folder";
-    public static final String URL_RELATIONS_FOLDER_DELETE = URL_RELATIONS + "delete_folder";
+    public static final String URL_RELATIONS_CHANGE_FOLDER = URL_RELATIONS + "change_folder";
+    public static final String URL_RELATIONS_DELETE_FOLDER = URL_RELATIONS + "delete_folder";
+    public static final String URL_RELATIONS_CREATE_FOLDER = URL_RELATIONS + "create_folder";
 
 	public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "api/oauth/authorize/new";
 	public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "api/oauth/accesstoken";

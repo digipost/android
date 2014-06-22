@@ -105,8 +105,14 @@ public class JSONUtilities {
                         "selfUri", "settingsUri"};
             }
         }else if(object instanceof Folder){
-            ignore = new String[]{"link","contentUri", "documents","changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
-                    "selfUri", "uploadUri","settingsUri" };
+            if(((Folder) object).getId() == null) {
+                ignore = new String[]{"id","link","contentUri", "documents","changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+                        "selfUri", "uploadUri","settingsUri" };
+            }else{
+                ignore = new String[]{"link","contentUri", "documents","changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+                        "selfUri", "uploadUri","settingsUri" };
+            }
+
 
         }
 

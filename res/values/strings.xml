@@ -217,4 +217,7 @@
         på Digipost.no for å se innholdet.
     </string>
 
+    <string name="dialog_create_folder_title">Opprett mappe</string>
+    <string name="dialog_create_folder_save_button">Opprett</string>
+
 </resources>

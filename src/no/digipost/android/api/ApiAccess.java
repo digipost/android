@@ -73,7 +73,9 @@ public class ApiAccess {
 	public static final int POST_ACTION_SEND_OPENING_RECEIPT = 1;
     public static final int POST_ACTION_UPDATE_SETTINGS = 2;
     public static final int POST_ACTION_SEND_TO_BANK = 3;
-    public static final int PUT_ACTION_EDIT_FOLDER = 4;
+    public static final int POST_ACTION_CREATE_FOLDER = 4;
+    public static final int PUT_ACTION_EDIT_FOLDER = 5;
+
     public static final int POST = 0;
     public static final int PUT = 1;
 
@@ -191,7 +193,7 @@ public class ApiAccess {
         request.addHeader(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
         request.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
 
-		if (action == POST_ACTION_MOVE || action == POST_ACTION_UPDATE_SETTINGS || action == PUT_ACTION_EDIT_FOLDER) {
+		if (action == POST_ACTION_MOVE || action == POST_ACTION_UPDATE_SETTINGS || action == PUT_ACTION_EDIT_FOLDER || action == POST_ACTION_CREATE_FOLDER) {
 			request.setEntity(json);
 		}
 
@@ -257,6 +259,12 @@ public class ApiAccess {
 		}
         return ""+cr.getStatus();
 	}
+
+    public static String createFolder(Context context, final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
+            DigipostAuthenticationException {
+        System.out.println("json:"+json.toString());
+        return request(context, POST_ACTION_CREATE_FOLDER, uri, json, POST);
+    }
 
     public static String editFolder(Context context, final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {

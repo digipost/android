@@ -347,9 +347,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         if (account != null) {
             int inboxReceiptsAndFolders = (numberOfFolders + ApplicationConstants.numberOfStaticFolders);
             if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders) {
-                showEditDialog(content);
-                return true;
-            } else if (selectAccountItem(content)) {
+                showCreateEditDialog(content, true);
                 return true;
             }
         }
@@ -357,7 +355,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         return false;
     }
 
-    private void showEditDialog(int content) {
+    private void showCreateEditDialog(int content,boolean editFolder) {
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("editFolderFragment");
@@ -365,16 +363,20 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        DialogFragment editFolderFragment = EditFolderFragment.newInstance(content);
+        DialogFragment editFolderFragment = EditFolderFragment.newInstance(content,editFolder);
         editFolderFragment.show(ft, "editFolderFragment");
     }
 
     public void saveEditFolder(Folder folder){
-        executeEditDeleteFolderTask(folder, ApiConstants.EDIT);
+        executeCreateEditDeleteFolderTask(folder, ApiConstants.EDIT);
+    }
+
+    public void createFolder(Folder folder){
+        executeCreateEditDeleteFolderTask(folder, ApiConstants.CREATE);
     }
 
     public void deleteEditFolder(Folder folder){
-        executeEditDeleteFolderTask(folder, ApiConstants.DELETE);
+        executeCreateEditDeleteFolderTask(folder, ApiConstants.DELETE);
     }
 
     private boolean selectAccountItem(int content) {
@@ -415,6 +417,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     contentFragment = new DocumentFragment(content);
 
                 } else if (selectAccountItem(content)) {
+                    return;
+                }else if (folders != null && content == inboxReceiptsAndFolders) {
+                    showCreateEditDialog(content, false);
                     return;
                 }
             } catch (Exception e) {
@@ -673,18 +678,18 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
-    private void executeEditDeleteFolderTask(Folder folder,String action) {
-        EditDeleteFolderTask editDeleteFolderTask = new EditDeleteFolderTask(folder,action);
+    private void executeCreateEditDeleteFolderTask(Folder folder,String action) {
+        CreateEditDeleteFolderTask editDeleteFolderTask = new CreateEditDeleteFolderTask(folder,action);
         editDeleteFolderTask.execute();
     }
 
-    private class EditDeleteFolderTask extends AsyncTask<Void, Void, Integer> {
+    private class CreateEditDeleteFolderTask extends AsyncTask<Void, Void, Integer> {
         private String errorMessage;
         private boolean invalidToken;
         private String action;
         private Folder folder;
 
-        public EditDeleteFolderTask(final Folder folder, final String action) {
+        public CreateEditDeleteFolderTask(final Folder folder, final String action) {
             this.folder = folder;
             this.action = action;
         }
@@ -697,7 +702,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         @Override
         protected Integer doInBackground(Void... voids) {
             try {
-                return ContentOperations.editDeleteFolder(MainContentActivity.this, folder, action);
+                return ContentOperations.createEditDeleteFolder(MainContentActivity.this, folder, action);
             } catch (DigipostApiException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
