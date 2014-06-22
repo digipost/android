@@ -349,6 +349,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             int inboxReceiptsAndFolders = (numberOfFolders + ApplicationConstants.numberOfStaticFolders);
             if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders) {
                 showEditDialog(content);
+                return true;
             } else if (selectAccountItem(content)) {
                 return true;
             }

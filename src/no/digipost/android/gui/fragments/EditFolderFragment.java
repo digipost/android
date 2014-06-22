@@ -139,7 +139,7 @@ public class EditFolderFragment extends DialogFragment {
                 folderIcon = iconNames[position];
                 return iconNames[position];
             }catch(IndexOutOfBoundsException e){
-                return "FOLDER";
+                return iconNames[0];
             }
 
         }
