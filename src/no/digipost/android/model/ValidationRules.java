@@ -51,6 +51,9 @@ public class ValidationRules {
     @JsonProperty
     private String percent;
 
+    @JsonProperty
+    private String foldername;
+
     public String getEmail() {
         return email;
     }
@@ -90,4 +93,6 @@ public class ValidationRules {
     public String getPercent() {
         return percent;
     }
+
+    public String getFolderName(){ return foldername;}
 }

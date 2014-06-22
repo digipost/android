@@ -89,14 +89,16 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private MenuItem searchButton;
     private boolean refreshing;
     private static String[] drawerListitems;
-    public static ArrayList<Folder> folders;
     private Dialog mailboxDialog;
-    public static int numberOfFolders;
     private boolean showActionBarName;
     private Mailbox mailbox;
     private ArrayList<Mailbox> mailboxes;
     private Account account;
+
+    public static int numberOfFolders;
     public static String fragmentName;
+    public static ArrayList<Folder> folders;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -355,7 +357,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         return false;
     }
 
-    private void showCreateEditDialog(int content,boolean editFolder) {
+    private void showCreateEditDialog(int content, boolean editFolder) {
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag("editFolderFragment");
@@ -363,7 +365,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        DialogFragment editFolderFragment = EditFolderFragment.newInstance(content,editFolder);
+        DialogFragment editFolderFragment = EditFolderFragment.newInstance(content,account.getValidationRules().getFolderName(),editFolder);
         editFolderFragment.show(ft, "editFolderFragment");
     }
 

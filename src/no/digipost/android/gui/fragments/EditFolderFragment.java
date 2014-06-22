@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.MainContentActivity;
@@ -24,6 +26,8 @@ public class EditFolderFragment extends DialogFragment {
 	Folder folder;
 	View editName;
 	String folderIcon;
+    String newFolderName;
+    String validationRules;
 	GridView gridView;
 
 	private Integer[] iconsNormal = { R.drawable.folder_128, R.drawable.envelope_128, R.drawable.file_128, R.drawable.star_128,
@@ -38,11 +42,12 @@ public class EditFolderFragment extends DialogFragment {
 	private String[] iconNames = { "FOLDER", "ENVELOPE", "PAPER", "STAR", "TAGS", "MONEY", "HEART", "HOME", "BOX", "TROPHY", "SUITCASE",
 			"CAMERA" };
 
-	public static EditFolderFragment newInstance(int content, boolean editFolder) {
+	public static EditFolderFragment newInstance(int content,String validationRules, boolean editFolder) {
 		EditFolderFragment editFolderfragment = new EditFolderFragment();
 		Bundle args = new Bundle();
 		args.putInt("content", content);
 		args.putBoolean("editFolder", editFolder);
+        args.putString("validationRules",validationRules);
 		editFolderfragment.setArguments(args);
 
 		return editFolderfragment;
@@ -53,6 +58,7 @@ public class EditFolderFragment extends DialogFragment {
 		super.onCreate(savedInstanceState);
 		content = getArguments().getInt("content");
 		editFolder = getArguments().getBoolean("editFolder");
+        validationRules = getArguments().getString("validationRules");
 
 		if (editFolder) {
 			try {
@@ -85,23 +91,24 @@ public class EditFolderFragment extends DialogFragment {
 
 		positiveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				String name = ((EditText) editName).getText().toString().trim();
+				newFolderName = ((EditText) editName).getText().toString().trim();
+
                 if(!editFolder){
                     folder = new Folder();
                 }
 
-				if (name.length() == 0) {
-					DialogUtitities.showToast(getActivity(), getString(R.string.dialog_edit_folder_invalid_folder_name));
-				} else {
-					folder.setName(name);
-					folder.setIcon(folderIcon);
+				if (folderIsValid()) {
+                    folder.setName(newFolderName);
+                    folder.setIcon(folderIcon);
                     if(editFolder) {
                         ((MainContentActivity) getActivity()).saveEditFolder(folder);
                     }else{
                         ((MainContentActivity) getActivity()).createFolder(folder);
                     }
-					dismiss();
-				}
+                    dismiss();
+				} else {
+                    DialogUtitities.showToast(getActivity(), getString(R.string.dialog_edit_folder_invalid_folder_name));
+                }
 			}
 		});
 
@@ -128,6 +135,18 @@ public class EditFolderFragment extends DialogFragment {
 
 		return view;
 	}
+    private boolean folderIsValid(){
+        ArrayList<Folder> folders = MainContentActivity.folders;
+
+        for(Folder f : folders){
+            if((f).getName().equals(newFolderName)){
+                return false;
+            }
+        }
+
+        return newFolderName.matches(validationRules);
+
+    }
 
 	private class ImageAdapter extends BaseAdapter {
 
