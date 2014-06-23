@@ -21,126 +21,132 @@ import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.DialogUtitities;
 
 public class EditFolderFragment extends DialogFragment {
-	int content;
-	boolean editFolder;
-	Folder folder;
-	View editName;
-	String folderIcon;
+    private int content;
+    int folderIndex;
+    boolean editFolder;
+    Folder folder;
+    View editName;
+    String folderIcon;
     String newFolderName;
     String validationRules;
-	GridView gridView;
+    GridView gridView;
 
-	private Integer[] iconsNormal = { R.drawable.folder_128, R.drawable.envelope_128, R.drawable.file_128, R.drawable.star_128,
-			R.drawable.tags_128, R.drawable.usd_128, R.drawable.heart_128, R.drawable.home_128, R.drawable.archive_128,
-			R.drawable.trophy_128, R.drawable.suitcase_128, R.drawable.camera_128 };
+    private Integer[] iconsNormal = {R.drawable.folder2x, R.drawable.envelope2x, R.drawable.file2x, R.drawable.star2x,
+            R.drawable.tags2x, R.drawable.usd2x, R.drawable.heart2x, R.drawable.home2x, R.drawable.archive2x,
+            R.drawable.trophy2x, R.drawable.suitcase2x, R.drawable.camera2x};
 
-	private Integer[] iconsSelected = { R.drawable.folder_128_selected, R.drawable.envelope_128_selected, R.drawable.file_128_selected,
-			R.drawable.star_128_selected, R.drawable.tags_128_selected, R.drawable.usd_128_selected, R.drawable.heart_128_selected,
-			R.drawable.home_128_selected, R.drawable.archive_128_selected, R.drawable.trophy_128_selected,
-			R.drawable.suitcase_128_selected, R.drawable.camera_128_selected };
+    private Integer[] iconsSelected = {R.drawable.folder_active2x, R.drawable.envelope_active2x, R.drawable.file_active2x,
+            R.drawable.star_active2x, R.drawable.tags_active2x, R.drawable.usd_active2x, R.drawable.heart_active2x,
+            R.drawable.home_active2x, R.drawable.archive_active2x, R.drawable.trophy_active2x,
+            R.drawable.suitcase_active2x, R.drawable.camera_active2x};
 
-	private String[] iconNames = { "FOLDER", "ENVELOPE", "PAPER", "STAR", "TAGS", "MONEY", "HEART", "HOME", "BOX", "TROPHY", "SUITCASE",
-			"CAMERA" };
+    private String[] iconNames = {"FOLDER", "LETTER", "PAPER", "STAR", "TAGS", "MONEY", "HEART", "HOME", "BOX", "TROPHY", "SUITCASE",
+            "CAMERA"};
 
-	public static EditFolderFragment newInstance(int content,String validationRules, boolean editFolder) {
-		EditFolderFragment editFolderfragment = new EditFolderFragment();
-		Bundle args = new Bundle();
-		args.putInt("content", content);
-		args.putBoolean("editFolder", editFolder);
-        args.putString("validationRules",validationRules);
-		editFolderfragment.setArguments(args);
+    public static EditFolderFragment newInstance(int content, String validationRules, boolean editFolder) {
+        EditFolderFragment editFolderfragment = new EditFolderFragment();
+        Bundle args = new Bundle();
+        args.putInt("content", content);
+        args.putBoolean("editFolder", editFolder);
+        args.putString("validationRules", validationRules);
+        editFolderfragment.setArguments(args);
 
-		return editFolderfragment;
-	}
+        return editFolderfragment;
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		content = getArguments().getInt("content");
-		editFolder = getArguments().getBoolean("editFolder");
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        content = getArguments().getInt("content");
+        editFolder = getArguments().getBoolean("editFolder");
         validationRules = getArguments().getString("validationRules");
 
-		if (editFolder) {
-			try {
-				folder = MainContentActivity.folders.get(content - ApplicationConstants.numberOfStaticFolders);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+        if (editFolder) {
+            try {
+                folderIndex = content - ApplicationConstants.numberOfStaticFolders;
+                folder = MainContentActivity.folders.get(folderIndex);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-		View view = inflater.inflate(R.layout.fragment_edit_folder, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_folder, container, false);
 
-		editName = view.findViewById(R.id.edit_folder_fragment_name);
-		gridView = (GridView) view.findViewById(R.id.edit_folder_fragment_gridview);
-		final ImageAdapter imageAdapter = new ImageAdapter();
-		gridView.requestFocusFromTouch();
-		gridView.setAdapter(imageAdapter);
-		gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				folderIcon = iconNames[position];
-				gridView.setItemChecked(position, true);
-				imageAdapter.notifyDataSetChanged();
-			}
-		});
+        editName = view.findViewById(R.id.edit_folder_fragment_name);
+        gridView = (GridView) view.findViewById(R.id.edit_folder_fragment_gridview);
+        final ImageAdapter imageAdapter = new ImageAdapter();
+        gridView.requestFocusFromTouch();
+        gridView.setAdapter(imageAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                folderIcon = iconNames[position];
+                gridView.setItemChecked(position, true);
+                imageAdapter.notifyDataSetChanged();
+            }
+        });
 
-		Button positiveButton = (Button) view.findViewById(R.id.edit_folder_fragment_save_button);
+        Button positiveButton = (Button) view.findViewById(R.id.edit_folder_fragment_save_button);
 
-		positiveButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				newFolderName = ((EditText) editName).getText().toString().trim();
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                newFolderName = ((EditText) editName).getText().toString().trim();
 
-                if(!editFolder){
+                if (!editFolder) {
                     folder = new Folder();
                 }
 
-				if (folderIsValid()) {
+                if (folderIsValid()) {
                     folder.setName(newFolderName);
                     folder.setIcon(folderIcon);
-                    if(editFolder) {
-                        ((MainContentActivity) getActivity()).saveEditFolder(folder);
-                    }else{
+                    if (editFolder) {
+                        ((MainContentActivity) getActivity()).saveEditFolder(folder,folderIndex);
+                    } else {
                         ((MainContentActivity) getActivity()).createFolder(folder);
                     }
                     dismiss();
-				} else {
+                } else {
                     DialogUtitities.showToast(getActivity(), getString(R.string.dialog_edit_folder_invalid_folder_name));
                 }
-			}
-		});
+            }
+        });
 
-		Button negativeButton = (Button) view.findViewById(R.id.edit_folder_fragment_delete_button);
-		negativeButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				if (editFolder) {
-					((MainContentActivity) getActivity()).deleteEditFolder(folder);
-				}
-				dismiss();
-			}
-		});
+        Button negativeButton = (Button) view.findViewById(R.id.edit_folder_fragment_delete_button);
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (editFolder) {
+                    ((MainContentActivity) getActivity()).deleteEditFolder(folder);
+                }
+                dismiss();
+            }
+        });
 
-		if (editFolder) {
-			getDialog().setTitle(getString(R.string.dialog_edit_folder_title));
-			((EditText) editName).setText(folder.getName());
-			folderIcon = folder.getIcon();
-		} else {
-			getDialog().setTitle(getString(R.string.dialog_create_folder_title));
-			positiveButton.setText(getString(R.string.dialog_create_folder_save_button));
-			negativeButton.setText(getString(R.string.abort));
+        if (editFolder) {
+            getDialog().setTitle(getString(R.string.dialog_edit_folder_title));
+            ((EditText) editName).setText(folder.getName());
+            folderIcon = folder.getIcon();
+        } else {
+            getDialog().setTitle(getString(R.string.dialog_create_folder_title));
+            positiveButton.setText(getString(R.string.dialog_create_folder_save_button));
+            negativeButton.setText(getString(R.string.abort));
             folderIcon = getString(R.string.icon_folder);
-		}
+        }
 
-		return view;
-	}
-    private boolean folderIsValid(){
+        return view;
+    }
+
+    private boolean folderIsValid() {
         ArrayList<Folder> folders = MainContentActivity.folders;
+        folder.setName(newFolderName);
+        for (Folder f : folders) {
 
-        for(Folder f : folders){
-            if((f).getName().equals(newFolderName)){
-                return false;
+            if(folder.getName().toLowerCase() != null && !(folder.getName().toLowerCase().equals(newFolderName.toLowerCase()))) {
+                if ((f).getName().toLowerCase().equals(newFolderName.toLowerCase())) {
+                    return false;
+                }
             }
         }
 
@@ -148,58 +154,65 @@ public class EditFolderFragment extends DialogFragment {
 
     }
 
-	private class ImageAdapter extends BaseAdapter {
+    private class ImageAdapter extends BaseAdapter {
 
-		public ImageAdapter() {
-		}
+        public ImageAdapter() {
+        }
 
-		public int getCount() {
-			return iconsNormal.length;
-		}
+        public int getCount() {
+            return iconsNormal.length;
+        }
 
-		public Object getItem(int position) {
-			String newFolderIcon = folderIcon;
+        public Object getItem(int position) {
 
-			try {
-				folderIcon = iconNames[position];
-				return iconNames[position];
-			} catch (IndexOutOfBoundsException e) {
-				return iconNames[0];
-			}
+            if(isFolderIconBeer()){
+                folderIcon = getString(R.string.icon_beer);
+                return folderIcon;
+            }
+            try {
+                folderIcon = iconNames[position];
+                return iconNames[position];
+            } catch (IndexOutOfBoundsException e) {
+                return iconNames[0];
+            }
 
-		}
+        }
 
-		public int getCurrentPosition() {
-			for (int i = 0; i < iconNames.length; i++) {
-				if (iconNames[i].equals(folderIcon)) {
-					return i;
-				}
-			}
-			return 0;
-		}
+        private boolean isFolderIconBeer(){
+            return editFolder && folder.getIcon().equals(getString(R.string.icon_beer));
+        }
 
-		public long getItemId(int position) {
-			return 0;
-		}
+        public int getCurrentPosition() {
 
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ImageView imageView;
+            for (int i = 0; i < iconNames.length; i++) {
+                if (iconNames[i].equals(folderIcon)) {
+                    return i;
+                }
+            }
+            return 0;
+        }
 
-			if (convertView == null) {
-				imageView = new ImageView(getActivity().getApplicationContext());
-				imageView.setLayoutParams(new GridView.LayoutParams(100, 100));
-				imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				imageView.setPadding(4, 4, 4, 4);
-			} else {
-				imageView = (ImageView) convertView;
-			}
+        public long getItemId(int position) {
+            return 0;
+        }
 
-			if (position == getCurrentPosition()) {
-				imageView.setImageResource(iconsSelected[position]);
-			} else {
-				imageView.setImageResource(iconsNormal[position]);
-			}
-			return imageView;
-		}
-	}
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ImageView imageView;
+
+            if (convertView == null) {
+                imageView = new ImageView(getActivity().getApplicationContext());
+                imageView.setLayoutParams(new GridView.LayoutParams(100, 100));
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            } else {
+                imageView = (ImageView) convertView;
+            }
+
+            if (position == getCurrentPosition() && !isFolderIconBeer()) {
+                imageView.setImageResource(iconsSelected[position]);
+            } else {
+                imageView.setImageResource(iconsNormal[position]);
+            }
+            return imageView;
+        }
+    }
 }

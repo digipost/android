@@ -33,71 +33,71 @@ import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Folder;
 
 public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
-	protected Context context;
-	private TextView linkName;
-	private TextView unreadView;
-	private String[] links;
-	private View line;
-	private int unreadLetters;
-	private ArrayList<Folder> folders;
+    protected Context context;
+    private TextView linkName;
+    private TextView unreadView;
+    private String[] links;
+    private View line;
+    private int unreadLetters;
+    private ArrayList<Folder> folders;
 
-	public DrawerArrayAdapter(final Context context, final int resource, final String[] links, ArrayList<Folder> folders,
-			final int unreadLetters) {
-		super(context, resource, links);
-		this.context = context;
-		this.links = links;
-		this.unreadLetters = unreadLetters;
-		this.folders = folders;
-	}
+    public DrawerArrayAdapter(final Context context, final int resource, final String[] links, ArrayList<Folder> folders,
+                              final int unreadLetters) {
+        super(context, resource, links);
+        this.context = context;
+        this.links = links;
+        this.unreadLetters = unreadLetters;
+        this.folders = folders;
+    }
 
-	public View getView(final int position, final View convertView, final ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public View getView(final int position, final View convertView, final ViewGroup parent) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-		View row = inflater.inflate(R.layout.drawer_list_item, parent, false);
-		this.linkName = (TextView) row.findViewById(R.id.drawer_link_name);
-		this.unreadView = (TextView) row.findViewById(R.id.drawer_link_unread);
-		this.line = row.findViewById(R.id.drawer_line);
-		setupLinkView(position);
+        View row = inflater.inflate(R.layout.drawer_list_item, parent, false);
+        this.linkName = (TextView) row.findViewById(R.id.drawer_link_name);
+        this.unreadView = (TextView) row.findViewById(R.id.drawer_link_unread);
+        this.line = row.findViewById(R.id.drawer_line);
+        setupLinkView(position);
 
-		return row;
-	}
+        return row;
+    }
 
-	public void setUnreadLetters(int unreadLetters) {
-		this.unreadLetters = unreadLetters;
-		notifyDataSetChanged();
-	}
+    public void setUnreadLetters(int unreadLetters) {
+        this.unreadLetters = unreadLetters;
+        notifyDataSetChanged();
+    }
 
-	public void updateDrawer() {
-		notifyDataSetChanged();
-	}
+    public void updateDrawer() {
+        notifyDataSetChanged();
+    }
 
-	private void updateUnreadView() {
-		unreadView.setText(" " + unreadLetters);
-		unreadView.setVisibility(View.VISIBLE);
-	}
+    private void updateUnreadView() {
+        unreadView.setText(" " + unreadLetters);
+        unreadView.setVisibility(View.VISIBLE);
+    }
 
-	private void setupLinkView(int position) {
-		linkName.setText((CharSequence) links[position]);
+    private void setupLinkView(int position) {
+        linkName.setText((CharSequence) links[position]);
 
-		int foldersStart = ApplicationConstants.numberOfStaticFolders;
+        int foldersStart = ApplicationConstants.numberOfStaticFolders;
         int foldersEnd = foldersStart;
 
-        if(folders != null) {
+        if (folders != null) {
             foldersEnd += folders.size();
         }
 
-		if (position < foldersStart) {
-			if (position == ApplicationConstants.MAILBOX) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.inbox_32, 0, 0, 0);
-				updateUnreadView();
-			} else if (position == ApplicationConstants.RECEIPTS) {
-				linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tag_32, 0, 0, 0);
+        if (position < foldersStart) {
+            if (position == ApplicationConstants.MAILBOX) {
+                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.inbox_32, 0, 0, 0);
+                updateUnreadView();
+            } else if (position == ApplicationConstants.RECEIPTS) {
+                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tag_32, 0, 0, 0);
 
-			} else if (position < foldersStart
-					&& links[position].equals(context.getResources().getString(R.string.drawer_my_folders))) {
-				drawLabel();
-			}
-		} else if (position >= foldersStart && position < foldersEnd) {
+            } else if (position < foldersStart
+                    && links[position].equals(context.getResources().getString(R.string.drawer_my_folders))) {
+                drawLabel();
+            }
+        } else if (position >= foldersStart && position < foldersEnd) {
             CharSequence type = context.getResources().getString(R.string.icon_folder);
 
             if (folders != null) {
@@ -109,14 +109,14 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
 
             linkName.setCompoundDrawablesWithIntrinsicBounds(getFolderIcon(type), 0, 0, 0);
 
-		} else if (position > foldersEnd) {
+        } else if (position >= foldersEnd) {
             getIconBelowFolders(position);
-		}
-	}
+        }
+    }
 
-    private int getIconBelowFolders(int position){
+    private int getIconBelowFolders(int position) {
         if (links[position].equals(context.getResources().getString(R.string.drawer_create_folder))) {
-
+            linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.new_folder_32, 0, 0, 0);
         } else if (links[position].equals(context.getResources().getString(R.string.drawer_my_account))) {
             drawLabel();
         } else if (links[position].equals(context.getResources().getString(R.string.drawer_change_account))) {
@@ -127,58 +127,58 @@ public class DrawerArrayAdapter<String> extends ArrayAdapter<String> {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.help_32px, 0, 0, 0);
         } else if (links[position].equals(context.getResources().getString(R.string.drawer_logout))) {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.logout_32px, 0, 0, 0);
-
         }
 
         return 0;
     }
 
-    private int getFolderIcon(CharSequence type){
-
-        if (type.equals("PAPER")) {
+    private int getFolderIcon(CharSequence type) {
+        if (type.equals(context.getString(R.string.icon_paper))) {
             return R.drawable.file_32;
-        } else if (type.equals("TAGS")) {
+        } else if (type.equals(context.getString(R.string.icon_tags))) {
             return R.drawable.tags_32;
-        } else if (type.equals("LETTER")) {
+        } else if (type.equals(context.getString(R.string.icon_letter))) {
             return R.drawable.envelope_32;
-        } else if (type.equals("HEART")) {
+        } else if (type.equals(context.getString(R.string.icon_heart))) {
             return R.drawable.heart_32;
-        } else if (type.equals("TROPHY")) {
+        } else if (type.equals(context.getString(R.string.icon_trophy))) {
             return R.drawable.trophy_32;
-        } else if (type.equals("BOX")) {
-           return R.drawable.archive_32;
-        } else if (type.equals("HOME")) {
+        } else if (type.equals(context.getString(R.string.icon_box))) {
+            return R.drawable.archive_32;
+        } else if (type.equals(context.getString(R.string.icon_home))) {
             return R.drawable.home_32;
-        } else if (type.equals("STAR")) {
+        } else if (type.equals(context.getString(R.string.icon_star))) {
             return R.drawable.star_32;
-        } else if (type.equals("SUITCASE")) {
+        } else if (type.equals(context.getString(R.string.icon_suitcase))) {
             return R.drawable.suitcase_32;
-        } else if (type.equals("CAMERA")) {
+        } else if (type.equals(context.getString(R.string.icon_camera))) {
             return R.drawable.camera32;
-        } else if (type.equals("MONEY")) {
+        } else if (type.equals(context.getString(R.string.icon_money))) {
             return R.drawable.usd_32;
+        } else if (type.equals(context.getString(R.string.icon_beer))) {
+            return R.drawable.beer_32;
         } else {
-            return R.drawable.folder_close;
+            return R.drawable.folder_32;
         }
     }
 
-	private void drawLabel() {
-		linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
-		linkName.setTextSize(16);
-		linkName.setGravity(Gravity.BOTTOM);
-		linkName.setTypeface(null, Typeface.BOLD);
-		linkName.setPadding(0, 0, 0, 5);
-		line.setVisibility(View.GONE);
-	}
+    private void drawLabel() {
+        linkName.setTextColor(context.getResources().getColor(R.color.main_drawer_grey_text));
+        linkName.setTextSize(16);
+        linkName.setGravity(Gravity.BOTTOM);
+        linkName.setTypeface(null, Typeface.BOLD);
+        linkName.setPadding(0, 0, 0, 5);
+        line.setVisibility(View.GONE);
+    }
 
-	@Override
-	public boolean isEnabled(int position) {
-        if (position != ApplicationConstants.FOLDERS_LABEL){
+    @Override
+    public boolean isEnabled(int position) {
+        if (position != ApplicationConstants.FOLDERS_LABEL) {
 
-            if(position != MainContentActivity.numberOfFolders + ApplicationConstants.numberOfStaticFolders +1){
+            if (position != MainContentActivity.numberOfFolders + ApplicationConstants.numberOfStaticFolders + 1) {
                 return true;
             }
         }
         return false;
-	}
+    }
 }

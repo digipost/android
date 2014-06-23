@@ -35,8 +35,10 @@ public class NetworkUtilities {
     public static final int HTTP_STATUS_CREATE = 201;
 	public static final int HTTP_STATUS_UNAUTHORIZED = 401;
 	public static final int HTTP_STATUS_BAD_REQUEST = 400;
+    public static final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
-	public static void checkHttpStatusCode(Context context, final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
+
+    public static void checkHttpStatusCode(Context context, final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
 			DigipostAuthenticationException {
 		if (statusCode == HTTP_STATUS_SUCCESS || statusCode == TEMPORARY_REDIRECT.getStatusCode()) {
 			return;
@@ -50,7 +52,7 @@ public class NetworkUtilities {
 			throw new DigipostAuthenticationException(context.getString(R.string.error_bad_request));
 		}else if (statusCode == HTTP_STATUS_CREATE) {
 
-        }else{
+        }else if(statusCode == HTTP_STATUS_INTERNAL_SERVER_ERROR){
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
 		}
 	}

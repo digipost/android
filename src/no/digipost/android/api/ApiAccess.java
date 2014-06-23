@@ -67,10 +67,10 @@ import no.digipost.android.utilities.NetworkUtilities;
 import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT;
 
 public class ApiAccess {
-	private static Client jerseyClient = Client.create();
+    private static Client jerseyClient = Client.create();
 
-	public static final int POST_ACTION_MOVE = 0;
-	public static final int POST_ACTION_SEND_OPENING_RECEIPT = 1;
+    public static final int POST_ACTION_MOVE = 0;
+    public static final int POST_ACTION_SEND_OPENING_RECEIPT = 1;
     public static final int POST_ACTION_UPDATE_SETTINGS = 2;
     public static final int POST_ACTION_SEND_TO_BANK = 3;
     public static final int POST_ACTION_CREATE_FOLDER = 4;
@@ -87,20 +87,21 @@ public class ApiAccess {
         return jerseyClient;
     }
 
-	public static Account getAccount(Context context) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		return (Account) JSONUtilities.processJackson(Account.class, getApiJsonString(context, ApiConstants.URL_API));
-	}
+    public static Account getAccount(Context context) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        return (Account) JSONUtilities.processJackson(Account.class, getApiJsonString(context, ApiConstants.URL_API));
+    }
 
-	public static Documents getDocuments(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		return (Documents) JSONUtilities.processJackson(Documents.class, getApiJsonString(context, uri));
-	}
+    public static Documents getDocuments(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        return (Documents) JSONUtilities.processJackson(Documents.class, getApiJsonString(context, uri));
+    }
 
     public static CurrentBankAccount getCurrentBankAccount(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
         return (CurrentBankAccount) JSONUtilities.processJackson(CurrentBankAccount.class, getApiJsonString(context, uri));
     }
-	public static Receipts getReceipts(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		return (Receipts) JSONUtilities.processJackson(Receipts.class, getApiJsonString(context, uri));
-	}
+
+    public static Receipts getReceipts(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        return (Receipts) JSONUtilities.processJackson(Receipts.class, getApiJsonString(context, uri));
+    }
 
     public static Folder getFolderSelf(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
         return (Folder) JSONUtilities.processJackson(Folder.class, getApiJsonString(context, uri));
@@ -114,54 +115,54 @@ public class ApiAccess {
         return (Settings) JSONUtilities.processJackson(Settings.class, getApiJsonString(context, uri));
     }
 
-	private static ClientResponse executeGetRequest(Context context, final String uri, final String header_accept) throws DigipostClientException,
-			DigipostApiException, DigipostAuthenticationException {
-		if (StringUtils.isBlank(Secret.ACCESS_TOKEN)) {
-			OAuth2.updateAccessToken(context);
-		}
+    private static ClientResponse executeGetRequest(Context context, final String uri, final String header_accept) throws DigipostClientException,
+            DigipostApiException, DigipostAuthenticationException {
+        if (StringUtils.isBlank(Secret.ACCESS_TOKEN)) {
+            OAuth2.updateAccessToken(context);
+        }
 
-		try {
-			ClientResponse cr = getClient()
-					.resource(uri)
+        try {
+            ClientResponse cr = getClient()
+                    .resource(uri)
                     .header(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT)
-					.header(ApiConstants.ACCEPT, header_accept)
-					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
-					.get(ClientResponse.class);
+                    .header(ApiConstants.ACCEPT, header_accept)
+                    .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
+                    .get(ClientResponse.class);
 
-			if (cr.getStatus() == TEMPORARY_REDIRECT.getStatusCode()) {
-				return executeGetRequest(context, cr.getHeaders().getFirst(HttpHeaders.LOCATION), header_accept);
-			}
+            if (cr.getStatus() == TEMPORARY_REDIRECT.getStatusCode()) {
+                return executeGetRequest(context, cr.getHeaders().getFirst(HttpHeaders.LOCATION), header_accept);
+            }
 
-			return cr;
-		} catch (Exception e) {
-			throw new DigipostClientException(context.getString(R.string.error_your_network));
-		}
+            return cr;
+        } catch (Exception e) {
+            throw new DigipostClientException(context.getString(R.string.error_your_network));
+        }
 
-	}
+    }
 
-	public static String getApiJsonString(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		ClientResponse cr = executeGetRequest(context, uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
+    public static String getApiJsonString(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        ClientResponse cr = executeGetRequest(context, uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
 
-		try {
-			NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
-		} catch (DigipostInvalidTokenException e) {
-			OAuth2.updateAccessToken(context);
-			return getApiJsonString(context, uri);
-		}
+        try {
+            NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
+        } catch (DigipostInvalidTokenException e) {
+            OAuth2.updateAccessToken(context);
+            return getApiJsonString(context, uri);
+        }
 
-		return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());
-	}
+        return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());
+    }
 
-	public static String postSendOpeningReceipt(Context context, final String uri) throws DigipostClientException, DigipostApiException,
-			DigipostAuthenticationException {
+    public static String postSendOpeningReceipt(Context context, final String uri) throws DigipostClientException, DigipostApiException,
+            DigipostAuthenticationException {
 
-		return request(context, POST_ACTION_SEND_OPENING_RECEIPT, uri, null, POST);
-	}
+        return request(context, POST_ACTION_SEND_OPENING_RECEIPT, uri, null, POST);
+    }
 
-	public static Document getMovedDocument(Context context, final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
-			DigipostAuthenticationException {
-		return (Document) JSONUtilities.processJackson(Document.class, request(context, POST_ACTION_MOVE, uri, json, POST));
-	}
+    public static Document getMovedDocument(Context context, final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
+            DigipostAuthenticationException {
+        return (Document) JSONUtilities.processJackson(Document.class, request(context, POST_ACTION_MOVE, uri, json, POST));
+    }
 
     public static void updateAccountSettings(Context context, String uri, StringEntity json) throws DigipostAuthenticationException, DigipostClientException, DigipostApiException {
         request(context, POST_ACTION_UPDATE_SETTINGS, uri, json, POST);
@@ -171,98 +172,98 @@ public class ApiAccess {
         request(context, POST_ACTION_SEND_TO_BANK, uri, null, POST);
     }
 
-	private static String request(Context context, int action, final String uri, final StringEntity json,final int httpAction) throws DigipostClientException,
-			DigipostApiException, DigipostAuthenticationException {
+    private static String request(Context context, int action, final String uri, final StringEntity json, final int httpAction) throws DigipostClientException,
+            DigipostApiException, DigipostAuthenticationException {
 
         HttpClient httpClient = new DefaultHttpClient();
         HttpEntityEnclosingRequestBase request = new HttpPost();
 
-        if(httpAction == POST) {
+        if (httpAction == POST) {
             request = new HttpPost();
-        }else if (httpAction == PUT){
+        } else if (httpAction == PUT) {
             request = new HttpPut();
         }
 
-		try {
+        try {
             request.setURI(new URI(uri));
-		} catch (URISyntaxException e1) {
-			// Ignore
-		}
+        } catch (URISyntaxException e1) {
+            // Ignore
+        }
 
         request.addHeader(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
         request.addHeader(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
         request.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
 
-		if (action == POST_ACTION_MOVE || action == POST_ACTION_UPDATE_SETTINGS || action == PUT_ACTION_EDIT_FOLDER || action == POST_ACTION_CREATE_FOLDER) {
-			request.setEntity(json);
-		}
+        if (action == POST_ACTION_MOVE || action == POST_ACTION_UPDATE_SETTINGS || action == PUT_ACTION_EDIT_FOLDER || action == POST_ACTION_CREATE_FOLDER) {
+            request.setEntity(json);
+        }
 
-		HttpResponse response;
-		try {
-			response = httpClient.execute(request);
-		} catch (Exception e) {
-			throw new DigipostClientException(context.getString(R.string.error_your_network));
-		}
+        HttpResponse response;
+        try {
+            response = httpClient.execute(request);
+        } catch (Exception e) {
+            throw new DigipostClientException(context.getString(R.string.error_your_network));
+        }
 
         try {
-			NetworkUtilities.checkHttpStatusCode(context, response.getStatusLine().getStatusCode());
-		} catch (DigipostInvalidTokenException e) {
-			OAuth2.updateAccessToken(context);
+            NetworkUtilities.checkHttpStatusCode(context, response.getStatusLine().getStatusCode());
+        } catch (DigipostInvalidTokenException e) {
+            OAuth2.updateAccessToken(context);
 
-			return request(context, action, uri, json, httpAction);
-		}
+            return request(context, action, uri, json, httpAction);
+        }
 
-		InputStream is = null;
-		try {
-			is = response.getEntity().getContent();
-		} catch (IllegalStateException e) {
-			// Ignore
-		} catch (IOException e) {
-			// Ignore
-		}
+        InputStream is = null;
+        try {
+            is = response.getEntity().getContent();
+        } catch (IllegalStateException e) {
+            // Ignore
+        } catch (IOException e) {
+            // Ignore
+        }
 
-		return JSONUtilities.getJsonStringFromInputStream(is);
-	}
+        return JSONUtilities.getJsonStringFromInputStream(is);
+    }
 
-	public static String delete(Context context, final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
-		Client client = Client.create();
-		ClientResponse cr;
+    public static String delete(Context context, final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
+        Client client = Client.create();
+        ClientResponse cr;
 
-		try {
-			cr = client
-					.resource(uri)
-					.header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
-					.header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
-					.delete(ClientResponse.class);
-		} catch (Exception e) {
-			throw new DigipostClientException(context.getString(R.string.error_your_network));
-		}
+        try {
+            cr = client
+                    .resource(uri)
+                    .header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
+                    .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
+                    .delete(ClientResponse.class);
+        } catch (Exception e) {
+            throw new DigipostClientException(context.getString(R.string.error_your_network));
+        }
 
-        if(cr.getStatus() == NetworkUtilities.HTTP_STATUS_BAD_REQUEST){
+        if (cr.getStatus() == NetworkUtilities.HTTP_STATUS_BAD_REQUEST) {
             try {
-               String output = cr.getEntity(String.class);
+                String output = cr.getEntity(String.class);
                 JSONObject jsonObject = new JSONObject(output);
-                if(jsonObject.get("error-code").equals("FOLDER_NOT_EMPTY")){
+                if (jsonObject.get("error-code").equals("FOLDER_NOT_EMPTY")) {
                     return null;
                 }
                 System.out.println(output);
-            }catch(JSONException e){
-            //IGNORE
-             }
+            } catch (JSONException e) {
+                //IGNORE
+            }
         }
 
-		try {
-			NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
-		} catch (DigipostInvalidTokenException e) {
-			OAuth2.updateAccessToken(context);
-			delete(context, uri);
-		}
-        return ""+cr.getStatus();
-	}
+        try {
+            NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
+        } catch (DigipostInvalidTokenException e) {
+            OAuth2.updateAccessToken(context);
+            delete(context, uri);
+        }
+        return "" + cr.getStatus();
+    }
 
     public static String createFolder(Context context, final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        System.out.println("json:"+json.toString());
+        System.out.println("json:" + json.toString());
         return request(context, POST_ACTION_CREATE_FOLDER, uri, json, POST);
     }
 
@@ -271,46 +272,47 @@ public class ApiAccess {
         return request(context, PUT_ACTION_EDIT_FOLDER, uri, json, PUT);
     }
 
-    public static String deleteFolder(Context context,final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
-        return delete(context,uri);
+    public static String deleteFolder(Context context, final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
+        return delete(context, uri);
     }
-	public static byte[] getDocumentContent(Context context, final String uri, final int filesize) throws DigipostApiException, DigipostClientException,
-			DigipostAuthenticationException {
-		ClientResponse cr = executeGetRequest(context, uri, ApiConstants.CONTENT_OCTET_STREAM);
 
-		try {
-			NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
-		} catch (DigipostInvalidTokenException e) {
-			OAuth2.updateAccessToken(context);
-			return getDocumentContent(context, uri, filesize);
-		}
+    public static byte[] getDocumentContent(Context context, final String uri, final int filesize) throws DigipostApiException, DigipostClientException,
+            DigipostAuthenticationException {
+        ClientResponse cr = executeGetRequest(context, uri, ApiConstants.CONTENT_OCTET_STREAM);
 
-		return JSONUtilities.inputStreamtoByteArray(context, filesize, cr.getEntityInputStream());
-	}
+        try {
+            NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
+        } catch (DigipostInvalidTokenException e) {
+            OAuth2.updateAccessToken(context);
+            return getDocumentContent(context, uri, filesize);
+        }
 
-	public static String getReceiptHTML(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-		ClientResponse cr = executeGetRequest(context, uri, ApiConstants.TEXT_HTML);
+        return JSONUtilities.inputStreamtoByteArray(context, filesize, cr.getEntityInputStream());
+    }
 
-		try {
-			NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
-		} catch (DigipostInvalidTokenException e) {
-			OAuth2.updateAccessToken(context);
-			return getReceiptHTML(context, uri);
-		}
+    public static String getReceiptHTML(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        ClientResponse cr = executeGetRequest(context, uri, ApiConstants.TEXT_HTML);
 
-		return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());
-	}
+        try {
+            NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
+        } catch (DigipostInvalidTokenException e) {
+            OAuth2.updateAccessToken(context);
+            return getReceiptHTML(context, uri);
+        }
 
-	public static void uploadFile(Context context, String uri, File file) throws DigipostClientException {
-		try {
+        return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());
+    }
+
+    public static void uploadFile(Context context, String uri, File file) throws DigipostClientException {
+        try {
             try {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(uri);
                 httpPost.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
                 FileBody filebody = new FileBody(file, ApiConstants.CONTENT_OCTET_STREAM);
 
-                MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE,null, Charset.forName(ApiConstants.ENCODING));
-                multipartEntity.addPart("subject", new StringBody(FilenameUtils.removeExtension(file.getName()), ApiConstants.MIME,Charset.forName(ApiConstants.ENCODING)));
+                MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName(ApiConstants.ENCODING));
+                multipartEntity.addPart("subject", new StringBody(FilenameUtils.removeExtension(file.getName()), ApiConstants.MIME, Charset.forName(ApiConstants.ENCODING)));
                 multipartEntity.addPart("file", filebody);
                 multipartEntity.addPart("token", new StringBody(Secret.ACCESS_TOKEN));
                 httpPost.setEntity(multipartEntity);
@@ -323,8 +325,8 @@ public class ApiAccess {
                 OAuth2.updateAccessToken(context);
                 uploadFile(context, uri, file);
             }
-		} catch (Exception e) {
-			throw new DigipostClientException(context.getString(R.string.error_your_network));
-		}
-	}
+        } catch (Exception e) {
+            throw new DigipostClientException(context.getString(R.string.error_your_network));
+        }
+    }
 }

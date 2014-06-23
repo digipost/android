@@ -121,7 +121,7 @@ public class JSONUtilities {
 
         StringEntity output = null;
         try {
-            output = new StringEntity(objectMapper.writer(filters).writeValueAsString(object));
+            output = new StringEntity(objectMapper.writer(filters).writeValueAsString(object),"UTF-8");
         } catch (JsonGenerationException e) {
             e.printStackTrace();
             // Ignore

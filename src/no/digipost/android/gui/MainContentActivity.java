@@ -82,13 +82,14 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     public static final int INTENT_REQUESTCODE = 0;
 
     private DrawerLayout drawerLayout;
+    private int currentDrawerListViewPosition;
     private ListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerArrayAdapter drawerArrayAdapter;
     protected MailboxArrayAdapter mailboxAdapter;
     private MenuItem searchButton;
     private boolean refreshing;
-    private static String[] drawerListitems;
+    private static String[] drawerListItems;
     private Dialog mailboxDialog;
     private boolean showActionBarName;
     private Mailbox mailbox;
@@ -365,36 +366,38 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        DialogFragment editFolderFragment = EditFolderFragment.newInstance(content,account.getValidationRules().getFolderName(),editFolder);
+        DialogFragment editFolderFragment = EditFolderFragment.newInstance(content, account.getValidationRules().getFolderName(), editFolder);
         editFolderFragment.show(ft, "editFolderFragment");
     }
 
-    public void saveEditFolder(Folder folder){
+    public void saveEditFolder(Folder folder, int folderIndex) {
+        folders.set(folderIndex,folder);
+        updateDrawer();
         executeCreateEditDeleteFolderTask(folder, ApiConstants.EDIT);
     }
 
-    public void createFolder(Folder folder){
+    public void createFolder(Folder folder) {
         executeCreateEditDeleteFolderTask(folder, ApiConstants.CREATE);
     }
 
-    public void deleteEditFolder(Folder folder){
+    public void deleteEditFolder(Folder folder) {
         executeCreateEditDeleteFolderTask(folder, ApiConstants.DELETE);
     }
 
     private boolean selectAccountItem(int content) {
-        if (drawerListitems[content].equals(getResources().getString(R.string.drawer_change_account))) {
+        if (drawerListItems[content].equals(getResources().getString(R.string.drawer_change_account))) {
             openMailboxSelection();
             return true;
 
-        } else if (drawerListitems[content].equals(getResources().getString(R.string.drawer_settings))) {
+        } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_settings))) {
             startPreferencesActivity();
             return true;
 
-        } else if (drawerListitems[content].equals(getResources().getString(R.string.drawer_help))) {
+        } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_help))) {
             openHelpWebView();
             return true;
 
-        } else if (drawerListitems[content].equals(getResources().getString(R.string.drawer_logout))) {
+        } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_logout))) {
             logOut();
             return true;
         }
@@ -420,7 +423,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
                 } else if (selectAccountItem(content)) {
                     return;
-                }else if (folders != null && content == inboxReceiptsAndFolders) {
+                } else if (folders != null && content == inboxReceiptsAndFolders) {
                     showCreateEditDialog(content, false);
                     return;
                 }
@@ -465,10 +468,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                         if (mailbox != null) {
                             fragmentName = mailbox.getName();
                         }
-                    } else if (drawerListitems[getCurrentFragment().getContent()].equals(getResources().getString(R.string.drawer_inbox))) {
+                    } else if (drawerListItems[getCurrentFragment().getContent()].equals(getResources().getString(R.string.drawer_inbox))) {
                         fragmentName = mailbox.getName();
                     } else {
-                        fragmentName = drawerListitems[getCurrentFragment().getContent()];
+                        fragmentName = drawerListItems[getCurrentFragment().getContent()];
                     }
                 }
                 getActionBar().setTitle(fragmentName);
@@ -479,8 +482,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void updateDrawer() {
+        currentDrawerListViewPosition = drawerList.getFirstVisiblePosition();
         folders = new ArrayList<Folder>();
-
         ArrayList<String> drawerItems = new ArrayList<String>();
 
         //Add main menu
@@ -523,14 +526,19 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerItems.add(getResources().getString(R.string.drawer_logout));
 
         //Add items to drawer
-        drawerListitems = new String[drawerItems.size()];
-        drawerListitems = drawerItems.toArray(drawerListitems);
+        drawerListItems = new String[drawerItems.size()];
+        drawerListItems = drawerItems.toArray(drawerListItems);
 
-        drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, drawerListitems, fs, 0);
+        drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, drawerListItems, fs, 0);
         drawerList.setAdapter(drawerArrayAdapter);
 
         if (mailbox != null) {
             drawerArrayAdapter.setUnreadLetters(mailbox.getUnreadItemsInInbox());
+        }
+        try {
+            drawerList.setSelection(currentDrawerListViewPosition + 1);
+        }catch(Exception e){
+            //IGNORE
         }
     }
 
@@ -586,14 +594,16 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             searchPlate.setBackgroundResource(R.drawable.search_background);
 
             searchTextView.setHintTextColor(getResources().getColor(R.color.searchbar_grey_hint));
-            searchView.setQueryHint(getString(R.string.search_in) + drawerListitems[getCurrentFragment().getContent()]);
+            searchView.setQueryHint(getString(R.string.search_in) + drawerListItems[getCurrentFragment().getContent()]);
 
             android.widget.ImageView searchViewClearButton = (android.widget.ImageView) searchPlate.getChildAt(1);
             searchViewClearButton.setImageResource(R.drawable.ic_clear_white);
 
             searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
         } catch (NoSuchFieldException e) {
+            //IGNORE
         } catch (IllegalAccessException e) {
+            //IGNORE
         }
     }
 
@@ -680,8 +690,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
-    private void executeCreateEditDeleteFolderTask(Folder folder,String action) {
-        CreateEditDeleteFolderTask editDeleteFolderTask = new CreateEditDeleteFolderTask(folder,action);
+    private void executeCreateEditDeleteFolderTask(Folder folder, String action) {
+        CreateEditDeleteFolderTask editDeleteFolderTask = new CreateEditDeleteFolderTask(folder, action);
         editDeleteFolderTask.execute();
     }
 
@@ -729,9 +739,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 executeGetAccountTask();
             } else {
 
-                if(result == ApplicationConstants.BAD_REQUEST_DELETE) {
+                if (result == ApplicationConstants.BAD_REQUEST_DELETE) {
                     DialogUtitities.showToast(MainContentActivity.this, getString(R.string.error_documents_in_delete_Folder));
-                }else if (invalidToken) {
+                } else if (invalidToken) {
                     DialogUtitities.showToast(MainContentActivity.this, errorMessage);
                     logOut();
                 }

@@ -26,9 +26,20 @@
     <string name="drawer_help">Hjelp</string>
     <string name="drawer_logout">Logg ut</string>
 
+    <!--Icons -->
     <string name="icon_folder">FOLDER</string>
-
-
+    <string name="icon_paper">PAPER</string>
+    <string name="icon_tags">TAGS</string>
+    <string name="icon_letter">LETTER</string>
+    <string name="icon_heart">HEART</string>
+    <string name="icon_trophy">TROPHY</string>
+    <string name="icon_box">BOX</string>
+    <string name="icon_home">HOME</string>
+    <string name="icon_star">STAR</string>
+    <string name="icon_suitcase">SUITCASE</string>
+    <string name="icon_camera">CAMERA</string>
+    <string name="icon_money">MONEY</string>
+    <string name="icon_beer">BEER</string>
     <!-- Misc -->
     <string name="close">Lukk</string>
     <string name="abort">Avbryt</string>
