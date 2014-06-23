@@ -20,5 +20,9 @@
             android:icon="@drawable/white_search_48"
             android:showAsAction="collapseActionView|ifRoom"
             android:actionViewClass="android.widget.SearchView"/>
-
+    <item
+        android:id="@+id/menu_edit_folder"
+        android:title="@string/edit"
+        android:visible="false"
+        android:showAsAction="never"/>
 </menu>

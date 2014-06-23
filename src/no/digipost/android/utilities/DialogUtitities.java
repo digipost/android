@@ -28,6 +28,11 @@ public class DialogUtitities {
 		toast.show();
 	}
 
+    public static void showLongToast(final Context context,final String text) {
+        Toast toast = Toast.makeText(context, text, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
 	public static ProgressDialog getProgressDialogWithMessage(final Context context, final String message) {
 		ProgressDialog progressDialog = new ProgressDialog(context);
 		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -109,7 +110,7 @@ public class EditFolderFragment extends DialogFragment {
                     }
                     dismiss();
                 } else {
-                    DialogUtitities.showToast(getActivity(), getString(R.string.dialog_edit_folder_invalid_folder_name));
+                    DialogUtitities.showLongToast(getActivity(), getString(R.string.dialog_edit_folder_invalid_folder_name));
                 }
             }
         });

@@ -39,7 +39,7 @@
     <string name="icon_suitcase">SUITCASE</string>
     <string name="icon_camera">CAMERA</string>
     <string name="icon_money">MONEY</string>
-    <string name="icon_beer">BEER</string>
+    <string name="icon_beer">BONUS</string>
     <!-- Misc -->
     <string name="close">Lukk</string>
     <string name="abort">Avbryt</string>
@@ -52,7 +52,7 @@
     <string name="open">Åpne</string>
     <string name="back">Tilbake</string>
     <string name="preview">Forhåndsvis</string>
-
+    <string name="edit">Rediger</string>
     <string name="search_in">Søk i\u0020</string>
     <string name="copy">Kopier tekst</string>
     <string name="save">Lagre</string>

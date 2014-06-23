@@ -157,6 +157,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     public boolean onPrepareOptionsMenu(Menu menu) {
         drawerArrayAdapter.updateDrawer();
 
+
         searchButton = menu.findItem(R.id.menu_search);
         searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
@@ -171,6 +172,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             }
         });
 
+        MenuItem editFoldersButton = menu.findItem(R.id.menu_edit_folder);
+
         MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
 
         if (refreshing) {
@@ -178,8 +181,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         } else {
             refreshButton.setActionView(null);
         }
+
         boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
         MenuItem uploadButton = menu.findItem(R.id.menu_upload);
+
         if (getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS) {
             uploadButton.setVisible(false);
         } else {
@@ -187,7 +192,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
         refreshButton.setVisible(!drawerOpen);
         searchButton.setVisible(!drawerOpen);
-
+        if(drawerOpen) {
+           // editFoldersButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+           // editFoldersButton.setVisible(drawerOpen);
+        }
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -209,6 +217,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 return true;
             case R.id.menu_upload:
                 startUploadActivity();
+                return true;
+            case R.id.menu_edit_folder:
+                enableEditFolders();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -356,6 +367,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
 
         return false;
+    }
+
+    private void enableEditFolders(){
+
     }
 
     private void showCreateEditDialog(int content, boolean editFolder) {
