@@ -17,6 +17,7 @@
 package no.digipost.android.utilities;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.apache.http.entity.StringEntity;
 import org.codehaus.jackson.JsonFactory;
@@ -42,6 +43,7 @@ import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Folder;
+import no.digipost.android.model.Folders;
 
 public class JSONUtilities {
 	public static String getJsonStringFromInputStream(final InputStream inputStream) {
@@ -105,15 +107,15 @@ public class JSONUtilities {
                         "selfUri", "settingsUri"};
             }
         }else if(object instanceof Folder){
-            if(((Folder) object).getId() == null) {
+            if(((Folder) object).getId() == 0) {
                 ignore = new String[]{"id","link","contentUri", "documents","changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
                         "selfUri", "uploadUri","settingsUri" };
             }else{
                 ignore = new String[]{"link","contentUri", "documents","changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
                         "selfUri", "uploadUri","settingsUri" };
             }
-
-
+        }else if(object instanceof Folders){
+            ignore = new String[]{"documents","changeUri","deleteUri","selfUri","uploadUri","createFolderUri","updateFoldersUri"};
         }
 
         ObjectMapper objectMapper = new ObjectMapper();

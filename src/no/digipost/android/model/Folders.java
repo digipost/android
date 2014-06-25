@@ -2,13 +2,14 @@ package no.digipost.android.model;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonFilter;
 
 import java.util.ArrayList;
 
 import no.digipost.android.constants.ApiConstants;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-
+@JsonFilter("toJSON")
 public class Folders {
     
     @JsonProperty
@@ -25,18 +26,19 @@ public class Folders {
         return getLinkByRelation(ApiConstants.URL_RELATIONS_CREATE_FOLDER);
     }
 
+    public void setFolder(ArrayList<Folder> folder){
+        this.folder = folder;
+    }
+
+    public String getUpdateFoldersUri(){
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_UPDATE_FOLDERS);
+    }
+
     private String getLinkByRelation(String relation) {
         for (Link l : link) {
-            System.out.println(l);
-            if(l!=null){
-                System.out.println(l.getRel());
-            }
             if (l.getRel().equals(relation)) {
                 return l.getUri();
             }
-        }
-        if(link== null){
-            System.out.println("link er null");
         }
         return null;
     }

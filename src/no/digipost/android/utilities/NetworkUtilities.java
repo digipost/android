@@ -54,7 +54,9 @@ public class NetworkUtilities {
 
         }else if(statusCode == HTTP_STATUS_INTERNAL_SERVER_ERROR){
 			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-		}
+		}else{
+            //IGNORE
+        }
 	}
 
 	public static boolean isOnline() {

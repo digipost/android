@@ -211,16 +211,16 @@ public class DocumentFragment extends ContentFragment {
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 
             Folder folder = folderAdapter.getItem(position);
-            String folderId = folder.getId();
+            int folderId = folder.getId();
             String location;
 
-            if(folderId == null){
+            if(folderId == 0){
                 location = "INBOX";
             }else{
                 location = "FOLDER";
             }
 
-            moveDocument(location,folderId);
+            moveDocument(location,folderId+"");
             if(folderDialog != null) {
                 folderDialog.dismiss();
                 folderDialog = null;

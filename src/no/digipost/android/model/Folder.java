@@ -30,8 +30,9 @@ public class Folder {
         return name;
     }
 
-    public String getId(){
-        return id;
+    public int getId(){
+        if(id==null){return 0;}
+        return Integer.parseInt(id);
     }
 
     public String getIcon(){

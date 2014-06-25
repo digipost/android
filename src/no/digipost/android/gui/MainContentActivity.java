@@ -124,9 +124,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (account != null && position == (numberOfFolders + ApplicationConstants.numberOfStaticFolders)) {
                     showCreateEditDialog(position, false);
-                }else if(editDrawerMode){
+                } else if (editDrawerMode) {
                     showCreateEditDialog(position, true);
-                }else {
+                } else {
                     selectItem(position);
                 }
             }
@@ -136,9 +136,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 editDrawerMode = !editDrawerMode;
-                if(editDrawerMode){
+                if (editDrawerMode) {
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
-                }else{
+                } else {
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 }
                 updateUI(false);
@@ -155,6 +155,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             @Override
             public void onItemDrop(DragNDropListView parent, View view, int startPosition, int endPosition, long id) {
                 moveFolderFrom(startPosition, endPosition);
+
             }
         });
 
@@ -178,7 +179,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         startPosition -= ApplicationConstants.numberOfStaticFolders;
         endPosition -= ApplicationConstants.numberOfStaticFolders;
 
-        if(startPosition < 0 || startPosition >= folders.size()){
+        if (startPosition < 0 || startPosition >= folders.size()) {
             return;
         }
 
@@ -192,6 +193,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         folders.add(endPosition, folders.remove(startPosition));
 
         updateUI(true);
+        executeUpdateFoldersTask();
     }
 
     @Override
@@ -261,7 +263,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         if (editDrawerMode && drawerOpen) {
             doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             doneEditingButton.setVisible(true);
-        }else{
+        } else {
             doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
             doneEditingButton.setVisible(false);
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -519,7 +521,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         if (editDrawerMode) {
             getActionBar().setTitle(getString(R.string.edit));
-        }else if (account != null) {
+        } else if (account != null) {
             fragmentName = "";
             try {
                 if (showActionBarName) {
@@ -832,6 +834,56 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     DialogUtitities.showToast(MainContentActivity.this, errorMessage);
                     logOut();
                 }
+            }
+        }
+    }
+
+    private void executeUpdateFoldersTask() {
+        UpdateFoldersTask updateFolderTask = new UpdateFoldersTask(folders);
+        updateFolderTask.execute();
+    }
+
+    private class UpdateFoldersTask extends AsyncTask<Void, Void, String> {
+        private String errorMessage;
+        private ArrayList<Folder> folders;
+
+        public UpdateFoldersTask(final ArrayList<Folder> folders) {
+            this.folders = folders;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                return ContentOperations.updateFolders(MainContentActivity.this, folders);
+            } catch (DigipostApiException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return errorMessage;
+            } catch (DigipostClientException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return errorMessage;
+            } catch (DigipostAuthenticationException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return errorMessage;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                executeGetAccountTask();
+            } else {
+                DialogUtitities.showToast(MainContentActivity.this, errorMessage);
+                logOut();
             }
         }
     }

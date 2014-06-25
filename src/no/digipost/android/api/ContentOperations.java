@@ -31,6 +31,7 @@ import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Documents;
 import no.digipost.android.model.Folder;
+import no.digipost.android.model.Folders;
 import no.digipost.android.model.Mailbox;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
@@ -136,6 +137,17 @@ public class ContentOperations {
     public static void moveDocument(Context context, final Document document) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
         ApiAccess.getMovedDocument(context, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document));
+    }
+
+    public static String updateFolders(Context context, final ArrayList<Folder> newFolders)throws DigipostClientException,
+            DigipostApiException, DigipostAuthenticationException {
+
+        if (mailbox == null) {
+            getCurrentMailbox(context);
+        }
+        Folders folders = mailbox.getFolders();
+        folders.setFolder(newFolders);
+        return ApiAccess.updateFolders(context, folders.getUpdateFoldersUri(),JSONUtilities.createJsonFromJackson(folders));
     }
 
     public static int createEditDeleteFolder(Context context, final Folder folder, final String action) throws DigipostClientException,
