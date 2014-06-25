@@ -136,6 +136,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 editDrawerMode = !editDrawerMode;
+                if(editDrawerMode){
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+                }else{
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                }
                 updateUI(false);
                 return true;
             }
@@ -259,6 +264,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }else{
             doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
             doneEditingButton.setVisible(false);
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -284,7 +290,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 return true;
             case R.id.menu_done_edit_folder:
                 editDrawerMode = false;
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 updateUI(false);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

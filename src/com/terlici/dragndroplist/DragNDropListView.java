@@ -29,6 +29,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.WrapperListAdapter;
 
+import no.digipost.android.gui.MainContentActivity;
+
 public class DragNDropListView extends ListView {
 
     public static interface OnItemDragNDropListener {
@@ -87,6 +89,7 @@ public class DragNDropListView extends ListView {
      */
     public boolean isDrag(MotionEvent ev) {
 
+        if(!MainContentActivity.editDrawerMode){return false;}
         if (mDragMode) return true;
         if (mDragHandler == 0) return false;
 
@@ -147,6 +150,7 @@ public class DragNDropListView extends ListView {
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+
                 mDragMode = false;
                 if (mStartPosition != INVALID_POSITION) {
                     // check if the position is a header/footer
