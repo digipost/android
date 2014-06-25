@@ -246,7 +246,6 @@ public class ApiAccess {
                 if (jsonObject.get("error-code").equals("FOLDER_NOT_EMPTY")) {
                     return null;
                 }
-                System.out.println(output);
             } catch (JSONException e) {
                 //IGNORE
             }
@@ -263,7 +262,6 @@ public class ApiAccess {
 
     public static String createFolder(Context context, final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        System.out.println("json:" + json.toString());
         return request(context, POST_ACTION_CREATE_FOLDER, uri, json, POST);
     }
 

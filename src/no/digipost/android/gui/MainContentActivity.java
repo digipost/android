@@ -359,6 +359,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         if (ContentOperations.changeMailbox(digipostAddress)) {
             getActionBar().setTitle(name);
             account = null;
+            editDrawerMode = false;
             executeGetAccountTask();
             selectItem(ApplicationConstants.MAILBOX);
         }
@@ -707,6 +708,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         public void onDrawerClosed(View view) {
             showActionBarName = false;
+            editDrawerMode = false;
             invalidateOptionsMenu();
 
         }

@@ -99,7 +99,7 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
             row.setAlpha(opacity);
             if (position == ApplicationConstants.MAILBOX) {
                 linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.inbox_32, 0, 0, 0);
-                row.findViewById(R.id.handler).setBackgroundResource(R.color.main_drawer_focused);
+                //row.findViewById(R.id.handler).setBackgroundResource(R.color.main_drawer_focused);
                 updateUnreadView();
 
             } else if (position == ApplicationConstants.RECEIPTS) {

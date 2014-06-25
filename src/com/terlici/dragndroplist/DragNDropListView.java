@@ -24,14 +24,10 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.WrapperListAdapter;
-
-import no.digipost.android.R;
 
 public class DragNDropListView extends ListView {
 
@@ -151,12 +147,11 @@ public class DragNDropListView extends ListView {
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-            default:
                 mDragMode = false;
                 if (mStartPosition != INVALID_POSITION) {
                     // check if the position is a header/footer
                     int actualPosition = pointToPosition(x, y);
-                    if (actualPosition > (getCount() - getFooterViewsCount()) - 1)
+                    if (actualPosition > (getCount()) - 1)
                         actualPosition = INVALID_POSITION;
 
                     stopDrag(mStartPosition - getFirstVisiblePosition(), actualPosition);
@@ -244,15 +239,7 @@ public class DragNDropListView extends ListView {
                 mDragNDropListener.onItemDrop(this, item, mStartPosition, endPosition, id);
 
             Adapter adapter = getAdapter();
-            DragNDropAdapter dndAdapter;
-
-            // if exists a footer/header we have our adapter wrapped
-            if (adapter instanceof WrapperListAdapter) {
-                dndAdapter = (DragNDropAdapter) ((WrapperListAdapter) adapter).getWrappedAdapter();
-            } else {
-                dndAdapter = (DragNDropAdapter) adapter;
-            }
-
+            DragNDropAdapter dndAdapter = (DragNDropAdapter) adapter;
             dndAdapter.onItemDrop(this, item, mStartPosition, endPosition, id);
         }
 

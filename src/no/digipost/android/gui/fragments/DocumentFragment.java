@@ -64,6 +64,7 @@ public class DocumentFragment extends ContentFragment {
     protected FolderArrayAdapter folderAdapter;
     private int content = 0;
     private Dialog folderDialog;
+    private Dialog attachmentDialog;
 
 	public DocumentFragment(int content) {
         this.content = content;
@@ -245,7 +246,7 @@ public class DocumentFragment extends ContentFragment {
 		attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(document, listPosition));
 
 		builder.setTitle(attachmentAdapter.getMainSubject());
-		Dialog attachmentDialog = builder.create();
+		attachmentDialog = builder.create();
 		attachmentDialog.show();
 
 	}
@@ -615,8 +616,12 @@ public class DocumentFragment extends ContentFragment {
 				if (invalidToken) {
 					activityCommunicator.requestLogOut();
 				}
-			}
-
+			}else{
+                if(attachmentDialog != null){
+                    attachmentDialog.dismiss();
+                    attachmentDialog = null;
+                }
+            }
 			updateAccountMeta();
 		}
 	}

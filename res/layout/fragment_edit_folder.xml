@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="10dp"
+    android:padding="5dp"
     android:orientation="vertical">
 
     <EditText
@@ -38,21 +39,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_margin="15dp">
+        android:gravity="left"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="30dp"
+        >
 
         <Button
             android:id="@+id/edit_folder_fragment_save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
+            android:paddingLeft="15sp"
+            android:paddingRight="15sp"
+            android:paddingBottom="2sp"
             android:text="@string/save" />
 
         <Button
             android:id="@+id/edit_folder_fragment_delete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:paddingLeft="15sp"
+            android:paddingRight="15sp"
+            android:paddingBottom="2sp"
             android:text="@string/delete" />
     </LinearLayout>
 </LinearLayout>
