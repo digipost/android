@@ -21,8 +21,9 @@
             android:showAsAction="collapseActionView|ifRoom"
             android:actionViewClass="android.widget.SearchView"/>
     <item
-        android:id="@+id/menu_edit_folder"
-        android:title="@string/edit"
+        android:id="@+id/menu_done_edit_folder"
+        android:title="@string/done"
         android:visible="false"
+        android:icon="@drawable/ic_action_accept"
         android:showAsAction="never"/>
 </menu>

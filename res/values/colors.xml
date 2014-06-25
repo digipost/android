@@ -6,6 +6,7 @@
     <color name="main_drawer_grey_text">#595959</color>
     <color name="main_drawer_text">#F5F5F5</color>
     <color name="main_drawer_focused">#17191A</color>
+    <color name="main_drawer_hover">#1C1F1F</color>
     <color name="main_drawer_divider">#333436</color>
 
     <!-- ActionBar -->

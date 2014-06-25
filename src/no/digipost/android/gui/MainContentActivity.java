@@ -48,9 +48,12 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.terlici.dragndroplist.DragNDropListView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
@@ -59,7 +62,7 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.gui.adapters.DrawerArrayAdapter;
+import no.digipost.android.gui.adapters.DrawerAdapter;
 import no.digipost.android.gui.adapters.MailboxArrayAdapter;
 import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.gui.content.UploadActivity;
@@ -83,12 +86,14 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private DrawerLayout drawerLayout;
     private int currentDrawerListViewPosition;
-    private ListView drawerList;
+    private DragNDropListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
-    private DrawerArrayAdapter drawerArrayAdapter;
+    private DrawerAdapter drawerArrayAdapter;
     protected MailboxArrayAdapter mailboxAdapter;
     private MenuItem searchButton;
+    private MenuItem doneEditingButton;
     private boolean refreshing;
+    public static boolean editDrawerMode;
     private static String[] drawerListItems;
     private Dialog mailboxDialog;
     private boolean showActionBarName;
@@ -109,11 +114,46 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
         this.refreshing = true;
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        drawerList = (ListView) findViewById(R.id.main_left_drawer);
+        drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
+        drawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        updateUI();
-        drawerList.setOnItemClickListener(new DrawerItemClickListener());
-        drawerList.setOnItemLongClickListener(new DrawerItemLongClickListener());
+        updateUI(false);
+
+        drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (account != null && position == (numberOfFolders + ApplicationConstants.numberOfStaticFolders)) {
+                    showCreateEditDialog(position, false);
+                }else if(editDrawerMode){
+                    showCreateEditDialog(position, true);
+                }else {
+                    selectItem(position);
+                }
+            }
+        });
+
+        drawerList.setOnItemLongClickListener(new ListView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                editDrawerMode = !editDrawerMode;
+                updateUI(false);
+                return true;
+            }
+        });
+
+        drawerList.setOnItemDragNDropListener(new DragNDropListView.OnItemDragNDropListener() {
+            @Override
+            public void onItemDrag(DragNDropListView parent, View view, int position, long id) {
+                view.setBackgroundResource(R.color.main_drawer_hover);
+            }
+
+            @Override
+            public void onItemDrop(DragNDropListView parent, View view, int startPosition, int endPosition, long id) {
+                moveFolderFrom(startPosition, endPosition);
+            }
+        });
+
+
         drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
                 R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
@@ -126,6 +166,27 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
             drawerLayout.openDrawer(GravityCompat.START);
         }
+    }
+
+    private void moveFolderFrom(int startPosition, int endPosition) {
+
+        startPosition -= ApplicationConstants.numberOfStaticFolders;
+        endPosition -= ApplicationConstants.numberOfStaticFolders;
+
+        if(startPosition < 0 || startPosition >= folders.size()){
+            return;
+        }
+
+        if (endPosition < 0) {
+            endPosition = 0;
+        }
+        if (endPosition > folders.size() - 1) {
+            endPosition = folders.size() - 1;
+        }
+
+        folders.add(endPosition, folders.remove(startPosition));
+
+        updateUI(true);
     }
 
     @Override
@@ -155,8 +216,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        drawerArrayAdapter.updateDrawer();
-
+        drawerArrayAdapter.notifyDataSetChanged();
 
         searchButton = menu.findItem(R.id.menu_search);
         searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
@@ -172,7 +232,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             }
         });
 
-        MenuItem editFoldersButton = menu.findItem(R.id.menu_edit_folder);
+        doneEditingButton = menu.findItem(R.id.menu_done_edit_folder);
 
         MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
 
@@ -192,9 +252,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
         refreshButton.setVisible(!drawerOpen);
         searchButton.setVisible(!drawerOpen);
-        if(drawerOpen) {
-           // editFoldersButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-           // editFoldersButton.setVisible(drawerOpen);
+
+        if (editDrawerMode && drawerOpen) {
+            doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            doneEditingButton.setVisible(true);
+        }else{
+            doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            doneEditingButton.setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -218,8 +282,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             case R.id.menu_upload:
                 startUploadActivity();
                 return true;
-            case R.id.menu_edit_folder:
-                enableEditFolders();
+            case R.id.menu_done_edit_folder:
+                editDrawerMode = false;
+                updateUI(false);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -290,21 +355,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
-    private class DrawerItemLongClickListener implements ListView.OnItemLongClickListener {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                       int position, long id) {
-            return selectItemLongPress(position);
-        }
-    }
-
     private void selectMailbox(String digipostAddress, String name) {
         if (ContentOperations.changeMailbox(digipostAddress)) {
             getActionBar().setTitle(name);
@@ -357,22 +407,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
-    private boolean selectItemLongPress(int content) {
-        if (account != null) {
-            int inboxReceiptsAndFolders = (numberOfFolders + ApplicationConstants.numberOfStaticFolders);
-            if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders) {
-                showCreateEditDialog(content, true);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private void enableEditFolders(){
-
-    }
-
     private void showCreateEditDialog(int content, boolean editFolder) {
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -386,8 +420,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     public void saveEditFolder(Folder folder, int folderIndex) {
-        folders.set(folderIndex,folder);
-        updateDrawer();
+        folders.set(folderIndex, folder);
+        updateUI(false);
         executeCreateEditDeleteFolderTask(folder, ApiConstants.EDIT);
     }
 
@@ -467,13 +501,16 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void updateUI() {
-        updateDrawer();
+    private void updateUI(boolean useCachedFolders) {
+        updateDrawer(useCachedFolders);
         updateTitles();
     }
 
     private void updateTitles() {
-        if (account != null) {
+
+        if (editDrawerMode) {
+            getActionBar().setTitle(getString(R.string.edit));
+        }else if (account != null) {
             fragmentName = "";
             try {
                 if (showActionBarName) {
@@ -494,11 +531,15 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 //IGNORE
             }
         }
+
     }
 
-    private void updateDrawer() {
+    private void updateDrawer(boolean useCachedFolders) {
+        invalidateOptionsMenu();
         currentDrawerListViewPosition = drawerList.getFirstVisiblePosition();
-        folders = new ArrayList<Folder>();
+        if (!useCachedFolders) {
+            folders = new ArrayList<Folder>();
+        }
         ArrayList<String> drawerItems = new ArrayList<String>();
 
         //Add main menu
@@ -514,14 +555,21 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             mailbox = account.getMailboxByDigipostAddress(ContentOperations.digipostAddress);
 
             if (mailbox != null) {
-                fs = mailbox.getFolders().getFolder();
+                if (useCachedFolders) {
+                    fs = folders;
+                } else {
+                    fs = mailbox.getFolders().getFolder();
+                }
                 numberOfFolders = fs.size();
                 for (Folder f : fs) {
-                    String name = f.getName();
-                    drawerItems.add(name);
-                    folders.add(f);
+                    drawerItems.add(f.getName());
+                    if (!useCachedFolders) {
+                        folders.add(f);
+                    }
                 }
+
             }
+
             drawerItems.add(getResources().getString(R.string.drawer_create_folder));
         }
 
@@ -544,17 +592,29 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerListItems = new String[drawerItems.size()];
         drawerListItems = drawerItems.toArray(drawerListItems);
 
-        drawerArrayAdapter = new DrawerArrayAdapter<String>(this, R.layout.drawer_list_item, drawerListItems, fs, 0);
-        drawerList.setAdapter(drawerArrayAdapter);
+        drawerArrayAdapter = new DrawerAdapter(this, toMap(drawerItems), drawerItems, fs, 0);
+        drawerList.setDragNDropAdapter(drawerArrayAdapter);
 
         if (mailbox != null) {
             drawerArrayAdapter.setUnreadLetters(mailbox.getUnreadItemsInInbox());
         }
         try {
             drawerList.setSelection(currentDrawerListViewPosition + 1);
-        }catch(Exception e){
+        } catch (Exception e) {
             //IGNORE
         }
+    }
+
+    private ArrayList<Map<String, Object>> toMap(ArrayList<String> content) {
+        ArrayList<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+
+        for (int i = 0; i < content.size(); ++i) {
+            HashMap<String, Object> item = new HashMap<String, Object>();
+            item.put("drawer_link_name", content.get(i));
+            items.add(item);
+        }
+
+        return items;
     }
 
     private ContentFragment getCurrentFragment() {
@@ -619,6 +679,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             //IGNORE
         } catch (IllegalAccessException e) {
             //IGNORE
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 
@@ -695,7 +757,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             if (result != null) {
                 account = result;
-                updateUI();
+                updateUI(false);
             } else {
                 if (invalidToken) {
                     DialogUtitities.showToast(MainContentActivity.this, errorMessage);

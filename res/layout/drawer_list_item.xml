@@ -23,6 +23,7 @@
 
     <RelativeLayout
         android:id="@+id/drawer_item"
+        android:background="@drawable/main_drawer_listitem_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true">
@@ -43,8 +44,8 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="@color/main_drawer_focused">
+        android:id="@+id/handler"
+        android:layout_alignParentRight="true">
 
         <TextView
             android:id="@+id/drawer_link_unread"
@@ -59,6 +60,16 @@
             android:textColor="@color/main_drawer_text"
             android:textSize="18sp"
             android:visibility="gone" />
+
+        <ImageView
+            android:layout_width="100px"
+            android:id="@+id/handler_image"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="15dp"
+            android:src="@android:drawable/ic_dialog_dialer"
+            android:layout_marginLeft="8px"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
     <View
