@@ -105,9 +105,7 @@ public class LoginActivity extends Activity {
 	}
 
 	private void enableCheckBoxIfScreenlock() {
-		if (Security.canUseRefreshTokens(this)) {
-			//stayLoggedInCheckBox.setChecked(true);
-		} else {
+		if (!Security.canUseRefreshTokens(this)) {
             rememberMe.setChecked(false);
 		}
 	}

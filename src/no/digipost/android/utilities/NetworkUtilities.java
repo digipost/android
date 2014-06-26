@@ -28,62 +28,55 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostInvalidTokenException;
 
-import static javax.ws.rs.core.Response.Status.TEMPORARY_REDIRECT;
-
 public class NetworkUtilities {
-	public static final int HTTP_STATUS_SUCCESS = 200;
+    public static final int HTTP_STATUS_SUCCESS = 200;
     public static final int HTTP_STATUS_CREATE = 201;
-	public static final int HTTP_STATUS_UNAUTHORIZED = 401;
-	public static final int HTTP_STATUS_BAD_REQUEST = 400;
+    public static final int HTTP_STATUS_UNAUTHORIZED = 401;
+    public static final int HTTP_STATUS_BAD_REQUEST = 400;
     public static final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
 
     public static void checkHttpStatusCode(Context context, final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
-			DigipostAuthenticationException {
-		if (statusCode == HTTP_STATUS_SUCCESS || statusCode == TEMPORARY_REDIRECT.getStatusCode()) {
-			return;
-		} else if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
-			if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
-				throw new DigipostInvalidTokenException();
-			} else {
-				throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
-			}
-		} else if (statusCode == HTTP_STATUS_BAD_REQUEST) {
-			throw new DigipostAuthenticationException(context.getString(R.string.error_bad_request));
-		}else if (statusCode == HTTP_STATUS_CREATE) {
+            DigipostAuthenticationException {
 
-        }else if(statusCode == HTTP_STATUS_INTERNAL_SERVER_ERROR){
-			throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-		}else{
-            //IGNORE
+        if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
+            if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
+                throw new DigipostInvalidTokenException();
+            } else {
+                throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
+            }
+        } else if (statusCode == HTTP_STATUS_BAD_REQUEST) {
+            throw new DigipostAuthenticationException(context.getString(R.string.error_bad_request));
+        } else if (statusCode == HTTP_STATUS_INTERNAL_SERVER_ERROR) {
+            throw new DigipostApiException(context.getString(R.string.error_digipost_api));
         }
-	}
+    }
 
-	public static boolean isOnline() {
-		IsOnlineTask task = new IsOnlineTask();
-		try {
-			return task.execute().get();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
+    public static boolean isOnline() {
+        IsOnlineTask task = new IsOnlineTask();
+        try {
+            return task.execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
-	private static class IsOnlineTask extends AsyncTask<Void, Void, Boolean> {
+    private static class IsOnlineTask extends AsyncTask<Void, Void, Boolean> {
 
-		@Override
-		protected Boolean doInBackground(final Void... params) {
-			try {
-				URL url = new URL("https://www.digipost.no/post/api/session");
-				URLConnection connection = url.openConnection();
-				connection.setConnectTimeout(3000);
-				connection.connect();
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-		}
-	}
+        @Override
+        protected Boolean doInBackground(final Void... params) {
+            try {
+                URL url = new URL("https://www.digipost.no/post/api/session");
+                URLConnection connection = url.openConnection();
+                connection.setConnectTimeout(3000);
+                connection.connect();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+    }
 }

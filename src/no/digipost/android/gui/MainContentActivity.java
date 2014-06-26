@@ -85,7 +85,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     public static final int INTENT_REQUESTCODE = 0;
 
     private DrawerLayout drawerLayout;
-    private int currentDrawerListViewPosition;
     private int drawerUpdates;
     private DragNDropListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
@@ -549,7 +548,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private void updateDrawer(boolean useCachedFolders) {
         invalidateOptionsMenu();
-        currentDrawerListViewPosition = drawerList.getFirstVisiblePosition();
+        int currentDrawerListViewPosition = drawerList.getFirstVisiblePosition();
         if (!useCachedFolders) {
             folders = new ArrayList<Folder>();
         }
@@ -605,16 +604,18 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerListItems = new String[drawerItems.size()];
         drawerListItems = drawerItems.toArray(drawerListItems);
 
-        drawerArrayAdapter = new DrawerAdapter(this, toMap(drawerItems), drawerItems, fs, 0);
+        int unreadLetters = 0;
+        if (mailbox != null) {
+            unreadLetters = mailbox.getUnreadItemsInInbox();
+        }
+
+        drawerArrayAdapter = new DrawerAdapter(this, toMap(drawerItems), drawerItems, fs, unreadLetters);
         drawerList.setDragNDropAdapter(drawerArrayAdapter);
 
-        if (mailbox != null) {
-            drawerArrayAdapter.setUnreadLetters(mailbox.getUnreadItemsInInbox());
-        }
         try {
-            if(currentDrawerListViewPosition == 0){
+            if (currentDrawerListViewPosition == 0) {
                 drawerList.setSelection(currentDrawerListViewPosition);
-            }else{
+            } else {
                 drawerList.setSelection(currentDrawerListViewPosition + 1);
             }
         } catch (Exception e) {
@@ -625,7 +626,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private ArrayList<Map<String, Object>> toMap(ArrayList<String> content) {
         ArrayList<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
 
-            for(String drawerItem: content){
+        for (String drawerItem : content) {
             HashMap<String, Object> item = new HashMap<String, Object>();
             item.put("drawer_link_name", drawerItem);
             items.add(item);
@@ -775,7 +776,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             if (result != null) {
                 account = result;
-                if(drawerUpdates < 1) {
+                if (drawerUpdates < 1) {
                     updateUI(false);
                 }
             } else {

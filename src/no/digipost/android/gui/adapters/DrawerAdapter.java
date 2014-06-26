@@ -23,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.terlici.dragndroplist.DragNDropSimpleAdapter;
@@ -48,7 +47,7 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
     private ArrayList<Folder> folders;
     private ArrayList<String> content;
 
-    public DrawerAdapter(final Context context, ArrayList<Map<String, Object>> map, ArrayList<String> content,ArrayList<Folder> folders, final int unreadLetters) {
+    public DrawerAdapter(final Context context, ArrayList<Map<String, Object>> map, ArrayList<String> content, ArrayList<Folder> folders, final int unreadLetters) {
         super(context, map, R.layout.drawer_list_item, new String[]{"drawer_link_name"}, new int[]{R.id.drawer_link_name}, R.id.handler);
 
         this.context = context;
@@ -67,30 +66,21 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
         this.unreadView = (TextView) row.findViewById(R.id.drawer_link_unread);
         this.line = row.findViewById(R.id.drawer_line);
         this.handlerImage = (ImageView) row.findViewById(R.id.handler_image);
-        setupLinkView(position,row);
+        setupLinkView(position, row);
 
         return row;
     }
 
-    public void updateItems(ArrayList<Folder> folders) {
-        this.folders = folders;
-    }
-
-    public void setUnreadLetters(int unreadLetters) {
-        this.unreadLetters = unreadLetters;
-        notifyDataSetChanged();
-    }
-
     private void updateUnreadView() {
-        unreadView.setText(" " + unreadLetters);
+        unreadView.setText("" + unreadLetters);
         unreadView.setVisibility(View.VISIBLE);
     }
 
-    private void setupLinkView(int position,View row) {
-        linkName.setText((CharSequence) content.get(position));
+    private void setupLinkView(int position, View row) {
+        linkName.setText(content.get(position));
 
         Float opacity = 1.0f;
-        if(MainContentActivity.editDrawerMode){
+        if (MainContentActivity.editDrawerMode) {
             opacity = 0.2f;
         }
 
@@ -121,18 +111,18 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
 
             linkName.setCompoundDrawablesWithIntrinsicBounds(getFolderIcon(type), 0, 0, 0);
 
-            if(MainContentActivity.editDrawerMode) {
+            if (MainContentActivity.editDrawerMode) {
                 handlerImage.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 handlerImage.setVisibility(View.GONE);
             }
 
-        } else if(position >= foldersEnd){
+        } else if (position >= foldersEnd) {
 
-            if (folders !=null && content.get(position).equals(context.getResources().getString(R.string.drawer_create_folder))) {
+            if (folders != null && content.get(position).equals(context.getResources().getString(R.string.drawer_create_folder))) {
                 linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.new_folder_32, 0, 0, 0);
                 row.setAlpha(1.0f);
-            }else{
+            } else {
                 setIconBelowFolders(content.get(position));
                 row.setAlpha(opacity);
             }

@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+/*
+Notice: Added item.setAlpha() on moving item.
+ */
+
 package com.terlici.dragndroplist;
 
 import android.content.Context;
@@ -223,7 +227,7 @@ public class DragNDropListView extends ListView {
         mDragView = v;
 
         item.setAlpha(0.2f);
-        item.invalidate(); // We have not changed anything else.
+        item.invalidate();
     }
 
     /**

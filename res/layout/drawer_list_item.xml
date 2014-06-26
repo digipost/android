@@ -42,7 +42,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="130dp"
+        android:layout_width="150dp"
         android:layout_height="match_parent"
         android:id="@+id/handler"
         android:gravity="right"
