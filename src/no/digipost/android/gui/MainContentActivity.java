@@ -41,6 +41,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
@@ -428,6 +429,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
         ft.addToBackStack(null);
         DialogFragment editFolderFragment = EditFolderFragment.newInstance(content, account.getValidationRules().getFolderName(), editFolder);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         editFolderFragment.show(ft, "editFolderFragment");
     }
 

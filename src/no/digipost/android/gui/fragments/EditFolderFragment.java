@@ -1,10 +1,13 @@
 package no.digipost.android.gui.fragments;
 
+import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -20,6 +23,7 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.DialogUtitities;
+import sun.awt.im.InputMethodManager;
 
 public class EditFolderFragment extends DialogFragment {
     private int content;
@@ -79,6 +83,10 @@ public class EditFolderFragment extends DialogFragment {
 
         editName = view.findViewById(R.id.edit_folder_fragment_name);
         gridView = (GridView) view.findViewById(R.id.edit_folder_fragment_gridview);
+        editName.setFocusableInTouchMode(true);
+        editName.setFocusable(true);
+        editName.requestFocus();
+
         final ImageAdapter imageAdapter = new ImageAdapter();
         gridView.requestFocusFromTouch();
         gridView.setAdapter(imageAdapter);
@@ -202,7 +210,7 @@ public class EditFolderFragment extends DialogFragment {
 
             if (convertView == null) {
                 imageView = new ImageView(getActivity().getApplicationContext());
-                imageView.setLayoutParams(new GridView.LayoutParams(100, 100));
+                //imageView.setLayoutParams(new GridView.LayoutParams(100, 100));
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else {
                 imageView = (ImageView) convertView;
