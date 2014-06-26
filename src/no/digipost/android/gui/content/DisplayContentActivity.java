@@ -54,6 +54,7 @@ import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
 import static java.lang.String.format;
+import static java.lang.String.valueOf;
 
 public abstract class DisplayContentActivity extends Activity {
 	private ProgressDialog progressDialog;
@@ -331,7 +332,7 @@ public abstract class DisplayContentActivity extends Activity {
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 
             Folder folder = folderAdapter.getItem(position);
-            folderId = folder.getId();
+            folderId = valueOf(folder.getId());
             if(folderId == null){
                 location = "INBOX";
             }else{
