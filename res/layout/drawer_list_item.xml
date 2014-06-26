@@ -68,6 +68,7 @@
             android:id="@+id/handler_image"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
+            android:background="@color/main_drawer_grey_background"
             android:src="@drawable/drawer_move"
             android:visibility="gone"
             />

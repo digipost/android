@@ -86,12 +86,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private DrawerLayout drawerLayout;
     private int currentDrawerListViewPosition;
+    private int drawerUpdates;
     private DragNDropListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerAdapter drawerArrayAdapter;
     protected MailboxArrayAdapter mailboxAdapter;
     private MenuItem searchButton;
-    private MenuItem doneEditingButton;
     private boolean refreshing;
     public static boolean editDrawerMode;
     private static String[] drawerListItems;
@@ -112,11 +112,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         setContentView(R.layout.activity_main_content);
         ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
-        this.refreshing = true;
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
         drawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        this.refreshing = true;
+        drawerUpdates = 0;
+        editDrawerMode = false;
         updateUI(false);
 
         drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
@@ -191,7 +193,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
 
         folders.add(endPosition, folders.remove(startPosition));
-
+        drawerUpdates++;
         updateUI(true);
         executeUpdateFoldersTask();
     }
@@ -239,7 +241,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             }
         });
 
-        doneEditingButton = menu.findItem(R.id.menu_done_edit_folder);
+        MenuItem doneEditingButton = menu.findItem(R.id.menu_done_edit_folder);
 
         MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
 
@@ -610,7 +612,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             drawerArrayAdapter.setUnreadLetters(mailbox.getUnreadItemsInInbox());
         }
         try {
-            drawerList.setSelection(currentDrawerListViewPosition + 1);
+            if(currentDrawerListViewPosition == 0){
+                drawerList.setSelection(currentDrawerListViewPosition);
+            }else{
+                drawerList.setSelection(currentDrawerListViewPosition + 1);
+            }
         } catch (Exception e) {
             //IGNORE
         }
@@ -619,9 +625,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private ArrayList<Map<String, Object>> toMap(ArrayList<String> content) {
         ArrayList<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
 
-        for (int i = 0; i < content.size(); ++i) {
+            for(String drawerItem: content){
             HashMap<String, Object> item = new HashMap<String, Object>();
-            item.put("drawer_link_name", content.get(i));
+            item.put("drawer_link_name", drawerItem);
             items.add(item);
         }
 
@@ -769,7 +775,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             if (result != null) {
                 account = result;
-                updateUI(false);
+                if(drawerUpdates < 1) {
+                    updateUI(false);
+                }
             } else {
                 if (invalidToken) {
                     DialogUtitities.showToast(MainContentActivity.this, errorMessage);
@@ -878,7 +886,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
+            drawerUpdates--;
             if (result != null) {
                 executeGetAccountTask();
             } else {

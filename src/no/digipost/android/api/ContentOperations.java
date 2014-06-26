@@ -79,13 +79,13 @@ public class ContentOperations {
 
     public static Documents getAccountContentMetaDocument(Context context, int content) throws DigipostApiException,
             DigipostClientException, DigipostAuthenticationException {
-        getCurrentMailbox(context);
+
+        mailbox = getCurrentMailbox(context);
 
         if (content == ApplicationConstants.MAILBOX) {
             return ApiAccess.getDocuments(context, mailbox.getInboxUri());
         } else {
             content -= ApplicationConstants.numberOfStaticFolders;
-            mailbox = getCurrentMailbox(context);
             ArrayList<Folder> folders = mailbox.getFolders().getFolder();
             Folder folder = folders.get(content);
             folder = ApiAccess.getFolderSelf(context, folder.getSelfUri());
