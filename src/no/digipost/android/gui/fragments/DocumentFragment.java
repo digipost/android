@@ -66,6 +66,9 @@ public class DocumentFragment extends ContentFragment {
     private Dialog folderDialog;
     private Dialog attachmentDialog;
 
+    public DocumentFragment(){
+
+    }
     public DocumentFragment(int content) {
         this.content = content;
     }
