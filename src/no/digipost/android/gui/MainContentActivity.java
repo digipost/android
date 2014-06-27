@@ -27,6 +27,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -173,6 +175,26 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
             drawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
+
+    private void checkAppDeprecation(){
+        try {
+            if(account != null) {
+                int versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+                int minimumAndroidVersion = account.getMinimumAndroidVersion();
+
+                if (account != null && versionCode < minimumAndroidVersion) {
+                    DialogUtitities.showLongToast(this,getString(R.string.app_deprecation_message));
+                    Uri marketUri = Uri.parse("market://details?id=no.digipost.android");
+                    Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
+                    startActivity(marketIntent);
+                    finish();
+                }
+            }
+        } catch (Exception e) {
+            //IGNORE
+            e.printStackTrace();
         }
     }
 
@@ -779,6 +801,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             if (result != null) {
                 account = result;
+                checkAppDeprecation();
                 if (drawerUpdates < 1) {
                     updateUI(false);
                 }

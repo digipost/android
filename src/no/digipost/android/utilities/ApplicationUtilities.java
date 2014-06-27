@@ -17,7 +17,11 @@
 package no.digipost.android.utilities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
+
+import no.digipost.android.model.Account;
 
 public class ApplicationUtilities {
 

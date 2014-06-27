@@ -31,6 +31,9 @@ public class Account {
     @JsonProperty
     private ArrayList<Mailbox> mailbox;
 
+    @JsonProperty
+    private String minimumAndroidVersion;
+
     public ArrayList<Mailbox> getMailbox() {
         return mailbox;
     }
@@ -42,6 +45,10 @@ public class Account {
             }
         }
         return null;
+    }
+
+    public int getMinimumAndroidVersion(){
+       return minimumAndroidVersion != null ? Integer.parseInt(minimumAndroidVersion) : 1000;
     }
 
     public PrimaryAccount getPrimaryAccount() {
