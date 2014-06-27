@@ -233,6 +233,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
@@ -240,55 +241,62 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         setupSearchView(searchView);
         updateTitles();
 
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        drawerArrayAdapter.notifyDataSetChanged();
-        searchButton = menu.findItem(R.id.menu_search);
-        searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                return true;
+        super.onPrepareOptionsMenu(menu);
+
+        if(drawerArrayAdapter != null ) {
+            drawerArrayAdapter.notifyDataSetChanged();
+        }
+        if(menu != null) {
+            searchButton = menu.findItem(R.id.menu_search);
+            searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                    getCurrentFragment().clearFilter();
+                    return true;
+                }
+            });
+
+            MenuItem doneEditingButton = menu.findItem(R.id.menu_done_edit_folder);
+            MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
+
+            if (refreshing) {
+                refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
+            } else {
+                refreshButton.setActionView(null);
             }
 
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                getCurrentFragment().clearFilter();
-                return true;
+            boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
+            MenuItem uploadButton = menu.findItem(R.id.menu_upload);
+
+            if (getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS) {
+                uploadButton.setVisible(false);
+            } else {
+                uploadButton.setVisible(!drawerOpen);
             }
-        });
+            refreshButton.setVisible(!drawerOpen);
+            searchButton.setVisible(!drawerOpen);
 
-        MenuItem doneEditingButton = menu.findItem(R.id.menu_done_edit_folder);
-        MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
-
-        if (refreshing) {
-            refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
-        } else {
-            refreshButton.setActionView(null);
+            if (editDrawerMode && drawerOpen) {
+                doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                doneEditingButton.setVisible(true);
+            } else {
+                doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                doneEditingButton.setVisible(false);
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            }
         }
 
-        boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-        MenuItem uploadButton = menu.findItem(R.id.menu_upload);
-
-        if (getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS) {
-            uploadButton.setVisible(false);
-        } else {
-            uploadButton.setVisible(!drawerOpen);
-        }
-        refreshButton.setVisible(!drawerOpen);
-        searchButton.setVisible(!drawerOpen);
-
-        if (editDrawerMode && drawerOpen) {
-            doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            doneEditingButton.setVisible(true);
-        } else {
-            doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-            doneEditingButton.setVisible(false);
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
-        return super.onPrepareOptionsMenu(menu);
+        return true;
     }
 
     @Override
