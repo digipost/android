@@ -165,6 +165,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
                 R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
+
         getActionBar().setHomeButtonEnabled(true);
 
         selectItem(ApplicationConstants.MAILBOX);
@@ -237,7 +238,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
         setupSearchView(searchView);
-        updateTitles();
+        updateUI(false);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -245,7 +246,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         drawerArrayAdapter.notifyDataSetChanged();
-
         searchButton = menu.findItem(R.id.menu_search);
         searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
