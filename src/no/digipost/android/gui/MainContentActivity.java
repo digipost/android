@@ -175,6 +175,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
             drawerLayout.openDrawer(GravityCompat.START);
         }
+        invalidateOptionsMenu();
     }
 
     private void checkAppDeprecation() {
@@ -245,6 +246,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+
         drawerArrayAdapter.notifyDataSetChanged();
         searchButton = menu.findItem(R.id.menu_search);
         searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
