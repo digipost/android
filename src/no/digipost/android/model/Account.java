@@ -48,7 +48,7 @@ public class Account {
     }
 
     public int getMinimumAndroidVersion(){
-       return minimumAndroidVersion != null ? Integer.parseInt(minimumAndroidVersion) : 1000;
+       return minimumAndroidVersion != null ? Integer.parseInt(minimumAndroidVersion) : 0;
     }
 
     public PrimaryAccount getPrimaryAccount() {
