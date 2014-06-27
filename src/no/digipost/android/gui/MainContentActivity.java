@@ -175,7 +175,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
             drawerLayout.openDrawer(GravityCompat.START);
         }
-        invalidateOptionsMenu();
     }
 
     private void checkAppDeprecation() {
@@ -239,14 +238,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
         setupSearchView(searchView);
-        updateUI(false);
+        updateTitles();
 
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-
         drawerArrayAdapter.notifyDataSetChanged();
         searchButton = menu.findItem(R.id.menu_search);
         searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
@@ -569,7 +567,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void updateDrawer(boolean useCachedFolders) {
-        invalidateOptionsMenu();
         int currentDrawerListViewPosition = drawerList.getFirstVisiblePosition();
         if (!useCachedFolders) {
             folders = new ArrayList<Folder>();
@@ -643,6 +640,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         } catch (Exception e) {
             //IGNORE
         }
+        invalidateOptionsMenu();
     }
 
     private ArrayList<Map<String, Object>> toMap(ArrayList<String> content) {
