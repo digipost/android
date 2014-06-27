@@ -184,7 +184,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
                 if (account != null && versionCode < minimumAndroidVersion) {
                     DialogUtitities.showLongToast(this, getString(R.string.app_deprecation_message));
-                    Uri marketUri = Uri.parse("market://details?id=no.digipost.android");
+                    Uri marketUri = Uri.parse(getString(R.string.app_deprecation_market_url));
                     Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
                     startActivity(marketIntent);
                     finish();
@@ -241,7 +241,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -412,7 +411,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         );
 
         builder.setView(view);
-
         ListView mailboxListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
 
         mailboxAdapter = new MailboxArrayAdapter(this, R.layout.attachmentdialog_list_item, mailboxes);

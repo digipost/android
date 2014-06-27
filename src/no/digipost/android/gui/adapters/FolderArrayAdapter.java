@@ -37,7 +37,7 @@ public class FolderArrayAdapter extends ArrayAdapter<Folder> {
         return row;
     }
 
-    public String getName(){
+    public String getName() {
         return folders.get(0).getName();
     }
 

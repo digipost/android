@@ -74,49 +74,49 @@ import no.digipost.android.utilities.FileUtilities;
 import static java.lang.String.format;
 
 public class UploadActivity extends Activity {
-	private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
-	private final String[] blockedFileContentTypes = { ApiConstants.TEXT_HTML };
+    private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
+    private final String[] blockedFileContentTypes = {ApiConstants.TEXT_HTML};
     private final String KEY_DIRECTORY = "directory";
 
-	private File mDirectory;
-	private ArrayList<File> mFiles;
-	private boolean mShowHiddenFiles = false;
-	private UploadListAdapter listAdapter;
+    private File mDirectory;
+    private ArrayList<File> mFiles;
+    private boolean mShowHiddenFiles = false;
+    private UploadListAdapter listAdapter;
 
-	private TextView absolutePath;
-	private TextProgressBar availableSpace;
-	private TextView listEmpty;
+    private TextView absolutePath;
+    private TextProgressBar availableSpace;
+    private TextView listEmpty;
     private int content = 0;
 
-	private ActionMode uploadActionMode;
+    private ActionMode uploadActionMode;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_upload);
-		ApplicationUtilities.setScreenRotationFromPreferences(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_upload);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-		getActionBar().setTitle(R.string.upload);
-		getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle(R.string.upload);
+        getActionBar().setHomeButtonEnabled(true);
 
-		absolutePath = (TextView) findViewById(R.id.upload_file_path);
-		availableSpace = (TextProgressBar) findViewById(R.id.upload_available_space);
-		listEmpty = (TextView) findViewById(R.id.upload_list_empty);
+        absolutePath = (TextView) findViewById(R.id.upload_file_path);
+        availableSpace = (TextProgressBar) findViewById(R.id.upload_available_space);
+        listEmpty = (TextView) findViewById(R.id.upload_list_empty);
 
-		mDirectory = DEFAULT_INITIAL_DIRECTORY;
-		mFiles = new ArrayList<File>();
+        mDirectory = DEFAULT_INITIAL_DIRECTORY;
+        mFiles = new ArrayList<File>();
 
-		ListView listView = (ListView) findViewById(R.id.upload_file_list);
-		listView.setEmptyView(listEmpty);
-		listView.setOnItemClickListener(new ListOnItemClickListener());
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		listView.setFastScrollEnabled(true);
-		listView.setMultiChoiceModeListener(new UploadMultiChoiceModeListener());
-		listAdapter = new UploadListAdapter(this, mFiles);
-		listView.setAdapter(listAdapter);
-        content = getIntent().getIntExtra(ApiConstants.UPLOAD,ApplicationConstants.MAILBOX);
-		executeSetAccountInfoTask();
-	}
+        ListView listView = (ListView) findViewById(R.id.upload_file_list);
+        listView.setEmptyView(listEmpty);
+        listView.setOnItemClickListener(new ListOnItemClickListener());
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setFastScrollEnabled(true);
+        listView.setMultiChoiceModeListener(new UploadMultiChoiceModeListener());
+        listAdapter = new UploadListAdapter(this, mFiles);
+        listView.setAdapter(listAdapter);
+        content = getIntent().getIntExtra(ApiConstants.UPLOAD, ApplicationConstants.MAILBOX);
+        executeSetAccountInfoTask();
+    }
 
     @Override
     protected void onStart() {
@@ -143,10 +143,10 @@ public class UploadActivity extends Activity {
     }
 
     @Override
-	protected void onResume() {
-		refreshFilesList();
-		super.onResume();
-	}
+    protected void onResume() {
+        refreshFilesList();
+        super.onResume();
+    }
 
     @Override
     protected void onDestroy() {
@@ -160,87 +160,87 @@ public class UploadActivity extends Activity {
     }
 
     @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		}
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
-	private void refreshFilesList() {
-		absolutePath.setText(mDirectory.getAbsolutePath());
+    private void refreshFilesList() {
+        absolutePath.setText(mDirectory.getAbsolutePath());
 
-		mFiles.clear();
+        mFiles.clear();
 
         File[] files = mDirectory.listFiles();
 
-		if (files != null && files.length > 0) {
-			for (File f : files) {
-				if ((f.isHidden() && !mShowHiddenFiles) || !isAcceptedFileExtension(f)) {
-					continue;
-				}
+        if (files != null && files.length > 0) {
+            for (File f : files) {
+                if ((f.isHidden() && !mShowHiddenFiles) || !isAcceptedFileExtension(f)) {
+                    continue;
+                }
 
-				mFiles.add(f);
-			}
+                mFiles.add(f);
+            }
 
-			Collections.sort(mFiles, new FileComparator());
-		}
-		listAdapter.notifyDataSetChanged();
-	}
+            Collections.sort(mFiles, new FileComparator());
+        }
+        listAdapter.notifyDataSetChanged();
+    }
 
-	private void setAvailableSpace(Mailbox mailbox) {
-		long bytesUsed = Long.parseLong(mailbox.getUsedStorage());
-		long bytesAvailable = Long.parseLong(mailbox.getTotalAvailableStorage());
+    private void setAvailableSpace(Mailbox mailbox) {
+        long bytesUsed = Long.parseLong(mailbox.getUsedStorage());
+        long bytesAvailable = Long.parseLong(mailbox.getTotalAvailableStorage());
 
-		int percentUsed = (int) ((bytesUsed * 100) / bytesAvailable);
+        int percentUsed = (int) ((bytesUsed * 100) / bytesAvailable);
 
-		availableSpace.setProgress(percentUsed);
-		availableSpace.setText(percentUsed + getString(R.string.upload_space_used));
-	}
+        availableSpace.setProgress(percentUsed);
+        availableSpace.setText(percentUsed + getString(R.string.upload_space_used));
+    }
 
-	private boolean isAcceptedFileExtension(File file) {
-		if (blockedFileContentTypes != null && blockedFileContentTypes.length > 0) {
-			String contentType = FileUtilities.getMimeType(file);
+    private boolean isAcceptedFileExtension(File file) {
+        if (blockedFileContentTypes != null && blockedFileContentTypes.length > 0) {
+            String contentType = FileUtilities.getMimeType(file);
 
-			if (contentType != null) {
-				for (String blockedFileContentType : blockedFileContentTypes) {
-					if (contentType.equals(blockedFileContentType)) {
-						return false;
-					}
-				}
-			}
+            if (contentType != null) {
+                for (String blockedFileContentType : blockedFileContentTypes) {
+                    if (contentType.equals(blockedFileContentType)) {
+                        return false;
+                    }
+                }
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	private void promtUpload(final File file) {
-		final AlertDialog dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this,
+    private void promtUpload(final File file) {
+        final AlertDialog dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this,
                 getString(R.string.upload_dialog) + file.getName() + "?", getString(R.string.upload))
-		.setPositiveButton(R.string.upload, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                executeUploadTask(file);
-                dialogInterface.dismiss();
-            }
-        })
-        .setNeutralButton(R.string.preview, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-                // ignore
-            }
-        })
-		.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        })
-        .create();
+                .setPositiveButton(R.string.upload, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        executeUploadTask(file);
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setNeutralButton(R.string.preview, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // ignore
+                    }
+                })
+                .setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .create();
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
@@ -258,27 +258,27 @@ public class UploadActivity extends Activity {
         });
 
         dialog.show();
-	}
+    }
 
-	private void promtUpload(final ArrayList<File> files) {
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this,
-				getUploadFileDialogMessage(listAdapter.getCheckedCount()), getString(R.string.upload));
-		builder.setPositiveButton(R.string.upload, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
+    private void promtUpload(final ArrayList<File> files) {
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this,
+                getUploadFileDialogMessage(listAdapter.getCheckedCount()), getString(R.string.upload));
+        builder.setPositiveButton(R.string.upload, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
                 uploadActionMode.finish();
-				executeUploadTask(files);
-				dialogInterface.dismiss();
-			}
-		});
-		builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				dialogInterface.dismiss();
-			}
-		});
-		builder.create().show();
-	}
+                executeUploadTask(files);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create().show();
+    }
 
     private String getUploadFileDialogMessage(int count) {
         if (count > 1) {
@@ -302,111 +302,111 @@ public class UploadActivity extends Activity {
         }
     }
 
-	private void executeUploadTask(File file) {
-		ArrayList<File> files = new ArrayList<File>();
-		files.add(file);
-		UploadTask uploadTask = new UploadTask(files,content);
-		uploadTask.execute();
-	}
+    private void executeUploadTask(File file) {
+        ArrayList<File> files = new ArrayList<File>();
+        files.add(file);
+        UploadTask uploadTask = new UploadTask(files, content);
+        uploadTask.execute();
+    }
 
-	private void executeUploadTask(ArrayList<File> files) {
-		UploadTask uploadTask = new UploadTask(files,content);
-		uploadTask.execute();
-	}
+    private void executeUploadTask(ArrayList<File> files) {
+        UploadTask uploadTask = new UploadTask(files, content);
+        uploadTask.execute();
+    }
 
-	private void setAccountInfo(Mailbox mailbox) {
-		setAvailableSpace(mailbox);
-		availableSpace.setVisibility(View.VISIBLE);
-	}
+    private void setAccountInfo(Mailbox mailbox) {
+        setAvailableSpace(mailbox);
+        availableSpace.setVisibility(View.VISIBLE);
+    }
 
-	private void executeSetAccountInfoTask() {
-		SetAccountInfoTask setAccountInfoTask = new SetAccountInfoTask();
-		setAccountInfoTask.execute();
-	}
+    private void executeSetAccountInfoTask() {
+        SetAccountInfoTask setAccountInfoTask = new SetAccountInfoTask();
+        setAccountInfoTask.execute();
+    }
 
-	private class SetAccountInfoTask extends AsyncTask<Void, Void, Mailbox> {
+    private class SetAccountInfoTask extends AsyncTask<Void, Void, Mailbox> {
 
-		@Override
-		protected Mailbox doInBackground(Void... voids) {
-			try {
-				return ContentOperations.getCurrentMailbox(UploadActivity.this);
-			} catch (DigipostApiException e) {
-				return null;
-			} catch (DigipostClientException e) {
-				return null;
-			} catch (DigipostAuthenticationException e) {
-				return null;
-			}
-		}
+        @Override
+        protected Mailbox doInBackground(Void... voids) {
+            try {
+                return ContentOperations.getCurrentMailbox(UploadActivity.this);
+            } catch (DigipostApiException e) {
+                return null;
+            } catch (DigipostClientException e) {
+                return null;
+            } catch (DigipostAuthenticationException e) {
+                return null;
+            }
+        }
 
-		@Override
-		protected void onPostExecute(Mailbox mailbox) {
-			super.onPostExecute(mailbox);
+        @Override
+        protected void onPostExecute(Mailbox mailbox) {
+            super.onPostExecute(mailbox);
 
-			if (mailbox != null) {
-				setAccountInfo(mailbox);
-			}
-		}
-	}
+            if (mailbox != null) {
+                setAccountInfo(mailbox);
+            }
+        }
+    }
 
-	@Override
-	public void onBackPressed() {
-		if (!mDirectory.equals(DEFAULT_INITIAL_DIRECTORY)) {
-			mDirectory = mDirectory.getParentFile();
-			refreshFilesList();
-			return;
-		}
+    @Override
+    public void onBackPressed() {
+        if (!mDirectory.equals(DEFAULT_INITIAL_DIRECTORY)) {
+            mDirectory = mDirectory.getParentFile();
+            refreshFilesList();
+            return;
+        }
 
-		super.onBackPressed();
-	}
+        super.onBackPressed();
+    }
 
-	private class ListOnItemClickListener implements AdapterView.OnItemClickListener {
+    private class ListOnItemClickListener implements AdapterView.OnItemClickListener {
 
-		@Override
-		public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-			File newFile = listAdapter.getItem(position);
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            File newFile = listAdapter.getItem(position);
 
-			if (newFile.isFile()) {
-				promtUpload(newFile);
-			} else {
-				mDirectory = newFile;
-				refreshFilesList();
-			}
-		}
-	}
+            if (newFile.isFile()) {
+                promtUpload(newFile);
+            } else {
+                mDirectory = newFile;
+                refreshFilesList();
+            }
+        }
+    }
 
-	private class UploadListAdapter extends ArrayAdapter<File> {
+    private class UploadListAdapter extends ArrayAdapter<File> {
 
-		private ArrayList<File> objects;
-		private boolean[] checked;
-		private boolean checkboxVisible;
+        private ArrayList<File> objects;
+        private boolean[] checked;
+        private boolean checkboxVisible;
 
         private Context context;
 
-		public UploadListAdapter(Context context, ArrayList<File> objects) {
-			super(context, R.layout.upload_list_item, android.R.id.text1, objects);
-			this.objects = objects;
-			this.checked = new boolean[objects.size()];
-			this.checkboxVisible = false;
+        public UploadListAdapter(Context context, ArrayList<File> objects) {
+            super(context, R.layout.upload_list_item, android.R.id.text1, objects);
+            this.objects = objects;
+            this.checked = new boolean[objects.size()];
+            this.checkboxVisible = false;
             this.context = context;
-		}
+        }
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View row = inflater.inflate(R.layout.upload_list_item, parent, false);
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View row = inflater.inflate(R.layout.upload_list_item, parent, false);
 
-			File object = objects.get(position);
+            File object = objects.get(position);
 
-			TextView name = (TextView) row.findViewById(R.id.upload_file_name);
-			TextView size = (TextView) row.findViewById(R.id.upload_file_size);
+            TextView name = (TextView) row.findViewById(R.id.upload_file_name);
+            TextView size = (TextView) row.findViewById(R.id.upload_file_size);
             TextView extension = (TextView) row.findViewById(R.id.upload_file_extension);
 
-			name.setText(FilenameUtils.getBaseName(object.getName()));
+            name.setText(FilenameUtils.getBaseName(object.getName()));
 
             final ImageView thumbnail = (ImageView) row.findViewById(R.id.upload_thumbnail);
 
-			if (object.isFile()) {
+            if (object.isFile()) {
                 if (isImage(object)) {
                     ImageSize targetSize = new ImageSize(40, 40);
                     ImageLoader.getInstance().loadImage(FileUtilities.getFileUri(object), targetSize, getImageLoaderOptions(), new SimpleImageLoadingListener() {
@@ -426,76 +426,76 @@ public class UploadActivity extends Activity {
                     thumbnail.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_grey_file));
                 }
 
-				size.setText(DataFormatUtilities.getFormattedFileSize(object.length()));
+                size.setText(DataFormatUtilities.getFormattedFileSize(object.length()));
                 extension.setText("." + FilenameUtils.getExtension(object.getName()));
-			} else {
+            } else {
                 thumbnail.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_grey_folder));
-			}
+            }
 
-			CheckBox checkBox = (CheckBox) row.findViewById(R.id.upload_checkbox);
-			checkBox.setFocusable(false);
-			checkBox.setClickable(false);
-			if (checkboxVisible) {
-				if (checked[position]) {
-					checkBox.setChecked(true);
-				}
+            CheckBox checkBox = (CheckBox) row.findViewById(R.id.upload_checkbox);
+            checkBox.setFocusable(false);
+            checkBox.setClickable(false);
+            if (checkboxVisible) {
+                if (checked[position]) {
+                    checkBox.setChecked(true);
+                }
 
-				if (object.isFile()) {
-					checkBox.setVisibility(View.VISIBLE);
-				}
-			} else {
-				checkBox.setVisibility(View.GONE);
-			}
+                if (object.isFile()) {
+                    checkBox.setVisibility(View.VISIBLE);
+                }
+            } else {
+                checkBox.setVisibility(View.GONE);
+            }
 
-			return row;
-		}
+            return row;
+        }
 
-		private void initializeChecked() {
-			checked = new boolean[objects.size()];
-		}
+        private void initializeChecked() {
+            checked = new boolean[objects.size()];
+        }
 
-		public void setCheckboxVisible(boolean state) {
-			checkboxVisible = state;
-			initializeChecked();
-			notifyDataSetChanged();
-		}
+        public void setCheckboxVisible(boolean state) {
+            checkboxVisible = state;
+            initializeChecked();
+            notifyDataSetChanged();
+        }
 
-		public void clearChecked() {
-			initializeChecked();
-			notifyDataSetChanged();
-		}
+        public void clearChecked() {
+            initializeChecked();
+            notifyDataSetChanged();
+        }
 
-		public void setChecked(int position) throws UnsupportedOperationException {
-			if (objects.get(position).isFile()) {
-				checked[position] = !checked[position];
-			} else {
-				throw new UnsupportedOperationException(getString(R.string.upload_folder_exception));
-			}
-		}
+        public void setChecked(int position) throws UnsupportedOperationException {
+            if (objects.get(position).isFile()) {
+                checked[position] = !checked[position];
+            } else {
+                throw new UnsupportedOperationException(getString(R.string.upload_folder_exception));
+            }
+        }
 
-		public int getCheckedCount() {
-			int count = 0;
+        public int getCheckedCount() {
+            int count = 0;
 
-			for (boolean state : checked) {
-				if (state) {
-					count++;
-				}
-			}
+            for (boolean state : checked) {
+                if (state) {
+                    count++;
+                }
+            }
 
-			return count;
-		}
+            return count;
+        }
 
-		public ArrayList<File> getCheckedItems() {
-			ArrayList<File> checkedItems = new ArrayList<File>();
+        public ArrayList<File> getCheckedItems() {
+            ArrayList<File> checkedItems = new ArrayList<File>();
 
-			for (int i = 0; i < checked.length; i++) {
-				if (checked[i]) {
-					checkedItems.add(objects.get(i));
-				}
-			}
+            for (int i = 0; i < checked.length; i++) {
+                if (checked[i]) {
+                    checkedItems.add(objects.get(i));
+                }
+            }
 
-			return checkedItems;
-		}
+            return checkedItems;
+        }
 
         private DisplayImageOptions getImageLoaderOptions() {
             DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -515,166 +515,166 @@ public class UploadActivity extends Activity {
 
             return false;
         }
-	}
+    }
 
-	private class FileComparator implements Comparator<File> {
-		@Override
-		public int compare(File f1, File f2) {
-			if (f1 == f2) {
-				return 0;
-			}
-			if (f1.isDirectory() && f2.isFile()) {
-				return -1;
-			}
-			if (f1.isFile() && f2.isDirectory()) {
-				return 1;
-			}
+    private class FileComparator implements Comparator<File> {
+        @Override
+        public int compare(File f1, File f2) {
+            if (f1 == f2) {
+                return 0;
+            }
+            if (f1.isDirectory() && f2.isFile()) {
+                return -1;
+            }
+            if (f1.isFile() && f2.isDirectory()) {
+                return 1;
+            }
 
-			return f1.getName().compareToIgnoreCase(f2.getName());
-		}
-	}
+            return f1.getName().compareToIgnoreCase(f2.getName());
+        }
+    }
 
-	private class UploadTask extends AsyncTask<Void, File, String> {
-		private ArrayList<File> files;
-		private boolean invalidToken;
-		private int progress;
+    private class UploadTask extends AsyncTask<Void, File, String> {
+        private ArrayList<File> files;
+        private boolean invalidToken;
+        private int progress;
         private int content;
 
-		private ProgressDialog progressDialog;
+        private ProgressDialog progressDialog;
 
-		public UploadTask(ArrayList<File> files,int content) {
-			this.files = files;
-			this.progress = 0;
+        public UploadTask(ArrayList<File> files, int content) {
+            this.files = files;
+            this.progress = 0;
             this.content = content;
         }
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
 
-			progressDialog = DialogUtitities.getProgressDialogWithMessage(UploadActivity.this, "");
-			progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
-				public void onClick(final DialogInterface dialog, final int which) {
-					dialog.dismiss();
-					UploadTask.this.cancel(true);
-				}
-			});
+            progressDialog = DialogUtitities.getProgressDialogWithMessage(UploadActivity.this, "");
+            progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+                public void onClick(final DialogInterface dialog, final int which) {
+                    dialog.dismiss();
+                    UploadTask.this.cancel(true);
+                }
+            });
 
-			progressDialog.show();
-		}
+            progressDialog.show();
+        }
 
-		@Override
-		protected String doInBackground(Void... voids) {
-			try {
-				for (File file : files) {
-					if (!isCancelled()) {
-						publishProgress(file);
-						progress++;
-						ContentOperations.uploadFile(UploadActivity.this, file,content);
-					}
-				}
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                for (File file : files) {
+                    if (!isCancelled()) {
+                        publishProgress(file);
+                        progress++;
+                        ContentOperations.uploadFile(UploadActivity.this, file, content);
+                    }
+                }
 
-				return null;
-			} catch (DigipostAuthenticationException e) {
-				e.printStackTrace();
-				invalidToken = true;
-				return e.getMessage();
-			} catch (DigipostApiException e) {
-				e.printStackTrace();
-				return e.getMessage();
-			} catch (DigipostClientException e) {
-				e.printStackTrace();
-				return e.getMessage();
-			}
-		}
+                return null;
+            } catch (DigipostAuthenticationException e) {
+                e.printStackTrace();
+                invalidToken = true;
+                return e.getMessage();
+            } catch (DigipostApiException e) {
+                e.printStackTrace();
+                return e.getMessage();
+            } catch (DigipostClientException e) {
+                e.printStackTrace();
+                return e.getMessage();
+            }
+        }
 
-		@Override
-		protected void onProgressUpdate(File... values) {
-			super.onProgressUpdate(values);
-			progressDialog.setMessage(format(getString(R.string.uploading), values[0].getName(), progress, files.size()));
-		}
+        @Override
+        protected void onProgressUpdate(File... values) {
+            super.onProgressUpdate(values);
+            progressDialog.setMessage(format(getString(R.string.uploading), values[0].getName(), progress, files.size()));
+        }
 
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-			progressDialog.dismiss();
-			DialogUtitities.showToast(UploadActivity.this, format(getString(R.string.upload_files_uploaded), progress, files.size()));
-			finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
-		}
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            progressDialog.dismiss();
+            DialogUtitities.showToast(UploadActivity.this, format(getString(R.string.upload_files_uploaded), progress, files.size()));
+            finishActivityWithAction(ApiConstants.REFRESH_ARCHIVE);
+        }
 
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			progressDialog.dismiss();
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
 
-			if (result != null) {
-				if (invalidToken) {
-					finishActivityWithAction(ApiConstants.LOGOUT);
-				}
+            if (result != null) {
+                if (invalidToken) {
+                    finishActivityWithAction(ApiConstants.LOGOUT);
+                }
 
-				DialogUtitities.showToast(UploadActivity.this, result);
-			} else {
-				DialogUtitities.showToast(UploadActivity.this, getString(R.string.upload_complete));
-				finishActivityWithAction(ApiConstants.UPLOAD);
-			}
-		}
-	}
+                DialogUtitities.showToast(UploadActivity.this, result);
+            } else {
+                DialogUtitities.showToast(UploadActivity.this, getString(R.string.upload_complete));
+                finishActivityWithAction(ApiConstants.UPLOAD);
+            }
+        }
+    }
 
-	private void finishActivityWithAction(String action) {
-		Intent intent = new Intent();
-		intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
-		setResult(RESULT_OK, intent);
-		finish();
-	}
+    private void finishActivityWithAction(String action) {
+        Intent intent = new Intent();
+        intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 
-	protected class UploadMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+    protected class UploadMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
-		@Override
-		public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean state) {
+        @Override
+        public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean state) {
 
-			try {
-				listAdapter.setChecked(position);
-				actionMode.setTitle(Integer.toString(listAdapter.getCheckedCount()));
-				listAdapter.notifyDataSetChanged();
-			} catch (UnsupportedOperationException e) {
-				DialogUtitities.showToast(UploadActivity.this, e.getMessage());
-				actionMode.finish();
-			}
-		}
+            try {
+                listAdapter.setChecked(position);
+                actionMode.setTitle(Integer.toString(listAdapter.getCheckedCount()));
+                listAdapter.notifyDataSetChanged();
+            } catch (UnsupportedOperationException e) {
+                DialogUtitities.showToast(UploadActivity.this, e.getMessage());
+                actionMode.finish();
+            }
+        }
 
-		@Override
-		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-			uploadActionMode = actionMode;
-			UploadActivity.this.setTheme(R.style.Digipost_ActionMode);
-			MenuInflater inflater = actionMode.getMenuInflater();
-			inflater.inflate(R.menu.activity_upload_context, menu);
-			listAdapter.setCheckboxVisible(true);
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            uploadActionMode = actionMode;
+            UploadActivity.this.setTheme(R.style.Digipost_ActionMode);
+            MenuInflater inflater = actionMode.getMenuInflater();
+            inflater.inflate(R.menu.activity_upload_context, menu);
+            listAdapter.setCheckboxVisible(true);
 
-			return true;
-		}
+            return true;
+        }
 
-		@Override
-		public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-			return false;
-		}
+        @Override
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+            return false;
+        }
 
-		@Override
-		public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
-			switch (menuItem.getItemId()) {
-			case R.id.upload_uploadButton:
-				promtUpload(listAdapter.getCheckedItems());
-				return true;
-			default:
-				return true;
-			}
-		}
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.upload_uploadButton:
+                    promtUpload(listAdapter.getCheckedItems());
+                    return true;
+                default:
+                    return true;
+            }
+        }
 
-		@Override
-		public void onDestroyActionMode(ActionMode actionMode) {
-			listAdapter.setCheckboxVisible(false);
-			listAdapter.clearChecked();
-			UploadActivity.this.setTheme(R.style.Digipost);
-			uploadActionMode = null;
-		}
-	}
+        @Override
+        public void onDestroyActionMode(ActionMode actionMode) {
+            listAdapter.setCheckboxVisible(false);
+            listAdapter.clearChecked();
+            UploadActivity.this.setTheme(R.style.Digipost);
+            uploadActionMode = null;
+        }
+    }
 }

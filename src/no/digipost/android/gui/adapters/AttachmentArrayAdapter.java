@@ -60,11 +60,11 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
     }
 
     public void placeMainOnTop() {
-        attachments.add(0,getMainAttachment());
+        attachments.add(0, getMainAttachment());
         notifyDataSetChanged();
     }
 
-    public String getMainSubject(){
+    public String getMainSubject() {
         return attachments.get(0).getSubject();
     }
 

@@ -1,6 +1,6 @@
 /**
  * Copyright (C) Posten Norge AS
- *	
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,14 +16,6 @@
 
 package no.digipost.android.gui;
 
-import no.digipost.android.R;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.authentication.OAuth2;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.NetworkUtilities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -37,34 +29,43 @@ import android.webkit.WebViewClient;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
+import no.digipost.android.R;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.authentication.OAuth2;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.NetworkUtilities;
+
 public class WebLoginActivity extends Activity {
 
-	private WebView webViewOauth;
-	private Context context;
+    private WebView webViewOauth;
+    private Context context;
 
-	@SuppressLint("SetJavaScriptEnabled")
-	@Override
-	public void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.fragment_web);
+    @SuppressLint("SetJavaScriptEnabled")
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_web);
         context = this;
 
-		if (!NetworkUtilities.isOnline()) {
-			DialogUtitities.showToast(context, getString(R.string.error_your_network));
-			finish();
-		}
+        if (!NetworkUtilities.isOnline()) {
+            DialogUtitities.showToast(context, getString(R.string.error_your_network));
+            finish();
+        }
 
-		getActionBar().setTitle(R.string.login_loginbutton_text);
-		getActionBar().setHomeButtonEnabled(true);
-		webViewOauth = (WebView) findViewById(R.id.web_oauth);
-		String url = OAuth2.getAuthorizeURL();
-		webViewOauth.loadUrl(url);
-		WebSettings settings = webViewOauth.getSettings();
-		settings.setJavaScriptEnabled(true);
-		settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-		webViewOauth.setWebViewClient(new MyWebViewClient());
+        getActionBar().setTitle(R.string.login_loginbutton_text);
+        getActionBar().setHomeButtonEnabled(true);
+        webViewOauth = (WebView) findViewById(R.id.web_oauth);
+        String url = OAuth2.getAuthorizeURL();
+        webViewOauth.loadUrl(url);
+        WebSettings settings = webViewOauth.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+        webViewOauth.setWebViewClient(new MyWebViewClient());
 
-	}
+    }
 
     @Override
     protected void onStart() {
@@ -79,73 +80,73 @@ public class WebLoginActivity extends Activity {
     }
 
     @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		}
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
-	private class MyWebViewClient extends WebViewClient {
-		@Override
-		public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+    private class MyWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
 
-			String state_fragment = "&" + ApiConstants.STATE + "=";
-			int state_start = url.indexOf(state_fragment);
-			String code_fragment = "&" + ApiConstants.CODE + "=";
-			int code_start = url.indexOf(code_fragment);
+            String state_fragment = "&" + ApiConstants.STATE + "=";
+            int state_start = url.indexOf(state_fragment);
+            String code_fragment = "&" + ApiConstants.CODE + "=";
+            int code_start = url.indexOf(code_fragment);
 
-			if (code_start > -1) {
-				String state = url.substring(state_start + state_fragment.length(), code_start);
-				String code = url.substring(code_start + code_fragment.length(), url.length());
+            if (code_start > -1) {
+                String state = url.substring(state_start + state_fragment.length(), code_start);
+                String code = url.substring(code_start + code_fragment.length(), url.length());
 
-				new GetAccessTokenTask().execute(state, code);
+                new GetAccessTokenTask().execute(state, code);
 
-				return true;
-			}
+                return true;
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-		@Override
-		public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
-			super.onReceivedError(view, errorCode, description, failingUrl);
-			setResult(RESULT_CANCELED);
-			finish();
-		}
-	}
+        @Override
+        public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
+            super.onReceivedError(view, errorCode, description, failingUrl);
+            setResult(RESULT_CANCELED);
+            finish();
+        }
+    }
 
-	private class GetAccessTokenTask extends AsyncTask<String, Void, String> {
+    private class GetAccessTokenTask extends AsyncTask<String, Void, String> {
 
-		@Override
-		protected String doInBackground(final String... params) {
+        @Override
+        protected String doInBackground(final String... params) {
 
-			try {
-				OAuth2.retriveInitialAccessToken(params[0], params[1], WebLoginActivity.this);
-				return null;
-			} catch (DigipostApiException e) {
-				return e.getMessage();
-			} catch (DigipostClientException e) {
-				return e.getMessage();
-			} catch (DigipostAuthenticationException e) {
-				return e.getMessage();
-			}
-		}
+            try {
+                OAuth2.retriveInitialAccessToken(params[0], params[1], WebLoginActivity.this);
+                return null;
+            } catch (DigipostApiException e) {
+                return e.getMessage();
+            } catch (DigipostClientException e) {
+                return e.getMessage();
+            } catch (DigipostAuthenticationException e) {
+                return e.getMessage();
+            }
+        }
 
-		@Override
-		protected void onPostExecute(final String result) {
-			if (result != null) {
-				DialogUtitities.showToast(context, result);
-				setResult(RESULT_CANCELED);
-			} else {
-				setResult(RESULT_OK);
-			}
+        @Override
+        protected void onPostExecute(final String result) {
+            if (result != null) {
+                DialogUtitities.showToast(context, result);
+                setResult(RESULT_CANCELED);
+            } else {
+                setResult(RESULT_OK);
+            }
 
-			finish();
-		}
+            finish();
+        }
 
-	}
+    }
 }

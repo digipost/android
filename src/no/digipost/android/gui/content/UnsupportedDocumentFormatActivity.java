@@ -43,63 +43,63 @@ import static java.lang.String.format;
 
 public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_unsupported);
-		ApplicationUtilities.setScreenRotationFromPreferences(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_unsupported);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-		if (DocumentContentStore.getDocumentContent() == null) {
-			DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
-			finish();
-		}
+        if (DocumentContentStore.getDocumentContent() == null) {
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
+            finish();
+        }
 
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setTitle(DocumentContentStore.getDocumentAttachment().getSubject());
-		getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
+        getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle(DocumentContentStore.getDocumentAttachment().getSubject());
+        getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
 
-		TextView message = (TextView) findViewById(R.id.unsupported_message);
-		message.setText(format(getString(R.string.unsupported_message_top), DocumentContentStore.getDocumentAttachment().getFileType()));
+        TextView message = (TextView) findViewById(R.id.unsupported_message);
+        message.setText(format(getString(R.string.unsupported_message_top), DocumentContentStore.getDocumentAttachment().getFileType()));
 
-		Button open = (Button) findViewById(R.id.unsupported_open_button);
-		open.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				UnsupportedDocumentFormatActivity.super.openFileWithIntent();
-			}
-		});
+        Button open = (Button) findViewById(R.id.unsupported_open_button);
+        open.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UnsupportedDocumentFormatActivity.super.openFileWithIntent();
+            }
+        });
 
-		Button cancel = (Button) findViewById(R.id.unsupported_cancel_button);
-		cancel.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				finish();
-			}
-		});
-	}
+        Button cancel = (Button) findViewById(R.id.unsupported_cancel_button);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		EasyTracker.getInstance().activityStart(this);
-	}
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
 
-	@Override
-	protected void onStop() {
-		super.onStop();
-		EasyTracker.getInstance().activityStop(this);
-	}
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_image_html_unsupported_actionbar, menu);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_image_html_unsupported_actionbar, menu);
 
-		return super.onCreateOptionsMenu(menu);
-	}
+        return super.onCreateOptionsMenu(menu);
+    }
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
         sendToBank = menu.findItem(R.id.menu_image_html_unsupported_send_to_bank);
         boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
@@ -107,67 +107,67 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
             super.setSendToBankMenuText(sendToBankVisible);
         }
 
-		return super.onPrepareOptionsMenu(menu);
-	}
+        return super.onPrepareOptionsMenu(menu);
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-        case R.id.menu_image_html_unsupported_send_to_bank:
-            super.openInvoiceTask();
-            return true;
-		case R.id.menu_image_html_unsupported_delete:
-			promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
-			return true;
-		case R.id.menu_image_html_move:
-			showMoveToFolderDialog();
-			return true;
-		case R.id.menu_image_html_unsupported_open_external:
-			super.openFileWithIntent();
-			return true;
-		case R.id.menu_image_html_unsupported_save:
-			super.promtSaveToSD();
-			return true;
-		}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.menu_image_html_unsupported_send_to_bank:
+                super.openInvoiceTask();
+                return true;
+            case R.id.menu_image_html_unsupported_delete:
+                promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
+                return true;
+            case R.id.menu_image_html_move:
+                showMoveToFolderDialog();
+                return true;
+            case R.id.menu_image_html_unsupported_open_external:
+                super.openFileWithIntent();
+                return true;
+            case R.id.menu_image_html_unsupported_save:
+                super.promtSaveToSD();
+                return true;
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
-	private void executeAction(String action) {
-		Intent i = new Intent(UnsupportedDocumentFormatActivity.this, MainContentActivity.class);
-		i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
+    private void executeAction(String action) {
+        Intent i = new Intent(UnsupportedDocumentFormatActivity.this, MainContentActivity.class);
+        i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
 
-		setResult(RESULT_OK, i);
-		finish();
-	}
+        setResult(RESULT_OK, i);
+        finish();
+    }
 
-	private void promtAction(final String message, final String action) {
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
-		builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				executeAction(action);
-				dialogInterface.dismiss();
-			}
-		});
-		builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				dialogInterface.cancel();
-			}
-		});
-		builder.create().show();
-	}
+    private void promtAction(final String message, final String action) {
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                executeAction(action);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.create().show();
+    }
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
-		if (isFinishing()) {
-			FileUtilities.deleteTempFiles();
-		}
-	}
+        if (isFinishing()) {
+            FileUtilities.deleteTempFiles();
+        }
+    }
 }

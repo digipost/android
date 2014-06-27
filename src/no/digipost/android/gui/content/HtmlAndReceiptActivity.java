@@ -41,61 +41,61 @@ import no.digipost.android.utilities.DialogUtitities;
 
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
-	private WebView webView;
-	private int content_type;
+    private WebView webView;
+    private int content_type;
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_html_and_receipt);
-		ApplicationUtilities.setScreenRotationFromPreferences(this);
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_html_and_receipt);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-		content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
+        content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
-		setupWebView();
-		setupActionBar();
+        setupWebView();
+        setupActionBar();
 
-		loadContent();
-	}
+        loadContent();
+    }
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-		EasyTracker.getInstance().activityStart(this);
-	}
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
 
-	@Override
-	protected void onStop() {
-		super.onStop();
-		EasyTracker.getInstance().activityStop(this);
-	}
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
 
-	private void loadContent() {
-		String html = "";
-		if (content_type == ApplicationConstants.RECEIPTS) {
-			html = getIntent().getStringExtra(ApiConstants.GET_RECEIPT);
-		} else {
-			try {
-				html = new String(DocumentContentStore.getDocumentContent(), ApiConstants.ENCODING);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+    private void loadContent() {
+        String html = "";
+        if (content_type == ApplicationConstants.RECEIPTS) {
+            html = getIntent().getStringExtra(ApiConstants.GET_RECEIPT);
+        } else {
+            try {
+                html = new String(DocumentContentStore.getDocumentContent(), ApiConstants.ENCODING);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-		webView.loadDataWithBaseURL(null, html, ApiConstants.MIME, ApiConstants.ENCODING, null);
-	}
+        webView.loadDataWithBaseURL(null, html, ApiConstants.MIME, ApiConstants.ENCODING, null);
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_html_actionbar, menu);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_html_actionbar, menu);
 
-		return super.onCreateOptionsMenu(menu);
-	}
+        return super.onCreateOptionsMenu(menu);
+    }
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
         MenuItem move = menu.findItem(R.id.htmlmenu_move);
 
         if (content_type != ApplicationConstants.RECEIPTS) {
@@ -108,90 +108,90 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
             super.setSendToBankMenuText(sendToBankVisible);
         }
 
-		return super.onPrepareOptionsMenu(menu);
-	}
+        return super.onPrepareOptionsMenu(menu);
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		case R.id.htmlmenu_send_to_bank:
-			super.openInvoiceTask();
-			return true;
-		case R.id.htmlmenu_delete:
-            deleteAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
-			return true;
-		case R.id.htmlmenu_move:
-            showMoveToFolderDialog();
-			return true;
-		}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            case R.id.htmlmenu_send_to_bank:
+                super.openInvoiceTask();
+                return true;
+            case R.id.htmlmenu_delete:
+                deleteAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
+                return true;
+            case R.id.htmlmenu_move:
+                showMoveToFolderDialog();
+                return true;
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
-	private void setupWebView() {
+    private void setupWebView() {
 
-		webView = (WebView) findViewById(R.id.web_html);
-		webView.getSettings().setJavaScriptEnabled(true);
-		webView.getSettings().setUseWideViewPort(true);
-		webView.getSettings().setSupportZoom(true);
-		webView.getSettings().setBuiltInZoomControls(true);
-		webView.getSettings().setDisplayZoomControls(false);
-		webView.getSettings().setLoadWithOverviewMode(true);
+        webView = (WebView) findViewById(R.id.web_html);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
+        webView.getSettings().setLoadWithOverviewMode(true);
 
-	}
+    }
 
-	private void setupActionBar() {
-		getActionBar().setHomeButtonEnabled(true);
+    private void setupActionBar() {
+        getActionBar().setHomeButtonEnabled(true);
 
-		if (content_type != ApplicationConstants.RECEIPTS) {
-			Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
-			getActionBar().setTitle(documentMeta.getSubject());
-			getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
-		} else {
-			Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
-			getActionBar().setTitle(receiptMeta.getStoreName());
-			getActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+        if (content_type != ApplicationConstants.RECEIPTS) {
+            Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
+            getActionBar().setTitle(documentMeta.getSubject());
+            getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
+        } else {
+            Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
+            getActionBar().setTitle(receiptMeta.getStoreName());
+            getActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
 
-		}
-	}
+        }
+    }
 
-	private void deleteAction(String message, final String action) {
+    private void deleteAction(String message, final String action) {
 
-		if (content_type == ApplicationConstants.RECEIPTS)
-			message = getString(R.string.dialog_prompt_delete_receipt);
+        if (content_type == ApplicationConstants.RECEIPTS)
+            message = getString(R.string.dialog_prompt_delete_receipt);
 
-		String positiveButton = getString(R.string.yes);
-		if (action.equals(ApiConstants.DELETE)) {
-			positiveButton = getString(R.string.delete);
-		}else if(action.equals(ApiConstants.MOVE)){
+        String positiveButton = getString(R.string.yes);
+        if (action.equals(ApiConstants.DELETE)) {
+            positiveButton = getString(R.string.delete);
+        } else if (action.equals(ApiConstants.MOVE)) {
             showMoveToFolderDialog();
         }
 
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
-		builder.setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				executeAction(action);
-				dialogInterface.dismiss();
-			}
-		});
-		builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				dialogInterface.cancel();
-			}
-		});
-		builder.create().show();
-	}
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+        builder.setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                executeAction(action);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.create().show();
+    }
 
-	private void executeAction(String action) {
-		Intent i = new Intent(HtmlAndReceiptActivity.this, MainContentActivity.class);
-		i.putExtra(ApiConstants.MOVE, action);
-		i.putExtra(ContentFragment.INTENT_CONTENT, content_type);
-		setResult(RESULT_OK, i);
-		finish();
-	}
+    private void executeAction(String action) {
+        Intent i = new Intent(HtmlAndReceiptActivity.this, MainContentActivity.class);
+        i.putExtra(ApiConstants.MOVE, action);
+        i.putExtra(ContentFragment.INTENT_CONTENT, content_type);
+        setResult(RESULT_OK, i);
+        finish();
+    }
 }

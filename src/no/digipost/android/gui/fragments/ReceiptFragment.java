@@ -48,30 +48,30 @@ import no.digipost.android.utilities.DialogUtitities;
 
 public class ReceiptFragment extends ContentFragment {
 
-	public ReceiptFragment() {
-	}
+    public ReceiptFragment() {
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = super.onCreateView(inflater, container, savedInstanceState);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
-		super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item);
-		super.listView.setAdapter(listAdapter);
-		super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
-		super.listView.setOnItemClickListener(new ReceiptListOnItemClickListener());
+        super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item);
+        super.listView.setAdapter(listAdapter);
+        super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
+        super.listView.setOnItemClickListener(new ReceiptListOnItemClickListener());
 
-		updateAccountMeta();
+        updateAccountMeta();
 
-		return view;
-	}
+        return view;
+    }
 
-	@Override
-	public int getContent() {
-		return ApplicationConstants.RECEIPTS;
-	}
+    @Override
+    public int getContent() {
+        return ApplicationConstants.RECEIPTS;
+    }
 
-	private void checkStatusAndDisplayReceipts(Receipts receipts) {
-        if(isAdded()) {
+    private void checkStatusAndDisplayReceipts(Receipts receipts) {
+        if (isAdded()) {
             ArrayList<Receipt> receipt = receipts.getReceipt();
             ReceiptFragment.super.listAdapter.replaceAll(receipt);
 
@@ -102,199 +102,199 @@ public class ReceiptFragment extends ContentFragment {
                 }
             }
         }
-	}
+    }
 
-	public void updateAccountMeta() {
-		GetReceiptsMetaTask task = new GetReceiptsMetaTask();
-		task.execute();
-	}
+    public void updateAccountMeta() {
+        GetReceiptsMetaTask task = new GetReceiptsMetaTask();
+        task.execute();
+    }
 
-	private void openListItem(Receipt receipt) {
-		GetReceiptContentTask task = new GetReceiptContentTask(receipt);
-		task.execute();
-	}
+    private void openListItem(Receipt receipt) {
+        GetReceiptContentTask task = new GetReceiptContentTask(receipt);
+        task.execute();
+    }
 
-	private void openReceipt(String receiptContent) {
-		Intent intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
-		intent.putExtra(INTENT_CONTENT, getContent());
-		intent.putExtra(ApiConstants.GET_RECEIPT, receiptContent);
-		startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
-	}
+    private void openReceipt(String receiptContent) {
+        Intent intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
+        intent.putExtra(INTENT_CONTENT, getContent());
+        intent.putExtra(ApiConstants.GET_RECEIPT, receiptContent);
+        startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
+    }
 
-	private class GetReceiptContentTask extends AsyncTask<Void, Void, String> {
-		private Receipt receipt;
-		private String errorMessage;
-		private boolean invalidToken;
+    private class GetReceiptContentTask extends AsyncTask<Void, Void, String> {
+        private Receipt receipt;
+        private String errorMessage;
+        private boolean invalidToken;
 
-		public GetReceiptContentTask(Receipt receipt) {
-			this.receipt = receipt;
-		}
+        public GetReceiptContentTask(Receipt receipt) {
+            this.receipt = receipt;
+        }
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			if (!ReceiptFragment.super.progressDialogIsVisible)
-				ReceiptFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (!ReceiptFragment.super.progressDialogIsVisible)
+                ReceiptFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
 
-		}
+        }
 
-		@Override
-		protected String doInBackground(Void... voids) {
-			try {
-				return ContentOperations.getReceiptContentHTML(context, receipt);
-			} catch (DigipostAuthenticationException e) {
-				Log.e(getClass().getName(), e.getMessage(), e);
-				errorMessage = e.getMessage();
-				invalidToken = true;
-				return null;
-			} catch (DigipostApiException e) {
-				Log.e(getClass().getName(), e.getMessage(), e);
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostClientException e) {
-				Log.e(getClass().getName(), e.getMessage(), e);
-				errorMessage = e.getMessage();
-				return null;
-			}
-		}
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                return ContentOperations.getReceiptContentHTML(context, receipt);
+            } catch (DigipostAuthenticationException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                invalidToken = true;
+                return null;
+            } catch (DigipostApiException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostClientException e) {
+                Log.e(getClass().getName(), e.getMessage(), e);
+                errorMessage = e.getMessage();
+                return null;
+            }
+        }
 
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			ReceiptFragment.super.taskIsRunning = false;
-			ReceiptFragment.super.hideProgressDialog();
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            ReceiptFragment.super.taskIsRunning = false;
+            ReceiptFragment.super.hideProgressDialog();
 
-			if (result != null) {
-				DocumentContentStore.setContent(receipt);
-				openReceipt(result);
-			} else {
-				if (invalidToken) {
-					activityCommunicator.requestLogOut();
-				}
+            if (result != null) {
+                DocumentContentStore.setContent(receipt);
+                openReceipt(result);
+            } else {
+                if (invalidToken) {
+                    activityCommunicator.requestLogOut();
+                }
 
-				DialogUtitities.showToast(ReceiptFragment.this.getActivity(), errorMessage);
-			}
-		}
+                DialogUtitities.showToast(ReceiptFragment.this.getActivity(), errorMessage);
+            }
+        }
 
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-			ReceiptFragment.super.taskIsRunning = false;
-			ReceiptFragment.super.hideProgressDialog();
-		}
-	}
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            ReceiptFragment.super.taskIsRunning = false;
+            ReceiptFragment.super.hideProgressDialog();
+        }
+    }
 
-	private class GetReceiptsMetaTask extends AsyncTask<Void, Void, Receipts> {
-		private String errorMessage;
-		private boolean invalidToken;
+    private class GetReceiptsMetaTask extends AsyncTask<Void, Void, Receipts> {
+        private String errorMessage;
+        private boolean invalidToken;
 
-		public GetReceiptsMetaTask() {
-			errorMessage = "";
-			invalidToken = false;
-		}
+        public GetReceiptsMetaTask() {
+            errorMessage = "";
+            invalidToken = false;
+        }
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			activityCommunicator.onStartRefreshContent();
-		}
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            activityCommunicator.onStartRefreshContent();
+        }
 
-		@Override
-		protected Receipts doInBackground(final Void... params) {
-			try {
-				return ContentOperations.getAccountContentMetaReceipt(context);
-			} catch (DigipostApiException e) {
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostClientException e) {
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostAuthenticationException e) {
-				errorMessage = e.getMessage();
-				invalidToken = true;
-				return null;
-			}
-		}
+        @Override
+        protected Receipts doInBackground(final Void... params) {
+            try {
+                return ContentOperations.getAccountContentMetaReceipt(context);
+            } catch (DigipostApiException e) {
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostClientException e) {
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostAuthenticationException e) {
+                errorMessage = e.getMessage();
+                invalidToken = true;
+                return null;
+            }
+        }
 
-		@Override
-		protected void onPostExecute(final Receipts receipts) {
-			super.onPostExecute(receipts);
-			if (receipts != null) {
-				checkStatusAndDisplayReceipts(receipts);
-			} else {
-				DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
+        @Override
+        protected void onPostExecute(final Receipts receipts) {
+            super.onPostExecute(receipts);
+            if (receipts != null) {
+                checkStatusAndDisplayReceipts(receipts);
+            } else {
+                DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
 
-				if (invalidToken) {
-					activityCommunicator.requestLogOut();
-				} else if (listAdapter.isEmpty()) {
-					ReceiptFragment.super.setListEmptyViewNoNetwork(true);
-				}
-			}
+                if (invalidToken) {
+                    activityCommunicator.requestLogOut();
+                } else if (listAdapter.isEmpty()) {
+                    ReceiptFragment.super.setListEmptyViewNoNetwork(true);
+                }
+            }
 
             activityCommunicator.onUpdateAccountMeta();
-			activityCommunicator.onEndRefreshContent();
-		}
+            activityCommunicator.onEndRefreshContent();
+        }
 
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-			activityCommunicator.onEndRefreshContent();
-		}
-	}
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            activityCommunicator.onEndRefreshContent();
+        }
+    }
 
-	private class ReceiptListOnItemClickListener implements AdapterView.OnItemClickListener {
-		public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
-			openListItem((Receipt) ReceiptFragment.super.listAdapter.getItem(position));
-		}
-	}
+    private class ReceiptListOnItemClickListener implements AdapterView.OnItemClickListener {
+        public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
+            openListItem((Receipt) ReceiptFragment.super.listAdapter.getItem(position));
+        }
+    }
 
-	private void deleteReceipt(Receipt receipt) {
-		ArrayList<Object> receipts = new ArrayList<Object>();
-		receipts.add(receipt);
+    private void deleteReceipt(Receipt receipt) {
+        ArrayList<Object> receipts = new ArrayList<Object>();
+        receipts.add(receipt);
 
-		ContentDeleteTask task = new ContentDeleteTask(receipts);
-		task.execute();
-	}
+        ContentDeleteTask task = new ContentDeleteTask(receipts);
+        task.execute();
+    }
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == Activity.RESULT_OK) {
-			if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
 
-				String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
+                String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
-				if (action.equals(ApiConstants.DELETE)) {
-					deleteReceipt(DocumentContentStore.getDocumentReceipt());
-				}
-			}
-		}
-	}
+                if (action.equals(ApiConstants.DELETE)) {
+                    deleteReceipt(DocumentContentStore.getDocumentReceipt());
+                }
+            }
+        }
+    }
 
-	private class ReceiptMultiChoiceModeListener extends ContentMultiChoiceModeListener {
+    private class ReceiptMultiChoiceModeListener extends ContentMultiChoiceModeListener {
 
-		@Override
-		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-			super.onCreateActionMode(actionMode, menu);
+        @Override
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            super.onCreateActionMode(actionMode, menu);
 
-			MenuItem moveDocument = menu.findItem(R.id.main_context_menu_move);
-			moveDocument.setVisible(false);
+            MenuItem moveDocument = menu.findItem(R.id.main_context_menu_move);
+            moveDocument.setVisible(false);
 
-			return true;
-		}
+            return true;
+        }
 
-		@Override
-		public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
-			super.onActionItemClicked(actionMode, menuItem);
+        @Override
+        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
+            super.onActionItemClicked(actionMode, menuItem);
 
-			switch (menuItem.getItemId()) {
-			case R.id.main_context_menu_delete:
-				ReceiptFragment.super.deleteContent();
-				break;
-			}
+            switch (menuItem.getItemId()) {
+                case R.id.main_context_menu_delete:
+                    ReceiptFragment.super.deleteContent();
+                    break;
+            }
 
-			return true;
-		}
-	}
+            return true;
+        }
+    }
 }

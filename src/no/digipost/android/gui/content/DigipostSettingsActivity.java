@@ -42,17 +42,17 @@ import no.digipost.android.utilities.DialogUtitities;
 public abstract class DigipostSettingsActivity extends Activity {
 
     protected Account userAccount;
-	protected Settings accountSettings;
+    protected Settings accountSettings;
 
-	protected Button settingsButton;
-	protected ProgressDialog settingsProgressDialog;
+    protected Button settingsButton;
+    protected ProgressDialog settingsProgressDialog;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		executeGetAccountTask();
-	}
+        executeGetAccountTask();
+    }
 
     @Override
     protected void onPause() {
@@ -83,114 +83,114 @@ public abstract class DigipostSettingsActivity extends Activity {
         return onOptionsItemSelected(item);
     }
 
-	private void showSettingsProgressDialog(String message) {
-		settingsProgressDialog = DialogUtitities.getProgressDialogWithMessage(this, message);
-		settingsProgressDialog.show();
-	}
+    private void showSettingsProgressDialog(String message) {
+        settingsProgressDialog = DialogUtitities.getProgressDialogWithMessage(this, message);
+        settingsProgressDialog.show();
+    }
 
-	private void hideSettingsProgressDialog() {
+    private void hideSettingsProgressDialog() {
         if (settingsProgressDialog != null) {
             settingsProgressDialog.dismiss();
             settingsProgressDialog = null;
         }
-	}
+    }
 
-	private void showInvalidInputDialog(String message) {
-		AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, getString(R.string.error_invalid_format));
-		builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i) {
-				dialogInterface.dismiss();
-			}
-		});
-		builder.create().show();
-	}
+    private void showInvalidInputDialog(String message) {
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, getString(R.string.error_invalid_format));
+        builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create().show();
+    }
 
-	protected abstract void setSettingsEnabled(boolean state);
+    protected abstract void setSettingsEnabled(boolean state);
 
-	protected void setButtonState(boolean state, String message) {
-		if (state) {
-			settingsButton.setText(message);
-			settingsButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					executeUpdateSettingsTask();
-				}
-			});
-		} else {
-			settingsButton.setText(R.string.error_try_again);
-			settingsButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					executeGetAccountTask();
-				}
-			});
-		}
-	}
+    protected void setButtonState(boolean state, String message) {
+        if (state) {
+            settingsButton.setText(message);
+            settingsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    executeUpdateSettingsTask();
+                }
+            });
+        } else {
+            settingsButton.setText(R.string.error_try_again);
+            settingsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    executeGetAccountTask();
+                }
+            });
+        }
+    }
 
-	protected abstract void setAccountInfo(Account account);
+    protected abstract void setAccountInfo(Account account);
 
-	private void executeGetAccountTask() {
-		GetAccountTask getAccountTask = new GetAccountTask();
-		getAccountTask.execute();
-	}
+    private void executeGetAccountTask() {
+        GetAccountTask getAccountTask = new GetAccountTask();
+        getAccountTask.execute();
+    }
 
-	private class GetAccountTask extends AsyncTask<Void, Void, Account> {
-		private String errorMessage;
+    private class GetAccountTask extends AsyncTask<Void, Void, Account> {
+        private String errorMessage;
         private boolean invalidToken;
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			showSettingsProgressDialog(getString(R.string.pref_personal_settings_loading));
-		}
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showSettingsProgressDialog(getString(R.string.pref_personal_settings_loading));
+        }
 
-		@Override
-		protected Account doInBackground(Void... voids) {
-			try {
-				return ContentOperations.getAccount(DigipostSettingsActivity.this);
-			} catch (DigipostApiException e) {
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostClientException e) {
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostAuthenticationException e) {
+        @Override
+        protected Account doInBackground(Void... voids) {
+            try {
+                return ContentOperations.getAccount(DigipostSettingsActivity.this);
+            } catch (DigipostApiException e) {
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostClientException e) {
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostAuthenticationException e) {
                 invalidToken = true;
-				errorMessage = e.getMessage();
-				return null;
-			}
-		}
+                errorMessage = e.getMessage();
+                return null;
+            }
+        }
 
-		@Override
-		protected void onPostExecute(Account result) {
-			super.onPostExecute(result);
+        @Override
+        protected void onPostExecute(Account result) {
+            super.onPostExecute(result);
 
-			if (result == null) {
+            if (result == null) {
                 hideSettingsProgressDialog();
-				DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
+                DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
 
                 if (invalidToken) {
                     finishActivityWithAction(ApiConstants.LOGOUT);
                 }
 
-				setSettingsEnabled(false);
-			} else {
+                setSettingsEnabled(false);
+            } else {
                 userAccount = result;
-				executeGetSettingsTask();
-			}
-		}
-	}
+                executeGetSettingsTask();
+            }
+        }
+    }
 
-	protected abstract void updateUI(Settings settings);
+    protected abstract void updateUI(Settings settings);
 
-	private void executeGetSettingsTask() {
-		GetSettingsTask getSettingsTask = new GetSettingsTask();
-		getSettingsTask.execute();
-	}
+    private void executeGetSettingsTask() {
+        GetSettingsTask getSettingsTask = new GetSettingsTask();
+        getSettingsTask.execute();
+    }
 
-	private class GetSettingsTask extends AsyncTask<Void, Void, Settings> {
-		private String errorMessage;
+    private class GetSettingsTask extends AsyncTask<Void, Void, Settings> {
+        private String errorMessage;
         private boolean invalidToken;
 
         @Override
@@ -199,100 +199,100 @@ public abstract class DigipostSettingsActivity extends Activity {
         }
 
         @Override
-		protected Settings doInBackground(Void... voids) {
-			try {
-				return ContentOperations.getSettings(DigipostSettingsActivity.this);
-			} catch (DigipostClientException e) {
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostAuthenticationException e) {
+        protected Settings doInBackground(Void... voids) {
+            try {
+                return ContentOperations.getSettings(DigipostSettingsActivity.this);
+            } catch (DigipostClientException e) {
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostAuthenticationException e) {
                 invalidToken = true;
-				errorMessage = e.getMessage();
-				return null;
-			} catch (DigipostApiException e) {
-				errorMessage = e.getMessage();
-				return null;
-			}
-		}
+                errorMessage = e.getMessage();
+                return null;
+            } catch (DigipostApiException e) {
+                errorMessage = e.getMessage();
+                return null;
+            }
+        }
 
-		@Override
-		protected void onPostExecute(Settings settings) {
-			super.onPostExecute(settings);
-			hideSettingsProgressDialog();
+        @Override
+        protected void onPostExecute(Settings settings) {
+            super.onPostExecute(settings);
+            hideSettingsProgressDialog();
 
-			if (settings == null) {
-				DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
+            if (settings == null) {
+                DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
                 setSettingsEnabled(false);
 
                 if (invalidToken) {
                     finishActivityWithAction(ApiConstants.LOGOUT);
                 }
-			} else {
-				accountSettings = settings;
-				updateUI(accountSettings);
+            } else {
+                accountSettings = settings;
+                updateUI(accountSettings);
                 setAccountInfo(userAccount);
-				setSettingsEnabled(true);
-			}
-		}
-	}
+                setSettingsEnabled(true);
+            }
+        }
+    }
 
-	protected abstract void setSelectedAccountSettings() throws Exception;
+    protected abstract void setSelectedAccountSettings() throws Exception;
 
-	private void executeUpdateSettingsTask() {
-		try {
+    private void executeUpdateSettingsTask() {
+        try {
             setSelectedAccountSettings();
-			UpdateSettingsTask updateSettingsTask = new UpdateSettingsTask(accountSettings);
-			updateSettingsTask.execute();
-		} catch (Exception e) {
-			showInvalidInputDialog(e.getMessage());
-		}
-	}
+            UpdateSettingsTask updateSettingsTask = new UpdateSettingsTask(accountSettings);
+            updateSettingsTask.execute();
+        } catch (Exception e) {
+            showInvalidInputDialog(e.getMessage());
+        }
+    }
 
-	protected class UpdateSettingsTask extends AsyncTask<Void, Void, String> {
-		private Settings settings;
+    protected class UpdateSettingsTask extends AsyncTask<Void, Void, String> {
+        private Settings settings;
         private boolean invalidToken;
 
-		public UpdateSettingsTask(Settings settings) {
-			this.settings = settings;
-		}
+        public UpdateSettingsTask(Settings settings) {
+            this.settings = settings;
+        }
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			showSettingsProgressDialog("Oppdaterer dine innstillinger...");
-		}
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showSettingsProgressDialog("Oppdaterer dine innstillinger...");
+        }
 
-		@Override
-		protected String doInBackground(Void... voids) {
-			try {
-				ContentOperations.updateAccountSettings(DigipostSettingsActivity.this, settings);
-				return null;
-			} catch (DigipostAuthenticationException e) {
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                ContentOperations.updateAccountSettings(DigipostSettingsActivity.this, settings);
+                return null;
+            } catch (DigipostAuthenticationException e) {
                 invalidToken = true;
-				return e.getMessage();
-			} catch (DigipostClientException e) {
-				return e.getMessage();
-			} catch (DigipostApiException e) {
-				return e.getMessage();
-			}
-		}
+                return e.getMessage();
+            } catch (DigipostClientException e) {
+                return e.getMessage();
+            } catch (DigipostApiException e) {
+                return e.getMessage();
+            }
+        }
 
-		@Override
-		protected void onPostExecute(String result) {
-			super.onPostExecute(result);
-			hideSettingsProgressDialog();
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            hideSettingsProgressDialog();
 
-			if (result != null) {
-				DialogUtitities.showToast(DigipostSettingsActivity.this, result);
+            if (result != null) {
+                DialogUtitities.showToast(DigipostSettingsActivity.this, result);
 
-				if (invalidToken) {
+                if (invalidToken) {
                     finishActivityWithAction(ApiConstants.LOGOUT);
                 }
-			} else {
-				DialogUtitities.showToast(DigipostSettingsActivity.this, "Dine varslingsinnstillinger ble oppdatert.");
-			}
-		}
-	}
+            } else {
+                DialogUtitities.showToast(DigipostSettingsActivity.this, "Dine varslingsinnstillinger ble oppdatert.");
+            }
+        }
+    }
 
     private void finishActivityWithAction(String action) {
         Intent intent = new Intent();

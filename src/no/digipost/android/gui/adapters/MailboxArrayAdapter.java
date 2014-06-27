@@ -35,7 +35,7 @@ public class MailboxArrayAdapter extends ArrayAdapter<Mailbox> {
         return row;
     }
 
-    public String getName(){
+    public String getName() {
         return mailboxes.get(0).getName();
     }
 

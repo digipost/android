@@ -5,6 +5,7 @@
     <!-- App -->
     <string name="app_name">Digipost</string>
     <string name="app_deprecation_message">Du må oppdatere din Digipost applikasjon</string>
+    <string name="app_deprecation_market_url">market://details?id=no.digipost.android</string>
 
     <!--Screenlock-->
     <string name="screenlock_message1">For at Digipost-appen skal huske din innlogging må du skru på

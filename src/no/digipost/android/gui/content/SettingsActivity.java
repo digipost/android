@@ -32,38 +32,38 @@ import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.utilities.ApplicationUtilities;
 
 public class SettingsActivity extends Activity {
-	public static final String KEY_PREF_GENERAL_SETTINGS = "pref_generalSettings";
-	public static final String KEY_PREF_DEFAULT_SCREEN = "pref_defaultScreen";
-	public static final String KEY_PREF_SCREEN_ROTATION = "pref_screenRotation";
-	public static final String KEY_PREF_CONFIRM_DELETE = "pref_confirmDelete";
-	public static final String KEY_PREF_CONFIRM_MOVE = "pref_confirmMove";
-	public static final String KEY_PREF_DOCUMENTS_SETTINGS = "pref_documentsSettings";
-	public static final String KEY_PREF_SHOW_BANK_ID_DOCUMENTS = "pref_showBankIDDocuments";
+    public static final String KEY_PREF_GENERAL_SETTINGS = "pref_generalSettings";
+    public static final String KEY_PREF_DEFAULT_SCREEN = "pref_defaultScreen";
+    public static final String KEY_PREF_SCREEN_ROTATION = "pref_screenRotation";
+    public static final String KEY_PREF_CONFIRM_DELETE = "pref_confirmDelete";
+    public static final String KEY_PREF_CONFIRM_MOVE = "pref_confirmMove";
+    public static final String KEY_PREF_DOCUMENTS_SETTINGS = "pref_documentsSettings";
+    public static final String KEY_PREF_SHOW_BANK_ID_DOCUMENTS = "pref_showBankIDDocuments";
     public static final String KEY_PREF_PERSONAL_SETTINGS = "pref_personalSettings";
     public static final String KEY_PREF_NOTIFICATION_SETTINGS = "pref_notificationSettings";
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		ApplicationUtilities.setScreenRotationFromPreferences(this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
-		getActionBar().setTitle(R.string.preferences);
-		getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle(R.string.preferences);
+        getActionBar().setHomeButtonEnabled(true);
 
-		getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
 
-	}
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
 
-		return super.onOptionsItemSelected(item);
-	}
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onStart() {
@@ -78,11 +78,11 @@ public class SettingsActivity extends Activity {
     }
 
     public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
 
-			addPreferencesFromResource(R.xml.preferences);
+            addPreferencesFromResource(R.xml.preferences);
 
             /*Preference personalSettings = findPreference(KEY_PREF_PERSONAL_SETTINGS);
             personalSettings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -102,17 +102,17 @@ public class SettingsActivity extends Activity {
                 }
             });*/
 
-			//setSummary(getPreferenceManager().getSharedPreferences(), findPreference(KEY_PREF_DEFAULT_SCREEN));
-		}
+            //setSummary(getPreferenceManager().getSharedPreferences(), findPreference(KEY_PREF_DEFAULT_SCREEN));
+        }
 
-		@Override
-		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-			setSummary(sharedPreferences, findPreference(key));
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            setSummary(sharedPreferences, findPreference(key));
 
-			if (key.equals(KEY_PREF_SCREEN_ROTATION)) {
-				ApplicationUtilities.setScreenRotationFromPreferences(getActivity());
-			}
-		}
+            if (key.equals(KEY_PREF_SCREEN_ROTATION)) {
+                ApplicationUtilities.setScreenRotationFromPreferences(getActivity());
+            }
+        }
 
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -130,24 +130,24 @@ public class SettingsActivity extends Activity {
         }
 
         @Override
-		public void onResume() {
-			super.onResume();
-			getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-		}
+        public void onResume() {
+            super.onResume();
+            getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        }
 
-		@Override
-		public void onPause() {
-			super.onPause();
-			getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-		}
+        @Override
+        public void onPause() {
+            super.onPause();
+            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        }
 
-		private void setSummary(SharedPreferences sharedPreferences, Preference preference) {
-			String key = preference.getKey();
+        private void setSummary(SharedPreferences sharedPreferences, Preference preference) {
+            String key = preference.getKey();
 
-			if (key.equals(KEY_PREF_DEFAULT_SCREEN)) {
-				//preference.setSummary(MainContentActivity.drawerListitems[Integer.parseInt(sharedPreferences.getString(key, Integer.toString(ApplicationConstants.MAILBOX)))]);
-			}
-		}
+            if (key.equals(KEY_PREF_DEFAULT_SCREEN)) {
+                //preference.setSummary(MainContentActivity.drawerListitems[Integer.parseInt(sharedPreferences.getString(key, Integer.toString(ApplicationConstants.MAILBOX)))]);
+            }
+        }
 
         private void finishActivityWithAction(String action) {
             Intent intent = new Intent();
@@ -155,5 +155,5 @@ public class SettingsActivity extends Activity {
             getActivity().setResult(RESULT_OK, intent);
             getActivity().finish();
         }
-	}
+    }
 }

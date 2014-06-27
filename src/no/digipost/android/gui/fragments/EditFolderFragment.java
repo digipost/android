@@ -1,20 +1,16 @@
 package no.digipost.android.gui.fragments;
 
-import android.app.Activity;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -23,7 +19,6 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.DialogUtitities;
-import sun.awt.im.InputMethodManager;
 
 public class EditFolderFragment extends DialogFragment {
     private int content;
@@ -112,7 +107,7 @@ public class EditFolderFragment extends DialogFragment {
                     folder.setName(newFolderName);
                     folder.setIcon(folderIcon);
                     if (editFolder) {
-                        ((MainContentActivity) getActivity()).saveEditFolder(folder,folderIndex);
+                        ((MainContentActivity) getActivity()).saveEditFolder(folder, folderIndex);
                     } else {
                         ((MainContentActivity) getActivity()).createFolder(folder);
                     }
@@ -152,7 +147,7 @@ public class EditFolderFragment extends DialogFragment {
         folder.setName(newFolderName);
         for (Folder f : folders) {
 
-            if(folder.getName().toLowerCase() != null && !(folder.getName().toLowerCase().equals(newFolderName.toLowerCase()))) {
+            if (folder.getName().toLowerCase() != null && !(folder.getName().toLowerCase().equals(newFolderName.toLowerCase()))) {
                 if ((f).getName().toLowerCase().equals(newFolderName.toLowerCase())) {
                     return false;
                 }
@@ -174,7 +169,7 @@ public class EditFolderFragment extends DialogFragment {
 
         public Object getItem(int position) {
 
-            if(isFolderIconBeer()){
+            if (isFolderIconBeer()) {
                 folderIcon = getString(R.string.icon_beer);
                 return folderIcon;
             }
@@ -187,7 +182,7 @@ public class EditFolderFragment extends DialogFragment {
 
         }
 
-        private boolean isFolderIconBeer(){
+        private boolean isFolderIconBeer() {
             return editFolder && folder.getIcon().equals(getString(R.string.icon_beer));
         }
 
