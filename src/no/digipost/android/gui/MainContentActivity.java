@@ -176,7 +176,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
-    private void checkAppDeperaction() {
+    private void checkAppDeprecation() {
         try {
             if (account != null) {
                 int versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
@@ -798,7 +798,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             if (result != null) {
                 account = result;
-                checkAppDeperaction();
+                checkAppDeprecation();
                 if (drawerUpdates < 1) {
                     updateUI(false);
                 }
