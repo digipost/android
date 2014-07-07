@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui.helpers;
+package no.digipost.android.utilities;
 
 import android.content.Context;
 import android.content.res.TypedArray;

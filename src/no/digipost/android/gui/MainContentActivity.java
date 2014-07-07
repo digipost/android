@@ -29,12 +29,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,14 +51,9 @@ import com.terlici.dragndroplist.DragNDropListView;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.DrawerAdapter;
@@ -74,6 +67,9 @@ import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Folder;
 import no.digipost.android.model.Mailbox;
+import no.digipost.android.api.tasks.CreateEditDeleteFolderTask;
+import no.digipost.android.api.tasks.GetAccountTask;
+import no.digipost.android.api.tasks.UpdateFoldersTask;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
@@ -102,6 +98,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private ArrayList<Mailbox> mailboxes;
     private Account account;
 
+    public static String errorMessage;
+    public static boolean invalidToken;
+
     public static int numberOfFolders;
     public static String fragmentName;
     public static ArrayList<Folder> folders;
@@ -121,7 +120,23 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerUpdates = 0;
         editDrawerMode = false;
         updateUI(false);
+        setDrawerListeners();
+        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
+                R.string.close);
+        drawerLayout.setDrawerListener(drawerToggle);
 
+        getActionBar().setHomeButtonEnabled(true);
+
+        selectItem(ApplicationConstants.MAILBOX);
+
+        SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
+
+        if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
+            drawerLayout.openDrawer(GravityCompat.START);
+        }
+    }
+
+    private void setDrawerListeners(){
         drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -161,21 +176,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
             }
         });
-
-
-        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
-                R.string.close);
-        drawerLayout.setDrawerListener(drawerToggle);
-
-        getActionBar().setHomeButtonEnabled(true);
-
-        selectItem(ApplicationConstants.MAILBOX);
-
-        SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
-
-        if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
-            drawerLayout.openDrawer(GravityCompat.START);
-        }
     }
 
     private void checkAppDeprecation() {
@@ -249,10 +249,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
 
-        if(drawerArrayAdapter != null ) {
+        if (drawerArrayAdapter != null) {
             drawerArrayAdapter.notifyDataSetChanged();
         }
-        if(menu != null) {
+        if (menu != null) {
             searchButton = menu.findItem(R.id.menu_search);
             searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
                 @Override
@@ -480,11 +480,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             return true;
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_settings))) {
-            startPreferencesActivity();
+            Intent intent = new Intent(MainContentActivity.this, SettingsActivity.class);
+            startActivityForResult(intent, INTENT_REQUESTCODE);
             return true;
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_help))) {
-            openHelpWebView();
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/hjelp/#android"));
+            startActivity(browserIntent);
             return true;
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_logout))) {
@@ -528,7 +530,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerList.setItemChecked(content, true);
         drawerLayout.closeDrawer(drawerList);
     }
-
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -637,7 +638,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             unreadLetters = mailbox.getUnreadItemsInInbox();
         }
 
-        drawerArrayAdapter = new DrawerAdapter(this, toMap(drawerItems), drawerItems, fs, unreadLetters);
+        drawerArrayAdapter = new DrawerAdapter(this, ApplicationUtilities.drawerContentToMap(drawerItems), drawerItems, fs, unreadLetters);
         drawerList.setDragNDropAdapter(drawerArrayAdapter);
 
         try {
@@ -650,18 +651,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             //IGNORE
         }
         invalidateOptionsMenu();
-    }
-
-    private ArrayList<Map<String, Object>> toMap(ArrayList<String> content) {
-        ArrayList<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
-
-        for (String drawerItem : content) {
-            HashMap<String, Object> item = new HashMap<String, Object>();
-            item.put("drawer_link_name", drawerItem);
-            items.add(item);
-        }
-
-        return items;
     }
 
     private ContentFragment getCurrentFragment() {
@@ -684,16 +673,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         Intent intent = new Intent(MainContentActivity.this, UploadActivity.class);
         intent.putExtra(ApiConstants.UPLOAD, getCurrentFragment().getContent());
         startActivityForResult(intent, INTENT_REQUESTCODE);
-    }
-
-    private void startPreferencesActivity() {
-        Intent intent = new Intent(MainContentActivity.this, SettingsActivity.class);
-        startActivityForResult(intent, INTENT_REQUESTCODE);
-    }
-
-    private void openHelpWebView() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/hjelp/#android"));
-        startActivity(browserIntent);
     }
 
     private void setupSearchView() {
@@ -762,7 +741,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         public void onDrawerOpened(View drawerView) {
             showActionBarName = true;
             invalidateOptionsMenu();
-            if(searchView != null){
+            if (searchView != null) {
                 searchButton.collapseActionView();
                 searchView.setQuery("", false);
                 searchView.setIconified(true);
@@ -771,164 +750,56 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void executeGetAccountTask() {
-        GetAccountTask getAccountTask = new GetAccountTask();
+        GetAccountTask getAccountTask = new GetAccountTask(this);
         getAccountTask.execute();
     }
 
-    private class GetAccountTask extends AsyncTask<Void, Void, Account> {
-        private String errorMessage;
-        private boolean invalidToken;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Account doInBackground(Void... voids) {
-            try {
-                return ContentOperations.getAccountUpdated(MainContentActivity.this);
-            } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return null;
-            } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return null;
-            } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                invalidToken = true;
-                return null;
+    public void setAccountFromTask(Account result) {
+        if (result != null) {
+            account = result;
+            checkAppDeprecation();
+            if (drawerUpdates < 1) {
+                updateUI(false);
             }
-        }
-
-        @Override
-        protected void onPostExecute(Account result) {
-            super.onPostExecute(result);
-
-            if (result != null) {
-                account = result;
-                checkAppDeprecation();
-                if (drawerUpdates < 1) {
-                    updateUI(false);
-                }
-            } else {
-                if (invalidToken) {
-                    DialogUtitities.showToast(MainContentActivity.this, errorMessage);
-                    logOut();
-                }
+        } else {
+            if (invalidToken) {
+                DialogUtitities.showToast(getApplicationContext(), errorMessage);
+                logOut();
             }
         }
     }
 
     private void executeCreateEditDeleteFolderTask(Folder folder, String action) {
-        CreateEditDeleteFolderTask editDeleteFolderTask = new CreateEditDeleteFolderTask(folder, action);
+        CreateEditDeleteFolderTask editDeleteFolderTask = new CreateEditDeleteFolderTask(this,folder, action);
         editDeleteFolderTask.execute();
     }
 
-    private class CreateEditDeleteFolderTask extends AsyncTask<Void, Void, Integer> {
-        private String errorMessage;
-        private boolean invalidToken;
-        private String action;
-        private Folder folder;
+    public void updateFolderFromTask(Integer result){
+        if (result == ApplicationConstants.OK) {
+            executeGetAccountTask();
+        } else {
 
-        public CreateEditDeleteFolderTask(final Folder folder, final String action) {
-            this.folder = folder;
-            this.action = action;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Integer doInBackground(Void... voids) {
-            try {
-                return ContentOperations.createEditDeleteFolder(MainContentActivity.this, folder, action);
-            } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return ApplicationConstants.BAD_REQUEST;
-            } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return ApplicationConstants.BAD_REQUEST;
-            } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                invalidToken = true;
-                return ApplicationConstants.BAD_REQUEST;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            super.onPostExecute(result);
-
-            if (result == ApplicationConstants.OK) {
-                executeGetAccountTask();
-            } else {
-
-                if (result == ApplicationConstants.BAD_REQUEST_DELETE) {
-                    DialogUtitities.showToast(MainContentActivity.this, getString(R.string.error_documents_in_delete_Folder));
-                } else if (invalidToken) {
-                    DialogUtitities.showToast(MainContentActivity.this, errorMessage);
-                    logOut();
-                }
+            if (result == ApplicationConstants.BAD_REQUEST_DELETE) {
+                DialogUtitities.showToast(MainContentActivity.this, getString(R.string.error_documents_in_delete_Folder));
+            } else if (invalidToken) {
+                DialogUtitities.showToast(MainContentActivity.this, errorMessage);
+                logOut();
             }
         }
     }
 
     private void executeUpdateFoldersTask() {
-        UpdateFoldersTask updateFolderTask = new UpdateFoldersTask(folders);
+        UpdateFoldersTask updateFolderTask = new UpdateFoldersTask(this,folders);
         updateFolderTask.execute();
     }
 
-    private class UpdateFoldersTask extends AsyncTask<Void, Void, String> {
-        private String errorMessage;
-        private ArrayList<Folder> folders;
-
-        public UpdateFoldersTask(final ArrayList<Folder> folders) {
-            this.folders = folders;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            try {
-                return ContentOperations.updateFolders(MainContentActivity.this, folders);
-            } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return errorMessage;
-            } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return errorMessage;
-            } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return errorMessage;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            drawerUpdates--;
-            if (result != null) {
-                executeGetAccountTask();
-            } else {
-                DialogUtitities.showToast(MainContentActivity.this, errorMessage);
-                logOut();
-            }
+    public void updateFoldersFromTask(String result){
+        drawerUpdates--;
+        if (result != null) {
+            executeGetAccountTask();
+        } else {
+            DialogUtitities.showToast(MainContentActivity.this, errorMessage);
+            logOut();
         }
     }
 }

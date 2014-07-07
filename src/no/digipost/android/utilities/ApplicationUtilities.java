@@ -21,6 +21,10 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import no.digipost.android.model.Account;
 
 public class ApplicationUtilities {
@@ -32,4 +36,16 @@ public class ApplicationUtilities {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 	}
+
+    public static ArrayList<Map<String, Object>> drawerContentToMap(ArrayList<String> content) {
+        ArrayList<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
+
+        for (String drawerItem : content) {
+            HashMap<String, Object> item = new HashMap<String, Object>();
+            item.put("drawer_link_name", drawerItem);
+            items.add(item);
+        }
+
+        return items;
+    }
 }

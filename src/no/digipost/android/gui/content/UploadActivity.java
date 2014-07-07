@@ -64,7 +64,7 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.gui.helpers.TextProgressBar;
+import no.digipost.android.utilities.TextProgressBar;
 import no.digipost.android.model.Mailbox;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DataFormatUtilities;
