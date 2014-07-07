@@ -92,6 +92,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private DrawerAdapter drawerArrayAdapter;
     protected MailboxArrayAdapter mailboxAdapter;
     private MenuItem searchButton;
+    private SearchView searchView;
     private boolean refreshing;
     public static boolean editDrawerMode;
     private static String[] drawerListItems;
@@ -236,9 +237,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
-        setupSearchView(searchView);
+        setupSearchView();
         updateTitles();
 
         return true;
@@ -695,7 +696,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         startActivity(browserIntent);
     }
 
-    private void setupSearchView(SearchView searchView) {
+    private void setupSearchView() {
 
         try {
             Field searchField = SearchView.class.getDeclaredField("mSearchButton");
@@ -742,6 +743,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             getCurrentFragment().filterList(s);
             return true;
         }
+
     }
 
     private class MainContentActionBarDrawerToggle extends ActionBarDrawerToggle {
@@ -755,12 +757,16 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             showActionBarName = false;
             editDrawerMode = false;
             invalidateOptionsMenu();
-
         }
 
         public void onDrawerOpened(View drawerView) {
             showActionBarName = true;
             invalidateOptionsMenu();
+            if(searchView != null){
+                searchButton.collapseActionView();
+                searchView.setQuery("", false);
+                searchView.setIconified(true);
+            }
         }
     }
 
