@@ -48,7 +48,6 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_html_and_receipt);
-        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
         content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 

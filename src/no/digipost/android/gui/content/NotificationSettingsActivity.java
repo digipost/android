@@ -46,7 +46,6 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_settings);
-        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setTitle(getString(R.string.pref_screen_notification_settings_title));

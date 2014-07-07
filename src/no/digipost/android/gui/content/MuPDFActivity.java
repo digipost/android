@@ -259,7 +259,6 @@ public class MuPDFActivity extends DisplayContentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
         selectActionModeCallback = new SelectActionModeCallback();
 

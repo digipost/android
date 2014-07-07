@@ -99,6 +99,7 @@ public class FileUtilities {
 	}
 
     public static String getFileUri(File file) {
-        return Uri.fromFile(file).toString();
+
+        return ((Object)Uri.fromFile(file)).toString();
     }
 }

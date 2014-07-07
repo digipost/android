@@ -49,7 +49,6 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_personal_settings);
-        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setTitle(getString(R.string.pref_screen_personal_settings_title));
