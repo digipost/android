@@ -29,14 +29,6 @@ import no.digipost.android.model.Account;
 
 public class ApplicationUtilities {
 
-	public static void setScreenRotationFromPreferences(Activity activity) {
-		if (SettingsUtilities.getScreenOrientationPreference(activity)) {
-			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-		} else {
-			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		}
-	}
-
     public static ArrayList<Map<String, Object>> drawerContentToMap(ArrayList<String> content) {
         ArrayList<Map<String, Object>> items = new ArrayList<Map<String, Object>>();
 

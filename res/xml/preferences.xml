@@ -6,12 +6,6 @@
             android:key="pref_generalSettings">
 
         <SwitchPreference
-                android:key="pref_screenRotation"
-                android:title="@string/pref_screen_rotation_title"
-                android:summary="@string/pref_screen_rotation_summary"
-                android:defaultValue="true"/>
-
-        <SwitchPreference
                 android:key="pref_confirmDelete"
                 android:title="@string/pref_screen_confirm_delete_title"
                 android:summary="@string/pref_screen_confirm_delete_summary"

@@ -28,10 +28,6 @@ public class SettingsUtilities {
         return SharedPreferencesUtilities.getSharedPreferences(context);
     }
 
-    public static boolean getScreenOrientationPreference(Context context) {
-        return getSharedPreferences(context).getBoolean(SettingsActivity.KEY_PREF_SCREEN_ROTATION, true);
-    }
-
     public static String getDefaultScreenPreference(Context context) {
         return getSharedPreferences(context).getString(SettingsActivity.KEY_PREF_DEFAULT_SCREEN, Integer.toString(ApplicationConstants.MAILBOX));
     }

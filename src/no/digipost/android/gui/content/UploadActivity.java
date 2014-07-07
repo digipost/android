@@ -94,7 +94,6 @@ public class UploadActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
-        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
         getActionBar().setTitle(R.string.upload);
         getActionBar().setHomeButtonEnabled(true);

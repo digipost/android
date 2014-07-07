@@ -111,7 +111,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main_content);
-        ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
         drawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -388,8 +387,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS) && getCurrentFragment() != null) {
                 getCurrentFragment().updateAccountMeta();
-            } else if (key.equals(SettingsActivity.KEY_PREF_SCREEN_ROTATION)) {
-                ApplicationUtilities.setScreenRotationFromPreferences(MainContentActivity.this);
             }
         }
     }
