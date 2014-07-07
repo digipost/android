@@ -38,7 +38,6 @@ public class NetworkUtilities {
 
     public static void checkHttpStatusCode(Context context, final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
             DigipostAuthenticationException {
-
         if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
             if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
                 throw new DigipostInvalidTokenException();
@@ -49,6 +48,10 @@ public class NetworkUtilities {
             throw new DigipostAuthenticationException(context.getString(R.string.error_bad_request));
         } else if (statusCode == HTTP_STATUS_INTERNAL_SERVER_ERROR) {
             throw new DigipostApiException(context.getString(R.string.error_digipost_api));
+        }else if(statusCode == HTTP_STATUS_SUCCESS || statusCode == HTTP_STATUS_CREATE){
+            // OK, Ignore
+        }else{
+            throw new DigipostApiException(context.getString(R.string.error_your_network));
         }
     }
 
