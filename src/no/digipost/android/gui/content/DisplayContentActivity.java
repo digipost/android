@@ -43,6 +43,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
+import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Document;
@@ -63,10 +64,12 @@ public abstract class DisplayContentActivity extends Activity {
     protected MenuItem sendToBank;
     private String location;
     private String folderId;
+    protected int content_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {
@@ -288,12 +291,12 @@ public abstract class DisplayContentActivity extends Activity {
     private void finishActivityWithAction(String action) {
         Intent intent = new Intent();
         intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
+        intent.putExtra(ContentFragment.INTENT_CONTENT, content_type);
 
         if (action.equals(ApiConstants.MOVE)) {
             intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION, location);
             intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID, folderId);
         }
-
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -326,15 +329,14 @@ public abstract class DisplayContentActivity extends Activity {
     }
 
     private class MoveToFolderListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public MoveToFolderListOnItemClickListener() {
-
-        }
+        public MoveToFolderListOnItemClickListener() {}
 
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 
             Folder folder = folderAdapter.getItem(position);
             folderId = valueOf(folder.getId());
-            if (folderId == null) {
+
+            if (folderId.equals("0")) {
                 location = "INBOX";
             } else {
                 location = "FOLDER";

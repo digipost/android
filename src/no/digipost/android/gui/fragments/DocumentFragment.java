@@ -122,15 +122,18 @@ public class DocumentFragment extends ContentFragment {
 
         if (resultCode == RESULT_OK) {
             if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
-                String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
+                if(data.hasExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION)) {
 
-                if (action.equals(ApiConstants.MOVE)) {
-                    String toLocation = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION);
-                    String folderId = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID);
-                    executeDocumentMoveTask(DocumentContentStore.getDocumentParent(), toLocation, folderId);
+                    String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
-                } else if (action.equals(ApiConstants.DELETE)) {
-                    deleteDocument(DocumentContentStore.getDocumentParent());
+                    if (action.equals(ApiConstants.MOVE)) {
+                        String toLocation = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION);
+                        String folderId = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID);
+                        executeDocumentMoveTask(DocumentContentStore.getDocumentParent(), toLocation, folderId);
+
+                    } else if (action.equals(ApiConstants.DELETE)) {
+                        deleteDocument(DocumentContentStore.getDocumentParent());
+                    }
                 }
             }
         }

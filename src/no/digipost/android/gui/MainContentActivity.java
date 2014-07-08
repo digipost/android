@@ -54,6 +54,9 @@ import java.util.ArrayList;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
+import no.digipost.android.api.tasks.CreateEditDeleteFolderTask;
+import no.digipost.android.api.tasks.GetAccountTask;
+import no.digipost.android.api.tasks.UpdateFoldersTask;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.DrawerAdapter;
@@ -67,9 +70,6 @@ import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Folder;
 import no.digipost.android.model.Mailbox;
-import no.digipost.android.api.tasks.CreateEditDeleteFolderTask;
-import no.digipost.android.api.tasks.GetAccountTask;
-import no.digipost.android.api.tasks.UpdateFoldersTask;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
@@ -135,7 +135,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
-    private void setDrawerListeners(){
+    private void setDrawerListeners() {
         drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -247,52 +247,57 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
-        if (drawerArrayAdapter != null) {
-            drawerArrayAdapter.notifyDataSetChanged();
-        }
-        if (menu != null) {
-            searchButton = menu.findItem(R.id.menu_search);
-            searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-                @Override
-                public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                    return true;
-                }
-
-                @Override
-                public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                    getCurrentFragment().clearFilter();
-                    return true;
-                }
-            });
-
-            MenuItem doneEditingButton = menu.findItem(R.id.menu_done_edit_folder);
-            MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
-
-            if (refreshing) {
-                refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
-            } else {
-                refreshButton.setActionView(null);
+        if (drawerLayout != null) {
+            if (drawerArrayAdapter != null) {
+                drawerArrayAdapter.notifyDataSetChanged();
             }
 
-            boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
-            MenuItem uploadButton = menu.findItem(R.id.menu_upload);
+            if (menu != null) {
+                searchButton = menu.findItem(R.id.menu_search);
+                searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                        return true;
+                    }
 
-            if (getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS) {
-                uploadButton.setVisible(false);
-            } else {
-                uploadButton.setVisible(!drawerOpen);
-            }
-            refreshButton.setVisible(!drawerOpen);
-            searchButton.setVisible(!drawerOpen);
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                        getCurrentFragment().clearFilter();
+                        return true;
+                    }
+                });
 
-            if (editDrawerMode && drawerOpen) {
-                doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                doneEditingButton.setVisible(true);
-            } else {
-                doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                doneEditingButton.setVisible(false);
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                MenuItem doneEditingButton = menu.findItem(R.id.menu_done_edit_folder);
+                MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
+
+                if (refreshing) {
+                    refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
+                } else {
+                    refreshButton.setActionView(null);
+                }
+
+                boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
+                MenuItem uploadButton = menu.findItem(R.id.menu_upload);
+
+                if (getCurrentFragment() != null) {
+                    if (getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS) {
+                        uploadButton.setVisible(false);
+                    } else {
+                        uploadButton.setVisible(!drawerOpen);
+                    }
+                }
+
+                refreshButton.setVisible(!drawerOpen);
+                searchButton.setVisible(!drawerOpen);
+
+                if (editDrawerMode && drawerOpen) {
+                    doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    doneEditingButton.setVisible(true);
+                } else {
+                    doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                    doneEditingButton.setVisible(false);
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                }
             }
         }
 
@@ -357,16 +362,19 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
         if (resultCode == RESULT_OK) {
             if (requestCode == INTENT_REQUESTCODE) {
-                String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
+                if (data.hasExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION)) {
+                    String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
-                if (action.equals(ApiConstants.UPLOAD)) {
-                    selectItem(getCurrentFragment().getContent());
-                } else if (action.equals(ApiConstants.LOGOUT)) {
-                    logOut();
+                    if (action.equals(ApiConstants.UPLOAD)) {
+                        selectItem(getCurrentFragment().getContent());
+                    } else if (action.equals(ApiConstants.LOGOUT)) {
+                        logOut();
+                    }
                 }
             }
         }
     }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -767,11 +775,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void executeCreateEditDeleteFolderTask(Folder folder, String action) {
-        CreateEditDeleteFolderTask editDeleteFolderTask = new CreateEditDeleteFolderTask(this,folder, action);
+        CreateEditDeleteFolderTask editDeleteFolderTask = new CreateEditDeleteFolderTask(this, folder, action);
         editDeleteFolderTask.execute();
     }
 
-    public void updateFolderFromTask(Integer result){
+    public void updateFolderFromTask(Integer result) {
         if (result == ApplicationConstants.OK) {
             executeGetAccountTask();
         } else {
@@ -786,11 +794,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void executeUpdateFoldersTask() {
-        UpdateFoldersTask updateFolderTask = new UpdateFoldersTask(this,folders);
+        UpdateFoldersTask updateFolderTask = new UpdateFoldersTask(this, folders);
         updateFolderTask.execute();
     }
 
-    public void updateFoldersFromTask(String result){
+    public void updateFoldersFromTask(String result) {
         drawerUpdates--;
         if (result != null) {
             executeGetAccountTask();

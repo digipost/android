@@ -77,20 +77,20 @@
                   android:configChanges="orientation|screenSize"/>
         <activity android:name="no.digipost.android.gui.WebLoginActivity"
                   android:configChanges="orientation|screenSize"/>
-        <activity android:name=".gui.content.HtmlAndReceiptActivity"
+        <activity android:name="no.digipost.android.gui.content.HtmlAndReceiptActivity"
                   android:configChanges="orientation|screenSize"/>
-        <activity android:name=".gui.content.MuPDFActivity"/>
-        <activity android:name=".gui.content.UnsupportedDocumentFormatActivity"
+        <activity android:name="no.digipost.android.gui.content.MuPDFActivity"/>
+        <activity android:name="no.digipost.android.gui.content.UnsupportedDocumentFormatActivity"
                   android:configChanges="orientation|screenSize"/>
-        <activity android:name=".gui.content.UploadActivity"
+        <activity android:name="no.digipost.android.gui.content.UploadActivity"
                   android:configChanges="orientation|screenSize"/>
-        <activity android:name=".gui.content.SettingsActivity"
+        <activity android:name="no.digipost.android.gui.content.SettingsActivity"
                   android:configChanges="orientation|screenSize"/>
         <activity
-                android:name=".gui.content.NotificationSettingsActivity"
+                android:name="no.digipost.android.gui.content.NotificationSettingsActivity"
                 android:windowSoftInputMode="stateHidden"
                 android:configChanges="orientation|screenSize"/>
-        <activity android:name=".gui.content.PersonalSettingsActivity"
+        <activity android:name="no.digipost.android.gui.content.PersonalSettingsActivity"
                   android:configChanges="orientation|screenSize"/>
     </application>
 </manifest>

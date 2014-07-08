@@ -89,8 +89,7 @@ public class ContentOperations {
             ArrayList<Folder> folders = mailbox.getFolders().getFolder();
             Folder folder = folders.get(content);
             folder = ApiAccess.getFolderSelf(context, folder.getSelfUri());
-
-            return folder.getDocuments();
+            return folders != null ? folder.getDocuments() : null;
         }
     }
 
@@ -139,7 +138,7 @@ public class ContentOperations {
         ApiAccess.getMovedDocument(context, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document));
     }
 
-    public static String updateFolders(Context context, final ArrayList<Folder> newFolders)throws DigipostClientException,
+    public static String updateFolders(Context context, final ArrayList<Folder> newFolders) throws DigipostClientException,
             DigipostApiException, DigipostAuthenticationException {
 
         if (mailbox == null) {
@@ -147,7 +146,7 @@ public class ContentOperations {
         }
         Folders folders = mailbox.getFolders();
         folders.setFolder(newFolders);
-        return ApiAccess.updateFolders(context, folders.getUpdateFoldersUri(),JSONUtilities.createJsonFromJackson(folders));
+        return ApiAccess.updateFolders(context, folders.getUpdateFoldersUri(), JSONUtilities.createJsonFromJackson(folders));
     }
 
     public static int createEditDeleteFolder(Context context, final Folder folder, final String action) throws DigipostClientException,

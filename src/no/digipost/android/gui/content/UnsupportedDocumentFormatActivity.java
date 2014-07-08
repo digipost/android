@@ -35,7 +35,6 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
@@ -47,7 +46,6 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unsupported);
-        ApplicationUtilities.setScreenRotationFromPreferences(this);
 
         if (DocumentContentStore.getDocumentContent() == null) {
             DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
@@ -139,6 +137,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
     private void executeAction(String action) {
         Intent i = new Intent(UnsupportedDocumentFormatActivity.this, MainContentActivity.class);
         i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
+        i.putExtra(ContentFragment.INTENT_CONTENT, content_type);
 
         setResult(RESULT_OK, i);
         finish();

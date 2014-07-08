@@ -262,11 +262,12 @@ public class ReceiptFragment extends ContentFragment {
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
+                if(data.hasExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION)) {
+                    String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
-                String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
-
-                if (action.equals(ApiConstants.DELETE)) {
-                    deleteReceipt(DocumentContentStore.getDocumentReceipt());
+                    if (action.equals(ApiConstants.DELETE)) {
+                        deleteReceipt(DocumentContentStore.getDocumentReceipt());
+                    }
                 }
             }
         }

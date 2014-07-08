@@ -232,22 +232,20 @@ public class MuPDFActivity extends DisplayContentActivity {
     private MuPDFCore openFile(String path) {
         int lastSlashPos = path.lastIndexOf('/');
         mFileName = new String(lastSlashPos == -1 ? path : path.substring(lastSlashPos + 1));
-        System.out.println("Trying to open " + path);
         try {
             core = new MuPDFCore(path);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             return null;
         }
         return core;
     }
 
     private MuPDFCore openBuffer(byte buffer[]) {
-        System.out.println("Trying to open byte buffer");
         try {
             core = new MuPDFCore(buffer);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
             return null;
         }
         return core;
@@ -627,10 +625,6 @@ public class MuPDFActivity extends DisplayContentActivity {
     private void executeAction(String action) {
         Intent i = new Intent(MuPDFActivity.this, MainContentActivity.class);
         i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
-        if (action == ApiConstants.MOVE) {
-
-        }
-
         setResult(RESULT_OK, i);
         finish();
     }

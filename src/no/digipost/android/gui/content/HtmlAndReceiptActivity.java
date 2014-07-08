@@ -35,22 +35,17 @@ import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Receipt;
-import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
     private WebView webView;
-    private int content_type;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_html_and_receipt);
-
-        content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
-
         setupWebView();
         setupActionBar();
 
@@ -188,8 +183,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
     private void executeAction(String action) {
         Intent i = new Intent(HtmlAndReceiptActivity.this, MainContentActivity.class);
-        i.putExtra(ApiConstants.MOVE, action);
-        i.putExtra(ContentFragment.INTENT_CONTENT, content_type);
+        i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
         setResult(RESULT_OK, i);
         finish();
     }
