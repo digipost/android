@@ -161,18 +161,20 @@ public class ReceiptFragment extends ContentFragment {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            ReceiptFragment.super.taskIsRunning = false;
-            ReceiptFragment.super.hideProgressDialog();
+            if(isAdded()) {
+                ReceiptFragment.super.taskIsRunning = false;
+                ReceiptFragment.super.hideProgressDialog();
 
-            if (result != null) {
-                DocumentContentStore.setContent(receipt);
-                openReceipt(result);
-            } else {
-                if (invalidToken) {
-                    activityCommunicator.requestLogOut();
+                if (result != null) {
+                    DocumentContentStore.setContent(receipt);
+                    openReceipt(result);
+                } else {
+                    if (invalidToken) {
+                        activityCommunicator.requestLogOut();
+                    }
+
+                    DialogUtitities.showToast(ReceiptFragment.this.getActivity(), errorMessage);
                 }
-
-                DialogUtitities.showToast(ReceiptFragment.this.getActivity(), errorMessage);
             }
         }
 

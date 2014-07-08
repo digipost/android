@@ -278,17 +278,19 @@ public abstract class ContentFragment extends Fragment {
         @Override
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
-            taskIsRunning = false;
-            if (result != null) {
-                DialogUtitities.showToast(context, result);
+            if(isAdded()) {
+                taskIsRunning = false;
+                if (result != null) {
+                    DialogUtitities.showToast(context, result);
 
-                if (invalidToken) {
-                    activityCommunicator.requestLogOut();
+                    if (invalidToken) {
+                        activityCommunicator.requestLogOut();
+                    }
                 }
-            }
 
-            hideProgressDialog();
-            updateAccountMeta();
+                hideProgressDialog();
+                updateAccountMeta();
+            }
         }
     }
 

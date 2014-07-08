@@ -415,34 +415,38 @@ public class DocumentFragment extends ContentFragment {
         @Override
         protected void onPostExecute(byte[] result) {
             super.onPostExecute(result);
-            DocumentFragment.super.taskIsRunning = false;
-            DocumentFragment.super.hideProgressDialog();
+            if(isAdded()) {
+                DocumentFragment.super.taskIsRunning = false;
+                DocumentFragment.super.hideProgressDialog();
 
-            if (result != null) {
-                DocumentContentStore.setContent(result, parentDocument, attachmentListPosition);
-                DocumentContentStore.setMoveFolders(getMoveFolders());
-                openAttachmentContent(attachment);
-                updateAdapterDocument(parentDocument, documentListPosition);
+                if (result != null) {
+                    DocumentContentStore.setContent(result, parentDocument, attachmentListPosition);
+                    DocumentContentStore.setMoveFolders(getMoveFolders());
+                    openAttachmentContent(attachment);
+                    updateAdapterDocument(parentDocument, documentListPosition);
 
-                ArrayList<Attachment> attachments = parentDocument.getAttachment();
-                if (attachments.size() > 1)
-                    attachmentAdapter.setAttachments(attachments);
+                    ArrayList<Attachment> attachments = parentDocument.getAttachment();
+                    if (attachments.size() > 1)
+                        attachmentAdapter.setAttachments(attachments);
 
-                activityCommunicator.onUpdateAccountMeta();
-            } else {
-                if (invalidToken) {
-                    activityCommunicator.requestLogOut();
+                    activityCommunicator.onUpdateAccountMeta();
+                } else {
+                    if (invalidToken) {
+                        activityCommunicator.requestLogOut();
+                    }
+
+                    DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
                 }
-
-                DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
             }
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            DocumentFragment.super.hideProgressDialog();
-            DocumentContentStore.clearContent();
+            if(isAdded()) {
+                DocumentFragment.super.hideProgressDialog();
+                DocumentContentStore.clearContent();
+            }
         }
     }
 
@@ -490,29 +494,30 @@ public class DocumentFragment extends ContentFragment {
         @Override
         protected void onPostExecute(final Documents documents) {
             super.onPostExecute(documents);
-            DocumentFragment.super.taskIsRunning = false;
-
-            if (documents != null) {
-                ArrayList<Document> docs = documents.getDocument();
-                DocumentFragment.super.listAdapter.replaceAll(docs);
-                if (!docs.isEmpty()) {
-                    DocumentFragment.super.setListEmptyViewNoNetwork(false);
-                } else {
-                    if (!isDetached()) {
-                        setEmptyViewText();
+            if(isAdded()) {
+                DocumentFragment.super.taskIsRunning = false;
+                if (documents != null) {
+                    ArrayList<Document> docs = documents.getDocument();
+                    DocumentFragment.super.listAdapter.replaceAll(docs);
+                    if (!docs.isEmpty()) {
+                        DocumentFragment.super.setListEmptyViewNoNetwork(false);
+                    } else {
+                        if (!isDetached()) {
+                            setEmptyViewText();
+                        }
                     }
+                } else {
+                    if (invalidToken) {
+                        activityCommunicator.requestLogOut();
+                    } else if (listAdapter.isEmpty()) {
+                        DocumentFragment.super.setListEmptyViewNoNetwork(true);
+                    }
+                    DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
                 }
-            } else {
-                if (invalidToken) {
-                    activityCommunicator.requestLogOut();
-                } else if (listAdapter.isEmpty()) {
-                    DocumentFragment.super.setListEmptyViewNoNetwork(true);
-                }
-                DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
-            }
 
-            activityCommunicator.onUpdateAccountMeta();
-            activityCommunicator.onEndRefreshContent();
+                activityCommunicator.onUpdateAccountMeta();
+                activityCommunicator.onEndRefreshContent();
+            }
         }
 
         @Override
@@ -615,22 +620,24 @@ public class DocumentFragment extends ContentFragment {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            DocumentFragment.super.taskIsRunning = false;
-            DocumentFragment.super.hideProgressDialog();
+            if(isAdded()) {
+                DocumentFragment.super.taskIsRunning = false;
+                DocumentFragment.super.hideProgressDialog();
 
-            if (result != null) {
-                DialogUtitities.showToast(context, result);
+                if (result != null) {
+                    DialogUtitities.showToast(context, result);
 
-                if (invalidToken) {
-                    activityCommunicator.requestLogOut();
+                    if (invalidToken) {
+                        activityCommunicator.requestLogOut();
+                    }
+                } else {
+                    if (attachmentDialog != null) {
+                        attachmentDialog.dismiss();
+                        attachmentDialog = null;
+                    }
                 }
-            } else {
-                if (attachmentDialog != null) {
-                    attachmentDialog.dismiss();
-                    attachmentDialog = null;
-                }
+                updateAccountMeta();
             }
-            updateAccountMeta();
         }
     }
 
@@ -697,15 +704,16 @@ public class DocumentFragment extends ContentFragment {
         @Override
         protected void onPostExecute(final Boolean result) {
             super.onPostExecute(result);
+            if(isAdded()) {
+                if (result) {
+                    executeGetAttachmentContentTask(document, attachmentPosition, listPosition, attachment);
+                } else {
+                    if (invalidToken) {
+                        activityCommunicator.requestLogOut();
+                    }
 
-            if (result) {
-                executeGetAttachmentContentTask(document, attachmentPosition, listPosition, attachment);
-            } else {
-                if (invalidToken) {
-                    activityCommunicator.requestLogOut();
+                    DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
                 }
-
-                DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
             }
         }
     }
