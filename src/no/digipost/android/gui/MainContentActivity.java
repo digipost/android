@@ -379,10 +379,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            int defaultScreen = Integer.parseInt(SettingsUtilities.getDefaultScreenPreference(this));
-
-            if (getCurrentFragment().getContent() != defaultScreen) {
-                selectItem(defaultScreen);
+            if (getCurrentFragment().getContent() != ApplicationConstants.MAILBOX) {
+                selectItem(ApplicationConstants.MAILBOX);
                 return true;
             }
         }
