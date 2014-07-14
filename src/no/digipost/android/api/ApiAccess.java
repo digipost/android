@@ -54,20 +54,13 @@ import no.digipost.android.api.exception.DigipostInvalidTokenException;
 import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.model.Account;
-import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Document;
-import no.digipost.android.model.Documents;
-import no.digipost.android.model.Folder;
-import no.digipost.android.model.Receipts;
-import no.digipost.android.model.Settings;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
 
 import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT;
 
 public class ApiAccess {
-    private static Client jerseyClient = Client.create();
 
     public static final int POST_ACTION_MOVE = 0;
     public static final int POST_ACTION_SEND_OPENING_RECEIPT = 1;
@@ -76,9 +69,10 @@ public class ApiAccess {
     public static final int POST_ACTION_CREATE_FOLDER = 4;
     public static final int PUT_ACTION_EDIT_FOLDER = 5;
     public static final int PUT_ACTION_UPDATE_FOLDERS = 6;
-
     public static final int POST = 0;
     public static final int PUT = 1;
+
+    private static Client jerseyClient = Client.create();
 
     private static Client getClient() {
         if (jerseyClient == null) {
@@ -88,36 +82,9 @@ public class ApiAccess {
         return jerseyClient;
     }
 
-    public static Account getAccount(Context context) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-        return (Account) JSONUtilities.processJackson(Account.class, getApiJsonString(context, ApiConstants.URL_API));
-    }
-
-    public static Documents getDocuments(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-        return (Documents) JSONUtilities.processJackson(Documents.class, getApiJsonString(context, uri));
-    }
-
-    public static CurrentBankAccount getCurrentBankAccount(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-        return (CurrentBankAccount) JSONUtilities.processJackson(CurrentBankAccount.class, getApiJsonString(context, uri));
-    }
-
-    public static Receipts getReceipts(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-        return (Receipts) JSONUtilities.processJackson(Receipts.class, getApiJsonString(context, uri));
-    }
-
-    public static Folder getFolderSelf(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-        return (Folder) JSONUtilities.processJackson(Folder.class, getApiJsonString(context, uri));
-    }
-
-    public static Document getDocumentSelf(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-        return (Document) JSONUtilities.processJackson(Document.class, getApiJsonString(context, uri));
-    }
-
-    public static Settings getSettings(Context context, final String uri) throws DigipostClientException, DigipostAuthenticationException, DigipostApiException {
-        return (Settings) JSONUtilities.processJackson(Settings.class, getApiJsonString(context, uri));
-    }
-
     private static ClientResponse executeGetRequest(Context context, final String uri, final String header_accept) throws DigipostClientException,
             DigipostApiException, DigipostAuthenticationException {
+
         if (StringUtils.isBlank(Secret.ACCESS_TOKEN)) {
             OAuth2.updateAccessToken(context);
         }
@@ -138,7 +105,6 @@ public class ApiAccess {
         } catch (Exception e) {
             throw new DigipostClientException(context.getString(R.string.error_your_network));
         }
-
     }
 
     public static String getApiJsonString(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
@@ -156,7 +122,6 @@ public class ApiAccess {
 
     public static String postSendOpeningReceipt(Context context, final String uri) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-
         return request(context, POST_ACTION_SEND_OPENING_RECEIPT, uri, null, POST);
     }
 
@@ -195,8 +160,8 @@ public class ApiAccess {
         request.addHeader(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
         request.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
 
-        if(action == POST_ACTION_SEND_OPENING_RECEIPT || action == POST_ACTION_SEND_TO_BANK) {
-        }else{
+        if (action == POST_ACTION_SEND_OPENING_RECEIPT || action == POST_ACTION_SEND_TO_BANK) {
+        } else {
             request.setEntity(json);
         }
 
@@ -278,20 +243,6 @@ public class ApiAccess {
 
     public static String updateFolders(Context context, final String uri, final StringEntity json) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
         return request(context, PUT_ACTION_UPDATE_FOLDERS, uri, json, PUT);
-    }
-
-    public static byte[] getDocumentContent(Context context, final String uri, final int filesize) throws DigipostApiException, DigipostClientException,
-            DigipostAuthenticationException {
-        ClientResponse cr = executeGetRequest(context, uri, ApiConstants.CONTENT_OCTET_STREAM);
-
-        try {
-            NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
-        } catch (DigipostInvalidTokenException e) {
-            OAuth2.updateAccessToken(context);
-            return getDocumentContent(context, uri, filesize);
-        }
-
-        return JSONUtilities.inputStreamtoByteArray(context, filesize, cr.getEntityInputStream());
     }
 
     public static String getReceiptHTML(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {

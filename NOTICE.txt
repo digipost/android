@@ -20,6 +20,7 @@ APACHE 2 - LICENSE - http://www.apache.org/licenses/LICENSE-2.0.html
 **************************************************************************************************************
 universal-image-loader:1.8.5 - https://github.com/nostra13/Android-Universal-Image-Loader
 DragNDropList - https://github.com/terlici/DragNDropListApp
+android-async-http - https://github.com/loopj/android-async-http
 
 **************************************************************************************************************
 GNU AFFERO GENERAL PUBLIC LICENSE 3 - LICENSE_GNU_3 - http://www.gnu.org/licenses/agpl-3.0.html

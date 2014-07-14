@@ -39,14 +39,15 @@ import no.digipost.android.model.Settings;
 import no.digipost.android.utilities.JSONUtilities;
 
 public class ContentOperations {
+
+    public static String digipostAddress = null;
     private static Account account = null;
     private static Mailbox mailbox = null;
-    public static String digipostAddress = null;
 
     public static Account getAccount(Context context) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 
         if (account == null) {
-            account = ApiAccess.getAccount(context);
+            account = (Account) JSONUtilities.processJackson(Account.class, ApiAccess.getApiJsonString(context, ApiConstants.URL_API));
         }
 
         return account;
@@ -73,7 +74,7 @@ public class ContentOperations {
             DigipostApiException {
 
         mailbox = null;
-        account = ApiAccess.getAccount(context);
+        account = (Account) JSONUtilities.processJackson(Account.class, ApiAccess.getApiJsonString(context, ApiConstants.URL_API));
         return account;
     }
 
@@ -83,12 +84,12 @@ public class ContentOperations {
         mailbox = getCurrentMailbox(context);
 
         if (content == ApplicationConstants.MAILBOX) {
-            return ApiAccess.getDocuments(context, mailbox.getInboxUri());
+            return (Documents) JSONUtilities.processJackson(Documents.class, ApiAccess.getApiJsonString(context, mailbox.getInboxUri()));
         } else {
             content -= ApplicationConstants.numberOfStaticFolders;
             ArrayList<Folder> folders = mailbox.getFolders().getFolder();
             Folder folder = folders.get(content);
-            folder = ApiAccess.getFolderSelf(context, folder.getSelfUri());
+            folder = (Folder) JSONUtilities.processJackson(Folder.class, ApiAccess.getApiJsonString(context, folder.getSelfUri()));
             return folders != null ? folder.getDocuments() : null;
         }
     }
@@ -125,17 +126,18 @@ public class ContentOperations {
     public static CurrentBankAccount getCurrentBankAccount(Context context) throws DigipostClientException,
             DigipostAuthenticationException, DigipostApiException {
         String uri = getAccount(context).getPrimaryAccount().getCurrentBankAccountUri();
-        return ApiAccess.getCurrentBankAccount(context, uri);
+        return (CurrentBankAccount) JSONUtilities.processJackson(CurrentBankAccount.class, ApiAccess.getApiJsonString(context, uri));
     }
 
     public static Receipts getAccountContentMetaReceipt(Context context) throws DigipostApiException, DigipostClientException,
             DigipostAuthenticationException {
-        return ApiAccess.getReceipts(context, getCurrentMailbox(context).getReceiptsUri());
+        return (Receipts) JSONUtilities.processJackson(Receipts.class, ApiAccess.getApiJsonString(context, getCurrentMailbox(context).getReceiptsUri()));
     }
 
     public static void moveDocument(Context context, final Document document) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
         ApiAccess.getMovedDocument(context, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document));
+
     }
 
     public static String updateFolders(Context context, final ArrayList<Folder> newFolders) throws DigipostClientException,
@@ -193,13 +195,7 @@ public class ContentOperations {
 
     public static Document getDocumentSelf(Context context, final Document document) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        return ApiAccess.getDocumentSelf(context, document.getSelfUri());
-    }
-
-    public static byte[] getDocumentContent(Context context, final Attachment attachment) throws DigipostApiException,
-            DigipostClientException, DigipostAuthenticationException {
-        int fileSize = Integer.parseInt(attachment.getFileSize());
-        return ApiAccess.getDocumentContent(context, attachment.getContentUri(), fileSize);
+        return (Document) JSONUtilities.processJackson(Document.class, ApiAccess.getApiJsonString(context, document.getSelfUri()));
     }
 
     public static String getReceiptContentHTML(Context context, final Receipt receipt) throws DigipostApiException,
@@ -224,6 +220,6 @@ public class ContentOperations {
 
     public static Settings getSettings(Context context) throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
-        return ApiAccess.getSettings(context, getCurrentMailbox(context).getSettingsUri());
+        return (Settings) JSONUtilities.processJackson(Settings.class, ApiAccess.getApiJsonString(context, getCurrentMailbox(context).getSettingsUri()));
     }
 }
