@@ -74,38 +74,34 @@ import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
-import no.digipost.android.utilities.SettingsUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
 public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
     public static final int INTENT_REQUESTCODE = 0;
+    public static boolean editDrawerMode;
+    public static String errorMessage;
+    public static boolean invalidToken;
+    public static int numberOfFolders;
+    public static String fragmentName;
+    public static ArrayList<Folder> folders;
+    private static String[] drawerListItems;
 
+    protected MailboxArrayAdapter mailboxAdapter;
     private DrawerLayout drawerLayout;
-    private int drawerUpdates;
+    private int remainingDrawerChanges;
     private DragNDropListView drawerList;
     private ActionBarDrawerToggle drawerToggle;
     private DrawerAdapter drawerArrayAdapter;
-    protected MailboxArrayAdapter mailboxAdapter;
     private MenuItem searchButton;
     private SearchView searchView;
     private boolean refreshing;
-    public static boolean editDrawerMode;
-    private static String[] drawerListItems;
     private Dialog mailboxDialog;
     private boolean showActionBarName;
     private Mailbox mailbox;
     private ArrayList<Mailbox> mailboxes;
     private Account account;
-
-    public static String errorMessage;
-    public static boolean invalidToken;
-
-    public static int numberOfFolders;
-    public static String fragmentName;
-    public static ArrayList<Folder> folders;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,12 +112,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
         drawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        this.refreshing = true;
-        drawerUpdates = 0;
+        refreshing = true;
+        remainingDrawerChanges = 0;
         editDrawerMode = false;
         updateUI(false);
         setDrawerListeners();
-        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,R.string.close);
+        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
 
         getActionBar().setHomeButtonEnabled(true);
@@ -214,7 +210,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
 
         folders.add(endPosition, folders.remove(startPosition));
-        drawerUpdates++;
+        remainingDrawerChanges++;
         updateUI(true);
         executeUpdateFoldersTask();
     }
@@ -387,16 +383,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         return super.onKeyDown(keyCode, event);
     }
 
-    private class SettingsChangedlistener implements OnSharedPreferenceChangeListener {
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS) && getCurrentFragment() != null) {
-                getCurrentFragment().updateAccountMeta();
-            }
-        }
-    }
-
     private void selectMailbox(String digipostAddress, String name) {
         if (ContentOperations.changeMailbox(digipostAddress)) {
             getActionBar().setTitle(name);
@@ -433,20 +419,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         mailboxDialog = builder.create();
         mailboxDialog.show();
 
-    }
-
-    private class ChangeMailboxListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public ChangeMailboxListOnItemClickListener() {
-        }
-
-        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-            Mailbox mailbox = mailboxAdapter.getItem(position);
-            selectMailbox(mailbox.getDigipostaddress(), mailbox.getName());
-            if (mailboxDialog != null) {
-                mailboxDialog.dismiss();
-                mailboxDialog = null;
-            }
-        }
     }
 
     private void showCreateEditDialog(int content, boolean editFolder) {
@@ -561,7 +533,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 if (showActionBarName) {
                     fragmentName = mailbox.getName();
                 } else {
-                    if(getCurrentFragment().getContent()== ApplicationConstants.MAILBOX || getActionBar().getTitle().equals("")){
+                    if (getCurrentFragment().getContent() == ApplicationConstants.MAILBOX || getActionBar().getTitle().equals("")) {
                         fragmentName = mailbox.getName();
                     } else {
                         fragmentName = drawerListItems[getCurrentFragment().getContent()];
@@ -601,6 +573,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     fs = mailbox.getFolders().getFolder();
                 }
                 numberOfFolders = fs.size();
+
                 for (Folder f : fs) {
                     drawerItems.add(f.getName());
                     if (!useCachedFolders) {
@@ -709,6 +682,94 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
+    private void executeGetAccountTask() {
+        GetAccountTask getAccountTask = new GetAccountTask(this);
+        getAccountTask.execute();
+    }
+
+    private void replaceFragmentWithMailboxIfInvalid(){
+        if(getCurrentFragment().getContent() > ApplicationConstants.numberOfStaticFolders){
+            if(getCurrentFragment().getContent()-ApplicationConstants.numberOfStaticFolders == MainContentActivity.numberOfFolders){
+                getFragmentManager().beginTransaction().replace(R.id.main_content_frame, new DocumentFragment(ApplicationConstants.MAILBOX)).commit();
+            }
+        }
+    }
+
+    public void setAccountFromTask(Account result) {
+        if (result != null) {
+            account = result;
+            checkAppDeprecation();
+
+            if (remainingDrawerChanges < 1) {
+                updateUI(false);
+            }
+
+            replaceFragmentWithMailboxIfInvalid();
+        } else {
+            if (invalidToken) {
+                DialogUtitities.showToast(getApplicationContext(), errorMessage);
+                logOut();
+            }
+        }
+    }
+
+    private void executeCreateEditDeleteFolderTask(Folder folder, String action) {
+        CreateEditDeleteFolderTask editDeleteFolderTask = new CreateEditDeleteFolderTask(this, folder, action);
+        editDeleteFolderTask.execute();
+    }
+
+    public void updateFolderFromTask(Integer result) {
+        if (result == NetworkUtilities.SUCCESS) {
+            executeGetAccountTask();
+        } else {
+            if (result == NetworkUtilities.BAD_REQUEST_DELETE) {
+                DialogUtitities.showToast(MainContentActivity.this, getString(R.string.error_documents_in_delete_Folder));
+            } else if (invalidToken) {
+                DialogUtitities.showToast(MainContentActivity.this, errorMessage);
+                logOut();
+            }
+        }
+    }
+
+    private void executeUpdateFoldersTask() {
+        UpdateFoldersTask updateFolderTask = new UpdateFoldersTask(this, folders);
+        updateFolderTask.execute();
+    }
+
+    public void updateFoldersFromTask(String result) {
+        remainingDrawerChanges--;
+        if (result != null) {
+            executeGetAccountTask();
+        } else {
+            DialogUtitities.showToast(MainContentActivity.this, errorMessage);
+            logOut();
+        }
+    }
+
+    private class SettingsChangedlistener implements OnSharedPreferenceChangeListener {
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS) && getCurrentFragment() != null) {
+                getCurrentFragment().updateAccountMeta();
+            }
+        }
+    }
+
+    private class ChangeMailboxListOnItemClickListener implements AdapterView.OnItemClickListener {
+        public ChangeMailboxListOnItemClickListener() {
+        }
+
+        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
+            Mailbox mailbox = mailboxAdapter.getItem(position);
+            selectMailbox(mailbox.getDigipostaddress(), mailbox.getName());
+            if (mailboxDialog != null) {
+                mailboxDialog.dismiss();
+                mailboxDialog = null;
+            }
+        }
+    }
+
     private class SearchViewOnQueryTextListener implements android.widget.SearchView.OnQueryTextListener {
 
         @Override
@@ -735,6 +796,10 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             showActionBarName = false;
             editDrawerMode = false;
             invalidateOptionsMenu();
+            int foldersSize = folders.size();
+            if (foldersSize > 0 && getCurrentFragment().getContent() == foldersSize) {
+                selectItem(ApplicationConstants.MAILBOX);
+            }
         }
 
         public void onDrawerOpened(View drawerView) {
@@ -745,60 +810,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 searchView.setQuery("", false);
                 searchView.setIconified(true);
             }
-        }
-    }
-
-    private void executeGetAccountTask() {
-        GetAccountTask getAccountTask = new GetAccountTask(this);
-        getAccountTask.execute();
-    }
-
-    public void setAccountFromTask(Account result) {
-        if (result != null) {
-            account = result;
-            checkAppDeprecation();
-            if (drawerUpdates < 1) {
-                updateUI(false);
-            }
-        } else {
-            if (invalidToken) {
-                DialogUtitities.showToast(getApplicationContext(), errorMessage);
-                logOut();
-            }
-        }
-    }
-
-    private void executeCreateEditDeleteFolderTask(Folder folder, String action) {
-        CreateEditDeleteFolderTask editDeleteFolderTask = new CreateEditDeleteFolderTask(this, folder, action);
-        editDeleteFolderTask.execute();
-    }
-
-    public void updateFolderFromTask(Integer result) {
-        if (result == NetworkUtilities.SUCCESS) {
-            executeGetAccountTask();
-        } else {
-
-            if (result == NetworkUtilities.BAD_REQUEST_DELETE) {
-                DialogUtitities.showToast(MainContentActivity.this, getString(R.string.error_documents_in_delete_Folder));
-            } else if (invalidToken) {
-                DialogUtitities.showToast(MainContentActivity.this, errorMessage);
-                logOut();
-            }
-        }
-    }
-
-    private void executeUpdateFoldersTask() {
-        UpdateFoldersTask updateFolderTask = new UpdateFoldersTask(this, folders);
-        updateFolderTask.execute();
-    }
-
-    public void updateFoldersFromTask(String result) {
-        drawerUpdates--;
-        if (result != null) {
-            executeGetAccountTask();
-        } else {
-            DialogUtitities.showToast(MainContentActivity.this, errorMessage);
-            logOut();
         }
     }
 }

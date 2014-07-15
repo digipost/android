@@ -93,9 +93,7 @@ public class DocumentFragment extends ContentFragment {
         super.listAdapter = new DocumentArrayAdapter(getActivity(), R.layout.content_list_item);
         super.listView.setAdapter(listAdapter);
         super.listView.setOnItemClickListener(new DocumentListOnItemClickListener());
-
         updateAccountMeta();
-
         return view;
     }
 
@@ -228,7 +226,7 @@ public class DocumentFragment extends ContentFragment {
             showAttachmentDialog(document, listPosition);
         } else {
             Attachment attachment = document.getAttachment().get(0);
-            getAttachmentContentTask(document, 0, listPosition, attachment);
+            getAttachmentContent(document, 0, listPosition, attachment);
         }
     }
 
@@ -308,7 +306,7 @@ public class DocumentFragment extends ContentFragment {
         progressDialog.show();
     }
 
-    private void getAttachmentContentTask(final Document parentDocument, final int attachmentListPosition, final int documentListPosition, final Attachment attachment) {
+    private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition, final int documentListPosition, final Attachment attachment) {
         asyncHttpClient = new AsyncHttpClient();
 
         asyncHttpClient.addHeader(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT);
@@ -328,7 +326,7 @@ public class DocumentFragment extends ContentFragment {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if(openAttachment) {
+                if (openAttachment) {
                     DocumentContentStore.setContent(responseBody, parentDocument, attachmentListPosition);
                     DocumentContentStore.setMoveFolders(getMoveFolders());
                     openAttachmentContent(attachment);
@@ -346,7 +344,6 @@ public class DocumentFragment extends ContentFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                //TODO check error statusCode.
                 openAttachment = false;
             }
 
@@ -366,6 +363,11 @@ public class DocumentFragment extends ContentFragment {
 
     @Override
     public void updateAccountMeta() {
+        if(getContent() > ApplicationConstants.numberOfStaticFolders){
+            if(getContent()-ApplicationConstants.numberOfStaticFolders == MainContentActivity.numberOfFolders){
+                content = ApplicationConstants.MAILBOX;
+            }
+        }
         GetDocumentMetaTask task = new GetDocumentMetaTask(getContent());
         task.execute();
     }
@@ -411,7 +413,6 @@ public class DocumentFragment extends ContentFragment {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             super.onCreateActionMode(actionMode, menu);
-
             return true;
         }
 
@@ -476,7 +477,7 @@ public class DocumentFragment extends ContentFragment {
             if (attachment.getOpeningReceiptUri() != null) {
                 showOpeningReceiptDialog(parentDocument, attachment, parentListPosition, position);
             } else {
-                getAttachmentContentTask(parentDocument, position, parentListPosition, attachment);
+                getAttachmentContent(parentDocument, position, parentListPosition, attachment);
             }
         }
     }
@@ -696,7 +697,7 @@ public class DocumentFragment extends ContentFragment {
             super.onPostExecute(result);
             if (isAdded()) {
                 if (result) {
-                    getAttachmentContentTask(document, attachmentPosition, listPosition, attachment);
+                    getAttachmentContent(document, attachmentPosition, listPosition, attachment);
                 } else {
                     if (invalidToken) {
                         activityCommunicator.requestLogOut();

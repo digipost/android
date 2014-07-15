@@ -45,9 +45,9 @@ public class EditFolderFragment extends DialogFragment {
     private Folder folder;
     private View editName;
     private String folderIcon;
-    private String newFolderName;
-    private String validationRules;
-    private GridView gridView;
+    String newFolderName;
+    String validationRules;
+    GridView gridView;
 
     private Integer[] iconsNormal = {R.drawable.folder2x, R.drawable.envelope2x, R.drawable.file2x, R.drawable.star2x,
             R.drawable.tags2x, R.drawable.usd2x, R.drawable.heart2x, R.drawable.home2x, R.drawable.archive2x,
@@ -164,8 +164,7 @@ public class EditFolderFragment extends DialogFragment {
         ArrayList<Folder> folders = MainContentActivity.folders;
         folder.setName(newFolderName);
         for (Folder f : folders) {
-
-            if (folder.getName().toLowerCase() != null && !(folder.getName().toLowerCase().equals(newFolderName.toLowerCase()))) {
+            if (!(folder.getName().toLowerCase().equals(newFolderName.toLowerCase()))) {
                 if ((f).getName().toLowerCase().equals(newFolderName.toLowerCase())) {
                     return false;
                 }
@@ -223,6 +222,7 @@ public class EditFolderFragment extends DialogFragment {
 
             if (convertView == null) {
                 imageView = new ImageView(getActivity().getApplicationContext());
+                //imageView.setLayoutParams(new GridView.LayoutParams(100, 100));
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else {
                 imageView = (ImageView) convertView;
