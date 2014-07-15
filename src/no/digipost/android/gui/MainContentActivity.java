@@ -73,6 +73,7 @@ import no.digipost.android.model.Mailbox;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
@@ -452,7 +453,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private void showCreateEditDialog(int content, boolean editFolder) {
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("editFolderFragment");
+        Fragment prev = getFragmentManager().findFragmentByTag(EditFolderFragment.fragmentName);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -460,17 +461,17 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         DialogFragment editFolderFragment = EditFolderFragment.newInstance(content, account.getValidationRules().getFolderName(), editFolder);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        editFolderFragment.show(ft, "editFolderFragment");
+        editFolderFragment.show(ft, EditFolderFragment.fragmentName);
+    }
+
+    public void createFolder(Folder folder) {
+        executeCreateEditDeleteFolderTask(folder, ApiConstants.CREATE);
     }
 
     public void saveEditFolder(Folder folder, int folderIndex) {
         folders.set(folderIndex, folder);
         updateUI(false);
         executeCreateEditDeleteFolderTask(folder, ApiConstants.EDIT);
-    }
-
-    public void createFolder(Folder folder) {
-        executeCreateEditDeleteFolderTask(folder, ApiConstants.CREATE);
     }
 
     public void deleteEditFolder(Folder folder) {
@@ -488,7 +489,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             return true;
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_help))) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/hjelp/#android"));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiConstants.URL_HELP));
             startActivity(browserIntent);
             return true;
 
@@ -778,11 +779,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     public void updateFolderFromTask(Integer result) {
-        if (result == ApplicationConstants.OK) {
+        if (result == NetworkUtilities.SUCCESS) {
             executeGetAccountTask();
         } else {
 
-            if (result == ApplicationConstants.BAD_REQUEST_DELETE) {
+            if (result == NetworkUtilities.BAD_REQUEST_DELETE) {
                 DialogUtitities.showToast(MainContentActivity.this, getString(R.string.error_documents_in_delete_Folder));
             } else if (invalidToken) {
                 DialogUtitities.showToast(MainContentActivity.this, errorMessage);

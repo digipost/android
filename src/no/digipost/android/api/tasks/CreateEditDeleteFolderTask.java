@@ -26,6 +26,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Folder;
+import no.digipost.android.utilities.NetworkUtilities;
 
 public class CreateEditDeleteFolderTask extends AsyncTask<Void, Void, Integer> {
     private MainContentActivity activity;
@@ -51,16 +52,16 @@ public class CreateEditDeleteFolderTask extends AsyncTask<Void, Void, Integer> {
         } catch (DigipostApiException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
             activity.errorMessage = e.getMessage();
-            return ApplicationConstants.BAD_REQUEST;
+            return NetworkUtilities.BAD_REQUEST;
         } catch (DigipostClientException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
             activity.errorMessage = e.getMessage();
-            return ApplicationConstants.BAD_REQUEST;
+            return NetworkUtilities.BAD_REQUEST;
         } catch (DigipostAuthenticationException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
             activity.errorMessage = e.getMessage();
             activity.invalidToken = true;
-            return ApplicationConstants.BAD_REQUEST;
+            return NetworkUtilities.BAD_REQUEST;
         }
     }
 

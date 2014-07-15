@@ -86,4 +86,6 @@ public class ApiConstants {
 	public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "api/oauth/authorize/new";
 	public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "api/oauth/accesstoken";
 
+    public static final String URL_HELP = "https://www.digipost.no/hjelp/#android";
+
 }

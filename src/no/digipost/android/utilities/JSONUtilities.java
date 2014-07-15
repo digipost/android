@@ -16,9 +16,6 @@
 
 package no.digipost.android.utilities;
 
-import android.content.Context;
-import android.util.Log;
-
 import org.apache.http.entity.StringEntity;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
@@ -31,7 +28,6 @@ import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -39,83 +35,83 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import no.digipost.android.R;
-import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Folder;
 import no.digipost.android.model.Folders;
 
 public class JSONUtilities {
-	public static String getJsonStringFromInputStream(final InputStream inputStream) {
-		String content = "";
 
-		if (inputStream != null) {
-			Writer writer = new StringWriter();
-			int buffer_size = 1024;
-			char[] buffer = new char[buffer_size];
+    public static String getJsonStringFromInputStream(final InputStream inputStream) {
+        String content = "";
 
-			try {
-				Reader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), buffer_size);
-				int n;
+        if (inputStream != null) {
+            Writer writer = new StringWriter();
+            int buffer_size = 1024;
+            char[] buffer = new char[buffer_size];
 
-				while ((n = reader.read(buffer)) != -1) {
-					writer.write(buffer, 0, n);
-				}
+            try {
+                Reader reader = new BufferedReader(new InputStreamReader(inputStream, ApiConstants.ENCODING), buffer_size);
+                int n;
 
-				inputStream.close();
-				reader.close();
-				writer.close();
-			} catch (Exception e) {
-			}
-			content = writer.toString();
-		}
-		return content;
-	}
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
 
-	public static <T> Object processJackson(final Class<T> type, final String data) {
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonFactory fact = new JsonFactory();
-		Object jacksonObject = null;
+                inputStream.close();
+                reader.close();
+                writer.close();
+            } catch (Exception e) {
+            }
+            content = writer.toString();
+        }
+        return content;
+    }
 
-		try {
-			JsonParser jp = fact.createJsonParser(data);
-			jacksonObject = objectMapper.readValue(jp, type);
-		} catch (JsonParseException e) {
-			// Ignore
-		} catch (IOException e) {
-			// Ignore
-		} catch (Exception e) {
-			// Ignore
-		}
+    public static <T> Object processJackson(final Class<T> type, final String data) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonFactory fact = new JsonFactory();
+        Object jacksonObject = null;
 
-		return jacksonObject;
-	}
+        try {
+            JsonParser jp = fact.createJsonParser(data);
+            jacksonObject = objectMapper.readValue(jp, type);
+        } catch (JsonParseException e) {
+            // Ignore
+        } catch (IOException e) {
+            // Ignore
+        } catch (Exception e) {
+            // Ignore
+        }
 
-	public static <T> Object processJackson(final Class<T> type, final InputStream data) {
-		return processJackson(type, getJsonStringFromInputStream(data));
-	}
+        return jacksonObject;
+    }
 
-	public static StringEntity createJsonFromJackson(final Object object) {
-		// ignore-test
+    public static <T> Object processJackson(final Class<T> type, final InputStream data) {
+        return processJackson(type, getJsonStringFromInputStream(data));
+    }
 
-        String[] ignore = { "link","folderId","contentUri", "documents","changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
-                "selfUri", "uploadUri","settingsUri" };
+    public static StringEntity createJsonFromJackson(final Object object) {
+        // ignore-test
+
+        String[] ignore = {"link", "folderId", "contentUri", "documents", "changeUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+                "selfUri", "uploadUri", "settingsUri"};
 
         if (object instanceof Document) {
             if (((Document) object).getFolderId() != null) {
-                ignore = new String[]{"link", "contentUri", "changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+                ignore = new String[]{"link", "contentUri", "changeUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
                         "selfUri", "settingsUri"};
             }
-        }else if(object instanceof Folder){
-            if(((Folder) object).getId() == 0) {
-                ignore = new String[]{"id","link","contentUri", "documents","changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
-                        "selfUri", "uploadUri","settingsUri" };
-            }else{
-                ignore = new String[]{"link","contentUri", "documents","changeUri","deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
-                        "selfUri", "uploadUri","settingsUri" };
+        } else if (object instanceof Folder) {
+            if (((Folder) object).getId() == 0) {
+                ignore = new String[]{"id", "link", "contentUri", "documents", "changeUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+                        "selfUri", "uploadUri", "settingsUri"};
+            } else {
+                ignore = new String[]{"link", "contentUri", "documents", "changeUri", "deleteUri", "updateUri", "organizationLogo", "attachment", "openingReceiptUri",
+                        "selfUri", "uploadUri", "settingsUri"};
             }
-        }else if(object instanceof Folders){
-            ignore = new String[]{"documents","changeUri","deleteUri","selfUri","uploadUri","createFolderUri","updateFoldersUri"};
+        } else if (object instanceof Folders) {
+            ignore = new String[]{"documents", "changeUri", "deleteUri", "selfUri", "uploadUri", "createFolderUri", "updateFoldersUri"};
         }
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -123,7 +119,7 @@ public class JSONUtilities {
 
         StringEntity output = null;
         try {
-            output = new StringEntity(objectMapper.writer(filters).writeValueAsString(object),"UTF-8");
+            output = new StringEntity(objectMapper.writer(filters).writeValueAsString(object), ApiConstants.ENCODING);
         } catch (JsonGenerationException e) {
             e.printStackTrace();
             // Ignore
@@ -138,25 +134,5 @@ public class JSONUtilities {
         }
 
         return output;
-	}
-
-	public static byte[] inputStreamtoByteArray(Context context, final int size, final InputStream data) throws DigipostClientException {
-		InputStream is = data;
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-
-		int nRead;
-
-		try {
-			byte[] byteArray = new byte[size];
-			while ((nRead = is.read(byteArray, 0, byteArray.length)) != -1) {
-				buffer.write(byteArray, 0, nRead);
-			}
-			buffer.flush();
-		} catch (IOException e) {
-			// Ignore
-		} catch (OutOfMemoryError e) {
-			throw new DigipostClientException(context.getString(R.string.error_inputstreamtobyarray));
-		}
-		return buffer.toByteArray();
-	}
+    }
 }

@@ -16,73 +16,74 @@
 
 package no.digipost.android.utilities;
 
-import no.digipost.android.api.ContentOperations;
-import no.digipost.android.authentication.Secret;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+import no.digipost.android.api.ContentOperations;
+import no.digipost.android.authentication.Secret;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
+
 public class SharedPreferencesUtilities {
 
-	public static SharedPreferences getSharedPreferences(final Context context) {
-		return PreferenceManager.getDefaultSharedPreferences(context);
-	}
+    public static SharedPreferences getSharedPreferences(final Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
 
-	public static int screenlockChoice(final Context context) {
-		return getSharedPreferences(context).getInt(ApplicationConstants.SCREENLOCK_CHOICE,
-				ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET);
-	}
+    public static int screenlockChoice(final Context context) {
+        return getSharedPreferences(context).getInt(ApplicationConstants.SCREENLOCK_CHOICE,
+                ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET);
+    }
 
-	public static boolean screenlockChoiceYes(final Context context) {
-		return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_YES;
-	}
+    public static boolean screenlockChoiceYes(final Context context) {
+        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_YES;
+    }
 
-	public static boolean screenlockChoiceNo(final Context context) {
-		return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_NO;
-	}
+    public static boolean screenlockChoiceNo(final Context context) {
+        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_NO;
+    }
 
-	public static boolean screenlockChoiceNotTakenYet(final Context context) {
-		return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET;
-	}
+    public static boolean screenlockChoiceNotTakenYet(final Context context) {
+        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET;
+    }
 
-	public static void storeScreenlockChoice(final Context context, final int choice) {
-		SharedPreferences.Editor edit = getSharedPreferences(context).edit();
-		edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE, choice);
-		edit.commit();
-	}
+    public static void storeScreenlockChoice(final Context context, final int choice) {
+        SharedPreferences.Editor edit = getSharedPreferences(context).edit();
+        edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE, choice);
+        edit.commit();
+    }
 
-	public static void deleteScreenlockChoice(final Context context) {
-		SharedPreferences.Editor edit = getSharedPreferences(context).edit();
-		edit.remove(ApplicationConstants.SCREENLOCK_CHOICE);
-		edit.commit();
-	}
+    public static void deleteScreenlockChoice(final Context context) {
+        SharedPreferences.Editor edit = getSharedPreferences(context).edit();
+        edit.remove(ApplicationConstants.SCREENLOCK_CHOICE);
+        edit.commit();
+    }
 
-	public static String getEncryptedRefreshtokenCipher(final Context context) {
-		return getSharedPreferences(context).getString(ApiConstants.REFRESH_TOKEN, "");
-	}
+    public static String getEncryptedRefreshtokenCipher(final Context context) {
+        return getSharedPreferences(context).getString(ApiConstants.REFRESH_TOKEN, "");
+    }
 
-	public static void storeEncryptedRefreshtokenCipher(final String cipher, final Context context) {
-		Editor editor = getSharedPreferences(context).edit();
-		editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
-		editor.commit();
-	}
+    public static void storeEncryptedRefreshtokenCipher(final String cipher, final Context context) {
+        Editor editor = getSharedPreferences(context).edit();
+        editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
+        editor.commit();
+    }
 
-	public static void deleteRefreshtoken(final Context context) {
+    public static void deleteRefreshtoken(final Context context) {
         Secret.ACCESS_TOKEN = null;
         ContentOperations.setAccountToNull();
-		Editor edit = getSharedPreferences(context).edit();
-		edit.remove(ApiConstants.REFRESH_TOKEN);
-		edit.commit();
-	}
+        Editor edit = getSharedPreferences(context).edit();
+        edit.remove(ApiConstants.REFRESH_TOKEN);
+        edit.commit();
+    }
 
-	public static void clearSharedPreferences(final Context context) {
-		Editor editor = getSharedPreferences(context).edit();
-		editor.clear();
-		editor.commit();
-	}
+    public static void clearSharedPreferences(final Context context) {
+        Editor editor = getSharedPreferences(context).edit();
+        editor.clear();
+        editor.commit();
+    }
 
     public static int numberOfTimesAppHasRun(final Context context) {
         Editor editor = getSharedPreferences(context).edit();

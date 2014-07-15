@@ -25,10 +25,6 @@ public class ApplicationConstants {
 	public static final int SCREENLOCK_CHOICE_NO = 1;
 	public static final int SCREENLOCK_CHOICE_YES = 2;
 
-    public static final int OK = 0;
-    public static final int BAD_REQUEST = 1;
-    public static final int BAD_REQUEST_DELETE = 2;
-
     public static final boolean FEATURE_SEND_TO_BANK_VISIBLE = true;
     public static final String NUMBER_OF_TIMES_APP_HAS_RUN = "numberOfTimesAppHasRun";
     public static final int NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN = 1;

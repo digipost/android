@@ -16,16 +16,9 @@
 
 package no.digipost.android.utilities;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.net.Uri;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import no.digipost.android.model.Account;
 
 public class ApplicationUtilities {
 

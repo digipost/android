@@ -47,15 +47,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unsupported);
 
-        if (DocumentContentStore.getDocumentContent() == null) {
-            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
-            finish();
-        }
-
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle(DocumentContentStore.getDocumentAttachment().getSubject());
-        getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
-
+        setActionBar(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore.getDocumentParent().getCreatorName());
         TextView message = (TextView) findViewById(R.id.unsupported_message);
         message.setText(format(getString(R.string.unsupported_message_top), DocumentContentStore.getDocumentAttachment().getFileType()));
 

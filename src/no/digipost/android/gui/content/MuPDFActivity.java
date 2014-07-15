@@ -259,12 +259,9 @@ public class MuPDFActivity extends DisplayContentActivity {
         super.onCreate(savedInstanceState);
 
         selectActionModeCallback = new SelectActionModeCallback();
-
         mAlertBuilder = new AlertDialog.Builder(this);
-
         intent = getIntent();
         String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
-
         if (openFilepath != null) {
             setActionBar(FilenameUtils.getName(openFilepath), null);
             core = openFile(openFilepath);
@@ -300,12 +297,6 @@ public class MuPDFActivity extends DisplayContentActivity {
         if (savedInstanceState != null) {
             mDocView.setDisplayedViewIndex(savedInstanceState.getInt(CURRENT_WINDOW, 0));
         }
-    }
-
-    private void setActionBar(String title, String subTitle) {
-        getActionBar().setTitle(title);
-        getActionBar().setSubtitle(subTitle);
-        getActionBar().setHomeButtonEnabled(true);
     }
 
     public void createUI(Bundle savedInstanceState) {
@@ -371,31 +362,31 @@ public class MuPDFActivity extends DisplayContentActivity {
         /*
 		 * mSearchButton.setOnClickListener(new View.OnClickListener() { public
 		 * void onClick(View v) { searchModeOn(); } });
-		 * 
+		 *
 		 * mCancelSelectButton.setOnClickListener(new View.OnClickListener() {
 		 * public void onClick(View v) { MuPDFView pageView = (MuPDFView)
 		 * mDocView.getDisplayedView(); if (pageView != null)
 		 * pageView.deselectText(); selectModeOff(); } });
-		 * 
+		 *
 		 * mCopySelectButton.setOnClickListener(new View.OnClickListener() {
 		 * public void onClick(View v) { MuPDFView pageView = (MuPDFView)
 		 * mDocView.getDisplayedView(); boolean copied = false; if (pageView !=
 		 * null) copied = pageView.copySelection();
-		 * 
+		 *
 		 * selectModeOff();
-		 * 
+		 *
 		 * showMessage(copied ? "Copied to clipboard" : "No text selected"); }
 		 * });
-		 * 
+		 *
 		 * // Search invoking buttons are disabled while there is no text
 		 * specified mSearchBack.setEnabled(false);
 		 * mSearchFwd.setEnabled(false);
 		 * mSearchBack.setColorFilter(Color.argb(255, 128, 128, 128));
 		 * mSearchFwd.setColorFilter(Color.argb(255, 128, 128, 128));
-		 * 
+		 *
 		 * // React to interaction with the text widget
 		 * mSearchText.addTextChangedListener(new TextWatcher() {
-		 * 
+		 *
 		 * public void afterTextChanged(Editable s) { boolean haveText =
 		 * s.toString().length() > 0; mSearchBack.setEnabled(haveText);
 		 * mSearchFwd.setEnabled(haveText); if (haveText) {
@@ -403,7 +394,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 		 * mSearchFwd.setColorFilter(Color.argb(255, 255, 255, 255)); } else {
 		 * mSearchBack.setColorFilter(Color.argb(255, 128, 128, 128));
 		 * mSearchFwd.setColorFilter(Color.argb(255, 128, 128, 128)); }
-		 * 
+		 *
 		 * // Remove any previous search results if (SearchTaskResult.get() !=
 		 * null &&
 		 * !mSearchText.getText().toString().equals(SearchTaskResult.get().txt))
@@ -411,19 +402,19 @@ public class MuPDFActivity extends DisplayContentActivity {
 		 * void beforeTextChanged(CharSequence s, int start, int count, int
 		 * after) {} public void onTextChanged(CharSequence s, int start, int
 		 * before, int count) {} });
-		 * 
+		 *
 		 * //React to Done button on keyboard
 		 * mSearchText.setOnEditorActionListener(new
 		 * TextView.OnEditorActionListener() { public boolean
 		 * onEditorAction(TextView v, int actionId, KeyEvent event) { if
 		 * (actionId == EditorInfo.IME_ACTION_DONE) search(1); return false; }
 		 * });
-		 * 
+		 *
 		 * mSearchText.setOnKeyListener(new View.OnKeyListener() { public
 		 * boolean onKey(View v, int keyCode, KeyEvent event) { if
 		 * (event.getAction() == KeyEvent.ACTION_DOWN && keyCode ==
 		 * KeyEvent.KEYCODE_ENTER) search(1); return false; } });
-		 * 
+		 *
 		 * // Activate search invoking buttons
 		 * mSearchBack.setOnClickListener(new View.OnClickListener() { public
 		 * void onClick(View v) { search(-1); } });

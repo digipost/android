@@ -309,11 +309,13 @@ public abstract class ContentFragment extends Fragment {
     }
 
     protected void hideProgressDialog() {
-        if (!taskIsRunning) {
-            progressDialogIsVisible = false;
-            if (progressDialog != null) {
-                progressDialog.dismiss();
-                progressDialog = null;
+        if(isAdded()) {
+            if (!taskIsRunning) {
+                progressDialogIsVisible = false;
+                if (progressDialog != null) {
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
             }
         }
     }

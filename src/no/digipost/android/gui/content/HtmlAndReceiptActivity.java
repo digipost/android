@@ -48,7 +48,6 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         setContentView(R.layout.activity_html_and_receipt);
         setupWebView();
         setupActionBar();
-
         loadContent();
     }
 
@@ -126,7 +125,6 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
     }
 
     private void setupWebView() {
-
         webView = (WebView) findViewById(R.id.web_html);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setUseWideViewPort(true);
@@ -134,7 +132,6 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
         webView.getSettings().setLoadWithOverviewMode(true);
-
     }
 
     private void setupActionBar() {

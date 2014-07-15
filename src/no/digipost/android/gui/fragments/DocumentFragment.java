@@ -346,6 +346,7 @@ public class DocumentFragment extends ContentFragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                //TODO check error statusCode.
                 openAttachment = false;
             }
 

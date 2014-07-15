@@ -58,17 +58,24 @@ import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
 public abstract class DisplayContentActivity extends Activity {
+
+    protected MenuItem sendToBank;
+    protected int content_type;
     private ProgressDialog progressDialog;
     private AlertDialog alertDialog;
     private FolderArrayAdapter folderAdapter;
-    protected MenuItem sendToBank;
     private String location;
     private String folderId;
-    protected int content_type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (DocumentContentStore.getDocumentAttachment() == null || DocumentContentStore.getDocumentParent() == null) {
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
+            finish();
+        }
+
         content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
     }
 
@@ -82,6 +89,12 @@ public abstract class DisplayContentActivity extends Activity {
         });
 
         progressDialog.show();
+    }
+
+    public void setActionBar(String title, String subTitle) {
+        getActionBar().setTitle(title);
+        getActionBar().setSubtitle(subTitle);
+        getActionBar().setHomeButtonEnabled(true);
     }
 
     protected void hideProgressDialog() {
@@ -180,6 +193,84 @@ public abstract class DisplayContentActivity extends Activity {
         task.execute();
     }
 
+    protected void openInvoiceTask() {
+        OpenInvoiceTask task = new OpenInvoiceTask(DocumentContentStore.getDocumentAttachment(), DocumentContentStore.getDocumentParent());
+        task.execute();
+    }
+
+    private void finishActivityWithAction(String action) {
+        Intent intent = new Intent();
+        intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
+        intent.putExtra(ContentFragment.INTENT_CONTENT, content_type);
+
+        if (action.equals(ApiConstants.MOVE)) {
+            intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION, location);
+            intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID, folderId);
+        }
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    protected void showMoveToFolderDialog() {
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setNegativeButton(getString(R.string.close),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }
+        );
+
+        builder.setView(view);
+
+        ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+
+        ArrayList<Folder> folders = DocumentContentStore.getMoveFolders();
+        folderAdapter = new FolderArrayAdapter(this, R.layout.attachmentdialog_list_item, folders);
+        moveToFolderListView.setAdapter(folderAdapter);
+        moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
+
+        builder.setTitle(R.string.move_to);
+        alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    protected void openFileWithIntent() {
+
+        if (DocumentContentStore.getDocumentContent() == null) {
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
+            finish();
+        }
+
+        try {
+            FileUtilities.openFileWithIntent(this, DocumentContentStore.getDocumentAttachment().getFileType(),
+                    DocumentContentStore.getDocumentContent());
+        } catch (ActivityNotFoundException e) {
+            DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
+        } catch (Exception e) {
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
+        }
+    }
+
+    protected void promtSaveToSD() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                new SaveDocumentToSDTask().execute();
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     protected class SendToBankTask extends AsyncTask<Void, Void, Boolean> {
         private String errorMessage;
         private Document document;
@@ -239,11 +330,6 @@ public abstract class DisplayContentActivity extends Activity {
         }
     }
 
-    protected void openInvoiceTask() {
-        OpenInvoiceTask task = new OpenInvoiceTask(DocumentContentStore.getDocumentAttachment(), DocumentContentStore.getDocumentParent());
-        task.execute();
-    }
-
     private class OpenInvoiceTask extends AsyncTask<Void, Void, CurrentBankAccount> {
         private String errorMessage;
         private Document document;
@@ -288,48 +374,9 @@ public abstract class DisplayContentActivity extends Activity {
         }
     }
 
-    private void finishActivityWithAction(String action) {
-        Intent intent = new Intent();
-        intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
-        intent.putExtra(ContentFragment.INTENT_CONTENT, content_type);
-
-        if (action.equals(ApiConstants.MOVE)) {
-            intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION, location);
-            intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID, folderId);
-        }
-        setResult(RESULT_OK, intent);
-        finish();
-    }
-
-    protected void showMoveToFolderDialog() {
-        LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this).setNegativeButton(getString(R.string.close),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }
-        );
-
-        builder.setView(view);
-
-        ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
-
-        ArrayList<Folder> folders = DocumentContentStore.getMoveFolders();
-        folderAdapter = new FolderArrayAdapter(this, R.layout.attachmentdialog_list_item, folders);
-        moveToFolderListView.setAdapter(folderAdapter);
-        moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
-
-        builder.setTitle(R.string.move_to);
-        alertDialog = builder.create();
-        alertDialog.show();
-    }
-
     private class MoveToFolderListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public MoveToFolderListOnItemClickListener() {}
+        public MoveToFolderListOnItemClickListener() {
+        }
 
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
 
@@ -347,39 +394,6 @@ public abstract class DisplayContentActivity extends Activity {
             finishActivityWithAction(ApiConstants.MOVE);
 
         }
-    }
-
-    protected void openFileWithIntent() {
-
-        if (DocumentContentStore.getDocumentContent() == null) {
-            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
-            finish();
-        }
-
-        try {
-            FileUtilities.openFileWithIntent(this, DocumentContentStore.getDocumentAttachment().getFileType(),
-                    DocumentContentStore.getDocumentContent());
-        } catch (ActivityNotFoundException e) {
-            DialogUtitities.showToast(this, getString(R.string.error_no_activity_to_open_file));
-        } catch (Exception e) {
-            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));
-        }
-    }
-
-    protected void promtSaveToSD() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                new SaveDocumentToSDTask().execute();
-                dialog.dismiss();
-            }
-        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
