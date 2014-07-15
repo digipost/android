@@ -57,7 +57,6 @@ import no.digipost.android.pdf.MuPDFReaderView;
 import no.digipost.android.pdf.MuPDFView;
 import no.digipost.android.pdf.SearchTask;
 import no.digipost.android.pdf.SearchTaskResult;
-import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
@@ -71,8 +70,8 @@ public class MuPDFActivity extends DisplayContentActivity {
     public static final String ACTION_OPEN_FILEPATH = "openFilepath";
 
     private final String CURRENT_WINDOW = "currentWindow";
+    private final Handler mHandler = new Handler();
     private int currentVindow;
-
     /* The core rendering instance */
     private MuPDFCore core;
     private String mFileName;
@@ -87,7 +86,6 @@ public class MuPDFActivity extends DisplayContentActivity {
     private EditText mSearchText;
     private SearchTask mSearchTask;
     private AlertDialog.Builder mAlertBuilder;
-    private final Handler mHandler = new Handler();
     private boolean mAlertsActive = false;
     private AsyncTask<Void, Void, MuPDFAlert> mAlertTask;
     private AlertDialog mAlertDialog;
@@ -360,7 +358,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 
         // Activate the search-preparing button
         /*
-		 * mSearchButton.setOnClickListener(new View.OnClickListener() { public
+         * mSearchButton.setOnClickListener(new View.OnClickListener() { public
 		 * void onClick(View v) { searchModeOn(); } });
 		 *
 		 * mCancelSelectButton.setOnClickListener(new View.OnClickListener() {
@@ -578,41 +576,6 @@ public class MuPDFActivity extends DisplayContentActivity {
         }
     }
 
-    private class SearchViewOnQueryTextListener implements android.widget.SearchView.OnQueryTextListener {
-
-        @Override
-        public boolean onQueryTextSubmit(String s) {
-            search(1, s);
-
-            return true;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String s) {
-            if (SearchTaskResult.get() != null && !s.equals(SearchTaskResult.get().txt)) {
-                SearchTaskResult.set(null);
-                mDocView.resetupChildren();
-            }
-
-            return true;
-        }
-    }
-
-    private class SearchOnActionExpandListener implements MenuItem.OnActionExpandListener {
-
-        @Override
-        public boolean onMenuItemActionExpand(MenuItem menuItem) {
-            searchModeOn();
-            return true;
-        }
-
-        @Override
-        public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-            searchModeOff();
-            return true;
-        }
-    }
-
     private void executeAction(String action) {
         Intent i = new Intent(MuPDFActivity.this, MainContentActivity.class);
         i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
@@ -717,6 +680,70 @@ public class MuPDFActivity extends DisplayContentActivity {
         DialogUtitities.showToast(this, copied ? getString(R.string.pdf_select_copied) : getString(R.string.pdf_select_no_text_selected));
     }
 
+    @Override
+    protected void onStart() {
+        EasyTracker.getInstance().activityStart(this);
+
+        if (core != null) {
+            core.startAlerts();
+            createAlertWaiter();
+        }
+
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        EasyTracker.getInstance().activityStop(this);
+
+        if (core != null) {
+            destroyAlertWaiter();
+            core.stopAlerts();
+        }
+
+        super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    private class SearchViewOnQueryTextListener implements android.widget.SearchView.OnQueryTextListener {
+
+        @Override
+        public boolean onQueryTextSubmit(String s) {
+            search(1, s);
+
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String s) {
+            if (SearchTaskResult.get() != null && !s.equals(SearchTaskResult.get().txt)) {
+                SearchTaskResult.set(null);
+                mDocView.resetupChildren();
+            }
+
+            return true;
+        }
+    }
+
+    private class SearchOnActionExpandListener implements MenuItem.OnActionExpandListener {
+
+        @Override
+        public boolean onMenuItemActionExpand(MenuItem menuItem) {
+            searchModeOn();
+            return true;
+        }
+
+        @Override
+        public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+            searchModeOff();
+            return true;
+        }
+    }
+
     private class SelectActionModeCallback implements ActionMode.Callback {
 
         @Override
@@ -751,34 +778,5 @@ public class MuPDFActivity extends DisplayContentActivity {
             setTheme(R.style.Digipost);
 
         }
-    }
-
-    @Override
-    protected void onStart() {
-        EasyTracker.getInstance().activityStart(this);
-
-        if (core != null) {
-            core.startAlerts();
-            createAlertWaiter();
-        }
-
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        EasyTracker.getInstance().activityStop(this);
-
-        if (core != null) {
-            destroyAlertWaiter();
-            core.stopAlerts();
-        }
-
-        super.onStop();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 }

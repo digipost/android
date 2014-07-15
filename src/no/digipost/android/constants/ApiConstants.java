@@ -18,60 +18,62 @@ package no.digipost.android.constants;
 
 public class ApiConstants {
 
-	public static final String FILETYPE_PDF = "pdf";
-	public static final String FILETYPE_HTML = "html";
-	public static final String[] FILETYPES_IMAGE = { "jpg", "jpeg", "png" };
+    public static final String ERROR_CODE = "error-code";
+    public static final String FOLDER_NOT_EMPTY = "FOLDER_NOT_EMPTY";
+    public static final String FILETYPE_PDF = "pdf";
+    public static final String FILETYPE_HTML = "html";
+    public static final String[] FILETYPES_IMAGE = {"jpg", "jpeg", "png"};
     public static final String ENCODING = "UTF-8";
     public static final String MIME = "text/html";
 
-	public static final String GET_RECEIPT = "receipt";
+    public static final String GET_RECEIPT = "receipt";
 
-    public static final String CREATE ="create";
-    public static final String EDIT ="edit";
+    public static final String CREATE = "create";
+    public static final String EDIT = "edit";
     public static final String MOVE = "move";
-	public static final String DELETE = "delete";
+    public static final String DELETE = "delete";
     public static final String UPLOAD = "upload";
     public static final String REFRESH_ARCHIVE = "refreshArchive";
     public static final String LOGOUT = "logout";
-	public static final String FRAGMENT_ACTIVITY_RESULT_ACTION = "action";
+    public static final String FRAGMENT_ACTIVITY_RESULT_ACTION = "action";
     public static final String FRAGMENT_ACTIVITY_RESULT_LOCATION = "location";
     public static final String FRAGMENT_ACTIVITY_RESULT_FOLDERID = "folderid";
-	public static final String AUTHENTICATION_LEVEL_TWO_FACTOR = "TWO_FACTOR";
+    public static final String AUTHENTICATION_LEVEL_TWO_FACTOR = "TWO_FACTOR";
     public static final String INVOICE = "INVOICE";
-	public static final String GRANT_TYPE = "grant_type";
-	public static final String CODE = "code";
-	public static final String RESPONSE_TYPE = "response_type";
-	public static final String CLIENT_ID = "client_id";
-	public static final String NONCE = "nonce";
-	public static final String ACCESS_TOKEN = "access_token";
-	public static final String REFRESH_TOKEN = "refresh_token";
-	public static final String REDIRECT_URI = "redirect_uri";
-	public static final String STATE = "state";
-	public static final String CONTENT_TYPE = "Content-Type";
-	public static final String ACCEPT = "Accept";
-	public static final String AUTHORIZATION = "Authorization";
-	public static final String BEARER = "Bearer ";
-	public static final String BASIC = "Basic ";
-	public static final String APPLICATION_VND_DIGIPOST_V2_JSON = "application/vnd.digipost-v2+json";
-	public static final String CONTENT_OCTET_STREAM = "application/octet-stream";
-	public static final String TEXT_HTML = "text/html";
+    public static final String GRANT_TYPE = "grant_type";
+    public static final String CODE = "code";
+    public static final String RESPONSE_TYPE = "response_type";
+    public static final String CLIENT_ID = "client_id";
+    public static final String NONCE = "nonce";
+    public static final String ACCESS_TOKEN = "access_token";
+    public static final String REFRESH_TOKEN = "refresh_token";
+    public static final String REDIRECT_URI = "redirect_uri";
+    public static final String STATE = "state";
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String ACCEPT = "Accept";
+    public static final String AUTHORIZATION = "Authorization";
+    public static final String BEARER = "Bearer ";
+    public static final String BASIC = "Basic ";
+    public static final String APPLICATION_VND_DIGIPOST_V2_JSON = "application/vnd.digipost-v2+json";
+    public static final String CONTENT_OCTET_STREAM = "application/octet-stream";
+    public static final String TEXT_HTML = "text/html";
 
-	public static final String URL = "https://www.digipost.no/post/";
+    public static final String URL = "https://www.digipost.no/post/";
 
-	public static final String URL_API = URL + "api";
+    public static final String URL_API = URL + "api";
     public static final String URL_RELATIONS = URL + "relations/";
-	public static final String URL_RELATIONS_DOCUMENT_INBOX = URL_RELATIONS + "document_inbox";
-	public static final String URL_RELATIONS_DOCUMENT_ARCHIVE = URL_RELATIONS + "document_archive";
-	public static final String URL_RELATIONS_DOCUMENT_WORKAREA = URL_RELATIONS + "document_workarea";
-	public static final String URL_RELATIONS_DOCUMENT_RECEIPTS = URL_RELATIONS + "receipts";
-	public static final String URL_RELATIONS_DOCUMENT_UPLOAD = URL_RELATIONS + "upload_document";
+    public static final String URL_RELATIONS_DOCUMENT_INBOX = URL_RELATIONS + "document_inbox";
+    public static final String URL_RELATIONS_DOCUMENT_ARCHIVE = URL_RELATIONS + "document_archive";
+    public static final String URL_RELATIONS_DOCUMENT_WORKAREA = URL_RELATIONS + "document_workarea";
+    public static final String URL_RELATIONS_DOCUMENT_RECEIPTS = URL_RELATIONS + "receipts";
+    public static final String URL_RELATIONS_DOCUMENT_UPLOAD = URL_RELATIONS + "upload_document";
     public static final String URL_RELATIONS_DOCUMENT_UPLOAD_TO_INBOX = URL_RELATIONS + "upload_document_to_inbox";
-	public static final String URL_RELATIONS_DOCUMENT_GET_CONTENT = URL_RELATIONS + "get_document_content";
-	public static final String URL_RELATIONS_DOCUMENT_SELF = URL_RELATIONS + "self";
-	public static final String URL_RELATIONS_DOCUMENT_UPDATE = URL_RELATIONS + "update_document";
-	public static final String URL_RELATIONS_DOCUMENT_DELETE = URL_RELATIONS + "delete_document";
-	public static final String URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT = URL_RELATIONS + "send_opening_receipt";
-	public static final String URL_RELATIONS_ACCOUNT_SETTINGS = URL_RELATIONS + "account_settings";
+    public static final String URL_RELATIONS_DOCUMENT_GET_CONTENT = URL_RELATIONS + "get_document_content";
+    public static final String URL_RELATIONS_DOCUMENT_SELF = URL_RELATIONS + "self";
+    public static final String URL_RELATIONS_DOCUMENT_UPDATE = URL_RELATIONS + "update_document";
+    public static final String URL_RELATIONS_DOCUMENT_DELETE = URL_RELATIONS + "delete_document";
+    public static final String URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT = URL_RELATIONS + "send_opening_receipt";
+    public static final String URL_RELATIONS_ACCOUNT_SETTINGS = URL_RELATIONS + "account_settings";
     public static final String URL_RELATIONS_CURRENT_BANK_ACCOUNT = URL_RELATIONS + "current_bank_account";
     public static final String URL_RELATIONS_BANK_HOMEPAGE = URL_RELATIONS + "bank_homepage";
     public static final String URL_RELATIONS_SEND_TO_BANK = URL_RELATIONS + "send_to_bank";
@@ -83,8 +85,8 @@ public class ApiConstants {
     public static final String URL_RELATIONS_CREATE_FOLDER = URL_RELATIONS + "create_folder";
     public static final String URL_RELATIONS_UPDATE_FOLDERS = URL_RELATIONS + "update_folders";
 
-	public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "api/oauth/authorize/new";
-	public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "api/oauth/accesstoken";
+    public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "api/oauth/authorize/new";
+    public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "api/oauth/accesstoken";
 
     public static final String URL_HELP = "https://www.digipost.no/hjelp/#android";
 

@@ -41,6 +41,7 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
 import no.digipost.android.gui.fragments.ContentFragment;
@@ -70,13 +71,13 @@ public abstract class DisplayContentActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (DocumentContentStore.getDocumentAttachment() == null || DocumentContentStore.getDocumentParent() == null) {
-            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
-            finish();
-        }
-
         content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
+        if(content_type != ApplicationConstants.RECEIPTS) {
+            if (DocumentContentStore.getDocumentAttachment() == null || DocumentContentStore.getDocumentParent() == null) {
+                DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
+                finish();
+            }
+        }
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {

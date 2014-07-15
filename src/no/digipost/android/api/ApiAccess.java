@@ -61,13 +61,13 @@ import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT
 
 public class ApiAccess {
 
-    public static final int POST_ACTION_MOVE = 0;
-    public static final int POST_ACTION_SEND_OPENING_RECEIPT = 1;
-    public static final int POST_ACTION_UPDATE_SETTINGS = 2;
-    public static final int POST_ACTION_SEND_TO_BANK = 3;
-    public static final int POST_ACTION_CREATE_FOLDER = 4;
-    public static final int PUT_ACTION_EDIT_FOLDER = 5;
-    public static final int PUT_ACTION_UPDATE_FOLDERS = 6;
+    public static final int MOVE = 0;
+    public static final int SEND_OPENING_RECEIPT = 1;
+    public static final int UPDATE_SETTINGS = 2;
+    public static final int SEND_TO_BANK = 3;
+    public static final int CREATE_FOLDER = 4;
+    public static final int EDIT_FOLDER = 5;
+    public static final int UPDATE_FOLDERS = 6;
     public static final int POST = 0;
     public static final int PUT = 1;
 
@@ -105,15 +105,15 @@ public class ApiAccess {
         }
     }
 
-    public static String postput(Context context, int action, final String uri, final StringEntity json, final int httpAction) throws DigipostClientException,
+    public static String postput(Context context, final int httpType, int action, final String uri, final StringEntity json) throws DigipostClientException,
             DigipostApiException, DigipostAuthenticationException {
 
         HttpClient httpClient = new DefaultHttpClient();
         HttpEntityEnclosingRequestBase request = new HttpPost();
 
-        if (httpAction == POST) {
+        if (httpType == POST) {
             request = new HttpPost();
-        } else if (httpAction == PUT) {
+        } else if (httpType == PUT) {
             request = new HttpPut();
         }
 
@@ -127,7 +127,7 @@ public class ApiAccess {
         request.addHeader(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
         request.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
 
-        if (action == POST_ACTION_SEND_OPENING_RECEIPT || action == POST_ACTION_SEND_TO_BANK) {
+        if (action == SEND_OPENING_RECEIPT || action == SEND_TO_BANK) {
         } else {
             request.setEntity(json);
         }
@@ -144,7 +144,7 @@ public class ApiAccess {
         } catch (DigipostInvalidTokenException e) {
             OAuth2.updateAccessToken(context);
 
-            return postput(context, action, uri, json, httpAction);
+            return postput(context, httpType, action, uri, json);
         }
 
         InputStream is = null;
@@ -159,7 +159,7 @@ public class ApiAccess {
         return JSONUtilities.getJsonStringFromInputStream(is);
     }
 
-    public static String delete(Context context, final String uri)throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
+    public static String delete(Context context, final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
         Client client = Client.create();
         ClientResponse cr;
         try {
@@ -177,7 +177,7 @@ public class ApiAccess {
             try {
                 String output = cr.getEntity(String.class);
                 JSONObject jsonObject = new JSONObject(output);
-                if (jsonObject.get("error-code").equals("FOLDER_NOT_EMPTY")) {
+                if (jsonObject.get(ApiConstants.ERROR_CODE).equals(ApiConstants.FOLDER_NOT_EMPTY)) {
                     return null;
                 }
             } catch (JSONException e) {
@@ -191,7 +191,6 @@ public class ApiAccess {
             OAuth2.updateAccessToken(context);
             delete(context, uri);
         }
-        System.out.println("cr:"+cr.getStatus());
         return "" + cr.getStatus();
     }
 

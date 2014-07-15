@@ -137,7 +137,7 @@ public class ContentOperations {
 
     public static void moveDocument(Context context, final Document document) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        JSONUtilities.processJackson(Document.class, ApiAccess.postput(context, ApiAccess.POST_ACTION_MOVE, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document), ApiAccess.POST));
+        JSONUtilities.processJackson(Document.class, ApiAccess.postput(context, ApiAccess.POST, ApiAccess.MOVE, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document)));
     }
 
     public static String updateFolders(Context context, final ArrayList<Folder> newFolders) throws DigipostClientException,
@@ -148,7 +148,7 @@ public class ContentOperations {
         }
         Folders folders = mailbox.getFolders();
         folders.setFolder(newFolders);
-        return ApiAccess.postput(context, ApiAccess.PUT_ACTION_UPDATE_FOLDERS, folders.getUpdateFoldersUri(), JSONUtilities.createJsonFromJackson(folders), ApiAccess.PUT);
+        return ApiAccess.postput(context, ApiAccess.PUT, ApiAccess.UPDATE_FOLDERS, folders.getUpdateFoldersUri(), JSONUtilities.createJsonFromJackson(folders));
     }
 
     public static int createEditDeleteFolder(Context context, final Folder folder, final String action) throws DigipostClientException,
@@ -158,14 +158,14 @@ public class ContentOperations {
         }
 
         if (action.equals(ApiConstants.CREATE)) {
-            if (ApiAccess.postput(context, ApiAccess.POST_ACTION_CREATE_FOLDER, mailbox.getFolders().getCreateFolderUri(), JSONUtilities.createJsonFromJackson(folder), ApiAccess.POST) != null) {
+            if (ApiAccess.postput(context, ApiAccess.POST, ApiAccess.CREATE_FOLDER, mailbox.getFolders().getCreateFolderUri(), JSONUtilities.createJsonFromJackson(folder)) != null) {
                 return NetworkUtilities.SUCCESS;
             }
 
             return NetworkUtilities.BAD_REQUEST;
         } else if (action.equals(ApiConstants.EDIT)) {
 
-            if(ApiAccess.postput(context, ApiAccess.PUT_ACTION_EDIT_FOLDER, folder.getChangeUri(), JSONUtilities.createJsonFromJackson(folder), ApiAccess.PUT) != null) {
+            if (ApiAccess.postput(context, ApiAccess.PUT, ApiAccess.EDIT_FOLDER, folder.getChangeUri(), JSONUtilities.createJsonFromJackson(folder)) != null) {
                 return NetworkUtilities.SUCCESS;
             }
             return NetworkUtilities.BAD_REQUEST;
@@ -181,17 +181,17 @@ public class ContentOperations {
 
     public static void updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException,
             DigipostClientException, DigipostApiException {
-        ApiAccess.postput(context, ApiAccess.POST_ACTION_UPDATE_SETTINGS, settings.getSettingsUri(), JSONUtilities.createJsonFromJackson(settings), ApiAccess.POST);
+        ApiAccess.postput(context, ApiAccess.POST, ApiAccess.UPDATE_SETTINGS, settings.getSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
     }
 
     public static String sendOpeningReceipt(Context context, final Attachment attachment) throws DigipostClientException,
             DigipostApiException, DigipostAuthenticationException {
-        return  ApiAccess.postput(context, ApiAccess.POST_ACTION_SEND_OPENING_RECEIPT, attachment.getOpeningReceiptUri(), null, ApiAccess.POST);
+        return ApiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_OPENING_RECEIPT, attachment.getOpeningReceiptUri(), null);
     }
 
     public static void sendToBank(Context context, final Attachment attachment) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        ApiAccess.postput(context, ApiAccess.POST_ACTION_SEND_TO_BANK, attachment.getInvoice().getSendToBank(), null, ApiAccess.POST);
+        ApiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_TO_BANK, attachment.getInvoice().getSendToBank(), null);
     }
 
     public static Document getDocumentSelf(Context context, final Document document) throws DigipostClientException, DigipostApiException,

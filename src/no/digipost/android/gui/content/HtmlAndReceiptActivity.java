@@ -137,15 +137,18 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
     private void setupActionBar() {
         getActionBar().setHomeButtonEnabled(true);
 
-        if (content_type != ApplicationConstants.RECEIPTS) {
-            Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
-            getActionBar().setTitle(documentMeta.getSubject());
-            getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
-        } else {
-            Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
-            getActionBar().setTitle(receiptMeta.getStoreName());
-            getActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
-
+        try {
+            if (content_type != ApplicationConstants.RECEIPTS) {
+                Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
+                getActionBar().setTitle(documentMeta.getSubject());
+                getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
+            } else {
+                Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
+                getActionBar().setTitle(receiptMeta.getStoreName());
+                getActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+            }
+        } catch (NullPointerException e) {
+            //IGNORE
         }
     }
 

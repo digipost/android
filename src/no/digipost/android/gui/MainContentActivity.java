@@ -121,8 +121,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         editDrawerMode = false;
         updateUI(false);
         setDrawerListeners();
-        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,
-                R.string.close);
+        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open,R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
 
         getActionBar().setHomeButtonEnabled(true);
@@ -562,11 +561,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 if (showActionBarName) {
                     fragmentName = mailbox.getName();
                 } else {
-                    if (getActionBar().getTitle().equals("")) {
-                        if (mailbox != null) {
-                            fragmentName = mailbox.getName();
-                        }
-                    } else if (drawerListItems[getCurrentFragment().getContent()].equals(getResources().getString(R.string.drawer_inbox))) {
+                    if(getCurrentFragment().getContent()== ApplicationConstants.MAILBOX || getActionBar().getTitle().equals("")){
                         fragmentName = mailbox.getName();
                     } else {
                         fragmentName = drawerListItems[getCurrentFragment().getContent()];
