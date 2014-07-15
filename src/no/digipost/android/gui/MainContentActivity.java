@@ -797,10 +797,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             showActionBarName = false;
             editDrawerMode = false;
             invalidateOptionsMenu();
-            int foldersSize = folders.size();
-            if (foldersSize > 0 && getCurrentFragment().getContent() == foldersSize) {
-                selectItem(ApplicationConstants.MAILBOX);
-            }
         }
 
         public void onDrawerOpened(View drawerView) {

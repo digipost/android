@@ -64,6 +64,7 @@ import no.digipost.android.model.Documents;
 import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.JSONUtilities;
+import no.digipost.android.utilities.NetworkUtilities;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -76,6 +77,9 @@ public class DocumentFragment extends ContentFragment {
     private Dialog folderDialog;
     private Dialog attachmentDialog;
     private boolean openAttachment = true;
+
+    public DocumentFragment() {
+    }
 
     public DocumentFragment(int content) {
         this.content = content;
@@ -307,64 +311,78 @@ public class DocumentFragment extends ContentFragment {
     }
 
     private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition, final int documentListPosition, final Attachment attachment) {
-        asyncHttpClient = new AsyncHttpClient();
 
-        asyncHttpClient.addHeader(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT);
-        asyncHttpClient.addHeader(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM);
-        asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
+        if (parentDocument != null && attachment != null) {
+            asyncHttpClient = new AsyncHttpClient();
+            asyncHttpClient.addHeader(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT);
+            asyncHttpClient.addHeader(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM);
+            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
 
-        asyncHttpClient.get(context, attachment.getContentUri(), new AsyncHttpResponseHandler() {
+            asyncHttpClient.get(context, attachment.getContentUri(), new AsyncHttpResponseHandler() {
 
-            @Override
-            public void onStart() {
-                super.onStart();
-                openAttachment = true;
-                if (!progressDialogIsVisible) {
-                    showContentProgressDialog(context.getString(R.string.loading_content));
-                }
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if (openAttachment) {
-                    DocumentContentStore.setContent(responseBody, parentDocument, attachmentListPosition);
-                    DocumentContentStore.setMoveFolders(getMoveFolders());
-                    openAttachmentContent(attachment);
-                    updateAdapterDocument(parentDocument, documentListPosition);
-
-                    ArrayList<Attachment> attachments = parentDocument.getAttachment();
-
-                    if (attachments.size() > 1) {
-                        attachmentAdapter.setAttachments(attachments);
+                @Override
+                public void onStart() {
+                    super.onStart();
+                    openAttachment = true;
+                    if (!progressDialogIsVisible) {
+                        showContentProgressDialog(context.getString(R.string.loading_content));
                     }
-                    activityCommunicator.onUpdateAccountMeta();
                 }
 
-            }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    if (openAttachment) {
+                        DocumentContentStore.setContent(responseBody, parentDocument, attachmentListPosition);
+                        DocumentContentStore.setMoveFolders(getMoveFolders());
+                        openAttachmentContent(attachment);
+                        updateAdapterDocument(parentDocument, documentListPosition);
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                openAttachment = false;
-            }
+                        ArrayList<Attachment> attachments = parentDocument.getAttachment();
 
-            @Override
-            public void onCancel() {
-                super.onCancel();
-                openAttachment = false;
-            }
+                        if (attachments.size() > 1) {
+                            attachmentAdapter.setAttachments(attachments);
+                        }
+                        activityCommunicator.onUpdateAccountMeta();
+                    }
 
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                hideProgressDialog();
-            }
-        });
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    openAttachment = false;
+                    String errorMessage = getString(R.string.error_digipost_api);
+
+                    if (statusCode == NetworkUtilities.HTTP_STATUS_UNAUTHORIZED) {
+                        errorMessage = getString(R.string.error_invalid_token);
+                    } else if (statusCode == NetworkUtilities.HTTP_STATUS_BAD_REQUEST) {
+                        errorMessage = getString(R.string.error_bad_request);
+                    } else if (statusCode == NetworkUtilities.HTTP_STATUS_INTERNAL_SERVER_ERROR) {
+                        errorMessage = getString(R.string.error_digipost_api);
+                    }
+
+                    DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
+                    updateAccountMeta();
+                }
+
+                @Override
+                public void onCancel() {
+                    super.onCancel();
+                    openAttachment = false;
+                }
+
+                @Override
+                public void onFinish() {
+                    super.onFinish();
+                    hideProgressDialog();
+                }
+            });
+        }
     }
 
     @Override
     public void updateAccountMeta() {
-        if(getContent() > ApplicationConstants.numberOfStaticFolders){
-            if(getContent()-ApplicationConstants.numberOfStaticFolders == MainContentActivity.numberOfFolders){
+        if (getContent() > ApplicationConstants.numberOfStaticFolders) {
+            if (getContent() - ApplicationConstants.numberOfStaticFolders == MainContentActivity.numberOfFolders) {
                 content = ApplicationConstants.MAILBOX;
             }
         }
