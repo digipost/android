@@ -688,7 +688,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void replaceFragmentWithMailboxIfInvalid(){
-        if(getCurrentFragment().getContent() > ApplicationConstants.numberOfStaticFolders){
+        if(getCurrentFragment().getContent() >= ApplicationConstants.numberOfStaticFolders){
             if(getCurrentFragment().getContent()-ApplicationConstants.numberOfStaticFolders == MainContentActivity.numberOfFolders){
                 getFragmentManager().beginTransaction().replace(R.id.main_content_frame, new DocumentFragment(ApplicationConstants.MAILBOX)).commit();
             }
@@ -705,6 +705,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             }
 
             replaceFragmentWithMailboxIfInvalid();
+
         } else {
             if (invalidToken) {
                 DialogUtitities.showToast(getApplicationContext(), errorMessage);
