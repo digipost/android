@@ -1,0 +1,57 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+    }
+}
+apply plugin: 'android'
+
+dependencies {
+    repositories {
+        mavenCentral()
+    }
+
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'com.loopj.android:android-async-http:1.4.5'
+    compile 'org.apache.httpcomponents:httpclient:4.2.5'
+    compile 'org.apache.httpcomponents:httpmime:4.2.5'
+    compile 'org.apache.commons:commons-io:1.3.2'
+    compile 'commons-lang:commons-lang:2.3'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.5'
+    compile 'com.android.support:support-v4:13.0.0'
+    compile 'com.android.support:support-v13:13.0.0'
+    compile 'com.facebook.conceal:conceal:1.0.0@aar'
+    compile 'com.sun.jersey:jersey-client:1.18'
+    compile('com.sun.jersey:jersey-json:1.18') {
+        exclude module: 'jaxb-impl'
+    }
+}
+
+android {
+    defaultConfig {
+        versionCode 24
+        versionName '2.7.4'
+
+        minSdkVersion 14
+        targetSdkVersion 19
+    }
+
+    compileSdkVersion 19
+    buildToolsVersion '19.1.0'
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+
+        pickFirst 'META-INF/services/javax.ws.rs.ext.MessageBodyReader'
+        pickFirst 'META-INF/services/javax.ws.rs.ext.MessageBodyWriter'
+        pickFirst 'META-INF/LICENCE.txt'
+        exclude 'META-INF/jersey-module-version'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+
+    }
+}

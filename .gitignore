@@ -1,5 +1,7 @@
-.DS_Store
-# built application files
+#Key
+Digipost/src/main/java/no/digipost/android/authentication/Secret.java
+
+#built application files
 *.apk
 *.ap_
 
@@ -12,22 +14,22 @@
 # generated files
 bin/
 gen/
-out/
 
 # Local configuration file (sdk path, etc)
 local.properties
 
-src/no/digipost/android/authentication/Secret.java
-target/
-proguard_logs/
-classes/
-obj
+# Windows thumbnail db
+Thumbs.db
 
-# libs/android-support-v4.jar
+# OSX files
+.DS_Store
 
-# IDEA Ignores
-*.iml
-*.ipr
-*.iws
-.idea/
+# Eclipse project files
+.classpath
+.project
 
+# Android Studio
+.idea
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+.gradle
+build/
