@@ -82,8 +82,10 @@ public class ContentOperations {
     public static Documents getAccountContentMetaDocument(Context context, int content) throws DigipostApiException,
             DigipostClientException, DigipostAuthenticationException {
 
-        mailbox = getCurrentMailbox(context);
-
+        getCurrentMailbox(context);
+        if(mailbox == null){
+            return null;
+        }
         if (content == ApplicationConstants.MAILBOX) {
             return (Documents) JSONUtilities.processJackson(Documents.class, ApiAccess.getApiJsonString(context, mailbox.getInboxUri()));
         } else {

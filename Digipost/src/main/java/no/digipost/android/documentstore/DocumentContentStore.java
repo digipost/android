@@ -61,6 +61,9 @@ public class DocumentContentStore {
     }
 
     public static Attachment getDocumentAttachment() {
+        if (documentParent == null || documentParent.getAttachment() == null ) {
+            return null;
+        }
         return documentParent.getAttachment().get(documentAttachmentPosition);
     }
 
