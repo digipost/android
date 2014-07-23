@@ -65,13 +65,14 @@
     <orderEntry type="library" exported="" name="jersey-core-1.18" level="project" />
     <orderEntry type="library" exported="" name="conceal-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="jersey-json-1.18" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-19.1.0" level="project" />
     <orderEntry type="library" exported="" name="support-v13-13.0.0" level="project" />
+    <orderEntry type="library" exported="" name="play-services-5.0.77" level="project" />
     <orderEntry type="library" exported="" name="httpcore-4.2.4" level="project" />
     <orderEntry type="library" exported="" name="jettison-1.1" level="project" />
     <orderEntry type="library" exported="" name="libGoogleAnalyticsV2" level="project" />
     <orderEntry type="library" exported="" name="jackson-core-asl-1.9.2" level="project" />
     <orderEntry type="library" exported="" name="android-async-http-1.4.5" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-13.0.0" level="project" />
     <orderEntry type="library" exported="" name="jackson-jaxrs-1.9.2" level="project" />
     <orderEntry type="library" exported="" name="commons-lang-2.3" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.8.5" level="project" />
