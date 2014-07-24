@@ -288,7 +288,7 @@ public class UploadActivity extends Activity {
     }
 
     private void previewFile(File file) {
-        if (FilenameUtils.getExtension(file.getName()).equals(ApiConstants.FILETYPE_PDF)) {
+        if (FilenameUtils.getExtension(file.getName()).toLowerCase().equals(ApiConstants.FILETYPE_PDF)) {
             Intent intent = new Intent(UploadActivity.this, MuPDFActivity.class);
             intent.putExtra(MuPDFActivity.ACTION_OPEN_FILEPATH, file.getAbsolutePath());
             startActivity(intent);
