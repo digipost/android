@@ -72,8 +72,10 @@ public class DocumentFragment extends ContentFragment {
 
     protected AttachmentArrayAdapter attachmentAdapter;
     protected FolderArrayAdapter folderAdapter;
+    public static boolean updateCurrentDocument = false;
     private AsyncHttpClient asyncHttpClient;
     private int content = 0;
+    private int currentListPosition = 0;
     private Dialog folderDialog;
     private Dialog attachmentDialog;
     private boolean openAttachment = true;
@@ -104,7 +106,6 @@ public class DocumentFragment extends ContentFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
             if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
                 if (data.hasExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION)) {
@@ -112,17 +113,22 @@ public class DocumentFragment extends ContentFragment {
                     String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
                     if (action.equals(ApiConstants.MOVE)) {
+                        updateCurrentDocument = false;
                         String toLocation = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION);
                         String folderId = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID);
                         executeDocumentMoveTask(DocumentContentStore.getDocumentParent(), toLocation, folderId);
 
                     } else if (action.equals(ApiConstants.DELETE)) {
+                        updateCurrentDocument = false;
                         deleteDocument(DocumentContentStore.getDocumentParent());
                     }
                 }
             }
         }
-
+        if(updateCurrentDocument ){
+            super.listAdapter.replaceAtPosition(DocumentContentStore.getDocumentParent(),currentListPosition);
+            updateCurrentDocument = false;
+        }
         DocumentContentStore.clearContent();
     }
 
@@ -189,7 +195,7 @@ public class DocumentFragment extends ContentFragment {
         }
     }
 
-    private void showAttachmentDialog(final Document document, int listPosition) {
+    private void showAttachmentDialog(final Document document) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.close),
@@ -205,7 +211,7 @@ public class DocumentFragment extends ContentFragment {
         ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
         attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item, document.getAttachment());
         attachmentListView.setAdapter(attachmentAdapter);
-        attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(document, listPosition));
+        attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(document));
 
         builder.setTitle(attachmentAdapter.getMainSubject());
         attachmentDialog = builder.create();
@@ -213,33 +219,33 @@ public class DocumentFragment extends ContentFragment {
 
     }
 
-    private void openListItem(final Document document, int listPosition) {
+    private void openListItem(final Document document) {
         if (document.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
             showTwoFactorDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).getOpeningReceiptUri() != null) {
-            showOpeningReceiptDialog(document, document.getAttachment().get(0), listPosition, 0);
+            showOpeningReceiptDialog(document, document.getAttachment().get(0), 0);
         } else {
-            findDocumentAttachments(document, listPosition);
+            findDocumentAttachments(document);
         }
     }
 
-    private void findDocumentAttachments(final Document document, int listPosition) {
+    private void findDocumentAttachments(final Document document) {
         ArrayList<Attachment> attachments = document.getAttachment();
 
         if (attachments.size() > 1) {
-            showAttachmentDialog(document, listPosition);
+            showAttachmentDialog(document);
         } else {
             Attachment attachment = document.getAttachment().get(0);
-            getAttachmentContent(document, 0, listPosition, attachment);
+            getAttachmentContent(document, 0, attachment);
         }
     }
 
-    private void sendOpeningReceipt(final Document document, final Attachment attachment, int listPosition, int attachmentPosition) {
-        SendOpeningReceiptTask task = new SendOpeningReceiptTask(document, attachment, listPosition, attachmentPosition);
+    private void sendOpeningReceipt(final Document document, final Attachment attachment, int attachmentPosition) {
+        SendOpeningReceiptTask task = new SendOpeningReceiptTask(document, attachment, attachmentPosition);
         task.execute();
     }
 
-    private void showOpeningReceiptDialog(final Document document, final Attachment attachment, final int listPosition, final int attachmentPosition) {
+    private void showOpeningReceiptDialog(final Document document, final Attachment attachment, final int attachmentPosition) {
 
         String title = getString(R.string.dialog_opening_receipt_title);
         String message = getString(R.string.dialog_opening_receipt_message);
@@ -248,7 +254,7 @@ public class DocumentFragment extends ContentFragment {
 
         builder.setPositiveButton(getString(R.string.dialog_opening_receipt_yes), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-                sendOpeningReceipt(document, attachment, listPosition, attachmentPosition);
+                sendOpeningReceipt(document, attachment, attachmentPosition);
                 dialog.dismiss();
             }
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
@@ -303,21 +309,22 @@ public class DocumentFragment extends ContentFragment {
             public void onClick(final DialogInterface dialog, final int which) {
                 dialog.dismiss();
                 openAttachment = false;
-                asyncHttpClient.cancelRequests(context, true);
+                if(asyncHttpClient != null) {
+                    asyncHttpClient.cancelRequests(context, true);
+                }
             }
         });
 
         progressDialog.show();
     }
 
-    private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition, final int documentListPosition, final Attachment attachment) {
+    private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition,final Attachment attachment) {
 
         if (parentDocument != null && attachment != null) {
             asyncHttpClient = new AsyncHttpClient();
             asyncHttpClient.addHeader(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT);
             asyncHttpClient.addHeader(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM);
             asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
-
             asyncHttpClient.get(context, attachment.getContentUri(), new AsyncHttpResponseHandler() {
 
                 @Override
@@ -332,10 +339,11 @@ public class DocumentFragment extends ContentFragment {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     if (openAttachment) {
+                        parentDocument.setRead("true");
                         DocumentContentStore.setContent(responseBody, parentDocument, attachmentListPosition);
                         DocumentContentStore.setMoveFolders(getMoveFolders());
                         openAttachmentContent(attachment);
-                        updateAdapterDocument(parentDocument, documentListPosition);
+                        updateAdapterDocument(parentDocument);
 
                         ArrayList<Attachment> attachments = parentDocument.getAttachment();
 
@@ -422,8 +430,8 @@ public class DocumentFragment extends ContentFragment {
         contentDeleteTask.execute();
     }
 
-    private void updateAdapterDocument(Document document, int listPosition) {
-        listAdapter.replaceAtPosition(document, listPosition);
+    private void updateAdapterDocument(Document document) {
+        super.listAdapter.replaceAtPosition(document,currentListPosition);
     }
 
     private class MultiChoiceModeListener extends ContentMultiChoiceModeListener {
@@ -452,7 +460,8 @@ public class DocumentFragment extends ContentFragment {
 
     private class DocumentListOnItemClickListener implements AdapterView.OnItemClickListener {
         public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
-            openListItem((Document) DocumentFragment.super.listAdapter.getItem(position), position);
+            currentListPosition = position;
+            openListItem((Document) DocumentFragment.super.listAdapter.getItem(position));
         }
     }
 
@@ -483,19 +492,17 @@ public class DocumentFragment extends ContentFragment {
 
     private class AttachmentListOnItemClickListener implements AdapterView.OnItemClickListener {
         private Document parentDocument;
-        private int parentListPosition;
 
-        public AttachmentListOnItemClickListener(Document parentDocument, int parentListPosition) {
+        public AttachmentListOnItemClickListener(Document parentDocument) {
             this.parentDocument = parentDocument;
-            this.parentListPosition = parentListPosition;
         }
 
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
             Attachment attachment = attachmentAdapter.getItem(position);
             if (attachment.getOpeningReceiptUri() != null) {
-                showOpeningReceiptDialog(parentDocument, attachment, parentListPosition, position);
+                showOpeningReceiptDialog(parentDocument, attachment, position);
             } else {
-                getAttachmentContent(parentDocument, position, parentListPosition, attachment);
+                getAttachmentContent(parentDocument, position, attachment);
             }
         }
     }
@@ -539,6 +546,7 @@ public class DocumentFragment extends ContentFragment {
         protected void onPostExecute(final Documents documents) {
             super.onPostExecute(documents);
             if (isAdded()) {
+
                 DocumentFragment.super.taskIsRunning = false;
                 if (documents != null) {
                     ArrayList<Document> docs = documents.getDocument();
@@ -663,16 +671,14 @@ public class DocumentFragment extends ContentFragment {
         private Document document;
         private Attachment attachment;
         private boolean invalidToken;
-        private int listPosition, attachmentPosition;
+        private int attachmentPosition;
 
-        public SendOpeningReceiptTask(final Document document, final Attachment attachment, int listPosition, int attachmentPosition) {
+        public SendOpeningReceiptTask(final Document document, final Attachment attachment,int attachmentPosition) {
             invalidToken = false;
             this.document = document;
             this.attachment = attachment;
-            this.listPosition = listPosition;
             this.attachmentPosition = attachmentPosition;
         }
-
 
         @Override
         protected void onPreExecute() {
@@ -706,6 +712,8 @@ public class DocumentFragment extends ContentFragment {
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            DocumentFragment.super.taskIsRunning = false;
+            DocumentFragment.super.progressDialogIsVisible = false;
             DocumentFragment.super.hideProgressDialog();
             DocumentContentStore.clearContent();
         }
@@ -713,9 +721,12 @@ public class DocumentFragment extends ContentFragment {
         @Override
         protected void onPostExecute(final Boolean result) {
             super.onPostExecute(result);
+            DocumentFragment.super.taskIsRunning = false;
+            DocumentFragment.super.progressDialogIsVisible = false;
+            DocumentFragment.super.hideProgressDialog();
             if (isAdded()) {
                 if (result) {
-                    getAttachmentContent(document, attachmentPosition, listPosition, attachment);
+                    getAttachmentContent(document, attachmentPosition, attachment);
                 } else {
                     if (invalidToken) {
                         activityCommunicator.requestLogOut();

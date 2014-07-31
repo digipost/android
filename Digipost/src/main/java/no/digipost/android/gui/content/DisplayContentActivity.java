@@ -45,6 +45,7 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
 import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.CurrentBankAccount;
 import no.digipost.android.model.Document;
@@ -321,6 +322,7 @@ public abstract class DisplayContentActivity extends Activity {
             if (result) {
                 DialogUtitities.showToast(DisplayContentActivity.this,
                         DisplayContentActivity.this.getString(R.string.dialog_send_to_bank_paid_title));
+                DocumentFragment.updateCurrentDocument = true;
             } else {
                 if (invalidToken) {
                     finishActivityWithAction(ApiConstants.LOGOUT);
