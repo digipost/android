@@ -35,6 +35,8 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.model.Attachment;
+import no.digipost.android.model.Document;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 
@@ -47,6 +49,10 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unsupported);
 
+        if(DocumentContentStore.getDocumentParent() == null ||  DocumentContentStore.getDocumentAttachment() == null){
+            finish();
+            return;
+        }
         setActionBar(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore.getDocumentParent().getCreatorName());
         TextView message = (TextView) findViewById(R.id.unsupported_message);
         message.setText(format(getString(R.string.unsupported_message_top), DocumentContentStore.getDocumentAttachment().getFileType()));

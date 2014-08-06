@@ -77,9 +77,6 @@ public abstract class ContentFragment extends Fragment {
 
     protected ActionMode contentActionMode;
 
-    public ContentFragment() {
-    }
-
     public abstract int getContent();
 
     @Override

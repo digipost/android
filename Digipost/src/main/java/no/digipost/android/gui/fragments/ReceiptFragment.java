@@ -51,7 +51,6 @@ public class ReceiptFragment extends ContentFragment {
     public static final ReceiptFragment newInstance()
     {
         ReceiptFragment fragment = new ReceiptFragment();
-
         return fragment ;
     }
 

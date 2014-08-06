@@ -81,7 +81,7 @@ public class DocumentFragment extends ContentFragment {
     private boolean openAttachment = true;
     private static String EXTRA_CONTENT = "content";
 
-    public static final DocumentFragment newInstance(int content)
+    public static DocumentFragment newInstance(int content)
     {
         DocumentFragment fragment = new DocumentFragment();
         Bundle bundle = new Bundle(1);
