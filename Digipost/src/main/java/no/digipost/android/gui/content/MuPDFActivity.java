@@ -425,7 +425,7 @@ public class MuPDFActivity extends DisplayContentActivity {
         // Stick the document view and the buttons overlay into a parent view
         RelativeLayout layout = new RelativeLayout(this);
         layout.addView(mDocView);
-        layout.setBackgroundResource(R.color.login_background);
+        layout.setBackgroundResource(R.drawable.login_background);
         setContentView(layout);
     }
 

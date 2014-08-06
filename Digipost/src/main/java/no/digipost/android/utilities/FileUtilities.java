@@ -31,7 +31,7 @@ import java.io.IOException;
 
 public class FileUtilities {
     public static final String TEMP_FILE_NAME = "temp";
-    public static final String TEMP_FILE_DIRECTORY = Environment.getExternalStorageDirectory() + "/digipost/";
+    public static final String TEMP_FILE_DIRECTORY = Environment.getExternalStorageDirectory() + "/Android/data/no.digipost.android/files/";
 
     public static void openFileWithIntent(Context context, File file) throws ActivityNotFoundException {
         Intent intent = new Intent();

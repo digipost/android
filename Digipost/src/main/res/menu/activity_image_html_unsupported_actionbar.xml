@@ -27,7 +27,7 @@
     <item
             android:id="@+id/menu_image_html_unsupported_save"
             android:showAsAction="never"
-            android:title="@string/save_to_phone">
+            android:title="@string/save_to_device">
     </item>
 
 </menu>
