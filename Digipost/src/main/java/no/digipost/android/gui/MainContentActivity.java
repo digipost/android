@@ -162,7 +162,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerList.setOnItemDragNDropListener(new DragNDropListView.OnItemDragNDropListener() {
             @Override
             public void onItemDrag(DragNDropListView parent, View view, int position, long id) {
-                view.setBackgroundResource(R.color.main_drawer_hover);
+                view.setBackgroundResource(R.drawable.main_drawer_hover);
             }
 
             @Override
