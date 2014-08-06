@@ -48,7 +48,16 @@ import no.digipost.android.utilities.DialogUtitities;
 
 public class ReceiptFragment extends ContentFragment {
 
-    public ReceiptFragment() {
+    public static final ReceiptFragment newInstance()
+    {
+        ReceiptFragment fragment = new ReceiptFragment();
+
+        return fragment ;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override

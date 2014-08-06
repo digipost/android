@@ -472,7 +472,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     }
 
     private void selectItem(int content) {
-        ContentFragment contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
+        ContentFragment contentFragment = DocumentFragment.newInstance(ApplicationConstants.MAILBOX);
 
         if (account != null) {
             try {
@@ -480,13 +480,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 int inboxReceiptsAndFolders = (numberOfFolders + ApplicationConstants.numberOfStaticFolders);
 
                 if (content == ApplicationConstants.MAILBOX) {
-                    contentFragment = new DocumentFragment(ApplicationConstants.MAILBOX);
+                    contentFragment = DocumentFragment.newInstance(ApplicationConstants.MAILBOX);
 
                 } else if (content == ApplicationConstants.RECEIPTS) {
-                    contentFragment = new ReceiptFragment();
+                    contentFragment = ReceiptFragment.newInstance();
 
                 } else if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders) {
-                    contentFragment = new DocumentFragment(content);
+                    contentFragment = DocumentFragment.newInstance(content);
 
                 } else if (selectAccountItem(content)) {
                     return;
@@ -692,7 +692,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             if(getCurrentFragment() != null) {
                 if (getCurrentFragment().getContent() >= ApplicationConstants.numberOfStaticFolders) {
                     if (getCurrentFragment().getContent() - ApplicationConstants.numberOfStaticFolders == MainContentActivity.numberOfFolders) {
-                        getFragmentManager().beginTransaction().replace(R.id.main_content_frame, new DocumentFragment(ApplicationConstants.MAILBOX)).commit();
+                        DocumentFragment documentFragment = DocumentFragment.newInstance(ApplicationConstants.MAILBOX);
+
+                        getFragmentManager().beginTransaction().replace(R.id.main_content_frame,documentFragment).commit();
                     }
                 }
             }

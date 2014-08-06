@@ -79,12 +79,21 @@ public class DocumentFragment extends ContentFragment {
     private Dialog folderDialog;
     private Dialog attachmentDialog;
     private boolean openAttachment = true;
+    private static String EXTRA_CONTENT = "content";
 
-    public DocumentFragment() {
+    public static final DocumentFragment newInstance(int content)
+    {
+        DocumentFragment fragment = new DocumentFragment();
+        Bundle bundle = new Bundle(1);
+        bundle.putInt(EXTRA_CONTENT, content);
+        fragment.setArguments(bundle);
+        return fragment ;
     }
 
-    public DocumentFragment(int content) {
-        this.content = content;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.content = getArguments().getInt(EXTRA_CONTENT,0);
     }
 
     @Override
