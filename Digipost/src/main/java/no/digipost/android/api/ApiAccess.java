@@ -16,6 +16,7 @@
 package no.digipost.android.api;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -70,6 +71,7 @@ public class ApiAccess {
     public static final int UPDATE_FOLDERS = 6;
     public static final int POST = 0;
     public static final int PUT = 1;
+    private static final String TAG = "ApiAccess";
 
     private Client jerseyClient;
 
@@ -85,11 +87,10 @@ public class ApiAccess {
     private ClientResponse get(Context context, final String uri, final String header_accept) throws DigipostClientException,
             DigipostApiException, DigipostAuthenticationException {
 
-        if (StringUtils.isBlank(Secret.ACCESS_TOKEN)) {
-            OAuth2.updateAccessToken(context);
-        }
-
         try {
+            if (StringUtils.isBlank(Secret.ACCESS_TOKEN)) {
+                OAuth2.updateAccessToken(context);
+            }
             ClientResponse cr = getClient()
                     .resource(uri)
                     .header(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT)
@@ -102,8 +103,11 @@ public class ApiAccess {
             }
 
             return cr;
+        } catch(DigipostClientException e){
+            Log.e(TAG, context.getString(R.string.error_your_network));
+            throw new DigipostClientException(context.getString(R.string.error_your_network));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, context.getString(R.string.error_your_network));
             throw new DigipostClientException(context.getString(R.string.error_your_network));
         }
     }
@@ -122,7 +126,8 @@ public class ApiAccess {
 
         try {
             request.setURI(new URI(uri));
-        } catch (URISyntaxException e1) {
+        } catch (URISyntaxException e) {
+            Log.e(TAG, e.getMessage());
             // Ignore
         }
 
@@ -139,6 +144,7 @@ public class ApiAccess {
         try {
             response = httpClient.execute(request);
         } catch (Exception e) {
+            Log.e(TAG, context.getString(R.string.error_your_network));
             throw new DigipostClientException(context.getString(R.string.error_your_network));
         }
 
@@ -146,7 +152,7 @@ public class ApiAccess {
             NetworkUtilities.checkHttpStatusCode(context, response.getStatusLine().getStatusCode());
         } catch (DigipostInvalidTokenException e) {
             OAuth2.updateAccessToken(context);
-
+            Log.e(TAG, context.getString(R.string.error_invalid_token));
             return postput(context, httpType, action, uri, json);
         }
 
@@ -154,9 +160,9 @@ public class ApiAccess {
         try {
             is = response.getEntity().getContent();
         } catch (IllegalStateException e) {
-            // Ignore
+            Log.e(TAG, e.getMessage());
         } catch (IOException e) {
-            // Ignore
+            Log.e(TAG, e.getMessage());
         }
 
         return JSONUtilities.getJsonStringFromInputStream(is);
@@ -184,13 +190,14 @@ public class ApiAccess {
                     return null;
                 }
             } catch (JSONException e) {
-                //IGNORE
+                Log.e(TAG, e.getMessage());
             }
         }
 
         try {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {
+            Log.e(TAG, context.getString(R.string.error_invalid_token));
             OAuth2.updateAccessToken(context);
             delete(context, uri);
         }
@@ -203,6 +210,7 @@ public class ApiAccess {
         try {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {
+            Log.e(TAG, context.getString(R.string.error_invalid_token));
             OAuth2.updateAccessToken(context);
             return getReceiptHTML(context, uri);
         }
@@ -233,7 +241,7 @@ public class ApiAccess {
                 uploadFile(context, uri, file);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, context.getString(R.string.error_your_network));
             throw new DigipostClientException(context.getString(R.string.error_your_network));
         }
     }
@@ -247,7 +255,7 @@ public class ApiAccess {
             OAuth2.updateAccessToken(context);
             return getApiJsonString(context, uri);
         }catch (Exception e){
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
 
         return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());
