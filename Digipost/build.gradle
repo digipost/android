@@ -30,8 +30,8 @@ dependencies {
 
 android {
     defaultConfig {
-        versionCode 24
-        versionName '2.7.4'
+        versionCode 25
+        versionName '2.7.5'
 
         minSdkVersion 14
         targetSdkVersion 19
