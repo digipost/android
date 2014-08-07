@@ -38,20 +38,29 @@ import no.digipost.android.model.Receipts;
 import no.digipost.android.model.Settings;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
+import no.digipost.android.api.ApiAccess;
 
 public class ContentOperations {
 
     public static String digipostAddress = null;
     private static Account account = null;
     private static Mailbox mailbox = null;
+    private static ApiAccess apiAccess;
 
     public static Account getAccount(Context context) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
 
+        refreshApiAccess();
         if (account == null) {
-            account = (Account) JSONUtilities.processJackson(Account.class, ApiAccess.getApiJsonString(context, ApiConstants.URL_API));
+            account = (Account) JSONUtilities.processJackson(Account.class, apiAccess.getApiJsonString(context, ApiConstants.URL_API));
         }
 
         return account;
+    }
+
+    public static void refreshApiAccess(){
+        if(apiAccess == null){
+            apiAccess = new ApiAccess();
+        }
     }
 
     public static Mailbox getCurrentMailbox(Context context) throws DigipostApiException, DigipostClientException,
@@ -73,9 +82,10 @@ public class ContentOperations {
 
     public static Account getAccountUpdated(Context context) throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
-
         mailbox = null;
-        account = (Account) JSONUtilities.processJackson(Account.class, ApiAccess.getApiJsonString(context, ApiConstants.URL_API));
+        refreshApiAccess();
+
+        account = (Account) JSONUtilities.processJackson(Account.class, apiAccess.getApiJsonString(context, ApiConstants.URL_API));
         return account;
     }
 
@@ -86,13 +96,16 @@ public class ContentOperations {
         if(mailbox == null){
             return null;
         }
+
+        refreshApiAccess();
+
         if (content == ApplicationConstants.MAILBOX) {
-            return (Documents) JSONUtilities.processJackson(Documents.class, ApiAccess.getApiJsonString(context, mailbox.getInboxUri()));
+            return (Documents) JSONUtilities.processJackson(Documents.class, apiAccess.getApiJsonString(context, mailbox.getInboxUri()));
         } else {
             content -= ApplicationConstants.numberOfStaticFolders;
             ArrayList<Folder> folders = mailbox.getFolders().getFolder();
             Folder folder = folders.get(content);
-            folder = (Folder) JSONUtilities.processJackson(Folder.class, ApiAccess.getApiJsonString(context, folder.getSelfUri()));
+            folder = (Folder) JSONUtilities.processJackson(Folder.class, apiAccess.getApiJsonString(context, folder.getSelfUri()));
             return folders != null ? folder.getDocuments() : null;
         }
     }
@@ -129,17 +142,20 @@ public class ContentOperations {
     public static CurrentBankAccount getCurrentBankAccount(Context context) throws DigipostClientException,
             DigipostAuthenticationException, DigipostApiException {
         String uri = getAccount(context).getPrimaryAccount().getCurrentBankAccountUri();
-        return (CurrentBankAccount) JSONUtilities.processJackson(CurrentBankAccount.class, ApiAccess.getApiJsonString(context, uri));
+        refreshApiAccess();
+
+        return (CurrentBankAccount) JSONUtilities.processJackson(CurrentBankAccount.class, apiAccess.getApiJsonString(context, uri));
     }
 
     public static Receipts getAccountContentMetaReceipt(Context context) throws DigipostApiException, DigipostClientException,
             DigipostAuthenticationException {
-        return (Receipts) JSONUtilities.processJackson(Receipts.class, ApiAccess.getApiJsonString(context, getCurrentMailbox(context).getReceiptsUri()));
+        refreshApiAccess();
+        return (Receipts) JSONUtilities.processJackson(Receipts.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getReceiptsUri()));
     }
 
     public static void moveDocument(Context context, final Document document) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        JSONUtilities.processJackson(Document.class, ApiAccess.postput(context, ApiAccess.POST, ApiAccess.MOVE, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document)));
+        JSONUtilities.processJackson(Document.class, apiAccess.postput(context, ApiAccess.POST, ApiAccess.MOVE, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document)));
     }
 
     public static String updateFolders(Context context, final ArrayList<Folder> newFolders) throws DigipostClientException,
@@ -148,9 +164,10 @@ public class ContentOperations {
         if (mailbox == null) {
             getCurrentMailbox(context);
         }
+        refreshApiAccess();
         Folders folders = mailbox.getFolders();
         folders.setFolder(newFolders);
-        return ApiAccess.postput(context, ApiAccess.PUT, ApiAccess.UPDATE_FOLDERS, folders.getUpdateFoldersUri(), JSONUtilities.createJsonFromJackson(folders));
+        return apiAccess.postput(context, ApiAccess.PUT, ApiAccess.UPDATE_FOLDERS, folders.getUpdateFoldersUri(), JSONUtilities.createJsonFromJackson(folders));
     }
 
     public static int createEditDeleteFolder(Context context, final Folder folder, final String action) throws DigipostClientException,
@@ -158,22 +175,23 @@ public class ContentOperations {
         if (mailbox == null) {
             getCurrentMailbox(context);
         }
+        refreshApiAccess();
 
         if (action.equals(ApiConstants.CREATE)) {
-            if (ApiAccess.postput(context, ApiAccess.POST, ApiAccess.CREATE_FOLDER, mailbox.getFolders().getCreateFolderUri(), JSONUtilities.createJsonFromJackson(folder)) != null) {
+            if (apiAccess.postput(context, ApiAccess.POST, ApiAccess.CREATE_FOLDER, mailbox.getFolders().getCreateFolderUri(), JSONUtilities.createJsonFromJackson(folder)) != null) {
                 return NetworkUtilities.SUCCESS;
             }
 
             return NetworkUtilities.BAD_REQUEST;
         } else if (action.equals(ApiConstants.EDIT)) {
 
-            if (ApiAccess.postput(context, ApiAccess.PUT, ApiAccess.EDIT_FOLDER, folder.getChangeUri(), JSONUtilities.createJsonFromJackson(folder)) != null) {
+            if (apiAccess.postput(context, ApiAccess.PUT, ApiAccess.EDIT_FOLDER, folder.getChangeUri(), JSONUtilities.createJsonFromJackson(folder)) != null) {
                 return NetworkUtilities.SUCCESS;
             }
             return NetworkUtilities.BAD_REQUEST;
 
         } else if (action.equals(ApiConstants.DELETE)) {
-            if (ApiAccess.delete(context, folder.getDeleteUri()) != null) {
+            if (apiAccess.delete(context, folder.getDeleteUri()) != null) {
                 return NetworkUtilities.SUCCESS;
             }
             return NetworkUtilities.BAD_REQUEST_DELETE;
@@ -183,47 +201,56 @@ public class ContentOperations {
 
     public static void updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException,
             DigipostClientException, DigipostApiException {
-        ApiAccess.postput(context, ApiAccess.POST, ApiAccess.UPDATE_SETTINGS, settings.getSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
+        refreshApiAccess();
+        apiAccess.postput(context, ApiAccess.POST, ApiAccess.UPDATE_SETTINGS, settings.getSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
     }
 
     public static String sendOpeningReceipt(Context context, final Attachment attachment) throws DigipostClientException,
             DigipostApiException, DigipostAuthenticationException {
-        return ApiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_OPENING_RECEIPT, attachment.getOpeningReceiptUri(), null);
+        refreshApiAccess();
+        return apiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_OPENING_RECEIPT, attachment.getOpeningReceiptUri(), null);
     }
 
     public static void sendToBank(Context context, final Attachment attachment) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        ApiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_TO_BANK, attachment.getInvoice().getSendToBank(), null);
+        refreshApiAccess();
+        apiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_TO_BANK, attachment.getInvoice().getSendToBank(), null);
     }
 
     public static Document getDocumentSelf(Context context, final Document document) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
-        return (Document) JSONUtilities.processJackson(Document.class, ApiAccess.getApiJsonString(context, document.getSelfUri()));
+        refreshApiAccess();
+        return (Document) JSONUtilities.processJackson(Document.class, apiAccess.getApiJsonString(context, document.getSelfUri()));
     }
 
     public static String getReceiptContentHTML(Context context, final Receipt receipt) throws DigipostApiException,
             DigipostClientException, DigipostAuthenticationException {
-        return ApiAccess.getReceiptHTML(context, receipt.getContentAsHTMLUri());
+        refreshApiAccess();
+        return apiAccess.getReceiptHTML(context, receipt.getContentAsHTMLUri());
     }
 
     public static void deleteContent(Context context, final Object object) throws DigipostApiException, DigipostClientException,
             DigipostAuthenticationException {
-
+        refreshApiAccess();
         if (object instanceof Document) {
-            ApiAccess.delete(context, ((Document) object).getDeleteUri());
+            apiAccess.delete(context, ((Document) object).getDeleteUri());
         } else if (object instanceof Receipt) {
-            ApiAccess.delete(context, ((Receipt) object).getDeleteUri());
+            apiAccess.delete(context, ((Receipt) object).getDeleteUri());
         }
     }
 
     public static void uploadFile(Context context, File file, int content) throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
+        refreshApiAccess();
         String uploadUri = getUploadUri(context, content);
-        ApiAccess.uploadFile(context, uploadUri, file);
+        apiAccess.uploadFile(context, uploadUri, file);
     }
 
     public static Settings getSettings(Context context) throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
-        return (Settings) JSONUtilities.processJackson(Settings.class, ApiAccess.getApiJsonString(context, getCurrentMailbox(context).getSettingsUri()));
+        if(apiAccess == null){
+            apiAccess = new ApiAccess();
+        }
+        return (Settings) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getSettingsUri()));
     }
 }

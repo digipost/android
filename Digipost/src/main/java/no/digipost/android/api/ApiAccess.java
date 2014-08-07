@@ -71,16 +71,18 @@ public class ApiAccess {
     public static final int POST = 0;
     public static final int PUT = 1;
 
-    private static Client jerseyClient = Client.create();
+    private Client jerseyClient;
 
-    private static Client getClient() {
+    public ApiAccess(){}
+
+    private Client getClient() {
         if (jerseyClient == null) {
             jerseyClient = Client.create();
         }
         return jerseyClient;
     }
 
-    private static ClientResponse get(Context context, final String uri, final String header_accept) throws DigipostClientException,
+    private ClientResponse get(Context context, final String uri, final String header_accept) throws DigipostClientException,
             DigipostApiException, DigipostAuthenticationException {
 
         if (StringUtils.isBlank(Secret.ACCESS_TOKEN)) {
@@ -101,11 +103,12 @@ public class ApiAccess {
 
             return cr;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DigipostClientException(context.getString(R.string.error_your_network));
         }
     }
 
-    public static String postput(Context context, final int httpType, int action, final String uri, final StringEntity json) throws DigipostClientException,
+    public String postput(Context context, final int httpType, int action, final String uri, final StringEntity json) throws DigipostClientException,
             DigipostApiException, DigipostAuthenticationException {
 
         HttpClient httpClient = new DefaultHttpClient();
@@ -194,7 +197,7 @@ public class ApiAccess {
         return "" + cr.getStatus();
     }
 
-    public static String getReceiptHTML(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+    public String getReceiptHTML(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
         ClientResponse cr = get(context, uri, ApiConstants.TEXT_HTML);
 
         try {
@@ -230,11 +233,12 @@ public class ApiAccess {
                 uploadFile(context, uri, file);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DigipostClientException(context.getString(R.string.error_your_network));
         }
     }
 
-    public static String getApiJsonString(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+    public String getApiJsonString(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
         ClientResponse cr = get(context, uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
 
         try {
@@ -242,6 +246,8 @@ public class ApiAccess {
         } catch (DigipostInvalidTokenException e) {
             OAuth2.updateAccessToken(context);
             return getApiJsonString(context, uri);
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());
