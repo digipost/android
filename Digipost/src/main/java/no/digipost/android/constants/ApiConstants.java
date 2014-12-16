@@ -39,13 +39,14 @@ public class ApiConstants {
     public static final String FRAGMENT_ACTIVITY_RESULT_LOCATION = "location";
     public static final String FRAGMENT_ACTIVITY_RESULT_FOLDERID = "folderid";
     public static final String AUTHENTICATION_LEVEL_TWO_FACTOR = "TWO_FACTOR";
+    public static final String AUTHENTICATION_LEVEL_IDPORTEN_3 = "IDPORTEN_3";
+    public static final String AUTHENTICATION_LEVEL_IDPORTEN_4 = "IDPORTEN_4";
     public static final String INVOICE = "INVOICE";
     public static final String GRANT_TYPE = "grant_type";
     public static final String CODE = "code";
     public static final String RESPONSE_TYPE = "response_type";
     public static final String CLIENT_ID = "client_id";
     public static final String NONCE = "nonce";
-    public static final String ACCESS_TOKEN = "access_token";
     public static final String REFRESH_TOKEN = "refresh_token";
     public static final String REDIRECT_URI = "redirect_uri";
     public static final String STATE = "state";

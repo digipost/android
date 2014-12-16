@@ -9,6 +9,10 @@ import java.util.ArrayList;
 
 import no.digipost.android.constants.ApiConstants;
 
+import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_IDPORTEN_3;
+import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_IDPORTEN_4;
+import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFilter("toJSON")
 public class Document {
@@ -101,6 +105,12 @@ public class Document {
 
     public String getAuthenticationLevel() {
         return authenticationLevel;
+    }
+
+    public boolean requiresTwoFactor() {
+        return authenticationLevel.equals(AUTHENTICATION_LEVEL_TWO_FACTOR) ||
+                authenticationLevel.equals(AUTHENTICATION_LEVEL_IDPORTEN_3) ||
+                authenticationLevel.equals(AUTHENTICATION_LEVEL_IDPORTEN_4);
     }
 
     public void setAuthenticationLevel(final String authenticationLevel) {

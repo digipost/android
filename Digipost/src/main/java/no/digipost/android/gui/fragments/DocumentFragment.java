@@ -229,7 +229,7 @@ public class DocumentFragment extends ContentFragment {
     }
 
     private void openListItem(final Document document) {
-        if (document.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+        if (document.requiresTwoFactor()) {
             showTwoFactorDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).getOpeningReceiptUri() != null) {
             showOpeningReceiptDialog(document, document.getAttachment().get(0), 0);

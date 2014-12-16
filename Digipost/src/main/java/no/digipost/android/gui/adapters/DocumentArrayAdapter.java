@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import no.digipost.android.R;
-import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Document;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
@@ -71,7 +70,7 @@ public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
             ArrayList<Document> documents = new ArrayList<Document>();
 
             for (Document document : collection) {
-                if (!document.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+                if (!document.requiresTwoFactor()) {
                     documents.add(document);
                 }
             }
@@ -90,7 +89,7 @@ public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
 
         if (super.hideContentTypeImage) {
             super.contentTypeImage.setVisibility(View.GONE);
-        } else if (document.getAuthenticationLevel().equals(ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR)) {
+        } else if (document.requiresTwoFactor()) {
             super.contentTypeImage.setImageDrawable(context.getResources().getDrawable(R.drawable.lock_32));
         }
     }

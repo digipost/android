@@ -227,9 +227,8 @@
     <string name="dialog_edit_folder_invalid_folder_name">Ugyldig navn</string>
 
     <string name="dialog_error_two_factor_title">Konfidensielt brev</string>
-    <string name="dialog_error_two_factor_message">Dette brevet krever autentisering med BankID. Logg inn
-        på Digipost.no for å se innholdet.
-    </string>
+    <string name="dialog_error_two_factor_message">Avsenderen krever at du logger inn på et annet
+        sikkerhetsnivå for å åpne brevet. Logg inn på Digipost.no for å se innholdet.</string>
 
     <string name="dialog_create_folder_title">Opprett mappe</string>
     <string name="dialog_create_folder_save_button">Opprett</string>
