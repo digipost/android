@@ -29,6 +29,9 @@ import no.digipost.android.model.Document;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
 
+import static no.digipost.android.model.Origin.PUBLIC_ENTITY;
+import static no.digipost.android.model.Origin.UPLOADED;
+
 public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
 
     public DocumentArrayAdapter(final Context context, final int resource) {
@@ -43,8 +46,10 @@ public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
 
         super.title.setText(document.getSubject());
 
-        if ("UPLOADED".equals(document.getOrigin())) {
+        if (document.getOrigin() == UPLOADED) {
             super.subTitle.setText(R.string.uploaded);
+        } else if (document.getOrigin() == PUBLIC_ENTITY) {
+            subTitle.setText(context.getString(R.string.public_entity, document.getCreatorName()));
         } else {
             super.subTitle.setText(document.getCreatorName());
         }

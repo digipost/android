@@ -95,12 +95,8 @@ public class Document {
         this.fileSize = fileSize;
     }
 
-    public String getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(final String origin) {
-        this.origin = origin;
+    public Origin getOrigin() {
+        return Origin.parse(origin);
     }
 
     public String getAuthenticationLevel() {
