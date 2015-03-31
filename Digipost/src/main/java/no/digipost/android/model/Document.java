@@ -36,7 +36,7 @@ public class Document {
     @JsonProperty
     private String folderId;
     @JsonProperty
-    private String read;
+    private boolean read;
     @JsonProperty
     private String type;
     @JsonProperty
@@ -125,12 +125,12 @@ public class Document {
         this.folderId = folderId;
     }
 
-    public String getRead() {
+    public boolean isRead() {
         return read;
     }
 
-    public void setRead(final String read) {
-        this.read = read;
+    public void markAsRead() {
+        this.read = true;
     }
 
     public String getType() {

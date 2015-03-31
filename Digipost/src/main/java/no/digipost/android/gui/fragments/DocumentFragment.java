@@ -348,7 +348,7 @@ public class DocumentFragment extends ContentFragment {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     if (openAttachment) {
-                        parentDocument.setRead("true");
+                        parentDocument.markAsRead();
                         DocumentContentStore.setContent(responseBody, parentDocument, attachmentListPosition);
                         DocumentContentStore.setMoveFolders(getMoveFolders());
                         openAttachmentContent(attachment);

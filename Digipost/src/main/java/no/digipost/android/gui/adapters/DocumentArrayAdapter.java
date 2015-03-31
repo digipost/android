@@ -57,7 +57,7 @@ public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
         super.metaTop.setText(DataFormatUtilities.getFormattedDate(document.getCreated()));
         super.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(document.getFileSize())));
 
-        if (!document.getRead().equals("true")) {
+        if (!document.isRead()) {
             row.setBackgroundResource(R.drawable.content_list_item_unread);
             super.setTitleAndSubTitleBold();
         }
