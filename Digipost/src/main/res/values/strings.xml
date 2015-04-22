@@ -231,6 +231,10 @@
     <string name="dialog_error_two_factor_message">Avsenderen krever at du logger inn på et annet
         sikkerhetsnivå for å åpne brevet. Logg inn på Digipost.no for å se innholdet.</string>
 
+    <string name="dialog_error_user_key_encrypted_title">Brukernøkkelkryptert brev</string>
+    <string name="dialog_error_user_key_encrypted_message">Dette brevet er kryptert med den offentlige nøkkelen
+        din og kan ikke vises i appen. Logg inn på Digipost.no for å laste ned innholdet.</string>
+
     <string name="dialog_create_folder_title">Opprett mappe</string>
     <string name="dialog_create_folder_save_button">Opprett</string>
 

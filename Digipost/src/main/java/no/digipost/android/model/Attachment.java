@@ -45,6 +45,8 @@ public class Attachment {
 	private ArrayList<Link> link;
     @JsonProperty
     private Invoice invoice;
+	@JsonProperty
+	private boolean userKeyEncrypted;
 
 	public String getSubject() {
 		return subject;
@@ -113,6 +115,10 @@ public class Attachment {
     public Invoice getInvoice(){
         return invoice;
     }
+
+	public boolean isUserKeyEncrypted() {
+		return userKeyEncrypted;
+	}
 
 	public String getContentUri() {
 		for (Link l : link) {

@@ -231,6 +231,8 @@ public class DocumentFragment extends ContentFragment {
     private void openListItem(final Document document) {
         if (document.requiresTwoFactor()) {
             showTwoFactorDialog();
+        } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).isUserKeyEncrypted()) {
+            showUserKeyEncryptedDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).getOpeningReceiptUri() != null) {
             showOpeningReceiptDialog(document, document.getAttachment().get(0), 0);
         } else {
@@ -279,6 +281,22 @@ public class DocumentFragment extends ContentFragment {
 
         String message = getString(R.string.dialog_error_two_factor_message);
         String title = getString(R.string.dialog_error_two_factor_title);
+
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
+
+        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.create().show();
+    }
+
+    private void showUserKeyEncryptedDialog() {
+        String title = getString(R.string.dialog_error_user_key_encrypted_title);
+        String message = getString(R.string.dialog_error_user_key_encrypted_message);
 
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
 
@@ -508,7 +526,9 @@ public class DocumentFragment extends ContentFragment {
 
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
             Attachment attachment = attachmentAdapter.getItem(position);
-            if (attachment.getOpeningReceiptUri() != null) {
+            if (attachment.isUserKeyEncrypted()) {
+                showUserKeyEncryptedDialog();
+            } else if (attachment.getOpeningReceiptUri() != null) {
                 showOpeningReceiptDialog(parentDocument, attachment, position);
             } else {
                 getAttachmentContent(parentDocument, position, attachment);
