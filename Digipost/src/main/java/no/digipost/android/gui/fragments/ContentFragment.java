@@ -37,6 +37,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
@@ -54,7 +56,7 @@ import no.digipost.android.utilities.SettingsUtilities;
 
 import static java.lang.String.format;
 
-public abstract class ContentFragment extends Fragment {
+public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     public static final String INTENT_CONTENT = "content";
     public static final String INTENT_SEND_TO_BANK = "sendToBank";
 
@@ -69,7 +71,7 @@ public abstract class ContentFragment extends Fragment {
     protected TextView listEmptyViewText;
 
     protected TextView listTopText;
-    protected ContentArrayAdapter listAdapter;
+    protected ContentArrayAdapter<CONTENT_TYPE> listAdapter;
 
     protected ProgressDialog progressDialog;
     protected boolean progressDialogIsVisible = false;
@@ -142,7 +144,7 @@ public abstract class ContentFragment extends Fragment {
     }
 
     protected void executeContentDeleteTask() {
-        ArrayList<Object> content = listAdapter.getCheckedItems();
+        List<CONTENT_TYPE> content = listAdapter.getCheckedItems();
 
         contentActionMode.finish();
 
@@ -207,12 +209,12 @@ public abstract class ContentFragment extends Fragment {
         return format(getString(R.string.delete_single), pronomen, type);
     }
 
-    protected class ContentDeleteTask extends AsyncTask<Void, Object, String> {
-        private ArrayList<Object> content;
+    protected class ContentDeleteTask extends AsyncTask<Void, CONTENT_TYPE, String> {
+        private List<CONTENT_TYPE> content;
         private boolean invalidToken;
         private int progress;
 
-        public ContentDeleteTask(ArrayList<Object> content) {
+        public ContentDeleteTask(List<CONTENT_TYPE> content) {
             this.content = content;
             this.progress = 0;
         }
@@ -226,7 +228,7 @@ public abstract class ContentFragment extends Fragment {
         @Override
         protected String doInBackground(final Void... params) {
             try {
-                for (Object object : content) {
+                for (CONTENT_TYPE object : content) {
                     if (!isCancelled()) {
                         publishProgress(object);
                         progress++;
@@ -249,7 +251,7 @@ public abstract class ContentFragment extends Fragment {
         }
 
         @Override
-        protected void onProgressUpdate(Object... values) {
+        protected void onProgressUpdate(CONTENT_TYPE... values) {
             super.onProgressUpdate(values);
 
             if (values[0] instanceof Document) {
@@ -327,13 +329,13 @@ public abstract class ContentFragment extends Fragment {
     public abstract void updateAccountMeta();
 
     public interface ActivityCommunicator {
-        public void onStartRefreshContent();
+        void onStartRefreshContent();
 
-        public void onEndRefreshContent();
+        void onEndRefreshContent();
 
-        public void requestLogOut();
+        void requestLogOut();
 
-        public void onUpdateAccountMeta();
+        void onUpdateAccountMeta();
     }
 
     protected class ContentMultiChoiceModeListener implements AbsListView.MultiChoiceModeListener {

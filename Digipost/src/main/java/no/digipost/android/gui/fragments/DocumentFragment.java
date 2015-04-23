@@ -38,6 +38,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.apache.http.Header;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.core.HttpHeaders;
 
@@ -68,7 +69,7 @@ import no.digipost.android.utilities.NetworkUtilities;
 
 import static android.app.Activity.RESULT_OK;
 
-public class DocumentFragment extends ContentFragment {
+public class DocumentFragment extends ContentFragment<Document> {
 
     protected AttachmentArrayAdapter attachmentAdapter;
     protected FolderArrayAdapter folderAdapter;
@@ -81,8 +82,7 @@ public class DocumentFragment extends ContentFragment {
     private boolean openAttachment = true;
     private static String EXTRA_CONTENT = "content";
 
-    public static DocumentFragment newInstance(int content)
-    {
+    public static DocumentFragment newInstance(int content) {
         DocumentFragment fragment = new DocumentFragment();
         Bundle bundle = new Bundle(1);
         bundle.putInt(EXTRA_CONTENT, content);
@@ -432,7 +432,7 @@ public class DocumentFragment extends ContentFragment {
     }
 
     protected void executeDocumentMoveTask(Document document, String toLocation, String folderId) {
-        ArrayList<Document> documents = new ArrayList<Document>();
+        List<Document> documents = new ArrayList<Document>();
 
         if (document != null) {
             documents.add(document);
@@ -450,7 +450,7 @@ public class DocumentFragment extends ContentFragment {
     }
 
     protected void deleteDocument(Document document) {
-        ArrayList<Object> documents = new ArrayList<Object>();
+        List<Document> documents = new ArrayList<Document>();
         documents.add(document);
 
         ContentDeleteTask contentDeleteTask = new ContentDeleteTask(documents);
@@ -488,7 +488,7 @@ public class DocumentFragment extends ContentFragment {
     private class DocumentListOnItemClickListener implements AdapterView.OnItemClickListener {
         public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
             currentListPosition = position;
-            openListItem((Document) DocumentFragment.super.listAdapter.getItem(position));
+            openListItem(DocumentFragment.super.listAdapter.getItem(position));
         }
     }
 
@@ -609,13 +609,13 @@ public class DocumentFragment extends ContentFragment {
     }
 
     private class DocumentMoveTask extends AsyncTask<Void, Document, String> {
-        private ArrayList<Document> documents;
+        private List<Document> documents;
         private String toLocation;
         private String folderId;
         private boolean invalidToken;
         private int progress;
 
-        public DocumentMoveTask(ArrayList<Document> documents, String toLocation, String folderId) {
+        public DocumentMoveTask(List<Document> documents, String toLocation, String folderId) {
             this.documents = documents;
             this.toLocation = toLocation;
             this.folderId = folderId;

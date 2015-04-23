@@ -50,7 +50,7 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
 
         TextView title = (TextView) row.findViewById(R.id.attachment_title);
 
-        if (!attachment.getRead().equals("true")) {
+        if (!attachment.isRead()) {
             title.setTypeface(null, Typeface.BOLD);
             title.setTextColor(context.getResources().getColor(R.color.white));
         }
@@ -60,7 +60,7 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
     }
 
     public void placeMainOnTop() {
-        attachments.add(0, getMainAttachment());
+        attachments.add(0, getMainDocument());
         notifyDataSetChanged();
     }
 
@@ -78,9 +78,9 @@ public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
         return attachments.get(position);
     }
 
-    public Attachment getMainAttachment() {
+    public Attachment getMainDocument() {
         for (Attachment a : attachments) {
-            if (a.getMainDocument().equals("true")) {
+            if (a.isMainDocument()) {
                 attachments.remove(a);
                 return a;
             }

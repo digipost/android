@@ -36,9 +36,9 @@ public class Attachment {
 	@JsonProperty("authentication-level")
 	private String authenticationLevel;
 	@JsonProperty
-	private String read;
+	private boolean read;
 	@JsonProperty
-	private String mainDocument;
+	private boolean mainDocument;
 	@JsonProperty
 	private String type;
 	@JsonProperty
@@ -80,20 +80,12 @@ public class Attachment {
 		this.authenticationLevel = authenticationLevel;
 	}
 
-	public String getRead() {
+	public boolean isRead() {
 		return read;
 	}
 
-	public void setRead(final String read) {
-		this.read = read;
-	}
-
-	public String getMainDocument() {
+	public boolean isMainDocument() {
 		return mainDocument;
-	}
-
-	public void setMainDocument(final String mainDocument) {
-		this.mainDocument = mainDocument;
 	}
 
 	public String getType() {

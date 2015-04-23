@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import no.digipost.android.R;
 
@@ -217,8 +218,8 @@ public abstract class ContentArrayAdapter<T> extends ArrayAdapter<T> {
         return count;
     }
 
-    public ArrayList<T> getCheckedItems() {
-        ArrayList<T> checkedItems = new ArrayList<T>();
+    public List<T> getCheckedItems() {
+        List<T> checkedItems = new ArrayList<T>();
 
         for (int i = 0; i < checked.length; i++) {
             if (checked[i]) {

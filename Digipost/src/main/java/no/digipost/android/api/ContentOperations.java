@@ -38,7 +38,6 @@ import no.digipost.android.model.Receipts;
 import no.digipost.android.model.Settings;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
-import no.digipost.android.api.ApiAccess;
 
 public class ContentOperations {
 
@@ -57,8 +56,8 @@ public class ContentOperations {
         return account;
     }
 
-    public static void refreshApiAccess(){
-        if(apiAccess == null){
+    public static void refreshApiAccess() {
+        if (apiAccess == null) {
             apiAccess = new ApiAccess();
         }
     }
@@ -93,7 +92,7 @@ public class ContentOperations {
             DigipostClientException, DigipostAuthenticationException {
 
         getCurrentMailbox(context);
-        if(mailbox == null){
+        if (mailbox == null) {
             return null;
         }
 
@@ -106,7 +105,7 @@ public class ContentOperations {
             ArrayList<Folder> folders = mailbox.getFolders().getFolder();
             Folder folder = folders.get(content);
             folder = (Folder) JSONUtilities.processJackson(Folder.class, apiAccess.getApiJsonString(context, folder.getSelfUri()));
-            return folders != null ? folder.getDocuments() : null;
+            return folder != null ? folder.getDocuments() : null;
         }
     }
 
@@ -191,7 +190,7 @@ public class ContentOperations {
             return NetworkUtilities.BAD_REQUEST;
 
         } else if (action.equals(ApiConstants.DELETE)) {
-            if (apiAccess.delete(context, folder.getDeleteUri()) != null) {
+            if (ApiAccess.delete(context, folder.getDeleteUri()) != null) {
                 return NetworkUtilities.SUCCESS;
             }
             return NetworkUtilities.BAD_REQUEST_DELETE;
@@ -233,9 +232,9 @@ public class ContentOperations {
             DigipostAuthenticationException {
         refreshApiAccess();
         if (object instanceof Document) {
-            apiAccess.delete(context, ((Document) object).getDeleteUri());
+            ApiAccess.delete(context, ((Document) object).getDeleteUri());
         } else if (object instanceof Receipt) {
-            apiAccess.delete(context, ((Receipt) object).getDeleteUri());
+            ApiAccess.delete(context, ((Receipt) object).getDeleteUri());
         }
     }
 
@@ -243,12 +242,12 @@ public class ContentOperations {
             DigipostApiException {
         refreshApiAccess();
         String uploadUri = getUploadUri(context, content);
-        apiAccess.uploadFile(context, uploadUri, file);
+        ApiAccess.uploadFile(context, uploadUri, file);
     }
 
     public static Settings getSettings(Context context) throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
-        if(apiAccess == null){
+        if (apiAccess == null) {
             apiAccess = new ApiAccess();
         }
         return (Settings) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getSettingsUri()));

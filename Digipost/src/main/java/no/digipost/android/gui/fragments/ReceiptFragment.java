@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
@@ -46,12 +47,10 @@ import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
 
-public class ReceiptFragment extends ContentFragment {
+public class ReceiptFragment extends ContentFragment<Receipt> {
 
-    public static final ReceiptFragment newInstance()
-    {
-        ReceiptFragment fragment = new ReceiptFragment();
-        return fragment ;
+    public static ReceiptFragment newInstance() {
+        return new ReceiptFragment();
     }
 
     @Override
@@ -254,12 +253,12 @@ public class ReceiptFragment extends ContentFragment {
 
     private class ReceiptListOnItemClickListener implements AdapterView.OnItemClickListener {
         public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
-            openListItem((Receipt) ReceiptFragment.super.listAdapter.getItem(position));
+            openListItem(ReceiptFragment.super.listAdapter.getItem(position));
         }
     }
 
     private void deleteReceipt(Receipt receipt) {
-        ArrayList<Object> receipts = new ArrayList<Object>();
+        List<Receipt> receipts = new ArrayList<Receipt>();
         receipts.add(receipt);
 
         ContentDeleteTask task = new ContentDeleteTask(receipts);
