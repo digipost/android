@@ -23,7 +23,7 @@ dependencies {
     compile 'com.android.support:support-v13:13.0.0'
     compile 'com.facebook.conceal:conceal:1.0.0@aar'
     compile 'com.sun.jersey:jersey-client:1.18'
-    compile ('com.sun.jersey:jersey-json:1.18'){
+    compile('com.sun.jersey:jersey-json:1.18') {
         exclude module: 'jaxb-impl'
     }
 }
@@ -52,5 +52,9 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
 
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
