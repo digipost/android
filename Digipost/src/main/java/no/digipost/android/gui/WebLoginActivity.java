@@ -17,18 +17,17 @@
 package no.digipost.android.gui;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
-import android.webkit.WebSettings;
+import android.webkit.*;
 import android.webkit.WebSettings.LayoutAlgorithm;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
+import com.google.android.gms.analytics.GoogleAnalytics;
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
@@ -47,6 +46,7 @@ public class WebLoginActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.fragment_web);
         context = this;
 
@@ -64,19 +64,18 @@ public class WebLoginActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
         webViewOauth.setWebViewClient(new MyWebViewClient());
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        EasyTracker.getInstance().activityStart(this);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        EasyTracker.getInstance().activityStop(this);
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     @Override
@@ -91,29 +90,37 @@ public class WebLoginActivity extends Activity {
     }
 
     private class MyWebViewClient extends WebViewClient {
+
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-
+            Log.d("WebView","shouldOverrideUrlLoading");
             String state_fragment = "&" + ApiConstants.STATE + "=";
             int state_start = url.indexOf(state_fragment);
             String code_fragment = "&" + ApiConstants.CODE + "=";
             int code_start = url.indexOf(code_fragment);
-
             if (code_start > -1) {
                 String state = url.substring(state_start + state_fragment.length(), code_start);
                 String code = url.substring(code_start + code_fragment.length(), url.length());
-
                 new GetAccessTokenTask().execute(state, code);
-
                 return true;
             }
 
             return false;
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
+            Log.d("WebView","onReceivedError");
             super.onReceivedError(view, errorCode, description, failingUrl);
+            setResult(RESULT_CANCELED);
+            finish();
+        }
+
+        @TargetApi(android.os.Build.VERSION_CODES.M)
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
+            onReceivedError(view, err.getErrorCode(), err.getDescription().toString(), req.getUrl().toString());
             setResult(RESULT_CANCELED);
             finish();
         }
@@ -123,9 +130,10 @@ public class WebLoginActivity extends Activity {
 
         @Override
         protected String doInBackground(final String... params) {
-
+            Log.d("WebView","GetAccessTokenTask");
             try {
                 OAuth2.retriveInitialAccessToken(params[0], params[1], WebLoginActivity.this);
+                Log.d("WebView","retriveInitialAccessToken");
                 return null;
             } catch (DigipostApiException e) {
                 return e.getMessage();

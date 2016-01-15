@@ -20,14 +20,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
+import com.google.android.gms.analytics.GoogleAnalytics;
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.authentication.KeyStoreAdapter;
 import no.digipost.android.authentication.Security;
@@ -47,6 +47,7 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_login);
         context = this;
         ks = new KeyStoreAdapter(this);
@@ -69,12 +70,11 @@ public class LoginActivity extends Activity {
         super.onResume();
         enableCheckBoxIfScreenlock();
         deleteOldRefreshtoken();
-        final Context c = this;
         rememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 if (rememberMe.isChecked()) {
-                    if (!Security.isAboveSlider(c)) {
+                    if (!Security.screenLockEnabled(getApplicationContext())) {
                         Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
                         startActivity(i);
                     }
@@ -83,19 +83,18 @@ public class LoginActivity extends Activity {
         });
         privacyButton.setTextColor(getResources().getColor(R.color.login_grey_text));
         registrationButton.setTextColor(getResources().getColor(R.color.login_grey_text));
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        EasyTracker.getInstance().activityStart(this);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        EasyTracker.getInstance().activityStop(this);
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     private void deleteOldRefreshtoken() {
@@ -121,6 +120,7 @@ public class LoginActivity extends Activity {
     }
 
     private void openWebView() {
+        Log.d("LoginActivity","openWebView");
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(this, WebLoginActivity.class);
             startActivityForResult(i, WEB_LOGIN_REQUEST);

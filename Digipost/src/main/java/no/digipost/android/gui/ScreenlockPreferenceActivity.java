@@ -22,9 +22,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
+import com.google.android.gms.analytics.GoogleAnalytics;
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 
 public class ScreenlockPreferenceActivity extends Activity {
@@ -35,6 +34,8 @@ public class ScreenlockPreferenceActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
         setContentView(R.layout.activity_screenlockpreference);
         yesButton = (Button) (findViewById(R.id.screenlockactivity_yes_button));
         Button noButton = (Button) (findViewById(R.id.screenlockactivity_no_button));
@@ -48,13 +49,13 @@ public class ScreenlockPreferenceActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        EasyTracker.getInstance().activityStart(this);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        EasyTracker.getInstance().activityStop(this);
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     private void yesButton() {

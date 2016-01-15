@@ -35,6 +35,8 @@ import android.widget.ListView;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -72,6 +74,7 @@ public abstract class DisplayContentActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
         if(content_type != ApplicationConstants.RECEIPTS) {
             if (DocumentContentStore.getDocumentAttachment() == null || DocumentContentStore.getDocumentParent() == null) {
@@ -79,6 +82,18 @@ public abstract class DisplayContentActivity extends Activity {
                 finish();
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {

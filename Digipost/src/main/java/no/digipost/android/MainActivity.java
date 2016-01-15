@@ -16,6 +16,7 @@
 
 package no.digipost.android;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
@@ -30,13 +31,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
 		setContentView(R.layout.activity_main);
 		checkTokenAndScreenlockStatus();
 	}
@@ -44,14 +44,14 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		GoogleAnalytics.getInstance(this).reportActivityStart(this);
 		FileUtilities.deleteTempFiles();
-		EasyTracker.getInstance().activityStart(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		EasyTracker.getInstance().activityStop(this);
+		GoogleAnalytics.getInstance(this).reportActivityStop(this);
 		finish();
 	}
 
