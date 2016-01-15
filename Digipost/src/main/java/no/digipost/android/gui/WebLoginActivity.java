@@ -93,7 +93,6 @@ public class WebLoginActivity extends Activity {
 
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-            Log.d("WebView","shouldOverrideUrlLoading");
             String state_fragment = "&" + ApiConstants.STATE + "=";
             int state_start = url.indexOf(state_fragment);
             String code_fragment = "&" + ApiConstants.CODE + "=";
@@ -111,7 +110,6 @@ public class WebLoginActivity extends Activity {
         @SuppressWarnings("deprecation")
         @Override
         public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
-            Log.d("WebView","onReceivedError");
             super.onReceivedError(view, errorCode, description, failingUrl);
             setResult(RESULT_CANCELED);
             finish();
@@ -130,10 +128,8 @@ public class WebLoginActivity extends Activity {
 
         @Override
         protected String doInBackground(final String... params) {
-            Log.d("WebView","GetAccessTokenTask");
             try {
                 OAuth2.retriveInitialAccessToken(params[0], params[1], WebLoginActivity.this);
-                Log.d("WebView","retriveInitialAccessToken");
                 return null;
             } catch (DigipostApiException e) {
                 return e.getMessage();
