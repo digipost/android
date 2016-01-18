@@ -19,9 +19,11 @@ package no.digipost.android.gui;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.*;
@@ -39,54 +41,42 @@ import no.digipost.android.utilities.NetworkUtilities;
 
 public class WebLoginActivity extends Activity {
 
-    private WebView webViewOauth;
-    private Context context;
-
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
-        setContentView(R.layout.fragment_web);
-        context = this;
+        setContentView(R.layout.fragment_login_webview);
 
         if (!NetworkUtilities.isOnline()) {
-            DialogUtitities.showToast(context, getString(R.string.error_your_network));
+            DialogUtitities.showToast(getApplicationContext(), getString(R.string.error_your_network));
             finish();
         }
 
+        WebView webView = (WebView) findViewById(R.id.login_webview);
+        webView.loadUrl(OAuth2.getAuthorizeURL());
+
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.setWebViewClient(new MyWebViewClient());
+
         getActionBar().setTitle(R.string.login_loginbutton_text);
         getActionBar().setHomeButtonEnabled(true);
-        webViewOauth = (WebView) findViewById(R.id.web_oauth);
-        String url = OAuth2.getAuthorizeURL();
-        webViewOauth.loadUrl(url);
-        WebSettings settings = webViewOauth.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-        webViewOauth.setWebViewClient(new MyWebViewClient());
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         GoogleAnalytics.getInstance(this).reportActivityStart(this);
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private class MyWebViewClient extends WebViewClient {
@@ -107,18 +97,9 @@ public class WebLoginActivity extends Activity {
             return false;
         }
 
-        @SuppressWarnings("deprecation")
-        @Override
-        public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
-            super.onReceivedError(view, errorCode, description, failingUrl);
-            setResult(RESULT_CANCELED);
-            finish();
-        }
-
-        @TargetApi(android.os.Build.VERSION_CODES.M)
         @Override
         public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
-            onReceivedError(view, err.getErrorCode(), err.getDescription().toString(), req.getUrl().toString());
+            super.onReceivedError(view,req,err);
             setResult(RESULT_CANCELED);
             finish();
         }
@@ -143,14 +124,12 @@ public class WebLoginActivity extends Activity {
         @Override
         protected void onPostExecute(final String result) {
             if (result != null) {
-                DialogUtitities.showToast(context, result);
+                DialogUtitities.showToast(getApplicationContext(), result);
                 setResult(RESULT_CANCELED);
             } else {
                 setResult(RESULT_OK);
             }
-
             finish();
         }
-
     }
 }

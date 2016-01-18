@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,8 +37,8 @@ import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class LoginActivity extends Activity {
     private Button loginButton, privacyButton, registrationButton;
-    private CheckBox rememberMe;
-    private KeyStoreAdapter ks;
+    private CheckBox rememberCheckbox;
+    private KeyStoreAdapter keyStoreAdapter;
     private Context context;
 
     private final int WEB_LOGIN_REQUEST = 1;
@@ -50,7 +49,7 @@ public class LoginActivity extends Activity {
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_login);
         context = this;
-        ks = new KeyStoreAdapter(this);
+        keyStoreAdapter = new KeyStoreAdapter(this);
         ButtonListener listener = new ButtonListener();
         loginButton = (Button) findViewById(R.id.login_loginButton);
         loginButton.setOnClickListener(listener);
@@ -58,10 +57,10 @@ public class LoginActivity extends Activity {
         privacyButton.setOnClickListener(listener);
         registrationButton = (Button) findViewById(R.id.login_registrationButton);
         registrationButton.setOnClickListener(listener);
-        rememberMe = (CheckBox) findViewById(R.id.login_remember_me);
+        rememberCheckbox = (CheckBox) findViewById(R.id.login_remember_me);
 
-        if (!ks.isAvailable()) {
-            rememberMe.setVisibility(View.GONE);
+        if (!keyStoreAdapter.isAvailable()) {
+            rememberCheckbox.setVisibility(View.GONE);
         }
     }
 
@@ -70,10 +69,10 @@ public class LoginActivity extends Activity {
         super.onResume();
         enableCheckBoxIfScreenlock();
         deleteOldRefreshtoken();
-        rememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        rememberCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-                if (rememberMe.isChecked()) {
+                if (rememberCheckbox.isChecked()) {
                     if (!Security.screenLockEnabled(getApplicationContext())) {
                         Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
                         startActivity(i);
@@ -98,19 +97,19 @@ public class LoginActivity extends Activity {
     }
 
     private void deleteOldRefreshtoken() {
-        if (ks.isAvailable()) {
+        if (keyStoreAdapter.isAvailable()) {
             SharedPreferencesUtilities.deleteRefreshtoken(this);
         }
     }
 
     private void enableCheckBoxIfScreenlock() {
         if (!Security.canUseRefreshTokens(this)) {
-            rememberMe.setChecked(false);
+            rememberCheckbox.setChecked(false);
         }
     }
 
     private void startLoginProcess() {
-        if (rememberMe.isChecked()) {
+        if (rememberCheckbox.isChecked()) {
             SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_YES);
             openWebView();
         } else {
@@ -120,7 +119,6 @@ public class LoginActivity extends Activity {
     }
 
     private void openWebView() {
-        Log.d("LoginActivity","openWebView");
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(this, WebLoginActivity.class);
             startActivityForResult(i, WEB_LOGIN_REQUEST);

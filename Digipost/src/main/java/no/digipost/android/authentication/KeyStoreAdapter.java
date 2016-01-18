@@ -75,11 +75,13 @@ public class KeyStoreAdapter {
 			outputStream.write(plaintext.getBytes());
 			outputStream.close();
 			return Base64.encodeToString(out.toByteArray(), Base64.DEFAULT);
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (CryptoInitializationException e) {
 			e.printStackTrace();
+			return null;
 		} catch (KeyChainException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;

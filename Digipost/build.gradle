@@ -25,7 +25,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.google.android.gms:play-services-analytics:8.4.0'
-    compile 'com.facebook.conceal:conceal:1.0.1@aar'
+    compile 'com.facebook.conceal:conceal:1.0.3@aar'
     compile 'com.sun.jersey:jersey-client:1.19'
     compile('com.sun.jersey:jersey-json:1.19') {
         exclude module: 'jaxb-impl'
