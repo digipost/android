@@ -16,11 +16,15 @@
 
 package no.digipost.android.utilities;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.webkit.MimeTypeMap;
 
 import org.apache.commons.io.FilenameUtils;
@@ -54,11 +58,12 @@ public class FileUtilities {
         return mime.getMimeTypeFromExtension(ext);
     }
 
-    public static File writeFileToSD(final String fileName, final String fileType, final byte[] data) throws Exception {
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(path.getAbsolutePath(), fileName + "." + fileType);
-
-        return writeData(file, data);
+    public static File writeFileToDevice(final Context context, final String fileName, final String fileType, final byte[] data) throws Exception {
+        if(isExternalStorageWritable() && isStorageWriteAllowed(context)) {
+            return writeData(getDownloadsStorageDir(fileName + "." + fileType), data);
+        }else{
+            return null;
+        }
     }
 
     public static File writeTempFile(final String fileType, final byte[] data) throws IOException {
@@ -67,6 +72,19 @@ public class FileUtilities {
         File file = new File(path, TEMP_FILE_NAME + "." + fileType);
 
         return writeData(file, data);
+    }
+
+    public static boolean isExternalStorageWritable(){
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+    }
+
+    public static boolean isStorageWriteAllowed(Context context){
+        return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+    }
+
+
+    public static File getDownloadsStorageDir(String fileName) {
+        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
     }
 
     public static void deleteTempFiles() {
@@ -88,18 +106,15 @@ public class FileUtilities {
         FileOutputStream stream = new FileOutputStream(file);
         stream.write(data);
         stream.close();
-
         return file;
     }
 
-    public static void makeFileVisible(Context context, File file) {
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        intent.setData(Uri.fromFile(file));
-        context.sendBroadcast(intent);
+    public static void makeFileVisible(Context context, File file, String title, String description, String mimeType, Long contentLength) {
+        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        manager.addCompletedDownload(title, description, true, mimeType, file.getAbsolutePath(), contentLength, false);
     }
 
     public static String getFileUri(File file) {
-
         return ((Object) Uri.fromFile(file)).toString();
     }
 }

@@ -661,7 +661,7 @@ public class MuPDFActivity extends DisplayContentActivity {
                 super.openFileWithIntent();
                 return true;
             case R.id.pdfmenu_save:
-                super.promtSaveToSD();
+                super.downloadFile();
                 return true;
         }
 

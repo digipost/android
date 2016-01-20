@@ -123,7 +123,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
                 super.openFileWithIntent();
                 return true;
             case R.id.menu_image_html_unsupported_save:
-                super.promtSaveToSD();
+                super.downloadFile();
                 return true;
         }
 

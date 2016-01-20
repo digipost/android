@@ -16,6 +16,7 @@
 
 package no.digipost.android.gui.content;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -25,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -65,6 +67,7 @@ public abstract class DisplayContentActivity extends Activity {
 
     protected MenuItem sendToBank;
     protected int content_type;
+    private final static int REQUEST_WRITE_EXTERNAL_STORAGE = 0;
     private ProgressDialog progressDialog;
     private AlertDialog alertDialog;
     private FolderArrayAdapter folderAdapter;
@@ -272,11 +275,14 @@ public abstract class DisplayContentActivity extends Activity {
         }
     }
 
-    protected void promtSaveToSD() {
+    protected void downloadFile() {
+        requestWritePermissionsIfMissing();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-                new SaveDocumentToSDTask().execute();
+
+                new DownloadDocumentTask().execute();
                 dialog.dismiss();
             }
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
@@ -414,29 +420,34 @@ public abstract class DisplayContentActivity extends Activity {
         }
     }
 
-    private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
+    private class DownloadDocumentTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
             showContentProgressDialog(this, DisplayContentActivity.this.getString(R.string.saving));
         }
 
         @Override
         protected Boolean doInBackground(Void... parameters) {
-            File file;
-
             try {
-                file = FileUtilities.writeFileToSD(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore
-                        .getDocumentAttachment()
-                        .getFileType(), DocumentContentStore.getDocumentContent());
-            } catch (Exception e) {
+                String subject = DocumentContentStore.getDocumentAttachment().getSubject();
+                String description = DocumentContentStore.getDocumentAttachment().getType();
+                String fileType = DocumentContentStore.getDocumentAttachment().getFileType();
+                String fileSize = DocumentContentStore.getDocumentAttachment().getFileSize();
+
+                File file = FileUtilities.writeFileToDevice(getApplicationContext(), subject, fileType, DocumentContentStore.getDocumentContent());
+                FileUtilities.makeFileVisible(DisplayContentActivity.this, file, subject, " ", fileType, Long.parseLong(fileSize));
+                return true;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
                 return false;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            FileUtilities.makeFileVisible(DisplayContentActivity.this, file);
-
-            return true;
+            return false;
         }
 
         @Override
@@ -446,16 +457,24 @@ public abstract class DisplayContentActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(Boolean saved) {
-            super.onPostExecute(saved);
+        protected void onPostExecute(Boolean downloadSuccessfull) {
+            super.onPostExecute(downloadSuccessfull);
 
-            if (saved) {
+            if (downloadSuccessfull) {
                 DialogUtitities.showToast(DisplayContentActivity.this, getString(R.string.pdf_saved_to_sd));
             } else {
                 DialogUtitities.showToast(DisplayContentActivity.this, getString(R.string.pdf_save_to_sd_failed));
             }
 
             hideProgressDialog();
+        }
+    }
+
+    public void requestWritePermissionsIfMissing(){
+        if(!FileUtilities.isStorageWriteAllowed(getApplicationContext())) {
+            ActivityCompat.requestPermissions(DisplayContentActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_WRITE_EXTERNAL_STORAGE);
         }
     }
 }
