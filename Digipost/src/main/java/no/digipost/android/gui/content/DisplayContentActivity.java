@@ -432,17 +432,10 @@ public abstract class DisplayContentActivity extends Activity {
         @Override
         protected Boolean doInBackground(Void... parameters) {
             try {
-                String subject = DocumentContentStore.getDocumentAttachment().getSubject();
-                String description = DocumentContentStore.getDocumentAttachment().getType();
-                String fileType = DocumentContentStore.getDocumentAttachment().getFileType();
-                String fileSize = DocumentContentStore.getDocumentAttachment().getFileSize();
-
-                File file = FileUtilities.writeFileToDevice(getApplicationContext(), subject, fileType, DocumentContentStore.getDocumentContent());
-                FileUtilities.makeFileVisible(DisplayContentActivity.this, file, subject, " ", fileType, Long.parseLong(fileSize));
+                FileUtilities.writeFileToDevice(getApplicationContext());
                 return true;
             } catch (NumberFormatException e) {
                 e.printStackTrace();
-                return false;
             } catch (Exception e) {
                 e.printStackTrace();
             }

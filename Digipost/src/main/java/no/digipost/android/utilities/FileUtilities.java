@@ -26,8 +26,12 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.webkit.MimeTypeMap;
-
+import net.danlew.android.joda.JodaTimeAndroid;
+import no.digipost.android.documentstore.DocumentContentStore;
 import org.apache.commons.io.FilenameUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,22 +58,44 @@ public class FileUtilities {
     public static String getMimeType(File file) {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         String ext = FilenameUtils.getExtension(file.getName());
-
         return mime.getMimeTypeFromExtension(ext);
     }
 
-    public static File writeFileToDevice(final Context context, final String fileName, final String fileType, final byte[] data) throws Exception {
+    public static void writeFileToDevice(final Context context) throws Exception {
         if(isExternalStorageWritable() && isStorageWriteAllowed(context)) {
-            return writeData(getDownloadsStorageDir(fileName + "." + fileType), data);
+            byte[] data = DocumentContentStore.getDocumentContent();
+            File file =  writeData(getDownloadsStorageDir(getAttachmentFullFilename()), data);
+            makeFileVisible(context, file);
         }else{
-            return null;
+            throw new Exception();
         }
     }
 
+    private static String getAttachmentFullFilename(){
+        String fileType = DocumentContentStore.getDocumentAttachment().getFileType();
+        String creatorName = DocumentContentStore.getDocumentParent().getCreatorName();
+        String fileName = DocumentContentStore.getDocumentAttachment().getSubject();
+
+        String dateCreated = "";
+
+        try{
+            String tempDate = DocumentContentStore.getDocumentParent().getCreated();
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            DateTime jodatime = dtf.parseDateTime(tempDate);
+            DateTimeFormatter dtfOut = DateTimeFormat.forPattern("yyyy.MM.dd");
+            dateCreated = dtfOut.print(jodatime) + " ";
+        }catch (Exception e){
+        }
+
+        String fullFileName = (dateCreated + creatorName.toUpperCase() + " " + fileName + "." +fileType);
+        fullFileName = fullFileName.replaceAll("[()\\?:!,;{}-]+", "").replaceAll("[\\t\\n\\s]+", "_");
+
+        return fullFileName;
+    }
+
     public static File writeTempFile(final String fileType, final byte[] data) throws IOException {
-        File path = new File(TEMP_FILE_DIRECTORY);
-        path.mkdir();
-        File file = new File(path, TEMP_FILE_NAME + "." + fileType);
+        File file = new File(new File(TEMP_FILE_DIRECTORY), TEMP_FILE_NAME + "." + fileType);
+        file.createNewFile();
 
         return writeData(file, data);
     }
@@ -83,8 +109,14 @@ public class FileUtilities {
     }
 
 
-    public static File getDownloadsStorageDir(String fileName) {
-        return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
+    public static File getDownloadsStorageDir(String fileName) throws Exception{
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName);
+        try {
+            file.createNewFile();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return file;
     }
 
     public static void deleteTempFiles() {
@@ -103,15 +135,18 @@ public class FileUtilities {
     }
 
     private static File writeData(File file, byte[] data) throws IOException {
+        file.getParentFile().mkdirs();
         FileOutputStream stream = new FileOutputStream(file);
         stream.write(data);
         stream.close();
         return file;
     }
 
-    public static void makeFileVisible(Context context, File file, String title, String description, String mimeType, Long contentLength) {
+    public static void makeFileVisible(Context context, File file) {
+        JodaTimeAndroid.init(context);
+        Long contentLength = Long.parseLong(DocumentContentStore.getDocumentAttachment().getFileSize());
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        manager.addCompletedDownload(title, description, true, mimeType, file.getAbsolutePath(), contentLength, false);
+        manager.addCompletedDownload(getAttachmentFullFilename(), " ", true, getMimeType(file), file.getAbsolutePath(), contentLength, false);
     }
 
     public static String getFileUri(File file) {
