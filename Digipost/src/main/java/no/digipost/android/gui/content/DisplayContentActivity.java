@@ -59,6 +59,7 @@ import no.digipost.android.model.Payment;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.Permissions;
 
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
@@ -67,7 +68,6 @@ public abstract class DisplayContentActivity extends Activity {
 
     protected MenuItem sendToBank;
     protected int content_type;
-    private final static int REQUEST_WRITE_EXTERNAL_STORAGE = 0;
     private ProgressDialog progressDialog;
     private AlertDialog alertDialog;
     private FolderArrayAdapter folderAdapter;
@@ -276,7 +276,7 @@ public abstract class DisplayContentActivity extends Activity {
     }
 
     protected void downloadFile() {
-        requestWritePermissionsIfMissing();
+        Permissions.requestWritePermissionsIfMissing(getApplicationContext(), DisplayContentActivity.this);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -460,14 +460,6 @@ public abstract class DisplayContentActivity extends Activity {
             }
 
             hideProgressDialog();
-        }
-    }
-
-    public void requestWritePermissionsIfMissing(){
-        if(!FileUtilities.isStorageWriteAllowed(getApplicationContext())) {
-            ActivityCompat.requestPermissions(DisplayContentActivity.this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_WRITE_EXTERNAL_STORAGE);
         }
     }
 }

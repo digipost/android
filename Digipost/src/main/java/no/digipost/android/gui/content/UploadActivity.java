@@ -50,6 +50,7 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
 import no.digipost.android.DigipostApplication;
+import no.digipost.android.utilities.*;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -64,11 +65,7 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.utilities.TextProgressBar;
 import no.digipost.android.model.Mailbox;
-import no.digipost.android.utilities.DataFormatUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
 
 import static java.lang.String.format;
 
@@ -114,6 +111,7 @@ public class UploadActivity extends Activity {
         listAdapter = new UploadListAdapter(this, mFiles);
         listView.setAdapter(listAdapter);
         content = getIntent().getIntExtra(ApiConstants.UPLOAD, ApplicationConstants.MAILBOX);
+        Permissions.requestWritePermissionsIfMissing(getApplicationContext(), UploadActivity.this);
         executeSetAccountInfoTask();
     }
 
