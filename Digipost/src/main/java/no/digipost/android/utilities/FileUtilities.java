@@ -44,7 +44,6 @@ public class FileUtilities {
     public static void openFileWithIntent(Context context, File file) throws ActivityNotFoundException {
         Intent intent = new Intent();
         intent.setAction(android.content.Intent.ACTION_VIEW);
-
         intent.setDataAndType(Uri.fromFile(file), getMimeType(file));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -95,6 +94,7 @@ public class FileUtilities {
 
     public static File writeTempFile(final String fileType, final byte[] data) throws IOException {
         File file = new File(new File(TEMP_FILE_DIRECTORY), TEMP_FILE_NAME + "." + fileType);
+        file.getParentFile().mkdirs();
         file.createNewFile();
 
         return writeData(file, data);
