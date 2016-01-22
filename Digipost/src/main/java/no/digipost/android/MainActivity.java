@@ -20,8 +20,8 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.authentication.OAuth2;
-import no.digipost.android.authentication.Security;
+import no.digipost.android.authentication.Auth;
+import no.digipost.android.authentication.AndroidLockSecurity;
 import no.digipost.android.gui.LoginActivity;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.utilities.FileUtilities;
@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkTokenAndScreenlockStatus() {
-		if (Security.canUseRefreshTokens(this) && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
+		if (AndroidLockSecurity.canUseRefreshTokens(this) && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
 			new CheckTokenTask().execute();
 		} else {
 			startLoginActivity();
@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
 		protected String doInBackground(final Void... params) {
 
 			try {
-				OAuth2.updateAccessToken(MainActivity.this);
+				Auth.updateAccessToken(MainActivity.this);
 				return null;
 			} catch (DigipostApiException e) {
 				return e.getMessage();

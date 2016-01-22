@@ -29,19 +29,19 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.authentication.KeyStoreAdapter;
-import no.digipost.android.authentication.Security;
+import no.digipost.android.authentication.AndroidLockSecurity;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class LoginActivity extends Activity {
+    private final int WEB_OAUTH_LOGIN_REQUEST = 0;
     private Button loginButton, privacyButton, registrationButton;
     private CheckBox rememberCheckbox;
     private KeyStoreAdapter keyStoreAdapter;
     private Context context;
-
-    private final int WEB_LOGIN_REQUEST = 1;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 if (rememberCheckbox.isChecked()) {
-                    if (!Security.screenLockEnabled(getApplicationContext())) {
+                    if (!AndroidLockSecurity.screenLockEnabled(getApplicationContext())) {
                         Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
                         startActivity(i);
                     }
@@ -103,7 +103,7 @@ public class LoginActivity extends Activity {
     }
 
     private void enableCheckBoxIfScreenlock() {
-        if (!Security.canUseRefreshTokens(this)) {
+        if (!AndroidLockSecurity.canUseRefreshTokens(this)) {
             rememberCheckbox.setChecked(false);
         }
     }
@@ -121,16 +121,16 @@ public class LoginActivity extends Activity {
     private void openWebView() {
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(this, WebLoginActivity.class);
-            startActivityForResult(i, WEB_LOGIN_REQUEST);
+            i.putExtra("authScope", ApiConstants.SCOPE_FULL);
+            startActivityForResult(i, WEB_OAUTH_LOGIN_REQUEST);
         } else {
             DialogUtitities.showToast(context, getString(R.string.error_your_network));
         }
-
     }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == WEB_LOGIN_REQUEST) {
+        if (requestCode == WEB_OAUTH_LOGIN_REQUEST) {
             if (resultCode == RESULT_OK) {
                 startMainContentActivity();
             }

@@ -21,6 +21,7 @@ import android.util.Log;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 
+import no.digipost.android.authentication.Auth;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
@@ -52,7 +53,6 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.api.exception.DigipostInvalidTokenException;
-import no.digipost.android.authentication.OAuth2;
 import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.utilities.JSONUtilities;
@@ -89,7 +89,7 @@ public class ApiAccess {
 
         try {
             if (StringUtils.isBlank(Secret.ACCESS_TOKEN)) {
-                OAuth2.updateAccessToken(context);
+                Auth.updateAccessToken(context);
             }
             ClientResponse cr = getClient()
                     .resource(uri)
@@ -151,7 +151,7 @@ public class ApiAccess {
         try {
             NetworkUtilities.checkHttpStatusCode(context, response.getStatusLine().getStatusCode());
         } catch (DigipostInvalidTokenException e) {
-            OAuth2.updateAccessToken(context);
+            Auth.updateAccessToken(context);
             Log.e(TAG, context.getString(R.string.error_invalid_token));
             return postput(context, httpType, action, uri, json);
         }
@@ -198,7 +198,7 @@ public class ApiAccess {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {
             Log.e(TAG, context.getString(R.string.error_invalid_token));
-            OAuth2.updateAccessToken(context);
+            Auth.updateAccessToken(context);
             delete(context, uri);
         }
         return "" + cr.getStatus();
@@ -211,7 +211,7 @@ public class ApiAccess {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {
             Log.e(TAG, context.getString(R.string.error_invalid_token));
-            OAuth2.updateAccessToken(context);
+            Auth.updateAccessToken(context);
             return getReceiptHTML(context, uri);
         }
 
@@ -237,7 +237,7 @@ public class ApiAccess {
                 NetworkUtilities.checkHttpStatusCode(context, httpResponse.getStatusLine().getStatusCode());
 
             } catch (DigipostInvalidTokenException e) {
-                OAuth2.updateAccessToken(context);
+                Auth.updateAccessToken(context);
                 uploadFile(context, uri, file);
             }
         } catch (Exception e) {
@@ -252,7 +252,7 @@ public class ApiAccess {
         try {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {
-            OAuth2.updateAccessToken(context);
+            Auth.updateAccessToken(context);
             return getApiJsonString(context, uri);
         }catch (Exception e){
             Log.e(TAG, e.getMessage());

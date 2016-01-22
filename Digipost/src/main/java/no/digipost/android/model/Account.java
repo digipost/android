@@ -29,6 +29,12 @@ public class Account {
     private ValidationRules validationRules;
 
     @JsonProperty
+    private String authenticationlevel;
+
+    @JsonProperty
+    private String authenticationlevelIdporten;
+
+    @JsonProperty
     private ArrayList<Mailbox> mailbox;
 
     @JsonProperty
@@ -49,6 +55,14 @@ public class Account {
 
     public int getMinimumAndroidVersion(){
        return minimumAndroidVersion != null ? Integer.parseInt(minimumAndroidVersion) : 0;
+    }
+
+    public int getAuthenticationlevel(){
+        return Integer.parseInt(authenticationlevel);
+    }
+
+    public int getAuthenticationlevelIdporten(){
+        return Integer.parseInt(authenticationlevelIdporten);
     }
 
     public PrimaryAccount getPrimaryAccount() {

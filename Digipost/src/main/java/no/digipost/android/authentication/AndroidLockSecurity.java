@@ -3,7 +3,7 @@ package no.digipost.android.authentication;
 import android.app.KeyguardManager;
 import android.content.Context;
 
-public class Security {
+public class AndroidLockSecurity {
 	public static boolean canUseRefreshTokens(final Context context) {
 		return screenLockEnabled(context) && new KeyStoreAdapter(context).isAvailable();
 	}

@@ -37,42 +37,42 @@ import no.digipost.android.model.TokenValue;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
-
 import org.apache.commons.lang.StringUtils;
-
 import android.content.Context;
 import android.util.Base64;
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import com.sun.jersey.spi.service.ServiceFinder;
 
-public class OAuth2 {
+public class Auth {
 
 	private static String state = "";
 
     private static SecureRandom random = new SecureRandom();
 
-	public static String getAuthorizeURL() {
+	public static String getAuthorizeURL(String scope) {
 		state = getSecureRandom(20);
 		return ApiConstants.URL_API_OAUTH_AUTHORIZE_NEW + "?" + ApiConstants.RESPONSE_TYPE + "=" + ApiConstants.CODE + "&"
 				+ ApiConstants.CLIENT_ID + "=" + Secret.CLIENT_ID + "&" + ApiConstants.REDIRECT_URI + "=" + Secret.REDIRECT_URI + "&"
-				+ ApiConstants.STATE + "=" + state;
+				+ ApiConstants.STATE + "=" + state + "&" + ApiConstants.SCOPE + "=" + scope;
 	}
 
-	public static void retriveInitialAccessToken(final String url_state, final String url_code, final Context context)
-			throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+	public static void retrieveToken(final String url_state, final String url_code, final Context context, final String authenticationScope) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
         String nonce = getSecureRandom(20);
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 
-		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-		params.add(ApiConstants.GRANT_TYPE, ApiConstants.CODE);
+        params.add(ApiConstants.GRANT_TYPE, ApiConstants.CODE);
 		params.add(ApiConstants.CODE, url_code);
 		params.add(ApiConstants.REDIRECT_URI, Secret.REDIRECT_URI);
 		params.add(ApiConstants.NONCE, nonce);
 
-		Access data = getAccessData(params, context);
+        if(authenticationScope.equals(ApiConstants.SCOPE_IDPORTEN_3)) {
+            params.add(ApiConstants.SCOPE, ApiConstants.SCOPE_IDPORTEN_3);
+        }
+
+        Access data = getAccessData(params, context);
 
 		verifyState(url_state, context);
 		verifyAuthentication(data.getId_token(), context);
@@ -80,7 +80,7 @@ public class OAuth2 {
 		storeTokens(data, context);
 	}
 
-	public static void retriveAccessToken(final String refresh_token, final Context context) throws DigipostApiException,
+	public static void retrieveAccessToken(final String refresh_token, final Context context) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
@@ -111,7 +111,7 @@ public class OAuth2 {
         if (StringUtils.isBlank(refresh_token)) {
             throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
         }
-		retriveAccessToken(refresh_token, context);
+        retrieveAccessToken(refresh_token, context);
 	}
 
 	private static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws DigipostApiException,

@@ -71,7 +71,7 @@
             android:name="no.digipost.android.gui.MainContentActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="no.digipost.android.gui.WebLoginActivity"
+            android:name=".gui.WebLoginActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="no.digipost.android.gui.content.HtmlAndReceiptActivity"

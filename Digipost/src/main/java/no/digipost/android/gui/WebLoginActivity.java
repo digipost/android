@@ -17,15 +17,10 @@
 package no.digipost.android.gui;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
-import android.view.MenuItem;
 import android.webkit.*;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -34,12 +29,15 @@ import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.authentication.OAuth2;
+import no.digipost.android.authentication.Auth;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.NetworkUtilities;
 
 public class WebLoginActivity extends Activity {
+
+    private final String SUCCESS = "SUCCESS";
+    private String authenticationScope = ApiConstants.SCOPE_FULL;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -47,6 +45,7 @@ public class WebLoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.fragment_login_webview);
+        authenticationScope = getIntent().getExtras().getString("authScope");
 
         if (!NetworkUtilities.isOnline()) {
             DialogUtitities.showToast(getApplicationContext(), getString(R.string.error_your_network));
@@ -54,23 +53,24 @@ public class WebLoginActivity extends Activity {
         }
 
         WebView webView = (WebView) findViewById(R.id.login_webview);
-        webView.loadUrl(OAuth2.getAuthorizeURL());
-
+        String url = Auth.getAuthorizeURL(authenticationScope);
+        webView.loadUrl(url);
+        Log.d("WebView", "authenticationScope: "+authenticationScope);
+        Log.d("WebView", "Loading url: "+ url);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
         webView.getSettings().setDomStorageEnabled(true);
+
         webView.setWebViewClient(new MyWebViewClient());
 
         getActionBar().setTitle(R.string.login_loginbutton_text);
         getActionBar().setHomeButtonEnabled(true);
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         GoogleAnalytics.getInstance(this).reportActivityStart(this);
-
     }
 
     @Override
@@ -90,7 +90,7 @@ public class WebLoginActivity extends Activity {
             if (code_start > -1) {
                 String state = url.substring(state_start + state_fragment.length(), code_start);
                 String code = url.substring(code_start + code_fragment.length(), url.length());
-                new GetAccessTokenTask().execute(state, code);
+                new GetTokenTask().execute(state, code);
                 return true;
             }
 
@@ -105,13 +105,13 @@ public class WebLoginActivity extends Activity {
         }
     }
 
-    private class GetAccessTokenTask extends AsyncTask<String, Void, String> {
+    private class GetTokenTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(final String... params) {
             try {
-                OAuth2.retriveInitialAccessToken(params[0], params[1], WebLoginActivity.this);
-                return null;
+                Auth.retrieveToken(params[0], params[1], WebLoginActivity.this, authenticationScope);
+                return SUCCESS;
             } catch (DigipostApiException e) {
                 return e.getMessage();
             } catch (DigipostClientException e) {
@@ -123,11 +123,11 @@ public class WebLoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(final String result) {
-            if (result != null) {
+            if(SUCCESS.equals(result)) {
+                setResult(RESULT_OK);
+            }else{
                 DialogUtitities.showToast(getApplicationContext(), result);
                 setResult(RESULT_CANCELED);
-            } else {
-                setResult(RESULT_OK);
             }
             finish();
         }

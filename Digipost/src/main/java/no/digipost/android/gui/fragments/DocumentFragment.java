@@ -35,6 +35,7 @@ import android.widget.ListView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import no.digipost.android.gui.WebLoginActivity;
 import org.apache.http.Header;
 
 import java.util.ArrayList;
@@ -229,14 +230,56 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private void openListItem(final Document document) {
-        if (document.requiresTwoFactor()) {
-            showTwoFactorDialog();
+        if (document.requiresHighAuthenticationLevel()) {
+            handleHighAuthenticationLevelDocument(document);
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).isUserKeyEncrypted()) {
             showUserKeyEncryptedDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).getOpeningReceiptUri() != null) {
             showOpeningReceiptDialog(document, document.getAttachment().get(0), 0);
         } else {
             findDocumentAttachments(document);
+        }
+    }
+
+    private void handleHighAuthenticationLevelDocument(Document document){
+        if (highAuthenticationLevelTokenIsValid(document.getAuthenticationLevel())){
+            findDocumentAttachments(document);
+        }else{
+            openHighAuthenticationLevelDialog(document);
+        }
+    }
+
+    private void openHighAuthenticationLevelDialog(final Document document){
+        String title = getString(R.string.dialog_id_porten_title);
+        String message = getString(R.string.dialog_id_porten_message);
+
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
+
+        builder.setPositiveButton(getString(R.string.dialog_id_porten_unlock), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                openHighAuthenticationWebView(document);
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+
+        builder.create().show();
+    }
+
+    private boolean highAuthenticationLevelTokenIsValid(String authenticationLevel){
+        return false;
+    }
+
+    private void openHighAuthenticationWebView(Document document){
+        if (NetworkUtilities.isOnline()) {
+            Intent i = new Intent(getActivity(), WebLoginActivity.class);
+            i.putExtra("authenticationScope", document.getAuthenticationScope());
+            getActivity().startActivityForResult(i, WebLoginActivity.WEB_IDPORTEN3_LOGIN_REQUEST);
+        } else {
+            DialogUtitities.showToast(context, getString(R.string.error_your_network));
         }
     }
 
@@ -271,23 +314,6 @@ public class DocumentFragment extends ContentFragment<Document> {
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 dialog.cancel();
-            }
-        });
-
-        builder.create().show();
-    }
-
-    private void showTwoFactorDialog() {
-
-        String message = getString(R.string.dialog_error_two_factor_message);
-        String title = getString(R.string.dialog_error_two_factor_title);
-
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
-
-        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
             }
         });
 
