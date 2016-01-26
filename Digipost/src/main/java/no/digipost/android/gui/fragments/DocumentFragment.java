@@ -34,22 +34,18 @@ import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-
+import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.gui.WebLoginActivity;
 import org.apache.http.Header;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ws.rs.core.HttpHeaders;
-
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
@@ -82,6 +78,9 @@ public class DocumentFragment extends ContentFragment<Document> {
     private Dialog attachmentDialog;
     private boolean openAttachment = true;
     private static String EXTRA_CONTENT = "content";
+    private static final int INTENT_OPEN_ATTACHMENT_CONTENT = 0;
+    private static final int INTENT_ID_PORTEN_WEBVIEW_LOGIN = 1;
+    private Document tempDocument;
 
     public static DocumentFragment newInstance(int content) {
         DocumentFragment fragment = new DocumentFragment();
@@ -117,7 +116,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
+            if (requestCode == DocumentFragment.INTENT_OPEN_ATTACHMENT_CONTENT) {
                 if (data.hasExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION)) {
 
                     String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
@@ -133,6 +132,9 @@ public class DocumentFragment extends ContentFragment<Document> {
                         deleteDocument(DocumentContentStore.getDocumentParent());
                     }
                 }
+            }else if(requestCode == DocumentFragment.INTENT_ID_PORTEN_WEBVIEW_LOGIN){
+                openListItem(tempDocument);
+
             }
         }
         if(updateCurrentDocument ){
@@ -242,9 +244,10 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private void handleHighAuthenticationLevelDocument(Document document){
-        if (highAuthenticationLevelTokenIsValid(document.getAuthenticationLevel())){
+        if (TokenStore.hasValidTokenForScope(document.getAuthenticationScope())){
             findDocumentAttachments(document);
         }else{
+            tempDocument = document;
             openHighAuthenticationLevelDialog(document);
         }
     }
@@ -269,15 +272,11 @@ public class DocumentFragment extends ContentFragment<Document> {
         builder.create().show();
     }
 
-    private boolean highAuthenticationLevelTokenIsValid(String authenticationLevel){
-        return false;
-    }
-
     private void openHighAuthenticationWebView(Document document){
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(getActivity(), WebLoginActivity.class);
             i.putExtra("authenticationScope", document.getAuthenticationScope());
-            getActivity().startActivityForResult(i, WebLoginActivity.WEB_IDPORTEN3_LOGIN_REQUEST);
+            getActivity().startActivityForResult(i, DocumentFragment.INTENT_ID_PORTEN_WEBVIEW_LOGIN);
         } else {
             DialogUtitities.showToast(context, getString(R.string.error_your_network));
         }
@@ -290,7 +289,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             showAttachmentDialog(document);
         } else {
             Attachment attachment = document.getAttachment().get(0);
-            getAttachmentContent(document, 0, attachment);
+            getAttachmentContent(document, 0, attachment, document.getAuthenticationScope());
         }
     }
 
@@ -353,7 +352,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
 
         intent.putExtra(INTENT_CONTENT, getContent());
-        startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
+        startActivityForResult(intent, DocumentFragment.INTENT_OPEN_ATTACHMENT_CONTENT);
     }
 
     protected void showContentProgressDialog(String message) {
@@ -371,13 +370,13 @@ public class DocumentFragment extends ContentFragment<Document> {
         progressDialog.show();
     }
 
-    private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition,final Attachment attachment) {
+    private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition, final Attachment attachment, final String authenticationScope) {
 
         if (parentDocument != null && attachment != null) {
             asyncHttpClient = new AsyncHttpClient();
             asyncHttpClient.addHeader(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT);
             asyncHttpClient.addHeader(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM);
-            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
+            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getTokenForScope(authenticationScope));
             asyncHttpClient.get(context, attachment.getContentUri(), new AsyncHttpResponseHandler() {
 
                 @Override
@@ -403,6 +402,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                         if (attachments.size() > 1) {
                             attachmentAdapter.setAttachments(attachments);
                         }
+
                         activityCommunicator.onUpdateAccountMeta();
                     }
 
@@ -557,7 +557,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             } else if (attachment.getOpeningReceiptUri() != null) {
                 showOpeningReceiptDialog(parentDocument, attachment, position);
             } else {
-                getAttachmentContent(parentDocument, position, attachment);
+                getAttachmentContent(parentDocument, position, attachment, parentDocument.getAuthenticationScope());
             }
         }
     }
@@ -749,7 +749,6 @@ public class DocumentFragment extends ContentFragment<Document> {
             try {
                 document = (Document) JSONUtilities.processJackson(Document.class, ContentOperations.sendOpeningReceipt(context, attachment));
                 attachment = document.getAttachment().get(attachmentPosition);
-
                 return true;
             } catch (DigipostApiException e) {
                 errorMessage = e.getMessage();
@@ -781,7 +780,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             DocumentFragment.super.hideProgressDialog();
             if (isAdded()) {
                 if (result) {
-                    getAttachmentContent(document, attachmentPosition, attachment);
+                    getAttachmentContent(document, attachmentPosition, attachment, document.getAuthenticationScope());
                 } else {
                     if (invalidToken) {
                         activityCommunicator.requestLogOut();

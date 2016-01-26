@@ -56,6 +56,7 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.tasks.CreateEditDeleteFolderTask;
 import no.digipost.android.api.tasks.GetAccountTask;
 import no.digipost.android.api.tasks.UpdateFoldersTask;
+import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.DrawerAdapter;
@@ -632,6 +633,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         FileUtilities.deleteTempFiles();
         SharedPreferencesUtilities.deleteRefreshtoken(this);
         SharedPreferencesUtilities.deleteScreenlockChoice(this);
+        TokenStore.deleteStore();
         ContentOperations.resetState();
         mailbox = null;
         account = null;

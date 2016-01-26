@@ -20,7 +20,7 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.authentication.Auth;
+import no.digipost.android.authentication.OAuth;
 import no.digipost.android.authentication.AndroidLockSecurity;
 import no.digipost.android.gui.LoginActivity;
 import no.digipost.android.gui.MainContentActivity;
@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
 		protected String doInBackground(final Void... params) {
 
 			try {
-				Auth.updateAccessToken(MainActivity.this);
+				OAuth.updateAccessToken(MainActivity.this);
 				return null;
 			} catch (DigipostApiException e) {
 				return e.getMessage();

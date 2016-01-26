@@ -25,7 +25,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.authentication.KeyStoreAdapter;
@@ -84,18 +83,6 @@ public class LoginActivity extends Activity {
         registrationButton.setTextColor(getResources().getColor(R.color.login_grey_text));
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
-
     private void deleteOldRefreshtoken() {
         if (keyStoreAdapter.isAvailable()) {
             SharedPreferencesUtilities.deleteRefreshtoken(this);
@@ -121,7 +108,7 @@ public class LoginActivity extends Activity {
     private void openWebView() {
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(this, WebLoginActivity.class);
-            i.putExtra("authScope", ApiConstants.SCOPE_FULL);
+            i.putExtra("authenticationScope", ApiConstants.SCOPE_FULL);
             startActivityForResult(i, WEB_OAUTH_LOGIN_REQUEST);
         } else {
             DialogUtitities.showToast(context, getString(R.string.error_your_network));
@@ -144,7 +131,7 @@ public class LoginActivity extends Activity {
         finish();
     }
 
-    private void openPrivayBrowser() {
+    private void openPrivacyBrowser() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/juridisk/"));
         startActivity(browserIntent);
     }
@@ -161,7 +148,7 @@ public class LoginActivity extends Activity {
                 startLoginProcess();
             } else if (v == privacyButton) {
                 privacyButton.setTextColor(getResources().getColor(R.color.grey_filesize));
-                openPrivayBrowser();
+                openPrivacyBrowser();
             } else if (v == registrationButton) {
                 registrationButton.setTextColor(getResources().getColor(R.color.grey_filesize));
                 openRegistrationDialog();

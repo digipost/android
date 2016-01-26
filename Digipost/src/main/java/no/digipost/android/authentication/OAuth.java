@@ -46,72 +46,62 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import com.sun.jersey.spi.service.ServiceFinder;
 
-public class Auth {
+public class OAuth {
 
 	private static String state = "";
-
     private static SecureRandom random = new SecureRandom();
 
 	public static String getAuthorizeURL(String scope) {
-		state = getSecureRandom(20);
+		state = getSecureRandom();
 		return ApiConstants.URL_API_OAUTH_AUTHORIZE_NEW + "?" + ApiConstants.RESPONSE_TYPE + "=" + ApiConstants.CODE + "&"
-				+ ApiConstants.CLIENT_ID + "=" + Secret.CLIENT_ID + "&" + ApiConstants.REDIRECT_URI + "=" + Secret.REDIRECT_URI + "&"
-				+ ApiConstants.STATE + "=" + state + "&" + ApiConstants.SCOPE + "=" + scope;
+				+ ApiConstants.CLIENT_ID + "=" + Secret.CLIENT_ID
+				+ "&" + ApiConstants.REDIRECT_URI + "=" + Secret.REDIRECT_URI
+				+ "&" + ApiConstants.SCOPE + "=" + scope
+				+ "&" + ApiConstants.STATE + "=" + state;
 	}
 
-	public static void retrieveToken(final String url_state, final String url_code, final Context context, final String authenticationScope) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-        String nonce = getSecureRandom(20);
+	public static void retrieveMainAccess(final String state, final String code, final Context context, final String scope) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+
+		String nonce = getSecureRandom();
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 
         params.add(ApiConstants.GRANT_TYPE, ApiConstants.CODE);
-		params.add(ApiConstants.CODE, url_code);
+		params.add(ApiConstants.CODE, code);
 		params.add(ApiConstants.REDIRECT_URI, Secret.REDIRECT_URI);
 		params.add(ApiConstants.NONCE, nonce);
+		params.add(ApiConstants.SCOPE, scope);
 
-        if(authenticationScope.equals(ApiConstants.SCOPE_IDPORTEN_3)) {
-            params.add(ApiConstants.SCOPE, ApiConstants.SCOPE_IDPORTEN_3);
-        }
-
-        Access data = getAccessData(params, context);
-
-		verifyState(url_state, context);
-		verifyAuthentication(data.getId_token(), context);
-
-		storeTokens(data, context);
+        Access access = getAccessData(params, context);
+		verifyState(state, context);
+		verifyAuthentication(access.getId_token(), context);
+		TokenStore.storeToken(access, context, scope);
 	}
 
-	public static void retrieveAccessToken(final String refresh_token, final Context context) throws DigipostApiException,
+	public static String getAccessTokenWithRefreshToken(final String refresh_token, final Context context) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
 		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
-		Secret.ACCESS_TOKEN = getAccessData(params, context).getAccess_token();
-	}
-
-	private static void storeTokens(final Access data, final Context context) {
-		Secret.ACCESS_TOKEN = data.getAccess_token();
-        Secret.REFRESH_TOKEN = data.getRefresh_token();
-		if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
-			String refresh_token = data.getRefresh_token();
-			KeyStoreAdapter ksa = new KeyStoreAdapter(context);
-			String cipher = ksa.encrypt(refresh_token);
-			SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
-		}
+		return getAccessData(params, context).getAccess_token();
 	}
 
 	public static void updateAccessToken(final Context context) throws DigipostApiException, DigipostClientException,
 			DigipostAuthenticationException {
-        String refresh_token = Secret.REFRESH_TOKEN;
+
+        String refresh_token = TokenStore.REFRESH_TOKEN;
+
         if (StringUtils.isBlank(refresh_token)) {
             String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
             KeyStoreAdapter ksa = new KeyStoreAdapter(context);
             refresh_token = ksa.decrypt(encrypted_refresh_token);
-            Secret.REFRESH_TOKEN = refresh_token;
+			TokenStore.REFRESH_TOKEN = refresh_token;
         }
+
         if (StringUtils.isBlank(refresh_token)) {
             throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
         }
-        retrieveAccessToken(refresh_token, context);
+
+		TokenStore.ACCESS_TOKEN = (getAccessTokenWithRefreshToken(refresh_token, context));
 	}
 
 	private static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws DigipostApiException,
@@ -165,7 +155,7 @@ public class Auth {
 		}
 	}
 
-	private static String getSecureRandom(final int num_bytes) {
+	private static String getSecureRandom() {
 		return new BigInteger(130, random).toString(32);
 	}
 

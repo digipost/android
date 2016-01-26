@@ -21,7 +21,8 @@ import android.util.Log;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 
-import no.digipost.android.authentication.Auth;
+import no.digipost.android.authentication.OAuth;
+import no.digipost.android.authentication.TokenStore;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
@@ -53,7 +54,6 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.api.exception.DigipostInvalidTokenException;
-import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
@@ -88,14 +88,14 @@ public class ApiAccess {
             DigipostApiException, DigipostAuthenticationException {
 
         try {
-            if (StringUtils.isBlank(Secret.ACCESS_TOKEN)) {
-                Auth.updateAccessToken(context);
+            if (StringUtils.isBlank(TokenStore.ACCESS_TOKEN)) {
+                OAuth.updateAccessToken(context);
             }
             ClientResponse cr = getClient()
                     .resource(uri)
                     .header(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT)
                     .header(ApiConstants.ACCEPT, header_accept)
-                    .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
+                    .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.ACCESS_TOKEN)
                     .get(ClientResponse.class);
 
             if (cr.getStatus() == TEMPORARY_REDIRECT.getStatusCode()) {
@@ -133,7 +133,7 @@ public class ApiAccess {
 
         request.addHeader(ApiConstants.CONTENT_TYPE, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
         request.addHeader(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
-        request.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
+        request.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.ACCESS_TOKEN);
 
         if (action == SEND_OPENING_RECEIPT || action == SEND_TO_BANK) {
         } else {
@@ -151,7 +151,7 @@ public class ApiAccess {
         try {
             NetworkUtilities.checkHttpStatusCode(context, response.getStatusLine().getStatusCode());
         } catch (DigipostInvalidTokenException e) {
-            Auth.updateAccessToken(context);
+            OAuth.updateAccessToken(context);
             Log.e(TAG, context.getString(R.string.error_invalid_token));
             return postput(context, httpType, action, uri, json);
         }
@@ -175,7 +175,7 @@ public class ApiAccess {
             cr = client
                     .resource(uri)
                     .header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
-                    .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN)
+                    .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.ACCESS_TOKEN)
                     .delete(ClientResponse.class);
 
         } catch (Exception e) {
@@ -198,7 +198,7 @@ public class ApiAccess {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {
             Log.e(TAG, context.getString(R.string.error_invalid_token));
-            Auth.updateAccessToken(context);
+            OAuth.updateAccessToken(context);
             delete(context, uri);
         }
         return "" + cr.getStatus();
@@ -211,7 +211,7 @@ public class ApiAccess {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {
             Log.e(TAG, context.getString(R.string.error_invalid_token));
-            Auth.updateAccessToken(context);
+            OAuth.updateAccessToken(context);
             return getReceiptHTML(context, uri);
         }
 
@@ -223,13 +223,13 @@ public class ApiAccess {
             try {
                 HttpClient httpClient = new DefaultHttpClient();
                 HttpPost httpPost = new HttpPost(uri);
-                httpPost.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
+                httpPost.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.ACCESS_TOKEN);
                 FileBody filebody = new FileBody(file, ApiConstants.CONTENT_OCTET_STREAM);
 
                 MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName(ApiConstants.ENCODING));
                 multipartEntity.addPart("subject", new StringBody(FilenameUtils.removeExtension(file.getName()), ApiConstants.MIME, Charset.forName(ApiConstants.ENCODING)));
                 multipartEntity.addPart("file", filebody);
-                multipartEntity.addPart("token", new StringBody(Secret.ACCESS_TOKEN));
+                multipartEntity.addPart("token", new StringBody(TokenStore.ACCESS_TOKEN));
                 httpPost.setEntity(multipartEntity);
 
                 HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -237,7 +237,7 @@ public class ApiAccess {
                 NetworkUtilities.checkHttpStatusCode(context, httpResponse.getStatusLine().getStatusCode());
 
             } catch (DigipostInvalidTokenException e) {
-                Auth.updateAccessToken(context);
+                OAuth.updateAccessToken(context);
                 uploadFile(context, uri, file);
             }
         } catch (Exception e) {
@@ -252,7 +252,7 @@ public class ApiAccess {
         try {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {
-            Auth.updateAccessToken(context);
+            OAuth.updateAccessToken(context);
             return getApiJsonString(context, uri);
         }catch (Exception e){
             Log.e(TAG, e.getMessage());

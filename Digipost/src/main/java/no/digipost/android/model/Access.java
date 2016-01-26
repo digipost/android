@@ -54,8 +54,4 @@ public class Access {
 	public String getId_token() {
 		return id_token;
 	}
-
-	public String getAccessToken() {
-		return access_token;
-	}
 }
