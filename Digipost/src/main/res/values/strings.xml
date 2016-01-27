@@ -100,7 +100,7 @@
     <string name="delete_cancelled">%1$d av %2$d slettet.</string>
 
     <!-- LoginActivity -->
-    <string name="login_loginbutton_text">Logg inn</string>
+    <string name="login_loginbutton_text">Logg inn i Digipost</string>
     <string name="login_registrationbutton_text">Ny bruker</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
