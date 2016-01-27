@@ -33,7 +33,6 @@ public class TokenStore {
     private static ArrayList<Token> tokens;
 
     public static String getTokenForScope(String scope){
-
         if (scope.equals(ApiConstants.SCOPE_FULL)) {
             return ACCESS_TOKEN;
         }
@@ -41,9 +40,9 @@ public class TokenStore {
         if(tokens != null) {
             for (Token token : tokens) {
                 if (!token.hasExpired()) {
-                    if (scope.equals(ApiConstants.SCOPE_FULL) && token.getScope().equals(ApiConstants.SCOPE_FULL_HIGH)) {
+                    if (scope.equals(ApiConstants.SCOPE_FULL_HIGH) && token.getScope().equals(ApiConstants.SCOPE_FULL_HIGH)) {
                         return token.getAccessToken();
-                    } else if (scope.equals(ApiConstants.SCOPE_TWO_FACTOR) && token.getScope().equals(ApiConstants.SCOPE_TWO_FACTOR)) {
+                    }else if (scope.equals(ApiConstants.SCOPE_FULL_HIGH) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)) {
                         return token.getAccessToken();
                     } else if (scope.equals(ApiConstants.SCOPE_IDPORTEN_3) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)) {
                         return token.getAccessToken();
@@ -59,10 +58,7 @@ public class TokenStore {
     }
 
     public static boolean hasValidTokenForScope(String scope){
-        if(getTokenForScope(scope).equals("")){
-            return false;
-        }
-        return true;
+        return !getTokenForScope(scope).equals("");
     }
 
     public static void deleteStore(){
@@ -91,7 +87,7 @@ public class TokenStore {
             boolean tokenExist = false;
 
             JodaTimeAndroid.init(context);
-            DateTime expiration = DateTime.now().plusSeconds(Integer.parseInt(access.getExpires_in()));
+            DateTime expiration = DateTime.now().plusSeconds(Integer.parseInt(access.getExpires_in())-10);
             for(int i = 0; i < tokens.size(); i++) {
                 if (tokens.get(i).getScope().equals(scope)) {
                     tokens.set(i, new Token(access.getAccess_token(), scope, expiration));

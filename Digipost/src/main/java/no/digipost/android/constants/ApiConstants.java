@@ -61,7 +61,6 @@ public class ApiConstants {
     public static final String TEXT_HTML = "text/html";
 
     public static final String SCOPE_FULL = "FULL";
-    public static final String SCOPE_TWO_FACTOR = "TWO_FACTOR";
     public static final String SCOPE_FULL_HIGH = "FULL_HIGHAUTH";
     public static final String SCOPE_IDPORTEN_3 = "FULL_IDPORTEN3";
     public static final String SCOPE_IDPORTEN_4 = "FULL_IDPORTEN4";

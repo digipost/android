@@ -288,7 +288,9 @@ public class DocumentFragment extends ContentFragment<Document> {
             showAttachmentDialog(document);
         } else {
             Attachment attachment = document.getAttachment().get(0);
-            getAttachmentContent(document, 0, attachment, document.getAuthenticationScope());
+            if (TokenStore.hasValidTokenForScope(document.getAuthenticationScope())) {
+                getAttachmentContent(document, 0, attachment);
+            }
         }
     }
 
@@ -369,13 +371,13 @@ public class DocumentFragment extends ContentFragment<Document> {
         progressDialog.show();
     }
 
-    private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition, final Attachment attachment, final String authenticationScope) {
+    private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition, final Attachment attachment) {
 
         if (parentDocument != null && attachment != null) {
             asyncHttpClient = new AsyncHttpClient();
             asyncHttpClient.addHeader(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT);
             asyncHttpClient.addHeader(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM);
-            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getTokenForScope(authenticationScope));
+            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getTokenForScope(parentDocument.getAuthenticationScope()));
             asyncHttpClient.get(context, attachment.getContentUri(), new AsyncHttpResponseHandler() {
 
                 @Override
@@ -556,7 +558,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             } else if (attachment.getOpeningReceiptUri() != null) {
                 showOpeningReceiptDialog(parentDocument, attachment, position);
             } else {
-                getAttachmentContent(parentDocument, position, attachment, parentDocument.getAuthenticationScope());
+                getAttachmentContent(parentDocument, position, attachment);
             }
         }
     }
@@ -779,7 +781,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             DocumentFragment.super.hideProgressDialog();
             if (isAdded()) {
                 if (result) {
-                    getAttachmentContent(document, attachmentPosition, attachment, document.getAuthenticationScope());
+                    getAttachmentContent(document, attachmentPosition, attachment);
                 } else {
                     if (invalidToken) {
                         activityCommunicator.requestLogOut();
