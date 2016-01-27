@@ -16,11 +16,12 @@
 
 package no.digipost.android;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.authentication.OAuth2;
-import no.digipost.android.authentication.Security;
+import no.digipost.android.authentication.OAuth;
+import no.digipost.android.authentication.AndroidLockSecurity;
 import no.digipost.android.gui.LoginActivity;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.utilities.FileUtilities;
@@ -30,13 +31,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 public class MainActivity extends Activity {
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
 		setContentView(R.layout.activity_main);
 		checkTokenAndScreenlockStatus();
 	}
@@ -44,19 +44,19 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
+		GoogleAnalytics.getInstance(this).reportActivityStart(this);
 		FileUtilities.deleteTempFiles();
-		EasyTracker.getInstance().activityStart(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		EasyTracker.getInstance().activityStop(this);
+		GoogleAnalytics.getInstance(this).reportActivityStop(this);
 		finish();
 	}
 
 	private void checkTokenAndScreenlockStatus() {
-		if (Security.canUseRefreshTokens(this) && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
+		if (AndroidLockSecurity.canUseRefreshTokens(this) && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
 			new CheckTokenTask().execute();
 		} else {
 			startLoginActivity();
@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
 		protected String doInBackground(final Void... params) {
 
 			try {
-				OAuth2.updateAccessToken(MainActivity.this);
+				OAuth.updateAccessTokenWithRefreshToken(MainActivity.this);
 				return null;
 			} catch (DigipostApiException e) {
 				return e.getMessage();

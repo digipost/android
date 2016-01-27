@@ -21,11 +21,9 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
 import java.util.ArrayList;
-
+import com.google.android.gms.analytics.GoogleAnalytics;
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Address;
@@ -47,7 +45,7 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_personal_settings);
 
         getActionBar().setHomeButtonEnabled(true);
@@ -59,13 +57,13 @@ public class PersonalSettingsActivity extends DigipostSettingsActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        EasyTracker.getInstance().activityStart(this);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        EasyTracker.getInstance().activityStop(this);
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     private void createUI() {

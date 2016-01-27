@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+           tools:ignore="TypographyDashes">
+    <!-- The apps Analytics Tracking Id -->
+    <string name="ga_trackingId">UA-20592293-2</string>
+
+    <!-- Percentage of events to include in reports -->
+    <string name="ga_sampleFrequency">100.0</string>
+
+    <!-- Enable automatic Activity measurement -->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!-- catch and report uncaught exceptions from the app -->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+    <string name="ga_anonymizeIp">true</string>
+
+    <!-- How long a session exists before giving up -->
+    <integer name="ga_sessionTimeout">-1</integer>
+
+    <!-- If ga_autoActivityTracking is enabled, an alternate screen name can be specified to substitute for the full length canonical Activity name in screen view hit. In order to specify an alternate screen name use an <screenName> element, with the name attribute specifying the canonical name, and the value the alias to use instead. -->
+    <string name="no.digipost.android.MainActivity">MainActivity</string>
+    <string name="no.digipost.android.gui.LoginActivity">LoginActivity</string>
+    <string name="no.digipost.android.gui.ScreenlockPreferenceActivity">ScreenlockPreferenceActivity</string>
+    <string name="no.digipost.android.gui.MainContentActivity">MainContentActivity</string>
+    <string name="no.digipost.android.gui.content.HtmlAndReceiptActivity">HtmlAndReceiptActivity</string>
+    <string name="no.digipost.android.gui.content.UnsupportedDocumentFormatActivity">UnsupportedDocumentFormatActivity</string>
+    <string name="no.digipost.android.gui.content.UploadActivity">UploadActivity</string>
+    <string name="no.digipost.android.gui.content.NotificationSettingsActivity">NotificationSettingsActivity</string>
+    <string name="no.digipost.android.gui.content.DisplayContentActivity">DisplayContentActivity</string>
+    <string name="no.digipost.android.gui.content.MuPDFActivity">MuPDFActivity</string>
+    <string name="no.digipost.android.gui.content.PersonalSettingsActivity">PersonalSettingsActivity</string>
+    <string name="no.digipost.android.gui.content.SettingsActivity">SettingsActivity</string>
+</resources>

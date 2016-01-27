@@ -25,31 +25,30 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.authentication.KeyStoreAdapter;
-import no.digipost.android.authentication.Security;
+import no.digipost.android.authentication.AndroidLockSecurity;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class LoginActivity extends Activity {
+    private final int WEB_OAUTH_LOGIN_REQUEST = 0;
     private Button loginButton, privacyButton, registrationButton;
-    private CheckBox rememberMe;
-    private KeyStoreAdapter ks;
+    private CheckBox rememberCheckbox;
+    private KeyStoreAdapter keyStoreAdapter;
     private Context context;
-
-    private final int WEB_LOGIN_REQUEST = 1;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_login);
         context = this;
-        ks = new KeyStoreAdapter(this);
+        keyStoreAdapter = new KeyStoreAdapter(this);
         ButtonListener listener = new ButtonListener();
         loginButton = (Button) findViewById(R.id.login_loginButton);
         loginButton.setOnClickListener(listener);
@@ -57,10 +56,10 @@ public class LoginActivity extends Activity {
         privacyButton.setOnClickListener(listener);
         registrationButton = (Button) findViewById(R.id.login_registrationButton);
         registrationButton.setOnClickListener(listener);
-        rememberMe = (CheckBox) findViewById(R.id.login_remember_me);
+        rememberCheckbox = (CheckBox) findViewById(R.id.login_remember_me);
 
-        if (!ks.isAvailable()) {
-            rememberMe.setVisibility(View.GONE);
+        if (!keyStoreAdapter.isAvailable()) {
+            rememberCheckbox.setVisibility(View.GONE);
         }
     }
 
@@ -69,12 +68,11 @@ public class LoginActivity extends Activity {
         super.onResume();
         enableCheckBoxIfScreenlock();
         deleteOldRefreshtoken();
-        final Context c = this;
-        rememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        rememberCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-                if (rememberMe.isChecked()) {
-                    if (!Security.isAboveSlider(c)) {
+                if (rememberCheckbox.isChecked()) {
+                    if (!AndroidLockSecurity.screenLockEnabled(getApplicationContext())) {
                         Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
                         startActivity(i);
                     }
@@ -83,35 +81,22 @@ public class LoginActivity extends Activity {
         });
         privacyButton.setTextColor(getResources().getColor(R.color.login_grey_text));
         registrationButton.setTextColor(getResources().getColor(R.color.login_grey_text));
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EasyTracker.getInstance().activityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EasyTracker.getInstance().activityStop(this);
     }
 
     private void deleteOldRefreshtoken() {
-        if (ks.isAvailable()) {
+        if (keyStoreAdapter.isAvailable()) {
             SharedPreferencesUtilities.deleteRefreshtoken(this);
         }
     }
 
     private void enableCheckBoxIfScreenlock() {
-        if (!Security.canUseRefreshTokens(this)) {
-            rememberMe.setChecked(false);
+        if (!AndroidLockSecurity.canUseRefreshTokens(this)) {
+            rememberCheckbox.setChecked(false);
         }
     }
 
     private void startLoginProcess() {
-        if (rememberMe.isChecked()) {
+        if (rememberCheckbox.isChecked()) {
             SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_YES);
             openWebView();
         } else {
@@ -123,16 +108,16 @@ public class LoginActivity extends Activity {
     private void openWebView() {
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(this, WebLoginActivity.class);
-            startActivityForResult(i, WEB_LOGIN_REQUEST);
+            i.putExtra("authenticationScope", ApiConstants.SCOPE_FULL);
+            startActivityForResult(i, WEB_OAUTH_LOGIN_REQUEST);
         } else {
             DialogUtitities.showToast(context, getString(R.string.error_your_network));
         }
-
     }
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        if (requestCode == WEB_LOGIN_REQUEST) {
+        if (requestCode == WEB_OAUTH_LOGIN_REQUEST) {
             if (resultCode == RESULT_OK) {
                 startMainContentActivity();
             }
@@ -146,7 +131,7 @@ public class LoginActivity extends Activity {
         finish();
     }
 
-    private void openPrivayBrowser() {
+    private void openPrivacyBrowser() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/juridisk/"));
         startActivity(browserIntent);
     }
@@ -163,7 +148,7 @@ public class LoginActivity extends Activity {
                 startLoginProcess();
             } else if (v == privacyButton) {
                 privacyButton.setTextColor(getResources().getColor(R.color.grey_filesize));
-                openPrivayBrowser();
+                openPrivacyBrowser();
             } else if (v == registrationButton) {
                 registrationButton.setTextColor(getResources().getColor(R.color.grey_filesize));
                 openRegistrationDialog();

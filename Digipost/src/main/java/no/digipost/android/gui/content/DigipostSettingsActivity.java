@@ -26,9 +26,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
+import com.google.android.gms.analytics.GoogleAnalytics;
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -50,27 +49,25 @@ public abstract class DigipostSettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         executeGetAccountTask();
     }
 
     @Override
     protected void onPause() {
-        super.onDestroy();
+        super.onPause();
 
         hideSettingsProgressDialog();
     }
 
     protected void onStart() {
         super.onStart();
-        EasyTracker.getInstance().activityStart(this);
-    }
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);    }
 
     @Override
     protected void onStop() {
         super.onStop();
-        EasyTracker.getInstance().activityStop(this);
-    }
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

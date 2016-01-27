@@ -22,6 +22,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -68,7 +71,7 @@
             android:name="no.digipost.android.gui.MainContentActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="no.digipost.android.gui.WebLoginActivity"
+            android:name=".gui.WebLoginActivity"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="no.digipost.android.gui.content.HtmlAndReceiptActivity"
@@ -90,5 +93,10 @@
         <activity
             android:name="no.digipost.android.gui.content.PersonalSettingsActivity"
             android:configChanges="orientation|screenSize" />
+
+        <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version" />
+
     </application>
 </manifest>

@@ -50,6 +50,7 @@ public class ApiConstants {
     public static final String REFRESH_TOKEN = "refresh_token";
     public static final String REDIRECT_URI = "redirect_uri";
     public static final String STATE = "state";
+    public static final String SCOPE = "scope";
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String ACCEPT = "Accept";
     public static final String AUTHORIZATION = "Authorization";
@@ -59,7 +60,12 @@ public class ApiConstants {
     public static final String CONTENT_OCTET_STREAM = "application/octet-stream";
     public static final String TEXT_HTML = "text/html";
 
-    public static final String URL = "https://www.digipost.no/post/";
+    public static final String SCOPE_FULL = "FULL";
+    public static final String SCOPE_FULL_HIGH = "FULL_HIGHAUTH";
+    public static final String SCOPE_IDPORTEN_3 = "FULL_IDPORTEN3";
+    public static final String SCOPE_IDPORTEN_4 = "FULL_IDPORTEN4";
+
+    public static final String URL = "https://qa.digipost.no/post/";
 
     public static final String URL_API = URL + "api";
     public static final String URL_RELATIONS = URL + "relations/";

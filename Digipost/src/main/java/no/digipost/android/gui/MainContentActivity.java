@@ -45,18 +45,18 @@ import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
-
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.terlici.dragndroplist.DragNDropListView;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.tasks.CreateEditDeleteFolderTask;
 import no.digipost.android.api.tasks.GetAccountTask;
 import no.digipost.android.api.tasks.UpdateFoldersTask;
+import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.DrawerAdapter;
@@ -106,7 +106,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_main_content);
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
@@ -218,13 +218,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     protected void onStart() {
         super.onStart();
-        EasyTracker.getInstance().activityStart(this);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        EasyTracker.getInstance().activityStop(this);
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     @Override
@@ -631,8 +631,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private void logOut() {
         FileUtilities.deleteTempFiles();
-        SharedPreferencesUtilities.deleteRefreshtoken(this);
         SharedPreferencesUtilities.deleteScreenlockChoice(this);
+        TokenStore.deleteStore(getApplicationContext());
         ContentOperations.resetState();
         mailbox = null;
         account = null;

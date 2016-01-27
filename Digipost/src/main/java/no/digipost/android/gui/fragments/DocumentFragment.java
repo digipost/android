@@ -34,21 +34,18 @@ import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-
+import no.digipost.android.authentication.TokenStore;
+import no.digipost.android.gui.WebLoginActivity;
 import org.apache.http.Header;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ws.rs.core.HttpHeaders;
-
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.authentication.Secret;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
@@ -81,6 +78,8 @@ public class DocumentFragment extends ContentFragment<Document> {
     private Dialog attachmentDialog;
     private boolean openAttachment = true;
     private static String EXTRA_CONTENT = "content";
+    private static final int INTENT_OPEN_ATTACHMENT_CONTENT = 0;
+    private static final int INTENT_ID_PORTEN_WEBVIEW_LOGIN = 1;
 
     public static DocumentFragment newInstance(int content) {
         DocumentFragment fragment = new DocumentFragment();
@@ -116,7 +115,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == MainContentActivity.INTENT_REQUESTCODE) {
+            if (requestCode == DocumentFragment.INTENT_OPEN_ATTACHMENT_CONTENT) {
                 if (data.hasExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION)) {
 
                     String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
@@ -132,6 +131,9 @@ public class DocumentFragment extends ContentFragment<Document> {
                         deleteDocument(DocumentContentStore.getDocumentParent());
                     }
                 }
+            }else if(requestCode == DocumentFragment.INTENT_ID_PORTEN_WEBVIEW_LOGIN){
+                currentListPosition = data.getExtras().getInt("currentListPosition");
+                openListItem(DocumentFragment.super.listAdapter.getItem(currentListPosition));
             }
         }
         if(updateCurrentDocument ){
@@ -229,14 +231,53 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private void openListItem(final Document document) {
-        if (document.requiresTwoFactor()) {
-            showTwoFactorDialog();
+        if (document.requiresHighAuthenticationLevel()) {
+            handleHighAuthenticationLevelDocument(document);
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).isUserKeyEncrypted()) {
             showUserKeyEncryptedDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).getOpeningReceiptUri() != null) {
             showOpeningReceiptDialog(document, document.getAttachment().get(0), 0);
         } else {
             findDocumentAttachments(document);
+        }
+    }
+
+    private void handleHighAuthenticationLevelDocument(Document document){
+        if (TokenStore.hasValidTokenForScope(document.getAuthenticationScope())){
+            findDocumentAttachments(document);
+        }else{
+            openHighAuthenticationLevelDialog(document);
+        }
+    }
+
+    private void openHighAuthenticationLevelDialog(final Document document){
+        String title = getString(R.string.dialog_id_porten_title);
+        String message = getString(R.string.dialog_id_porten_message);
+
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
+
+        builder.setPositiveButton(getString(R.string.dialog_id_porten_unlock), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                openHighAuthenticationWebView(document);
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+
+        builder.create().show();
+    }
+
+    private void openHighAuthenticationWebView(Document document){
+        if (NetworkUtilities.isOnline()) {
+            Intent i = new Intent(getActivity(), WebLoginActivity.class);
+            i.putExtra("authenticationScope", document.getAuthenticationScope());
+            i.putExtra("currentListPosition", currentListPosition);
+            startActivityForResult(i, DocumentFragment.INTENT_ID_PORTEN_WEBVIEW_LOGIN);
+        } else {
+            DialogUtitities.showToast(context, getString(R.string.error_your_network));
         }
     }
 
@@ -247,7 +288,9 @@ public class DocumentFragment extends ContentFragment<Document> {
             showAttachmentDialog(document);
         } else {
             Attachment attachment = document.getAttachment().get(0);
-            getAttachmentContent(document, 0, attachment);
+            if (TokenStore.hasValidTokenForScope(document.getAuthenticationScope())) {
+                getAttachmentContent(document, 0, attachment);
+            }
         }
     }
 
@@ -271,23 +314,6 @@ public class DocumentFragment extends ContentFragment<Document> {
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 dialog.cancel();
-            }
-        });
-
-        builder.create().show();
-    }
-
-    private void showTwoFactorDialog() {
-
-        String message = getString(R.string.dialog_error_two_factor_message);
-        String title = getString(R.string.dialog_error_two_factor_title);
-
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
-
-        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
             }
         });
 
@@ -327,7 +353,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
 
         intent.putExtra(INTENT_CONTENT, getContent());
-        startActivityForResult(intent, MainContentActivity.INTENT_REQUESTCODE);
+        startActivityForResult(intent, DocumentFragment.INTENT_OPEN_ATTACHMENT_CONTENT);
     }
 
     protected void showContentProgressDialog(String message) {
@@ -345,13 +371,13 @@ public class DocumentFragment extends ContentFragment<Document> {
         progressDialog.show();
     }
 
-    private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition,final Attachment attachment) {
+    private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition, final Attachment attachment) {
 
         if (parentDocument != null && attachment != null) {
             asyncHttpClient = new AsyncHttpClient();
             asyncHttpClient.addHeader(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT);
             asyncHttpClient.addHeader(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM);
-            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + Secret.ACCESS_TOKEN);
+            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccessTokenForScope(parentDocument.getAuthenticationScope()));
             asyncHttpClient.get(context, attachment.getContentUri(), new AsyncHttpResponseHandler() {
 
                 @Override
@@ -377,6 +403,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                         if (attachments.size() > 1) {
                             attachmentAdapter.setAttachments(attachments);
                         }
+
                         activityCommunicator.onUpdateAccountMeta();
                     }
 
@@ -723,7 +750,6 @@ public class DocumentFragment extends ContentFragment<Document> {
             try {
                 document = (Document) JSONUtilities.processJackson(Document.class, ContentOperations.sendOpeningReceipt(context, attachment));
                 attachment = document.getAttachment().get(attachmentPosition);
-
                 return true;
             } catch (DigipostApiException e) {
                 errorMessage = e.getMessage();

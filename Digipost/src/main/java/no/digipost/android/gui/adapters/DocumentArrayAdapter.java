@@ -75,7 +75,7 @@ public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
             ArrayList<Document> documents = new ArrayList<Document>();
 
             for (Document document : collection) {
-                if (!document.requiresTwoFactor()) {
+                if (!document.requiresHighAuthenticationLevel()) {
                     documents.add(document);
                 }
             }
@@ -94,7 +94,7 @@ public class DocumentArrayAdapter extends ContentArrayAdapter<Document> {
 
         if (super.hideContentTypeImage) {
             super.contentTypeImage.setVisibility(View.GONE);
-        } else if (document.requiresTwoFactor()) {
+        } else if (document.requiresHighAuthenticationLevel()) {
             super.contentTypeImage.setImageDrawable(context.getResources().getDrawable(R.drawable.lock_32));
         }
     }

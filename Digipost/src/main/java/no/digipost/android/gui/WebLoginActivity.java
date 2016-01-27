@@ -18,115 +18,101 @@ package no.digipost.android.gui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.webkit.WebSettings;
+import android.util.Log;
+import android.webkit.*;
 import android.webkit.WebSettings.LayoutAlgorithm;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.authentication.OAuth2;
+import no.digipost.android.authentication.OAuth;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.NetworkUtilities;
 
 public class WebLoginActivity extends Activity {
 
-    private WebView webViewOauth;
-    private Context context;
+    private final String SUCCESS = "SUCCESS";
+    private String authenticationScope = ApiConstants.SCOPE_FULL;
+    private int currentListPosition = -1;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_web);
-        context = this;
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
+        setContentView(R.layout.fragment_login_webview);
+
+        try {
+            authenticationScope = getIntent().getExtras().getString("authenticationScope");
+            if(!authenticationScope.equals(ApiConstants.SCOPE_FULL)){
+                currentListPosition = getIntent().getExtras().getInt("currentListPosition");
+            }
+        }catch (NullPointerException e){
+            authenticationScope = ApiConstants.SCOPE_FULL;
+        }
 
         if (!NetworkUtilities.isOnline()) {
-            DialogUtitities.showToast(context, getString(R.string.error_your_network));
+            DialogUtitities.showToast(getApplicationContext(), getString(R.string.error_your_network));
             finish();
         }
 
+        CookieManager.getInstance().setAcceptCookie(true);
+        WebView webView = (WebView) findViewById(R.id.login_webview);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+        }
+        String url = OAuth.getAuthorizeURL(authenticationScope);
+        webView.loadUrl(url);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.setWebViewClient(new MyWebViewClient());
+
         getActionBar().setTitle(R.string.login_loginbutton_text);
         getActionBar().setHomeButtonEnabled(true);
-        webViewOauth = (WebView) findViewById(R.id.web_oauth);
-        String url = OAuth2.getAuthorizeURL();
-        webViewOauth.loadUrl(url);
-        WebSettings settings = webViewOauth.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-        webViewOauth.setWebViewClient(new MyWebViewClient());
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EasyTracker.getInstance().activityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EasyTracker.getInstance().activityStop(this);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private class MyWebViewClient extends WebViewClient {
+
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
+            if (url.indexOf( "https://localhost") == 0) {
+                oAuthRedirect(url);
+                return true;
+            }
+            return false;
+        }
 
+        private void oAuthRedirect(final String url){
             String state_fragment = "&" + ApiConstants.STATE + "=";
             int state_start = url.indexOf(state_fragment);
             String code_fragment = "&" + ApiConstants.CODE + "=";
             int code_start = url.indexOf(code_fragment);
-
-            if (code_start > -1) {
-                String state = url.substring(state_start + state_fragment.length(), code_start);
-                String code = url.substring(code_start + code_fragment.length(), url.length());
-
-                new GetAccessTokenTask().execute(state, code);
-
-                return true;
-            }
-
-            return false;
+            String state = url.substring(state_start + state_fragment.length(), code_start);
+            String code = url.substring(code_start + code_fragment.length(), url.length());
+            new GetTokenTask().execute(state, code);
         }
 
         @Override
-        public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
-            super.onReceivedError(view, errorCode, description, failingUrl);
+        public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
+            super.onReceivedError(view,req,err);
             setResult(RESULT_CANCELED);
             finish();
         }
     }
 
-    private class GetAccessTokenTask extends AsyncTask<String, Void, String> {
+    private class GetTokenTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(final String... params) {
-
             try {
-                OAuth2.retriveInitialAccessToken(params[0], params[1], WebLoginActivity.this);
-                return null;
+                OAuth.retrieveMainAccess(params[0], params[1], WebLoginActivity.this, authenticationScope);
+                return SUCCESS;
             } catch (DigipostApiException e) {
                 return e.getMessage();
             } catch (DigipostClientException e) {
@@ -138,15 +124,15 @@ public class WebLoginActivity extends Activity {
 
         @Override
         protected void onPostExecute(final String result) {
-            if (result != null) {
-                DialogUtitities.showToast(context, result);
+            if(SUCCESS.equals(result)) {
+                Intent resultIntent = new Intent();
+                if(!authenticationScope.equals(ApiConstants.SCOPE_FULL) && currentListPosition != -1) resultIntent.putExtra("currentListPosition", currentListPosition);
+                setResult(RESULT_OK, resultIntent);
+            }else{
+                DialogUtitities.showToast(getApplicationContext(), result);
                 setResult(RESULT_CANCELED);
-            } else {
-                setResult(RESULT_OK);
             }
-
             finish();
         }
-
     }
 }

@@ -16,6 +16,7 @@
 
 package no.digipost.android.gui.content;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -25,6 +26,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -35,6 +37,8 @@ import android.widget.ListView;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -55,6 +59,7 @@ import no.digipost.android.model.Payment;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.Permissions;
 
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
@@ -72,6 +77,7 @@ public abstract class DisplayContentActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
         if(content_type != ApplicationConstants.RECEIPTS) {
             if (DocumentContentStore.getDocumentAttachment() == null || DocumentContentStore.getDocumentParent() == null) {
@@ -79,6 +85,18 @@ public abstract class DisplayContentActivity extends Activity {
                 finish();
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {
@@ -257,11 +275,14 @@ public abstract class DisplayContentActivity extends Activity {
         }
     }
 
-    protected void promtSaveToSD() {
+    protected void downloadFile() {
+        Permissions.requestWritePermissionsIfMissing(getApplicationContext(), DisplayContentActivity.this);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.pdf_promt_save_to_sd).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-                new SaveDocumentToSDTask().execute();
+
+                new DownloadDocumentTask().execute();
                 dialog.dismiss();
             }
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
@@ -399,29 +420,27 @@ public abstract class DisplayContentActivity extends Activity {
         }
     }
 
-    private class SaveDocumentToSDTask extends AsyncTask<Void, Void, Boolean> {
+    private class DownloadDocumentTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
             showContentProgressDialog(this, DisplayContentActivity.this.getString(R.string.saving));
         }
 
         @Override
         protected Boolean doInBackground(Void... parameters) {
-            File file;
-
             try {
-                file = FileUtilities.writeFileToSD(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore
-                        .getDocumentAttachment()
-                        .getFileType(), DocumentContentStore.getDocumentContent());
+                FileUtilities.writeFileToDevice(getApplicationContext());
+                return true;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             } catch (Exception e) {
-                return false;
+                e.printStackTrace();
             }
 
-            FileUtilities.makeFileVisible(DisplayContentActivity.this, file);
-
-            return true;
+            return false;
         }
 
         @Override
@@ -431,10 +450,10 @@ public abstract class DisplayContentActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(Boolean saved) {
-            super.onPostExecute(saved);
+        protected void onPostExecute(Boolean downloadSuccessfull) {
+            super.onPostExecute(downloadSuccessfull);
 
-            if (saved) {
+            if (downloadSuccessfull) {
                 DialogUtitities.showToast(DisplayContentActivity.this, getString(R.string.pdf_saved_to_sd));
             } else {
                 DialogUtitities.showToast(DisplayContentActivity.this, getString(R.string.pdf_save_to_sd_failed));

@@ -36,14 +36,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
-
-import com.google.analytics.tracking.android.EasyTracker;
-
+import com.google.android.gms.analytics.GoogleAnalytics;
+import no.digipost.android.DigipostApplication;
 import org.apache.commons.io.FilenameUtils;
-
 import java.lang.reflect.Field;
 import java.util.concurrent.Executor;
-
 import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
@@ -255,7 +252,7 @@ public class MuPDFActivity extends DisplayContentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         selectActionModeCallback = new SelectActionModeCallback();
         mAlertBuilder = new AlertDialog.Builder(this);
         intent = getIntent();
@@ -664,7 +661,7 @@ public class MuPDFActivity extends DisplayContentActivity {
                 super.openFileWithIntent();
                 return true;
             case R.id.pdfmenu_save:
-                super.promtSaveToSD();
+                super.downloadFile();
                 return true;
         }
 
@@ -682,7 +679,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 
     @Override
     protected void onStart() {
-        EasyTracker.getInstance().activityStart(this);
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
 
         if (core != null) {
             core.startAlerts();
@@ -694,7 +691,7 @@ public class MuPDFActivity extends DisplayContentActivity {
 
     @Override
     protected void onStop() {
-        EasyTracker.getInstance().activityStop(this);
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
 
         if (core != null) {
             destroyAlertWaiter();

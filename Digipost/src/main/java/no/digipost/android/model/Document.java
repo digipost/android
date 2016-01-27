@@ -1,14 +1,10 @@
 package no.digipost.android.model;
 
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonFilter;
-
 import java.util.ArrayList;
-
 import no.digipost.android.constants.ApiConstants;
-
 import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_IDPORTEN_3;
 import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_IDPORTEN_4;
 import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR;
@@ -103,10 +99,23 @@ public class Document {
         return authenticationLevel;
     }
 
-    public boolean requiresTwoFactor() {
+    public boolean requiresHighAuthenticationLevel() {
         return authenticationLevel.equals(AUTHENTICATION_LEVEL_TWO_FACTOR) ||
                 authenticationLevel.equals(AUTHENTICATION_LEVEL_IDPORTEN_3) ||
                 authenticationLevel.equals(AUTHENTICATION_LEVEL_IDPORTEN_4);
+    }
+
+    public String getAuthenticationScope() {
+        switch (authenticationLevel){
+            case AUTHENTICATION_LEVEL_TWO_FACTOR:
+                return ApiConstants.SCOPE_FULL_HIGH;
+            case AUTHENTICATION_LEVEL_IDPORTEN_3:
+                return ApiConstants.SCOPE_IDPORTEN_3;
+            case AUTHENTICATION_LEVEL_IDPORTEN_4:
+                return ApiConstants.SCOPE_IDPORTEN_4;
+            default:
+                return ApiConstants.SCOPE_FULL;
+        }
     }
 
     public void setAuthenticationLevel(final String authenticationLevel) {

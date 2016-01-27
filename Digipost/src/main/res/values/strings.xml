@@ -59,7 +59,7 @@
     <string name="search_in">Søk i\u0020</string>
     <string name="copy">Kopier tekst</string>
     <string name="save">Lagre</string>
-    <string name="save_to_device">Lagre til enhet</string>
+    <string name="save_to_device">Last ned</string>
     <string name="open_external">Åpne i en annen app</string>
     <string name="saving">Lagrer…</string>
     <string name="uploaded">Opplastet</string>
@@ -230,6 +230,11 @@
     <string name="dialog_error_two_factor_title">Konfidensielt brev</string>
     <string name="dialog_error_two_factor_message">Avsenderen krever at du logger inn på et annet
         sikkerhetsnivå for å åpne brevet. Logg inn på Digipost.no for å se innholdet.</string>
+
+
+    <string name="dialog_id_porten_title">Høyere sikkerhetsnivå</string>
+    <string name="dialog_id_porten_unlock">Logg inn</string>
+    <string name="dialog_id_porten_message">Avsenderen krever at du logger inn på et høyere sikkerhetsnivå for å åpne brevet.</string>
 
     <string name="dialog_error_user_key_encrypted_title">Brukernøkkelkryptert brev</string>
     <string name="dialog_error_user_key_encrypted_message">Dette brevet er kryptert med den offentlige nøkkelen
