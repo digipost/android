@@ -29,7 +29,6 @@ public class TokenStore {
 
     public static String ACCESS_TOKEN = "";
     public static String REFRESH_TOKEN = "";
-
     private static ArrayList<Token> tokens;
 
     public static String getTokenForScope(String scope){
@@ -63,6 +62,8 @@ public class TokenStore {
 
     public static void deleteStore(){
         tokens = null;
+        ACCESS_TOKEN = "";
+        REFRESH_TOKEN = "";
     }
 
     public static void storeToken(final Access access, final Context context, final String scope) {
@@ -99,7 +100,5 @@ public class TokenStore {
                 tokens.add(new Token(access.getAccess_token(), scope, expiration));
             }
         }
-
-
     }
 }
