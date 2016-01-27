@@ -18,6 +18,7 @@ package no.digipost.android.gui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class WebLoginActivity extends Activity {
 
     private final String SUCCESS = "SUCCESS";
     private String authenticationScope = ApiConstants.SCOPE_FULL;
+    private int currentListPosition = -1;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -44,26 +46,33 @@ public class WebLoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.fragment_login_webview);
-        authenticationScope = getIntent().getExtras().getString("authenticationScope");
+
+        try {
+            authenticationScope = getIntent().getExtras().getString("authenticationScope");
+            if(!authenticationScope.equals(ApiConstants.SCOPE_FULL)){
+                currentListPosition = getIntent().getExtras().getInt("currentListPosition");
+            }
+        }catch (NullPointerException e){
+            authenticationScope = ApiConstants.SCOPE_FULL;
+        }
 
         if (!NetworkUtilities.isOnline()) {
             DialogUtitities.showToast(getApplicationContext(), getString(R.string.error_your_network));
             finish();
         }
+
         CookieManager.getInstance().setAcceptCookie(true);
-
         WebView webView = (WebView) findViewById(R.id.login_webview);
-
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
         }
-
         String url = OAuth.getAuthorizeURL(authenticationScope);
         webView.loadUrl(url);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
         webView.getSettings().setDomStorageEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
+
         getActionBar().setTitle(R.string.login_loginbutton_text);
         getActionBar().setHomeButtonEnabled(true);
     }
@@ -116,7 +125,9 @@ public class WebLoginActivity extends Activity {
         @Override
         protected void onPostExecute(final String result) {
             if(SUCCESS.equals(result)) {
-                setResult(RESULT_OK);
+                Intent resultIntent = new Intent();
+                if(!authenticationScope.equals(ApiConstants.SCOPE_FULL) && currentListPosition != -1) resultIntent.putExtra("currentListPosition", currentListPosition);
+                setResult(RESULT_OK, resultIntent);
             }else{
                 DialogUtitities.showToast(getApplicationContext(), result);
                 setResult(RESULT_CANCELED);

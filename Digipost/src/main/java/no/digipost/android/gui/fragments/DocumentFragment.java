@@ -80,7 +80,6 @@ public class DocumentFragment extends ContentFragment<Document> {
     private static String EXTRA_CONTENT = "content";
     private static final int INTENT_OPEN_ATTACHMENT_CONTENT = 0;
     private static final int INTENT_ID_PORTEN_WEBVIEW_LOGIN = 1;
-    private Document tempDocument;
 
     public static DocumentFragment newInstance(int content) {
         DocumentFragment fragment = new DocumentFragment();
@@ -133,8 +132,8 @@ public class DocumentFragment extends ContentFragment<Document> {
                     }
                 }
             }else if(requestCode == DocumentFragment.INTENT_ID_PORTEN_WEBVIEW_LOGIN){
-                openListItem(tempDocument);
-
+                currentListPosition = data.getExtras().getInt("currentListPosition");
+                openListItem(DocumentFragment.super.listAdapter.getItem(currentListPosition));
             }
         }
         if(updateCurrentDocument ){
@@ -247,7 +246,6 @@ public class DocumentFragment extends ContentFragment<Document> {
         if (TokenStore.hasValidTokenForScope(document.getAuthenticationScope())){
             findDocumentAttachments(document);
         }else{
-            tempDocument = document;
             openHighAuthenticationLevelDialog(document);
         }
     }
@@ -276,7 +274,8 @@ public class DocumentFragment extends ContentFragment<Document> {
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(getActivity(), WebLoginActivity.class);
             i.putExtra("authenticationScope", document.getAuthenticationScope());
-            getActivity().startActivityForResult(i, DocumentFragment.INTENT_ID_PORTEN_WEBVIEW_LOGIN);
+            i.putExtra("currentListPosition", currentListPosition);
+            startActivityForResult(i, DocumentFragment.INTENT_ID_PORTEN_WEBVIEW_LOGIN);
         } else {
             DialogUtitities.showToast(context, getString(R.string.error_your_network));
         }
