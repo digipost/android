@@ -631,9 +631,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private void logOut() {
         FileUtilities.deleteTempFiles();
-        SharedPreferencesUtilities.deleteRefreshtoken(this);
         SharedPreferencesUtilities.deleteScreenlockChoice(this);
-        TokenStore.deleteStore();
+        TokenStore.deleteStore(getApplicationContext());
         ContentOperations.resetState();
         mailbox = null;
         account = null;

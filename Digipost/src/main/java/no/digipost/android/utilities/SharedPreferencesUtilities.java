@@ -73,7 +73,6 @@ public class SharedPreferencesUtilities {
     }
 
     public static void deleteRefreshtoken(final Context context) {
-        TokenStore.ACCESS_TOKEN = null;
         ContentOperations.setAccountToNull();
         Editor edit = getSharedPreferences(context).edit();
         edit.remove(ApiConstants.REFRESH_TOKEN);

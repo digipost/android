@@ -13,8 +13,8 @@ public class Token {
         this.expiration = expiration;
     }
 
-    public String getAccessToken(){
-        return access;
+    public String getAccess(){
+        return this.access;
     }
 
     public String getScope(){

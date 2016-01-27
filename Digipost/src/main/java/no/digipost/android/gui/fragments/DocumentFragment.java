@@ -377,7 +377,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             asyncHttpClient = new AsyncHttpClient();
             asyncHttpClient.addHeader(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT);
             asyncHttpClient.addHeader(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM);
-            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getTokenForScope(parentDocument.getAuthenticationScope()));
+            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccessTokenForScope(parentDocument.getAuthenticationScope()));
             asyncHttpClient.get(context, attachment.getContentUri(), new AsyncHttpResponseHandler() {
 
                 @Override

@@ -27,28 +27,32 @@ import java.util.ArrayList;
 
 public class TokenStore {
 
-    public static String ACCESS_TOKEN = "";
-    public static String REFRESH_TOKEN = "";
     private static ArrayList<Token> tokens;
 
-    public static String getTokenForScope(String scope){
-        if (scope.equals(ApiConstants.SCOPE_FULL)) {
-            return ACCESS_TOKEN;
-        }
+    public static boolean hasValidTokenForScope(String scope){
+        return !getAccessTokenForScope(scope).equals("");
+    }
 
+    public static String getAccess(){
+        return getAccessTokenForScope(ApiConstants.SCOPE_FULL);
+    }
+
+    public static String getAccessTokenForScope(String scope){
         if(tokens != null) {
             for (Token token : tokens) {
                 if (!token.hasExpired()) {
-                    if (scope.equals(ApiConstants.SCOPE_FULL_HIGH) && token.getScope().equals(ApiConstants.SCOPE_FULL_HIGH)) {
-                        return token.getAccessToken();
+                    if (scope.equals(ApiConstants.SCOPE_FULL) && token.getScope().equals(ApiConstants.SCOPE_FULL)) {
+                        return token.getAccess();
+                    }else if (scope.equals(ApiConstants.SCOPE_FULL_HIGH) && token.getScope().equals(ApiConstants.SCOPE_FULL_HIGH)) {
+                        return token.getAccess();
                     }else if (scope.equals(ApiConstants.SCOPE_FULL_HIGH) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)) {
-                        return token.getAccessToken();
-                    } else if (scope.equals(ApiConstants.SCOPE_IDPORTEN_3) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)) {
-                        return token.getAccessToken();
+                        return token.getAccess();
                     } else if (scope.equals(ApiConstants.SCOPE_IDPORTEN_3) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_3)) {
-                        return token.getAccessToken();
+                        return token.getAccess();
+                    } else if (scope.equals(ApiConstants.SCOPE_IDPORTEN_3) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)) {
+                        return token.getAccess();
                     } else if (scope.equals(ApiConstants.SCOPE_IDPORTEN_4) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)) {
-                        return token.getAccessToken();
+                        return token.getAccess();
                     }
                 }
             }
@@ -56,49 +60,39 @@ public class TokenStore {
         return "";
     }
 
-    public static boolean hasValidTokenForScope(String scope){
-        return !getTokenForScope(scope).equals("");
-    }
-
-    public static void deleteStore(){
+    public static void deleteStore(Context context){
+        SharedPreferencesUtilities.clearSharedPreferences(context);
         tokens = null;
-        ACCESS_TOKEN = "";
-        REFRESH_TOKEN = "";
     }
 
-    public static void storeToken(final Access access, final Context context, final String scope) {
-        if(scope.equals(ApiConstants.SCOPE_FULL)) {
-            JodaTimeAndroid.init(context);
-            ACCESS_TOKEN = access.getAccess_token();
-            REFRESH_TOKEN = access.getRefresh_token();
+    public static void storeRefreshTokenInSharedPreferences(Context context, String refreshToken) {
+        if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
+            String cipher = new KeyStoreAdapter(context).encrypt(refreshToken);
+            SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
+        }
+    }
 
-            if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
-                String refresh_token = access.getRefresh_token();
-                KeyStoreAdapter ksa = new KeyStoreAdapter(context);
-                String cipher = ksa.encrypt(refresh_token);
-                SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
-            }
+    public static String getRefreshTokenFromSharedPreferences(Context context){
+        String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
+        return new KeyStoreAdapter(context).decrypt(encrypted_refresh_token);
+    }
 
-        }else {
+    public static void updateToken(Context context, String access, String scope, String expiration){
+        if (tokens == null) tokens = new ArrayList<>();
+        boolean tokenExist = false;
 
-            if (tokens == null) {
-                tokens = new ArrayList<>();
-            }
-
-            boolean tokenExist = false;
-
-            JodaTimeAndroid.init(context);
-            DateTime expiration = DateTime.now().plusSeconds(Integer.parseInt(access.getExpires_in())-10);
-            for(int i = 0; i < tokens.size(); i++) {
-                if (tokens.get(i).getScope().equals(scope)) {
-                    tokens.set(i, new Token(access.getAccess_token(), scope, expiration));
-                    tokenExist = true;
-                }
-            }
-
-            if(!tokenExist) {
-                tokens.add(new Token(access.getAccess_token(), scope, expiration));
+        JodaTimeAndroid.init(context);
+        for(int i = 0; i < tokens.size(); i++) {
+            if (tokens.get(i).getScope().equals(scope)) {
+                tokens.set(i, new Token(access,  scope, DateTime.now().plusSeconds(Integer.parseInt(expiration)-10)));
+                tokenExist = true;
             }
         }
+        if(!tokenExist) tokens.add(new Token(access, scope, DateTime.now().plusSeconds(Integer.parseInt(expiration)-10)));
+    }
+
+    public static void storeToken(final Context context, final Access access, final String scope) {
+        if(scope.equals(ApiConstants.SCOPE_FULL)) storeRefreshTokenInSharedPreferences(context, access.getRefresh_token());
+        updateToken(context, access.getAccess_token(),scope,access.getExpires_in());
     }
 }

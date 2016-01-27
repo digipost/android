@@ -24,6 +24,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import com.google.android.gms.common.api.Api;
 import no.digipost.android.R;
 import no.digipost.android.api.Buscador;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -61,7 +62,6 @@ public class OAuth {
 	}
 
 	public static void retrieveMainAccess(final String state, final String code, final Context context, final String scope) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-
 		String nonce = getSecureRandom();
         MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 
@@ -74,34 +74,22 @@ public class OAuth {
         Access access = getAccessData(params, context);
 		verifyState(state, context);
 		verifyAuthentication(access.getId_token(), context);
-		TokenStore.storeToken(access, context, scope);
+		TokenStore.storeToken(context, access, scope);
 	}
 
-	public static String getAccessTokenWithRefreshToken(final String refresh_token, final Context context) throws DigipostApiException,
+	public static void updateAccessTokenWithRefreshToken(final Context context) throws DigipostApiException,
 			DigipostClientException, DigipostAuthenticationException {
+
+		String refreshToken = TokenStore.getRefreshTokenFromSharedPreferences(context);
+		if (StringUtils.isBlank(refreshToken)) {
+			throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
+		}
+
 		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 		params.add(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
-		params.add(ApiConstants.REFRESH_TOKEN, refresh_token);
-		return getAccessData(params, context).getAccess_token();
-	}
-
-	public static void updateAccessToken(final Context context) throws DigipostApiException, DigipostClientException,
-			DigipostAuthenticationException {
-
-        String refresh_token = TokenStore.REFRESH_TOKEN;
-
-        if (StringUtils.isBlank(refresh_token)) {
-            String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
-            KeyStoreAdapter ksa = new KeyStoreAdapter(context);
-            refresh_token = ksa.decrypt(encrypted_refresh_token);
-			TokenStore.REFRESH_TOKEN = refresh_token;
-        }
-
-        if (StringUtils.isBlank(refresh_token)) {
-            throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
-        }
-
-		TokenStore.ACCESS_TOKEN = (getAccessTokenWithRefreshToken(refresh_token, context));
+		params.add(ApiConstants.REFRESH_TOKEN, refreshToken);
+		Access access = getAccessData(params, context);
+		TokenStore.updateToken(context, access.getAccess_token(), ApiConstants.SCOPE_FULL, access.getExpires_in());
 	}
 
 	private static Access getAccessData(final MultivaluedMap<String, String> params, final Context context) throws DigipostApiException,

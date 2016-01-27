@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
 		protected String doInBackground(final Void... params) {
 
 			try {
-				OAuth.updateAccessToken(MainActivity.this);
+				OAuth.updateAccessTokenWithRefreshToken(MainActivity.this);
 				return null;
 			} catch (DigipostApiException e) {
 				return e.getMessage();
