@@ -146,7 +146,9 @@ public class FileUtilities {
         JodaTimeAndroid.init(context);
         Long contentLength = Long.parseLong(DocumentContentStore.getDocumentAttachment().getFileSize());
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        manager.addCompletedDownload(getAttachmentFullFilename(), " ", true, getMimeType(file), file.getAbsolutePath(), contentLength, false);
+        String mimeType = getMimeType(file);
+        String validMimeType = mimeType != null ? mimeType :  "application/binary";
+        manager.addCompletedDownload(getAttachmentFullFilename(), " ", true, validMimeType, file.getAbsolutePath(), contentLength, true);
     }
 
     public static String getFileUri(File file) {
