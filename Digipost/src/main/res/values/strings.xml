@@ -227,8 +227,8 @@
     <string name="dialog_edit_folder_title">Velg navn og ikon</string>
     <string name="dialog_edit_folder_invalid_folder_name">Ugyldig navn</string>
 
-    <string name="dialog_error_two_factor_title">Konfidensielt brev</string>
-    <string name="dialog_error_two_factor_message">Avsenderen krever at du logger inn på et annet
+    <string name="dialog_error_two_factor_title">Høyere sikkerhetsnivå</string>
+    <string name="dialog_error_two_factor_message">Avsenderen krever at du logger inn på et høyere
         sikkerhetsnivå for å åpne brevet. Logg inn på Digipost.no for å se innholdet.</string>
 
 

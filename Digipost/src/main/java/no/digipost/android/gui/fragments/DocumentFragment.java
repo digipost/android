@@ -232,7 +232,8 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     private void openListItem(final Document document) {
         if (document.requiresHighAuthenticationLevel()) {
-            handleHighAuthenticationLevelDocument(document);
+            //handleHighAuthenticationLevelDocument(document);
+            showCancelHighAuthDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).isUserKeyEncrypted()) {
             showUserKeyEncryptedDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).getOpeningReceiptUri() != null) {
@@ -279,6 +280,19 @@ public class DocumentFragment extends ContentFragment<Document> {
         } else {
             DialogUtitities.showToast(context, getString(R.string.error_your_network));
         }
+    }
+
+    private void showCancelHighAuthDialog() {
+        String message = getString(R.string.dialog_error_two_factor_message);
+        String title = getString(R.string.dialog_error_two_factor_title);
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
+        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.create().show();
     }
 
     private void findDocumentAttachments(final Document document) {
