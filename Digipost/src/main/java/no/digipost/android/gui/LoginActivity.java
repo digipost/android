@@ -79,7 +79,7 @@ public class LoginActivity extends Activity {
                 }
             }
         });
-        privacyButton.setTextColor(getResources().getColor(R.color.login_grey_text));
+        privacyButton.setTextColor(getResources().getColor(R.color.grey_privacy_button_text));
         registrationButton.setTextColor(getResources().getColor(R.color.login_grey_text));
     }
 
@@ -110,6 +110,7 @@ public class LoginActivity extends Activity {
             Intent i = new Intent(this, WebLoginActivity.class);
             i.putExtra("authenticationScope", ApiConstants.SCOPE_FULL);
             startActivityForResult(i, WEB_OAUTH_LOGIN_REQUEST);
+
         } else {
             DialogUtitities.showToast(context, getString(R.string.error_your_network));
         }

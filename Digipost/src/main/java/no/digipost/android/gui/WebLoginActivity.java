@@ -81,7 +81,7 @@ public class WebLoginActivity extends Activity {
 
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-            if (url.indexOf( "https://localhost") == 0) {
+            if (url.indexOf( "http://localhost") == 0) {
                 oAuthRedirect(url);
                 return true;
             }

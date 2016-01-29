@@ -636,6 +636,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         ContentOperations.resetState();
         mailbox = null;
         account = null;
+
         Intent intent = new Intent(MainContentActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
