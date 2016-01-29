@@ -41,6 +41,8 @@
     <color name="login_background">#292b2d</color>
     <color name="grey_button_background_normal">#5E5E5E</color>
     <color name="grey_button_background_pressed">#3B3B3B</color>
+    <color name="grey_privacy_button_background">#303030</color>
+    <color name="grey_privacy_button_text">#F5F5F5</color>
     <color name="login_grey_text">#4D4D4D</color>
 
     <!-- Screenlock -->
