@@ -82,15 +82,10 @@ public class WebLoginActivity extends Activity {
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
             if (url.indexOf( "localhost") != -1) {
-                oAuthRedirect(url);
+                new GetTokenTask().execute(url);
                 return true;
             }
             return false;
-        }
-
-        private void oAuthRedirect(final String url){
-
-            new GetTokenTask().execute(url);
         }
 
         @Override

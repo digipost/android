@@ -232,8 +232,8 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     private void openListItem(final Document document) {
         if (document.requiresHighAuthenticationLevel()) {
-            //handleHighAuthenticationLevelDocument(document);
-            showCancelHighAuthDialog();
+            handleHighAuthenticationLevelDocument(document);
+            //showCancelHighAuthDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).isUserKeyEncrypted()) {
             showUserKeyEncryptedDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).getOpeningReceiptUri() != null) {
