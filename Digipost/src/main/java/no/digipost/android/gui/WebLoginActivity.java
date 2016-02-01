@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.webkit.*;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import no.digipost.android.DigipostApplication;
@@ -72,30 +73,31 @@ public class WebLoginActivity extends Activity {
         webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
         webView.getSettings().setDomStorageEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
-
-        getActionBar().setTitle(R.string.login_loginbutton_text);
         getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle("Avbryt");
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class MyWebViewClient extends WebViewClient {
 
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-            if (url.indexOf( "https://localhost") == 0) {
-                oAuthRedirect(url);
+            if (url.indexOf( "localhost") != -1) {
+                new GetTokenTask().execute(url);
                 return true;
             }
             return false;
-        }
-
-        private void oAuthRedirect(final String url){
-            String state_fragment = "&" + ApiConstants.STATE + "=";
-            int state_start = url.indexOf(state_fragment);
-            String code_fragment = "&" + ApiConstants.CODE + "=";
-            int code_start = url.indexOf(code_fragment);
-            String state = url.substring(state_start + state_fragment.length(), code_start);
-            String code = url.substring(code_start + code_fragment.length(), url.length());
-            new GetTokenTask().execute(state, code);
         }
 
         @Override
@@ -111,7 +113,17 @@ public class WebLoginActivity extends Activity {
         @Override
         protected String doInBackground(final String... params) {
             try {
-                OAuth.retrieveMainAccess(params[0], params[1], WebLoginActivity.this, authenticationScope);
+                String url = params[0];
+                String state_fragment = "&" + ApiConstants.STATE + "=";
+                int state_start = url.indexOf(state_fragment);
+                String code_fragment = "&" + ApiConstants.CODE + "=";
+
+                int code_start = url.indexOf(code_fragment);
+                String state = url.substring(state_start + state_fragment.length(), code_start);
+                String code = url.substring(code_start + code_fragment.length(), url.length());
+
+
+                OAuth.retrieveMainAccess(state, code, WebLoginActivity.this, authenticationScope);
                 return SUCCESS;
             } catch (DigipostApiException e) {
                 return e.getMessage();
@@ -119,6 +131,9 @@ public class WebLoginActivity extends Activity {
                 return e.getMessage();
             } catch (DigipostAuthenticationException e) {
                 return e.getMessage();
+            }catch (Exception e){
+                e.printStackTrace();
+                return "Det oppstod en feil";
             }
         }
 

@@ -259,6 +259,7 @@ public abstract class DisplayContentActivity extends Activity {
     }
 
     protected void openFileWithIntent() {
+        Permissions.requestWritePermissionsIfMissing(getApplicationContext(), DisplayContentActivity.this);
 
         if (DocumentContentStore.getDocumentContent() == null) {
             DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_with_intent));

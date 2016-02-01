@@ -65,7 +65,7 @@ public class ApiConstants {
     public static final String SCOPE_IDPORTEN_3 = "FULL_IDPORTEN3";
     public static final String SCOPE_IDPORTEN_4 = "FULL_IDPORTEN4";
 
-    public static final String URL = "https://qa.digipost.no/post/";
+    public static final String URL = "https://www.digipost.no/post/";
 
     public static final String URL_API = URL + "api";
     public static final String URL_RELATIONS = URL + "relations/";
