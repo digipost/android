@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.webkit.*;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import no.digipost.android.DigipostApplication;
@@ -72,9 +73,20 @@ public class WebLoginActivity extends Activity {
         webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
         webView.getSettings().setDomStorageEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
-
-        getActionBar().setTitle(R.string.login_loginbutton_text);
         getActionBar().setHomeButtonEnabled(true);
+        getActionBar().setTitle("Avbryt");
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private class MyWebViewClient extends WebViewClient {
