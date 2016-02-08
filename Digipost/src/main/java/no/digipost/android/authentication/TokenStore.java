@@ -17,6 +17,7 @@ package no.digipost.android.authentication;
  */
 
 import android.content.Context;
+import android.util.Log;
 import net.danlew.android.joda.JodaTimeAndroid;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Access;

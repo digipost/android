@@ -31,6 +31,7 @@ import no.digipost.android.authentication.KeyStoreAdapter;
 import no.digipost.android.authentication.AndroidLockSecurity;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gcm.GCMController;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.NetworkUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
@@ -61,6 +62,9 @@ public class LoginActivity extends Activity {
         if (!keyStoreAdapter.isAvailable()) {
             rememberCheckbox.setVisibility(View.GONE);
         }
+
+        GCMController gcmController = new GCMController(this);
+        gcmController.init();
     }
 
     @Override
