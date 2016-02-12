@@ -70,6 +70,8 @@ public class ApiAccess {
     public static final int CREATE_FOLDER = 4;
     public static final int EDIT_FOLDER = 5;
     public static final int UPDATE_FOLDERS = 6;
+    public static final int SEND_GCM_REGISTRATION_TOKEN = 7;
+    public static final int OAUTH_REVOKE = 8;
     public static final int POST = 0;
     public static final int PUT = 1;
     private static final String TAG = "ApiAccess";
@@ -136,10 +138,7 @@ public class ApiAccess {
         request.addHeader(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
         request.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccess());
 
-        if (action == SEND_OPENING_RECEIPT || action == SEND_TO_BANK) {
-        } else {
-            request.setEntity(json);
-        }
+        if(json != null) {request.setEntity(json);}
 
         HttpResponse response;
         try {

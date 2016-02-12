@@ -17,6 +17,7 @@
 package no.digipost.android.gcm;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -30,26 +31,25 @@ public class GCMController {
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
     public static final String REGISTRATION_COMPLETE = "registrationComplete";
     public static final String DEFAULT_SENDER_ID = "488272337328";
-    private Activity activity;
 
-    public GCMController(Activity activity){
-        this.activity = activity;
-    }
-
-    public void init(){
-        isDeviceRegistered();
-        if (checkPlayServices()) {
+    public static void init(Activity activity){
+        if (!isDeviceRegistered(activity) && playServicesAvailable(activity)) {
             Intent intent = new Intent(activity, RegistrationService.class);
             activity.startService(intent);
         }
     }
 
-    private boolean isDeviceRegistered(){
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+    public static void reset(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences.edit().remove(SENT_TOKEN_TO_SERVER).apply();
+    }
+
+    public static boolean isDeviceRegistered(Context context){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return sharedPreferences.getBoolean(SENT_TOKEN_TO_SERVER, false);
     }
 
-    public boolean checkPlayServices() {
+    private static boolean playServicesAvailable(Activity activity) {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(activity.getApplicationContext());
         if (resultCode != ConnectionResult.SUCCESS) {

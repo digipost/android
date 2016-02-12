@@ -29,6 +29,8 @@ public class ApplicationConstants {
     public static final String NUMBER_OF_TIMES_APP_HAS_RUN = "numberOfTimesAppHasRun";
     public static final int NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN = 1;
 
+    public static final String LOGOUT_FAILED = "logoutFailed";
+
     public static final int MAILBOX = 0;
     public static final int RECEIPTS = 1;
     public static final int FOLDERS_LABEL = 2;

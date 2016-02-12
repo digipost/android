@@ -18,6 +18,7 @@ package no.digipost.android.api;
 import android.content.Context;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import no.digipost.android.api.exception.DigipostApiException;
@@ -38,6 +39,9 @@ import no.digipost.android.model.Receipts;
 import no.digipost.android.model.Settings;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
+import org.apache.http.entity.StringEntity;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ContentOperations {
 
@@ -152,6 +156,11 @@ public class ContentOperations {
         return (Receipts) JSONUtilities.processJackson(Receipts.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getReceiptsUri()));
     }
 
+    public static void revokeOAuthToken(Context context) throws DigipostClientException, DigipostApiException,
+            DigipostAuthenticationException {
+        apiAccess.postput(context, ApiAccess.POST, ApiAccess.OAUTH_REVOKE, ApiConstants.URL_API_OAUTH_REVOKE, null);
+    }
+
     public static void moveDocument(Context context, final Document document) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
         JSONUtilities.processJackson(Document.class, apiAccess.postput(context, ApiAccess.POST, ApiAccess.MOVE, document.getUpdateUri(), JSONUtilities.createJsonFromJackson(document)));
@@ -208,6 +217,18 @@ public class ContentOperations {
             DigipostApiException, DigipostAuthenticationException {
         refreshApiAccess();
         return apiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_OPENING_RECEIPT, attachment.getOpeningReceiptUri(), null);
+    }
+
+    public static void sendGCMRegistrationToken(Context context, final String registrationToken) throws DigipostClientException, DigipostApiException, JSONException, UnsupportedEncodingException,
+            DigipostAuthenticationException {
+
+        JSONObject json = new JSONObject();
+        json.put("token", registrationToken);
+        json.put("device", "Android");
+        StringEntity params = new StringEntity(json.toString());
+
+        refreshApiAccess();
+        apiAccess.postput(context, ApiAccess.PUT, ApiAccess.SEND_GCM_REGISTRATION_TOKEN, ApiConstants.URL_RELATIONS_PUSH_REGISTRATION, params);
     }
 
     public static void sendToBank(Context context, final Attachment attachment) throws DigipostClientException, DigipostApiException,

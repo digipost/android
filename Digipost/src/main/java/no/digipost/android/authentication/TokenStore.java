@@ -62,8 +62,8 @@ public class TokenStore {
     }
 
     public static void deleteStore(Context context){
-        SharedPreferencesUtilities.clearSharedPreferences(context);
         tokens = null;
+        SharedPreferencesUtilities.deleteRefreshtoken(context);
     }
 
     public static void storeRefreshTokenInSharedPreferences(Context context, String refreshToken) {

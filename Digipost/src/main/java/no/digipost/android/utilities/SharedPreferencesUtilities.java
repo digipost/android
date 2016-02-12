@@ -42,23 +42,9 @@ public class SharedPreferencesUtilities {
         return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_YES;
     }
 
-    public static boolean screenlockChoiceNo(final Context context) {
-        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_NO;
-    }
-
-    public static boolean screenlockChoiceNotTakenYet(final Context context) {
-        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET;
-    }
-
     public static void storeScreenlockChoice(final Context context, final int choice) {
         SharedPreferences.Editor edit = getSharedPreferences(context).edit();
         edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE, choice);
-        edit.commit();
-    }
-
-    public static void deleteScreenlockChoice(final Context context) {
-        SharedPreferences.Editor edit = getSharedPreferences(context).edit();
-        edit.remove(ApplicationConstants.SCREENLOCK_CHOICE);
         edit.commit();
     }
 
@@ -70,6 +56,14 @@ public class SharedPreferencesUtilities {
         Editor editor = getSharedPreferences(context).edit();
         editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
         editor.commit();
+    }
+
+    public static boolean logoutFailed(final Context context){
+        return getSharedPreferences(context).getBoolean(ApplicationConstants.LOGOUT_FAILED, false);
+    }
+
+    public static void setLogoutFailed(final Context context, boolean failed){
+        getSharedPreferences(context).edit().putBoolean(ApplicationConstants.LOGOUT_FAILED, failed).apply();
     }
 
     public static void deleteRefreshtoken(final Context context) {

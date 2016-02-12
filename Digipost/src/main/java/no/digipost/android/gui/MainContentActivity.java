@@ -29,6 +29,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
@@ -59,6 +60,7 @@ import no.digipost.android.api.tasks.UpdateFoldersTask;
 import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gcm.GCMController;
 import no.digipost.android.gui.adapters.DrawerAdapter;
 import no.digipost.android.gui.adapters.MailboxArrayAdapter;
 import no.digipost.android.gui.content.SettingsActivity;
@@ -108,6 +110,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_main_content);
+        GCMController.init(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
         drawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -631,15 +634,37 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private void logOut() {
         FileUtilities.deleteTempFiles();
-        SharedPreferencesUtilities.deleteScreenlockChoice(this);
-        TokenStore.deleteStore(getApplicationContext());
+        GCMController.reset(getApplicationContext());
+        revokeAndDeleteAccess();
         ContentOperations.resetState();
         mailbox = null;
         account = null;
-
         Intent intent = new Intent(MainContentActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void revokeAndDeleteAccess(){
+            new AsyncTask<Void, Void, Boolean>() {
+                @Override
+                protected Boolean doInBackground(Void... params) {
+                    try {
+                        ContentOperations.revokeOAuthToken(getApplicationContext());
+                        TokenStore.deleteStore(getApplicationContext());
+                    } catch (Exception e) {
+                        SharedPreferencesUtilities.setLogoutFailed(getApplicationContext(), true);
+                    }
+                    return true;
+                }
+
+                @Override
+                protected void onCancelled() {
+                    super.onCancelled();
+                    TokenStore.deleteStore(getApplicationContext());
+                    SharedPreferencesUtilities.setLogoutFailed(getApplicationContext(),true);
+                }
+
+            }.execute(null, null, null);
     }
 
     private void startUploadActivity() {

@@ -26,6 +26,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import no.digipost.android.api.ContentOperations;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class RegistrationService extends IntentService {
 
@@ -35,16 +37,16 @@ public class RegistrationService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferencesUtilities.setLogoutFailed(getApplicationContext(),false);
         try {
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(GCMController.DEFAULT_SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             Log.i(TAG, "GCM Registration Token: " + token);
             sendRegistrationToServer(token);
-            sharedPreferences.edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, true).apply();
-
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, true).apply();
         } catch (Exception e) {
-            sharedPreferences.edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, false).apply();
+            e.printStackTrace();
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, false).apply();
         }
 
         Intent registrationComplete = new Intent(GCMController.REGISTRATION_COMPLETE);
@@ -53,8 +55,14 @@ public class RegistrationService extends IntentService {
 
     private void sendRegistrationToServer(String token) {
         new AsyncTask<String, Void, String>() {
+
             @Override
             protected String doInBackground(String... params) {
+                try {
+                    ContentOperations.sendGCMRegistrationToken(getApplicationContext(), params[0]);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 return "";
             }
 

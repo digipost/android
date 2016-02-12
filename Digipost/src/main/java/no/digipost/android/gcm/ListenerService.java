@@ -23,21 +23,48 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
+import no.digipost.android.R;
+import no.digipost.android.authentication.TokenStore;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.gui.MainContentActivity;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class ListenerService extends GcmListenerService {
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
         super.onMessageReceived(from, data);
-
-        sendNotification(data.getString("message"));
+        if(shouldProcessPush()) {
+            handlePush(data);
+        };
     }
 
-    private void sendNotification(String message) {
+    private boolean shouldProcessPush(){
+        boolean hasRefreshToken = !SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(getApplicationContext()).isEmpty();
+        boolean hasAccessToken = !TokenStore.getAccess().isEmpty();
+
+        if(SharedPreferencesUtilities.logoutFailed(getApplicationContext())){
+            return false;
+        }else if(hasRefreshToken && GCMController.isDeviceRegistered(getApplicationContext())){
+            return true;
+        }else if(hasAccessToken && GCMController.isDeviceRegistered(getApplicationContext())){
+            return true;
+        }
+
+        return false;
+    }
+
+    private void handlePush(Bundle data){
+        String message = data.getString("message", "Du har brev i Digipost");
+        int type = type = data.getInt("type", 0);
+        displayNotification(message);
+    }
+
+    private void displayNotification(String message) {
         Log.d("GCM", message);
         Intent intent = new Intent(this, MainContentActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -45,7 +72,7 @@ public class ListenerService extends GcmListenerService {
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(com.google.android.gms.gcm.R.drawable.common_google_signin_btn_icon_dark)
+                .setSmallIcon(R.drawable.actionbar_icon)
                 .setContentTitle("Digipost")
                 .setContentText(message)
                 .setAutoCancel(true)
@@ -54,7 +81,6 @@ public class ListenerService extends GcmListenerService {
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
         notificationManager.notify(0, notificationBuilder.build());
     }
 }

@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -62,14 +63,12 @@ public class LoginActivity extends Activity {
         if (!keyStoreAdapter.isAvailable()) {
             rememberCheckbox.setVisibility(View.GONE);
         }
-
-        GCMController gcmController = new GCMController(this);
-        gcmController.init();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        GCMController.reset(getApplicationContext());
         enableCheckBoxIfScreenlock();
         deleteOldRefreshtoken();
         rememberCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
