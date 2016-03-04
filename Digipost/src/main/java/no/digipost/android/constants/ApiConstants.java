@@ -91,7 +91,7 @@ public class ApiConstants {
     public static final String URL_RELATIONS_DELETE_FOLDER = URL_RELATIONS + "delete_folder";
     public static final String URL_RELATIONS_CREATE_FOLDER = URL_RELATIONS + "create_folder";
     public static final String URL_RELATIONS_UPDATE_FOLDERS = URL_RELATIONS + "update_folders";
-    public static final String URL_RELATIONS_PUSH_REGISTRATION = URL_RELATIONS + "push/registration";
+    public static final String URL_RELATIONS_PUSH_REGISTRATION = URL_API + "/private/gcm_token";
 
     public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "api/oauth/authorize/new";
     public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "api/oauth/accesstoken";
