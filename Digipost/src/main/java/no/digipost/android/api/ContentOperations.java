@@ -228,7 +228,7 @@ public class ContentOperations {
         StringEntity params = new StringEntity(json.toString());
 
         refreshApiAccess();
-        apiAccess.postput(context, ApiAccess.PUT, ApiAccess.SEND_GCM_REGISTRATION_TOKEN, ApiConstants.URL_RELATIONS_PUSH_REGISTRATION, params);
+        apiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_GCM_REGISTRATION_TOKEN, ApiConstants.URL_RELATIONS_PUSH_REGISTRATION, params);
     }
 
     public static void sendToBank(Context context, final Attachment attachment) throws DigipostClientException, DigipostApiException,
