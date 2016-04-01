@@ -4,12 +4,12 @@
 
     <!-- App -->
     <string name="app_name">Digipost</string>
-    <string name="app_deprecation_message">Du må oppdatere din Digipost applikasjon</string>
+    <string name="app_deprecation_message">Du må oppdatere Digipost-appen din</string>
     <string name="app_deprecation_market_url">market://details?id=no.digipost.android</string>
 
     <!--Screenlock-->
-    <string name="screenlock_message1">For at Digipost-appen skal huske din innlogging må du skru på
-        skjermlås på din mobil.
+    <string name="screenlock_message1">For at appen skal huske innloggingen må du skru på
+        skjermlås på enheten din.
     </string>
     <string name="screenlock_message2">Uten skjermlås må du logge inn med fødselsnummer og passord
         hver gang du åpner appen.
@@ -65,7 +65,7 @@
     <string name="uploaded">Opplastet</string>
     <string name="public_entity">Offentlig: %s</string>
 
-    <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjon som flytt og slett</string>
+    <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjoner, som flytt og slett</string>
 
     <!-- EmptyView -->
     <string name="emptyview_mailbox">Ingen dokumenter i postkassen</string>
@@ -74,19 +74,19 @@
 
     <!-- EmptyView - Receipt -->
     <string name="emptyview_receipt_intro_title">Kom i gang med elektroniske kvitteringer</string>
-    <string name="emptyview_receipt_intro_message">Med Digipost har du tilgang til dine kvitteringer der du er. Se kvitteringer på mobilen, nettbrett eller på din datamaskin. Tjenesten er gratis å bruke.</string>
+    <string name="emptyview_receipt_intro_message">Med Digipost har du tilgang til kvitteringene dine der du er. Se kvitteringer på mobil, nettbrett eller datamaskin. Tjenesten er gratis å bruke.</string>
 
     <string name="emptyview_receipt_verification_title">Verifisering</string>
-    <string name="emptyview_receipt_verification_message">For å se kvitteringer må du verifisere at de kommer fra ditt bankkort. Du verifiserer kortet ved å taste inn kjøpesummen fra et kjøp som er gjort i en butikk som støtter elektroniske kvitteringer.</string>
+    <string name="emptyview_receipt_verification_message">For å se kvitteringer må du først bekrefte at de kommer fra ditt bankkort. Det gjør du ved å taste inn kjøpesummen fra et kjøp gjort i en butikk som støtter elektroniske kvitteringer.</string>
 
     <string name="emptyview_receipt_registrated_title">Registert</string>
-    <string name="emptyview_receipt_registrated_message">Neste steg er å betale med kort i en butikk som støtter elektroniske kvitteringer. Ta vare på kvitteringen fra dette kjøpet. Du kan bruke kvitteringen til å verifisere bankkortet. Du trenger kun å verifisere kortet én gang.
+    <string name="emptyview_receipt_registrated_message">Neste steg er å betale med bankkortet i en butikk som støtter elektroniske kvitteringer. Bruk kvitteringen til å bekrefte at du eier bankkortet. Etterpå vil resten gå automatisk.
     </string>
 
     <!-- Receipt TopText -->
     <string name="receipt_toptext_register_cards">For å motta elektroniske kvitteringer må du legge til et bankkort</string>
-    <string name="receipt_toptext_one_hidden_receipt">En kvittering er skjult. For å se denne må du verifisere ditt bankkort</string>
-    <string name="receipt_toptext_multiple_hidden_receipts">Du har %1$d skjulte kvitteringer. For å se disse må du verifisere ditt bankkort</string>
+    <string name="receipt_toptext_one_hidden_receipt">En kvittering er skjult. For å se denne må du bekrefte at du eier bankkortet</string>
+    <string name="receipt_toptext_multiple_hidden_receipts">Du har %1$d skjulte kvitteringer. For å se disse må du bekrefte at du eier bankkortet</string>
 
     <!-- ContentFragment -->
     <string name="receipt_singular">kvitteringen</string>
@@ -186,7 +186,7 @@
     <string name="error_invalid_token">Tilgang tilbaketrukket.</string>
     <string name="error_bad_request">En feil oppstod.</string>
     <string name="error_inputstreamtobyarray">En feil oppstod under åpning av innhold</string>
-    <string name="error_no_activity_to_open_file">Din enhet har ingen applikasjoner som kan åpne
+    <string name="error_no_activity_to_open_file">Du har ingen apper som kan åpne
         denne filtypen.
     </string>
     <string name="error_failed_to_open_with_intent">En feil oppstod under åpning av filen.</string>
@@ -205,11 +205,11 @@
     <string name="dialog_send_to_bank_not_paid_message_end">Følgende konto vil belastes:\n%1$s</string>
 
     <string name="dialog_send_to_bank_paid_title">Fakturaen er lagt til forfall</string>
-    <string name="dialog_send_to_bank_paid_message">Denne fakturaen ble sendt til nettbanken %1$s.\n\nHvis du vil endre eller se på selve betalingen, må du logge inn i din nettbank.</string>
+    <string name="dialog_send_to_bank_paid_message">Denne fakturaen ble sendt til nettbanken %1$s.\n\nHvis du vil endre eller se på selve betalingen, må du logge inn i nettbanken din.</string>
 
     <string name="dialog_send_to_bank_not_enabled_title">Send fakturaer til nettbanken med ett trykk</string>
-    <string name="dialog_send_to_bank_not_enabled_message">Dine fakturaer kan nå legges til forfall med kun ett trykk, etter at du har spesifisert hvilken nettbank du bruker.\n\n
-        Dette trenger du bare å gjøre en gang, og gjøres enkelt via innstillinger på digipost.no, ved hjelp av din datamaskin.</string>
+    <string name="dialog_send_to_bank_not_enabled_message">Fakturaene dine kan nå legges til forfall med kun ett trykk, etter at du har spesifisert hvilken nettbank du bruker.\n\n
+        Dette trenger du bare å gjøre en gang, og gjøres enkelt i innstillingene dine når du har logget inn på digipost.no fra en datamaskin.</string>
 
     <string name="dialog_opening_receipt_yes">Åpne og send kvittering</string>
     <string name="dialog_opening_receipt_title">Avsender krever lesekvittering</string>
