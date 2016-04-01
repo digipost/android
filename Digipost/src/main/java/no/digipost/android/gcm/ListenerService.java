@@ -37,7 +37,7 @@ public class ListenerService extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         super.onMessageReceived(from, data);
         if(shouldProcessPush()) {
-            displayNotification("Du har ett ulest brev i Digipost");
+            displayNotification("Du har fått et nytt brev");
         };
     }
 
@@ -57,6 +57,7 @@ public class ListenerService extends GcmListenerService {
     }
 
     public void displayNotification(String message) {
+
         Intent intent = new Intent(this, MainContentActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
