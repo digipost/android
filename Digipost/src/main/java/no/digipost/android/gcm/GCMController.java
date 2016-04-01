@@ -56,8 +56,6 @@ public class GCMController {
             if (apiAvailability.isUserResolvableError(resultCode)) {
                 apiAvailability.getErrorDialog(activity, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
                         .show();
-            } else {
-                Log.i("GCMController", "This device is not supported.");
             }
             return false;
         }

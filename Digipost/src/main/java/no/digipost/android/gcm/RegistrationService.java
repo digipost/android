@@ -19,11 +19,9 @@ package no.digipost.android.gcm;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import no.digipost.android.api.ContentOperations;
@@ -41,9 +39,7 @@ public class RegistrationService extends IntentService {
         try {
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(GCMController.DEFAULT_SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            Log.i(TAG, "GCM Registration Token: " + token);
             sendRegistrationToServer(token);
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, true).apply();
         } catch (Exception e) {
             e.printStackTrace();
             PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, false).apply();
@@ -60,6 +56,7 @@ public class RegistrationService extends IntentService {
             protected String doInBackground(String... params) {
                 try {
                     ContentOperations.sendGCMRegistrationToken(getApplicationContext(), params[0]);
+                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, true).apply();
                 }catch (Exception e){
                     e.printStackTrace();
                 }
