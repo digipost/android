@@ -18,6 +18,7 @@ package no.digipost.android.gui.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -75,6 +76,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     private int content = 0;
     private int currentListPosition = 0;
     private Dialog folderDialog;
+    private ProgressDialog updateProgressDialog;
     private Dialog attachmentDialog;
     private boolean openAttachment = true;
     private static String EXTRA_CONTENT = "content";
@@ -112,6 +114,12 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        dismissUpdateProgressDialogIfExisting();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
@@ -133,13 +141,15 @@ public class DocumentFragment extends ContentFragment<Document> {
                 }
             }else if(requestCode == DocumentFragment.INTENT_ID_PORTEN_WEBVIEW_LOGIN){
                 currentListPosition = data.getExtras().getInt("currentListPosition");
-                openListItem(DocumentFragment.super.listAdapter.getItem(currentListPosition));
+                openUpdatedDocument(currentListPosition);
             }
         }
+
         if(updateCurrentDocument ){
             super.listAdapter.replaceAtPosition(DocumentContentStore.getDocumentParent(),currentListPosition);
             updateCurrentDocument = false;
         }
+
         DocumentContentStore.clearContent();
     }
 
@@ -214,6 +224,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        dismissUpdateProgressDialogIfExisting();
                     }
                 }
         );
@@ -233,7 +244,6 @@ public class DocumentFragment extends ContentFragment<Document> {
     private void openListItem(final Document document) {
         if (document.requiresHighAuthenticationLevel()) {
             handleHighAuthenticationLevelDocument(document);
-            //showCancelHighAuthDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).isUserKeyEncrypted()) {
             showUserKeyEncryptedDialog();
         } else if (document.getAttachment().size() == 1 && document.getAttachment().get(0).getOpeningReceiptUri() != null) {
@@ -265,6 +275,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 dialog.cancel();
+                dismissUpdateProgressDialogIfExisting();
             }
         });
 
@@ -297,7 +308,6 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     private void findDocumentAttachments(final Document document) {
         ArrayList<Attachment> attachments = document.getAttachment();
-
         if (attachments.size() > 1) {
             showAttachmentDialog(document);
         } else {
@@ -328,6 +338,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 dialog.cancel();
+                dismissUpdateProgressDialogIfExisting();
             }
         });
 
@@ -344,6 +355,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.cancel();
+                dismissUpdateProgressDialogIfExisting();
             }
         });
 
@@ -370,23 +382,68 @@ public class DocumentFragment extends ContentFragment<Document> {
         startActivityForResult(intent, DocumentFragment.INTENT_OPEN_ATTACHMENT_CONTENT);
     }
 
-    protected void showContentProgressDialog(String message) {
-        progressDialog = DialogUtitities.getProgressDialogWithMessage(context, message);
-        progressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
+    protected class OpenUpdatedDocumentTask extends AsyncTask<Void, Void, Boolean> {
+
+        private Document document;
+
+        public OpenUpdatedDocumentTask(final Document document){
+            this.document = document;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showUpdateProgressDialog();
+        }
+
+        @Override
+        protected Boolean doInBackground(final Void... params) {
+            try {
+                this.document = ContentOperations.getDocumentSelf(getActivity(), document);
+                return true;
+            } catch (Exception e) {
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+            if(success){
+                openListItem(this.document);
+            }
+        }
+    }
+
+    protected void showUpdateProgressDialog() {
+        dismissUpdateProgressDialogIfExisting();
+
+        if(updateProgressDialog == null){
+            updateProgressDialog = DialogUtitities.getProgressDialogWithMessage(context, getString(R.string.loading_content));
+        }
+
+        updateProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int which) {
-                dialog.dismiss();
+                updateProgressDialog.dismiss();
                 openAttachment = false;
-                if(asyncHttpClient != null) {
+
+                if (asyncHttpClient != null) {
                     asyncHttpClient.cancelRequests(context, true);
                 }
             }
         });
 
-        progressDialog.show();
+        updateProgressDialog.show();
+    }
+
+    private void dismissUpdateProgressDialogIfExisting(){
+        if(updateProgressDialog != null) {
+            updateProgressDialog.dismiss();
+            updateProgressDialog = null;
+        }
     }
 
     private void getAttachmentContent(final Document parentDocument, final int attachmentListPosition, final Attachment attachment) {
-
         if (parentDocument != null && attachment != null) {
             asyncHttpClient = new AsyncHttpClient();
             asyncHttpClient.addHeader(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT);
@@ -398,15 +455,13 @@ public class DocumentFragment extends ContentFragment<Document> {
                 public void onStart() {
                     super.onStart();
                     openAttachment = true;
-                    if (!progressDialogIsVisible) {
-                        showContentProgressDialog(context.getString(R.string.loading_content));
-                    }
                 }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     if (openAttachment) {
                         parentDocument.markAsRead();
+
                         DocumentContentStore.setContent(responseBody, parentDocument, attachmentListPosition);
                         DocumentContentStore.setMoveFolders(getMoveFolders());
                         openAttachmentContent(attachment);
@@ -420,7 +475,6 @@ public class DocumentFragment extends ContentFragment<Document> {
 
                         activityCommunicator.onUpdateAccountMeta();
                     }
-
                 }
 
                 @Override
@@ -449,7 +503,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                 @Override
                 public void onFinish() {
                     super.onFinish();
-                    hideProgressDialog();
+                    dismissUpdateProgressDialogIfExisting();
                 }
             });
         }
@@ -529,13 +583,17 @@ public class DocumentFragment extends ContentFragment<Document> {
     private class DocumentListOnItemClickListener implements AdapterView.OnItemClickListener {
         public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
             currentListPosition = position;
-            openListItem(DocumentFragment.super.listAdapter.getItem(position));
+            openUpdatedDocument(currentListPosition);
         }
+    }
+
+    private void openUpdatedDocument(int position){
+        Document listDocument = DocumentFragment.super.listAdapter.getItem(position);
+        new OpenUpdatedDocumentTask(listDocument).execute();
     }
 
     private class MoveToFolderListOnItemClickListener implements AdapterView.OnItemClickListener {
         public MoveToFolderListOnItemClickListener() {
-
         }
 
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
@@ -666,7 +724,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            DocumentFragment.super.showContentProgressDialog(this, "");
+            DocumentFragment.super.showContentProgressDialog(this, "Flytter");
         }
 
         @Override
@@ -698,7 +756,7 @@ public class DocumentFragment extends ContentFragment<Document> {
 
         @Override
         protected void onProgressUpdate(Document... values) {
-            super.onProgressUpdate(values);
+                super.onProgressUpdate(values);
 
             DocumentFragment.super.progressDialog.setMessage("Flytter " + values[0].getSubject() + " (" + progress + "/" + documents.size()
                     + ")");
@@ -756,7 +814,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             if (!DocumentFragment.super.progressDialogIsVisible) {
                 DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
             }
-            DocumentFragment.super.progressDialogIsVisible = true;
+
         }
 
         @Override
@@ -800,7 +858,6 @@ public class DocumentFragment extends ContentFragment<Document> {
                     if (invalidToken) {
                         activityCommunicator.requestLogOut();
                     }
-
                     DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
                 }
             }
