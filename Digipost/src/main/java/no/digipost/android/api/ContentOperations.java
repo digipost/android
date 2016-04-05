@@ -219,7 +219,7 @@ public class ContentOperations {
         return apiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_OPENING_RECEIPT, attachment.getOpeningReceiptUri(), null);
     }
 
-    public static void sendGCMRegistrationToken(Context context, final String registrationToken) throws DigipostClientException, DigipostApiException, JSONException, UnsupportedEncodingException,
+    public static boolean sendGCMRegistrationToken(Context context, final String registrationToken) throws DigipostClientException, DigipostApiException, JSONException, UnsupportedEncodingException,
             DigipostAuthenticationException {
 
         JSONObject json = new JSONObject();
@@ -228,7 +228,8 @@ public class ContentOperations {
         StringEntity params = new StringEntity(json.toString());
 
         refreshApiAccess();
-        apiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_GCM_REGISTRATION_TOKEN, ApiConstants.URL_RELATIONS_PUSH_REGISTRATION, params);
+        String result = apiAccess.postput(context, ApiAccess.POST, ApiAccess.SEND_GCM_REGISTRATION_TOKEN, ApiConstants.URL_RELATIONS_PUSH_REGISTRATION, params);
+        return NetworkUtilities.SUCCESS_NO_CONTENT.equals(result);
     }
 
     public static void sendToBank(Context context, final Attachment attachment) throws DigipostClientException, DigipostApiException,

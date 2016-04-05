@@ -148,14 +148,18 @@ public class ApiAccess {
             throw new DigipostClientException(context.getString(R.string.error_your_network));
         }
 
+        int statusCode = response.getStatusLine().getStatusCode();
+
         try {
-            NetworkUtilities.checkHttpStatusCode(context, response.getStatusLine().getStatusCode());
+            NetworkUtilities.checkHttpStatusCode(context, statusCode);
         } catch (DigipostInvalidTokenException e) {
             OAuth.updateAccessTokenWithRefreshToken(context);
-            Log.e(TAG, context.getString(R.string.error_invalid_token));
             return postput(context, httpType, action, uri, json);
         }
 
+        if(statusCode == NetworkUtilities.HTTP_STATUS_NO_CONTENT){
+            return NetworkUtilities.SUCCESS_NO_CONTENT;
+        }
         InputStream is = null;
         try {
             is = response.getEntity().getContent();

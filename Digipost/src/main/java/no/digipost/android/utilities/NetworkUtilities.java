@@ -31,6 +31,7 @@ import no.digipost.android.api.exception.DigipostInvalidTokenException;
 public class NetworkUtilities {
     public static final int HTTP_STATUS_SUCCESS = 200;
     public static final int HTTP_STATUS_CREATE = 201;
+    public static final int HTTP_STATUS_NO_CONTENT = 204;
     public static final int HTTP_STATUS_UNAUTHORIZED = 401;
     public static final int HTTP_STATUS_BAD_REQUEST = 400;
     public static final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
@@ -38,10 +39,11 @@ public class NetworkUtilities {
     public static final int SUCCESS = 0;
     public static final int BAD_REQUEST = 1;
     public static final int BAD_REQUEST_DELETE = 2;
-
+    public static final String SUCCESS_NO_CONTENT = "SUCCESS_NO_CONTENT";
 
     public static void checkHttpStatusCode(Context context, final int statusCode) throws DigipostApiException, DigipostInvalidTokenException,
             DigipostAuthenticationException {
+
         if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
             if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
                 throw new DigipostInvalidTokenException();
@@ -52,7 +54,7 @@ public class NetworkUtilities {
             throw new DigipostAuthenticationException(context.getString(R.string.error_bad_request));
         } else if (statusCode == HTTP_STATUS_INTERNAL_SERVER_ERROR) {
             throw new DigipostApiException(context.getString(R.string.error_digipost_api));
-        } else if (statusCode == HTTP_STATUS_SUCCESS || statusCode == HTTP_STATUS_CREATE) {
+        } else if (statusCode == HTTP_STATUS_SUCCESS || statusCode == HTTP_STATUS_CREATE || statusCode == HTTP_STATUS_NO_CONTENT) {
             // OK, Ignore
         } else {
             throw new DigipostApiException(context.getString(R.string.error_your_network));

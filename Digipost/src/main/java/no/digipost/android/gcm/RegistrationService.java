@@ -50,17 +50,29 @@ public class RegistrationService extends IntentService {
     }
 
     private void sendRegistrationToServer(String token) {
-        new AsyncTask<String, Void, String>() {
+        new AsyncTask<String, Void, Boolean>() {
 
             @Override
-            protected String doInBackground(String... params) {
+            protected Boolean doInBackground(String... params) {
                 try {
-                    ContentOperations.sendGCMRegistrationToken(getApplicationContext(), params[0]);
-                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, true).apply();
+                   return ContentOperations.sendGCMRegistrationToken(getApplicationContext(), params[0]);
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                return "";
+                return false;
+            }
+
+            @Override
+            protected void onCancelled() {
+                super.onCancelled();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean success) {
+                super.onPostExecute(success);
+
+                if(success)
+                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, true).apply();
             }
 
         }.execute(token, null, null);
