@@ -17,11 +17,11 @@
 package no.digipost.android.gcm;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.*;
 
@@ -37,6 +37,12 @@ public class GCMController {
             Intent intent = new Intent(activity, RegistrationService.class);
             activity.startService(intent);
         }
+        removeOldNotifications(activity);
+    }
+
+    private static void removeOldNotifications(Activity activity){
+        NotificationManager notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 
     public static void reset(Context context){
