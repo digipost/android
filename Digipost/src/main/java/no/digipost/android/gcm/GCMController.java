@@ -37,10 +37,9 @@ public class GCMController {
             Intent intent = new Intent(activity, RegistrationService.class);
             activity.startService(intent);
         }
-        removeOldNotifications(activity);
     }
 
-    private static void removeOldNotifications(Activity activity){
+    public static void clearNotifications(Activity activity){
         NotificationManager notificationManager = (NotificationManager) activity.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
     }

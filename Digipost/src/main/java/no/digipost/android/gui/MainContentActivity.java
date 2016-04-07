@@ -134,6 +134,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GCMController.clearNotifications(this);
+    }
+
     private void setDrawerListeners() {
         drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
