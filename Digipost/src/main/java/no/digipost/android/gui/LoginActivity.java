@@ -28,6 +28,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
+import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.authentication.KeyStoreAdapter;
 import no.digipost.android.authentication.AndroidLockSecurity;
 import no.digipost.android.constants.ApiConstants;
@@ -129,11 +130,15 @@ public class LoginActivity extends Activity {
     }
 
     private void startMainContentActivity() {
+        GAEventController.sendRememberMeEvent(this, rememberCheckbox.isChecked());
         loginButton.setVisibility(View.INVISIBLE);
         Intent i = new Intent(LoginActivity.this, MainContentActivity.class);
+        i.putExtra(GAEventController.appLaunchOrigin, GAEventController.LAUNCH_ORIGIN_LOGIN);
         startActivity(i);
         finish();
     }
+
+
 
     private void openPrivacyBrowser() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/juridisk/"));

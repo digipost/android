@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.gcm.GcmListenerService;
 import no.digipost.android.R;
+import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
@@ -59,6 +60,7 @@ public class ListenerService extends GcmListenerService {
     public void displayNotification(String message) {
 
         Intent intent = new Intent(this, MainContentActivity.class);
+        intent.putExtra(GAEventController.appLaunchOrigin, GAEventController.LAUNCH_ORIGIN_PUSH);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 

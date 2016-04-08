@@ -53,6 +53,7 @@ import java.util.ArrayList;
 
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
+import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.tasks.CreateEditDeleteFolderTask;
 import no.digipost.android.api.tasks.GetAccountTask;
@@ -88,6 +89,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     public static int numberOfFolders;
     public static String fragmentName;
     public static ArrayList<Folder> folders;
+    public Bundle savedInstanceState;
+    private boolean launchedOnce;
     private static String[] drawerListItems;
 
     protected MailboxArrayAdapter mailboxAdapter;
@@ -105,9 +108,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private ArrayList<Mailbox> mailboxes;
     private Account account;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.savedInstanceState = savedInstanceState;
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_main_content);
         GCMController.init(this);
@@ -123,7 +128,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
 
-        getActionBar().setHomeButtonEnabled(true);
+        if(getActionBar() != null) getActionBar().setHomeButtonEnabled(true);
 
         selectItem(ApplicationConstants.MAILBOX);
 
@@ -137,6 +142,36 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     protected void onResume() {
         super.onResume();
+        handleAppLaunchLogging();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
+
+    private void handleAppLaunchLogging(){
+
+        int action = GAEventController.LAUNCH_ORIGIN_RESUME;
+
+        Bundle bundle = getIntent().getExtras();
+        if(bundle != null) {
+            action = bundle.getInt(GAEventController.appLaunchOrigin, GAEventController.LAUNCH_ORIGIN_RESUME);
+            getIntent().removeExtra(GAEventController.appLaunchOrigin);
+        }
+
+        if(!launchedOnce) {
+            GAEventController.sendLaunchEvent(this, action);
+            launchedOnce = true;
+        }
+
         GCMController.clearNotifications(this);
     }
 
@@ -222,18 +257,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         remainingDrawerChanges++;
         updateUI(true);
         executeUpdateFoldersTask();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     @Override
