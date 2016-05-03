@@ -146,7 +146,7 @@ public class LoginActivity extends Activity {
     }
 
     public void openRegistrationDialog() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/app/registrering#/"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/app/registrering?utm_source=android_app&utm_medium=app&utm_campaign=app-link&utm_content=ny_bruker#/"));
         startActivity(browserIntent);
     }
 
