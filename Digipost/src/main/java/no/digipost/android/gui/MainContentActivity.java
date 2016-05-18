@@ -50,10 +50,8 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.terlici.dragndroplist.DragNDropListView;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
-import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.tasks.CreateEditDeleteFolderTask;
 import no.digipost.android.api.tasks.GetAccountTask;
@@ -90,8 +88,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     public static String fragmentName;
     public static ArrayList<Folder> folders;
     public Bundle savedInstanceState;
-    private boolean launchedOnce;
     private static String[] drawerListItems;
+    public static boolean launchedFromPush;
 
     protected MailboxArrayAdapter mailboxAdapter;
     private DrawerLayout drawerLayout;
@@ -142,7 +140,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     protected void onResume() {
         super.onResume();
-        handleAppLaunchLogging();
+        GCMController.clearNotifications(this);
+        if(launchedFromPush) {
+            selectItem(ApplicationConstants.MAILBOX);
+            launchedFromPush = false;
+        }
     }
 
     @Override
@@ -155,24 +157,6 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
-    }
-
-    private void handleAppLaunchLogging(){
-
-        int action = GAEventController.LAUNCH_ORIGIN_RESUME;
-
-        Bundle bundle = getIntent().getExtras();
-        if(bundle != null) {
-            action = bundle.getInt(GAEventController.appLaunchOrigin, GAEventController.LAUNCH_ORIGIN_RESUME);
-            getIntent().removeExtra(GAEventController.appLaunchOrigin);
-        }
-
-        if(!launchedOnce) {
-            GAEventController.sendLaunchEvent(this, action);
-            launchedOnce = true;
-        }
-
-        GCMController.clearNotifications(this);
     }
 
     private void setDrawerListeners() {

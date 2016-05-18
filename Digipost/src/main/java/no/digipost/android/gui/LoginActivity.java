@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -133,7 +132,6 @@ public class LoginActivity extends Activity {
         GAEventController.sendRememberMeEvent(this, rememberCheckbox.isChecked());
         loginButton.setVisibility(View.INVISIBLE);
         Intent i = new Intent(LoginActivity.this, MainContentActivity.class);
-        i.putExtra(GAEventController.appLaunchOrigin, GAEventController.LAUNCH_ORIGIN_LOGIN);
         startActivity(i);
         finish();
     }

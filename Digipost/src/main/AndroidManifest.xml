@@ -67,6 +67,7 @@
             android:theme="@android:style/Theme.Holo.NoActionBar"/>
         <activity
             android:name="no.digipost.android.gui.MainContentActivity"
+            android:launchMode="singleInstance"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name=".gui.WebLoginActivity"

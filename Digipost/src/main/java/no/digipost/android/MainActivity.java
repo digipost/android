@@ -17,6 +17,7 @@
 package no.digipost.android;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
+import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
@@ -38,14 +39,26 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
 		setContentView(R.layout.activity_main);
-		checkTokenAndScreenlockStatus();
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		GoogleAnalytics.getInstance(this).reportActivityStart(this);
+		handleLaunchOrigin();
 		FileUtilities.deleteTempFiles();
+		checkTokenAndScreenlockStatus();
+	}
+
+	private void handleLaunchOrigin(){
+		GoogleAnalytics.getInstance(this).reportActivityStart(this);
+		if(getIntent() != null && getIntent().hasExtra("collapse_key")) {
+			MainContentActivity.launchedFromPush = true;
+			getIntent().removeExtra("collapse_key");
+			GAEventController.sendLaunchEvent(this, GAEventController.LAUNCH_ORIGIN_PUSH);
+		}else{
+			MainContentActivity.launchedFromPush = false;
+			GAEventController.sendLaunchEvent(this, GAEventController.LAUNCH_ORIGIN_NORMAL);
+		}
 	}
 
 	@Override

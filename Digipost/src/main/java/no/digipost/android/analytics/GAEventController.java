@@ -9,26 +9,10 @@ public class GAEventController {
 
     public static final String appLaunchOrigin = "app-launch-origin";
     public static final String loginRememberMeOption = "login-remember-me";
-    public static final int LAUNCH_ORIGIN_RESUME = 0;
-    public static final int LAUNCH_ORIGIN_LOGIN = 1;
-    public static final int LAUNCH_ORIGIN_PUSH = 2;
+    public static final String LAUNCH_ORIGIN_NORMAL = "normal";;
+    public static final String LAUNCH_ORIGIN_PUSH = "push";
 
-
-    public static void sendLaunchEvent(Activity activity, int origin){
-        String actionText = "resume";
-
-        switch (origin) {
-            case LAUNCH_ORIGIN_RESUME:
-                actionText = "resume";
-                break;
-            case LAUNCH_ORIGIN_LOGIN:
-                actionText = "login";
-                break;
-            case LAUNCH_ORIGIN_PUSH:
-                actionText = "push";
-                break;
-        }
-
+    public static void sendLaunchEvent(Activity activity, String actionText){
         sendEvent(activity, appLaunchOrigin, actionText, appLaunchOrigin+"-"+actionText);
     }
 
