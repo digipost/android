@@ -104,7 +104,7 @@
     <string name="login_registrationbutton_text">Ny bruker</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
-    <string name="login_remember_me">Husk meg</string>
+    <string name="login_remember_me">Forbli innlogget</string>
     <string name="login_remember_me_contentdescription">Avhukingsboks for å velge at applikasjonen skal huske innloggingen</string>
 
     <!-- ContextMenu -->
