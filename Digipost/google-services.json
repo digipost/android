@@ -1,15 +1,12 @@
 {
   "project_info": {
-    "project_id": "digipost-android",
-    "project_number": "362191699878",
-    "name": "Digipost-android"
+    "project_number": "1079051739965",
+    "project_id": "cloud-messaging-digipost"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:362191699878:android:81ba7a516cad1341",
-        "client_id": "android:no.digipost.android",
-        "client_type": 1,
+        "mobilesdk_app_id": "1:1079051739965:android:81ba7a516cad1341",
         "android_client_info": {
           "package_name": "no.digipost.android"
         }
@@ -18,21 +15,11 @@
       "api_key": [],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-20592293-2"
-          }
-        },
-        "cloud_messaging_service": {
-          "status": 1,
-          "apns_config": []
+          "status": 1
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
-        },
-        "google_signin_service": {
-          "status": 1
         },
         "ads_service": {
           "status": 1
@@ -40,6 +27,5 @@
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }
