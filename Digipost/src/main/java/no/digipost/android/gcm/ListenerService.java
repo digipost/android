@@ -16,75 +16,13 @@
 
 package no.digipost.android.gcm;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.gcm.GcmListenerService;
-import no.digipost.android.R;
-import no.digipost.android.analytics.GAEventController;
-import no.digipost.android.authentication.TokenStore;
-import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class ListenerService extends GcmListenerService {
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
         super.onMessageReceived(from, data);
-        if(shouldProcessPush()) {
-            displayNotification("Du har fått et nytt brev");
-        };
     }
-
-    private boolean shouldProcessPush(){
-        boolean hasRefreshToken = !SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(getApplicationContext()).isEmpty();
-        boolean hasAccessToken = !TokenStore.getAccess().isEmpty();
-
-        if(SharedPreferencesUtilities.logoutFailed(getApplicationContext())){
-            return false;
-        }else if(hasRefreshToken && GCMController.isDeviceRegistered(getApplicationContext())){
-            return true;
-        }else if(hasAccessToken && GCMController.isDeviceRegistered(getApplicationContext())){
-            return true;
-        }
-
-        return false;
-    }
-
-    public void displayNotification(String message) {
-
-        Intent intent = new Intent(this, MainContentActivity.class);
-        intent.putExtra(GAEventController.appLaunchOrigin, GAEventController.LAUNCH_ORIGIN_PUSH);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(getNotificationIcon())
-                .setContentTitle("Digipost")
-                .setContentText(message)
-                .setTicker(message)
-                .setAutoCancel(false)
-                .setSound(defaultSoundUri)
-                .setOnlyAlertOnce(true)
-                .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification=notificationBuilder.build();
-        notification.contentView.setImageViewResource(android.R.id.icon, R.drawable.digipost_varslingsikon);
-
-        notificationManager.notify(0, notification);
-    }
-
-    private int getNotificationIcon() {
-        boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
-        return useWhiteIcon ? R.drawable.digipost_varslingsikon : R.drawable.digipost_varslingsikon;
-    }
-
 }
