@@ -293,19 +293,6 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
     }
 
-    private void showCancelHighAuthDialog() {
-        String message = getString(R.string.dialog_error_two_factor_message);
-        String title = getString(R.string.dialog_error_two_factor_title);
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, message, title);
-        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.create().show();
-    }
-
     private void findDocumentAttachments(final Document document) {
         ArrayList<Attachment> attachments = document.getAttachment();
         if (attachments.size() > 1) {
