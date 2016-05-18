@@ -109,12 +109,12 @@ public class DocumentFragment extends ContentFragment<Document> {
         super.listAdapter = new DocumentArrayAdapter(getActivity(), R.layout.content_list_item);
         super.listView.setAdapter(listAdapter);
         super.listView.setOnItemClickListener(new DocumentListOnItemClickListener());
-        updateAccountMeta();
         return view;
     }
 
     @Override
     public void onResume() {
+        updateAccountMeta();
         super.onResume();
         dismissUpdateProgressDialogIfExisting();
     }
