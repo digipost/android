@@ -22,8 +22,6 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
 import no.digipost.android.api.ContentOperations;
-import no.digipost.android.authentication.OAuth;
-import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 
