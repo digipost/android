@@ -20,37 +20,35 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+import com.facebook.android.crypto.keychain.AndroidConceal;
+import com.facebook.crypto.CryptoConfig;
+import com.facebook.crypto.keychain.KeyChain;
 import org.apache.commons.io.output.ByteArrayOutputStream;
-
 import android.content.Context;
 import android.util.Log;
-
 import com.facebook.crypto.Entity;
 import com.facebook.crypto.exception.CryptoInitializationException;
 import com.facebook.crypto.exception.KeyChainException;
 import com.facebook.android.crypto.keychain.SharedPrefsBackedKeyChain;
-import com.facebook.crypto.util.SystemNativeCryptoLibrary;
 
 public class KeyStoreAdapter {
 
 	private final com.facebook.crypto.Crypto crypto;
-	Entity entity = new Entity("refresh_token");
+	Entity entity = Entity.create("refresh_token");
 
 	public KeyStoreAdapter(final Context context) {
-		crypto = new com.facebook.crypto.Crypto(
-				  new SharedPrefsBackedKeyChain(context),
-				  new SystemNativeCryptoLibrary());
+		KeyChain keyChain = new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_256);
+		crypto = AndroidConceal.get().createDefaultCrypto(keyChain);
 	}
 
 	public boolean isAvailable() {
 		return crypto.isAvailable();
 	}
 
-	public String decrypt(final String ciphertext) {
+	public String decrypt(final String cipherText) {
 		try {
 			InputStream inputStream = crypto.getCipherInputStream(
-			  new ByteArrayInputStream(Base64.decode(ciphertext.getBytes(), Base64.DEFAULT)),
+			  new ByteArrayInputStream(Base64.decode(cipherText.getBytes(), Base64.DEFAULT)),
 			  entity);
 
 			int read;
