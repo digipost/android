@@ -43,7 +43,7 @@ public class SharedPreferencesUtilities {
     public static void storeScreenlockChoice(final Context context, final int choice) {
         SharedPreferences.Editor edit = getSharedPreferences(context).edit();
         edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE, choice);
-        edit.commit();
+        edit.apply();
     }
 
     public static String getEncryptedRefreshtokenCipher(final Context context) {
@@ -52,12 +52,9 @@ public class SharedPreferencesUtilities {
 
     public static void storeEncryptedRefreshtokenCipher(final String cipher, final Context context) {
         Editor editor = getSharedPreferences(context).edit();
+        editor.remove(ApiConstants.REFRESH_TOKEN);
         editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
-        editor.commit();
-    }
-
-    public static boolean logoutFailed(final Context context){
-        return getSharedPreferences(context).getBoolean(ApplicationConstants.LOGOUT_FAILED, false);
+        editor.apply();
     }
 
     public static void setLogoutFailed(final Context context, boolean failed){
@@ -68,20 +65,14 @@ public class SharedPreferencesUtilities {
         ContentOperations.setAccountToNull();
         Editor edit = getSharedPreferences(context).edit();
         edit.remove(ApiConstants.REFRESH_TOKEN);
-        edit.commit();
-    }
-
-    public static void clearSharedPreferences(final Context context) {
-        Editor editor = getSharedPreferences(context).edit();
-        editor.clear();
-        editor.commit();
+        edit.apply();
     }
 
     public static int numberOfTimesAppHasRun(final Context context) {
         Editor editor = getSharedPreferences(context).edit();
         int numberOfTimesAppHasRun = getSharedPreferences(context).getInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, 1);
         editor.putInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, numberOfTimesAppHasRun + 1);
-        editor.commit();
+        editor.apply();
 
         return numberOfTimesAppHasRun;
     }

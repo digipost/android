@@ -60,7 +60,7 @@ public class LoginActivity extends Activity {
         registrationButton.setOnClickListener(listener);
         rememberCheckbox = (CheckBox) findViewById(R.id.login_remember_me);
 
-        if (!keyStoreAdapter.isAvailable()) {
+        if (keyStoreAdapter != null && !keyStoreAdapter.isAvailable()) {
             rememberCheckbox.setVisibility(View.GONE);
         }
     }
@@ -70,7 +70,7 @@ public class LoginActivity extends Activity {
         super.onResume();
         GCMController.reset(getApplicationContext());
         enableCheckBoxIfScreenlock();
-        deleteOldRefreshtoken();
+
         rememberCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
@@ -84,12 +84,6 @@ public class LoginActivity extends Activity {
         });
         privacyButton.setTextColor(getResources().getColor(R.color.grey_privacy_button_text));
         registrationButton.setTextColor(getResources().getColor(R.color.login_grey_text));
-    }
-
-    private void deleteOldRefreshtoken() {
-        if (keyStoreAdapter.isAvailable()) {
-            SharedPreferencesUtilities.deleteRefreshtoken(this);
-        }
     }
 
     private void enableCheckBoxIfScreenlock() {
@@ -135,8 +129,6 @@ public class LoginActivity extends Activity {
         startActivity(i);
         finish();
     }
-
-
 
     private void openPrivacyBrowser() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/juridisk/"));
