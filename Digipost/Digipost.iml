@@ -100,7 +100,6 @@
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="jackson-jaxrs-1.9.2" level="project" />
-    <orderEntry type="library" exported="" name="jersey-client-1.19" level="project" />
     <orderEntry type="library" exported="" name="play-services-base-8.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-measurement-8.4.0" level="project" />
     <orderEntry type="library" exported="" name="jettison-1.1" level="project" />
@@ -116,11 +115,12 @@
     <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="jackson-xc-1.9.2" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.2.5" level="project" />
-    <orderEntry type="library" exported="" name="jersey-json-1.19" level="project" />
+    <orderEntry type="library" exported="" name="jersey-client-1.19.1" level="project" />
     <orderEntry type="library" exported="" name="httpcore-4.2.4" level="project" />
+    <orderEntry type="library" exported="" name="jersey-json-1.19" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.8.5" level="project" />
-    <orderEntry type="library" exported="" name="jersey-core-1.19" level="project" />
     <orderEntry type="library" exported="" name="play-services-gcm-8.4.0" level="project" />
+    <orderEntry type="library" exported="" name="jersey-core-1.19.1" level="project" />
     <orderEntry type="library" exported="" name="support-v13-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="jackson-mapper-asl-1.9.2" level="project" />
     <orderEntry type="library" exported="" name="android-async-http-1.4.5" level="project" />
