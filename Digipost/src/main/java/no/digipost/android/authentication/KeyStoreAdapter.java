@@ -39,7 +39,7 @@ public class KeyStoreAdapter {
 
 	public KeyStoreAdapter(final Context context) {
 		KeyChain keyChain = new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_256);
-		crypto = AndroidConceal.get().createDefaultCrypto(keyChain);
+		crypto = AndroidConceal.get().createCrypto256Bits(keyChain);
 	}
 
 	public boolean isAvailable() {
