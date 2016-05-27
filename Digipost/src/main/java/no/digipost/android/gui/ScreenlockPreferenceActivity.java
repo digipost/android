@@ -63,7 +63,7 @@ public class ScreenlockPreferenceActivity extends Activity {
         finish();
     }
 
-    private void openPrivayBrowser() {
+    private void openPrivacyBrowser() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/juridisk/"));
         startActivity(browserIntent);
     }
@@ -74,7 +74,7 @@ public class ScreenlockPreferenceActivity extends Activity {
             if (v == yesButton) {
                 yesButton();
             } else if (v == privacyButton) {
-                openPrivayBrowser();
+                openPrivacyBrowser();
             } else {
                 finish();
             }
