@@ -116,8 +116,8 @@
     <orderEntry type="library" exported="" name="jackson-xc-1.9.2" level="project" />
     <orderEntry type="library" exported="" name="httpmime-4.2.5" level="project" />
     <orderEntry type="library" exported="" name="jersey-client-1.19.1" level="project" />
-    <orderEntry type="library" exported="" name="httpcore-4.2.4" level="project" />
     <orderEntry type="library" exported="" name="jersey-json-1.19" level="project" />
+    <orderEntry type="library" exported="" name="httpcore-4.2.4" level="project" />
     <orderEntry type="library" exported="" name="universal-image-loader-1.8.5" level="project" />
     <orderEntry type="library" exported="" name="play-services-gcm-8.4.0" level="project" />
     <orderEntry type="library" exported="" name="jersey-core-1.19.1" level="project" />
