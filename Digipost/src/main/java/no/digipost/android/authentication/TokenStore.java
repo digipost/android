@@ -17,7 +17,6 @@ package no.digipost.android.authentication;
  */
 
 import android.content.Context;
-import android.util.Log;
 import net.danlew.android.joda.JodaTimeAndroid;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Access;
@@ -68,14 +67,14 @@ public class TokenStore {
 
     public static void storeRefreshTokenInSharedPreferences(Context context, String refreshToken) {
         if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
-            String cipher = new KeyStoreAdapter(context).encrypt(refreshToken);
+            String cipher = new ConcealAdapter(context).encrypt(refreshToken);
             SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
         }
     }
 
     public static String getRefreshTokenFromSharedPreferences(Context context){
         String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
-        return new KeyStoreAdapter(context).decrypt(encrypted_refresh_token);
+        return new ConcealAdapter(context).decrypt(encrypted_refresh_token);
     }
 
     public static void updateToken(Context context, String access, String scope, String expiration){

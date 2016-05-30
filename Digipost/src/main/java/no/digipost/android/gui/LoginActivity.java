@@ -28,7 +28,7 @@ import android.widget.CompoundButton;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.analytics.GAEventController;
-import no.digipost.android.authentication.KeyStoreAdapter;
+import no.digipost.android.authentication.ConcealAdapter;
 import no.digipost.android.authentication.AndroidLockSecurity;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
@@ -41,7 +41,7 @@ public class LoginActivity extends Activity {
     private final int WEB_OAUTH_LOGIN_REQUEST = 0;
     private Button loginButton, privacyButton, registrationButton;
     private CheckBox rememberCheckbox;
-    private KeyStoreAdapter keyStoreAdapter;
+    private ConcealAdapter concealAdapter;
     private Context context;
 
     @Override
@@ -50,7 +50,7 @@ public class LoginActivity extends Activity {
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_login);
         context = this;
-        keyStoreAdapter = new KeyStoreAdapter(this);
+        concealAdapter = new ConcealAdapter(this);
         ButtonListener listener = new ButtonListener();
         loginButton = (Button) findViewById(R.id.login_loginButton);
         loginButton.setOnClickListener(listener);
@@ -60,7 +60,7 @@ public class LoginActivity extends Activity {
         registrationButton.setOnClickListener(listener);
         rememberCheckbox = (CheckBox) findViewById(R.id.login_remember_me);
 
-        if (keyStoreAdapter != null && !keyStoreAdapter.isAvailable()) {
+        if (concealAdapter != null && !concealAdapter.isAvailable()) {
             rememberCheckbox.setVisibility(View.GONE);
         }
     }

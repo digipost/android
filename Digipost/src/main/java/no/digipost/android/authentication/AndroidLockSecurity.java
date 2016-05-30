@@ -22,7 +22,7 @@ import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class AndroidLockSecurity {
 	public static boolean canUseRefreshTokens(final Context context) {
-		boolean screenLockAndKeyStoreAvailable = screenLockEnabled(context) && new KeyStoreAdapter(context).isAvailable();
+		boolean screenLockAndKeyStoreAvailable = screenLockEnabled(context) && new ConcealAdapter(context).isAvailable();
 
 		if(!screenLockAndKeyStoreAvailable){
 			SharedPreferencesUtilities.clearData(context);
