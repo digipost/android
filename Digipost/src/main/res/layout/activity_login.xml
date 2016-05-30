@@ -36,9 +36,9 @@
                 android:gravity="top|center_horizontal"
                 android:layout_gravity="top"
                 android:orientation="vertical"
-                android:paddingLeft="50dp"
+                android:paddingLeft="48dp"
                 android:paddingBottom="250dp"
-                android:paddingRight="50dp">
+                android:paddingRight="48dp">
 
             <ImageView
                     android:id="@+id/login_loginlogo"
