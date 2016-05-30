@@ -61,6 +61,12 @@ public class SharedPreferencesUtilities {
         getSharedPreferences(context).edit().putBoolean(ApplicationConstants.LOGOUT_FAILED, failed).apply();
     }
 
+    public static void clearData(final Context context){
+        Editor editor = getSharedPreferences(context).edit();
+        editor.clear();
+        editor.apply();
+    }
+
     public static void deleteRefreshtoken(final Context context) {
         ContentOperations.setAccountToNull();
         Editor edit = getSharedPreferences(context).edit();
