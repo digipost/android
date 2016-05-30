@@ -226,11 +226,6 @@ public class UploadActivity extends Activity {
                         dialogInterface.dismiss();
                     }
                 })
-                .setNeutralButton(R.string.preview, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // ignore
-                    }
-                })
                 .setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
