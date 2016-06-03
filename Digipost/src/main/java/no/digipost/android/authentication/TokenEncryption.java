@@ -34,8 +34,6 @@ public class TokenEncryption {
     public String encrypt(String plainText){
         return cryptoAdapter.encrypt(plainText);
     }
-    public String decrypt(String cipherText){
-        Log.d("Decrypting: ", cipherText);
-        return cryptoAdapter.decrypt(cipherText);
+    public String decrypt(String cipherText){return cryptoAdapter.decrypt(cipherText);
     }
 }
