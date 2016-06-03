@@ -666,7 +666,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                 if (documents != null) {
                     ArrayList<Document> docs = documents.getDocument();
                     DocumentFragment.super.listAdapter.replaceAll(docs);
-                    if (!docs.isEmpty()) {
+                    if (docs != null && !docs.isEmpty()) {
                         DocumentFragment.super.setListEmptyViewNoNetwork(false);
                     } else {
                         if (!isDetached()) {
