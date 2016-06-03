@@ -32,7 +32,7 @@ import com.facebook.crypto.exception.CryptoInitializationException;
 import com.facebook.crypto.exception.KeyChainException;
 import com.facebook.android.crypto.keychain.SharedPrefsBackedKeyChain;
 
-public class ConcealAdapter {
+public class ConcealAdapter implements CryptoAdapter{
 
 	private final com.facebook.crypto.Crypto crypto;
 	Entity entity = Entity.create("refresh_token");
