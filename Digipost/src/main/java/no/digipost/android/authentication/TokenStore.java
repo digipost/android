@@ -67,14 +67,14 @@ public class TokenStore {
 
     public static void storeRefreshTokenInSharedPreferences(Context context, String refreshToken) {
         if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
-            String cipher = new TokenEncryption(context).encrypt(refreshToken);
+            String cipher = new TokenEncryption(context, true).encrypt(refreshToken);
             SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
         }
     }
 
     public static String getRefreshTokenFromSharedPreferences(Context context){
         String encrypted_refresh_token = SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context);
-        return new TokenEncryption(context).decrypt(encrypted_refresh_token);
+        return new TokenEncryption(context,false).decrypt(encrypted_refresh_token);
     }
 
     public static void updateToken(Context context, String access, String scope, String expiration){

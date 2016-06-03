@@ -17,23 +17,23 @@
 package no.digipost.android.authentication;
 
 import android.content.Context;
-import android.util.Log;
 
 public class TokenEncryption {
     private CryptoAdapter cryptoAdapter;
 
-    public TokenEncryption(final Context context){
-        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
-            cryptoAdapter = new KeyStoreAdapter();
-        }else{
-            cryptoAdapter = new ConcealAdapter(context);
-        }
+    public TokenEncryption(final Context context, boolean shouldRegenerateKeyPair){
+        cryptoAdapter = keyStoreIsAvailable() ? new KeyStoreAdapter(shouldRegenerateKeyPair) : new ConcealAdapter(context);
     }
 
-    public boolean isAvailable(){return cryptoAdapter.isAvailable();}
-    public String encrypt(String plainText){
-        return cryptoAdapter.encrypt(plainText);
+    public boolean isAvailable(){
+        return cryptoAdapter.isAvailable();
     }
-    public String decrypt(String cipherText){return cryptoAdapter.decrypt(cipherText);
+
+    public String encrypt(String plainText){return cryptoAdapter.encrypt(plainText);}
+
+    public String decrypt(String cipherText){
+        return cryptoAdapter.decrypt(cipherText);
     }
+
+    public boolean keyStoreIsAvailable(){return (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M);}
 }

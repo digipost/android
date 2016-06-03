@@ -50,7 +50,7 @@ public class LoginActivity extends Activity {
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_login);
         context = this;
-        tokenEncryption = new TokenEncryption(this);
+        tokenEncryption = new TokenEncryption(this, false);
         ButtonListener listener = new ButtonListener();
         loginButton = (Button) findViewById(R.id.login_loginButton);
         loginButton.setOnClickListener(listener);

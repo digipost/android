@@ -21,19 +21,16 @@ import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
-import android.util.Log;
-
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
-import java.util.Enumeration;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class KeyStoreAdapter implements CryptoAdapter {
@@ -41,10 +38,12 @@ public class KeyStoreAdapter implements CryptoAdapter {
     private final String ALIAS = "refresh_token";
     private KeyStore keyStore;
 
-    public KeyStoreAdapter(){
+    public KeyStoreAdapter(Boolean shouldGenerateNewKeyPair){
         try{
-            if(shouldGenerateNewKeyPair()) {
-                generateKeypair();
+            loadKeyStore();
+            if(shouldGenerateNewKeyPair) {
+                deleteAlias();
+                generateKeyPair();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,33 +51,10 @@ public class KeyStoreAdapter implements CryptoAdapter {
     }
 
     public boolean isAvailable(){
-        return true;
+        return keyStore != null;
     }
 
-    private boolean shouldGenerateNewKeyPair(){
-        if(existingKeys().isEmpty()){
-            return true;
-        }
-        return false;
-    }
-
-    private ArrayList existingKeys(){
-        ArrayList keyAliases = new ArrayList<>();
-        try {
-            loadKeyStore();
-            Enumeration<String> aliases = keyStore.aliases();
-            while (aliases.hasMoreElements()) {
-                keyAliases.add(aliases.nextElement());
-            }
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        return keyAliases;
-    }
-
-    private void generateKeypair() throws Exception {
-        loadKeyStore();
+    private void generateKeyPair() throws Exception {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, "AndroidKeyStore");
         KeyGenParameterSpec spec = new KeyGenParameterSpec.Builder(
                 ALIAS,
@@ -87,12 +63,11 @@ public class KeyStoreAdapter implements CryptoAdapter {
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
                 .build();
         kpg.initialize(spec);
-        KeyPair kp = kpg.generateKeyPair();
+        kpg.generateKeyPair();
     }
 
     public String encrypt(String plainText){
         try {
-            loadKeyStore();
             KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(ALIAS, null);
             RSAPublicKey publicKey = (RSAPublicKey) privateKeyEntry.getCertificate().getPublicKey();
             Cipher input = Cipher.getInstance("RSA/ECB/PKCS1Padding", "AndroidOpenSSL");
@@ -105,26 +80,34 @@ public class KeyStoreAdapter implements CryptoAdapter {
             byte[] vals = outputStream.toByteArray();
             return Base64.encodeToString(vals, Base64.DEFAULT);
         } catch (Exception e) {
-            Log.e("KeyStoreAdapter", "Error encrypting", e);
+            //IGNORE
         }
         return null;
     }
 
-    private void loadKeyStore(){
+    private KeyStore loadKeyStore(){
         try {
             if(keyStore == null) {
                 keyStore = KeyStore.getInstance("AndroidKeyStore");
                 keyStore.load(null);
-
+                return keyStore;
             }
         }catch (Exception e){
-            e.printStackTrace();
+            //IGNORE
+        }
+        return null;
+    }
+
+    private void deleteAlias(){
+        try {
+             keyStore.deleteEntry(ALIAS);
+        }catch (KeyStoreException e){
+            //IGNORE
         }
     }
 
     public String decrypt(String cipherText){
         try {
-            loadKeyStore();
             KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(ALIAS, null);
             Cipher output = Cipher.getInstance("RSA/ECB/PKCS1Padding");
             output.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
@@ -141,7 +124,7 @@ public class KeyStoreAdapter implements CryptoAdapter {
             }
             return new String(bytes, 0, bytes.length, "UTF-8");
         } catch (Exception e) {
-            Log.e("KeyStoreAdapter", "Error decrypting", e);
+           //IGNORE
         }
 
         return null;
