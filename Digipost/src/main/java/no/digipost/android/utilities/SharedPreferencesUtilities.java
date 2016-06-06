@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
-
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
@@ -81,5 +80,26 @@ public class SharedPreferencesUtilities {
         editor.apply();
 
         return numberOfTimesAppHasRun;
+    }
+
+    public static boolean firstLaunchWithNewVersion(final Context context) {
+
+        int currentVersionCode = 0;
+        try {
+            currentVersionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return true;
+        }
+
+        int savedVersionCode = getSharedPreferences(context).getInt(ApplicationConstants.CURRENT_APP_VERSION, 0);
+        boolean firstLaunch = currentVersionCode != savedVersionCode;
+        if(firstLaunch) {
+            Editor editor = getSharedPreferences(context).edit();
+            editor.putInt(ApplicationConstants.CURRENT_APP_VERSION, currentVersionCode);
+            editor.apply();
+        }
+
+        return firstLaunch;
     }
 }

@@ -46,6 +46,7 @@ public class MainActivity extends Activity {
 		super.onStart();
 		handleLaunchOrigin();
 		FileUtilities.deleteTempFiles();
+		checkAppVersion();
 		checkTokenAndScreenlockStatus();
 	}
 
@@ -66,6 +67,12 @@ public class MainActivity extends Activity {
 		super.onStop();
 		GoogleAnalytics.getInstance(this).reportActivityStop(this);
 		finish();
+	}
+
+	private void checkAppVersion(){
+		if(SharedPreferencesUtilities.firstLaunchWithNewVersion(this)){
+			SharedPreferencesUtilities.deleteRefreshtoken(this);
+		}
 	}
 
 	private void checkTokenAndScreenlockStatus() {
