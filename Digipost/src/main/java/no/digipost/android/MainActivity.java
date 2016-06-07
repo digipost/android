@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkAppVersion(){
-		if(SharedPreferencesUtilities.firstLaunchWithNewVersion(this)){
+		if(SharedPreferencesUtilities.shouldDeleteStoredRefreshToken(this)){
 			SharedPreferencesUtilities.deleteRefreshtoken(this);
 		}
 	}

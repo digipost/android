@@ -24,6 +24,8 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 
+import java.net.ConnectException;
+
 public class SharedPreferencesUtilities {
 
     public static SharedPreferences getSharedPreferences(final Context context) {
@@ -82,24 +84,31 @@ public class SharedPreferencesUtilities {
         return numberOfTimesAppHasRun;
     }
 
-    public static boolean firstLaunchWithNewVersion(final Context context) {
+    public static boolean shouldDeleteStoredRefreshToken(final Context context) {
+        int storedAPIVersion = getSharedPreferences(context).getInt(ApplicationConstants.ANDROID_SDK_VERSION,0);
+        int currentAPIVersion = android.os.Build.VERSION.SDK_INT;
+        int androidM = android.os.Build.VERSION_CODES.M;
+        storeCurrentAndroidVersion(context);
+        storeCurrentAppVersionCode(context);
+        return storedAPIVersion < androidM && currentAPIVersion >= androidM;
+    }
 
-        int currentVersionCode = 0;
-        try {
-            currentVersionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            return true;
-        }
+    private static void storeCurrentAndroidVersion(final Context context){
+        Editor editor = getSharedPreferences(context).edit();
+        editor.putInt(ApplicationConstants.ANDROID_SDK_VERSION, android.os.Build.VERSION.SDK_INT);
+        editor.apply();
+    }
 
-        int savedVersionCode = getSharedPreferences(context).getInt(ApplicationConstants.CURRENT_APP_VERSION, 0);
-        boolean firstLaunch = currentVersionCode != savedVersionCode;
-        if(firstLaunch) {
-            Editor editor = getSharedPreferences(context).edit();
-            editor.putInt(ApplicationConstants.CURRENT_APP_VERSION, currentVersionCode);
-            editor.apply();
-        }
+    private static int currentAppVersionCode(final Context context){
+        try {return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {}
+        return 0;
+    }
 
-        return firstLaunch;
+    private static void storeCurrentAppVersionCode(final Context context){
+        Editor editor = getSharedPreferences(context).edit();
+        editor.putInt(ApplicationConstants.APP_VERSION, currentAppVersionCode(context));
+        editor.apply();
+
     }
 }

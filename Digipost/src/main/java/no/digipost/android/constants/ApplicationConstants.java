@@ -28,7 +28,8 @@ public class ApplicationConstants {
     public static final boolean FEATURE_SEND_TO_BANK_VISIBLE = true;
     public static final String NUMBER_OF_TIMES_APP_HAS_RUN = "numberOfTimesAppHasRun";
     public static final int NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN = 1;
-    public static final String CURRENT_APP_VERSION = "currentAppVersion";
+    public static final String APP_VERSION = "appVersion";
+    public static final String ANDROID_SDK_VERSION = "androidSDKVersion";
 
     public static final String LOGOUT_FAILED = "logoutFailed";
 
