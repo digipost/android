@@ -24,8 +24,6 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 
-import java.net.ConnectException;
-
 public class SharedPreferencesUtilities {
 
     public static SharedPreferences getSharedPreferences(final Context context) {
