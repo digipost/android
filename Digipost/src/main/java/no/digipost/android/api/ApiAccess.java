@@ -106,7 +106,7 @@ public class ApiAccess {
             httpsClient.setRequestProperty(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
             httpsClient.setRequestProperty(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccess());
 
-            OutputStream outputStream = null;
+            OutputStream outputStream;
             outputStream = new BufferedOutputStream(httpsClient.getOutputStream());
             if (json != null) {
                 json.writeTo(outputStream);
