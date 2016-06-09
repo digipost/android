@@ -18,6 +18,7 @@ package no.digipost.android.gui.content;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -83,7 +84,7 @@ public class UploadActivity extends Activity {
     private TextProgressBar availableSpace;
     private TextView listEmpty;
     private int content = 0;
-
+    private final long TOO_LARGE_FILE = 104858027;
     private ActionMode uploadActionMode;
 
     @Override
@@ -357,14 +358,21 @@ public class UploadActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
             File newFile = listAdapter.getItem(position);
-
-            if (newFile.isFile()) {
+            if(newFile.length() > TOO_LARGE_FILE){
+                showTooLargeFileDialog();
+            }else if (newFile.isFile()) {
                 promtUpload(newFile);
             } else {
                 mDirectory = newFile;
                 refreshFilesList();
             }
         }
+    }
+
+    private void showTooLargeFileDialog(){
+        String message = getString(R.string.upload_too_large_file);
+        Dialog tooLargeFileDialog = DialogUtitities.getAlertDialogBuilderWithMessage(this,message ).create();
+        tooLargeFileDialog.show();
     }
 
     private class UploadListAdapter extends ArrayAdapter<File> {
@@ -458,7 +466,10 @@ public class UploadActivity extends Activity {
         }
 
         public void setChecked(int position) throws UnsupportedOperationException {
-            if (objects.get(position).isFile()) {
+            File file = objects.get(position);
+            if(file.length() > TOO_LARGE_FILE) {
+                showTooLargeFileDialog();
+            }else if (file.isFile()) {
                 checked[position] = !checked[position];
             } else {
                 throw new UnsupportedOperationException(getString(R.string.upload_folder_exception));

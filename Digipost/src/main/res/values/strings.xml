@@ -132,6 +132,7 @@
     <string name="upload_complete">Opplastning fullført.</string>
     <string name="upload_confirm_single">Vil du laste opp denne filen?</string>
     <string name="upload_confirm_multiple">Vil du laste opp disse %1$d filene?</string>
+    <string name="upload_too_large_file">Filen er for stor. Prøv igjen med en fil under 100 MB.</string>
 
     <string name="no_files">Ingen filer</string>
 

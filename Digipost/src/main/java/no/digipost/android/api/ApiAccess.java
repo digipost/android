@@ -16,6 +16,7 @@
 package no.digipost.android.api;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -194,6 +195,7 @@ public class ApiAccess {
         try {
             try {
 
+
                 FileBody filebody = new FileBody(file, ApiConstants.CONTENT_OCTET_STREAM);
                 MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName(ApiConstants.ENCODING));
                 multipartEntity.addPart("subject", new StringBody(FilenameUtils.removeExtension(file.getName()), ApiConstants.MIME, Charset.forName(ApiConstants.ENCODING)));
@@ -204,7 +206,11 @@ public class ApiAccess {
                 HttpsURLConnection httpsClient = (HttpsURLConnection) url.openConnection();
                 httpsClient.setRequestMethod("POST");
                 httpsClient.setDoOutput(true);
-                httpsClient.setChunkedStreamingMode(0);
+                if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    httpsClient.setFixedLengthStreamingMode(multipartEntity.getContentLength());
+                }else {
+                    httpsClient.setChunkedStreamingMode(0);
+                }
                 httpsClient.setRequestProperty("Connection", "Keep-Alive");
                 httpsClient.addRequestProperty("Content-length", multipartEntity.getContentLength()+"");
                 httpsClient.setRequestProperty(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccess());
