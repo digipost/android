@@ -445,7 +445,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
                     if (openAttachment) {
                         parentDocument.markAsRead();
 
@@ -464,8 +464,9 @@ public class DocumentFragment extends ContentFragment<Document> {
                     }
                 }
 
+
                 @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                public void onFailure(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody, Throwable error) {
                     openAttachment = false;
                     String errorMessage = getString(R.string.error_digipost_api);
 

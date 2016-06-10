@@ -110,6 +110,7 @@
     <orderEntry type="library" exported="" name="jackson-core-asl-1.9.2" level="project" />
     <orderEntry type="library" exported="" name="jsr311-api-1.1.1" level="project" />
     <orderEntry type="library" exported="" name="conceal-1.1.2" level="project" />
+    <orderEntry type="library" exported="" name="httpclient-4.3.6" level="project" />
     <orderEntry type="library" exported="" name="commons-lang-2.3" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.1.1" level="project" />
@@ -123,7 +124,7 @@
     <orderEntry type="library" exported="" name="jersey-core-1.19.1" level="project" />
     <orderEntry type="library" exported="" name="support-v13-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="jackson-mapper-asl-1.9.2" level="project" />
-    <orderEntry type="library" exported="" name="android-async-http-1.4.5" level="project" />
+    <orderEntry type="library" exported="" name="android-async-http-1.4.9" level="project" />
     <orderEntry type="library" exported="" name="play-services-basement-8.4.0" level="project" />
     <orderEntry type="library" exported="" name="joda-time-2.9.1-no-tzdb" level="project" />
   </component>
