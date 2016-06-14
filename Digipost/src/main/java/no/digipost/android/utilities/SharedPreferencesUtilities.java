@@ -60,12 +60,6 @@ public class SharedPreferencesUtilities {
         getSharedPreferences(context).edit().putBoolean(ApplicationConstants.LOGOUT_FAILED, failed).apply();
     }
 
-    public static void clearData(final Context context){
-        Editor editor = getSharedPreferences(context).edit();
-        editor.clear();
-        editor.apply();
-    }
-
     public static void deleteRefreshtoken(final Context context) {
         ContentOperations.setAccountToNull();
         Editor edit = getSharedPreferences(context).edit();
@@ -83,15 +77,15 @@ public class SharedPreferencesUtilities {
     }
 
     public static boolean shouldDeleteStoredRefreshToken(final Context context) {
-        int storedAPIVersion = getSharedPreferences(context).getInt(ApplicationConstants.ANDROID_SDK_VERSION,0);
-        int currentAPIVersion = android.os.Build.VERSION.SDK_INT;
+        int storedSDKVersion = getSharedPreferences(context).getInt(ApplicationConstants.ANDROID_SDK_VERSION,0);
+        int currentSDKVersion = android.os.Build.VERSION.SDK_INT;
         int androidM = android.os.Build.VERSION_CODES.M;
-        storeCurrentAndroidVersion(context);
+        storeCurrentAndroidSDKVersion(context);
         storeCurrentAppVersionCode(context);
-        return storedAPIVersion < androidM && currentAPIVersion >= androidM;
+        return storedSDKVersion < androidM && currentSDKVersion >= androidM;
     }
 
-    private static void storeCurrentAndroidVersion(final Context context){
+    private static void storeCurrentAndroidSDKVersion(final Context context){
         Editor editor = getSharedPreferences(context).edit();
         editor.putInt(ApplicationConstants.ANDROID_SDK_VERSION, android.os.Build.VERSION.SDK_INT);
         editor.apply();

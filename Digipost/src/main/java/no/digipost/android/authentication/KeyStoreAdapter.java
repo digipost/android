@@ -35,7 +35,7 @@ import java.util.ArrayList;
 @TargetApi(Build.VERSION_CODES.M)
 public class KeyStoreAdapter implements CryptoAdapter {
 
-    private final String ALIAS = "refresh_token";
+    private final String ALIAS = "digipost_refresh_token";
     private KeyStore keyStore;
 
     public KeyStoreAdapter(Boolean shouldGenerateNewKeyPair){
@@ -60,6 +60,7 @@ public class KeyStoreAdapter implements CryptoAdapter {
                 ALIAS,
                 KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                 .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
+                .setKeySize(2048)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
                 .build();
         kpg.initialize(spec);
@@ -91,6 +92,8 @@ public class KeyStoreAdapter implements CryptoAdapter {
                 keyStore = KeyStore.getInstance("AndroidKeyStore");
                 keyStore.load(null);
                 return keyStore;
+            }else{
+                return keyStore;
             }
         }catch (Exception e){
             //IGNORE
@@ -102,7 +105,6 @@ public class KeyStoreAdapter implements CryptoAdapter {
         try {
              keyStore.deleteEntry(ALIAS);
         }catch (KeyStoreException e){
-            //IGNORE
         }
     }
 

@@ -61,6 +61,7 @@
             android:name="no.digipost.android.gui.LoginActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"/>
         <activity
             android:name="no.digipost.android.gui.ScreenlockPreferenceActivity"

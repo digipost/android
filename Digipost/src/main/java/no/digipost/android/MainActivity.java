@@ -70,13 +70,16 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkAppVersion(){
-		if(SharedPreferencesUtilities.shouldDeleteStoredRefreshToken(this)){
+		boolean shouldDelete =  SharedPreferencesUtilities.shouldDeleteStoredRefreshToken(this);
+		if(shouldDelete){
 			SharedPreferencesUtilities.deleteRefreshtoken(this);
 		}
 	}
 
 	private void checkTokenAndScreenlockStatus() {
-		if (AndroidLockSecurity.canUseRefreshTokens(this) && (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty())) {
+		boolean canUseRefreshToken = AndroidLockSecurity.canUseRefreshTokens(this);
+		boolean hasRefreshToken = (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty());
+		if (canUseRefreshToken && hasRefreshToken) {
 			new CheckTokenTask().execute();
 		} else {
 			startLoginActivity();

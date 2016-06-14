@@ -18,17 +18,18 @@ package no.digipost.android.authentication;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import no.digipost.android.gcm.GCMController;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class AndroidLockSecurity {
 	public static boolean canUseRefreshTokens(final Context context) {
-		boolean screenLockAndKeyStoreAvailable = screenLockEnabled(context) && new TokenEncryption(context, false).isAvailable();
 
-		if(!screenLockAndKeyStoreAvailable){
-			SharedPreferencesUtilities.clearData(context);
+		if(!screenLockEnabled(context)){
+			SharedPreferencesUtilities.deleteRefreshtoken(context);
+			GCMController.reset(context);
 		}
 
-		return screenLockAndKeyStoreAvailable;
+		return screenLockEnabled(context);
 	}
 
 	public static boolean unableToUseStoredRefreshToken(final Context context){
