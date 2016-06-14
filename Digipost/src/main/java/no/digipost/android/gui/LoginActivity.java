@@ -29,7 +29,6 @@ import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.authentication.AndroidLockSecurity;
-import no.digipost.android.authentication.TokenEncryption;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gcm.GCMController;
@@ -41,7 +40,6 @@ public class LoginActivity extends Activity {
     private final int WEB_OAUTH_LOGIN_REQUEST = 0;
     private Button loginButton, privacyButton, registrationButton;
     private CheckBox rememberCheckbox;
-    private TokenEncryption tokenEncryption;
     private Context context;
 
     @Override
@@ -50,7 +48,6 @@ public class LoginActivity extends Activity {
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_login);
         context = this;
-        tokenEncryption = new TokenEncryption(this, false);
         ButtonListener listener = new ButtonListener();
         loginButton = (Button) findViewById(R.id.login_loginButton);
         loginButton.setOnClickListener(listener);
@@ -59,10 +56,6 @@ public class LoginActivity extends Activity {
         registrationButton = (Button) findViewById(R.id.login_registrationButton);
         registrationButton.setOnClickListener(listener);
         rememberCheckbox = (CheckBox) findViewById(R.id.login_remember_me);
-
-        if (tokenEncryption != null && !tokenEncryption.isAvailable()) {
-            rememberCheckbox.setVisibility(View.GONE);
-        }
     }
 
     @Override
