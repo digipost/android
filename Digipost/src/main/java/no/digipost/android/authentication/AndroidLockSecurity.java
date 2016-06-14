@@ -31,6 +31,10 @@ public class AndroidLockSecurity {
 		return screenLockAndKeyStoreAvailable;
 	}
 
+	public static boolean unableToUseStoredRefreshToken(final Context context){
+		return !screenLockEnabled(context) && !SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context).isEmpty();
+	}
+
 	public static boolean screenLockEnabled(final Context context) {
 			KeyguardManager keyguardMgr = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
 			return keyguardMgr.isKeyguardSecure();
