@@ -69,8 +69,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class DocumentFragment extends ContentFragment<Document> {
 
-    protected AttachmentArrayAdapter attachmentAdapter;
-    protected FolderArrayAdapter folderAdapter;
+    private AttachmentArrayAdapter attachmentAdapter;
+    private FolderArrayAdapter folderAdapter;
     public static boolean updateCurrentDocument = false;
     private AsyncHttpClient asyncHttpClient;
     private int content = 0;
@@ -182,7 +182,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private ArrayList<Folder> getMoveFolders() {
-        ArrayList<Folder> moveLocations = new ArrayList<Folder>();
+        ArrayList<Folder> moveLocations = new ArrayList<>();
 
         if (MainContentActivity.folders != null) {
             if (MainContentActivity.fragmentName != null) {
@@ -191,7 +191,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                 if (MainContentActivity.folders != null) {
 
                     //Mapper
-                    ArrayList<Folder> folders = new ArrayList<Folder>();
+                    ArrayList<Folder> folders = new ArrayList<>();
                     for (Folder f : MainContentActivity.folders) {
                         if (!MainContentActivity.fragmentName.equals(f.getName())) {
                             folders.add(f);
@@ -353,12 +353,16 @@ public class DocumentFragment extends ContentFragment<Document> {
         String fileType = attachment.getFileType();
         Intent intent;
 
-        if (fileType.equals(ApiConstants.FILETYPE_PDF)) {
-            intent = new Intent(context, MuPDFActivity.class);
-        } else if (fileType.equals(ApiConstants.FILETYPE_HTML)) {
-            intent = new Intent(context, HtmlAndReceiptActivity.class);
-        } else {
-            intent = new Intent(context, UnsupportedDocumentFormatActivity.class);
+        switch (fileType) {
+            case ApiConstants.FILETYPE_PDF:
+                intent = new Intent(context, MuPDFActivity.class);
+                break;
+            case ApiConstants.FILETYPE_HTML:
+                intent = new Intent(context, HtmlAndReceiptActivity.class);
+                break;
+            default:
+                intent = new Intent(context, UnsupportedDocumentFormatActivity.class);
+                break;
         }
 
         if (attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null) {
@@ -369,11 +373,11 @@ public class DocumentFragment extends ContentFragment<Document> {
         startActivityForResult(intent, DocumentFragment.INTENT_OPEN_ATTACHMENT_CONTENT);
     }
 
-    protected class OpenUpdatedDocumentTask extends AsyncTask<Void, Void, Boolean> {
+    private class OpenUpdatedDocumentTask extends AsyncTask<Void, Void, Boolean> {
 
         private Document document;
 
-        public OpenUpdatedDocumentTask(final Document document){
+        private OpenUpdatedDocumentTask(final Document document){
             this.document = document;
         }
 
@@ -389,6 +393,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                 this.document = ContentOperations.getDocumentSelf(getActivity(), document);
                 return true;
             } catch (Exception e) {
+                //IGNORE
             }
             return false;
         }
@@ -402,7 +407,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
     }
 
-    protected void showUpdateProgressDialog() {
+    private void showUpdateProgressDialog() {
         dismissUpdateProgressDialogIfExisting();
 
         if(updateProgressDialog == null){
@@ -514,8 +519,8 @@ public class DocumentFragment extends ContentFragment<Document> {
         setListEmptyViewText(getString(textResource), null);
     }
 
-    protected void executeDocumentMoveTask(Document document, String toLocation, String folderId) {
-        List<Document> documents = new ArrayList<Document>();
+    private void executeDocumentMoveTask(Document document, String toLocation, String folderId) {
+        List<Document> documents = new ArrayList<>();
 
         if (document != null) {
             documents.add(document);
@@ -528,12 +533,12 @@ public class DocumentFragment extends ContentFragment<Document> {
         documentMoveTask.execute();
     }
 
-    protected void moveDocument(String toLocation, String folderId) {
+    private void moveDocument(String toLocation, String folderId) {
         executeDocumentMoveTask(null, toLocation, folderId);
     }
 
-    protected void deleteDocument(Document document) {
-        List<Document> documents = new ArrayList<Document>();
+    private void deleteDocument(Document document) {
+        List<Document> documents = new ArrayList<>();
         documents.add(document);
 
         ContentDeleteTask contentDeleteTask = new ContentDeleteTask(documents);
@@ -581,7 +586,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private class MoveToFolderListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public MoveToFolderListOnItemClickListener() {
+        private MoveToFolderListOnItemClickListener() {
         }
 
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
@@ -607,7 +612,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     private class AttachmentListOnItemClickListener implements AdapterView.OnItemClickListener {
         private Document parentDocument;
 
-        public AttachmentListOnItemClickListener(Document parentDocument) {
+        private AttachmentListOnItemClickListener(Document parentDocument) {
             this.parentDocument = parentDocument;
         }
 
@@ -623,12 +628,12 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
     }
 
-    protected class GetDocumentMetaTask extends AsyncTask<Void, Void, Documents> {
+    private class GetDocumentMetaTask extends AsyncTask<Void, Void, Documents> {
         private final int content;
         private String errorMessage;
         private boolean invalidToken;
 
-        public GetDocumentMetaTask(final int content) {
+        private GetDocumentMetaTask(final int content) {
             this.content = content;
         }
 
@@ -702,7 +707,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         private boolean invalidToken;
         private int progress;
 
-        public DocumentMoveTask(List<Document> documents, String toLocation, String folderId) {
+        private DocumentMoveTask(List<Document> documents, String toLocation, String folderId) {
             this.documents = documents;
             this.toLocation = toLocation;
             this.folderId = folderId;
@@ -782,14 +787,14 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
     }
 
-    protected class SendOpeningReceiptTask extends AsyncTask<Void, Void, Boolean> {
+    private class SendOpeningReceiptTask extends AsyncTask<Void, Void, Boolean> {
         private String errorMessage;
         private Document document;
         private Attachment attachment;
         private boolean invalidToken;
         private int attachmentPosition;
 
-        public SendOpeningReceiptTask(final Document document, final Attachment attachment,int attachmentPosition) {
+        private SendOpeningReceiptTask(final Document document, final Attachment attachment,int attachmentPosition) {
             invalidToken = false;
             this.document = document;
             this.attachment = attachment;

@@ -133,7 +133,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         private String errorMessage;
         private boolean invalidToken;
 
-        public GetReceiptContentTask(Receipt receipt) {
+        private GetReceiptContentTask(Receipt receipt) {
             this.receipt = receipt;
         }
 
@@ -197,7 +197,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         private String errorMessage;
         private boolean invalidToken;
 
-        public GetReceiptsMetaTask() {
+        private GetReceiptsMetaTask() {
             errorMessage = "";
             invalidToken = false;
         }
@@ -258,7 +258,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     }
 
     private void deleteReceipt(Receipt receipt) {
-        List<Receipt> receipts = new ArrayList<Receipt>();
+        List<Receipt> receipts = new ArrayList<>();
         receipts.add(receipt);
 
         ContentDeleteTask task = new ContentDeleteTask(receipts);

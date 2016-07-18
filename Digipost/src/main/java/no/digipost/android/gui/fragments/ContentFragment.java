@@ -143,7 +143,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         }
     }
 
-    protected void executeContentDeleteTask() {
+    private void executeContentDeleteTask() {
         List<CONTENT_TYPE> content = listAdapter.getCheckedItems();
 
         contentActionMode.finish();
@@ -160,7 +160,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         }
     }
 
-    protected void showDeleteContentDialog() {
+    private void showDeleteContentDialog() {
         AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
                 getActionDeletePromtString(listAdapter.getCheckedCount()), getString(R.string.delete));
         alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
@@ -180,7 +180,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         alertDialog.show();
     }
 
-    protected String getContentTypeString(int count) {
+    private String getContentTypeString(int count) {
         int res;
         if (getContent() == ApplicationConstants.RECEIPTS) {
             if (count > 1) {
@@ -198,7 +198,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         return getString(res);
     }
 
-    protected String getActionDeletePromtString(int count) {
+    private String getActionDeletePromtString(int count) {
         String type = getContentTypeString(count);
 
         if (count > 1) {
@@ -214,7 +214,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         private boolean invalidToken;
         private int progress;
 
-        public ContentDeleteTask(List<CONTENT_TYPE> content) {
+        protected ContentDeleteTask(List<CONTENT_TYPE> content) {
             this.content = content;
             this.progress = 0;
         }

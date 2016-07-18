@@ -39,15 +39,14 @@ import no.digipost.android.utilities.DialogUtitities;
 public class EditFolderFragment extends DialogFragment {
 
     public static String fragmentName = "editFolderFragment";
-    private int content;
     private int folderIndex;
-    boolean editFolder;
+    private boolean editFolder;
     private Folder folder;
     private View editName;
     private String folderIcon;
-    String newFolderName;
-    String validationRules;
-    GridView gridView;
+    private String newFolderName;
+    private String validationRules;
+    private GridView gridView;
 
     private Integer[] iconsNormal = {R.drawable.folder2x, R.drawable.envelope2x, R.drawable.file2x, R.drawable.star2x,
             R.drawable.tags2x, R.drawable.usd2x, R.drawable.heart2x, R.drawable.home2x, R.drawable.archive2x,
@@ -75,7 +74,7 @@ public class EditFolderFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        content = getArguments().getInt("content");
+        int content = getArguments().getInt("content");
         editFolder = getArguments().getBoolean("editFolder");
         validationRules = getArguments().getString("validationRules");
 
@@ -177,7 +176,7 @@ public class EditFolderFragment extends DialogFragment {
 
     private class ImageAdapter extends BaseAdapter {
 
-        public ImageAdapter() {
+        private ImageAdapter() {
         }
 
         public int getCount() {
@@ -203,7 +202,7 @@ public class EditFolderFragment extends DialogFragment {
             return editFolder && folder.getIcon().equals(getString(R.string.icon_beer));
         }
 
-        public int getCurrentPosition() {
+        private int getCurrentPosition() {
 
             for (int i = 0; i < iconNames.length; i++) {
                 if (iconNames[i].equals(folderIcon)) {
@@ -222,7 +221,6 @@ public class EditFolderFragment extends DialogFragment {
 
             if (convertView == null) {
                 imageView = new ImageView(getActivity().getApplicationContext());
-                //imageView.setLayoutParams(new GridView.LayoutParams(100, 100));
                 imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else {
                 imageView = (ImageView) convertView;
