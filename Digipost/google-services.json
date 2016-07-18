@@ -12,10 +12,15 @@
         }
       },
       "oauth_client": [],
-      "api_key": [],
+      "api_key": [{
+        "current_key": ""
+      }],
       "services": {
         "analytics_service": {
-          "status": 1
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-20592293-2"
+          }
         },
         "appinvite_service": {
           "status": 1,
