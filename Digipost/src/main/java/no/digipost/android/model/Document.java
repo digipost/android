@@ -27,7 +27,7 @@ import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_TW
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFilter("toJSON")
-public class Document {
+public class Document{
 
     @JsonProperty
     private String subject;

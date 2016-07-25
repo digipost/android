@@ -24,7 +24,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import no.digipost.android.constants.ApiConstants;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Receipt {
+public class Receipt{
 
 	@JsonProperty
 	private String amount;

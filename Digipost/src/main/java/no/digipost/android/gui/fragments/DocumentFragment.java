@@ -22,8 +22,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -33,10 +38,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.gui.WebLoginActivity;
+import no.digipost.android.gui.lists.ClickListener;
+import no.digipost.android.gui.lists.DividerItemDecoration;
+import no.digipost.android.gui.lists.DocumentAdapter;
+import no.digipost.android.gui.lists.RecyclerTouchListener;
+import no.digipost.android.model.*;
 import org.apache.http.Header;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +68,6 @@ import no.digipost.android.gui.adapters.FolderArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
 import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
-import no.digipost.android.model.Attachment;
-import no.digipost.android.model.Document;
-import no.digipost.android.model.Documents;
-import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
@@ -82,6 +89,9 @@ public class DocumentFragment extends ContentFragment<Document> {
     private static String EXTRA_CONTENT = "content";
     private static final int INTENT_OPEN_ATTACHMENT_CONTENT = 0;
     private static final int INTENT_ID_PORTEN_WEBVIEW_LOGIN = 1;
+
+    protected DocumentAdapter documentAdapter;
+    protected ArrayList<Document> documents = new ArrayList<>();
 
     public static DocumentFragment newInstance(int content) {
         DocumentFragment fragment = new DocumentFragment();
@@ -105,11 +115,36 @@ public class DocumentFragment extends ContentFragment<Document> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        super.listView.setMultiChoiceModeListener(new MultiChoiceModeListener());
-        super.listAdapter = new DocumentArrayAdapter(getActivity(), R.layout.content_list_item);
-        super.listView.setAdapter(listAdapter);
-        super.listView.setOnItemClickListener(new DocumentListOnItemClickListener());
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_content_recyclerview);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(context));
+        documentAdapter = new DocumentAdapter(documents);
+        recyclerView.setAdapter(documentAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context, recyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                currentListPosition = position;
+                Document document = documents.get(position);
+                openUpdatedDocument(document);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                currentListPosition = position;
+                Document document = documents.get(position);
+                Toast.makeText(context, document.getSubject() + "  onLongClick!", Toast.LENGTH_SHORT).show();
+            }
+        }));
         return view;
+    }
+
+    private void updateContent(ArrayList<Document> documents){
+        this.documents = documents;
+        documentAdapter.updateContent(documents);
+        documentAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -546,7 +581,10 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private void updateAdapterDocument(Document document) {
+      /*
+      //TODO Replace
         super.listAdapter.replaceAtPosition(document,currentListPosition);
+         */
     }
 
     private class MultiChoiceModeListener extends ContentMultiChoiceModeListener {
@@ -581,8 +619,12 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private void openUpdatedDocument(int position){
-        Document listDocument = DocumentFragment.super.listAdapter.getItem(position);
-        new OpenUpdatedDocumentTask(listDocument).execute();
+        Document document = documentAdapter.getItem(position);
+        new OpenUpdatedDocumentTask(document).execute();
+    }
+
+    private void openUpdatedDocument(Document document){
+        new OpenUpdatedDocumentTask(document).execute();
     }
 
     private class MoveToFolderListOnItemClickListener implements AdapterView.OnItemClickListener {
@@ -671,7 +713,8 @@ public class DocumentFragment extends ContentFragment<Document> {
                 DocumentFragment.super.taskIsRunning = false;
                 if (documents != null) {
                     ArrayList<Document> docs = documents.getDocument();
-                    DocumentFragment.super.listAdapter.replaceAll(docs);
+
+                    updateContent(docs);
                     if (docs != null && !docs.isEmpty()) {
                         DocumentFragment.super.setListEmptyViewNoNetwork(false);
                     } else {

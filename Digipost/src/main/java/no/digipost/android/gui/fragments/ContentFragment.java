@@ -24,6 +24,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -31,13 +34,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-
+import android.widget.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import no.digipost.android.R;
@@ -47,6 +45,7 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.adapters.ContentArrayAdapter;
+import no.digipost.android.gui.lists.DocumentAdapter;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.DataFormatUtilities;
@@ -65,6 +64,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected Context context;
 
     protected ListView listView;
+    protected RecyclerView recyclerView;
     protected View listEmptyViewNoConnection;
     protected View listEmptyViewNoContent;
     protected TextView listEmptyViewTitle;
@@ -79,6 +79,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
     protected ActionMode contentActionMode;
 
+
     public abstract int getContent();
 
     @Override
@@ -86,12 +87,9 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         context = getActivity();
 
         View view = inflater.inflate(R.layout.fragment_layout_listview, container, false);
-        listView = (ListView) view.findViewById(R.id.fragment_content_listview);
-        listEmptyViewNoConnection = view.findViewById(R.id.fragment_content_list_emptyview_no_connection);
-        listEmptyViewNoContent = view.findViewById(R.id.fragment_content_list_no_content);
-        listEmptyViewTitle = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_title);
-        listEmptyViewText = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_text);
-        listTopText = (TextView) view.findViewById(R.id.fragment_content_listview_top_text);
+        //listView = (ListView) view.findViewById(R.id.fragment_content_listview);
+
+
 
         Button networkRetryButton = (Button) view.findViewById(R.id.fragment_content_network_retry_button);
         networkRetryButton.setOnClickListener(new View.OnClickListener() {
@@ -101,8 +99,17 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             }
         });
 
+        /*
+        listEmptyViewNoConnection = view.findViewById(R.id.fragment_content_list_emptyview_no_connection);
+        listEmptyViewNoContent = view.findViewById(R.id.fragment_content_list_no_content);
+        listEmptyViewTitle = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_title);
+        listEmptyViewText = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_text);
+        listTopText = (TextView) view.findViewById(R.id.fragment_content_listview_top_text);
+
+
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setFastScrollEnabled(true);
+        */
 
         return view;
     }
@@ -130,17 +137,19 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     }
 
     protected void setTopText(String text) {
-
         listTopText.setVisibility(View.VISIBLE);
         listTopText.setText(text);
     }
 
     protected void setListEmptyViewNoNetwork(boolean visible) {
+        /*
+        //TODO replace
         if (visible) {
             listView.setEmptyView(listEmptyViewNoConnection);
         } else {
             listView.setEmptyView(null);
         }
+        */
     }
 
     private void executeContentDeleteTask() {
@@ -319,11 +328,18 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     }
 
     public void filterList(String filterQuery) {
+        /*
+
+        //TODO Replace
         listAdapter.getFilter().filter(filterQuery);
+        */
     }
 
     public void clearFilter() {
+        /*
+        TODO Replace
         listAdapter.clearFilter();
+         */
     }
 
     public abstract void updateAccountMeta();

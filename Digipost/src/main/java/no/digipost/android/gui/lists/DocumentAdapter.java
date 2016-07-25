@@ -16,30 +16,65 @@
 
 package no.digipost.android.gui.lists;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.model.Document;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class DocumentAdapter extends ContentAdapter {
+public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.DocumentViewHolder> {
 
-    public DocumentAdapter(ArrayList<Object> documents){
-        super(documents);
+    private ArrayList<Document> documents;
+
+    public DocumentAdapter(ArrayList<Document> documents){
+        this.documents = documents;
     }
 
+    public Document getItem(int position){
+        return documents.get(position);
+    }
+
+    public ArrayList<Document> getDocuments(){
+        return documents;
+    }
+
+    public void updateContent(ArrayList<Document> documents){
+        this.documents = documents;
+    }
     @Override
-    public DocumentAdapter.ContentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DocumentAdapter.DocumentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_list_item,parent,false);
-        return new ContentViewHolder(view);
+        return new DocumentViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ContentViewHolder holder, int position) {
-        super.onBindViewHolder(holder, position);
-        Document document = (Document) contents.get(position);
+    public void onBindViewHolder(DocumentViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    @Override
+    public void onBindViewHolder(DocumentViewHolder holder, int position) {
+        Document document = documents.get(position);
         holder.content_title.setText(document.getSubject());
+    }
+
+    @Override
+    public int getItemCount() {
+        return documents != null ? documents.size() : 0;
+    }
+
+    protected class DocumentViewHolder extends RecyclerView.ViewHolder{
+
+        private TextView content_title;
+
+        private DocumentViewHolder(View view){
+            super(view);
+            content_title = (TextView) view.findViewById(R.id.content_title);
+        }
     }
 }
