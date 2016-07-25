@@ -22,10 +22,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,7 +46,6 @@ import no.digipost.android.gui.lists.DividerItemDecoration;
 import no.digipost.android.gui.lists.DocumentAdapter;
 import no.digipost.android.gui.lists.RecyclerTouchListener;
 import no.digipost.android.model.*;
-import org.apache.http.Header;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
@@ -63,7 +60,6 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
-import no.digipost.android.gui.adapters.DocumentArrayAdapter;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
@@ -121,7 +117,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(context));
-        documentAdapter = new DocumentAdapter(documents);
+        documentAdapter = new DocumentAdapter(context, documents);
         recyclerView.setAdapter(documentAdapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context, recyclerView, new ClickListener() {
             @Override
