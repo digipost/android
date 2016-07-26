@@ -39,7 +39,6 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
 
     private Context context;
     private ArrayList<Document> documents;
-    private boolean hideContentTypeImage;
 
     public DocumentAdapter(Context context, ArrayList<Document> documents){
         this.documents = documents;
@@ -104,10 +103,6 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
         } else {
             return document.getCreatorName();
         }
-    }
-
-    public void setContentTypeImageVisible(boolean state) {
-        hideContentTypeImage = !state;
     }
 
     public class DocumentViewHolder extends RecyclerView.ViewHolder{
