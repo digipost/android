@@ -24,6 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import no.digipost.android.R;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -33,25 +34,17 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
     public DividerItemDecoration(Context context) {
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
-
-        mDivider = a.getDrawable(0);
+        mDivider = context.getResources().getDrawable(R.drawable.content_list_item_divider);
         a.recycle();
-        setOrientation(LinearLayoutManager.VERTICAL);
-    }
-
-    public void setOrientation(int orientation) {
-        if (orientation != VERTICAL_LIST) {
-            throw new IllegalArgumentException("invalid orientation");
-        }
     }
 
     @Override
-    public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
+    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         drawVertical(c, parent);
     }
 
     private void drawVertical(Canvas c, RecyclerView parent) {
-        final int left = parent.getPaddingLeft();
+        final int left = parent.getPaddingLeft()+100;
         final int right = parent.getWidth() - parent.getPaddingRight();
 
         final int childCount = parent.getChildCount();
