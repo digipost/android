@@ -108,7 +108,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
     public class DocumentViewHolder extends RecyclerView.ViewHolder{
 
         private TextView title, subTitle, metaTop,metaMiddle;
-        private ImageView metaBottom, contentTypeImage;
+        private ImageView contentTypeImage;
         private CheckBox checkbox;
 
         private DocumentViewHolder(View view){
@@ -117,7 +117,6 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             subTitle = (TextView) view.findViewById(R.id.content_subTitle);
             metaTop = (TextView) view.findViewById(R.id.content_meta_top);
             metaMiddle = (TextView) view.findViewById(R.id.content_meta_middle);
-            metaBottom = (ImageView) view.findViewById(R.id.content_meta_bottom);
             contentTypeImage = (ImageView) view.findViewById(R.id.content_type_image);
             checkbox = (CheckBox) view.findViewById(R.id.content_checkbox);
         }
