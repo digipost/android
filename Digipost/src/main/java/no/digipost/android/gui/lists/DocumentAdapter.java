@@ -80,6 +80,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
         holder.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(document.getFileSize())));
 
         if (!document.isRead()) {
+            holder.itemView.setBackgroundResource(R.drawable.content_list_item_unread);
             holder.title.setTypeface(null, Typeface.BOLD);
             holder.subTitle.setTypeface(null, Typeface.BOLD);
         }
