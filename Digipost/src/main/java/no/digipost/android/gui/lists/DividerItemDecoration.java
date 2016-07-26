@@ -21,21 +21,16 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import no.digipost.android.R;
 
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
-    private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
-    private static final int VERTICAL_LIST = LinearLayoutManager.VERTICAL;
     private Drawable mDivider;
 
     public DividerItemDecoration(Context context) {
-        final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = context.getResources().getDrawable(R.drawable.content_list_item_divider);
-        a.recycle();
     }
 
     @Override
