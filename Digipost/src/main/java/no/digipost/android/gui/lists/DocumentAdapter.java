@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import no.digipost.android.R;
@@ -38,6 +39,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
 
     private Context context;
     private ArrayList<Document> documents;
+    private boolean hideContentTypeImage;
 
     public DocumentAdapter(Context context, ArrayList<Document> documents){
         this.documents = documents;
@@ -83,15 +85,15 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             holder.subTitle.setTypeface(null, Typeface.BOLD);
         }
 
-        if (document.getAttachment().size() > 1) {
+        if (document.getAttachment().size() > 1)
             holder.subTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.paperclip_32, 0);
-        }
 
         if (document.requiresHighAuthenticationLevel()) {
             holder.contentTypeImage.setImageDrawable(context.getResources().getDrawable(R.drawable.lock_32));
         }else{
-            holder.contentTypeImage.setVisibility(View.GONE);
+            holder.contentTypeImage.setVisibility(View.INVISIBLE);
         }
+        holder.checkbox.setVisibility(View.GONE);
     }
 
     private String getSubTitleText(Document document){
@@ -104,20 +106,25 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
         }
     }
 
+    public void setContentTypeImageVisible(boolean state) {
+        hideContentTypeImage = !state;
+    }
 
     public class DocumentViewHolder extends RecyclerView.ViewHolder{
 
         private TextView title, subTitle, metaTop,metaMiddle;
         private ImageView metaBottom, contentTypeImage;
+        private CheckBox checkbox;
 
         private DocumentViewHolder(View view){
             super(view);
             title = (TextView) view.findViewById(R.id.content_title);
             subTitle = (TextView) view.findViewById(R.id.content_subTitle);
-            this.metaTop = (TextView) view.findViewById(R.id.content_meta_top);
-            this.metaMiddle = (TextView) view.findViewById(R.id.content_meta_middle);
-            this.metaBottom = (ImageView) view.findViewById(R.id.content_meta_bottom);
-            contentTypeImage = (ImageView) view.findViewById((R.id.content_type_image));
+            metaTop = (TextView) view.findViewById(R.id.content_meta_top);
+            metaMiddle = (TextView) view.findViewById(R.id.content_meta_middle);
+            metaBottom = (ImageView) view.findViewById(R.id.content_meta_bottom);
+            contentTypeImage = (ImageView) view.findViewById(R.id.content_type_image);
+            checkbox = (CheckBox) view.findViewById(R.id.content_checkbox);
         }
     }
 }
