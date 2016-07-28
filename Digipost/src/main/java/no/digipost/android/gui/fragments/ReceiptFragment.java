@@ -20,13 +20,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 
 import java.util.ArrayList;
@@ -41,13 +39,17 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.gui.adapters.ReceiptArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
+import no.digipost.android.gui.lists.*;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
 
 public class ReceiptFragment extends ContentFragment<Receipt> {
+
+    protected ReceiptAdapter receiptAdapter;
+    protected boolean multiSelectEnabled;
+    protected int currentListPosition;
 
     public static ReceiptFragment newInstance() {
         return new ReceiptFragment();
@@ -61,15 +63,87 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_content_recyclerview);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(context));
+        receiptAdapter = new ReceiptAdapter(context, new ArrayList<Receipt>());
+        recyclerView.setAdapter(receiptAdapter);
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context, recyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                currentListPosition = position;
+                if(multiSelectEnabled){
+                    receiptAdapter.select(position);
+                }else {
+                    openReceipt(receiptAdapter.getReceipts().get(position));
+                }
+            }
 
-        super.listAdapter = new ReceiptArrayAdapter(getActivity(), R.layout.content_list_item);
-        super.listView.setAdapter(listAdapter);
-        super.listView.setMultiChoiceModeListener(new ReceiptMultiChoiceModeListener());
-        super.listView.setOnItemClickListener(new ReceiptListOnItemClickListener());
+            @Override
+            public void onLongClick(View view, int position) {
+                currentListPosition = position;
 
-        updateAccountMeta();
-
+                if(multiSelectEnabled) {
+                    receiptAdapter.select(position);
+                }else{
+                    beginActionMode(position);
+                }
+            }
+        }));
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateAccountMeta();
+    }
+
+    private void beginActionMode(int position){
+        multiSelectEnabled = true;
+        contentActionMode = getActivity().startActionMode(new ReceiptFragment.SelectActionModeCallback());
+        receiptAdapter.setSelectable(multiSelectEnabled);
+        receiptAdapter.select(position);
+    }
+
+    private void finishActionMode(){
+        multiSelectEnabled = false;
+        contentActionMode = null;
+        receiptAdapter.setSelectable(multiSelectEnabled);
+        getActivity().setTheme(R.style.Digipost);
+    }
+
+    private class SelectActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.activity_main_content_receipt_context, menu);
+            getActivity().setTheme(R.style.Digipost_ActionMode);
+            return true;
+        }
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.main_context_menu_delete_receipt:
+                    ReceiptFragment.super.deleteContent(receiptAdapter.getSelected());
+                    mode.finish();
+                    finishActionMode();
+                    return true;
+                default:
+                    finishActionMode();
+                    return false;
+            }
+        }
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            finishActionMode();
+        }
     }
 
     @Override
@@ -77,16 +151,15 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         return ApplicationConstants.RECEIPTS;
     }
 
-    private void checkStatusAndDisplayReceipts(Receipts receipts) {
+    private void checkStatusAndDisplayReceipts(Receipts newReceipts) {
         if (isAdded()) {
-            ArrayList<Receipt> receipt = receipts.getReceipt();
-            ReceiptFragment.super.listAdapter.replaceAll(receipt);
 
-            int numberOfCards = Integer.parseInt(receipts.getNumberOfCards());
-            int numberOfCardsReadyForVerification = Integer.parseInt(receipts.getNumberOfCardsReadyForVerification());
-            int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(receipts.getNumberOfReceiptsHiddenUntilVerification());
+            receiptAdapter.updateContent(newReceipts.getReceipt());
+            int numberOfCards = Integer.parseInt(newReceipts.getNumberOfCards());
+            int numberOfCardsReadyForVerification = Integer.parseInt(newReceipts.getNumberOfCardsReadyForVerification());
+            int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(newReceipts.getNumberOfReceiptsHiddenUntilVerification());
 
-            if (receipt.size() == 0) {
+            if (receiptAdapter.getReceipts().size() == 0) {
                 if (numberOfCards == 0) {
                     setListEmptyViewText(getString(R.string.emptyview_receipt_intro_title), getString(R.string.emptyview_receipt_intro_message));
                 } else if (numberOfCardsReadyForVerification > 0) {
@@ -116,12 +189,12 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         task.execute();
     }
 
-    private void openListItem(Receipt receipt) {
+    public void openReceipt(Receipt receipt){
         GetReceiptContentTask task = new GetReceiptContentTask(receipt);
         task.execute();
     }
 
-    private void openReceipt(String receiptContent) {
+    private void openReceiptHTMLContent(String receiptContent) {
         Intent intent = new Intent(getActivity(), HtmlAndReceiptActivity.class);
         intent.putExtra(INTENT_CONTENT, getContent());
         intent.putExtra(ApiConstants.GET_RECEIPT, receiptContent);
@@ -142,7 +215,6 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
             super.onPreExecute();
             if (!ReceiptFragment.super.progressDialogIsVisible)
                 ReceiptFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
-
         }
 
         @Override
@@ -166,15 +238,15 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+        protected void onPostExecute(String receiptHTMLString) {
+            super.onPostExecute(receiptHTMLString);
             if(isAdded()) {
                 ReceiptFragment.super.taskIsRunning = false;
                 ReceiptFragment.super.hideProgressDialog();
 
-                if (result != null) {
+                if (receiptHTMLString != null) {
                     DocumentContentStore.setContent(receipt);
-                    openReceipt(result);
+                    openReceiptHTMLContent(receiptHTMLString);
                 } else {
                     if (invalidToken) {
                         activityCommunicator.requestLogOut();
@@ -235,7 +307,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
 
                 if (invalidToken) {
                     activityCommunicator.requestLogOut();
-                } else if (listAdapter.isEmpty()) {
+                } else if (receiptAdapter.isEmpty()) {
                     ReceiptFragment.super.setListEmptyViewNoNetwork(true);
                 }
             }
@@ -253,15 +325,14 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
 
     private class ReceiptListOnItemClickListener implements AdapterView.OnItemClickListener {
         public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
-            openListItem(ReceiptFragment.super.listAdapter.getItem(position));
+            openReceipt(receiptAdapter.getItem(position));
         }
     }
 
     private void deleteReceipt(Receipt receipt) {
-        List<Receipt> receipts = new ArrayList<>();
-        receipts.add(receipt);
-
-        ContentDeleteTask task = new ContentDeleteTask(receipts);
+        List<Receipt> receiptsToBeDelete = new ArrayList<>();
+        receiptsToBeDelete.add(receipt);
+        ContentDeleteTask task = new ContentDeleteTask(receiptsToBeDelete);
         task.execute();
     }
 
@@ -279,32 +350,6 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
                     }
                 }
             }
-        }
-    }
-
-    private class ReceiptMultiChoiceModeListener extends ContentMultiChoiceModeListener {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            super.onCreateActionMode(actionMode, menu);
-
-            MenuItem moveDocument = menu.findItem(R.id.main_context_menu_move);
-            moveDocument.setVisible(false);
-
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
-            super.onActionItemClicked(actionMode, menuItem);
-
-            switch (menuItem.getItemId()) {
-                case R.id.main_context_menu_delete:
-                    ReceiptFragment.super.deleteContent(null);
-                    break;
-            }
-
-            return true;
         }
     }
 }

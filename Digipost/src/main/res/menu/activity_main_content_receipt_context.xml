@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/main_context_menu_delete_receipt"
+            android:title="@string/delete"
+            android:icon="@drawable/ic_action_delete"
+            android:showAsAction="ifRoom"/>
+
+</menu>

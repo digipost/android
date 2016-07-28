@@ -24,7 +24,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,7 +32,6 @@ import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import no.digipost.android.authentication.TokenStore;
@@ -44,7 +42,6 @@ import no.digipost.android.gui.lists.DocumentAdapter;
 import no.digipost.android.gui.lists.RecyclerTouchListener;
 import no.digipost.android.model.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
@@ -86,7 +83,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     private static final int INTENT_ID_PORTEN_WEBVIEW_LOGIN = 1;
 
     protected DocumentAdapter documentAdapter;
-    private boolean multiSelectEnabled;
+    protected boolean multiSelectEnabled;
     protected ArrayList<Document> documents = new ArrayList<>();
 
     public static DocumentFragment newInstance(int content) {
@@ -234,7 +231,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
 
         if(updateCurrentDocument ){
-            super.listAdapter.replaceAtPosition(DocumentContentStore.getDocumentParent(),currentListPosition);
+            documentAdapter.replaceAtPosition(DocumentContentStore.getDocumentParent(),currentListPosition);
             updateCurrentDocument = false;
         }
 
