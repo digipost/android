@@ -84,7 +84,6 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     protected DocumentAdapter documentAdapter;
     protected boolean multiSelectEnabled;
-    protected ArrayList<Document> documents = new ArrayList<>();
 
     public static DocumentFragment newInstance(int content) {
         DocumentFragment fragment = new DocumentFragment();
@@ -114,7 +113,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(context));
-        documentAdapter = new DocumentAdapter(context, documents);
+        documentAdapter = new DocumentAdapter(context, new ArrayList<Document>());
         recyclerView.setAdapter(documentAdapter);
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context, recyclerView, new ClickListener() {
             @Override
@@ -124,7 +123,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                 if(multiSelectEnabled){
                     documentAdapter.select(position);
                 }else {
-                    openUpdatedDocument(documents.get(position));
+                    openUpdatedDocument(documentAdapter.getDocuments().get(position));
                 }
             }
 
@@ -190,11 +189,6 @@ public class DocumentFragment extends ContentFragment<Document> {
         public void onDestroyActionMode(ActionMode mode) {
             finishActionMode();
         }
-    }
-
-    private void updateContent(ArrayList<Document> documents){
-        this.documents = documents;
-        documentAdapter.updateContent(documents);
     }
 
     @Override
@@ -719,16 +713,15 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
 
         @Override
-        protected void onPostExecute(final Documents documents) {
-            super.onPostExecute(documents);
+        protected void onPostExecute(final Documents newDocuments) {
+            super.onPostExecute(newDocuments);
             if (isAdded()) {
 
                 DocumentFragment.super.taskIsRunning = false;
-                if (documents != null) {
-                    ArrayList<Document> docs = documents.getDocument();
-
-                    updateContent(docs);
-                    if (docs != null && !docs.isEmpty()) {
+                if (newDocuments != null) {
+                    ArrayList<Document> documents = newDocuments.getDocument();
+                    documentAdapter.updateContent(documents);
+                    if (documents != null && !documents.isEmpty()) {
                         DocumentFragment.super.setListEmptyViewNoNetwork(false);
                     } else {
                         if (!isDetached()) {
