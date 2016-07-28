@@ -41,7 +41,6 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.gui.adapters.ContentArrayAdapter;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.DataFormatUtilities;
@@ -67,7 +66,6 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected TextView listEmptyViewText;
 
     protected TextView listTopText;
-    //protected ContentArrayAdapter<CONTENT_TYPE> listAdapter;
     protected ProgressDialog progressDialog;
     protected boolean progressDialogIsVisible = false;
     protected boolean taskIsRunning = false;

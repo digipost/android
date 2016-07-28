@@ -36,10 +36,10 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.gui.WebLoginActivity;
-import no.digipost.android.gui.lists.ClickListener;
-import no.digipost.android.gui.lists.DividerItemDecoration;
-import no.digipost.android.gui.lists.DocumentAdapter;
-import no.digipost.android.gui.lists.RecyclerTouchListener;
+import no.digipost.android.gui.recyclerview.ClickListener;
+import no.digipost.android.gui.recyclerview.DividerItemDecoration;
+import no.digipost.android.gui.adapters.DocumentAdapter;
+import no.digipost.android.gui.recyclerview.RecyclerTouchListener;
 import no.digipost.android.model.*;
 
 import java.util.ArrayList;

@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui.lists;
+package no.digipost.android.gui.recyclerview;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui.lists;
+package no.digipost.android.gui.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
