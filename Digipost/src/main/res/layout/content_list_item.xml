@@ -20,6 +20,7 @@
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:background="@drawable/content_list_item"
+              android:id="@+id/content_layout"
               android:orientation="horizontal"
               android:clickable="true"
               android:paddingBottom="10dp"

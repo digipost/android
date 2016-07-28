@@ -127,6 +127,9 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     }
 
     protected void setListEmptyViewText(String title, String text) {
+        /*
+
+        //TODO ListView
         if (title != null) {
             listEmptyViewTitle.setText(title);
         }
@@ -134,6 +137,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             listEmptyViewText.setText(text);
         }
         listView.setEmptyView(listEmptyViewNoContent);
+        */
     }
 
     protected void setTopText(String text) {
@@ -152,30 +156,26 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         */
     }
 
-    private void executeContentDeleteTask() {
-        List<CONTENT_TYPE> content = listAdapter.getCheckedItems();
-
-        contentActionMode.finish();
-
+    private void executeContentDeleteTask(List<CONTENT_TYPE> content) {
         ContentDeleteTask documentDeleteTask = new ContentDeleteTask(content);
         documentDeleteTask.execute();
     }
 
-    protected void deleteContent() {
+    protected void deleteContent(List<CONTENT_TYPE> content) {
         if (SettingsUtilities.getConfirmDeletePreference(context)) {
-            showDeleteContentDialog();
+            showDeleteContentDialog(content);
         } else {
-            executeContentDeleteTask();
+            executeContentDeleteTask(content);
         }
     }
 
-    private void showDeleteContentDialog() {
+    private void showDeleteContentDialog(final List<CONTENT_TYPE> content) {
         AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
-                getActionDeletePromtString(listAdapter.getCheckedCount()), getString(R.string.delete));
+                getActionDeletePromtString(content.size()), getString(R.string.delete));
         alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                executeContentDeleteTask();
+                executeContentDeleteTask(content);
                 dialogInterface.dismiss();
             }
         });

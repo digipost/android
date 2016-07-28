@@ -18,7 +18,9 @@ package no.digipost.android.gui.lists;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +32,6 @@ import no.digipost.android.model.Document;
 import no.digipost.android.utilities.DataFormatUtilities;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static no.digipost.android.model.Origin.PUBLIC_ENTITY;
 import static no.digipost.android.model.Origin.UPLOADED;
@@ -39,31 +40,64 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
 
     private Context context;
     private ArrayList<Document> documents;
+    private SparseBooleanArray selectedPositions = new SparseBooleanArray();
+    private DocumentViewHolder documentViewHolder;
+    private boolean multiSelectEnabled;
 
     public DocumentAdapter(Context context, ArrayList<Document> documents){
         this.documents = documents;
         this.context = context;
     }
+
     public Document getItem(int position){
         return documents.get(position);
     }
+
     public ArrayList<Document> getDocuments(){
         return documents;
     }
+
     public void updateContent(ArrayList<Document> documents){
         this.documents = documents;
+        selectedPositions = new SparseBooleanArray();
+        multiSelectEnabled = false;
+        notifyDataSetChanged();
     }
 
     @Override
     public DocumentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_list_item,parent,false);
-        return new DocumentViewHolder(view);
+        documentViewHolder = new DocumentViewHolder(view);
+        return documentViewHolder;
     }
 
-    @Override
-    public void onBindViewHolder(DocumentViewHolder holder, int position, List<Object> payloads) {
-        super.onBindViewHolder(holder, position, payloads);
+    public void setSelectable(boolean multiSelectEnabled){
+        this.multiSelectEnabled = multiSelectEnabled;
+        selectedPositions = new SparseBooleanArray();
+        notifyDataSetChanged();
+    }
 
+    public void select(int position){
+        selectedPositions.put(position, !selectedPositions.get(position));
+        notifyItemChanged(position);
+    }
+
+    private boolean isSelected(int position){
+        return selectedPositions.get(position);
+    }
+
+    public ArrayList<Document> getSelected(){
+        ArrayList<Document> selectedDocuments = new ArrayList<  >();
+        for(int i = 0; i < selectedPositions.size(); i++){
+            int documentIndex = selectedPositions.keyAt(i);
+            selectedDocuments.add(documents.get(documentIndex));
+        }
+        return selectedDocuments;
+    }
+
+    public void replaceAtPosition(Document document, int position){
+        documents.set(position, document);
+        notifyItemChanged(position);
     }
 
     @Override
@@ -72,47 +106,19 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
     }
 
     @Override
-    public void onBindViewHolder(DocumentViewHolder holder, int position) {
-        Document document = documents.get(position);
-        holder.title.setText(document.getSubject());
-        holder.subTitle.setText(getSubTitleText(document));
-        holder.metaTop.setText(DataFormatUtilities.getFormattedDate(document.getCreated()));
-        holder.metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(document.getFileSize())));
-
-        if (!document.isRead()) {
-            holder.itemView.setBackgroundResource(R.drawable.content_list_item_unread);
-            holder.title.setTypeface(null, Typeface.BOLD);
-            holder.subTitle.setTypeface(null, Typeface.BOLD);
-        }
-
-        if (document.getAttachment().size() > 1)
-            holder.subTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.paperclip_32, 0);
-
-        if (document.requiresHighAuthenticationLevel()) {
-            holder.contentTypeImage.setImageDrawable(context.getResources().getDrawable(R.drawable.lock_32));
-        }else{
-            holder.contentTypeImage.setVisibility(View.INVISIBLE);
-        }
-        holder.checkbox.setVisibility(View.GONE);
-    }
-
-    private String getSubTitleText(Document document){
-        if (document.getOrigin() == UPLOADED) {
-            return context.getString(R.string.uploaded);
-        } else if (document.getOrigin() == PUBLIC_ENTITY) {
-            return context.getString(R.string.public_entity, document.getCreatorName());
-        } else {
-            return document.getCreatorName();
-        }
+    public void onBindViewHolder(DocumentViewHolder documentViewHolder, int position) {
+        this.documentViewHolder = documentViewHolder;
+        documentViewHolder.bindDocument(documents.get(position), position);
     }
 
     public class DocumentViewHolder extends RecyclerView.ViewHolder{
-
         private TextView title, subTitle, metaTop,metaMiddle;
         private ImageView contentTypeImage;
+        private View view;
         private CheckBox checkbox;
+        private Drawable lock = context.getResources().getDrawable(R.drawable.lock_32);
 
-        private DocumentViewHolder(View view){
+        public DocumentViewHolder(View view){
             super(view);
             title = (TextView) view.findViewById(R.id.content_title);
             subTitle = (TextView) view.findViewById(R.id.content_subTitle);
@@ -120,6 +126,58 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             metaMiddle = (TextView) view.findViewById(R.id.content_meta_middle);
             contentTypeImage = (ImageView) view.findViewById(R.id.content_type_image);
             checkbox = (CheckBox) view.findViewById(R.id.content_checkbox);
+            this.view = view;
+        }
+
+        public void bindDocument(Document document, int position){
+            title.setText(document.getSubject());
+            subTitle.setText(getSubTitleText(document));
+            metaTop.setText(DataFormatUtilities.getFormattedDate(document.getCreated()));
+            metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(document.getFileSize())));
+
+            if (!document.isRead()) {
+                itemView.setBackgroundResource(R.drawable.content_list_item_unread);
+                title.setTypeface(null, Typeface.BOLD);
+                subTitle.setTypeface(null, Typeface.BOLD);
+            }else{
+                itemView.setBackgroundResource(R.drawable.content_list_item);
+                title.setTypeface(null, Typeface.NORMAL);
+                subTitle.setTypeface(null, Typeface.NORMAL);
+            }
+
+            if (document.getAttachment().size() > 1) {
+                subTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.paperclip_32, 0);
+            }else{
+                subTitle.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+            }
+
+            contentTypeImage.setImageDrawable(lock);
+            if (document.requiresHighAuthenticationLevel()) {
+                contentTypeImage.setVisibility(View.VISIBLE);
+            }else{
+                contentTypeImage.setVisibility(View.INVISIBLE);
+            }
+
+            boolean selected = isSelected(position);
+            checkbox.setChecked(selected);
+            view.setActivated(selected);
+            view.setSelected(selected);
+
+            if(multiSelectEnabled){
+                checkbox.setVisibility(View.VISIBLE);
+            }else{
+                checkbox.setVisibility(View.GONE);
+            }
+        }
+
+        private String getSubTitleText(Document document){
+            if (document.getOrigin() == UPLOADED) {
+                return context.getString(R.string.uploaded);
+            } else if (document.getOrigin() == PUBLIC_ENTITY) {
+                return context.getString(R.string.public_entity, document.getCreatorName());
+            } else {
+                return document.getCreatorName();
+            }
         }
     }
 }

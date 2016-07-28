@@ -24,15 +24,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ActionMode;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -46,6 +43,8 @@ import no.digipost.android.gui.lists.DividerItemDecoration;
 import no.digipost.android.gui.lists.DocumentAdapter;
 import no.digipost.android.gui.lists.RecyclerTouchListener;
 import no.digipost.android.model.*;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
@@ -87,6 +86,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     private static final int INTENT_ID_PORTEN_WEBVIEW_LOGIN = 1;
 
     protected DocumentAdapter documentAdapter;
+    private boolean multiSelectEnabled;
     protected ArrayList<Document> documents = new ArrayList<>();
 
     public static DocumentFragment newInstance(int content) {
@@ -123,24 +123,81 @@ public class DocumentFragment extends ContentFragment<Document> {
             @Override
             public void onClick(View view, int position) {
                 currentListPosition = position;
-                Document document = documents.get(position);
-                openUpdatedDocument(document);
+
+                if(multiSelectEnabled){
+                    documentAdapter.select(position);
+                }else {
+                    openUpdatedDocument(documents.get(position));
+                }
             }
 
             @Override
             public void onLongClick(View view, int position) {
                 currentListPosition = position;
-                Document document = documents.get(position);
-                Toast.makeText(context, document.getSubject() + "  onLongClick!", Toast.LENGTH_SHORT).show();
+
+                if(multiSelectEnabled) {
+                    documentAdapter.select(position);
+                }else{
+                    beginActionMode(position);
+                }
             }
         }));
         return view;
     }
 
+    private void beginActionMode(int position){
+        multiSelectEnabled = true;
+        contentActionMode = getActivity().startActionMode(new SelectActionModeCallback());
+        documentAdapter.setSelectable(multiSelectEnabled);
+        documentAdapter.select(position);
+    }
+
+    private void finishActionMode(){
+        multiSelectEnabled = false;
+        contentActionMode = null;
+        documentAdapter.setSelectable(multiSelectEnabled);
+        getActivity().setTheme(R.style.Digipost);
+    }
+
+    private class SelectActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.activity_main_content_context, menu);
+            getActivity().setTheme(R.style.Digipost_ActionMode);
+            return true;
+        }
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.main_context_menu_move:
+                    showMoveToFolderDialog(documentAdapter.getSelected());
+                    mode.finish();
+                    finishActionMode();
+                    return true;
+                case R.id.main_context_menu_delete:
+                    DocumentFragment.super.deleteContent(documentAdapter.getSelected());
+                    mode.finish();
+                    finishActionMode();
+                    return true;
+                default:
+                    finishActionMode();
+                    return false;
+            }
+        }
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            finishActionMode();
+        }
+    }
+
     private void updateContent(ArrayList<Document> documents){
         this.documents = documents;
         documentAdapter.updateContent(documents);
-        documentAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -163,7 +220,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                         updateCurrentDocument = false;
                         String toLocation = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION);
                         String folderId = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID);
-                        executeDocumentMoveTask(DocumentContentStore.getDocumentParent(), toLocation, folderId);
+                        executeDocumentMoveTask(DocumentContentStore.getDocumentParent(),null, toLocation, folderId);
 
                     } else if (action.equals(ApiConstants.DELETE)) {
                         updateCurrentDocument = false;
@@ -184,7 +241,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         DocumentContentStore.clearContent();
     }
 
-    private void showMoveToFolderDialog() {
+    private void showMoveToFolderDialog(ArrayList<Document> documents) {
         folderDialog = null;
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
@@ -205,7 +262,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         ArrayList<Folder> folders = getMoveFolders();
         folderAdapter = new FolderArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item, folders);
         moveToFolderListView.setAdapter(folderAdapter);
-        moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
+        moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener(documents));
 
         builder.setTitle(getString(R.string.move_to));
         folderDialog = builder.create();
@@ -550,22 +607,17 @@ public class DocumentFragment extends ContentFragment<Document> {
         setListEmptyViewText(getString(textResource), null);
     }
 
-    private void executeDocumentMoveTask(Document document, String toLocation, String folderId) {
-        List<Document> documents = new ArrayList<>();
+    private void executeDocumentMoveTask(Document document, ArrayList<Document> documents, String toLocation, String folderId) {
 
         if (document != null) {
+            documents = new ArrayList<>();
             documents.add(document);
         } else {
-            documents = listAdapter.getCheckedItems();
-            contentActionMode.finish();
+            contentActionMode = null;
         }
 
         DocumentMoveTask documentMoveTask = new DocumentMoveTask(documents, toLocation, folderId);
         documentMoveTask.execute();
-    }
-
-    private void moveDocument(String toLocation, String folderId) {
-        executeDocumentMoveTask(null, toLocation, folderId);
     }
 
     private void deleteDocument(Document document) {
@@ -577,41 +629,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private void updateAdapterDocument(Document document) {
-      /*
-      //TODO Replace
-        super.listAdapter.replaceAtPosition(document,currentListPosition);
-         */
-    }
-
-    private class MultiChoiceModeListener extends ContentMultiChoiceModeListener {
-
-        @Override
-        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-            super.onCreateActionMode(actionMode, menu);
-            return true;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode actionMode, android.view.MenuItem menuItem) {
-            super.onActionItemClicked(actionMode, menuItem);
-            switch (menuItem.getItemId()) {
-                case R.id.main_context_menu_delete:
-                    DocumentFragment.super.deleteContent();
-                    break;
-                case R.id.main_context_menu_move:
-                    showMoveToFolderDialog();
-                    break;
-            }
-
-            return true;
-        }
-    }
-
-    private class DocumentListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
-            currentListPosition = position;
-            openUpdatedDocument(currentListPosition);
-        }
+        documentAdapter.replaceAtPosition(document, currentListPosition);
     }
 
     private void openUpdatedDocument(int position){
@@ -624,11 +642,12 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private class MoveToFolderListOnItemClickListener implements AdapterView.OnItemClickListener {
-        private MoveToFolderListOnItemClickListener() {
+        private ArrayList<Document> documents;
+        private MoveToFolderListOnItemClickListener(ArrayList<Document> documents) {
+            this.documents = documents;
         }
 
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
-
             Folder folder = folderAdapter.getItem(position);
             int folderId = folder.getId();
             String location;
@@ -639,7 +658,8 @@ public class DocumentFragment extends ContentFragment<Document> {
                 location = "FOLDER";
             }
 
-            moveDocument(location, folderId + "");
+            executeDocumentMoveTask(null, documents, location, ""+folderId);
+
             if (folderDialog != null) {
                 folderDialog.dismiss();
                 folderDialog = null;
@@ -721,9 +741,13 @@ public class DocumentFragment extends ContentFragment<Document> {
                 } else {
                     if (invalidToken) {
                         activityCommunicator.requestLogOut();
-                    } else if (listAdapter.isEmpty()) {
+                    }
+                   /*
+                   // TODO ListView
+                        } else if (listAdapter.isEmpty()) {
                         DocumentFragment.super.setListEmptyViewNoNetwork(true);
                     }
+                    */
                     DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
                 }
 

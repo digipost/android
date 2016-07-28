@@ -300,7 +300,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
 
             switch (menuItem.getItemId()) {
                 case R.id.main_context_menu_delete:
-                    ReceiptFragment.super.deleteContent();
+                    ReceiptFragment.super.deleteContent(null);
                     break;
             }
 
