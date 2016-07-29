@@ -13,7 +13,6 @@
             android:title="@string/upload"
             android:icon="@drawable/ic_upload"
             android:showAsAction="ifRoom"/>
-
     <item
             android:id="@+id/menu_search"
             android:title="@string/search"
@@ -21,9 +20,9 @@
             android:showAsAction="collapseActionView|ifRoom"
             android:actionViewClass="android.widget.SearchView"/>
     <item
-        android:id="@+id/menu_done_edit_folder"
-        android:title="@string/done"
-        android:visible="false"
-        android:icon="@drawable/ic_action_accept"
-        android:showAsAction="never"/>
+            android:id="@+id/menu_done_edit_folder"
+            android:title="@string/done"
+            android:visible="false"
+            android:icon="@drawable/ic_action_accept"
+            android:showAsAction="never"/>
 </menu>

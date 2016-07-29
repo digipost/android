@@ -127,7 +127,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open, R.string.close);
         drawerLayout.setDrawerListener(drawerToggle);
 
-        if(getActionBar() != null) getActionBar().setHomeButtonEnabled(true);
+        //if(getActionBar() != null) getActionBar().setHomeButtonEnabled(true);
 
         selectItem(ApplicationConstants.MAILBOX);
 
