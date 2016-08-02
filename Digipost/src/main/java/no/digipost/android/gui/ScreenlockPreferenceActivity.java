@@ -44,6 +44,8 @@ public class ScreenlockPreferenceActivity extends Activity {
         yesButton.setOnClickListener(listener);
         noButton.setOnClickListener(listener);
         privacyButton.setOnClickListener(listener);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     @Override

@@ -46,7 +46,8 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_unsupported);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         if(DocumentContentStore.getDocumentParent() == null ||  DocumentContentStore.getDocumentAttachment() == null){
             finish();
             return;

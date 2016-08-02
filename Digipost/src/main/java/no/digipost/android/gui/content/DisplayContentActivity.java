@@ -76,7 +76,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.pdf_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);

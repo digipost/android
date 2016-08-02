@@ -45,7 +45,6 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_notification_settings);
-
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setTitle(getString(R.string.pref_screen_notification_settings_title));
 

@@ -20,13 +20,7 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-            android:id="@+id/html_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/Digipost.AppBarOverlay">
-    </android.support.v7.widget.Toolbar>
+    <include layout="@layout/toolbar"/>
 
     <WebView
             android:id="@+id/web_html"

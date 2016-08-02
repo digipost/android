@@ -47,7 +47,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_html_and_receipt);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.html_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setupWebView();
         setupActionBar();

@@ -96,7 +96,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     public static boolean launchedFromPush;
     private DrawerLayout drawer;
     private android.support.v7.app.ActionBarDrawerToggle drawerToggle;
-    private Toolbar toolbar;
     protected MailboxArrayAdapter mailboxAdapter;
     private int remainingDrawerChanges;
     private DragNDropListView drawerList;
@@ -117,7 +116,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         this.savedInstanceState = savedInstanceState;
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_main_content);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         GCMController.init(this);
 

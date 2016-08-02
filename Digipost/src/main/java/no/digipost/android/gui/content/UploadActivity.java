@@ -94,7 +94,7 @@ public class UploadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_upload);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.upload_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.upload);
         getSupportActionBar().setHomeButtonEnabled(true);

@@ -254,7 +254,7 @@ public class MuPDFActivity extends DisplayContentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.pdf_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         selectActionModeCallback = new SelectActionModeCallback();

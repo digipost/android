@@ -35,12 +35,7 @@
             android:orientation="vertical"
             android:theme="@style/Digipost.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:popupTheme="@style/Digipost.PopupOverlay"/>
+    <include layout="@layout/toolbar"/>
 
     <FrameLayout
             android:id="@+id/main_content_frame"
