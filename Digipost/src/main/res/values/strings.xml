@@ -28,6 +28,9 @@
     <string name="drawer_help">Hjelp</string>
     <string name="drawer_logout">Logg ut</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <!--Icons -->
     <string name="icon_folder">FOLDER</string>
     <string name="icon_paper">PAPER</string>

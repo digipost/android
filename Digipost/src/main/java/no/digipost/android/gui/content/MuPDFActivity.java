@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -252,6 +253,9 @@ public class MuPDFActivity extends DisplayContentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pdf);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.pdf_toolbar);
+        setSupportActionBar(toolbar);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         selectActionModeCallback = new SelectActionModeCallback();
         mAlertBuilder = new AlertDialog.Builder(this);
@@ -353,77 +357,12 @@ public class MuPDFActivity extends DisplayContentActivity {
             }
         };
 
-        // Activate the search-preparing button
-        /*
-         * mSearchButton.setOnClickListener(new View.OnClickListener() { public
-		 * void onClick(View v) { searchModeOn(); } });
-		 *
-		 * mCancelSelectButton.setOnClickListener(new View.OnClickListener() {
-		 * public void onClick(View v) { MuPDFView pageView = (MuPDFView)
-		 * mDocView.getDisplayedView(); if (pageView != null)
-		 * pageView.deselectText(); selectModeOff(); } });
-		 *
-		 * mCopySelectButton.setOnClickListener(new View.OnClickListener() {
-		 * public void onClick(View v) { MuPDFView pageView = (MuPDFView)
-		 * mDocView.getDisplayedView(); boolean copied = false; if (pageView !=
-		 * null) copied = pageView.copySelection();
-		 *
-		 * selectModeOff();
-		 *
-		 * showMessage(copied ? "Copied to clipboard" : "No text selected"); }
-		 * });
-		 *
-		 * // Search invoking buttons are disabled while there is no text
-		 * specified mSearchBack.setEnabled(false);
-		 * mSearchFwd.setEnabled(false);
-		 * mSearchBack.setColorFilter(Color.argb(255, 128, 128, 128));
-		 * mSearchFwd.setColorFilter(Color.argb(255, 128, 128, 128));
-		 *
-		 * // React to interaction with the text widget
-		 * mSearchText.addTextChangedListener(new TextWatcher() {
-		 *
-		 * public void afterTextChanged(Editable s) { boolean haveText =
-		 * s.toString().length() > 0; mSearchBack.setEnabled(haveText);
-		 * mSearchFwd.setEnabled(haveText); if (haveText) {
-		 * mSearchBack.setColorFilter(Color.argb(255, 255, 255, 255));
-		 * mSearchFwd.setColorFilter(Color.argb(255, 255, 255, 255)); } else {
-		 * mSearchBack.setColorFilter(Color.argb(255, 128, 128, 128));
-		 * mSearchFwd.setColorFilter(Color.argb(255, 128, 128, 128)); }
-		 *
-		 * // Remove any previous search results if (SearchTaskResult.get() !=
-		 * null &&
-		 * !mSearchText.getText().toString().equals(SearchTaskResult.get().txt))
-		 * { SearchTaskResult.set(null); mDocView.resetupChildren(); } } public
-		 * void beforeTextChanged(CharSequence s, int start, int count, int
-		 * after) {} public void onTextChanged(CharSequence s, int start, int
-		 * before, int count) {} });
-		 *
-		 * //React to Done button on keyboard
-		 * mSearchText.setOnEditorActionListener(new
-		 * TextView.OnEditorActionListener() { public boolean
-		 * onEditorAction(TextView v, int actionId, KeyEvent event) { if
-		 * (actionId == EditorInfo.IME_ACTION_DONE) search(1); return false; }
-		 * });
-		 *
-		 * mSearchText.setOnKeyListener(new View.OnKeyListener() { public
-		 * boolean onKey(View v, int keyCode, KeyEvent event) { if
-		 * (event.getAction() == KeyEvent.ACTION_DOWN && keyCode ==
-		 * KeyEvent.KEYCODE_ENTER) search(1); return false; } });
-		 *
-		 * // Activate search invoking buttons
-		 * mSearchBack.setOnClickListener(new View.OnClickListener() { public
-		 * void onClick(View v) { search(-1); } });
-		 * mSearchFwd.setOnClickListener(new View.OnClickListener() { public
-		 * void onClick(View v) { search(1); } });
-		 */
-
         mDocView.setLinksEnabled(true);
 
         // Stick the document view and the buttons overlay into a parent view
-        RelativeLayout layout = new RelativeLayout(this);
+        RelativeLayout layout = (RelativeLayout) findViewById(R.id.pdf_relative_layout);
         layout.addView(mDocView);
         layout.setBackgroundResource(R.drawable.login_background);
-        setContentView(layout);
     }
 
     @Override
@@ -440,11 +379,14 @@ public class MuPDFActivity extends DisplayContentActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /*
+    //TODO
     public Object onRetainNonConfigurationInstance() {
         MuPDFCore mycore = core;
         core = null;
         return mycore;
     }
+    */
 
     @Override
     protected void onPause() {
@@ -540,6 +482,7 @@ public class MuPDFActivity extends DisplayContentActivity {
     }
 
     private void setupSearchView(MenuItem menuSearch) {
+
         menuSearch.setOnActionExpandListener(new SearchOnActionExpandListener());
 
         SearchView searchView = (SearchView) menuSearch.getActionView();
@@ -605,7 +548,7 @@ public class MuPDFActivity extends DisplayContentActivity {
         inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
 
         searchMenuItem = menu.findItem(R.id.pdfmenu_search);
-        setupSearchView(searchMenuItem);
+        //setupSearchView(searchMenuItem);
 
         return super.onCreateOptionsMenu(menu);
     }

@@ -23,20 +23,21 @@
               android:id="@+id/content_layout"
               android:orientation="horizontal"
               android:clickable="true"
-              android:paddingBottom="10dp"
-              android:paddingLeft="12dp"
-              android:paddingStart="12dp"
-              android:paddingRight="15dp"
-              android:paddingEnd="15dp"
-              android:paddingTop="10dp">
+              android:paddingBottom="15dp"
+              android:paddingLeft="10dp"
+              android:paddingStart="10dp"
+              android:paddingRight="20dp"
+              android:paddingEnd="20dp"
+              android:paddingTop="15dp">
 
     <CheckBox
             android:id="@+id/content_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:theme="@style/CheckBoxStyle"
             android:contentDescription="@string/move_checkbox_description"
             android:gravity="center"
-            android:paddingRight="10dp"/>
+            android:paddingRight="5dp"/>
 
     <ImageView
             android:id="@+id/content_type_image"
@@ -63,13 +64,14 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/black_subject"
-                android:textSize="17sp"/>
+                android:textSize="18sp"/>
 
         <TextView
                 android:id="@+id/content_subTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="5dp"
+                android:layout_marginTop="2sp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -90,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:singleLine="true"
-                android:textColor="@color/blue"
+                android:textColor="@color/grey_date"
                 android:textSize="12sp"/>
 
         <TextView

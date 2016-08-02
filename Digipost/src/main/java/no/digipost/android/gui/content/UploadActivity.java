@@ -28,6 +28,8 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -70,7 +72,7 @@ import no.digipost.android.model.Mailbox;
 
 import static java.lang.String.format;
 
-public class UploadActivity extends Activity {
+public class UploadActivity extends AppCompatActivity {
     private final static File DEFAULT_INITIAL_DIRECTORY = Environment.getExternalStorageDirectory();
     private final String[] blockedFileContentTypes = {ApiConstants.TEXT_HTML};
     private final String KEY_DIRECTORY = "directory";
@@ -92,9 +94,10 @@ public class UploadActivity extends Activity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_upload);
-
-        getActionBar().setTitle(R.string.upload);
-        getActionBar().setHomeButtonEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.upload_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.upload);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         absolutePath = (TextView) findViewById(R.id.upload_file_path);
         availableSpace = (TextProgressBar) findViewById(R.id.upload_available_space);

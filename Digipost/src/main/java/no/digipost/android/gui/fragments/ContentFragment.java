@@ -24,7 +24,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.*;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import java.util.List;
 
+import android.widget.Toolbar;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -87,6 +88,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         });
 
         /*
+        //TODO
         listEmptyViewNoConnection = view.findViewById(R.id.fragment_content_list_emptyview_no_connection);
         listEmptyViewNoContent = view.findViewById(R.id.fragment_content_list_no_content);
         listEmptyViewTitle = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_title);

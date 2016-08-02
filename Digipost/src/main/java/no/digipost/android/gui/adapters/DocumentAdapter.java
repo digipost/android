@@ -112,7 +112,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
     }
 
     public class DocumentViewHolder extends RecyclerView.ViewHolder{
-        private TextView title, subTitle, metaTop,metaMiddle;
+        private TextView title, subTitle, metaTop;
         private ImageView contentTypeImage;
         private View view;
         private CheckBox checkbox;
@@ -123,7 +123,6 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             title = (TextView) view.findViewById(R.id.content_title);
             subTitle = (TextView) view.findViewById(R.id.content_subTitle);
             metaTop = (TextView) view.findViewById(R.id.content_meta_top);
-            metaMiddle = (TextView) view.findViewById(R.id.content_meta_middle);
             contentTypeImage = (ImageView) view.findViewById(R.id.content_type_image);
             checkbox = (CheckBox) view.findViewById(R.id.content_checkbox);
             this.view = view;
@@ -133,7 +132,6 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             title.setText(document.getSubject());
             subTitle.setText(getSubTitleText(document));
             metaTop.setText(DataFormatUtilities.getFormattedDate(document.getCreated()));
-            metaMiddle.setText(DataFormatUtilities.getFormattedFileSize(Long.parseLong(document.getFileSize())));
 
             if (!document.isRead()) {
                 itemView.setBackgroundResource(R.drawable.content_list_item_unread);

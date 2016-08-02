@@ -16,7 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -25,6 +24,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -61,7 +62,7 @@ import no.digipost.android.utilities.Permissions;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
-public abstract class DisplayContentActivity extends Activity {
+public abstract class DisplayContentActivity extends AppCompatActivity {
 
     protected MenuItem sendToBank;
     protected int content_type;
@@ -74,6 +75,9 @@ public abstract class DisplayContentActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pdf);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.pdf_toolbar);
+        setSupportActionBar(toolbar);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
         if(content_type != ApplicationConstants.RECEIPTS) {
@@ -109,9 +113,9 @@ public abstract class DisplayContentActivity extends Activity {
     }
 
     public void setActionBar(String title, String subTitle) {
-        getActionBar().setTitle(title);
-        getActionBar().setSubtitle(subTitle);
-        getActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setSubtitle(subTitle);
+        getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     protected void hideProgressDialog() {

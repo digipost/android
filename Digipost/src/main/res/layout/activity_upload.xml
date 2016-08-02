@@ -7,6 +7,15 @@
               android:layout_height="match_parent"
               android:background="@drawable/content_list_item">
 
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/upload_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/Digipost.AppBarOverlay">
+
+    </android.support.v7.widget.Toolbar>
+
     <TextView
             android:id="@+id/upload_file_path"
             android:layout_height="wrap_content"

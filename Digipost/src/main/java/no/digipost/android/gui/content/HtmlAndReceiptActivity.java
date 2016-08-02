@@ -20,6 +20,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -46,6 +47,8 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_html_and_receipt);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.html_toolbar);
+        setSupportActionBar(toolbar);
         setupWebView();
         setupActionBar();
         loadContent();
@@ -135,17 +138,15 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
     }
 
     private void setupActionBar() {
-        getActionBar().setHomeButtonEnabled(true);
-
         try {
             if (content_type != ApplicationConstants.RECEIPTS) {
                 Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
-                getActionBar().setTitle(documentMeta.getSubject());
-                getActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
+                getSupportActionBar().setTitle(documentMeta.getSubject());
+                getSupportActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
             } else {
                 Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
-                getActionBar().setTitle(receiptMeta.getStoreName());
-                getActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+                getSupportActionBar().setTitle(receiptMeta.getStoreName());
+                getSupportActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
             }
         } catch (NullPointerException e) {
             //IGNORE

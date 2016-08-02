@@ -31,9 +31,12 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -80,7 +83,7 @@ import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
-public class MainContentActivity extends Activity implements ContentFragment.ActivityCommunicator {
+public class MainContentActivity extends AppCompatActivity implements ContentFragment.ActivityCommunicator, NavigationView.OnNavigationItemSelectedListener {
     public static final int INTENT_REQUESTCODE = 0;
     public static boolean editDrawerMode;
     public static String errorMessage;
@@ -91,12 +94,12 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     public Bundle savedInstanceState;
     private static String[] drawerListItems;
     public static boolean launchedFromPush;
-
+    private DrawerLayout drawer;
+    private android.support.v7.app.ActionBarDrawerToggle drawerToggle;
+    private Toolbar toolbar;
     protected MailboxArrayAdapter mailboxAdapter;
-    private DrawerLayout drawerLayout;
     private int remainingDrawerChanges;
     private DragNDropListView drawerList;
-    private ActionBarDrawerToggle drawerToggle;
     private DrawerAdapter drawerArrayAdapter;
     private MenuItem searchButton;
     private SearchView searchView;
@@ -114,28 +117,35 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         this.savedInstanceState = savedInstanceState;
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_main_content);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         GCMController.init(this);
-        drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+
+        drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        drawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
         drawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
         refreshing = true;
         remainingDrawerChanges = 0;
         editDrawerMode = false;
         updateUI(false);
-        setDrawerListeners();
-        drawerToggle = new MainContentActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer_white, R.string.open, R.string.close);
-        drawerLayout.setDrawerListener(drawerToggle);
 
-        //if(getActionBar() != null) getActionBar().setHomeButtonEnabled(true);
+        setDrawerListeners();
 
         selectItem(ApplicationConstants.MAILBOX);
-
         SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
 
         if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
-            drawerLayout.openDrawer(GravityCompat.START);
+            drawer.openDrawer(GravityCompat.START);
         }
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -163,6 +173,11 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        return false;
+    }
+
     private void setDrawerListeners() {
         drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
@@ -182,9 +197,9 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 editDrawerMode = !editDrawerMode;
                 if (editDrawerMode) {
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+                    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
                 } else {
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 }
                 updateUI(false);
                 return true;
@@ -254,7 +269,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
         searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
 
-        setupSearchView();
+// TODO ListView        setupSearchView();
         updateTitles();
 
         return true;
@@ -263,25 +278,13 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        if (drawerLayout != null) {
+        if (drawer != null) {
             if (drawerArrayAdapter != null) {
                 drawerArrayAdapter.notifyDataSetChanged();
             }
 
             if (menu != null) {
                 searchButton = menu.findItem(R.id.menu_search);
-                searchButton.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-                    @Override
-                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                        getCurrentFragment().clearFilter();
-                        return true;
-                    }
-                });
 
                 MenuItem doneEditingButton = menu.findItem(R.id.menu_done_edit_folder);
                 MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
@@ -292,7 +295,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                     refreshButton.setActionView(null);
                 }
 
-                boolean drawerOpen = drawerLayout.isDrawerOpen(drawerList);
+               // boolean drawerOpen = drawer.isDrawerOpen(drawerList);
+                boolean drawerOpen = false;
                 MenuItem uploadButton = menu.findItem(R.id.menu_upload);
 
                 if (getCurrentFragment() != null) {
@@ -312,7 +316,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 } else {
                     doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                     doneEditingButton.setVisible(false);
-                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 }
             }
         }
@@ -341,7 +345,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
                 return true;
             case R.id.menu_done_edit_folder:
                 editDrawerMode = false;
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 updateUI(false);
 
                 return true;
@@ -405,7 +409,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
 
     private void selectMailbox(String digipostAddress, String name) {
         if (ContentOperations.changeMailbox(digipostAddress)) {
-            getActionBar().setTitle(name);
+            getSupportActionBar().setTitle(name);
             account = null;
             editDrawerMode = false;
             executeGetAccountTask();
@@ -523,7 +527,8 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
         fragmentManager.beginTransaction().replace(R.id.main_content_frame, contentFragment).commit();
 
         drawerList.setItemChecked(content, true);
-        drawerLayout.closeDrawer(drawerList);
+        drawer.closeDrawers();
+// TODO        drawer.closeDrawer(drawerList);
     }
 
     @Override
@@ -546,20 +551,20 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private void updateTitles() {
 
         if (editDrawerMode) {
-            getActionBar().setTitle(getString(R.string.edit));
+            getSupportActionBar().setTitle(getString(R.string.edit));
         } else if (account != null) {
             fragmentName = "";
             try {
                 if (showActionBarName) {
                     fragmentName = mailbox.getName();
                 } else {
-                    if (getCurrentFragment().getContent() == ApplicationConstants.MAILBOX || getActionBar().getTitle().equals("")) {
+                    if (getCurrentFragment().getContent() == ApplicationConstants.MAILBOX || getSupportActionBar().getTitle().equals("")) {
                         fragmentName = mailbox.getName();
                     } else {
                         fragmentName = drawerListItems[getCurrentFragment().getContent()];
                     }
                 }
-                getActionBar().setTitle(fragmentName);
+                getSupportActionBar().setTitle(fragmentName);
             } catch (NullPointerException e) {
                 //IGNORE
             }
@@ -570,7 +575,7 @@ public class MainContentActivity extends Activity implements ContentFragment.Act
     private void updateDrawer(boolean useCachedFolders) {
         int currentDrawerListViewPosition = drawerList.getFirstVisiblePosition();
         if (!useCachedFolders) {
-            folders = new ArrayList<Folder>();
+            folders = new ArrayList<>();
         }
         ArrayList<String> drawerItems = new ArrayList<String>();
 

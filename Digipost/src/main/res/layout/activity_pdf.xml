@@ -15,23 +15,27 @@
  * limitations under the License.
  */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fitsSystemWindows="true">
 
     <android.support.v7.widget.Toolbar
-            android:id="@+id/html_toolbar"
+            android:id="@+id/pdf_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:theme="@style/Digipost.AppBarOverlay">
+
     </android.support.v7.widget.Toolbar>
 
-    <WebView
-            android:id="@+id/web_html"
-            android:layout_width="fill_parent"
-            android:layout_height="0sp"
-            android:layout_weight="1"/>
+    <RelativeLayout
+            android:id="@+id/pdf_relative_layout"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:layout_height="match_parent">
+    </RelativeLayout>
 
 </LinearLayout>

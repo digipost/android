@@ -21,6 +21,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.*;
@@ -35,7 +37,7 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.NetworkUtilities;
 
-public class WebLoginActivity extends Activity {
+public class WebLoginActivity extends AppCompatActivity {
 
     private final String SUCCESS = "SUCCESS";
     private String authenticationScope = ApiConstants.SCOPE_FULL;
@@ -73,9 +75,10 @@ public class WebLoginActivity extends Activity {
         webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
         webView.getSettings().setDomStorageEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle("Avbryt");
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.login_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Avbryt");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

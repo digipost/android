@@ -12,24 +12,28 @@
     <!-- ActionBar -->
     <color name="actionbar_title_color">#FFF</color>
     <color name="actionbar_subtitle_color">#f2f2f2</color>
-    <color name="actionbar_red_background">#e2251b</color>
+    <color name="actionbar_red_background">#D42319</color>
+    <color name="actionbar_dark_red_background">#AB1E16</color>
     <color name="searchbar_grey_hint">#FFF</color>
     <color name="actionbar_button_pressed_dark_red">#B00</color>
     <color name="actionbar_button_pressed_medium_red">#CF0404</color>
 
     <!-- ListView -->
     <color name="list_pressed">#cecece</color>
-    <color name="list_multiselected">#c4e1f3</color>
-    <color name="list_focused">#c4e1f3</color>
+    <color name="list_multiselected">#CCCCCC</color>
+    <color name="list_focused">#DDDDDD</color>
     <color name="green">#2a2929</color>
     <color name="blue">#2a2929</color>
     <color name="black_subject">#2a2929</color>
     <color name="grey_filesize">#5f5f5f</color>
     <color name="grey_creator">#444142</color>
-    <color name="list_divider">#DBDBDB</color>
+    <color name="list_divider">#DEDEDE</color>
     <color name="list_element_opened">#EBEBEB</color>
     <color name="toptext_background">#292b2d</color>
     <color name="search_highlight_color">#EBEB86</color>
+    <color name="checkbox_unchecked">#CCCCCC</color>
+    <color name="checkbox_checked">#666666</color>
+    <color name="grey_date">#828282</color>
 
     <!-- Misc -->
     <color name="transparent">#00000000</color>
