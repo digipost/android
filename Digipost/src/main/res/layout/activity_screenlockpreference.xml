@@ -22,6 +22,14 @@
     android:orientation="vertical"
     android:weightSum="13">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/screenlock_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/Digipost.AppBarOverlay">
+    </android.support.v7.widget.Toolbar>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
