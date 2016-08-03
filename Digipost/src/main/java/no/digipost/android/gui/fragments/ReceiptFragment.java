@@ -316,12 +316,6 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         }
     }
 
-    private class ReceiptListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public void onItemClick(final AdapterView<?> arg0, final View view, final int position, final long arg3) {
-            openReceipt(receiptAdapter.getItem(position));
-        }
-    }
-
     private void deleteReceipt(Receipt receipt) {
         List<Receipt> receiptsToBeDelete = new ArrayList<>();
         receiptsToBeDelete.add(receipt);
