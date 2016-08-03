@@ -17,7 +17,7 @@
     <color name="searchbar_grey_hint">#FFF</color>
     <color name="actionbar_button_pressed_dark_red">#B00</color>
     <color name="actionbar_button_pressed_medium_red">#CF0404</color>
-
+    <color name="actionbar_multi_select_grey">#424242</color>
     <!-- ListView -->
     <color name="list_pressed">#cecece</color>
     <color name="list_multiselected">#CCCCCC</color>

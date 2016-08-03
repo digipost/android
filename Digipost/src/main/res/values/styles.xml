@@ -4,14 +4,14 @@
     <style name="Digipost" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
         <item name="colorPrimary">@color/actionbar_red_background</item>
-        <item name="colorPrimaryDark">@color/actionbar_dark_red_background</item>
+        <item name="colorPrimaryDark">@color/actionbar_red_background</item>
         <item name="android:actionBarItemBackground">@drawable/actionbar_item_background</item>
         <item name="android:homeAsUpIndicator">@drawable/up_indicator</item>
         <item name="android:windowBackground">@drawable/application_window_background</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:actionModeBackground">@color/actionbar_red_background</item>
+        <item name="android:actionModeBackground">@color/actionbar_multi_select_grey</item>
     </style>
 
     <style name="Digipost.NoActionBar">
