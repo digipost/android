@@ -28,7 +28,7 @@
     <color name="grey_filesize">#5f5f5f</color>
     <color name="grey_creator">#444142</color>
     <color name="list_divider">#DEDEDE</color>
-    <color name="list_element_opened">#EBEBEB</color>
+    <color name="list_element_opened">#F7F7F7</color>
     <color name="toptext_background">#292b2d</color>
     <color name="search_highlight_color">#EBEB86</color>
     <color name="checkbox_unchecked">#CCCCCC</color>
