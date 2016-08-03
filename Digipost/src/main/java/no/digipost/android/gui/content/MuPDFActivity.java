@@ -690,7 +690,6 @@ public class MuPDFActivity extends DisplayContentActivity {
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.activity_mupdf_context, menu);
-            setTheme(R.style.Digipost_ActionMode);
             return true;
         }
 
@@ -715,8 +714,6 @@ public class MuPDFActivity extends DisplayContentActivity {
         public void onDestroyActionMode(ActionMode actionMode) {
             selectModeOff();
             selectActionMode = null;
-            setTheme(R.style.Digipost);
-
         }
     }
 }

@@ -113,7 +113,6 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         multiSelectEnabled = false;
         contentActionMode = null;
         receiptAdapter.setSelectable(multiSelectEnabled);
-        getActivity().setTheme(R.style.Digipost);
     }
 
     private class SelectActionModeCallback implements ActionMode.Callback {
@@ -121,7 +120,6 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.activity_main_content_receipt_context, menu);
-            getActivity().setTheme(R.style.Digipost_ActionMode);
             return true;
         }
         @Override

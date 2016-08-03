@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/screenlock_header_background"
-            android:gravity="left"
+            android:gravity="start"
             android:orientation="vertical"
             android:padding="10dp"
             android:paddingLeft="20dp">
@@ -22,6 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
+                android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
                 android:text="@string/pref_personal_settings_info_title"
                 android:textColor="@color/white"
@@ -45,8 +46,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="0.5"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:text="@string/pref_personal_settings_info_personalidentificationnumber"
                     android:textColor="@color/white" />
 
@@ -67,8 +69,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="0.5"
-                    android:gravity="right"
+                    android:gravity="end"
                     android:text="@string/pref_personal_settings_info_full_name"
                     android:textColor="@color/white" />
 

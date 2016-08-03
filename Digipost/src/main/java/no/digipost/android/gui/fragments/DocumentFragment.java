@@ -152,7 +152,6 @@ public class DocumentFragment extends ContentFragment<Document> {
         multiSelectEnabled = false;
         contentActionMode = null;
         documentAdapter.setSelectable(multiSelectEnabled);
-        getActivity().setTheme(R.style.Digipost);
     }
 
     private class SelectActionModeCallback implements ActionMode.Callback {
@@ -160,7 +159,6 @@ public class DocumentFragment extends ContentFragment<Document> {
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.activity_main_content_context, menu);
-            getActivity().setTheme(R.style.Digipost_ActionMode);
             return true;
         }
         @Override

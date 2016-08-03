@@ -5,13 +5,13 @@
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
         <item name="colorPrimary">@color/actionbar_red_background</item>
         <item name="colorPrimaryDark">@color/actionbar_dark_red_background</item>
-        <item name="android:colorAccent">@color/white</item>
         <item name="android:actionBarItemBackground">@drawable/actionbar_item_background</item>
         <item name="android:homeAsUpIndicator">@drawable/up_indicator</item>
         <item name="android:windowBackground">@drawable/application_window_background</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:actionModeBackground">@color/actionbar_red_background</item>
     </style>
 
     <style name="Digipost.NoActionBar">
@@ -29,22 +29,15 @@
         <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
     </style>
 
-
-
-    <style name="Digipost.ActionMode" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:homeAsUpIndicator">@drawable/up_indicator</item>
-    </style>
-
-
     <style name="Digipost.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="Digipost.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-    <style name="TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+    <style name="TitleTextStyle" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textColor">@color/actionbar_title_color</item>
     </style>
 
-    <style name="SubtitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
+    <style name="SubtitleTextStyle" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textColor">@color/actionbar_subtitle_color</item>
     </style>
 

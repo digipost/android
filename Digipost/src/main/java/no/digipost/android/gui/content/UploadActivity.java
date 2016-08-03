@@ -651,7 +651,6 @@ public class UploadActivity extends AppCompatActivity {
         @Override
         public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
             uploadActionMode = actionMode;
-            UploadActivity.this.setTheme(R.style.Digipost_ActionMode);
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.activity_upload_context, menu);
             listAdapter.setCheckboxVisible(true);
@@ -679,7 +678,6 @@ public class UploadActivity extends AppCompatActivity {
         public void onDestroyActionMode(ActionMode actionMode) {
             listAdapter.setCheckboxVisible(false);
             listAdapter.clearChecked();
-            UploadActivity.this.setTheme(R.style.Digipost);
             uploadActionMode = null;
         }
     }
