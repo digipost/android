@@ -64,36 +64,30 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_content_recyclerview);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(context));
         receiptAdapter = new ReceiptAdapter(context, new ArrayList<Receipt>());
         recyclerView.setAdapter(receiptAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context, recyclerView, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                currentListPosition = position;
-                if(multiSelectEnabled){
-                    receiptAdapter.select(position);
-                }else {
-                    openReceipt(receiptAdapter.getReceipts().get(position));
-                }
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                currentListPosition = position;
-
-                if(multiSelectEnabled) {
-                    receiptAdapter.select(position);
-                }else{
-                    beginActionMode(position);
-                }
-            }
-        }));
         return view;
+    }
+
+    @Override
+    void recyclerViewOnClick(int position){
+        currentListPosition = position;
+        if(multiSelectEnabled){
+            receiptAdapter.select(position);
+        }else {
+            openReceipt(receiptAdapter.getReceipts().get(position));
+        }
+    }
+
+    @Override
+    void recyclerViewOnLongClick(int position){
+        currentListPosition = position;
+
+        if(multiSelectEnabled) {
+            receiptAdapter.select(position);
+        }else{
+            beginActionMode(position);
+        }
     }
 
     @Override

@@ -28,20 +28,21 @@ import android.support.v7.widget.*;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import java.util.List;
 
-import android.widget.Toolbar;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.recyclerview.ClickListener;
+import no.digipost.android.gui.recyclerview.DividerItemDecoration;
+import no.digipost.android.gui.recyclerview.RecyclerTouchListener;
+import no.digipost.android.gui.recyclerview.SupportSwipeRefreshLayout;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.DataFormatUtilities;
@@ -61,6 +62,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
     //protected ListView listView;
     protected RecyclerView recyclerView;
+    protected SupportSwipeRefreshLayout swipeRefreshLayout;
     protected View listEmptyViewNoConnection;
     protected View listEmptyViewNoContent;
     protected TextView listEmptyViewTitle;
@@ -71,7 +73,6 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected boolean progressDialogIsVisible = false;
     protected boolean taskIsRunning = false;
     protected ActionMode contentActionMode;
-
 
     public abstract int getContent();
 
@@ -84,6 +85,31 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             @Override
             public void onClick(View view) {
                 updateAccountMeta();
+            }
+        });
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_content_recyclerview);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(context));
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context, recyclerView, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                recyclerViewOnClick(position);
+            }
+            @Override
+            public void onLongClick(View view, int position) {
+                recyclerViewOnLongClick(position);
+            }
+        }));
+
+        swipeRefreshLayout = (SupportSwipeRefreshLayout) view.findViewById(R.id.fragment_content_swipe_refresh_layout);
+        swipeRefreshLayout.setInternalRecyclerView(recyclerView);
+        swipeRefreshLayout.setOnRefreshListener(new SupportSwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshItems();
             }
         });
 
@@ -101,6 +127,23 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         */
 
         return view;
+    }
+
+
+    abstract void recyclerViewOnClick(int position);
+
+    abstract void recyclerViewOnLongClick(int position);
+
+    void refreshItems() {
+        updateAccountMeta();
+        activityCommunicator.onStartRefreshContent();
+        onItemsLoadComplete();
+    }
+
+    void onItemsLoadComplete() {
+        activityCommunicator.onEndRefreshContent();
+        recyclerView.getAdapter().notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

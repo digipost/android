@@ -24,9 +24,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
@@ -37,7 +34,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.gui.WebLoginActivity;
 import no.digipost.android.gui.recyclerview.ClickListener;
-import no.digipost.android.gui.recyclerview.DividerItemDecoration;
 import no.digipost.android.gui.adapters.DocumentAdapter;
 import no.digipost.android.gui.recyclerview.RecyclerTouchListener;
 import no.digipost.android.model.*;
@@ -107,38 +103,29 @@ public class DocumentFragment extends ContentFragment<Document> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_content_recyclerview);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new DividerItemDecoration(context));
         documentAdapter = new DocumentAdapter(context, new ArrayList<Document>());
         recyclerView.setAdapter(documentAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context, recyclerView, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                currentListPosition = position;
-
-                if(multiSelectEnabled){
-                    documentAdapter.select(position);
-                }else {
-                    openUpdatedDocument(documentAdapter.getDocuments().get(position));
-                }
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                currentListPosition = position;
-
-                if(multiSelectEnabled) {
-                    documentAdapter.select(position);
-                }else{
-                    beginActionMode(position);
-                }
-            }
-        }));
         return view;
+    }
+
+    @Override
+    void recyclerViewOnClick(int position){
+        currentListPosition = position;
+        if(multiSelectEnabled){
+            documentAdapter.select(position);
+        }else {
+            openUpdatedDocument(documentAdapter.getDocuments().get(position));
+        }
+    }
+
+    @Override
+    void recyclerViewOnLongClick(int position){
+        currentListPosition = position;
+        if(multiSelectEnabled) {
+            documentAdapter.select(position);
+        }else{
+            beginActionMode(position);
+        }
     }
 
     private void beginActionMode(int position){

@@ -36,6 +36,11 @@
         android:gravity="center_horizontal"
         android:textColor="@color/white"/>
 
+    <no.digipost.android.gui.recyclerview.SupportSwipeRefreshLayout
+            android:id="@+id/fragment_content_swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
     <android.support.v7.widget.RecyclerView
             android:id="@+id/fragment_content_recyclerview"
             android:layout_width="match_parent"
@@ -44,6 +49,8 @@
             android:scrollbars="vertical"
             android:layout_weight="1">
     </android.support.v7.widget.RecyclerView>
+
+    </no.digipost.android.gui.recyclerview.SupportSwipeRefreshLayout>
 
     <LinearLayout
         android:orientation="vertical"
