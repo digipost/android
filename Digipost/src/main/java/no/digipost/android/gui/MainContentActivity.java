@@ -32,7 +32,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -45,13 +44,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.SearchView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.terlici.dragndroplist.DragNDropListView;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
@@ -100,15 +95,12 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     private int remainingDrawerChanges;
     private DragNDropListView drawerList;
     private DrawerAdapter drawerArrayAdapter;
-    private MenuItem searchButton;
-    private SearchView searchView;
     private boolean refreshing;
     private Dialog mailboxDialog;
     private boolean showActionBarName;
     private Mailbox mailbox;
     private ArrayList<Mailbox> mailboxes;
     private Account account;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,9 +258,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
-        searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-
-// TODO ListView        setupSearchView();
         updateTitles();
 
         return true;
@@ -283,7 +272,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             }
 
             if (menu != null) {
-                searchButton = menu.findItem(R.id.menu_search);
 
                 MenuItem doneEditingButton = menu.findItem(R.id.menu_done_edit_folder);
                 MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
@@ -307,7 +295,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 }
 
                 refreshButton.setVisible(!drawerOpen);
-                searchButton.setVisible(!drawerOpen);
 
                 if (editDrawerMode && drawerOpen) {
                     doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -321,12 +308,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         }
 
         return true;
-    }
-
-    @Override
-    public boolean onSearchRequested() {
-        searchButton.expandActionView();
-        return false;
     }
 
     @Override
@@ -548,27 +529,22 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     }
 
     private void updateTitles() {
-
         if (editDrawerMode) {
             getSupportActionBar().setTitle(getString(R.string.edit));
         } else if (account != null) {
             fragmentName = "";
             try {
-                if (showActionBarName) {
+                if (getCurrentFragment().getContent() == ApplicationConstants.MAILBOX || getSupportActionBar().getTitle().equals("")) {
                     fragmentName = mailbox.getName();
                 } else {
-                    if (getCurrentFragment().getContent() == ApplicationConstants.MAILBOX || getSupportActionBar().getTitle().equals("")) {
-                        fragmentName = mailbox.getName();
-                    } else {
-                        fragmentName = drawerListItems[getCurrentFragment().getContent()];
-                    }
+                    fragmentName = drawerListItems[getCurrentFragment().getContent()];
                 }
+
                 getSupportActionBar().setTitle(fragmentName);
             } catch (NullPointerException e) {
                 //IGNORE
             }
         }
-
     }
 
     private void updateDrawer(boolean useCachedFolders) {
@@ -694,41 +670,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         startActivityForResult(intent, INTENT_REQUESTCODE);
     }
 
-    private void setupSearchView() {
-
-        try {
-            Field searchField = SearchView.class.getDeclaredField("mSearchButton");
-            searchField.setAccessible(true);
-
-            android.widget.ImageView searchBtn = (android.widget.ImageView) searchField.get(searchView);
-            searchBtn.setImageResource(R.drawable.white_search_48);
-
-            searchField = SearchView.class.getDeclaredField("mSearchPlate");
-            searchField.setAccessible(true);
-
-            LinearLayout searchPlate = (LinearLayout) searchField.get(searchView);
-
-            AutoCompleteTextView searchTextView = (AutoCompleteTextView) searchPlate.getChildAt(0);
-
-            searchTextView.setTextColor(getResources().getColor(R.color.white));
-            searchPlate.setBackgroundResource(R.drawable.search_background);
-
-            searchTextView.setHintTextColor(getResources().getColor(R.color.searchbar_grey_hint));
-            searchView.setQueryHint(getString(R.string.search_in) + drawerListItems[getCurrentFragment().getContent()]);
-
-            android.widget.ImageView searchViewClearButton = (android.widget.ImageView) searchPlate.getChildAt(1);
-            searchViewClearButton.setImageResource(R.drawable.ic_clear_white);
-
-            searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
-        } catch (NoSuchFieldException e) {
-            //IGNORE
-        } catch (IllegalAccessException e) {
-            //IGNORE
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void executeGetAccountTask() {
         GetAccountTask getAccountTask = new GetAccountTask(this);
         getAccountTask.execute();
@@ -822,45 +763,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             if (mailboxDialog != null) {
                 mailboxDialog.dismiss();
                 mailboxDialog = null;
-            }
-        }
-    }
-
-    private class SearchViewOnQueryTextListener implements android.widget.SearchView.OnQueryTextListener {
-
-        @Override
-        public boolean onQueryTextSubmit(String s) {
-            return false;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String s) {
-            getCurrentFragment().filterList(s);
-            return true;
-        }
-
-    }
-
-    private class MainContentActionBarDrawerToggle extends ActionBarDrawerToggle {
-
-        public MainContentActionBarDrawerToggle(Activity activity, DrawerLayout drawerLayout, int drawerImageRes,
-                                                int openDrawerContentDescRes, int closeDrawerContentDescRes) {
-            super(activity, drawerLayout, drawerImageRes, openDrawerContentDescRes, closeDrawerContentDescRes);
-        }
-
-        public void onDrawerClosed(View view) {
-            showActionBarName = false;
-            editDrawerMode = false;
-            invalidateOptionsMenu();
-        }
-
-        public void onDrawerOpened(View drawerView) {
-            showActionBarName = true;
-            invalidateOptionsMenu();
-            if (searchView != null) {
-                searchButton.collapseActionView();
-                searchView.setQuery("", false);
-                searchView.setIconified(true);
             }
         }
     }

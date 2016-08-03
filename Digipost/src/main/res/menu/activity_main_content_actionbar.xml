@@ -13,12 +13,7 @@
             android:title="@string/upload"
             android:icon="@drawable/ic_upload"
             android:showAsAction="ifRoom"/>
-    <item
-            android:id="@+id/menu_search"
-            android:title="@string/search"
-            android:icon="@drawable/white_search_48"
-            android:showAsAction="collapseActionView|ifRoom"
-            android:actionViewClass="android.widget.SearchView"/>
+
     <item
             android:id="@+id/menu_done_edit_folder"
             android:title="@string/done"
