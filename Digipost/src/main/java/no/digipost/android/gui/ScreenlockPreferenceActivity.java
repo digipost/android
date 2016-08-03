@@ -20,13 +20,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 
-public class ScreenlockPreferenceActivity extends Activity {
+public class ScreenlockPreferenceActivity extends AppCompatActivity {
     private static final String UNLOCK_ACTION = "com.android.credentials.UNLOCK";
     private Button yesButton;
     private Button privacyButton;
