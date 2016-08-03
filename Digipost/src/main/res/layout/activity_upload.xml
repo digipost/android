@@ -9,8 +9,6 @@
 
     <include layout="@layout/toolbar"/>
 
-    </android.support.v7.widget.Toolbar>
-
     <TextView
             android:id="@+id/upload_file_path"
             android:layout_height="wrap_content"

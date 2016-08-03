@@ -24,8 +24,6 @@
 
     <include layout="@layout/toolbar"/>
 
-    </android.support.v7.widget.Toolbar>
-
     <RelativeLayout
             android:id="@+id/pdf_relative_layout"
             android:layout_width="match_parent"
