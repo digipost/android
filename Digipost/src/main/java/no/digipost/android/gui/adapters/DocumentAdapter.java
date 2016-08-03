@@ -89,7 +89,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
     public ArrayList<Document> getSelected(){
         ArrayList<Document> selectedDocuments = new ArrayList<  >();
         for(int i = 0; i < selectedPositions.size(); i++){
-            if(selectedPositions.get(i)) {
+            if(selectedPositions.valueAt(i)) {
                 int documentIndex = selectedPositions.keyAt(i);
                 selectedDocuments.add(documents.get(documentIndex));
             }
