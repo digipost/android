@@ -386,6 +386,13 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            if(editDrawerMode){
+                editDrawerMode = false;
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                updateUI(false);
+                //drawer.closeDrawers();
+                return true;
+            }
             if (getCurrentFragment().getContent() != ApplicationConstants.MAILBOX) {
                 selectItem(ApplicationConstants.MAILBOX);
                 return true;
@@ -515,7 +522,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
         drawerList.setItemChecked(content, true);
         drawer.closeDrawers();
-// TODO        drawer.closeDrawer(drawerList);
     }
 
     @Override
