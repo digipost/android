@@ -16,21 +16,26 @@
 
 package no.digipost.android.gui.content;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.utilities.ApplicationUtilities;
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends AppCompatActivity {
     public static final String KEY_PREF_GENERAL_SETTINGS = "pref_generalSettings";
     public static final String KEY_PREF_DEFAULT_SCREEN = "pref_defaultScreen";
     public static final String KEY_PREF_CONFIRM_DELETE = "pref_confirmDelete";
@@ -44,9 +49,10 @@ public class SettingsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
-        getActionBar().setTitle(R.string.preferences);
-        getActionBar().setHomeButtonEnabled(true);
-
+        setContentView(R.layout.activity_settings);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.preferences);
+        setSupportActionBar(toolbar);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
 
     }
@@ -78,7 +84,6 @@ public class SettingsActivity extends Activity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-
             addPreferencesFromResource(R.xml.preferences);
 
             /*Preference personalSettings = findPreference(KEY_PREF_PERSONAL_SETTINGS);
@@ -100,6 +105,12 @@ public class SettingsActivity extends Activity {
             });*/
 
             //setSummary(getPreferenceManager().getSharedPreferences(), findPreference(KEY_PREF_DEFAULT_SCREEN));
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.fragment_settings, container, false);
+            return view;
         }
 
         @Override
