@@ -110,6 +110,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         setContentView(R.layout.activity_main_content);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         GCMController.init(this);
 
         drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);

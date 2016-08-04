@@ -49,6 +49,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
         setContentView(R.layout.activity_unsupported);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if(DocumentContentStore.getDocumentParent() == null ||  DocumentContentStore.getDocumentAttachment() == null){
             finish();
             return;

@@ -49,6 +49,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         setContentView(R.layout.activity_html_and_receipt);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupWebView();
         setupActionBar();
         loadContent();

@@ -48,6 +48,7 @@ public class ScreenlockPreferenceActivity extends AppCompatActivity {
         privacyButton.setOnClickListener(listener);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

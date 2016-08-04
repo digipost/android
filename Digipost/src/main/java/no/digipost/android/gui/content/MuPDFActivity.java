@@ -256,6 +256,7 @@ public class MuPDFActivity extends DisplayContentActivity {
         setContentView(R.layout.activity_pdf);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         selectActionModeCallback = new SelectActionModeCallback();
         mAlertBuilder = new AlertDialog.Builder(this);
