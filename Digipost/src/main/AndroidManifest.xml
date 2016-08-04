@@ -70,6 +70,7 @@
             android:theme="@android:style/Theme.Holo.NoActionBar"/>
         <activity
             android:name="no.digipost.android.gui.MainContentActivity"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="no.digipost.android.gui.WebLoginActivity"
