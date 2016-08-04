@@ -103,7 +103,8 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         receiptAdapter.select(position);
     }
 
-    private void finishActionMode(){
+    @Override
+    public void finishActionMode(){
         multiSelectEnabled = false;
         contentActionMode = null;
         receiptAdapter.setSelectable(multiSelectEnabled);

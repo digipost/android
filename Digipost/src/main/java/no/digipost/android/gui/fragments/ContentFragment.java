@@ -134,6 +134,8 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
     abstract void recyclerViewOnLongClick(int position);
 
+    public abstract void finishActionMode();
+
     void refreshItems() {
         updateAccountMeta();
         activityCommunicator.onStartRefreshContent();
@@ -356,20 +358,6 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
                 }
             }
         }
-    }
-
-    public void filterList(String filterQuery) {
-        /*
-        //TODO Replace
-        listAdapter.getFilter().filter(filterQuery);
-        */
-    }
-
-    public void clearFilter() {
-        /*
-        TODO Replace
-        listAdapter.clearFilter();
-         */
     }
 
     public abstract void updateAccountMeta();

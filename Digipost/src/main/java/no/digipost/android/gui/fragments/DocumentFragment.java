@@ -80,6 +80,7 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     protected DocumentAdapter documentAdapter;
     protected boolean multiSelectEnabled;
+    private ActionMode internalActionMode;
 
     public static DocumentFragment newInstance(int content) {
         DocumentFragment fragment = new DocumentFragment();
@@ -135,7 +136,10 @@ public class DocumentFragment extends ContentFragment<Document> {
         documentAdapter.select(position);
     }
 
-    private void finishActionMode(){
+    @Override
+    public void finishActionMode(){
+        if(contentActionMode != null)contentActionMode.finish();
+        if(internalActionMode != null)internalActionMode.finish();
         multiSelectEnabled = false;
         contentActionMode = null;
         documentAdapter.setSelectable(multiSelectEnabled);
@@ -154,15 +158,13 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            internalActionMode = mode;
             switch (item.getItemId()) {
                 case R.id.main_context_menu_move:
                     showMoveToFolderDialog(documentAdapter.getSelected());
-                    mode.finish();
-                    finishActionMode();
                     return true;
                 case R.id.main_context_menu_delete:
                     DocumentFragment.super.deleteContent(documentAdapter.getSelected());
-                    mode.finish();
                     finishActionMode();
                     return true;
                 default:
@@ -227,14 +229,13 @@ public class DocumentFragment extends ContentFragment<Document> {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        finishActionMode();
                     }
                 }
         );
 
         builder.setView(view);
-
         ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
-
         ArrayList<Folder> folders = getMoveFolders();
         folderAdapter = new FolderArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item, folders);
         moveToFolderListView.setAdapter(folderAdapter);
@@ -591,7 +592,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         } else {
             contentActionMode = null;
         }
-
+        finishActionMode();
         DocumentMoveTask documentMoveTask = new DocumentMoveTask(documents, toLocation, folderId);
         documentMoveTask.execute();
     }
@@ -635,7 +636,6 @@ public class DocumentFragment extends ContentFragment<Document> {
             }
 
             executeDocumentMoveTask(null, documents, location, ""+folderId);
-
             if (folderDialog != null) {
                 folderDialog.dismiss();
                 folderDialog = null;

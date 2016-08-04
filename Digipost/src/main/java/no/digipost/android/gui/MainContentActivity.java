@@ -113,10 +113,16 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         GCMController.init(this);
 
         drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        drawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(drawerToggle);
+        drawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getCurrentFragment().finishActionMode();
+            }
+        };
+        
+        drawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
         drawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
