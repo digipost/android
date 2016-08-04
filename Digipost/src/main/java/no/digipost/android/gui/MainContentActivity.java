@@ -218,26 +218,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         });
     }
 
-    private void checkAppDeprecation() {
-        try {
-            if (account != null) {
-                int versionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-                int minimumAndroidVersion = account.getMinimumAndroidVersion();
-
-                if (account != null && versionCode < minimumAndroidVersion) {
-                    DialogUtitities.showLongToast(this, getString(R.string.app_deprecation_message));
-                    Uri marketUri = Uri.parse(getString(R.string.app_deprecation_market_url));
-                    Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
-                    startActivity(marketIntent);
-                    finish();
-                }
-            }
-        } catch (Exception e) {
-            //IGNORE
-            e.printStackTrace();
-        }
-    }
-
     private void moveFolderFrom(int startPosition, int endPosition) {
 
         startPosition -= ApplicationConstants.numberOfStaticFolders;
@@ -707,7 +687,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     public void setAccountFromTask(Account result) {
         if (result != null) {
             account = result;
-            checkAppDeprecation();
 
             if (remainingDrawerChanges < 1) {
                 updateUI(false);
