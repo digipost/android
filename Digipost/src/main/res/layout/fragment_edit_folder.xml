@@ -1,70 +1,73 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/edit_folder_fragment"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="10dp"
-    android:padding="5dp"
-    android:orientation="vertical">
+              android:id="@+id/edit_folder_fragment"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:layout_margin="10dp"
+              android:background="@color/grey_button_background_pressed"
+              android:padding="10dp"
+              android:orientation="vertical">
 
     <EditText
-        android:id="@+id/edit_folder_fragment_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Mappenavn"
-        android:imeOptions="actionDone"
-        android:inputType="text|textAutoCorrect"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:orientation="vertical"
-        >
-
-        <GridView
-            android:id="@+id/edit_folder_fragment_gridview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:numColumns="4"
-            android:verticalSpacing="2dp"
-            android:horizontalSpacing="8dp"
-            android:stretchMode="columnWidth"
-            android:listSelector="@android:color/transparent"
-            android:drawSelectorOnTop="false"
-            android:gravity="center"
-            android:padding="1dp"
-            />
-
-        <LinearLayout
+            android:id="@+id/edit_folder_fragment_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="11dp"
-            android:layout_marginLeft="-3dp"
+            android:hint="Mappenavn"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/white"
+            android:imeOptions="actionDone"
+            android:inputType="text|textAutoCorrect"
+            />
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:orientation="vertical"
             >
 
-        <Button
-            android:id="@+id/edit_folder_fragment_save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15sp"
-            android:paddingRight="15sp"
-            android:text="@string/save" />
+        <GridView
+                android:id="@+id/edit_folder_fragment_gridview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:numColumns="4"
+                android:verticalSpacing="2dp"
+                android:horizontalSpacing="8dp"
+                android:stretchMode="columnWidth"
+                android:listSelector="@android:color/transparent"
+                android:drawSelectorOnTop="false"
+                android:gravity="center"
+                android:padding="1dp"
+                />
 
-        <Button
-            android:id="@+id/edit_folder_fragment_delete_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="15sp"
-            android:paddingRight="15sp"
-            android:text="@string/delete" />
-            </LinearLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="11dp"
+                android:layout_marginLeft="-3dp"
+                >
+
+            <Button
+                    android:id="@+id/edit_folder_fragment_save_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15sp"
+                    android:paddingRight="15sp"
+                    android:text="@string/save" />
+
+            <Button
+                    android:id="@+id/edit_folder_fragment_delete_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15sp"
+                    android:paddingRight="15sp"
+                    android:text="@string/delete" />
+        </LinearLayout>
     </LinearLayout>
 
 

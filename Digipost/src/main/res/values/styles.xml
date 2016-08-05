@@ -20,6 +20,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Digipost.Dialog" parent="ThemeOverlay.AppCompat.Dialog">
+        <item name="colorAccent">#3B3B3B</item>
+    </style>
+
 
     <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:titleTextStyle">@style/TitleTextStyle</item>
