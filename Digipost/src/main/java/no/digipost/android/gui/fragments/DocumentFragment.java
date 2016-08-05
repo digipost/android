@@ -163,7 +163,6 @@ public class DocumentFragment extends ContentFragment<Document> {
                     return true;
                 case R.id.main_context_menu_delete:
                     DocumentFragment.super.deleteContent(documentAdapter.getSelected());
-                    finishActionMode();
                     return true;
                 default:
                     finishActionMode();

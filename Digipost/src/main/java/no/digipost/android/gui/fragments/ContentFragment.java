@@ -204,6 +204,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                finishActionMode();
                 executeContentDeleteTask(content);
                 dialogInterface.dismiss();
             }
@@ -211,6 +212,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                finishActionMode();
                 dialogInterface.cancel();
             }
         });
