@@ -138,6 +138,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
     void onItemsLoadComplete() {
         activityCommunicator.onEndRefreshContent();
+        if(contentActionMode != null) contentActionMode.finish();
         recyclerView.getAdapter().notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }
