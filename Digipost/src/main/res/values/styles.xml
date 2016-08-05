@@ -5,6 +5,7 @@
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
         <item name="colorPrimary">@color/actionbar_red_background</item>
         <item name="colorPrimaryDark">@color/actionbar_red_background</item>
+        <item name="colorAccent">#3B3B3B</item>
         <item name="android:actionBarItemBackground">@drawable/actionbar_item_background</item>
         <item name="android:homeAsUpIndicator">@drawable/up_indicator</item>
         <item name="android:windowBackground">@drawable/application_window_background</item>

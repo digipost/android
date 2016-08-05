@@ -39,10 +39,7 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.gui.recyclerview.ClickListener;
-import no.digipost.android.gui.recyclerview.DividerItemDecoration;
-import no.digipost.android.gui.recyclerview.RecyclerTouchListener;
-import no.digipost.android.gui.recyclerview.SupportSwipeRefreshLayout;
+import no.digipost.android.gui.recyclerview.*;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.DataFormatUtilities;
@@ -60,19 +57,20 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
     protected Context context;
 
-    //protected ListView listView;
-    protected RecyclerView recyclerView;
-    protected SupportSwipeRefreshLayout swipeRefreshLayout;
+    protected RecyclerViewEmptySupport recyclerView;
+    protected SwipeRefreshLayoutWithEmpty swipeRefreshLayout;
     protected View listEmptyViewNoConnection;
     protected View listEmptyViewNoContent;
     protected TextView listEmptyViewTitle;
     protected TextView listEmptyViewText;
+    protected ImageView listEmptyViewImage;
 
     protected TextView listTopText;
     protected ProgressDialog progressDialog;
     protected boolean progressDialogIsVisible = false;
     protected boolean taskIsRunning = false;
     protected ActionMode contentActionMode;
+    protected View spinnerLayout;
 
     public abstract int getContent();
 
@@ -88,7 +86,8 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             }
         });
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.fragment_content_recyclerview);
+        spinnerLayout = (View) view.findViewById(R.id.fragment_content_spinner_layout);
+        recyclerView = (RecyclerViewEmptySupport) view.findViewById(R.id.fragment_content_recyclerview);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -104,27 +103,22 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             }
         }));
 
-        swipeRefreshLayout = (SupportSwipeRefreshLayout) view.findViewById(R.id.fragment_content_swipe_refresh_layout);
-        swipeRefreshLayout.setInternalRecyclerView(recyclerView);
-        swipeRefreshLayout.setOnRefreshListener(new SupportSwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshLayout = (SwipeRefreshLayoutWithEmpty) view.findViewById(R.id.fragment_content_swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayoutWithEmpty.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshItems();
             }
         });
 
-        /*
-        //TODO
-        listEmptyViewNoConnection = view.findViewById(R.id.fragment_content_list_emptyview_no_connection);
         listEmptyViewNoContent = view.findViewById(R.id.fragment_content_list_no_content);
-        listEmptyViewTitle = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_title);
         listEmptyViewText = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_text);
+        listEmptyViewTitle = (TextView) view.findViewById(R.id.fragment_content_list_emptyview_title);
+        listEmptyViewNoConnection = view.findViewById(R.id.fragment_content_list_emptyview_no_connection);
+        listEmptyViewImage = (ImageView) view.findViewById(R.id.fragment_content_list_emptyview_image);
         listTopText = (TextView) view.findViewById(R.id.fragment_content_listview_top_text);
-
-
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setFastScrollEnabled(true);
-        */
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setEmptyView(listEmptyViewNoContent);
 
         return view;
     }
@@ -160,18 +154,20 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         FileUtilities.deleteTempFiles();
     }
 
-    protected void setListEmptyViewText(String title, String text) {
-        /*
+    protected void initialLoadingComplete(){
+        spinnerLayout.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+    }
 
-        //TODO ListView
-        if (title != null) {
-            listEmptyViewTitle.setText(title);
-        }
-        if (text != null) {
+    protected void setListEmptyViewText(String title, String text) {
+        if(title == null) {
+            listEmptyViewTitle.setText("");
             listEmptyViewText.setText(text);
+            listEmptyViewImage.setVisibility(View.VISIBLE);
+        }else{
+            if(text != null) listEmptyViewText.setText(text);
+            listEmptyViewImage.setVisibility(View.GONE);
         }
-        listView.setEmptyView(listEmptyViewNoContent);
-        */
     }
 
     protected void setTopText(String text) {
@@ -180,14 +176,12 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     }
 
     protected void setListEmptyViewNoNetwork(boolean visible) {
-        /*
-        //TODO replace
-        if (visible) {
-            listView.setEmptyView(listEmptyViewNoConnection);
-        } else {
-            listView.setEmptyView(null);
+        if(visible) {
+            listEmptyViewNoConnection.setVisibility(View.VISIBLE);
+        }else{
+            listEmptyViewNoConnection.setVisibility(View.GONE);
         }
-        */
+
     }
 
     private void executeContentDeleteTask(List<CONTENT_TYPE> content) {

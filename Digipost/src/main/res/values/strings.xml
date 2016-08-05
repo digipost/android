@@ -71,8 +71,9 @@
     <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjoner, som flytt og slett</string>
 
     <!-- EmptyView -->
-    <string name="emptyview_mailbox">Ingen dokumenter i postkassen</string>
-    <string name="emptyview_folder">Ingen dokumenter i mappen</string>
+    <string name="emptyview_mailbox">Brev du mottar i Digipost vil bli lagt her.\nDu kan også laste opp egne filer i mapper</string>
+    <string name="emptyview_folder">Last opp filer for sikker lagring.\nDu kan enkelt flytte innhold mellom mapper.</string>
+    <string name="emptyview_image">Tom mappe illustrasjon</string>
 
 
     <!-- EmptyView - Receipt -->

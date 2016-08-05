@@ -33,9 +33,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.gui.WebLoginActivity;
-import no.digipost.android.gui.recyclerview.ClickListener;
 import no.digipost.android.gui.adapters.DocumentAdapter;
-import no.digipost.android.gui.recyclerview.RecyclerTouchListener;
 import no.digipost.android.model.*;
 
 import java.util.ArrayList;
@@ -574,6 +572,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                 content = ApplicationConstants.MAILBOX;
             }
         }
+
         GetDocumentMetaTask task = new GetDocumentMetaTask(getContent());
         task.execute();
     }
@@ -581,7 +580,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     private void setEmptyViewText() {
         int contentType = getContent();
         int textResource = contentType == ApplicationConstants.MAILBOX ? R.string.emptyview_mailbox : R.string.emptyview_folder;
-        setListEmptyViewText(getString(textResource), null);
+        setListEmptyViewText(null, getString(textResource));
     }
 
     private void executeDocumentMoveTask(Document document, ArrayList<Document> documents, String toLocation, String folderId) {
@@ -700,8 +699,9 @@ public class DocumentFragment extends ContentFragment<Document> {
         @Override
         protected void onPostExecute(final Documents newDocuments) {
             super.onPostExecute(newDocuments);
+            DocumentFragment.super.initialLoadingComplete();
             if (isAdded()) {
-
+                if(listEmptyViewImage != null) listEmptyViewImage.setVisibility(View.GONE);
                 DocumentFragment.super.taskIsRunning = false;
                 if (newDocuments != null) {
                     ArrayList<Document> documents = newDocuments.getDocument();
@@ -709,20 +709,13 @@ public class DocumentFragment extends ContentFragment<Document> {
                     if (documents != null && !documents.isEmpty()) {
                         DocumentFragment.super.setListEmptyViewNoNetwork(false);
                     } else {
-                        if (!isDetached()) {
-                            setEmptyViewText();
-                        }
+                        setEmptyViewText();
                     }
                 } else {
                     if (invalidToken) {
                         activityCommunicator.requestLogOut();
                     }
-                   /*
-                   // TODO ListView
-                        } else if (listAdapter.isEmpty()) {
-                        DocumentFragment.super.setListEmptyViewNoNetwork(true);
-                    }
-                    */
+                    DocumentFragment.super.setListEmptyViewNoNetwork(true);
                     DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
                 }
 

@@ -20,91 +20,124 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               tools:showIn="@layout/activity_main_content_action_bar"
               android:layout_width="match_parent"
+              android:background="@color/list_element_opened"
               android:layout_height="match_parent"
               android:orientation="vertical"
               app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    >
+        >
 
     <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_content_listview_top_text"
-        android:textSize="15sp"
-        android:padding="8dp"
-        android:visibility="gone"
-        android:background="@color/toptext_background"
-        android:gravity="center_horizontal"
-        android:textColor="@color/white"/>
-
-    <no.digipost.android.gui.recyclerview.SupportSwipeRefreshLayout
-            android:id="@+id/fragment_content_swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/fragment_content_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@drawable/content_list_item"
-            android:scrollbars="vertical"
-            android:layout_weight="1">
-    </android.support.v7.widget.RecyclerView>
-
-    </no.digipost.android.gui.recyclerview.SupportSwipeRefreshLayout>
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/fragment_content_listview_top_text"
+            android:textSize="15sp"
+            android:padding="8dp"
+            android:visibility="gone"
+            android:background="@color/toptext_background"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"/>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/fragment_content_list_no_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical|center_horizontal"
-        android:visibility="gone"
-        android:padding="20dp">
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_content_list_emptyview_title"
-            android:textSize="25sp"
-            android:padding="10dp"
-            android:gravity="center_horizontal"
-            android:textColor="@color/black_subject"/>
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/fragment_content_list_emptyview_text"
-            android:textSize="17sp"
-            android:textColor="@color/grey_filesize"/>
-
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_content_spinner_layout"
+            android:gravity="center"
+            >
+        <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminateTintMode="src_atop"
+                android:indeterminateTint="@color/list_focused"
+                android:layout_gravity="center" />
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/fragment_content_list_emptyview_no_connection"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone"
+    <no.digipost.android.gui.recyclerview.SwipeRefreshLayoutWithEmpty
+            android:id="@+id/fragment_content_swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="match_parent">
 
-        android:padding="10dp">
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:background="@color/list_element_opened"
+                android:layout_height="match_parent">
+
+            <no.digipost.android.gui.recyclerview.RecyclerViewEmptySupport
+                    android:id="@+id/fragment_content_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="vertical">
+            </no.digipost.android.gui.recyclerview.RecyclerViewEmptySupport>
+
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:id="@+id/fragment_content_list_no_content"
+                    android:layout_width="match_parent"
+                    android:background="@color/list_element_opened"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="100dp"
+                    >
+
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_content_list_emptyview_title"
+                        android:textSize="25sp"
+                        android:padding="10dp"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/black_subject"/>
+
+                <ImageView
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:id="@+id/fragment_content_list_emptyview_image"
+                        android:visibility="gone"
+                        android:src="@drawable/empty_state_breven"
+                        android:contentDescription="@string/emptyview_image"
+                        android:layout_gravity="center"/>
+
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fragment_content_list_emptyview_text"
+                        android:textSize="17sp"
+                        android:lineSpacingExtra="5dp"
+                        android:layout_marginTop="40dp"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/grey_filesize"/>
+            </LinearLayout>
+        </FrameLayout>
+
+    </no.digipost.android.gui.recyclerview.SwipeRefreshLayoutWithEmpty>
+    <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/fragment_content_list_emptyview_no_connection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="10dp">
 
         <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/error_no_connection"
-            android:textSize="20sp"
-            android:gravity="center_horizontal"
-            android:textColor="@color/login_background"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/error_no_connection"
+                android:textSize="20sp"
+                android:gravity="center_horizontal"
+                android:textColor="@color/login_background"/>
         <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/red_button_style"
-            android:text="@string/error_try_again"
-            android:textStyle="bold"
-            android:layout_margin="20dp"
-            android:textColor="@color/white"
-            android:id="@+id/fragment_content_network_retry_button"/>
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/red_button_style"
+                android:text="@string/error_try_again"
+                android:textStyle="bold"
+                android:layout_margin="20dp"
+                android:textColor="@color/white"
+                android:id="@+id/fragment_content_network_retry_button"/>
 
     </LinearLayout>
 </LinearLayout>
