@@ -66,8 +66,7 @@
         <activity
             android:name="no.digipost.android.gui.ScreenlockPreferenceActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.NoActionBar"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name="no.digipost.android.gui.MainContentActivity"
             android:screenOrientation="portrait"

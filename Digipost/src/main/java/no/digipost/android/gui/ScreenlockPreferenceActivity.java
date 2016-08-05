@@ -16,10 +16,10 @@
 
 package no.digipost.android.gui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -46,9 +46,6 @@ public class ScreenlockPreferenceActivity extends AppCompatActivity {
         yesButton.setOnClickListener(listener);
         noButton.setOnClickListener(listener);
         privacyButton.setOnClickListener(listener);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

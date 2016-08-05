@@ -31,6 +31,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -661,6 +662,14 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         Intent intent = new Intent(MainContentActivity.this, UploadActivity.class);
         intent.putExtra(ApiConstants.UPLOAD, getCurrentFragment().getContent());
         startActivityForResult(intent, INTENT_REQUESTCODE);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode, @Nullable Bundle options) {
+        if(intent == null){
+            intent = new Intent();
+        }
+        super.startActivityForResult(intent, requestCode, options);
     }
 
     private void executeGetAccountTask() {
