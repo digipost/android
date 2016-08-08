@@ -71,6 +71,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected boolean taskIsRunning = false;
     protected ActionMode contentActionMode;
     protected View spinnerLayout;
+    public static boolean activityDrawerOpen;
 
     public abstract int getContent();
 

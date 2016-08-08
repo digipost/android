@@ -16,7 +16,6 @@
 
 package no.digipost.android.gui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -102,6 +101,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     private Mailbox mailbox;
     private ArrayList<Mailbox> mailboxes;
     private Account account;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         this.savedInstanceState = savedInstanceState;
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_main_content);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         GCMController.init(this);
@@ -119,7 +119,14 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                toolbar.dismissPopupMenus();
                 getCurrentFragment().finishActionMode();
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+                getCurrentFragment().activityDrawerOpen = drawer.isDrawerOpen(GravityCompat.START);
             }
         };
         
@@ -175,6 +182,10 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         return false;
+    }
+
+    public boolean isDrawerClosed(){
+        return !drawer.isDrawerOpen(GravityCompat.START);
     }
 
     private void setDrawerListeners() {
@@ -483,9 +494,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     }
 
     private void updateTitles() {
-        if (editDrawerMode) {
-            getSupportActionBar().setTitle(getString(R.string.edit));
-        } else if (account != null) {
+        if (account != null) {
             fragmentName = "";
             try {
                 if (getCurrentFragment().getContent() == ApplicationConstants.MAILBOX || getSupportActionBar().getTitle().equals("")) {

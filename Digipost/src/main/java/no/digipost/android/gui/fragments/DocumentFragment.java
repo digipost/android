@@ -128,10 +128,12 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private void beginActionMode(int position){
-        multiSelectEnabled = true;
-        contentActionMode = getActivity().startActionMode(new SelectActionModeCallback());
-        documentAdapter.setSelectable(multiSelectEnabled);
-        documentAdapter.select(position);
+        if(!activityDrawerOpen) {
+            multiSelectEnabled = true;
+            contentActionMode = getActivity().startActionMode(new SelectActionModeCallback());
+            documentAdapter.setSelectable(multiSelectEnabled);
+            documentAdapter.select(position);
+        }
     }
 
     @Override
@@ -139,13 +141,13 @@ public class DocumentFragment extends ContentFragment<Document> {
         if(contentActionMode != null)contentActionMode.finish();
         if(internalActionMode != null)internalActionMode.finish();
         multiSelectEnabled = false;
-        contentActionMode = null;
         documentAdapter.setSelectable(multiSelectEnabled);
     }
 
     private class SelectActionModeCallback implements ActionMode.Callback {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            internalActionMode = mode;
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.activity_main_content_context, menu);
             return true;
@@ -169,6 +171,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                     return false;
             }
         }
+
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             finishActionMode();
@@ -587,8 +590,6 @@ public class DocumentFragment extends ContentFragment<Document> {
         if (document != null) {
             documents = new ArrayList<>();
             documents.add(document);
-        } else {
-            contentActionMode = null;
         }
         finishActionMode();
         DocumentMoveTask documentMoveTask = new DocumentMoveTask(documents, toLocation, folderId);

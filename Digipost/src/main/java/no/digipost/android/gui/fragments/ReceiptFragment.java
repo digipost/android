@@ -97,16 +97,18 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     }
 
     private void beginActionMode(int position){
-        multiSelectEnabled = true;
-        contentActionMode = getActivity().startActionMode(new ReceiptFragment.SelectActionModeCallback());
-        receiptAdapter.setSelectable(multiSelectEnabled);
-        receiptAdapter.select(position);
+        if(!activityDrawerOpen) {
+            multiSelectEnabled = true;
+            contentActionMode = getActivity().startActionMode(new ReceiptFragment.SelectActionModeCallback());
+            receiptAdapter.setSelectable(multiSelectEnabled);
+            receiptAdapter.select(position);
+        }
     }
 
     @Override
     public void finishActionMode(){
+        if(contentActionMode != null)contentActionMode.finish();
         multiSelectEnabled = false;
-        contentActionMode = null;
         receiptAdapter.setSelectable(multiSelectEnabled);
     }
 
