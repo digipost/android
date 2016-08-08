@@ -8,6 +8,7 @@
     <color name="main_drawer_focused">#17191A</color>
     <color name="main_drawer_hover">#1C1F1F</color>
     <color name="main_drawer_divider">#333436</color>
+    <color name="main_drawer_edit_text_placeholder">#F5F5F5</color>
 
     <!-- ActionBar -->
     <color name="actionbar_title_color">#FFF</color>
@@ -18,6 +19,7 @@
     <color name="actionbar_button_pressed_dark_red">#B00</color>
     <color name="actionbar_button_pressed_medium_red">#CF0404</color>
     <color name="actionbar_multi_select_grey">#424242</color>
+
     <!-- ListView -->
     <color name="list_pressed">#cecece</color>
     <color name="list_multiselected">#CCCCCC</color>

@@ -18,6 +18,7 @@
     <string name="no_dont_use_screenlock">Avbryt</string>
 
     <!--Drawer -->
+    <string name="drawer_create_new_folder_default_name">Mappenavn</string>
     <string name="drawer_create_folder">Opprett mappe</string>
     <string name="drawer_inbox">Postkassen</string>
     <string name="drawer_receipts">E-Kvitteringer</string>
