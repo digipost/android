@@ -214,7 +214,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             @Override
             public void onItemDrop(DragNDropListView parent, View view, int startPosition, int endPosition, long id) {
                 moveFolderFrom(startPosition, endPosition);
-
             }
         });
     }
@@ -247,7 +246,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
         updateTitles();
-
         return true;
     }
 
@@ -257,41 +255,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         if (drawer != null) {
             if (drawerArrayAdapter != null) {
                 drawerArrayAdapter.notifyDataSetChanged();
-            }
-
-            if (menu != null) {
-
-                MenuItem doneEditingButton = menu.findItem(R.id.menu_done_edit_folder);
-                MenuItem refreshButton = menu.findItem(R.id.menu_refresh);
-
-                if (refreshing) {
-                    refreshButton.setActionView(R.layout.activity_main_content_refreshspinner);
-                } else {
-                    refreshButton.setActionView(null);
-                }
-
-               // boolean drawerOpen = drawer.isDrawerOpen(drawerList);
-                boolean drawerOpen = false;
-                MenuItem uploadButton = menu.findItem(R.id.menu_upload);
-
-                if (getCurrentFragment() != null) {
-                    if (getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS) {
-                        uploadButton.setVisible(false);
-                    } else {
-                        uploadButton.setVisible(!drawerOpen);
-                    }
-                }
-
-                refreshButton.setVisible(!drawerOpen);
-
-                if (editDrawerMode && drawerOpen) {
-                    doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                    doneEditingButton.setVisible(true);
-                } else {
-                    doneEditingButton.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                    doneEditingButton.setVisible(false);
-                    drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                }
             }
         }
 
@@ -310,12 +273,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 return true;
             case R.id.menu_upload:
                 startUploadActivity();
-                return true;
-            case R.id.menu_done_edit_folder:
-                editDrawerMode = false;
-                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                updateUI(false);
-
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -371,9 +328,12 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 editDrawerMode = false;
                 drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 updateUI(false);
-                //drawer.closeDrawers();
+                return true;
+            }else if(drawer.isDrawerOpen(GravityCompat.START)){
+                drawer.closeDrawers();
                 return true;
             }
+
             if (getCurrentFragment().getContent() != ApplicationConstants.MAILBOX) {
                 selectItem(ApplicationConstants.MAILBOX);
                 return true;

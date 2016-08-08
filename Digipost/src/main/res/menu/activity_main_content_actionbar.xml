@@ -13,11 +13,4 @@
             android:title="@string/upload"
             android:icon="@drawable/ic_upload"
             android:showAsAction="ifRoom"/>
-
-    <item
-            android:id="@+id/menu_done_edit_folder"
-            android:title="@string/done"
-            android:visible="false"
-            android:icon="@drawable/ic_action_accept"
-            android:showAsAction="never"/>
 </menu>
