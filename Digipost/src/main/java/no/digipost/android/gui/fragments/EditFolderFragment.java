@@ -17,7 +17,6 @@
 package no.digipost.android.gui.fragments;
 
 import android.app.DialogFragment;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +75,7 @@ public class EditFolderFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         int content = getArguments().getInt("content");
+        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Digipost_Dialog);
         editFolder = getArguments().getBoolean("editFolder");
         validationRules = getArguments().getString("validationRules");
 
@@ -91,7 +91,6 @@ public class EditFolderFragment extends DialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Digipost_Dialog);
         View view = inflater.inflate(R.layout.fragment_edit_folder, container, false);
         editName = view.findViewById(R.id.edit_folder_fragment_name);
         gridView = (GridView) view.findViewById(R.id.edit_folder_fragment_gridview);

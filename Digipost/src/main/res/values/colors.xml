@@ -42,6 +42,7 @@
     <color name="white">#FFF</color>
     <color name="black">#000</color>
     <color name="busy_indicator">#C0202020</color>
+    <color name="edit_folder_background">#3B3B3B</color>
 
     <!-- LoginActivity -->
     <color name="login_background">#292b2d</color>

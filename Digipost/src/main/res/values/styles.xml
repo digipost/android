@@ -20,7 +20,15 @@
     </style>
 
     <style name="Digipost.Dialog" parent="ThemeOverlay.AppCompat.Dialog">
-        <item name="colorAccent">#3B3B3B</item>
+        <item name="android:fullDark">@color/edit_folder_background</item>
+        <item name="android:topDark">@color/edit_folder_background</item>
+        <item name="android:centerDark">@color/edit_folder_background</item>
+        <item name="android:bottomDark">@color/edit_folder_background</item>
+        <item name="android:topBright">@color/edit_folder_background</item>
+        <item name="android:centerBright">@color/edit_folder_background</item>
+        <item name="android:bottomBright">@color/edit_folder_background</item>
+        <item name="android:bottomMedium">@color/edit_folder_background</item>
+        <item name="android:centerMedium">@color/edit_folder_background</item>
     </style>
     
     <style name="ActionBarStyle" parent="Widget.AppCompat.ActionBar">
