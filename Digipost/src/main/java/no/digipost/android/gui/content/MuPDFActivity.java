@@ -17,30 +17,24 @@
 package no.digipost.android.gui.content;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.SearchView;
-import android.widget.TextView;
+import android.widget.*;
+import java.lang.reflect.Field;
+import android.support.v7.widget.SearchView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import org.apache.commons.io.FilenameUtils;
-import java.lang.reflect.Field;
 import java.util.concurrent.Executor;
 import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
@@ -70,7 +64,6 @@ public class MuPDFActivity extends DisplayContentActivity {
     private final String CURRENT_WINDOW = "currentWindow";
     private final Handler mHandler = new Handler();
     private int currentVindow;
-    /* The core rendering instance */
     private MuPDFCore core;
     private String mFileName;
     private MuPDFReaderView mDocView;
@@ -90,27 +83,13 @@ public class MuPDFActivity extends DisplayContentActivity {
     private Intent intent;
     private boolean searchModeOn;
     private MenuItem searchMenuItem;
+    private android.support.v7.widget.SearchView searchView;
 
     private ActionMode.Callback selectActionModeCallback;
     private ActionMode selectActionMode;
 
     public void createAlertWaiter() {
         mAlertsActive = true;
-        // All mupdf library calls are performed on asynchronous tasks to avoid
-        // stalling
-        // the UI. Some calls can lead to javascript-invoked requests to display
-        // an
-        // alert dialog and collect a reply from the user. The task has to be
-        // blocked
-        // until the user's reply is received. This method creates an
-        // asynchronous task,
-        // the purpose of which is to wait of these requests and produce the
-        // dialog
-        // in response, while leaving the core blocked. When the dialog receives
-        // the
-        // user's response, it is sent to the core via replyToAlert, unblocking
-        // it.
-        // Another alert-waiting task is then created to pick up the next alert.
         if (mAlertTask != null) {
             mAlertTask.cancel(true);
             mAlertTask = null;
@@ -131,7 +110,6 @@ public class MuPDFActivity extends DisplayContentActivity {
 
             @Override
             protected void onPostExecute(final MuPDFAlert result) {
-                // core.waitForAlert may return null when shutting down
                 if (result == null)
                     return;
                 final MuPDFAlert.ButtonPressed pressed[] = new MuPDFAlert.ButtonPressed[3];
@@ -154,12 +132,7 @@ public class MuPDFActivity extends DisplayContentActivity {
                                     break;
                             }
                             result.buttonPressed = pressed[index];
-                            // Send the user's response to the core, so that it
-                            // can
-                            // continue processing.
                             core.replyToAlert(result);
-                            // Create another alert-waiter to pick up the next
-                            // alert.
                             createAlertWaiter();
                         }
                     }
@@ -292,20 +265,18 @@ public class MuPDFActivity extends DisplayContentActivity {
             return;
         }
 
-        createUI(savedInstanceState);
+        createUI();
 
         if (savedInstanceState != null) {
             mDocView.setDisplayedViewIndex(savedInstanceState.getInt(CURRENT_WINDOW, 0));
         }
     }
 
-    public void createUI(Bundle savedInstanceState) {
+    public void createUI() {
         if (core == null)
             return;
 
         mPageNumberView = new TextView(this);
-        // Now create the UI.
-        // First create the document view
         mDocView = new MuPDFReaderView(this) {
             @Override
             protected void onMoveToChild(int i) {
@@ -325,17 +296,7 @@ public class MuPDFActivity extends DisplayContentActivity {
                     super.onMoveToChild(i);
                 }
             }
-
-            @Override
-            protected void onTapMainDocArea() {
-
-            }
-
-            @Override
-            protected void onDocMotion() {
-
-            }
-
+            
             @Override
             public void onLongPress(MotionEvent e) {
                 super.onLongPress(e);
@@ -350,17 +311,12 @@ public class MuPDFActivity extends DisplayContentActivity {
             @Override
             protected void onTextFound(SearchTaskResult result) {
                 SearchTaskResult.set(result);
-                // Ask the ReaderView to move to the resulting page
                 mDocView.setDisplayedViewIndex(result.pageNumber);
-                // Make the ReaderView act on the change to SearchTaskResult
-                // via overridden onChildSetup method.
                 mDocView.resetupChildren();
             }
         };
 
         mDocView.setLinksEnabled(true);
-
-        // Stick the document view and the buttons overlay into a parent view
         RelativeLayout layout = (RelativeLayout) findViewById(R.id.pdf_relative_layout);
         layout.addView(mDocView);
         layout.setBackgroundResource(R.drawable.login_background);
@@ -380,14 +336,12 @@ public class MuPDFActivity extends DisplayContentActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /*
-    //TODO
-    public Object onRetainNonConfigurationInstance() {
+    @Override
+    public Object onRetainCustomNonConfigurationInstance() {
         MuPDFCore mycore = core;
         core = null;
         return mycore;
     }
-    */
 
     @Override
     protected void onPause() {
@@ -416,7 +370,6 @@ public class MuPDFActivity extends DisplayContentActivity {
 
     void selectModeOn() {
         mDocView.setSelectionMode(true);
-
     }
 
     void selectModeOff() {
@@ -429,39 +382,16 @@ public class MuPDFActivity extends DisplayContentActivity {
     }
 
     void searchModeOn() {
-        // Focus on EditTextWidget
-        // mSearchText.requestFocus();
-        // showKeyboard();
         searchModeOn = true;
     }
 
     void searchModeOff() {
-        // hideKeyboard()
         searchModeOn = false;
         SearchTaskResult.set(null);
         mDocView.resetupChildren();
     }
 
-    void updatePageNumView(int index) {
-        if (core == null)
-            return;
-        mPageNumberView.setText(String.format("%d / %d", index + 1, core.countPages()));
-    }
-
-    void showKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null)
-            imm.showSoftInput(mSearchText, 0);
-    }
-
-    void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null)
-            imm.hideSoftInputFromWindow(mSearchText.getWindowToken(), 0);
-    }
-
     void search(int direction, String query) {
-        // hideKeyboard();
         int displayPage = mDocView.getDisplayedViewIndex();
         SearchTaskResult r = SearchTaskResult.get();
         int searchPage = r != null ? r.pageNumber : -1;
@@ -482,38 +412,65 @@ public class MuPDFActivity extends DisplayContentActivity {
         return super.onSearchRequested();
     }
 
-    private void setupSearchView(MenuItem menuSearch) {
+    private void setupSearchView() {
+        MenuItemCompat.setOnActionExpandListener(searchMenuItem,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                        searchModeOn();
+                        return true;
+                    }
 
-        menuSearch.setOnActionExpandListener(new SearchOnActionExpandListener());
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                        searchModeOff();
+                        return true;
+                    }
+                }
+        );
 
-        SearchView searchView = (SearchView) menuSearch.getActionView();
+        searchView = (android.support.v7.widget.SearchView) searchMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                if (!searchView.isIconified()) {
+                    searchView.setIconified(true);
+                }
+                searchMenuItem.collapseActionView();
+
+                search(1, s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (SearchTaskResult.get() != null && !s.equals(SearchTaskResult.get().txt)) {
+                    SearchTaskResult.set(null);
+                    mDocView.resetupChildren();
+                }
+                return true;
+            }
+        });
 
         try {
+
             Field searchField = SearchView.class.getDeclaredField("mSearchButton");
             searchField.setAccessible(true);
-
             android.widget.ImageView searchBtn = (android.widget.ImageView) searchField.get(searchView);
             searchBtn.setImageResource(R.drawable.white_search_48);
-
             searchField = SearchView.class.getDeclaredField("mSearchPlate");
             searchField.setAccessible(true);
-
             LinearLayout searchPlate = (LinearLayout) searchField.get(searchView);
-
             AutoCompleteTextView searchTextView = (AutoCompleteTextView) searchPlate.getChildAt(0);
-
             searchTextView.setTextColor(getResources().getColor(R.color.white));
             searchPlate.setBackgroundResource(R.drawable.search_background);
-
             searchTextView.setHintTextColor(getResources().getColor(R.color.searchbar_grey_hint));
             searchView.setQueryHint(getString(R.string.pdf_search_document));
-
             android.widget.ImageView searchViewClearButton = (android.widget.ImageView) searchPlate.getChildAt(1);
             searchViewClearButton.setImageResource(R.drawable.ic_clear_white);
-
-            searchView.setOnQueryTextListener(new SearchViewOnQueryTextListener());
-        } catch (NoSuchFieldException e) {
-        } catch (IllegalAccessException e) {
+        }catch (Exception e){
+            //Empty
         }
     }
 
@@ -547,10 +504,8 @@ public class MuPDFActivity extends DisplayContentActivity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_mupdf_actionbar, menu);
-
         searchMenuItem = menu.findItem(R.id.pdfmenu_search);
-        //setupSearchView(searchMenuItem);
-
+        setupSearchView();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -570,8 +525,6 @@ public class MuPDFActivity extends DisplayContentActivity {
             openExternal.setVisible(false);
             save.setVisible(false);
         }
-
-        int content = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
 
         boolean sendToBankVisible = intent.getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 
@@ -648,41 +601,6 @@ public class MuPDFActivity extends DisplayContentActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-    }
-
-    private class SearchViewOnQueryTextListener implements android.widget.SearchView.OnQueryTextListener {
-
-        @Override
-        public boolean onQueryTextSubmit(String s) {
-            search(1, s);
-
-            return true;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String s) {
-            if (SearchTaskResult.get() != null && !s.equals(SearchTaskResult.get().txt)) {
-                SearchTaskResult.set(null);
-                mDocView.resetupChildren();
-            }
-
-            return true;
-        }
-    }
-
-    private class SearchOnActionExpandListener implements MenuItem.OnActionExpandListener {
-
-        @Override
-        public boolean onMenuItemActionExpand(MenuItem menuItem) {
-            searchModeOn();
-            return true;
-        }
-
-        @Override
-        public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-            searchModeOff();
-            return true;
-        }
     }
 
     private class SelectActionModeCallback implements ActionMode.Callback {
