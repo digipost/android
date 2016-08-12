@@ -96,7 +96,7 @@ public class WebLoginActivity extends AppCompatActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-            if (url.indexOf( "localhost") != -1) {
+            if (url.contains( "localhost")) {
                 new GetTokenTask().execute(url);
                 return true;
             }
@@ -125,7 +125,6 @@ public class WebLoginActivity extends AppCompatActivity {
                 String state = url.substring(state_start + state_fragment.length(), code_start);
                 String code = url.substring(code_start + code_fragment.length(), url.length());
 
-
                 OAuth.retrieveMainAccess(state, code, WebLoginActivity.this, authenticationScope);
                 return SUCCESS;
             } catch (DigipostApiException e) {
@@ -144,7 +143,8 @@ public class WebLoginActivity extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             if(SUCCESS.equals(result)) {
                 Intent resultIntent = new Intent();
-                if(!authenticationScope.equals(ApiConstants.SCOPE_FULL) && currentListPosition != -1) resultIntent.putExtra("currentListPosition", currentListPosition);
+                if(!authenticationScope.equals(ApiConstants.SCOPE_FULL) && currentListPosition != -1)
+                    resultIntent.putExtra("currentListPosition", currentListPosition);
                 setResult(RESULT_OK, resultIntent);
             }else{
                 DialogUtitities.showToast(getApplicationContext(), result);

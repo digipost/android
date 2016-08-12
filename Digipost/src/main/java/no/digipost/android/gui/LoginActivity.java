@@ -65,6 +65,7 @@ public class LoginActivity extends Activity {
         idPortenLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferencesUtilities.storeScreenlockChoice(getApplicationContext(), ApplicationConstants.SCREENLOCK_CHOICE_NO);
                 openWebView(Login.IDPORTEN);
             }
         });

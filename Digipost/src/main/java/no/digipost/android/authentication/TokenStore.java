@@ -53,6 +53,8 @@ public class TokenStore {
                         return token.getAccess();
                     } else if (scope.equals(ApiConstants.SCOPE_IDPORTEN_4) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)) {
                         return token.getAccess();
+                    }else{
+                        return token.getAccess();
                     }
                 }
             }
