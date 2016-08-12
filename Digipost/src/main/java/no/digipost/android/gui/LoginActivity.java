@@ -20,11 +20,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.*;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.analytics.GAEventController;
@@ -41,6 +42,10 @@ public class LoginActivity extends Activity {
     private Button loginButton, privacyButton, registrationButton;
     private CheckBox rememberCheckbox;
     private Context context;
+    private enum Login{
+        IDPORTEN,
+        NORMAL
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -56,6 +61,18 @@ public class LoginActivity extends Activity {
         registrationButton = (Button) findViewById(R.id.login_registrationButton);
         registrationButton.setOnClickListener(listener);
         rememberCheckbox = (CheckBox) findViewById(R.id.login_remember_me);
+        LinearLayout idPortenLayout = (LinearLayout) findViewById(R.id.login_id_porten_layout);
+        idPortenLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openWebView(Login.IDPORTEN);
+            }
+        });
+
+        TextView idPortenTextView = (TextView) findViewById(R.id.login_id_porten_textview);
+        final SpannableStringBuilder str = new SpannableStringBuilder(getString(R.string.login_id_porten_login_text_button));
+        str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 22, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        idPortenTextView.setText(str);
     }
 
     @Override
@@ -88,17 +105,21 @@ public class LoginActivity extends Activity {
     private void startLoginProcess() {
         if (rememberCheckbox.isChecked()) {
             SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_YES);
-            openWebView();
+            openWebView(Login.NORMAL);
         } else {
             SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_NO);
-            openWebView();
+            openWebView(Login.NORMAL);
         }
     }
 
-    private void openWebView() {
+    private void openWebView(Login target) {
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(this, WebLoginActivity.class);
-            i.putExtra("authenticationScope", ApiConstants.SCOPE_FULL);
+            if(Login.IDPORTEN == target){
+                i.putExtra("authenticationScope", ApiConstants.SCOPE_IDPORTEN_4);
+            }else {
+                i.putExtra("authenticationScope", ApiConstants.SCOPE_FULL);
+            }
             startActivityForResult(i, WEB_OAUTH_LOGIN_REQUEST);
 
         } else {

@@ -112,6 +112,8 @@
     <string name="login_remember_me">Forbli innlogget</string>
     <string name="login_remember_me_contentdescription">Avhukingsboks for å velge at applikasjonen skal huske innloggingen</string>
 
+    <string name="login_id_porten_login_text_button">Logg inn med ID-porten for å lese post fra det offentlige</string>
+
     <!-- ContextMenu -->
     <string name="context_refresh">Oppdater</string>
 

@@ -98,6 +98,27 @@
                         android:textColor="@color/login_grey_text"
                         android:textSize="18sp" />
             </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/login_id_porten_layout"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/id_porten_box"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="40dp"
+                    android:padding="20dp"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="13dp"
+                        android:src="@drawable/idporten_logo"/>
+                <TextView
+                        android:id="@+id/login_id_porten_textview"
+                        android:layout_width="wrap_content"
+                        android:textSize="16sp"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

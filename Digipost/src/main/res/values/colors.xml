@@ -51,6 +51,8 @@
     <color name="grey_privacy_button_background">#303030</color>
     <color name="grey_privacy_button_text">#F5F5F5</color>
     <color name="login_grey_text">#4D4D4D</color>
+    <color name="login_id_porten_box_background">#FCFCFC</color>
+    <color name="login_id_porten_box_border">#C4C4C4</color>
 
     <!-- Screenlock -->
     <color name="screenlock_header_background">#1F1F1F</color>
