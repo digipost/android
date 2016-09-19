@@ -20,13 +20,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
-import android.widget.AdapterView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +38,6 @@ import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.ReceiptAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
-import no.digipost.android.gui.recyclerview.*;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
@@ -51,6 +47,8 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     protected ReceiptAdapter receiptAdapter;
     protected boolean multiSelectEnabled;
     protected int currentListPosition;
+    private boolean mLoading = false;
+    private int skip = 0;
 
     public static ReceiptFragment newInstance() {
         return new ReceiptFragment();
@@ -66,6 +64,22 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         receiptAdapter = new ReceiptAdapter(context, new ArrayList<Receipt>());
         recyclerView.setAdapter(receiptAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int totalItem = layoutManager.getItemCount();
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                if (!mLoading && lastVisibleItem == totalItem - 1) {
+                    mLoading = true;
+                    skip = receiptAdapter.getItemCount();
+                    updateAccountMeta();
+                    mLoading = false;
+                }
+            }
+        });
         return view;
     }
 
@@ -149,7 +163,6 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
 
     private void checkStatusAndDisplayReceipts(Receipts newReceipts) {
         if (isAdded()) {
-
             receiptAdapter.updateContent(newReceipts.getReceipt());
             int numberOfCards = Integer.parseInt(newReceipts.getNumberOfCards());
             int numberOfCardsReadyForVerification = Integer.parseInt(newReceipts.getNumberOfCardsReadyForVerification());
@@ -279,7 +292,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         @Override
         protected Receipts doInBackground(final Void... params) {
             try {
-                return ContentOperations.getAccountContentMetaReceipt(context);
+                return ContentOperations.getAccountContentMetaReceipt(context, skip);
             } catch (DigipostApiException e) {
                 errorMessage = e.getMessage();
                 return null;

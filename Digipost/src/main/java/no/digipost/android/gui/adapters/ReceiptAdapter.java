@@ -52,7 +52,11 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptV
     }
 
     public void updateContent(ArrayList<Receipt> receipts){
-        this.receipts = receipts;
+        if(this.receipts != null){
+            this.receipts.addAll(receipts);
+        }else {
+            this.receipts = receipts;
+        }
         selectedPositions = new SparseBooleanArray();
         multiSelectEnabled = false;
         notifyDataSetChanged();

@@ -27,6 +27,7 @@ public class ApiConstants {
     public static final String MIME = "text/html";
 
     public static final String GET_RECEIPT = "receipt";
+    public static final String GET_RECEIPT_SKIP = "skip";
 
     public static final String CREATE = "create";
     public static final String EDIT = "edit";

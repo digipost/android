@@ -89,7 +89,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
         spinnerLayout = (View) view.findViewById(R.id.fragment_content_spinner_layout);
         recyclerView = (RecyclerViewEmptySupport) view.findViewById(R.id.fragment_content_recyclerview);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(context));

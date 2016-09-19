@@ -150,10 +150,12 @@ public class ContentOperations {
         return (CurrentBankAccount) JSONUtilities.processJackson(CurrentBankAccount.class, apiAccess.getApiJsonString(context, uri));
     }
 
-    public static Receipts getAccountContentMetaReceipt(Context context) throws DigipostApiException, DigipostClientException,
+    public static Receipts getAccountContentMetaReceipt(Context context, int skip) throws DigipostApiException, DigipostClientException,
             DigipostAuthenticationException {
         refreshApiAccess();
-        return (Receipts) JSONUtilities.processJackson(Receipts.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getReceiptsUri()));
+        String queryArguments = "?"+ApiConstants.GET_RECEIPT_SKIP +"="+skip;
+        return (Receipts) JSONUtilities.processJackson(Receipts.class, apiAccess.getApiJsonString(context,
+                getCurrentMailbox(context).getReceiptsUri() + queryArguments));
     }
 
     public static void revokeOAuthToken(Context context) throws DigipostClientException, DigipostApiException,
