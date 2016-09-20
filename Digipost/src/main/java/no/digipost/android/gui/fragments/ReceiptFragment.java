@@ -47,7 +47,6 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     protected ReceiptAdapter receiptAdapter;
     protected boolean multiSelectEnabled;
     protected int currentListPosition;
-    private boolean mLoading = false;
     private int skip = 0;
 
     public static ReceiptFragment newInstance() {
@@ -64,22 +63,6 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         receiptAdapter = new ReceiptAdapter(context, new ArrayList<Receipt>());
         recyclerView.setAdapter(receiptAdapter);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                int totalItem = layoutManager.getItemCount();
-                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-
-                if (!mLoading && lastVisibleItem == totalItem - 1) {
-                    mLoading = true;
-                    skip = receiptAdapter.getItemCount();
-                    updateAccountMeta();
-                    mLoading = false;
-                }
-            }
-        });
         return view;
     }
 
@@ -102,6 +85,11 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         }else{
             beginActionMode(position);
         }
+    }
+
+    public void loadMoreContent(){
+        skip = receiptAdapter.getItemCount();
+        updateAccountMeta();
     }
 
     @Override

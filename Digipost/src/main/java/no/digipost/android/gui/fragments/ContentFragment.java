@@ -72,6 +72,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected ActionMode contentActionMode;
     protected View spinnerLayout;
     public static boolean activityDrawerOpen;
+    private boolean mLoading = false;
 
     public abstract int getContent();
 
@@ -120,6 +121,21 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         listTopText = (TextView) view.findViewById(R.id.fragment_content_listview_top_text);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setEmptyView(listEmptyViewNoContent);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int totalItem = layoutManager.getItemCount();
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                if (!mLoading && lastVisibleItem == totalItem - 1) {
+                    mLoading = true;
+                    loadMoreContent();
+                    mLoading = false;
+                }
+            }
+        });
 
         return view;
     }
@@ -130,6 +146,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     abstract void recyclerViewOnLongClick(int position);
 
     public abstract void finishActionMode();
+    public abstract void loadMoreContent();
 
     void refreshItems() {
         updateAccountMeta();

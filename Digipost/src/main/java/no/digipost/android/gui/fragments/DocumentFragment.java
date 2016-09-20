@@ -24,6 +24,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
@@ -104,7 +106,13 @@ public class DocumentFragment extends ContentFragment<Document> {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         documentAdapter = new DocumentAdapter(context, new ArrayList<Document>());
         recyclerView.setAdapter(documentAdapter);
+
         return view;
+    }
+
+    public void loadMoreContent(){
+        int skip = documentAdapter.getItemCount();
+        updateAccountMeta();
     }
 
     @Override
