@@ -92,6 +92,11 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         updateAccountMeta();
     }
 
+    public void clearExistingContent(){
+        skip = 0;
+        receiptAdapter.clearExistingContent();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -151,6 +156,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
 
     private void checkStatusAndDisplayReceipts(Receipts newReceipts) {
         if (isAdded()) {
+
             receiptAdapter.updateContent(newReceipts.getReceipt());
             int numberOfCards = Integer.parseInt(newReceipts.getNumberOfCards());
             int numberOfCardsReadyForVerification = Integer.parseInt(newReceipts.getNumberOfCardsReadyForVerification());
@@ -310,6 +316,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
                 }
             }
 
+            loadingMoreContent = false;
             activityCommunicator.onUpdateAccountMeta();
             activityCommunicator.onEndRefreshContent();
         }

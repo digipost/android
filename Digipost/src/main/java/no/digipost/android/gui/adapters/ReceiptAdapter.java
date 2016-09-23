@@ -62,6 +62,10 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptV
         notifyDataSetChanged();
     }
 
+    public void clearExistingContent(){
+        this.receipts = null;
+    }
+
     @Override
     public ReceiptViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.content_list_item,parent,false);

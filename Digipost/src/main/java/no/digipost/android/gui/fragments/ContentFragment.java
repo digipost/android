@@ -64,7 +64,6 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected TextView listEmptyViewTitle;
     protected TextView listEmptyViewText;
     protected ImageView listEmptyViewImage;
-
     protected TextView listTopText;
     protected ProgressDialog progressDialog;
     protected boolean progressDialogIsVisible = false;
@@ -72,8 +71,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected ActionMode contentActionMode;
     protected View spinnerLayout;
     public static boolean activityDrawerOpen;
-    private boolean mLoading = false;
-
+    boolean loadingMoreContent = false;
     public abstract int getContent();
 
     @Override
@@ -129,10 +127,9 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
                 int totalItem = layoutManager.getItemCount();
                 int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
 
-                if (!mLoading && lastVisibleItem == totalItem - 1) {
-                    mLoading = true;
+                if (!loadingMoreContent && lastVisibleItem == totalItem - 1) {
+                    loadingMoreContent = true;
                     loadMoreContent();
-                    mLoading = false;
                 }
             }
         });
@@ -147,8 +144,10 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
     public abstract void finishActionMode();
     public abstract void loadMoreContent();
+    public abstract void clearExistingContent();
 
     void refreshItems() {
+        clearExistingContent();
         updateAccountMeta();
         activityCommunicator.onStartRefreshContent();
         onItemsLoadComplete();
@@ -329,6 +328,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             taskIsRunning = false;
             DialogUtitities.showToast(context, format(getString(R.string.delete_cancelled), progress, content.size()));
             hideProgressDialog();
+            clearExistingContent();
             updateAccountMeta();
         }
 
@@ -344,7 +344,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
                         activityCommunicator.requestLogOut();
                     }
                 }
-
+                clearExistingContent();
                 hideProgressDialog();
                 updateAccountMeta();
             }

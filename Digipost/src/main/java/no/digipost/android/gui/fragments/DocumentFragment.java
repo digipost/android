@@ -39,6 +39,7 @@ import no.digipost.android.gui.adapters.DocumentAdapter;
 import no.digipost.android.model.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 import no.digipost.android.DigipostApplication;
@@ -77,7 +78,6 @@ public class DocumentFragment extends ContentFragment<Document> {
     private static String EXTRA_CONTENT = "content";
     private static final int INTENT_OPEN_ATTACHMENT_CONTENT = 0;
     private static final int INTENT_ID_PORTEN_WEBVIEW_LOGIN = 1;
-
     protected DocumentAdapter documentAdapter;
     protected boolean multiSelectEnabled;
     private ActionMode internalActionMode;
@@ -111,8 +111,12 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     public void loadMoreContent(){
-        int skip = documentAdapter.getItemCount();
-        updateAccountMeta();
+        if(documentAdapter != null && documentAdapter.remainingContentToGet())
+            updateAccountMeta();
+    }
+
+    public void clearExistingContent(){
+        documentAdapter.clearExistingContent();
     }
 
     @Override
@@ -687,7 +691,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         @Override
         protected Documents doInBackground(final Void... params) {
             try {
-                return ContentOperations.getAccountContentMetaDocument(context, content);
+                return ContentOperations.getAccountContentMetaDocument(context, content, documentAdapter.getGetUnixTimeOfNextDocument());
             } catch (DigipostApiException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
@@ -726,7 +730,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                     DocumentFragment.super.setListEmptyViewNoNetwork(true);
                     DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
                 }
-
+                loadingMoreContent = false;
                 activityCommunicator.onUpdateAccountMeta();
                 activityCommunicator.onEndRefreshContent();
             }
@@ -821,6 +825,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                         attachmentDialog = null;
                     }
                 }
+                clearExistingContent();
                 updateAccountMeta();
             }
         }

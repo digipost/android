@@ -28,9 +28,12 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import no.digipost.android.R;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Document;
 import no.digipost.android.utilities.DataFormatUtilities;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import static no.digipost.android.model.Origin.PUBLIC_ENTITY;
@@ -43,6 +46,8 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
     private SparseBooleanArray selectedPositions = new SparseBooleanArray();
     private DocumentViewHolder documentViewHolder;
     private boolean multiSelectEnabled;
+    private String getUnixTimeOfNextDocument;
+    private boolean fetchedLastDocument;
 
     public DocumentAdapter(Context context, ArrayList<Document> documents){
         this.documents = documents;
@@ -58,10 +63,51 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
     }
 
     public void updateContent(ArrayList<Document> documents){
-        this.documents = documents;
+
+        if(documents != null) {
+            if(documents.size() > 0)
+                this.getUnixTimeOfNextDocument = getUnixTimeOfNextDocument(documents.get(documents.size()-1));
+
+            if(documents.size() >= ApiConstants.GET_DOCUMENT_LIMIT_N){
+                documents.remove(documents.size()-1);
+            }else{
+                fetchedLastDocument = true;
+            }
+
+            if(this.documents != null && this.documents.size() > 0){
+                this.documents.addAll(documents);
+            }else{
+                this.documents = documents;
+                resetMultiSelectAndContentState();
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    private void resetMultiSelectAndContentState(){
         selectedPositions = new SparseBooleanArray();
         multiSelectEnabled = false;
-        notifyDataSetChanged();
+    }
+
+    public boolean remainingContentToGet(){
+        return !fetchedLastDocument;
+    }
+
+    public void clearExistingContent(){
+        fetchedLastDocument = false;
+        getUnixTimeOfNextDocument = null;
+        this.documents = null;
+    }
+
+    private String getUnixTimeOfNextDocument(Document document){
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            return Long.toString(formatter.parse(document.getCreated()).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     @Override
@@ -75,6 +121,10 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
         this.multiSelectEnabled = multiSelectEnabled;
         selectedPositions = new SparseBooleanArray();
         notifyDataSetChanged();
+    }
+
+    public String getGetUnixTimeOfNextDocument(){
+        return this.getUnixTimeOfNextDocument;
     }
 
     public void select(int position){

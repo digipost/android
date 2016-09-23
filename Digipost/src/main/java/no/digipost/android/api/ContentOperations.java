@@ -20,7 +20,8 @@ import android.content.Context;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
+import java.util.Date;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
@@ -43,6 +44,8 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.ws.rs.core.MultivaluedMap;
+
 public class ContentOperations {
 
     public static String digipostAddress = null;
@@ -54,7 +57,7 @@ public class ContentOperations {
 
         refreshApiAccess();
         if (account == null) {
-            account = (Account) JSONUtilities.processJackson(Account.class, apiAccess.getApiJsonString(context, ApiConstants.URL_API));
+            account = (Account) JSONUtilities.processJackson(Account.class, apiAccess.getApiJsonString(context, ApiConstants.URL_API,null));
         }
 
         return account;
@@ -88,11 +91,11 @@ public class ContentOperations {
         mailbox = null;
         refreshApiAccess();
 
-        account = (Account) JSONUtilities.processJackson(Account.class, apiAccess.getApiJsonString(context, ApiConstants.URL_API));
+        account = (Account) JSONUtilities.processJackson(Account.class, apiAccess.getApiJsonString(context, ApiConstants.URL_API,null));
         return account;
     }
 
-    public static Documents getAccountContentMetaDocument(Context context, int content) throws DigipostApiException,
+    public static Documents getAccountContentMetaDocument(Context context, int content, String oldestVisibleDocumentDate) throws DigipostApiException,
             DigipostClientException, DigipostAuthenticationException {
 
         getCurrentMailbox(context);
@@ -102,13 +105,21 @@ public class ContentOperations {
 
         refreshApiAccess();
 
+        if(oldestVisibleDocumentDate == null){
+            oldestVisibleDocumentDate = Long.toString(new Date().getTime());
+        }
+
+        MultivaluedMap params = new MultivaluedMapImpl();
+        params.add(ApiConstants.GET_DOCUMENT_LASTSEEN, oldestVisibleDocumentDate);
+        params.add(ApiConstants.GET_DOCUMENT_LIMIT, Integer.toString(ApiConstants.GET_DOCUMENT_LIMIT_N));
+
         if (content == ApplicationConstants.MAILBOX) {
-            return (Documents) JSONUtilities.processJackson(Documents.class, apiAccess.getApiJsonString(context, mailbox.getInboxUri()));
+            return (Documents) JSONUtilities.processJackson(Documents.class, apiAccess.getApiJsonString(context, mailbox.getInboxUri(), params));
         } else {
             content -= ApplicationConstants.numberOfStaticFolders;
             ArrayList<Folder> folders = mailbox.getFolders().getFolder();
             Folder folder = folders.get(content);
-            folder = (Folder) JSONUtilities.processJackson(Folder.class, apiAccess.getApiJsonString(context, folder.getSelfUri()));
+            folder = (Folder) JSONUtilities.processJackson(Folder.class, apiAccess.getApiJsonString(context, folder.getSelfUri(), params));
             return folder != null ? folder.getDocuments() : null;
         }
     }
@@ -147,15 +158,16 @@ public class ContentOperations {
         String uri = getAccount(context).getPrimaryAccount().getCurrentBankAccountUri();
         refreshApiAccess();
 
-        return (CurrentBankAccount) JSONUtilities.processJackson(CurrentBankAccount.class, apiAccess.getApiJsonString(context, uri));
+        return (CurrentBankAccount) JSONUtilities.processJackson(CurrentBankAccount.class, apiAccess.getApiJsonString(context, uri, null));
     }
 
     public static Receipts getAccountContentMetaReceipt(Context context, int skip) throws DigipostApiException, DigipostClientException,
             DigipostAuthenticationException {
         refreshApiAccess();
-        String queryArguments = "?"+ApiConstants.GET_RECEIPT_SKIP +"="+skip;
-        return (Receipts) JSONUtilities.processJackson(Receipts.class, apiAccess.getApiJsonString(context,
-                getCurrentMailbox(context).getReceiptsUri() + queryArguments));
+
+        MultivaluedMap params = new MultivaluedMapImpl();
+        params.add(ApiConstants.GET_RECEIPT_SKIP, ""+skip);
+        return (Receipts) JSONUtilities.processJackson(Receipts.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getReceiptsUri(), params));
     }
 
     public static void revokeOAuthToken(Context context) throws DigipostClientException, DigipostApiException,
@@ -243,13 +255,13 @@ public class ContentOperations {
     public static Document getDocumentSelf(Context context, final Document document) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
         refreshApiAccess();
-        return (Document) JSONUtilities.processJackson(Document.class, apiAccess.getApiJsonString(context, document.getSelfUri()));
+        return (Document) JSONUtilities.processJackson(Document.class, apiAccess.getApiJsonString(context, document.getSelfUri(),null));
     }
 
     public static String getReceiptContentHTML(Context context, final Receipt receipt) throws DigipostApiException,
             DigipostClientException, DigipostAuthenticationException {
         refreshApiAccess();
-        return apiAccess.getReceiptHTML(context, receipt.getContentAsHTMLUri());
+        return apiAccess.getReceiptHTML(context, receipt.getContentAsHTMLUri(), null);
     }
 
     public static void deleteContent(Context context, final Object object) throws DigipostApiException, DigipostClientException,
@@ -274,6 +286,6 @@ public class ContentOperations {
         if (apiAccess == null) {
             apiAccess = new ApiAccess();
         }
-        return (Settings) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getSettingsUri()));
+        return (Settings) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getSettingsUri(), null));
     }
 }
