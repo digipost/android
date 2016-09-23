@@ -146,7 +146,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     public abstract void loadMoreContent();
     public abstract void clearExistingContent();
 
-    void refreshItems() {
+    public void refreshItems() {
         clearExistingContent();
         updateAccountMeta();
         activityCommunicator.onStartRefreshContent();

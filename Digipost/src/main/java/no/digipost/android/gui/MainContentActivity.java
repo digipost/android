@@ -280,7 +280,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                getCurrentFragment().updateAccountMeta();
+                getCurrentFragment().refreshItems();
                 return true;
             case R.id.menu_upload:
                 startUploadActivity();
