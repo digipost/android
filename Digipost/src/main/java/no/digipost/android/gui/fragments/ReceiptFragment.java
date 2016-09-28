@@ -135,8 +135,6 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
             switch (item.getItemId()) {
                 case R.id.main_context_menu_delete_receipt:
                     ReceiptFragment.super.deleteContent(receiptAdapter.getSelected());
-                    mode.finish();
-                    finishActionMode();
                     return true;
                 default:
                     finishActionMode();
@@ -188,8 +186,10 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     }
 
     public void updateAccountMeta() {
-        GetReceiptsMetaTask task = new GetReceiptsMetaTask();
-        task.execute();
+        if(receiptAdapter.remainingContentToGet()) {
+            GetReceiptsMetaTask task = new GetReceiptsMetaTask();
+            task.execute();
+        }
     }
 
     public void openReceipt(Receipt receipt){

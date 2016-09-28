@@ -166,7 +166,7 @@ public class ContentOperations {
         refreshApiAccess();
 
         MultivaluedMap params = new MultivaluedMapImpl();
-        params.add(ApiConstants.GET_RECEIPT_SKIP, ""+skip);
+        params.add(ApiConstants.GET_RECEIPT_SKIP, String.valueOf(skip));
         return (Receipts) JSONUtilities.processJackson(Receipts.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getReceiptsUri(), params));
     }
 
