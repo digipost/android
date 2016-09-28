@@ -25,11 +25,10 @@ public class ApiConstants {
     public static final String[] FILETYPES_IMAGE = {"jpg", "jpeg", "png"};
     public static final String ENCODING = "UTF-8";
     public static final String MIME = "text/html";
-
     public static final String GET_RECEIPT = "receipt";
     public static final String GET_RECEIPT_SKIP = "skip";
     public static final String GET_DOCUMENT_LIMIT = "limit";
-    public static final int GET_DOCUMENT_LIMIT_N = 5;
+    public static final int GET_DOCUMENT_LIMIT_N = 101;
     public static final String GET_DOCUMENT_LASTSEEN = "lastseen";
 
     public static final String CREATE = "create";
