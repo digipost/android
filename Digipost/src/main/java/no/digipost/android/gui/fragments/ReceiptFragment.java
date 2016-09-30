@@ -98,6 +98,8 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     @Override
     public void onResume() {
         super.onResume();
+        clearExistingContent();
+        receiptAdapter.notifyDataSetChanged();
         updateAccountMeta();
     }
 

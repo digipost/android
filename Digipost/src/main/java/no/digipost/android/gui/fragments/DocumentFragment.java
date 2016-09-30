@@ -192,6 +192,8 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     @Override
     public void onResume() {
+        clearExistingContent();
+        documentAdapter.notifyDataSetChanged();
         updateAccountMeta();
         super.onResume();
         dismissUpdateProgressDialogIfExisting();
