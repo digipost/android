@@ -256,6 +256,10 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
+        if(getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS){
+            MenuItem uploadButton = menu.findItem(R.id.menu_upload);
+            uploadButton.setVisible(false);
+        }
         updateTitles();
         return true;
     }
