@@ -39,8 +39,8 @@ dependencies {
 
 android {
     defaultConfig {
-        versionCode 43
-        versionName '3.0.0'
+        versionCode 44
+        versionName '3.1.0'
         applicationId = "no.digipost.android"
         minSdkVersion 16
         targetSdkVersion 24
