@@ -111,12 +111,14 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     public void loadMoreContent(){
-        if(documentAdapter != null && documentAdapter.remainingContentToGet())
-            updateAccountMeta();
+        if(documentAdapter != null && documentAdapter.remainingContentToGet()) {
+            updateAccountMeta(false);
+        }
     }
 
     public void clearExistingContent(){
-        documentAdapter.clearExistingContent();
+        if(documentAdapter != null)
+            documentAdapter.clearExistingContent();
     }
 
     @Override
@@ -192,11 +194,9 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     @Override
     public void onResume() {
-        clearExistingContent();
-        documentAdapter.notifyDataSetChanged();
-        updateAccountMeta();
         super.onResume();
         dismissUpdateProgressDialogIfExisting();
+        refreshItems();
     }
 
     @Override
@@ -563,7 +563,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                     }
 
                     DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
-                    updateAccountMeta();
+                    updateAccountMeta(true);
                 }
 
                 @Override
@@ -581,15 +581,20 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
     }
 
+    public void clearAndupdateAccountMeta(){
+
+    }
+
+
     @Override
-    public void updateAccountMeta() {
+    public void updateAccountMeta(boolean clearContent) {
         if (getContent() > ApplicationConstants.numberOfStaticFolders) {
             if (getContent() - ApplicationConstants.numberOfStaticFolders == MainContentActivity.numberOfFolders) {
                 content = ApplicationConstants.MAILBOX;
             }
         }
 
-        GetDocumentMetaTask task = new GetDocumentMetaTask(getContent());
+        GetDocumentMetaTask task = new GetDocumentMetaTask(getContent(),clearContent);
         task.execute();
     }
 
@@ -613,7 +618,6 @@ public class DocumentFragment extends ContentFragment<Document> {
     private void deleteDocument(Document document) {
         List<Document> documents = new ArrayList<>();
         documents.add(document);
-
         ContentDeleteTask contentDeleteTask = new ContentDeleteTask(documents);
         contentDeleteTask.execute();
     }
@@ -679,9 +683,11 @@ public class DocumentFragment extends ContentFragment<Document> {
         private final int content;
         private String errorMessage;
         private boolean invalidToken;
+        private boolean clearContent;
 
-        private GetDocumentMetaTask(final int content) {
+        private GetDocumentMetaTask(final int content, final boolean clearContent) {
             this.content = content;
+            this.clearContent = clearContent;
         }
 
         @Override
@@ -714,6 +720,11 @@ public class DocumentFragment extends ContentFragment<Document> {
         protected void onPostExecute(final Documents newDocuments) {
             super.onPostExecute(newDocuments);
             DocumentFragment.super.initialLoadingComplete();
+
+            if(clearContent){
+                documentAdapter.clearExistingContent();
+            }
+
             if (isAdded()) {
                 if(listEmptyViewImage != null) listEmptyViewImage.setVisibility(View.GONE);
                 DocumentFragment.super.taskIsRunning = false;
@@ -805,7 +816,6 @@ public class DocumentFragment extends ContentFragment<Document> {
             super.onCancelled();
             DocumentFragment.super.hideProgressDialog();
             DialogUtitities.showToast(context, progress + " av " + documents.size() + " ble flyttet.");
-            updateAccountMeta();
         }
 
         @Override
@@ -827,9 +837,8 @@ public class DocumentFragment extends ContentFragment<Document> {
                         attachmentDialog = null;
                     }
                 }
-                clearExistingContent();
-                updateAccountMeta();
             }
+            refreshItems();
         }
     }
 
@@ -853,7 +862,6 @@ public class DocumentFragment extends ContentFragment<Document> {
             if (!DocumentFragment.super.progressDialogIsVisible) {
                 DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
             }
-
         }
 
         @Override

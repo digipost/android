@@ -722,7 +722,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS) && getCurrentFragment() != null) {
-                getCurrentFragment().updateAccountMeta();
+                getCurrentFragment().refreshItems();
             }
         }
     }

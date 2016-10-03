@@ -82,7 +82,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         networkRetryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateAccountMeta();
+                updateAccountMeta(true);
             }
         });
 
@@ -134,6 +134,8 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             }
         });
 
+        refreshItems();
+
         return view;
     }
 
@@ -148,7 +150,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
     public void refreshItems() {
         clearExistingContent();
-        updateAccountMeta();
+        updateAccountMeta(true);
         activityCommunicator.onStartRefreshContent();
         onItemsLoadComplete();
     }
@@ -156,7 +158,6 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     void onItemsLoadComplete() {
         activityCommunicator.onEndRefreshContent();
         if(contentActionMode != null) contentActionMode.finish();
-        recyclerView.getAdapter().notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -328,14 +329,12 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             taskIsRunning = false;
             DialogUtitities.showToast(context, format(getString(R.string.delete_cancelled), progress, content.size()));
             hideProgressDialog();
-            clearExistingContent();
-            updateAccountMeta();
         }
 
         @Override
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
-            if(isAdded()) {
+            if (isAdded()) {
                 taskIsRunning = false;
                 if (result != null) {
                     DialogUtitities.showToast(context, result);
@@ -344,9 +343,8 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
                         activityCommunicator.requestLogOut();
                     }
                 }
-                clearExistingContent();
                 hideProgressDialog();
-                updateAccountMeta();
+                refreshItems();
             }
         }
     }
@@ -375,7 +373,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         }
     }
 
-    public abstract void updateAccountMeta();
+    public abstract void updateAccountMeta(boolean clearContent);
 
     public interface ActivityCommunicator {
         void onStartRefreshContent();

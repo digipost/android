@@ -97,7 +97,9 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
     public void clearExistingContent(){
         fetchedLastDocument = false;
         getUnixTimeOfNextDocument = null;
+        if(this.documents != null) this.documents.removeAll(this.documents);
         this.documents = null;
+        notifyDataSetChanged();
     }
 
     private String getUnixTimeOfNextDocument(Document document){

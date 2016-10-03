@@ -87,20 +87,19 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
 
     public void loadMoreContent(){
         skip = receiptAdapter.getItemCount();
-        updateAccountMeta();
+        updateAccountMeta(false);
     }
 
     public void clearExistingContent(){
         skip = 0;
-        receiptAdapter.clearExistingContent();
+        if(receiptAdapter != null) receiptAdapter.clearExistingContent();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         clearExistingContent();
-        receiptAdapter.notifyDataSetChanged();
-        updateAccountMeta();
+        refreshItems();
     }
 
     private void beginActionMode(int position){
@@ -152,8 +151,11 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         return ApplicationConstants.RECEIPTS;
     }
 
-    private void checkStatusAndDisplayReceipts(Receipts newReceipts) {
+    private void checkStatusAndDisplayReceipts(Receipts newReceipts, boolean clearContent) {
         if (isAdded()) {
+
+            if(clearContent)
+                receiptAdapter.clearExistingContent();
 
             receiptAdapter.updateContent(newReceipts.getReceipt());
             int numberOfCards = Integer.parseInt(newReceipts.getNumberOfCards());
@@ -185,9 +187,9 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         }
     }
 
-    public void updateAccountMeta() {
-        if(receiptAdapter.remainingContentToGet()) {
-            GetReceiptsMetaTask task = new GetReceiptsMetaTask();
+    public void updateAccountMeta(boolean clearContent) {
+        if(receiptAdapter != null && receiptAdapter.remainingContentToGet()) {
+            GetReceiptsMetaTask task = new GetReceiptsMetaTask(clearContent);
             task.execute();
         }
     }
@@ -271,10 +273,12 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     private class GetReceiptsMetaTask extends AsyncTask<Void, Void, Receipts> {
         private String errorMessage;
         private boolean invalidToken;
+        private boolean clearContent;
 
-        private GetReceiptsMetaTask() {
-            errorMessage = "";
-            invalidToken = false;
+        private GetReceiptsMetaTask(boolean clearContent) {
+            this.errorMessage = "";
+            this.invalidToken = false;
+            this.clearContent = clearContent;
         }
 
         @Override
@@ -305,7 +309,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
             super.onPostExecute(receipts);
             ReceiptFragment.super.initialLoadingComplete();
             if (receipts != null) {
-                checkStatusAndDisplayReceipts(receipts);
+                checkStatusAndDisplayReceipts(receipts,clearContent);
             } else {
                 DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
 
@@ -331,6 +335,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     private void deleteReceipt(Receipt receipt) {
         List<Receipt> receiptsToBeDelete = new ArrayList<>();
         receiptsToBeDelete.add(receipt);
+        receiptAdapter.clearExistingContent();
         ContentDeleteTask task = new ContentDeleteTask(receiptsToBeDelete);
         task.execute();
     }

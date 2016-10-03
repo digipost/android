@@ -75,6 +75,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptV
     public void clearExistingContent(){
         fetchedLastDocument = false;
         this.receipts = null;
+        notifyDataSetChanged();
     }
 
     @Override
