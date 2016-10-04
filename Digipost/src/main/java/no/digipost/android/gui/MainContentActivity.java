@@ -256,7 +256,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
-        if(getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS){
+        if(getCurrentFragment() != null && getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS){
             MenuItem uploadButton = menu.findItem(R.id.menu_upload);
             uploadButton.setVisible(false);
         }
@@ -501,7 +501,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         if (account != null) {
             fragmentName = "";
             try {
-                if (getCurrentFragment().getContent() == ApplicationConstants.MAILBOX || getSupportActionBar().getTitle().equals("")) {
+                if (getCurrentFragment() != null && getCurrentFragment().getContent() == ApplicationConstants.MAILBOX || getSupportActionBar().getTitle().equals("")) {
                     fragmentName = mailbox.getName();
                 } else {
                     fragmentName = drawerListItems[getCurrentFragment().getContent()];
