@@ -536,7 +536,6 @@ public class DocumentFragment extends ContentFragment<Document> {
                         DocumentContentStore.setContent(responseBody, parentDocument, attachmentListPosition);
                         DocumentContentStore.setMoveFolders(getMoveFolders());
                         openAttachmentContent(attachment);
-                        updateAdapterDocument(parentDocument);
 
                         ArrayList<Attachment> attachments = parentDocument.getAttachment();
 
@@ -616,11 +615,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         ContentDeleteTask contentDeleteTask = new ContentDeleteTask(documents);
         contentDeleteTask.execute();
     }
-
-    private void updateAdapterDocument(Document document) {
-        documentAdapter.replaceAtPosition(document, currentListPosition);
-    }
-
+        
     private void openUpdatedDocument(int position){
         Document document = documentAdapter.getItem(position);
         new OpenUpdatedDocumentTask(document).execute();
