@@ -328,6 +328,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            loadingMoreContent = false;
             activityCommunicator.onEndRefreshContent();
         }
     }

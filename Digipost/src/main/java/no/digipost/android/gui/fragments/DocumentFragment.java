@@ -747,6 +747,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            loadingMoreContent = false;
             activityCommunicator.onEndRefreshContent();
         }
     }

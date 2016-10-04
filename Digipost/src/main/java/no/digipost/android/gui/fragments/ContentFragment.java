@@ -106,7 +106,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayoutWithEmpty.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshItems();
+                if(!loadingMoreContent) refreshItems();
             }
         });
 
