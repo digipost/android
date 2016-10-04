@@ -581,11 +581,6 @@ public class DocumentFragment extends ContentFragment<Document> {
         }
     }
 
-    public void clearAndupdateAccountMeta(){
-
-    }
-
-
     @Override
     public void updateAccountMeta(boolean clearContent) {
         if (getContent() > ApplicationConstants.numberOfStaticFolders) {
