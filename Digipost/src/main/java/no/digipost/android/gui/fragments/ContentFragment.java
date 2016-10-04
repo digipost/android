@@ -25,7 +25,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.*;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -296,13 +295,10 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
                 return null;
             } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 return e.getMessage();
             } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 return e.getMessage();
             } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 invalidToken = true;
                 return e.getMessage();
             }
