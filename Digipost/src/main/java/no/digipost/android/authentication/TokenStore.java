@@ -65,6 +65,16 @@ public class TokenStore {
         SharedPreferencesUtilities.deleteRefreshtoken(context);
     }
 
+    public static void removeHighAuthenticationTokens(){
+        if(tokens != null){
+            for(Token token : tokens){
+                if(token.getScope() != ApiConstants.SCOPE_FULL){
+                    tokens.remove(token);
+                }
+            }
+        }
+    }
+
     public static void storeRefreshTokenInSharedPreferences(Context context, String refreshToken) {
         if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
             String cipher = new TokenEncryption(context, true).encrypt(refreshToken);

@@ -361,6 +361,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         if (ContentOperations.changeMailbox(digipostAddress)) {
             getSupportActionBar().setTitle(name);
             account = null;
+            TokenStore.removeHighAuthenticationTokens();
             editDrawerMode = false;
             executeGetAccountTask();
             selectItem(ApplicationConstants.MAILBOX);
