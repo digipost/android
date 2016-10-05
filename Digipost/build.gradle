@@ -26,7 +26,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.1.1'
     compile 'com.android.support:support-v4:24.1.1'
     compile 'com.android.support:design:24.1.1'
-
     compile 'com.google.android.gms:play-services-analytics:9.2.1'
     compile 'com.google.android.gms:play-services-gcm:9.2.1'
     compile 'com.facebook.conceal:conceal:1.1.2@aar'
@@ -39,7 +38,7 @@ dependencies {
 
 android {
     defaultConfig {
-        versionCode 47
+        versionCode 48
         versionName '3.1.0'
         applicationId = "no.digipost.android"
         minSdkVersion 16
