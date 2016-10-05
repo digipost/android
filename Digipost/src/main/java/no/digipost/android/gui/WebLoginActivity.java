@@ -17,9 +17,11 @@
 package no.digipost.android.gui;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -49,36 +51,68 @@ public class WebLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.fragment_login_webview);
-
-        try {
-            authenticationScope = getIntent().getExtras().getString("authenticationScope");
-            if(!authenticationScope.equals(ApiConstants.SCOPE_FULL)){
-                currentListPosition = getIntent().getExtras().getInt("currentListPosition");
-            }
-        }catch (NullPointerException e){
-            authenticationScope = ApiConstants.SCOPE_FULL;
-        }
-
-        if (!NetworkUtilities.isOnline()) {
-            DialogUtitities.showToast(getApplicationContext(), getString(R.string.error_your_network));
-            finish();
-        }
-
-        CookieManager.getInstance().setAcceptCookie(true);
+        setAuthenticationScope(getIntent().getExtras());
+        checkIfAppIsOnline();
         WebView webView = (WebView) findViewById(R.id.login_webview);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
-        }
+        clearWebViewCacheAndCookies(webView);
+        setupWebView(webView);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Avbryt");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void setupWebView(WebView webView){
         String url = OAuth.getAuthorizeURL(authenticationScope);
+        enableCookies(webView);
         webView.loadUrl(url);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
         webView.getSettings().setDomStorageEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Avbryt");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void setAuthenticationScope(Bundle extras){
+        try {
+            authenticationScope = extras.getString("authenticationScope");
+            if(!authenticationScope.equals(ApiConstants.SCOPE_FULL)){
+                currentListPosition = extras.getInt("currentListPosition");
+        }
+        }catch (NullPointerException e){
+            authenticationScope = ApiConstants.SCOPE_FULL;
+        }
+    }
+
+    private void checkIfAppIsOnline(){
+        if (!NetworkUtilities.isOnline()) {
+            DialogUtitities.showToast(getApplicationContext(), getString(R.string.error_your_network));
+            finish();
+        }
+    }
+
+    private void clearWebViewCacheAndCookies(WebView webView){
+        webView.clearCache(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        } else{
+            CookieSyncManager cookieSyncMngr=CookieSyncManager.createInstance(getApplicationContext());
+            cookieSyncMngr.startSync();
+            CookieManager cookieManager=CookieManager.getInstance();
+            cookieManager.removeAllCookie();
+            cookieManager.removeSessionCookie();
+            cookieSyncMngr.stopSync();
+            cookieSyncMngr.sync();
+        }
+    }
+
+    private void enableCookies(WebView webView){
+        CookieManager.getInstance().setAcceptCookie(true);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+        }
     }
 
     @Override
@@ -94,13 +128,25 @@ public class WebLoginActivity extends AppCompatActivity {
 
     private class MyWebViewClient extends WebViewClient {
 
+        @SuppressWarnings("deprecation")
         @Override
         public boolean shouldOverrideUrlLoading(final WebView view, final String url) {
-            if (url.indexOf( "localhost") != -1) {
+            return handleUrl(url);
+        }
+
+        @TargetApi(Build.VERSION_CODES.N)
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request){
+            return handleUrl(request.getUrl().toString());
+        }
+
+        private boolean handleUrl(String url){
+            if (url.contains("localhost")) {
                 new GetTokenTask().execute(url);
                 return true;
             }
             return false;
+
         }
 
         @Override
