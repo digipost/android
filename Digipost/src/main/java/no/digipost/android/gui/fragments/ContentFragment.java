@@ -148,6 +148,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     public abstract void clearExistingContent();
 
     public void refreshItems() {
+        showBackgroundLoadingSpinner();
         clearExistingContent();
         updateAccountMeta(true);
         activityCommunicator.onStartRefreshContent();
@@ -172,9 +173,14 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         FileUtilities.deleteTempFiles();
     }
 
-    protected void initialLoadingComplete(){
+    protected void hideBackgroundLoadingSpinner(){
         spinnerLayout.setVisibility(View.GONE);
         swipeRefreshLayout.setVisibility(View.VISIBLE);
+    }
+
+    protected void showBackgroundLoadingSpinner(){
+        spinnerLayout.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setVisibility(View.GONE);
     }
 
     protected void setListEmptyViewText(String title, String text) {

@@ -307,7 +307,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         @Override
         protected void onPostExecute(final Receipts receipts) {
             super.onPostExecute(receipts);
-            ReceiptFragment.super.initialLoadingComplete();
+            ReceiptFragment.super.hideBackgroundLoadingSpinner();
             if (receipts != null) {
                 checkStatusAndDisplayReceipts(receipts,clearContent);
             } else {
