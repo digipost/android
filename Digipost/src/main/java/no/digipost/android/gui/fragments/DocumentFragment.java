@@ -104,10 +104,13 @@ public class DocumentFragment extends ContentFragment<Document> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+        setupNewDocumentAdapter();
+        return view;
+    }
+
+    private void setupNewDocumentAdapter(){
         documentAdapter = new DocumentAdapter(context, new ArrayList<Document>());
         recyclerView.setAdapter(documentAdapter);
-
-        return view;
     }
 
     public void loadMoreContent(){
@@ -588,7 +591,9 @@ public class DocumentFragment extends ContentFragment<Document> {
             }
         }
 
-        GetDocumentMetaTask task = new GetDocumentMetaTask(getContent(),clearContent);
+        if(documentAdapter==null)setupNewDocumentAdapter();
+        String unixTimeOfNextDocument = documentAdapter.getGetUnixTimeOfNextDocument();
+        GetDocumentMetaTask task = new GetDocumentMetaTask(getContent(),clearContent, unixTimeOfNextDocument);
         task.execute();
     }
 
@@ -674,10 +679,12 @@ public class DocumentFragment extends ContentFragment<Document> {
         private String errorMessage;
         private boolean invalidToken;
         private boolean clearContent;
+        private String unixTimeOfNextDocument;
 
-        private GetDocumentMetaTask(final int content, final boolean clearContent) {
+        private GetDocumentMetaTask(final int content, final boolean clearContent, final String unixTimeOfNextDocument) {
             this.content = content;
             this.clearContent = clearContent;
+            this.unixTimeOfNextDocument = unixTimeOfNextDocument;
         }
 
         @Override
@@ -689,7 +696,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         @Override
         protected Documents doInBackground(final Void... params) {
             try {
-                return ContentOperations.getAccountContentMetaDocument(context, content, documentAdapter.getGetUnixTimeOfNextDocument());
+                return ContentOperations.getAccountContentMetaDocument(context, content, unixTimeOfNextDocument);
             } catch (DigipostApiException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
@@ -709,7 +716,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         @Override
         protected void onPostExecute(final Documents newDocuments) {
             super.onPostExecute(newDocuments);
-            DocumentFragment.super.initialLoadingComplete();
+            DocumentFragment.super.hideBackgroundLoadingSpinner();
 
             if(clearContent){
                 documentAdapter.clearExistingContent();
