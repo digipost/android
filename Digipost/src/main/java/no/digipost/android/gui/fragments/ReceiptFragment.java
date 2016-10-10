@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,13 +91,12 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
 
     public void clearExistingContent(){
         skip = 0;
-        if(receiptAdapter != null) receiptAdapter.clearExistingContent();
+        if(receiptAdapter != null)receiptAdapter.clearExistingContent();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        clearExistingContent();
         refreshItems();
     }
 
@@ -154,15 +152,19 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     private void checkStatusAndDisplayReceipts(Receipts newReceipts, boolean clearContent) {
         if (isAdded()) {
 
-            if(clearContent)
+            int numberOfReceipts = newReceipts.getReceipt().size();
+            numberOfReceipts += receiptAdapter != null ? receiptAdapter.getItemCount() : 0;
+
+            if(clearContent) {
                 receiptAdapter.clearExistingContent();
+            }
 
             receiptAdapter.updateContent(newReceipts.getReceipt());
             int numberOfCards = Integer.parseInt(newReceipts.getNumberOfCards());
             int numberOfCardsReadyForVerification = Integer.parseInt(newReceipts.getNumberOfCardsReadyForVerification());
             int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(newReceipts.getNumberOfReceiptsHiddenUntilVerification());
 
-            if (receiptAdapter.getReceipts().size() == 0) {
+            if (numberOfReceipts == 0) {
                 if (numberOfCards == 0) {
                     setListEmptyViewText(getString(R.string.emptyview_receipt_intro_title), getString(R.string.emptyview_receipt_intro_message));
                 } else if (numberOfCardsReadyForVerification > 0) {
@@ -227,16 +229,13 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
             try {
                 return ContentOperations.getReceiptContentHTML(context, receipt);
             } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 invalidToken = true;
                 return null;
             } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 return null;
             } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 return null;
             }

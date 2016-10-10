@@ -167,7 +167,8 @@ public class ContentOperations {
 
         MultivaluedMap params = new MultivaluedMapImpl();
         params.add(ApiConstants.GET_RECEIPT_SKIP, String.valueOf(skip));
-        return (Receipts) JSONUtilities.processJackson(Receipts.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getReceiptsUri(), params));
+        String result = apiAccess.getApiJsonString(context, getCurrentMailbox(context).getReceiptsUri(), params);
+        return (Receipts) JSONUtilities.processJackson(Receipts.class, result);
     }
 
     public static void revokeOAuthToken(Context context) throws DigipostClientException, DigipostApiException,
