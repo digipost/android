@@ -190,6 +190,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     }
 
     public void updateAccountMeta(boolean clearContent) {
+        clearEmptyTextView();
         if(receiptAdapter != null && receiptAdapter.remainingContentToGet()) {
             GetReceiptsMetaTask task = new GetReceiptsMetaTask(clearContent);
             task.execute();

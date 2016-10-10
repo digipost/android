@@ -195,6 +195,11 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         }
     }
 
+    protected void clearEmptyTextView(){
+        listEmptyViewTitle.setText("");
+        listEmptyViewText.setText("");
+    }
+
     protected void setTopText(String text) {
         listTopText.setVisibility(View.VISIBLE);
         listTopText.setText(text);
