@@ -176,11 +176,13 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected void hideBackgroundLoadingSpinner(){
         spinnerLayout.setVisibility(View.GONE);
         swipeRefreshLayout.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     protected void showBackgroundLoadingSpinner(){
         spinnerLayout.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setVisibility(View.GONE);
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     protected void setListEmptyViewText(String title, String text) {
