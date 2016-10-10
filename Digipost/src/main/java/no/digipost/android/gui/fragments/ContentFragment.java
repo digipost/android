@@ -70,7 +70,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected ActionMode contentActionMode;
     protected View spinnerLayout;
     public static boolean activityDrawerOpen;
-    boolean loadingMoreContent = false;
+    protected boolean loadingMoreContent = false;
     public abstract int getContent();
 
     @Override
@@ -106,7 +106,8 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayoutWithEmpty.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(!loadingMoreContent) refreshItems();
+                loadingMoreContent = true;
+                refreshItems();
             }
         });
 
@@ -176,13 +177,11 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected void hideBackgroundLoadingSpinner(){
         spinnerLayout.setVisibility(View.GONE);
         swipeRefreshLayout.setVisibility(View.VISIBLE);
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     protected void showBackgroundLoadingSpinner(){
         spinnerLayout.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setVisibility(View.GONE);
-        swipeRefreshLayout.setRefreshing(true);
     }
 
     protected void setListEmptyViewText(String title, String text) {

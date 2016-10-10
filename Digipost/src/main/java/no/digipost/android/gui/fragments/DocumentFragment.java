@@ -24,8 +24,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
@@ -39,7 +37,6 @@ import no.digipost.android.gui.adapters.DocumentAdapter;
 import no.digipost.android.model.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 import no.digipost.android.DigipostApplication;
