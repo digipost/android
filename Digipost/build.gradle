@@ -20,7 +20,6 @@ dependencies {
     compile 'org.apache.commons:commons-io:1.3.2'
     compile 'commons-lang:commons-lang:2.3'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.5'
-
     compile 'com.android.support:support-v13:24.1.1'
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:recyclerview-v7:24.1.1'
@@ -60,7 +59,6 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
-
         pickFirst 'META-INF/services/javax.ws.rs.ext.MessageBodyReader'
         pickFirst 'META-INF/services/javax.ws.rs.ext.MessageBodyWriter'
         pickFirst 'META-INF/LICENCE.txt'
