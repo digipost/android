@@ -53,6 +53,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         setupWebView();
         setupActionBar();
         loadContent();
+        super.showInvoiceOptionsDialogIfInvoice(getApplicationContext());
     }
 
     @Override
