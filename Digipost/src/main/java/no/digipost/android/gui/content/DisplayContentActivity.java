@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -54,10 +53,7 @@ import no.digipost.android.model.Document;
 import no.digipost.android.model.Folder;
 import no.digipost.android.model.Invoice;
 import no.digipost.android.model.Payment;
-import no.digipost.android.utilities.DataFormatUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
-import no.digipost.android.utilities.Permissions;
+import no.digipost.android.utilities.*;
 
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
@@ -108,6 +104,33 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         });
 
         progressDialog.show();
+    }
+
+    protected void showInvoiceOptionsDialogIfInvoice(final Context context){
+        Attachment attachment = DocumentContentStore.getDocumentAttachment();
+        boolean attachmentIsInvoice = attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null;
+        if (attachmentIsInvoice) {
+            if(SharedPreferencesUtilities.showInvoiceOptionsDialog(context)){
+                AlertDialog invoiceOptionsDialog = null;
+
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(context).setNegativeButton(getString(R.string.abort),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+
+                builder.setView(view);
+                builder.setTitle(getResources().getString(R.string.drawer_change_account));
+                invoiceOptionsDialog = builder.create();
+                invoiceOptionsDialog .show();
+            }
+        }
     }
 
     public void setActionBar(String title, String subTitle) {
