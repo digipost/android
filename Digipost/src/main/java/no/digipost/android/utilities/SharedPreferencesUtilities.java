@@ -25,6 +25,7 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 
 public class SharedPreferencesUtilities {
+    private final static String HIDE_INVOICE_OPTIONS = "hide_invoice_options";
 
     public static SharedPreferences getSharedPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
@@ -101,6 +102,15 @@ public class SharedPreferencesUtilities {
         Editor editor = getSharedPreferences(context).edit();
         editor.putInt(ApplicationConstants.APP_VERSION, currentAppVersionCode(context));
         editor.apply();
+    }
 
+    public static void hideInvoiceOptionsDialog(final Context context){
+        Editor editor = getSharedPreferences(context).edit();
+        editor.putBoolean(HIDE_INVOICE_OPTIONS, true);
+        editor.apply();
+    }
+
+    public static boolean showInvoiceOptionsDialog(final Context context){
+        return !getSharedPreferences(context).getBoolean(HIDE_INVOICE_OPTIONS, false);
     }
 }
