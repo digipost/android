@@ -270,7 +270,7 @@ public class MuPDFActivity extends DisplayContentActivity {
         if (savedInstanceState != null) {
             mDocView.setDisplayedViewIndex(savedInstanceState.getInt(CURRENT_WINDOW, 0));
         }
-        super.showInvoiceOptionsDialogIfInvoice(getApplicationContext());
+        super.showInvoiceOptionsDialogIfInvoice();
     }
 
     public void createUI() {

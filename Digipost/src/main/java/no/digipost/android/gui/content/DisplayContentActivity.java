@@ -101,42 +101,41 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         progressDialog.show();
     }
 
-    protected void showInvoiceOptionsDialogIfInvoice(final Context context) {
+    protected void showInvoiceOptionsDialogIfInvoice() {
         final Attachment attachment = DocumentContentStore.getDocumentAttachment();
         boolean attachmentIsInvoice = attachment != null && attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null;
-        if (attachmentIsInvoice) {
-            if (SharedPreferencesUtilities.showInvoiceOptionsDialog(context)) {
 
-                AlertDialog invoiceOptionsDialog = null;
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+        if (attachmentIsInvoice && SharedPreferencesUtilities.showInvoiceOptionsDialog(getApplicationContext())) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                        .setPositiveButton(R.string.invoice_dialog_choose_bank_button, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                openBankOptionsActivity(attachment.getSubject());
-                                dialogInterface.dismiss();
-                            }
-                        }).setNeutralButton(R.string.invoice_dialog_later_button, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        }).setNegativeButton(R.string.invoice_dialog_forget_button, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int which) {
+            AlertDialog invoiceOptionsDialog = null;
+            LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext())
+                    .setPositiveButton(R.string.invoice_dialog_choose_bank_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            openBankOptionsActivity(attachment.getSubject());
+                            dialogInterface.dismiss();
+                        }
+                    }).setNeutralButton(R.string.invoice_dialog_later_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).setNegativeButton(R.string.invoice_dialog_forget_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
                             SharedPreferencesUtilities.hideInvoiceOptionsDialog(getApplicationContext());
-                                dialogInterface.dismiss();
-                            }
-                        });
+                            dialogInterface.dismiss();
+                        }
+                    });
 
-                builder.setView(view);
-                builder.setTitle(getResources().getString(R.string.invoice_dialog_title));
-                builder.setMessage(getResources().getString(R.string.invoice_dialog_subtitle));
-                invoiceOptionsDialog = builder.create();
-                invoiceOptionsDialog.show();
-            }
+            builder.setView(view);
+            builder.setTitle(getResources().getString(R.string.invoice_dialog_title));
+            builder.setMessage(getResources().getString(R.string.invoice_dialog_subtitle));
+            invoiceOptionsDialog = builder.create();
+            invoiceOptionsDialog.show();
         }
     }
 
