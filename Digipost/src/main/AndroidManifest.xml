@@ -94,6 +94,12 @@
         <activity
             android:name="no.digipost.android.gui.content.PersonalSettingsActivity"
             android:configChanges="orientation|screenSize" />
+        <activity
+                android:name="no.digipost.android.gui.content.invoice.InvoiceBankActivity"
+                android:configChanges="orientation|screenSize" />
+        <activity
+                android:name="no.digipost.android.gui.content.invoice.InvoiceOptionsActivity"
+                android:configChanges="orientation|screenSize" />
 
         <receiver
                 android:name="com.google.android.gms.gcm.GcmReceiver"
