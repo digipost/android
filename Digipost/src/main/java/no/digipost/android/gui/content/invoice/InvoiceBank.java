@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui.content.Invoice;
+package no.digipost.android.gui.content.invoice;
 
 import android.os.Parcel;
 import android.os.Parcelable;

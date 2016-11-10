@@ -14,24 +14,38 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui.content.Invoice;
+package no.digipost.android.gui.content.invoice;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import no.digipost.android.R;
 
-public abstract class InvoiceBankActivity extends Activity {
+import java.util.ArrayList;
 
-    private InvoiceBank invoiceBank;
+public abstract class InvoiceOptionsActivity extends Activity {
+    private ArrayList<InvoiceBank> banks;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_bank);
+        addBanks();
     }
 
-    private void openBankUrl(){
-
+    private void openBankActivity(InvoiceBank invoiceBank){
+        Intent i = new Intent(InvoiceOptionsActivity.this, InvoiceBankActivity.class);
+        i.putExtra("InvoiceBank", invoiceBank);
+        startActivity(i);
     }
+
+    private void addBanks(){
+        banks = new ArrayList<>();
+        banks.add(new InvoiceBank("DNB", "https://m.dnb.no/appo/logon/startmobile", "invoice-bank-dnb", true));
+        banks.add(new InvoiceBank("KLP", "https://www.digipost.no", "invoice-bank-klp", false));
+        banks.add(new InvoiceBank("Skandiabanken", "https://www.digipost.no", "invoice-bank-skandia", false));
+    }
+
+
 }
