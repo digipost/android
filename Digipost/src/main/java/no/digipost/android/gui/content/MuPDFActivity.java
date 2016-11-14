@@ -34,6 +34,7 @@ import java.lang.reflect.Field;
 import android.support.v7.widget.SearchView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
+import no.digipost.android.gui.content.invoice.InvoiceOptionsActivity;
 import org.apache.commons.io.FilenameUtils;
 import java.util.concurrent.Executor;
 import no.digipost.android.R;
@@ -270,8 +271,11 @@ public class MuPDFActivity extends DisplayContentActivity {
         if (savedInstanceState != null) {
             mDocView.setDisplayedViewIndex(savedInstanceState.getInt(CURRENT_WINDOW, 0));
         }
-        super.showInvoiceOptionsDialogIfInvoice();
+
+        super.showInvoiceOptionsDialogIfInvoice(this);
+
     }
+
 
     public void createUI() {
         if (core == null)
