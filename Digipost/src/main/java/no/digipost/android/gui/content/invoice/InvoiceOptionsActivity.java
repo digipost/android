@@ -14,24 +14,67 @@
  * limitations under the License.
  */
 
+
 package no.digipost.android.gui.content.invoice;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 import no.digipost.android.R;
 
 import java.util.ArrayList;
 
-public abstract class InvoiceOptionsActivity extends Activity {
-    private ArrayList<InvoiceBank> banks;
+public class InvoiceOptionsActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invoice_bank);
-        addBanks();
+        setContentView(R.layout.activity_invoice_options);
+        setupActionBar();
+        setupListView();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
+
+    private void setupActionBar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionbar = getSupportActionBar();
+
+        if(actionbar != null) {
+            actionbar.setDisplayHomeAsUpEnabled(true);
+            actionbar.setHomeButtonEnabled(true);
+            String invoiceSubject = getIntent().getExtras().getString("InvoiceSubject");
+            actionbar.setTitle(invoiceSubject);
+            actionbar.setDisplayShowTitleEnabled(true);
+        }
+    }
+
+    private void setupListView(){
+        ListView listView = (ListView)findViewById(R.id.invoice_options_banks_listview);
+        InvoiceBankAdapter adapter = new InvoiceBankAdapter(this, R.layout.invoice_bank_list_item, getInvoiceBanks());
+        listView.setAdapter(adapter);
+    }
+
+    private ArrayList<InvoiceBank> getInvoiceBanks(){
+        ArrayList<InvoiceBank> invoiceBanks = new ArrayList<>();
+        invoiceBanks.add(new InvoiceBank("DNB", "https://m.dnb.no/appo/logon/startmobile", "invoice_bank_logo_dnb", true));
+        invoiceBanks.add(new InvoiceBank("KLP", "https://digipost.no/faktura", "invoice_bank_logo_klp", false));
+        invoiceBanks.add(new InvoiceBank("Skandiabanken", "https://digipost.no/faktura", "invoice_bank_logo_skandiabanken", false));
+        return invoiceBanks;
     }
 
     private void openBankActivity(InvoiceBank invoiceBank){
@@ -40,12 +83,43 @@ public abstract class InvoiceOptionsActivity extends Activity {
         startActivity(i);
     }
 
-    private void addBanks(){
-        banks = new ArrayList<>();
-        banks.add(new InvoiceBank("DNB", "https://m.dnb.no/appo/logon/startmobile", "invoice-bank-dnb", true));
-        banks.add(new InvoiceBank("KLP", "https://www.digipost.no", "invoice-bank-klp", false));
-        banks.add(new InvoiceBank("Skandiabanken", "https://www.digipost.no", "invoice-bank-skandia", false));
+    private class InvoiceBankAdapter extends ArrayAdapter<InvoiceBank> {
+        ArrayList<InvoiceBank> invoiceBanks;
+
+        private class ViewHolder {private ImageView bankLogo;}
+
+        private InvoiceBankAdapter(Context context, int textViewResourceId, ArrayList<InvoiceBank> invoiceBanks) {
+            super(context, textViewResourceId, invoiceBanks);
+            this.invoiceBanks = invoiceBanks;
+        }
+
+        public InvoiceBank getItem(int position){
+            return invoiceBanks.get(position);
+        }
+
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(this.getContext()).inflate(R.layout.invoice_bank_list_item, parent, false);
+                viewHolder = new ViewHolder();
+                viewHolder.bankLogo = (ImageView) convertView.findViewById(R.id.invoice_options_bank_item_list_logo);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            final InvoiceBank invoiceBank = getItem(position);
+            int id = getContext().getResources().getIdentifier(invoiceBank.getLogo(), "drawable", getContext().getPackageName());
+            viewHolder.bankLogo.setImageResource(id);
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(final View v) {
+                    openBankActivity(invoiceBank);
+                }
+            });
+
+            return convertView;
+        }
     }
-
-
 }

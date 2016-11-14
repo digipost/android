@@ -1,13 +1,77 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="no.digipost.android.gui.content.invoice.InvoiceOptionsActivity">
+<!--
+/**
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="#f1f1f1"
+              android:weightSum="1">
 
-</RelativeLayout>
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="162dp"
+            android:background="@color/white"
+            android:layout_gravity="center"
+            android:minHeight="120dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:gravity="center_vertical|center_horizontal">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/invoice_options_title"
+                android:id="@+id/invoice_options_title"
+                android:textSize="22sp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/invoice_options_subtitle"
+                android:id="@+id/invoice_options_subtitle"
+                android:minLines="2"
+                android:textSize="18sp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"
+                android:gravity="center_vertical|center_horizontal"/>
+    </LinearLayout>
+    <ListView
+            android:id="@+id/invoice_options_banks_listview"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_weight="0.74">
+
+    </ListView>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/invoice_options_more_soon"
+            android:id="@+id/invoice_options_more_soon"
+            android:layout_gravity="center_horizontal"/>
+
+</LinearLayout>
