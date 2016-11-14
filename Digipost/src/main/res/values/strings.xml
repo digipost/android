@@ -256,4 +256,19 @@
     <string name="invoice_dialog_later_button">Senere</string>
     <string name="invoice_dialog_forget_button">Ikke vis meg igjen</string>
 
+    <string name="invoice_options_title">Velg bank</string>
+    <string name="invoice_options_subtitle">Alle fakturaer du mottar i Digipost, kan enkelt overføres til nettbanken din.</string>
+    <string name="invoice_options_more_soon">Flere banker kommer snart.</string>
+
+    <string name="invoice_bank_title_enabled">Få fakturaene i nettbanken også</string>
+    <string name="invoice_bank_subtitle_enabled">Alle fakturaer du mottar i Digipost vil automatisk vises i nettbanken din. Da kan du enkelt betale dem uten å sjekke postkassa først.</string>
+    <string name="invoice_bank_button_enabled">Logg inn i %1$s for å komme i gang</string>
+    <string name="invoice_bank_read_more_enabled">Les mer om Digipost faktura</string>
+
+    <string name="invoice_bank_title_disabled">Overfør fakturaer til nettbanken</string>
+    <string name="invoice_bank_subtitle_disabled">Fremover slipper du å skrive inn KID- og kontonummer når du skal behandle fakturaer mottatt i Digipost.\n\nI stedet kan du overføre fakturaen til betaling med ett enkelt klikk, uten å måtte logge inn i nettbanken.</string>
+    <string name="invoice_bank_button_disabled">Logg inn i %1$s for å komme i gang</string>
+    <string name="invoice_bank_read_more_disabled">Logg inn på digipost.no for å komme i gang</string>
+
+
 </resources>
