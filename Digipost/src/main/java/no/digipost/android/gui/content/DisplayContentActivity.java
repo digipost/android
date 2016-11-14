@@ -16,6 +16,7 @@
 
 package no.digipost.android.gui.content;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -26,10 +27,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
@@ -42,7 +46,7 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
-import no.digipost.android.gui.content.Invoice.InvoiceOptionsActivity;
+import no.digipost.android.gui.content.invoice.InvoiceOptionsActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.model.*;
@@ -101,21 +105,21 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         progressDialog.show();
     }
 
-    protected void showInvoiceOptionsDialogIfInvoice() {
+    protected void showInvoiceOptionsDialogIfInvoice(final Activity activity) {
         final Attachment attachment = DocumentContentStore.getDocumentAttachment();
         boolean attachmentIsInvoice = attachment != null && attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null;
-
+        attachmentIsInvoice = true;
         if (attachmentIsInvoice && SharedPreferencesUtilities.showInvoiceOptionsDialog(getApplicationContext())) {
 
             AlertDialog invoiceOptionsDialog = null;
             LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext())
+            AlertDialog.Builder builder = new AlertDialog.Builder(DisplayContentActivity.this)
                     .setPositiveButton(R.string.invoice_dialog_choose_bank_button, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            openBankOptionsActivity(attachment.getSubject());
+                            openBankOptionsActivity(attachment.getSubject(), activity);
                             dialogInterface.dismiss();
                         }
                     }).setNeutralButton(R.string.invoice_dialog_later_button, new DialogInterface.OnClickListener() {
@@ -134,15 +138,32 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
             builder.setView(view);
             builder.setTitle(getResources().getString(R.string.invoice_dialog_title));
             builder.setMessage(getResources().getString(R.string.invoice_dialog_subtitle));
+
             invoiceOptionsDialog = builder.create();
             invoiceOptionsDialog.show();
+
+            final Button positiveButton = invoiceOptionsDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+            positiveButtonLL.gravity = Gravity.CENTER;
+            positiveButton.setLayoutParams(positiveButtonLL);
+
+            final Button neutralButton = invoiceOptionsDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+            LinearLayout.LayoutParams neutralButtonLL = (LinearLayout.LayoutParams) neutralButton.getLayoutParams();
+            neutralButtonLL.gravity = Gravity.CENTER_VERTICAL;
+            neutralButton.setLayoutParams(neutralButtonLL);
+
+            final Button negativeButton = invoiceOptionsDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            LinearLayout.LayoutParams negativeButtonLL = (LinearLayout.LayoutParams) negativeButton.getLayoutParams();
+            negativeButtonLL.gravity = Gravity.CENTER;
+            negativeButton.setLayoutParams(negativeButtonLL);
         }
     }
 
-    private void openBankOptionsActivity(final String invoiceSubject) {
-        Intent i = new Intent(DisplayContentActivity.this, InvoiceOptionsActivity.class);
-        i.putExtra("invoiceSubject", invoiceSubject);
-        startActivity(i);
+    private void openBankOptionsActivity(final String invoiceSubject, final Activity activity) {
+        Intent i = new Intent(activity, InvoiceOptionsActivity.class);
+        Log.d("Faktura", "invoiceSubject: "+invoiceSubject);
+        i.putExtra("InvoiceSubject", invoiceSubject);
+        activity.startActivity(i);
     }
 
     public void setActionBar(String title, String subTitle) {
