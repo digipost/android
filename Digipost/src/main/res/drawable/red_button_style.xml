@@ -10,7 +10,7 @@
 
     <item android:state_focused="true">
         <shape>
-            <solid android:color="@color/actionbar_button_pressed_dark_red"/>
+            <solid android:color="@color/actionbar_red_background"/>
             <!--<corners android:radius="8dp"/>-->
         </shape>
     </item>
