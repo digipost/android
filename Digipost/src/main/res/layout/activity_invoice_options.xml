@@ -19,7 +19,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:background="#f1f1f1"
+              android:background="@color/invoice_background"
               android:weightSum="1">
 
     <include layout="@layout/toolbar"/>
@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/invoice_options_title"
                 android:id="@+id/invoice_options_title"
+                android:textColor="@color/invoice_title"
                 android:textSize="22sp"/>
         <TextView
                 android:layout_width="wrap_content"
@@ -47,6 +48,7 @@
                 android:text="@string/invoice_options_subtitle"
                 android:id="@+id/invoice_options_subtitle"
                 android:minLines="2"
+                android:textColor="@color/invoice_subtitle"
                 android:textSize="18sp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
@@ -57,8 +59,9 @@
     <ListView
             android:id="@+id/invoice_options_banks_listview"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_weight="0.74">
+            android:layout_height="0dp"
+            android:layout_weight="0.74"
+            android:background="@color/invoice_background">
 
     </ListView>
     <LinearLayout
@@ -69,9 +72,11 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="16sp"
             android:text="@string/invoice_options_more_soon"
             android:id="@+id/invoice_options_more_soon"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="top|left"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"/>
 
 </LinearLayout>

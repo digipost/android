@@ -18,40 +18,76 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
-
+              android:orientation="vertical"
+              android:background="@color/invoice_background"
+              android:weightSum="1"
+        >
     <include layout="@layout/toolbar"/>
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:gravity="center|fill_vertical|center_horizontal"
+            android:paddingTop="40dp"
+            android:paddingBottom="40dp"
+            android:layout_gravity="center">
         <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:id="@+id/invoice_bank_logo"
+                android:src="@drawable/invoice_bank_logo_dnb_stor"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                android:layout_gravity="center"/>
     </LinearLayout>
+
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="20dp"
+            android:weightSum="1"
+            android:layout_marginBottom="0dp">
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="title"
+                android:textSize="20sp"
+                android:textColor="@color/invoice_title"
+                android:text="@string/invoice_bank_title_enabled"
                 android:id="@+id/invoice_bank_title"/>
         <TextView
                 android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:text="@string/invoice_bank_subtitle_enabled"
+                android:textSize="16sp"
+                android:id="@+id/invoice_bank_subtitle"
+                android:lineSpacingMultiplier="1.2"
+                android:textColor="@color/invoice_subtitle"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.41"/>
+
+        <Button
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="title"
-                android:id="@+id/invoice_options_subtitle"/>
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:background="@drawable/red_button_style"
+                android:text="@string/invoice_bank_button_enabled"
+                android:textStyle="bold"
+                android:textColor="@color/white"
                 android:id="@+id/invoice_bank_url_button"
-                />
+                android:layout_marginTop="10dp"/>
+
         <Button
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:textColor="@color/invoice_link"
+                android:background="@color/transparent"
+                android:layout_height="wrap_content"
+                android:text="@string/invoice_bank_read_more_enabled"
                 android:id="@+id/invoice_bank_read_more_link"
-                />
+                android:layout_gravity="left|center_horizontal"
+                android:layout_marginTop="20dp"/>
     </LinearLayout>
 
 </LinearLayout>
