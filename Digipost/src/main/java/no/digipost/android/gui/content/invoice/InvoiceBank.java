@@ -44,8 +44,10 @@ public class InvoiceBank implements Parcelable{
             return new InvoiceBank[size];
         }
     };
-    public String getName(){return this.logo;}
-    public String getUrl(){return this.logo;}
+    public String getName(){return this.name;}
+
+    public String getUrl(){return this.url;}
+
     public String getLogo(){return this.logo;}
 
     protected InvoiceBank(Parcel in) {

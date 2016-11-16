@@ -71,15 +71,16 @@ public class InvoiceOptionsActivity extends AppCompatActivity {
 
     private ArrayList<InvoiceBank> getInvoiceBanks(){
         ArrayList<InvoiceBank> invoiceBanks = new ArrayList<>();
-        invoiceBanks.add(new InvoiceBank("DNB", "https://m.dnb.no/appo/logon/startmobile", "invoice_bank_logo_dnb", true));
-        invoiceBanks.add(new InvoiceBank("KLP", "https://digipost.no/faktura", "invoice_bank_logo_klp", false));
-        invoiceBanks.add(new InvoiceBank("Skandiabanken", "https://digipost.no/faktura", "invoice_bank_logo_skandiabanken", false));
+        invoiceBanks.add(new InvoiceBank("DNB", "https://m.dnb.no/privat/nettbank-mobil-og-kort/elektronisk-faktura.html", "invoice_bank_logo_dnb", true));
+        invoiceBanks.add(new InvoiceBank("KLP", "", "invoice_bank_logo_klp", false));
+        invoiceBanks.add(new InvoiceBank("Skandiabanken", "", "invoice_bank_logo_skandiabanken", false));
         return invoiceBanks;
     }
 
     private void openBankActivity(InvoiceBank invoiceBank){
         Intent i = new Intent(InvoiceOptionsActivity.this, InvoiceBankActivity.class);
         i.putExtra("InvoiceBank", invoiceBank);
+        i.putExtra("InvoiceSubject", getSupportActionBar().getTitle());
         startActivity(i);
     }
 
@@ -110,8 +111,8 @@ public class InvoiceOptionsActivity extends AppCompatActivity {
             }
 
             final InvoiceBank invoiceBank = getItem(position);
-            int id = getContext().getResources().getIdentifier(invoiceBank.getLogo(), "drawable", getContext().getPackageName());
-            viewHolder.bankLogo.setImageResource(id);
+            int logoResourceId = getContext().getResources().getIdentifier(invoiceBank.getLogo(), "drawable", getContext().getPackageName());
+            viewHolder.bankLogo.setImageResource(logoResourceId);
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 public void onClick(final View v) {
