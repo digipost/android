@@ -101,16 +101,19 @@ public class InvoiceOptionsActivity extends AppCompatActivity {
         public View getView(final int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
 
+            final InvoiceBank invoiceBank = getItem(position);
+
             if (convertView == null) {
                 convertView = LayoutInflater.from(this.getContext()).inflate(R.layout.invoice_bank_list_item, parent, false);
                 viewHolder = new ViewHolder();
                 viewHolder.bankLogo = (ImageView) convertView.findViewById(R.id.invoice_options_bank_item_list_logo);
+                viewHolder.bankLogo.setContentDescription(invoiceBank.getName());
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            final InvoiceBank invoiceBank = getItem(position);
+
             int logoResourceId = getContext().getResources().getIdentifier(invoiceBank.getLogo(), "drawable", getContext().getPackageName());
             viewHolder.bankLogo.setImageResource(logoResourceId);
 

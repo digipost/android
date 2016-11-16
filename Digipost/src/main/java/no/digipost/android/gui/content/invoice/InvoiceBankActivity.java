@@ -72,6 +72,7 @@ public class InvoiceBankActivity extends AppCompatActivity {
 
             int logoResourceId = getApplicationContext().getResources().getIdentifier(invoiceBank.getLogo()+"_stor", "drawable", getApplicationContext().getPackageName());
             logo.setImageResource(logoResourceId);
+            logo.setContentDescription(invoiceBank.getName());
 
             if(invoiceBank.setupIsAvailable){
                 title.setText(R.string.invoice_bank_title_enabled);
