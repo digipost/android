@@ -250,6 +250,7 @@
     <string name="dialog_create_folder_save_button">Opprett</string>
 
     <!--Invoice-->
+    <string name="invoice_bank_logo">Banklogo</string>
     <string name="invoice_dialog_title">Enklere betaling</string>
     <string name="invoice_dialog_subtitle">Unngå lange KID-numre og få fakturaene rett i nettbanken</string>
     <string name="invoice_dialog_choose_bank_button">Velg bank</string>

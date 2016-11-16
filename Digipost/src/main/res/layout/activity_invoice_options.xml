@@ -27,7 +27,7 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_height="162dp"
+            android:layout_height="180dp"
             android:background="@color/white"
             android:layout_gravity="center"
             android:minHeight="120dp"
@@ -41,7 +41,8 @@
                 android:text="@string/invoice_options_title"
                 android:id="@+id/invoice_options_title"
                 android:textColor="@color/invoice_title"
-                android:textSize="22sp"/>
+                android:textSize="22sp"
+                android:layout_marginTop="30dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,25 +50,22 @@
                 android:id="@+id/invoice_options_subtitle"
                 android:minLines="2"
                 android:textColor="@color/invoice_subtitle"
-                android:textSize="18sp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="15dp"
                 android:textAlignment="center"
-                android:gravity="center_vertical|center_horizontal"/>
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_marginBottom="30dp"/>
     </LinearLayout>
     <ListView
             android:id="@+id/invoice_options_banks_listview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.74"
+            android:layout_weight="0.60"
             android:background="@color/invoice_background">
 
     </ListView>
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-    </LinearLayout>
 
     <TextView
             android:layout_width="wrap_content"
@@ -77,6 +75,7 @@
             android:id="@+id/invoice_options_more_soon"
             android:layout_gravity="top|left"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:gravity="top|left"/>
 
 </LinearLayout>
