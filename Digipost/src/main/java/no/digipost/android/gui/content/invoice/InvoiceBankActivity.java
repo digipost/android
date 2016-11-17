@@ -70,7 +70,7 @@ public class InvoiceBankActivity extends AppCompatActivity {
             Button openBankUrlButton = (Button) findViewById(R.id.invoice_bank_url_button);
             Button readMoreButton = (Button) findViewById(R.id.invoice_bank_read_more_link);
 
-            int logoResourceId = getApplicationContext().getResources().getIdentifier(invoiceBank.getLogo()+"_stor", "drawable", getApplicationContext().getPackageName());
+            int logoResourceId = getApplicationContext().getResources().getIdentifier(invoiceBank.getLogo()+"_large", "drawable", getApplicationContext().getPackageName());
             logo.setImageResource(logoResourceId);
             logo.setContentDescription(invoiceBank.getName());
 

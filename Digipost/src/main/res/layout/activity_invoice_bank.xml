@@ -37,7 +37,7 @@
         <ImageView
                 android:layout_width="wrap_content"
                 android:id="@+id/invoice_bank_logo"
-                android:src="@drawable/invoice_bank_logo_dnb_stor"
+                android:src="@drawable/invoice_bank_logo_dnb_large"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/invoice_bank_logo"
                 android:scaleType="fitCenter"
