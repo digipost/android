@@ -37,8 +37,8 @@
     <color name="checkbox_checked">#666666</color>
     <color name="grey_date">#828282</color>
 
-    <color name="invoice_title">#4A4A4A</color>
-    <color name="invoice_subtitle">#4A4A4A</color>
+    <color name="invoice_title">#303030</color>
+    <color name="invoice_subtitle">#5E5E5E</color>
     <color name="invoice_link">#0C72A8</color>
     <color name="invoice_background">#f1f1f1</color>
 
