@@ -108,7 +108,6 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     protected void showInvoiceOptionsDialogIfInvoice(final Activity activity) {
         final Attachment attachment = DocumentContentStore.getDocumentAttachment();
         boolean attachmentIsInvoice = attachment != null && attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null;
-        attachmentIsInvoice = true;
         if (attachmentIsInvoice && SharedPreferencesUtilities.showInvoiceOptionsDialog(getApplicationContext())) {
 
             AlertDialog invoiceOptionsDialog = null;
