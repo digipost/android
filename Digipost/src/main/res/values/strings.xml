@@ -271,5 +271,14 @@
     <string name="invoice_bank_button_disabled">Logg inn i %1$s for å komme i gang</string>
     <string name="invoice_bank_read_more_disabled">Logg inn på digipost.no og inngå avtale</string>
 
+    <string name="invoice_delete_dialog_title">Slett faktura</string>
+    <string name="invoice_delete_dialog_paid_message">Er du sikker på at du vil slette fakturaen?  Om du vil stoppe betalingen må du logge inn i nettbanken også</string>
+    <string name="invoice_delete_dialog_paid_delete_button">Slett fakturaen</string>
+    <string name="invoice_delete_dialog_paid_cancel_button">Avbryt</string>
+
+    <string name="invoice_delete_dialog_unpaid_message">Er du sikker på at du vil slette fakturaen fra både Digipost og nettbanken?</string>
+    <string name="invoice_delete_dialog_unpaid_delete_button">Slett fakturaen</string>
+    <string name="invoice_delete_dialog_unpaid_cancel_button">Avbryt</string>
+
 
 </resources>
