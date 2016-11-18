@@ -45,6 +45,7 @@ import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
+import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
 import no.digipost.android.gui.content.invoice.InvoiceOptionsActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
@@ -160,15 +161,67 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
     private void openBankOptionsActivity(final String invoiceSubject, final Activity activity) {
         Intent i = new Intent(activity, InvoiceOptionsActivity.class);
-        Log.d("Faktura", "invoiceSubject: "+invoiceSubject);
         i.putExtra("InvoiceSubject", invoiceSubject);
         activity.startActivity(i);
     }
 
+    protected void deleteAction(final Activity originActivity) {
+
+        String message = getString(R.string.dialog_prompt_delete_document);
+        String positiveAction = getString(R.string.delete);
+        String negativeAction = getString(R.string.abort);
+
+        Invoice invoice = DocumentContentStore.getDocumentAttachment().getInvoice();
+
+        if (content_type == ApplicationConstants.RECEIPTS) {
+            message = getString(R.string.dialog_prompt_delete_receipt);
+        }else if(invoice != null){
+            Payment payment = invoice.getPayment();
+            if(payment != null){
+                message = getString(R.string.invoice_delete_dialog_paid_message);
+                positiveAction = getString(R.string.invoice_delete_dialog_paid_delete_button);
+                negativeAction = getString(R.string.invoice_delete_dialog_paid_cancel_button);
+            }else{
+                message = getString(R.string.invoice_delete_dialog_unpaid_message);
+                positiveAction = getString(R.string.invoice_delete_dialog_unpaid_delete_button);
+                negativeAction = getString(R.string.invoice_delete_dialog_unpaid_cancel_button);
+            }
+        }
+
+        showActionDialog(originActivity, ApiConstants.DELETE, message, positiveAction, negativeAction );
+    }
+
+    protected void showActionDialog(final Activity originActivity, final String action ,final String message ,final String positiveAction,final String negativeAction){
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+        builder.setPositiveButton(positiveAction, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                executeAction(originActivity, action);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton(negativeAction, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+        builder.create().show();
+    }
+
+    private void executeAction(final Activity originActivity, String action) {
+        Intent intent = new Intent(originActivity, MainContentActivity.class);
+        intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     public void setActionBar(String title, String subTitle) {
-        getSupportActionBar().setTitle(title);
-        getSupportActionBar().setSubtitle(subTitle);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        if(getSupportActionBar()!=null) {
+            getSupportActionBar().setTitle(title);
+            getSupportActionBar().setSubtitle(subTitle);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
     }
 
     protected void hideProgressDialog() {

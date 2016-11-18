@@ -479,31 +479,6 @@ public class MuPDFActivity extends DisplayContentActivity {
         }
     }
 
-    private void executeAction(String action) {
-        Intent i = new Intent(MuPDFActivity.this, MainContentActivity.class);
-        i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
-        setResult(RESULT_OK, i);
-        finish();
-    }
-
-    private void promtAction(final String message, final String action) {
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
-        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                executeAction(action);
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.create().show();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -550,7 +525,7 @@ public class MuPDFActivity extends DisplayContentActivity {
                 super.openInvoiceTask();
                 return true;
             case R.id.pdfmenu_delete:
-                promtAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
+                deleteAction(this);
                 return true;
             case R.id.pdfmenu_move:
                 showMoveToFolderDialog();
