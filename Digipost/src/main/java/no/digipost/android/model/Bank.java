@@ -17,7 +17,27 @@
 package no.digipost.android.model;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Bank {
+
+    @JsonProperty
+    private String name;
+
+    @JsonProperty
+    private boolean active;
+
+    @JsonProperty
+    private ArrayList<Link> link;
+
+    public String getName(){
+        return this.name;
+    }
+
+    public boolean getActive(){
+        return this.active;
+    }
 }
