@@ -22,22 +22,12 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Bank {
+public class Banks {
 
     @JsonProperty
-    private String name;
+    private ArrayList<Document> banks;
 
-    @JsonProperty
-    private boolean active;
-
-    @JsonProperty
-    private ArrayList<Link> link;
-
-    public String getName(){
-        return this.name;
-    }
-
-    public boolean isActive(){
-        return this.active;
+    public ArrayList<Document> getBanks() {
+        return banks;
     }
 }

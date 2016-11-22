@@ -129,7 +129,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 getCurrentFragment().activityDrawerOpen = drawer.isDrawerOpen(GravityCompat.START);
             }
         };
-        
+
         drawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
@@ -630,6 +630,22 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 }
 
             }.execute(null, null, null);
+    }
+
+    private void refreshInvoiceBanksActiveState(){
+    	new AsyncTask<Void, Void, Boolean>() {
+
+    		@Override
+    		protected Boolean doInBackground(Void... params) {
+    			return ContentOperations.getInvoiceBanksActiveState(getApplicationContext());
+    		}
+
+    		@Override
+        protected void onPostExecute(final Boolean result) {
+        	SharedPreferencesUtilities.invoiceBankIsActive(result);
+        }
+
+    	}.execute(null, null, null);
     }
 
     private void startUploadActivity() {
