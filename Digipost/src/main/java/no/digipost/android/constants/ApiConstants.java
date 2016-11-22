@@ -89,6 +89,7 @@ public class ApiConstants {
     public static final String URL_RELATIONS_SEND_TO_BANK = URL_RELATIONS + "send_to_bank";
     public static final String URL_RELATIONS_RECEIPT_HTML = URL_RELATIONS + "get_receipt_as_html";
     public static final String URL_RELATIONS_RECEIPT_DELETE = URL_RELATIONS + "delete_receipt";
+    public static final String URL_RELATIONS_BANKS = URL_RELATIONS + "banks";
 
     public static final String URL_RELATIONS_CHANGE_FOLDER = URL_RELATIONS + "change_folder";
     public static final String URL_RELATIONS_DELETE_FOLDER = URL_RELATIONS + "delete_folder";
