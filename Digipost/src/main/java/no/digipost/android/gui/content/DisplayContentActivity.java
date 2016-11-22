@@ -175,7 +175,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
         if (content_type == ApplicationConstants.RECEIPTS) {
             message = getString(R.string.dialog_prompt_delete_receipt);
-        }else if(invoice != null){
+        }else if(invoice != null && invoice.canBePaidByUser()){
             Payment payment = invoice.getPayment();
             if(payment != null){
                 message = getString(R.string.invoice_delete_dialog_paid_message);
