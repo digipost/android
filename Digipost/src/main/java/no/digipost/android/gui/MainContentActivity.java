@@ -113,6 +113,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         GCMController.init(this);
+        refreshInvoiceBanksActiveState();
 
         drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
@@ -637,12 +638,17 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
     		@Override
     		protected Boolean doInBackground(Void... params) {
-    			return ContentOperations.getInvoiceBanksActiveState(getApplicationContext());
+                boolean activeBank;
+                try {
+                    activeBank = ContentOperations.getInvoiceBanksActiveState(getApplicationContext());
+                }catch (Exception e){
+                    return false;
+                }
+                return activeBank;
     		}
-
     		@Override
         protected void onPostExecute(final Boolean result) {
-        	SharedPreferencesUtilities.invoiceBankIsActive(result);
+                SharedPreferencesUtilities.invoiceBankIsActive(getApplicationContext(), result);
         }
 
     	}.execute(null, null, null);

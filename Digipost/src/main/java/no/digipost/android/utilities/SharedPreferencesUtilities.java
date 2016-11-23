@@ -115,7 +115,7 @@ public class SharedPreferencesUtilities {
         return !getSharedPreferences(context).getBoolean(HIDE_INVOICE_OPTIONS, false);
     }
 
-    public static void invoiceBankIsActive(result){
+    public static void invoiceBankIsActive(final Context context, boolean result){
         Editor editor = getSharedPreferences(context).edit();
         editor.putBoolean(HAS_ACTIVE_INVOICE_BANK, false);
         editor.apply();
