@@ -203,9 +203,9 @@
     <string name="error_documents_in_delete_Folder">Kunne ikke slette mappen. Mappen inneholder dokumenter. Du må flytte eller slette disse før mappen kan slettes.</string>
 
     <!-- Prompts -->
-    <string name="sent_to_bank">Sendt til nettbank</string>
-    <string name="sending_to_bank">Sender til nettbank…</string>
-    <string name="dialog_send_to_bank">Send til nettbank</string>
+    <string name="sent_to_bank">Lagt til betaling</string>
+    <string name="sending_to_bank">Legger til betaling…</string>
+    <string name="dialog_send_to_bank">Legg til betaling</string>
     <string name="dialog_send_to_bank_not_paid_title">Vil du legge fakturaen i forfallsregisteret i nettbanken?</string>
     <string name="dialog_send_to_bank_not_paid_message_start">Fakturaen vil bli betalt på forfallsdatoen. Hvis du vil endre eller se på selve betalingen senere, må du logge inn i din nettbank.</string>
     <string name="dialog_send_to_bank_not_paid_message_end">Følgende konto vil belastes:\n%1$s</string>
