@@ -25,9 +25,9 @@ import java.util.ArrayList;
 public class Banks {
 
     @JsonProperty
-    private ArrayList<Document> banks;
+    private ArrayList<Bank> banks;
 
-    public ArrayList<Document> getBanks() {
+    public ArrayList<Bank> getBanks() {
         return banks;
     }
 }
