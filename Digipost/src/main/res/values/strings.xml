@@ -279,6 +279,10 @@
     <string name="invoice_delete_dialog_unpaid_message">Er du sikker på at du vil slette fakturaen fra både Digipost og nettbanken?</string>
     <string name="invoice_delete_dialog_unpaid_delete_button">Slett fakturaen</string>
     <string name="invoice_delete_dialog_unpaid_cancel_button">Avbryt</string>
-
+    <string name="invoice_delete_file_single">fil</string>
+    <string name="invoice_delete_file_plural">filer</string>
+    <string name="invoice_delete_invoice_single">faktura</string>
+    <string name="invoice_delete_invoice_plural">fakturaer</string>
+    <string name="invoice_delete_multiple_files_including_n_invoices">Er du sikker på at du vil slette %1$s, inkludert %2$s? Om du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken.</string>
 
 </resources>

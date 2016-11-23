@@ -284,8 +284,9 @@ public class ContentOperations {
             DigipostApiException {
         refreshApiAccess();
 
-        Banks banks = (Banks) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, getAccount(context).getPrimaryAccount().getBanksUri(), null));
+        Banks banks = (Banks) JSONUtilities.processJackson(Banks.class, apiAccess.getApiJsonString(context, getAccount(context).getPrimaryAccount().getBanksUri(), null));
         ArrayList<Bank> banksList = banks.getBanks();
+
         for(Bank bank : banksList){
             if(bank.isActive()){
                 return true;
