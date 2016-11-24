@@ -175,17 +175,32 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
         if (content_type == ApplicationConstants.RECEIPTS) {
             message = getString(R.string.dialog_prompt_delete_receipt);
-        }else if(invoice != null && invoice.canBePaidByUser()){
+
+        }else if(invoice != null && SharedPreferencesUtilities.gotAnyBankAgreements(getApplicationContext())){
             Payment payment = invoice.getPayment();
+
             if(payment != null){
+                //Behandlet, 1.0 & 2.0
                 message = getString(R.string.invoice_delete_dialog_paid_message);
                 positiveAction = getString(R.string.invoice_delete_dialog_paid_delete_button);
                 negativeAction = getString(R.string.invoice_delete_dialog_paid_cancel_button);
             }else{
-                message = getString(R.string.invoice_delete_dialog_unpaid_message);
+                //Ubehandlet, 1.0 & 2.0
+                if(SharedPreferencesUtilities.getBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT)){
+                    message = getString(R.string.invoice_delete_dialog_unpaid_message_20);
+                }else{
+                    message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
+                }
                 positiveAction = getString(R.string.invoice_delete_dialog_unpaid_delete_button);
                 negativeAction = getString(R.string.invoice_delete_dialog_unpaid_cancel_button);
             }
+        }
+
+
+        Payment payment = invoice.getPayment();
+        if(payment==null && !SharedPreferencesUtilities.gotAnyBankAgreements(getApplicationContext())){
+            //Ubehandlet, ingen avtale
+            message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
         }
 
         showActionDialog(originActivity, ApiConstants.DELETE, message, positiveAction, negativeAction );
