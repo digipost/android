@@ -28,19 +28,22 @@ public class Bank {
     private String name;
 
     @JsonProperty
-    private boolean hasBank10Agreement;
+    private boolean bankOffersFaktura10Agreement;
 
     @JsonProperty
-    private boolean hasBank20Agreement;
+    private boolean bankOffersFaktura20Agreement;
+
+    @JsonProperty
+    private boolean personHasFakturaAgreementWithBank;
 
     public boolean hasBank20Agreement(){
-        return this.hasBank20Agreement;
+        return this.bankOffersFaktura20Agreement && this.personHasFakturaAgreementWithBank;
     }
 
     public boolean hasBank10Agreement(){
-        return this.hasBank10Agreement;
+        return this.bankOffersFaktura10Agreement && this.personHasFakturaAgreementWithBank;
     }
-    
+
     @JsonProperty
     private ArrayList<Link> link;
 
