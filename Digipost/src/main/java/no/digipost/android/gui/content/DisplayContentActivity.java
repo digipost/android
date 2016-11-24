@@ -176,33 +176,35 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         if (content_type == ApplicationConstants.RECEIPTS) {
             message = getString(R.string.dialog_prompt_delete_receipt);
 
-        }else if(invoice != null && SharedPreferencesUtilities.gotAnyBankAgreements(getApplicationContext())){
+        }else if(invoice != null){
+            //Faktura
+
             Payment payment = invoice.getPayment();
 
-            if(payment != null){
-                //Behandlet, 1.0 & 2.0
-                message = getString(R.string.invoice_delete_dialog_paid_message);
-                positiveAction = getString(R.string.invoice_delete_dialog_paid_delete_button);
-                negativeAction = getString(R.string.invoice_delete_dialog_paid_cancel_button);
+            if(SharedPreferencesUtilities.gotAnyBankAgreements(getApplicationContext())) {
+                if (payment != null) {
+                    //Behandlet faktura, 1.0 & 2.0
+                    message = getString(R.string.invoice_delete_dialog_paid_message);
+                    positiveAction = getString(R.string.invoice_delete_dialog_paid_delete_button);
+                    negativeAction = getString(R.string.invoice_delete_dialog_paid_cancel_button);
+                } else {
+                    //Ubehandlet faktura, 1.0 & 2.0
+                    if (SharedPreferencesUtilities.getBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT)) {
+                        message = getString(R.string.invoice_delete_dialog_unpaid_message_20);
+                    } else {
+                        message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
+                    }
+                    positiveAction = getString(R.string.invoice_delete_dialog_unpaid_delete_button);
+                    negativeAction = getString(R.string.invoice_delete_dialog_unpaid_cancel_button);
+                }
             }else{
-                //Ubehandlet, 1.0 & 2.0
-                if(SharedPreferencesUtilities.getBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT)){
-                    message = getString(R.string.invoice_delete_dialog_unpaid_message_20);
-                }else{
+                if(payment == null){
+                    //Ubehandlet faktura, ingen avtale
                     message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
                 }
-                positiveAction = getString(R.string.invoice_delete_dialog_unpaid_delete_button);
-                negativeAction = getString(R.string.invoice_delete_dialog_unpaid_cancel_button);
             }
         }
-
-
-        Payment payment = invoice.getPayment();
-        if(payment==null && !SharedPreferencesUtilities.gotAnyBankAgreements(getApplicationContext())){
-            //Ubehandlet, ingen avtale
-            message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
-        }
-
+        
         showActionDialog(originActivity, ApiConstants.DELETE, message, positiveAction, negativeAction );
     }
 
