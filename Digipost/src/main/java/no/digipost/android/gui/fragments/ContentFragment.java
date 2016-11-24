@@ -233,7 +233,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         String cancelButtonText = getString(R.string.abort);
         String messageText = getActionDeletePromptString(content.size());
 
-        if(SharedPreferencesUtilities.invoiceBankIsActive(context) && getContent() != ApplicationConstants.RECEIPTS){
+        if(SharedPreferencesUtilities.gotAnyBankAgreements(context) && getContent() != ApplicationConstants.RECEIPTS){
             if(numberOfInvoices(content) > 0){
                 int numberOfFiles = content.size();
                 String filesText = numberOfFiles +" "+ (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));

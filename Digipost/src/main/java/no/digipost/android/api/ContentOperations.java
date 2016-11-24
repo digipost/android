@@ -280,18 +280,11 @@ public class ContentOperations {
         return (Settings) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getSettingsUri(), null));
     }
 
-    public static boolean getInvoiceBanksActiveState(final Context context)throws DigipostClientException, DigipostAuthenticationException,
+    public static ArrayList<Bank> getInvoiceBanksAgreementState(final Context context)throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
         refreshApiAccess();
 
         Banks banks = (Banks) JSONUtilities.processJackson(Banks.class, apiAccess.getApiJsonString(context, getAccount(context).getPrimaryAccount().getBanksUri(), null));
-        ArrayList<Bank> banksList = banks.getBanks();
-
-        for(Bank bank : banksList){
-            if(bank.isActive()){
-                return true;
-            }
-        }
-        return false;
+        return banks.getBanks();
     }
 }

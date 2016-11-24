@@ -28,16 +28,23 @@ public class Bank {
     private String name;
 
     @JsonProperty
-    private boolean active;
+    private boolean hasBank10Agreement;
 
+    @JsonProperty
+    private boolean hasBank20Agreement;
+
+    public boolean hasBank20Agreement(){
+        return this.hasBank20Agreement;
+    }
+
+    public boolean hasBank10Agreement(){
+        return this.hasBank10Agreement;
+    }
+    
     @JsonProperty
     private ArrayList<Link> link;
 
     public String getName(){
         return this.name;
-    }
-
-    public boolean isActive(){
-        return this.active;
     }
 }

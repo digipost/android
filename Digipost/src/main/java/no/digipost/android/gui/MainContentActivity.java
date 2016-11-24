@@ -68,6 +68,7 @@ import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.fragments.EditFolderFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.model.Account;
+import no.digipost.android.model.Bank;
 import no.digipost.android.model.Folder;
 import no.digipost.android.model.Mailbox;
 import no.digipost.android.utilities.ApplicationUtilities;
@@ -113,7 +114,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         GCMController.init(this);
-        refreshInvoiceBanksActiveState();
+        refreshInvoiceBanksAgreementState();
 
         drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
@@ -633,22 +634,38 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             }.execute(null, null, null);
     }
 
-    private void refreshInvoiceBanksActiveState(){
-    	new AsyncTask<Void, Void, Boolean>() {
+    private void refreshInvoiceBanksAgreementState(){
+    	new AsyncTask<Void, Void, ArrayList<Bank>>() {
 
     		@Override
-    		protected Boolean doInBackground(Void... params) {
-                boolean activeBank;
+    		protected ArrayList<Bank> doInBackground(Void... params) {
+                ArrayList<Bank> banks;
                 try {
-                    activeBank = ContentOperations.getInvoiceBanksActiveState(getApplicationContext());
+                    banks = ContentOperations.getInvoiceBanksAgreementState(getApplicationContext());
                 }catch (Exception e){
-                    return false;
+                    return null;
                 }
-                return activeBank;
+                return banks;
     		}
+
     		@Override
-        protected void onPostExecute(final Boolean result) {
-                SharedPreferencesUtilities.invoiceBankIsActive(getApplicationContext(), result);
+        protected void onPostExecute(final ArrayList<Bank> banks) {
+                if(banks != null){
+                    boolean hasBank10Agreement = false;
+                    boolean hasBank20Agreement = false;
+
+                    for(Bank bank : banks){
+                        if(bank.hasBank10Agreement()){
+                            hasBank10Agreement = true;
+                        }
+                        if(bank.hasBank20Agreement()){
+                            hasBank20Agreement = true;
+                        }
+                    }
+
+                    SharedPreferencesUtilities.setBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_10_AGREEMENT, hasBank10Agreement);
+                    SharedPreferencesUtilities.setBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT, hasBank20Agreement);
+                }
         }
 
     	}.execute(null, null, null);

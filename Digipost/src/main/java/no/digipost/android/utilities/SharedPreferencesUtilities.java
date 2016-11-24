@@ -26,7 +26,8 @@ import no.digipost.android.constants.ApplicationConstants;
 
 public class SharedPreferencesUtilities {
     private final static String HIDE_INVOICE_OPTIONS = "hide_invoice_options";
-    private final static String HAS_ACTIVE_INVOICE_BANK = "has_active_invoice_bank";
+    public final static String HAS_BANK_10_AGREEMENT = "hasBank10Agreement";
+    public final static String HAS_BANK_20_AGREEMENT = "hasBank20Agreement";
 
     public static SharedPreferences getSharedPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
@@ -115,13 +116,17 @@ public class SharedPreferencesUtilities {
         return !getSharedPreferences(context).getBoolean(HIDE_INVOICE_OPTIONS, false);
     }
 
-    public static void invoiceBankIsActive(final Context context, boolean result){
+    public static void setBankAgreement(final Context context, String agreement, boolean result){
         Editor editor = getSharedPreferences(context).edit();
-        editor.putBoolean(HAS_ACTIVE_INVOICE_BANK, false);
+        editor.putBoolean(agreement, result);
         editor.apply();
     }
 
-    public static boolean invoiceBankIsActive(final Context context){
-        return getSharedPreferences(context).getBoolean(HAS_ACTIVE_INVOICE_BANK, false);
+    public static boolean getBankAgreement(final Context context, final String agreement){
+        return getSharedPreferences(context).getBoolean(agreement, false);
+    }
+
+    public static boolean gotAnyBankAgreements(final Context context){
+        return getSharedPreferences(context).getBoolean(HAS_BANK_10_AGREEMENT, false) || getSharedPreferences(context).getBoolean(HAS_BANK_20_AGREEMENT, false);
     }
 }
