@@ -98,6 +98,8 @@
     <string name="receipt_plural">kvitteringene</string>
     <string name="document_singular">dokumentet</string>
     <string name="document_plural">dokumentene</string>
+    <string name="letter_singular">brevet</string>
+    <string name="letter_plural">brevene</string>
     <string name="delete_multiple">Vil du slette disse %1$d %2$s?</string>
     <string name="delete_single">Vil du slette %1$s %2$s?</string>
     <string name="delete_progress_document">Sletter %1$s (%2$d/%3$d)</string>

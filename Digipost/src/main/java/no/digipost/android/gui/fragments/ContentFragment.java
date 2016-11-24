@@ -233,11 +233,14 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         String cancelButtonText = getString(R.string.abort);
         String messageText = getActionDeletePromptString(content.size());
 
-        if(SharedPreferencesUtilities.gotAnyBankAgreements(context) && getContent() != ApplicationConstants.RECEIPTS){
+        boolean notReceipt = getContent() != ApplicationConstants.RECEIPTS;
+
+        if(notReceipt){
             if(numberOfInvoices(content) > 0){
                 int numberOfFiles = content.size();
                 String filesText = numberOfFiles +" "+ (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));
                 int numberOfInvoices = numberOfInvoices(content);
+
                 String invoicesText = numberOfInvoices +" "+ (numberOfInvoices == 1 ? getString(R.string.invoice_delete_invoice_single) : getString(R.string.invoice_delete_invoice_plural));
                 messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices),filesText, invoicesText);
             }
@@ -291,9 +294,9 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             }
         } else {
             if (count > 1) {
-                res = R.string.document_plural;
+                res = R.string.letter_plural;
             } else {
-                res = R.string.document_singular;
+                res = R.string.letter_singular;
             }
         }
         return getString(res);
