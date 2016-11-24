@@ -108,8 +108,12 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
     protected void showInvoiceOptionsDialogIfInvoice(final Activity activity) {
         final Attachment attachment = DocumentContentStore.getDocumentAttachment();
+
         boolean attachmentIsInvoice = attachment != null && attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null;
-        if (attachmentIsInvoice && SharedPreferencesUtilities.showInvoiceOptionsDialog(getApplicationContext())) {
+        boolean hasNoActiveBankAgreements = !SharedPreferencesUtilities.gotAnyBankAgreements(getApplicationContext());
+        boolean showInvoiceOptionsTips = SharedPreferencesUtilities.showInvoiceOptionsDialog(getApplicationContext());
+
+        if (attachmentIsInvoice && hasNoActiveBankAgreements && showInvoiceOptionsTips ) {
 
             AlertDialog invoiceOptionsDialog = null;
             LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
