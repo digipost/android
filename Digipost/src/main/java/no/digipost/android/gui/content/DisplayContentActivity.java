@@ -249,18 +249,21 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     protected void setSendToBankMenuText(boolean sendToBankVisible) {
-
-        if (sendToBankVisible) {
-            sendToBank.setVisible(true);
-            Payment payment = DocumentContentStore.getDocumentAttachment().getInvoice() == null ? null : DocumentContentStore
-                    .getDocumentAttachment()
-                    .getInvoice()
-                    .getPayment();
-            if (payment != null) {
-                sendToBank.setTitle(getString(R.string.sent_to_bank));
-            }
-        } else {
+        if(SharedPreferencesUtilities.getBankAgreement(getApplicationContext(),SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT)){
             sendToBank.setVisible(false);
+        }else {
+            if (sendToBankVisible) {
+                sendToBank.setVisible(true);
+                Payment payment = DocumentContentStore.getDocumentAttachment().getInvoice() == null ? null : DocumentContentStore
+                        .getDocumentAttachment()
+                        .getInvoice()
+                        .getPayment();
+                if (payment != null) {
+                    sendToBank.setTitle(getString(R.string.sent_to_bank));
+                }
+            } else {
+                sendToBank.setVisible(false);
+            }
         }
     }
 
