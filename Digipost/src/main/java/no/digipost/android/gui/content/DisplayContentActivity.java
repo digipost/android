@@ -205,6 +205,13 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                 if(payment == null){
                     //Ubehandlet faktura, ingen avtale
                     message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
+                    positiveAction = getString(R.string.invoice_delete_dialog_unpaid_delete_button);
+                    negativeAction = getString(R.string.invoice_delete_dialog_unpaid_delete_button);
+                }else{
+                    //Behandlet faktura, ingen avtale
+                    message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
+                    positiveAction = getString(R.string.invoice_delete_dialog_paid_delete_button);
+                    negativeAction = getString(R.string.invoice_delete_dialog_paid_cancel_button);
                 }
             }
         }
