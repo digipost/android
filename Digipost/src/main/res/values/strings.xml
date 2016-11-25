@@ -276,13 +276,10 @@
     <string name="invoice_delete_dialog_title">Slett faktura</string>
 
     <string name="invoice_delete_dialog_paid_message">Er du sikker på at du vil slette fakturaen?  Om du vil stoppe betalingen må du logge inn i nettbanken også</string>
-    <string name="invoice_delete_dialog_paid_delete_button">Slett</string>
-    <string name="invoice_delete_dialog_paid_cancel_button">Avbryt</string>
-
     <string name="invoice_delete_dialog_unpaid_message_10">Vil du slette fakturaen?</string>
     <string name="invoice_delete_dialog_unpaid_message_20">Er du sikker på at du vil slette fakturaen fra både Digipost og nettbanken?</string>
-    <string name="invoice_delete_dialog_unpaid_delete_button">Slett</string>
-    <string name="invoice_delete_dialog_unpaid_cancel_button">Avbryt</string>
+    <string name="invoice_delete_dialog_delete_button">Slett</string>
+    <string name="invoice_delete_dialog_cancel_button">Avbryt</string>
 
     <!-- Delete invoice list dialog -->
     <string name="invoice_delete_file_single">fil</string>
