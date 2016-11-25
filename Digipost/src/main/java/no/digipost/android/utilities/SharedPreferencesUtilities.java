@@ -122,11 +122,11 @@ public class SharedPreferencesUtilities {
         editor.apply();
     }
 
-    public static boolean getBankAgreement(final Context context, final String agreement){
+    public static boolean hasBankAgreement(final Context context, final String agreement){
         return getSharedPreferences(context).getBoolean(agreement, false);
     }
 
-    public static boolean gotAnyBankAgreements(final Context context){
+    public static boolean hasAnyBankAgreements(final Context context){
         return getSharedPreferences(context).getBoolean(HAS_BANK_10_AGREEMENT, false) || getSharedPreferences(context).getBoolean(HAS_BANK_20_AGREEMENT, false);
     }
 }

@@ -110,7 +110,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         final Attachment attachment = DocumentContentStore.getDocumentAttachment();
 
         boolean attachmentIsInvoice = attachment != null && attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null;
-        boolean hasNoActiveBankAgreements = !SharedPreferencesUtilities.gotAnyBankAgreements(getApplicationContext());
+        boolean hasNoActiveBankAgreements = !SharedPreferencesUtilities.hasAnyBankAgreements(getApplicationContext());
         boolean showInvoiceOptionsTips = SharedPreferencesUtilities.showInvoiceOptionsDialog(getApplicationContext());
 
         if (attachmentIsInvoice && hasNoActiveBankAgreements && showInvoiceOptionsTips ) {
@@ -185,7 +185,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
             Payment payment = invoice.getPayment();
 
-            if(SharedPreferencesUtilities.gotAnyBankAgreements(getApplicationContext())) {
+            if(SharedPreferencesUtilities.hasAnyBankAgreements(getApplicationContext())) {
                 if (payment != null) {
                     //Behandlet faktura, 1.0 & 2.0
                     message = getString(R.string.invoice_delete_dialog_paid_message);
@@ -193,7 +193,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                     negativeAction = getString(R.string.invoice_delete_dialog_paid_cancel_button);
                 } else {
                     //Ubehandlet faktura, 1.0 & 2.0
-                    if (SharedPreferencesUtilities.getBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT)) {
+                    if (SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT)) {
                         message = getString(R.string.invoice_delete_dialog_unpaid_message_20);
                     } else {
                         message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
@@ -260,7 +260,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     protected void setSendToBankMenuText(boolean sendToBankVisible) {
-        if(SharedPreferencesUtilities.getBankAgreement(getApplicationContext(),SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT)){
+        if(SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(),SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT)){
             sendToBank.setVisible(false);
         }else {
             if (sendToBankVisible) {
