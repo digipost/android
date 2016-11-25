@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.R;
+import no.digipost.android.analytics.GAEventController;
+
 import static java.lang.String.format;
 
 public class InvoiceBankActivity extends AppCompatActivity {
@@ -103,6 +105,7 @@ public class InvoiceBankActivity extends AppCompatActivity {
             openBankUrlButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    GAEventController.sendInvoiceClickedSetup20Link(getParent(), invoiceBank.getName());
                     openExternalUrl(invoiceBank.getUrl());
                 }
             });
@@ -111,7 +114,13 @@ public class InvoiceBankActivity extends AppCompatActivity {
             readMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    openExternalUrl("https://digipost.no/faktura");
+                    if(invoiceBank.setupIsAvailable) {
+                        GAEventController.sendInvoiceClickedDigipostOpenPagesLink(getParent(), invoiceBank.getName());
+                        openExternalUrl("https://digipost.no/faktura");
+                    }else{
+                        GAEventController.sendInvoiceClickedSetup10Link(getParent(), invoiceBank.getName());
+                        openExternalUrl("https://digipost.no/app/post#/faktura");
+                    }
                 }
             });
         }

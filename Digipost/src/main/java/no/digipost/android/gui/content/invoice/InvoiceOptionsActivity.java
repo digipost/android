@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.R;
+import no.digipost.android.analytics.GAEventController;
 
 import java.util.ArrayList;
 
@@ -91,6 +92,7 @@ public class InvoiceOptionsActivity extends AppCompatActivity {
     }
 
     private void openBankActivity(InvoiceBank invoiceBank){
+        GAEventController.sendInvoiceOpenBankViewFromListEvent(this, invoiceBank.getName());
         Intent i = new Intent(InvoiceOptionsActivity.this, InvoiceBankActivity.class);
         i.putExtra("InvoiceBank", invoiceBank);
         i.putExtra("InvoiceSubject", getSupportActionBar().getTitle());
