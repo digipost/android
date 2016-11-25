@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.R;
 import static java.lang.String.format;
 
@@ -39,6 +40,18 @@ public class InvoiceBankActivity extends AppCompatActivity {
         setContentView(R.layout.activity_invoice_bank);
         setupActionBar();
         setupLayout();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     @Override

@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.R;
 
 import java.util.ArrayList;
@@ -41,6 +42,18 @@ public class InvoiceOptionsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_invoice_options);
         setupActionBar();
         setupListView();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     @Override
