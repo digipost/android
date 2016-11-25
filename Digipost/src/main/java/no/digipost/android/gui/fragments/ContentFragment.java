@@ -39,6 +39,7 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.recyclerview.*;
 import no.digipost.android.model.Attachment;
@@ -234,16 +235,13 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         String messageText = getActionDeletePromptString(content.size());
 
         boolean notReceipt = getContent() != ApplicationConstants.RECEIPTS;
+        int numberOfInvoices = numberOfInvoices(content);
 
-        if(notReceipt){
-            if(numberOfInvoices(content) > 0){
-                int numberOfFiles = content.size();
-                String filesText = numberOfFiles +" "+ (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));
-                int numberOfInvoices = numberOfInvoices(content);
-
-                String invoicesText = numberOfInvoices +" "+ (numberOfInvoices == 1 ? getString(R.string.invoice_delete_invoice_single) : getString(R.string.invoice_delete_invoice_plural));
-                messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices),filesText, invoicesText);
-            }
+        if(notReceipt && numberOfInvoices > 0){
+            int numberOfFiles = content.size();
+            String filesText = numberOfFiles +" "+ (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));
+            String invoicesText = numberOfInvoices +" "+ (numberOfInvoices == 1 ? getString(R.string.invoice_delete_invoice_single) : getString(R.string.invoice_delete_invoice_plural));
+            messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices),filesText, invoicesText);
         }
 
         AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, messageText, dialogTitle);
@@ -275,7 +273,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             Document document = (Document) object;
             ArrayList<Attachment> attachments = document.getAttachment();
             for(Attachment attachment : attachments){
-                if(attachment.getInvoice() != null){
+                if(attachment.getType().equals(ApiConstants.INVOICE)){
                     numberOfInvoices += 1;
                 }
             }
