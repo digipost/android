@@ -194,7 +194,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                     message = getString(R.string.invoice_delete_dialog_paid_message);
                 } else {
                     //Ubehandlet faktura, 1.0 & 2.0
-                    if (SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT)) {
+                    if (SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2)) {
                         message = getString(R.string.invoice_delete_dialog_unpaid_message_20);
                     } else {
                         message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
@@ -251,7 +251,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     protected void setSendToBankMenuText(boolean sendToBankVisible) {
-        if(SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(),SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT)){
+        if(SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(),SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2)){
             sendToBank.setVisible(false);
         }else {
             if (sendToBankVisible) {

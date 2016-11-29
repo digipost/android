@@ -651,20 +651,20 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     		@Override
         protected void onPostExecute(final ArrayList<Bank> banks) {
                 if(banks != null){
-                    boolean hasBank10Agreement = false;
-                    boolean hasBank20Agreement = false;
+                    boolean hasBankAgreementType1 = false;
+                    boolean hasBankAgreementType2 = false;
 
                     for(Bank bank : banks){
-                        if(bank.hasBank10Agreement()){
-                            hasBank10Agreement = true;
+                        if(bank.hasBankAgreementType1()){
+                            hasBankAgreementType1 = true;
                         }
-                        if(bank.hasBank20Agreement()){
-                            hasBank20Agreement = true;
+                        if(bank.hasBankAgreementType2()){
+                            hasBankAgreementType2 = true;
                         }
                     }
 
-                    SharedPreferencesUtilities.setBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_10_AGREEMENT, hasBank10Agreement);
-                    SharedPreferencesUtilities.setBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_20_AGREEMENT, hasBank20Agreement);
+                    SharedPreferencesUtilities.setBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_1, hasBankAgreementType1);
+                    SharedPreferencesUtilities.setBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2, hasBankAgreementType2);
                 }
         }
 

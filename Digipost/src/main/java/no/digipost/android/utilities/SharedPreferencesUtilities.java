@@ -26,8 +26,8 @@ import no.digipost.android.constants.ApplicationConstants;
 
 public class SharedPreferencesUtilities {
     private final static String HIDE_INVOICE_OPTIONS = "hide_invoice_options";
-    public final static String HAS_BANK_10_AGREEMENT = "hasBank10Agreement";
-    public final static String HAS_BANK_20_AGREEMENT = "hasBank20Agreement";
+    public final static String HAS_BANK_AGREEMENT_TYPE_1 = "hasBankAgreementType1";
+    public final static String HAS_BANK_AGREEMENT_TYPE_2 = "hasBankAgreementType2";
 
     public static SharedPreferences getSharedPreferences(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
@@ -127,6 +127,6 @@ public class SharedPreferencesUtilities {
     }
 
     public static boolean hasAnyBankAgreements(final Context context){
-        return getSharedPreferences(context).getBoolean(HAS_BANK_10_AGREEMENT, false) || getSharedPreferences(context).getBoolean(HAS_BANK_20_AGREEMENT, false);
+        return getSharedPreferences(context).getBoolean(HAS_BANK_AGREEMENT_TYPE_1, false) || getSharedPreferences(context).getBoolean(HAS_BANK_AGREEMENT_TYPE_2, false);
     }
 }
