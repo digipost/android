@@ -28,20 +28,20 @@
         private String name;
 
         @JsonProperty
-        private boolean offersFakturaAgreementType1;
+        private boolean tilbyrFakturaAvtaleType1;
 
         @JsonProperty
-        private boolean offersFakturaAgreementType2;
+        private boolean tilbyrFakturaAvtaleType2;
 
         @JsonProperty
-        private boolean personHasFakturaAgreementWithBank;
+        private boolean personHarFakturaAvtaleMedBank;
 
         public boolean hasBankAgreementType1(){
-            return this.offersFakturaAgreementType1 && this.personHasFakturaAgreementWithBank;
+            return this.tilbyrFakturaAvtaleType1 && this.personHarFakturaAvtaleMedBank;
         }
 
         public boolean hasBankAgreementType2(){
-            return this.offersFakturaAgreementType2 && this.personHasFakturaAgreementWithBank;
+            return this.tilbyrFakturaAvtaleType2 && this.personHarFakturaAvtaleMedBank;
         }
 
         @JsonProperty
