@@ -124,20 +124,20 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                     .setPositiveButton(R.string.invoice_dialog_choose_bank_button, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            GAEventController.sendInvoiceCLickedChooseBankDialog(getParent(), getString(R.string.invoice_dialog_choose_bank_button));
+                            GAEventController.sendInvoiceClickedChooseBankDialogue(getParent(), getString(R.string.invoice_dialog_choose_bank_button));
                             openBankOptionsActivity(attachment.getSubject(), activity);
                             dialogInterface.dismiss();
                         }
                     }).setNeutralButton(R.string.invoice_dialog_later_button, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            GAEventController.sendInvoiceCLickedChooseBankDialog(getParent(), getString(R.string.invoice_dialog_later_button));
+                            GAEventController.sendInvoiceClickedChooseBankDialogue(getParent(), getString(R.string.invoice_dialog_later_button));
                             dialogInterface.dismiss();
                         }
                     }).setNegativeButton(R.string.invoice_dialog_forget_button, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int which) {
-                            GAEventController.sendInvoiceCLickedChooseBankDialog(getParent(), getString(R.string.invoice_dialog_forget_button));
+                            GAEventController.sendInvoiceClickedChooseBankDialogue(getParent(), getString(R.string.invoice_dialog_forget_button));
                             SharedPreferencesUtilities.hideInvoiceOptionsDialog(getApplicationContext());
                             dialogInterface.dismiss();
                         }
