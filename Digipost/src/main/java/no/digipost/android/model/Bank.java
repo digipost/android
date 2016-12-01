@@ -34,14 +34,17 @@
         private boolean tilbyrFakturaAvtaleType2;
 
         @JsonProperty
-        private boolean personHarFakturaAvtaleMedBank;
+        private boolean aktivFakturaAvtaleType1;
+
+        @JsonProperty
+        private boolean aktivFakturaAvtaleType2;
 
         public boolean hasBankAgreementType1(){
-            return this.tilbyrFakturaAvtaleType1 && this.personHarFakturaAvtaleMedBank;
+            return this.tilbyrFakturaAvtaleType1 && this.aktivFakturaAvtaleType1;
         }
 
         public boolean hasBankAgreementType2(){
-            return this.tilbyrFakturaAvtaleType2 && this.personHarFakturaAvtaleMedBank;
+            return this.tilbyrFakturaAvtaleType2 && this.aktivFakturaAvtaleType2;
         }
 
         @JsonProperty
