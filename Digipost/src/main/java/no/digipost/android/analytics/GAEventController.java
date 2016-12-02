@@ -22,7 +22,7 @@ public class GAEventController {
         sendEvent(activity, loginRememberMeOption, actionText, loginRememberMeOption+"-"+actionText);
     }
 
-    public static void sendInvoiceClickedChooseBankDialogue(Activity activity, String buttonText){
+    public static void sendInvoiceClickedChooseBankDialog(Activity activity, String buttonText){
         sendEvent(activity, FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT, "klikk-start-oppsett", buttonText);
     }
 
