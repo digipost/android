@@ -34,23 +34,20 @@
         private boolean tilbyrFakturaAvtaleType2;
 
         @JsonProperty
-        private boolean aktivFakturaAvtaleType1;
-
-        @JsonProperty
-        private boolean aktivFakturaAvtaleType2;
-
-        public boolean hasBankAgreementType1(){
-            return this.tilbyrFakturaAvtaleType1 && this.aktivFakturaAvtaleType1;
-        }
-
-        public boolean hasBankAgreementType2(){
-            return this.tilbyrFakturaAvtaleType2 && this.aktivFakturaAvtaleType2;
-        }
-
+        private ArrayList<Agreement> agreements;
         @JsonProperty
         private ArrayList<Link> link;
 
         public String getName(){
             return this.name;
+        }
+
+        public boolean hasAgreementType(final String agreementType){
+            for(Agreement agreement : agreements){
+                if(agreement.active && agreementType.equals(agreement.agreementType)){
+                    return true;
+                }
+            }
+            return false;
         }
     }

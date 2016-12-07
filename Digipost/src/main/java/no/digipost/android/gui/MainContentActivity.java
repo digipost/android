@@ -67,10 +67,7 @@ import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.fragments.EditFolderFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
-import no.digipost.android.model.Account;
-import no.digipost.android.model.Bank;
-import no.digipost.android.model.Folder;
-import no.digipost.android.model.Mailbox;
+import no.digipost.android.model.*;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
@@ -655,10 +652,10 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                     boolean hasBankAgreementType2 = false;
 
                     for(Bank bank : banks){
-                        if(bank.hasBankAgreementType1()){
+                        if(bank.hasAgreementType(Agreement.AGREEMENT_TYPE_1)){
                             hasBankAgreementType1 = true;
                         }
-                        if(bank.hasBankAgreementType2()){
+                        if(bank.hasAgreementType(Agreement.AGREEMENT_TYPE_2)){
                             hasBankAgreementType2 = true;
                         }
                     }
