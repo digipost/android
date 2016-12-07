@@ -16,6 +16,8 @@
 
 package no.digipost.android.constants;
 
+import no.digipost.android.authentication.Secret;
+
 public class ApiConstants {
 
     public static final String ERROR_CODE = "error-code";
@@ -68,10 +70,8 @@ public class ApiConstants {
     public static final String SCOPE_IDPORTEN_3 = "FULL_IDPORTEN3";
     public static final String SCOPE_IDPORTEN_4 = "FULL_IDPORTEN4";
 
-    public static final String URL = "https://www.digipost.no/post/";
-
-    public static final String URL_API = URL + "api";
-    public static final String URL_RELATIONS = URL + "relations/";
+    public static final String URL_API = Secret.ENV_URL + "api";
+    public static final String URL_RELATIONS = Secret.ENV_URL  + "relations/";
     public static final String URL_RELATIONS_DOCUMENT_INBOX = URL_RELATIONS + "document_inbox";
     public static final String URL_RELATIONS_DOCUMENT_ARCHIVE = URL_RELATIONS + "document_archive";
     public static final String URL_RELATIONS_DOCUMENT_WORKAREA = URL_RELATIONS + "document_workarea";
@@ -97,9 +97,9 @@ public class ApiConstants {
     public static final String URL_RELATIONS_UPDATE_FOLDERS = URL_RELATIONS + "update_folders";
     public static final String URL_RELATIONS_PUSH_REGISTRATION = URL_API + "/private/gcm_token";
 
-    public static final String URL_API_OAUTH_AUTHORIZE_NEW = URL + "api/oauth/authorize/new";
-    public static final String URL_API_OAUTH_ACCESSTOKEN = URL + "api/oauth/accesstoken";
-    public static final String URL_API_OAUTH_REVOKE = URL + "api/oauth/revoke";
+    public static final String URL_API_OAUTH_AUTHORIZE_NEW = Secret.ENV_URL + "api/oauth/authorize/new";
+    public static final String URL_API_OAUTH_ACCESSTOKEN = Secret.ENV_URL + "api/oauth/accesstoken";
+    public static final String URL_API_OAUTH_REVOKE = Secret.ENV_URL + "api/oauth/revoke";
 
     public static final String URL_HELP = "https://www.digipost.no/hjelp/#android";
 
