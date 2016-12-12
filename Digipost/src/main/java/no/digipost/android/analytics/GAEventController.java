@@ -9,7 +9,7 @@ public class GAEventController {
 
     public static final String appLaunchOrigin = "app-launch-origin";
     public static final String loginRememberMeOption = "login-remember-me";
-    public static final String LAUNCH_ORIGIN_NORMAL = "normal";;
+    public static final String LAUNCH_ORIGIN_NORMAL = "normal";
     public static final String LAUNCH_ORIGIN_PUSH = "push";
     public static final String FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT = "faktura-avtale-oppsett-kontekst-basert";
 
