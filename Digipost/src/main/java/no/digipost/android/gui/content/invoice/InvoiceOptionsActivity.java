@@ -85,7 +85,7 @@ public class InvoiceOptionsActivity extends AppCompatActivity {
 
     private ArrayList<InvoiceBank> getInvoiceBanks(){
         ArrayList<InvoiceBank> invoiceBanks = new ArrayList<>();
-        invoiceBanks.add(new InvoiceBank("DNB", "https://m.dnb.no/privat/nettbank-mobil-og-kort/elektronisk-faktura.html", "invoice_bank_logo_dnb", true));
+        invoiceBanks.add(new InvoiceBank("DNB", "https://www.dnb.no/privat/nettbank-mobil-og-kort/betaling/elektronisk-faktura.html", "invoice_bank_logo_dnb", true));
         invoiceBanks.add(new InvoiceBank("KLP", "", "invoice_bank_logo_klp", false));
         invoiceBanks.add(new InvoiceBank("Skandiabanken", "", "invoice_bank_logo_skandiabanken", false));
         return invoiceBanks;
