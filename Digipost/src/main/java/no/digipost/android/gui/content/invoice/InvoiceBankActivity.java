@@ -105,7 +105,7 @@ public class InvoiceBankActivity extends AppCompatActivity {
             openBankUrlButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    GAEventController.sendInvoiceClickedSetup20Link(getParent(), invoiceBank.getName());
+                    GAEventController.sendInvoiceClickedSetup20Link(InvoiceBankActivity.this, invoiceBank.getName());
                     openExternalUrl(invoiceBank.getUrl());
                 }
             });
@@ -115,10 +115,10 @@ public class InvoiceBankActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if(invoiceBank.setupIsAvailable) {
-                        GAEventController.sendInvoiceClickedDigipostOpenPagesLink(getParent(), invoiceBank.getName());
+                        GAEventController.sendInvoiceClickedDigipostOpenPagesLink(InvoiceBankActivity.this, invoiceBank.getName());
                         openExternalUrl("https://digipost.no/faktura");
                     }else{
-                        GAEventController.sendInvoiceClickedSetup10Link(getParent(), invoiceBank.getName());
+                        GAEventController.sendInvoiceClickedSetup10Link(InvoiceBankActivity.this, invoiceBank.getName());
                         openExternalUrl("https://digipost.no/app/post#/faktura");
                     }
                 }
