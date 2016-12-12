@@ -282,6 +282,7 @@
     <string name="invoice_delete_dialog_cancel_button">Avbryt</string>
 
     <!-- Delete invoice list dialog -->
+    <string name="invoice_payment_tips_button">Betalingstips</string>
     <string name="invoice_delete_file_single">fil</string>
     <string name="invoice_delete_file_plural">filer</string>
     <string name="invoice_delete_invoice_single">faktura</string>

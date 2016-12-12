@@ -251,10 +251,15 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     protected void setSendToBankMenuText(boolean sendToBankVisible) {
-        if(SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(),SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2)){
+        boolean hasType1BankAgreement = SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2);
+
+        if(hasType1BankAgreement){
             sendToBank.setVisible(false);
         }else {
+
             if (sendToBankVisible) {
+
+
                 sendToBank.setVisible(true);
                 Payment payment = DocumentContentStore.getDocumentAttachment().getInvoice() == null ? null : DocumentContentStore
                         .getDocumentAttachment()
@@ -263,6 +268,12 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                 if (payment != null) {
                     sendToBank.setTitle(getString(R.string.sent_to_bank));
                 }
+
+                boolean dontHaveAnyBankAgreement = !SharedPreferencesUtilities.hasAnyBankAgreements(getApplicationContext());
+                if(dontHaveAnyBankAgreement){
+                    sendToBank.setTitle(R.string.invoice_payment_tips_button);
+                }
+
             } else {
                 sendToBank.setVisible(false);
             }
@@ -278,7 +289,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                 String accountNumber = account == null ? "***********" : account.getBankAccount().getAccountNumber();
                 showSendToBankDialog(attachment, document, accountNumber);
             } else {
-                showSendToBankNotEnabledDialog();
+                showInvoiceOptionsDialogIfInvoice(this);
             }
         }
     }
@@ -315,20 +326,6 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
-
-        builder.create().show();
-    }
-
-    private void showSendToBankNotEnabledDialog() {
-        String title = getString(R.string.dialog_send_to_bank_not_enabled_title);
-        String message = getString(R.string.dialog_send_to_bank_not_enabled_message);
-
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
-        builder.setCancelable(false).setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 dialog.cancel();
             }
