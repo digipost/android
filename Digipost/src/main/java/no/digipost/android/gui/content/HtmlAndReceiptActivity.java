@@ -54,7 +54,9 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         setupWebView();
         setupActionBar();
         loadContent();
-        super.showInvoiceOptionsDialogIfInvoice(this);
+        if (super.shouldShowInvoiceOptionsDialog(this)) {
+            super.showInvoiceOptionsDialog(this);
+        }
     }
 
     @Override

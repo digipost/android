@@ -107,64 +107,67 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         progressDialog.show();
     }
 
-    protected void showInvoiceOptionsDialogIfInvoice(final Activity activity) {
+    protected boolean shouldShowInvoiceOptionsDialog(final Activity activity) {
         final Attachment attachment = DocumentContentStore.getDocumentAttachment();
 
         boolean attachmentIsInvoice = attachment != null && attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null;
         boolean hasNoActiveBankAgreements = !SharedPreferencesUtilities.hasAnyBankAgreements(getApplicationContext());
         boolean showInvoiceOptionsTips = SharedPreferencesUtilities.showInvoiceOptionsDialog(getApplicationContext());
 
-        if (attachmentIsInvoice && hasNoActiveBankAgreements && showInvoiceOptionsTips ) {
+        return attachmentIsInvoice && hasNoActiveBankAgreements && showInvoiceOptionsTips;
+    }
 
-            AlertDialog invoiceOptionsDialog = null;
-            LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.generic_dialog_layout, null);
+    protected void showInvoiceOptionsDialog(final Activity activity) {
+        final Attachment attachment = DocumentContentStore.getDocumentAttachment();
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(DisplayContentActivity.this)
-                    .setPositiveButton(R.string.invoice_dialog_choose_bank_button, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            GAEventController.sendInvoiceClickedChooseBankDialog(DisplayContentActivity.this, getString(R.string.invoice_dialog_choose_bank_button));
-                            openBankOptionsActivity(attachment.getSubject(), activity);
-                            dialogInterface.dismiss();
-                        }
-                    }).setNeutralButton(R.string.invoice_dialog_later_button, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            GAEventController.sendInvoiceClickedChooseBankDialog(DisplayContentActivity.this, getString(R.string.invoice_dialog_later_button));
-                            dialogInterface.dismiss();
-                        }
-                    }).setNegativeButton(R.string.invoice_dialog_forget_button, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int which) {
-                            GAEventController.sendInvoiceClickedChooseBankDialog(DisplayContentActivity.this, getString(R.string.invoice_dialog_forget_button));
-                            SharedPreferencesUtilities.hideInvoiceOptionsDialog(getApplicationContext());
-                            dialogInterface.dismiss();
-                        }
-                    });
+        AlertDialog invoiceOptionsDialog = null;
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.generic_dialog_layout, null);
 
-            builder.setView(view);
-            builder.setTitle(getResources().getString(R.string.invoice_dialog_title));
-            builder.setMessage(getResources().getString(R.string.invoice_dialog_subtitle));
+        AlertDialog.Builder builder = new AlertDialog.Builder(DisplayContentActivity.this)
+                .setPositiveButton(R.string.invoice_dialog_choose_bank_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        GAEventController.sendInvoiceClickedChooseBankDialog(DisplayContentActivity.this, getString(R.string.invoice_dialog_choose_bank_button));
+                        openBankOptionsActivity(attachment.getSubject(), activity);
+                        dialogInterface.dismiss();
+                    }
+                }).setNeutralButton(R.string.invoice_dialog_later_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        GAEventController.sendInvoiceClickedChooseBankDialog(DisplayContentActivity.this, getString(R.string.invoice_dialog_later_button));
+                        dialogInterface.dismiss();
+                    }
+                }).setNegativeButton(R.string.invoice_dialog_forget_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        GAEventController.sendInvoiceClickedChooseBankDialog(DisplayContentActivity.this, getString(R.string.invoice_dialog_forget_button));
+                        SharedPreferencesUtilities.hideInvoiceOptionsDialog(getApplicationContext());
+                        dialogInterface.dismiss();
+                    }
+                });
 
-            invoiceOptionsDialog = builder.create();
-            invoiceOptionsDialog.show();
+        builder.setView(view);
+        builder.setTitle(getResources().getString(R.string.invoice_dialog_title));
+        builder.setMessage(getResources().getString(R.string.invoice_dialog_subtitle));
 
-            final Button positiveButton = invoiceOptionsDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
-            positiveButtonLL.gravity = Gravity.CENTER;
-            positiveButton.setLayoutParams(positiveButtonLL);
+        invoiceOptionsDialog = builder.create();
+        invoiceOptionsDialog.show();
 
-            final Button neutralButton = invoiceOptionsDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
-            LinearLayout.LayoutParams neutralButtonLL = (LinearLayout.LayoutParams) neutralButton.getLayoutParams();
-            neutralButtonLL.gravity = Gravity.CENTER_VERTICAL;
-            neutralButton.setLayoutParams(neutralButtonLL);
+        final Button positiveButton = invoiceOptionsDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+        positiveButtonLL.gravity = Gravity.CENTER;
+        positiveButton.setLayoutParams(positiveButtonLL);
 
-            final Button negativeButton = invoiceOptionsDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-            LinearLayout.LayoutParams negativeButtonLL = (LinearLayout.LayoutParams) negativeButton.getLayoutParams();
-            negativeButtonLL.gravity = Gravity.CENTER;
-            negativeButton.setLayoutParams(negativeButtonLL);
-        }
+        final Button neutralButton = invoiceOptionsDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+        LinearLayout.LayoutParams neutralButtonLL = (LinearLayout.LayoutParams) neutralButton.getLayoutParams();
+        neutralButtonLL.gravity = Gravity.CENTER_VERTICAL;
+        neutralButton.setLayoutParams(neutralButtonLL);
+
+        final Button negativeButton = invoiceOptionsDialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        LinearLayout.LayoutParams negativeButtonLL = (LinearLayout.LayoutParams) negativeButton.getLayoutParams();
+        negativeButtonLL.gravity = Gravity.CENTER;
+        negativeButton.setLayoutParams(negativeButtonLL);
     }
 
     private void openBankOptionsActivity(final String invoiceSubject, final Activity activity) {
@@ -267,13 +270,12 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                         .getPayment();
                 if (payment != null) {
                     sendToBank.setTitle(getString(R.string.sent_to_bank));
+                }else{
+                    boolean dontHaveAnyBankAgreement = !SharedPreferencesUtilities.hasAnyBankAgreements(getApplicationContext());
+                    if(dontHaveAnyBankAgreement){
+                        sendToBank.setTitle(R.string.invoice_payment_tips_button);
+                    }
                 }
-
-                boolean dontHaveAnyBankAgreement = !SharedPreferencesUtilities.hasAnyBankAgreements(getApplicationContext());
-                if(dontHaveAnyBankAgreement){
-                    sendToBank.setTitle(R.string.invoice_payment_tips_button);
-                }
-
             } else {
                 sendToBank.setVisible(false);
             }
@@ -281,15 +283,16 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     private void openInvoiceContent(Attachment attachment, Document document, CurrentBankAccount account) {
+        Payment payment = attachment.getInvoice().getPayment();
 
-        if (attachment.getInvoice().getPayment() != null) {
+        if (payment != null) {
             showPaidInvoiceDialog(attachment.getInvoice());
         } else {
             if (attachment.getInvoice().getSendToBank() != null) {
                 String accountNumber = account == null ? "***********" : account.getBankAccount().getAccountNumber();
                 showSendToBankDialog(attachment, document, accountNumber);
             } else {
-                showInvoiceOptionsDialogIfInvoice(this);
+                showInvoiceOptionsDialog(this);
             }
         }
     }
