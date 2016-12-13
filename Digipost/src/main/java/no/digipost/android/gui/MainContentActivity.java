@@ -371,7 +371,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         mailboxDialog = null;
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+        View view = inflater.inflate(R.layout.generic_dialog_layout, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setNegativeButton(getString(R.string.abort),
                 new DialogInterface.OnClickListener() {
@@ -383,9 +383,9 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         );
 
         builder.setView(view);
-        ListView mailboxListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+        ListView mailboxListView = (ListView) view.findViewById(R.id.generic_dialog_listview);
 
-        mailboxAdapter = new MailboxArrayAdapter(this, R.layout.attachmentdialog_list_item, mailboxes);
+        mailboxAdapter = new MailboxArrayAdapter(this, R.layout.generic_dialog_list_item, mailboxes);
         mailboxListView.setAdapter(mailboxAdapter);
         mailboxListView.setOnItemClickListener(new ChangeMailboxListOnItemClickListener());
 

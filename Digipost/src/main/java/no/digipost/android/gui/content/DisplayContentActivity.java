@@ -118,7 +118,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
             AlertDialog invoiceOptionsDialog = null;
             LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+            View view = inflater.inflate(R.layout.generic_dialog_layout, null);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(DisplayContentActivity.this)
                     .setPositiveButton(R.string.invoice_dialog_choose_bank_button, new DialogInterface.OnClickListener() {
@@ -359,7 +359,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
     protected void showMoveToFolderDialog() {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+        View view = inflater.inflate(R.layout.generic_dialog_layout, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setNegativeButton(getString(R.string.close),
                 new DialogInterface.OnClickListener() {
@@ -372,10 +372,10 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
         builder.setView(view);
 
-        ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+        ListView moveToFolderListView = (ListView) view.findViewById(R.id.generic_dialog_listview);
 
         ArrayList<Folder> folders = DocumentContentStore.getMoveFolders();
-        folderAdapter = new FolderArrayAdapter(this, R.layout.attachmentdialog_list_item, folders);
+        folderAdapter = new FolderArrayAdapter(this, R.layout.generic_dialog_list_item, folders);
         moveToFolderListView.setAdapter(folderAdapter);
         moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener());
 

@@ -236,7 +236,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     private void showMoveToFolderDialog(ArrayList<Document> documents) {
         folderDialog = null;
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+        View view = inflater.inflate(R.layout.generic_dialog_layout, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.abort),
                 new DialogInterface.OnClickListener() {
@@ -249,9 +249,9 @@ public class DocumentFragment extends ContentFragment<Document> {
         );
 
         builder.setView(view);
-        ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+        ListView moveToFolderListView = (ListView) view.findViewById(R.id.generic_dialog_listview);
         ArrayList<Folder> folders = getMoveFolders();
-        folderAdapter = new FolderArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item, folders);
+        folderAdapter = new FolderArrayAdapter(getActivity(), R.layout.generic_dialog_list_item, folders);
         moveToFolderListView.setAdapter(folderAdapter);
         moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener(documents));
 
@@ -297,7 +297,7 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     private void showAttachmentDialog(final Document document) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+        View view = inflater.inflate(R.layout.generic_dialog_layout, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.close),
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -309,8 +309,8 @@ public class DocumentFragment extends ContentFragment<Document> {
         );
         builder.setView(view);
 
-        ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
-        attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item, document.getAttachment());
+        ListView attachmentListView = (ListView) view.findViewById(R.id.generic_dialog_listview);
+        attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.generic_dialog_list_item, document.getAttachment());
         attachmentListView.setAdapter(attachmentAdapter);
         attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(document));
 
