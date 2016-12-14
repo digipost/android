@@ -18,6 +18,7 @@ package no.digipost.android.gui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -38,7 +39,7 @@ import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class LoginActivity extends Activity {
     private final int WEB_OAUTH_LOGIN_REQUEST = 0;
-    private Button loginButton, privacyButton, registrationButton;
+    private Button loginButton, privacyButton, registrationButton, forgotPasswordButton;
     private CheckBox rememberCheckbox;
     private Context context;
 
@@ -56,6 +57,10 @@ public class LoginActivity extends Activity {
         registrationButton = (Button) findViewById(R.id.login_registrationButton);
         registrationButton.setOnClickListener(listener);
         rememberCheckbox = (CheckBox) findViewById(R.id.login_remember_me);
+        forgotPasswordButton = (Button) findViewById(R.id.login_forgotPasswordButton);
+        forgotPasswordButton.setOnClickListener(listener);
+        forgotPasswordButton.setPaintFlags(forgotPasswordButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        registrationButton.setPaintFlags(registrationButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
     @Override
@@ -123,13 +128,8 @@ public class LoginActivity extends Activity {
         finish();
     }
 
-    private void openPrivacyBrowser() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/juridisk/"));
-        startActivity(browserIntent);
-    }
-
-    public void openRegistrationDialog() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/app/registrering?utm_source=android_app&utm_medium=app&utm_campaign=app-link&utm_content=ny_bruker#/"));
+    private void openExternalBrowserWithUrl(String url){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
     }
 
@@ -139,11 +139,11 @@ public class LoginActivity extends Activity {
             if (v == loginButton) {
                 startLoginProcess();
             } else if (v == privacyButton) {
-                privacyButton.setTextColor(getResources().getColor(R.color.grey_filesize));
-                openPrivacyBrowser();
+                openExternalBrowserWithUrl("https://www.digipost.no/juridisk/");
             } else if (v == registrationButton) {
-                registrationButton.setTextColor(getResources().getColor(R.color.grey_filesize));
-                openRegistrationDialog();
+                openExternalBrowserWithUrl("https://www.digipost.no/app/registrering?utm_source=android_app&utm_medium=app&utm_campaign=app-link&utm_content=ny_bruker#/");
+            }else if (v == forgotPasswordButton){
+                openExternalBrowserWithUrl("https://www.digipost.no/app/#/person/glemt");
             }
         }
     }
