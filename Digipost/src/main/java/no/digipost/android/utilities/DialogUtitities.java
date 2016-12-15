@@ -41,18 +41,10 @@ public class DialogUtitities {
 
         return progressDialog;
     }
-
-    public static ProgressDialog getProgressDialogWithMessageAndTitle(final Context context, final String message, final String title) {
-        ProgressDialog progressDialog = getProgressDialogWithMessage(context, message);
-        progressDialog.setTitle(title);
-
-        return progressDialog;
-    }
-
+    
     public static AlertDialog.Builder getAlertDialogBuilderWithMessage(final Context context, final String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message);
-
         return builder;
     }
 
