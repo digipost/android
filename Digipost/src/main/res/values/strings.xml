@@ -108,7 +108,11 @@
 
     <!-- LoginActivity -->
     <string name="login_loginbutton_text">Logg inn i Digipost</string>
-    <string name="login_forgotpassword_button_text">Glemt passord</string>
+    <string name="login_forgot_password_button_text">Glemt passord</string>
+    <string name="login_forgot_password_dialog_title">Glemt passord</string>
+    <string name="login_forgot_password_dialog_message">Gå til digipost.no for å endre passord.\nNår det er gjort kan du bruke det nye passordet for å logge deg inn i appen.</string>
+    <string name="login_forgot_password_dialog_open_link_button">Til digipost.no</string>
+    <string name="login_forgot_password_dialog_close_button">Lukk</string>
     <string name="login_registrationbutton_text">Ny bruker</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>

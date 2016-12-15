@@ -15,11 +15,11 @@
  */
 
 package no.digipost.android.utilities;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.widget.Toast;
+
 
 public class DialogUtitities {
 
@@ -41,7 +41,7 @@ public class DialogUtitities {
 
         return progressDialog;
     }
-    
+
     public static AlertDialog.Builder getAlertDialogBuilderWithMessage(final Context context, final String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(message);

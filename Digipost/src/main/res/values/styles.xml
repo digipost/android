@@ -19,6 +19,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="deviceDefault" parent="">
+
+    </style>
+
     <style name="Digipost.Dialog" parent="ThemeOverlay.AppCompat.Dialog">
         <item name="android:fullDark">@color/edit_folder_background</item>
         <item name="android:topDark">@color/edit_folder_background</item>

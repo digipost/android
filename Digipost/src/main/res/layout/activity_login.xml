@@ -88,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/transparent"
                     android:focusable="true"
-                    android:text="@string/login_forgotpassword_button_text"
+                    android:text="@string/login_forgot_password_button_text"
                     android:textColor="@color/login_grey_text"
                     android:textSize="16sp" />
             </LinearLayout>
