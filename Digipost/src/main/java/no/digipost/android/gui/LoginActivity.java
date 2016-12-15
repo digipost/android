@@ -132,17 +132,20 @@ public class LoginActivity extends Activity {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
     }
-
+    
     private class ButtonListener implements OnClickListener {
 
         public void onClick(final View v) {
             if (v == loginButton) {
                 startLoginProcess();
             } else if (v == privacyButton) {
+                GAEventController.sendLoginClickEvent(LoginActivity.this, "personvern");
                 openExternalBrowserWithUrl("https://www.digipost.no/juridisk/");
             } else if (v == registrationButton) {
+                GAEventController.sendLoginClickEvent(LoginActivity.this, "registrering");
                 openExternalBrowserWithUrl("https://www.digipost.no/app/registrering?utm_source=android_app&utm_medium=app&utm_campaign=app-link&utm_content=ny_bruker#/");
             }else if (v == forgotPasswordButton){
+                GAEventController.sendLoginClickEvent(LoginActivity.this, "glemt-passord");
                 openExternalBrowserWithUrl("https://www.digipost.no/app/#/person/glemt");
             }
         }
