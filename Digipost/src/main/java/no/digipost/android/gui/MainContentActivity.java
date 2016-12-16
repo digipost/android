@@ -93,7 +93,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     private int remainingDrawerChanges;
     private DragNDropListView drawerList;
     private DrawerAdapter drawerArrayAdapter;
-    private boolean refreshing;
     private Dialog mailboxDialog;
     private boolean showActionBarName;
     private Mailbox mailbox;
@@ -134,8 +133,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
         drawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
-        refreshing = true;
         remainingDrawerChanges = 0;
         editDrawerMode = false;
         updateUI(false);
@@ -295,13 +292,11 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
     @Override
     public void onStartRefreshContent() {
-        refreshing = true;
         invalidateOptionsMenu();
     }
 
     @Override
     public void onEndRefreshContent() {
-        refreshing = false;
         invalidateOptionsMenu();
     }
 
