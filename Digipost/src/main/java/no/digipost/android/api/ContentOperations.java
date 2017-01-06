@@ -27,17 +27,7 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
-import no.digipost.android.model.Account;
-import no.digipost.android.model.Attachment;
-import no.digipost.android.model.CurrentBankAccount;
-import no.digipost.android.model.Document;
-import no.digipost.android.model.Documents;
-import no.digipost.android.model.Folder;
-import no.digipost.android.model.Folders;
-import no.digipost.android.model.Mailbox;
-import no.digipost.android.model.Receipt;
-import no.digipost.android.model.Receipts;
-import no.digipost.android.model.Settings;
+import no.digipost.android.model.*;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
 import org.apache.http.entity.StringEntity;
@@ -288,5 +278,13 @@ public class ContentOperations {
             apiAccess = new ApiAccess();
         }
         return (Settings) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getSettingsUri(), null));
+    }
+
+    public static ArrayList<Bank> getInvoiceBanksAgreementState(final Context context)throws DigipostClientException, DigipostAuthenticationException,
+            DigipostApiException {
+        refreshApiAccess();
+
+        Banks banks = (Banks) JSONUtilities.processJackson(Banks.class, apiAccess.getApiJsonString(context, getAccount(context).getPrimaryAccount().getBanksUri(), null));
+        return banks.getBanks();
     }
 }

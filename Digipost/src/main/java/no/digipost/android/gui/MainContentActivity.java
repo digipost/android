@@ -67,9 +67,7 @@ import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.fragments.EditFolderFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
-import no.digipost.android.model.Account;
-import no.digipost.android.model.Folder;
-import no.digipost.android.model.Mailbox;
+import no.digipost.android.model.*;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
@@ -95,7 +93,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     private int remainingDrawerChanges;
     private DragNDropListView drawerList;
     private DrawerAdapter drawerArrayAdapter;
-    private boolean refreshing;
     private Dialog mailboxDialog;
     private boolean showActionBarName;
     private Mailbox mailbox;
@@ -113,6 +110,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         GCMController.init(this);
+        refreshInvoiceBanksAgreementState();
 
         drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
@@ -129,14 +127,12 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 getCurrentFragment().activityDrawerOpen = drawer.isDrawerOpen(GravityCompat.START);
             }
         };
-        
+
         drawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
         drawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
-        refreshing = true;
         remainingDrawerChanges = 0;
         editDrawerMode = false;
         updateUI(false);
@@ -296,13 +292,11 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
     @Override
     public void onStartRefreshContent() {
-        refreshing = true;
         invalidateOptionsMenu();
     }
 
     @Override
     public void onEndRefreshContent() {
-        refreshing = false;
         invalidateOptionsMenu();
     }
 
@@ -372,7 +366,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         mailboxDialog = null;
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+        View view = inflater.inflate(R.layout.generic_dialog_layout, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setNegativeButton(getString(R.string.abort),
                 new DialogInterface.OnClickListener() {
@@ -384,9 +378,9 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         );
 
         builder.setView(view);
-        ListView mailboxListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+        ListView mailboxListView = (ListView) view.findViewById(R.id.generic_dialog_listview);
 
-        mailboxAdapter = new MailboxArrayAdapter(this, R.layout.attachmentdialog_list_item, mailboxes);
+        mailboxAdapter = new MailboxArrayAdapter(this, R.layout.generic_dialog_list_item, mailboxes);
         mailboxListView.setAdapter(mailboxAdapter);
         mailboxListView.setOnItemClickListener(new ChangeMailboxListOnItemClickListener());
 
@@ -630,6 +624,43 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 }
 
             }.execute(null, null, null);
+    }
+
+    private void refreshInvoiceBanksAgreementState(){
+    	new AsyncTask<Void, Void, ArrayList<Bank>>() {
+
+    		@Override
+    		protected ArrayList<Bank> doInBackground(Void... params) {
+                ArrayList<Bank> banks;
+                try {
+                    banks = ContentOperations.getInvoiceBanksAgreementState(getApplicationContext());
+                }catch (Exception e){
+                    return null;
+                }
+                return banks;
+    		}
+
+    		@Override
+        protected void onPostExecute(final ArrayList<Bank> banks) {
+                if(banks != null){
+                    boolean hasBankAgreementType1 = false;
+                    boolean hasBankAgreementType2 = false;
+
+                    for(Bank bank : banks){
+                        if(bank.hasAgreementType(Agreement.AGREEMENT_TYPE_1)){
+                            hasBankAgreementType1 = true;
+                        }
+                        if(bank.hasAgreementType(Agreement.AGREEMENT_TYPE_2)){
+                            hasBankAgreementType2 = true;
+                        }
+                    }
+
+                    SharedPreferencesUtilities.setBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_1, hasBankAgreementType1);
+                    SharedPreferencesUtilities.setBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2, hasBankAgreementType2);
+                }
+        }
+
+    	}.execute(null, null, null);
     }
 
     private void startUploadActivity() {

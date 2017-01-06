@@ -124,6 +124,8 @@ public class PrimaryAccount {
         return getLinkByRelation(ApiConstants.URL_RELATIONS_ACCOUNT_SETTINGS);
     }
 
+    public String getBanksUri(){return getLinkByRelation(ApiConstants.URL_RELATIONS_BANKS);}
+
     public String getCurrentBankAccountUri(){
         return getLinkByRelation(ApiConstants.URL_RELATIONS_CURRENT_BANK_ACCOUNT);
     }

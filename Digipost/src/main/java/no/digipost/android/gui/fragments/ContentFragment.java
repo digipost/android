@@ -30,6 +30,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import no.digipost.android.R;
@@ -37,14 +39,13 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.recyclerview.*;
+import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Receipt;
-import no.digipost.android.utilities.DataFormatUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
-import no.digipost.android.utilities.SettingsUtilities;
+import no.digipost.android.utilities.*;
 
 import static java.lang.String.format;
 
@@ -228,9 +229,24 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     }
 
     private void showDeleteContentDialog(final List<CONTENT_TYPE> content) {
-        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
-                getActionDeletePromtString(content.size()), getString(R.string.delete));
-        alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+        String dialogTitle = getString(R.string.delete);
+        String deleteButtonText = getString(R.string.delete);
+        String cancelButtonText = getString(R.string.abort);
+        String messageText = getActionDeletePromptString(content.size());
+
+        boolean notReceipt = getContent() != ApplicationConstants.RECEIPTS;
+        int numberOfInvoices = numberOfInvoices(content);
+
+        if(notReceipt && numberOfInvoices > 0){
+            int numberOfFiles = content.size();
+            String filesText = numberOfFiles +" "+ (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));
+            String invoicesText = numberOfInvoices +" "+ (numberOfInvoices == 1 ? getString(R.string.invoice_delete_invoice_single) : getString(R.string.invoice_delete_invoice_plural));
+            messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices),filesText, invoicesText);
+        }
+
+        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, messageText, dialogTitle);
+
+        alertDialogBuilder.setPositiveButton(deleteButtonText, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 finishActionMode();
@@ -238,15 +254,32 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
                 dialogInterface.dismiss();
             }
         });
-        alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+
+        alertDialogBuilder.setNegativeButton(cancelButtonText, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 finishActionMode();
                 dialogInterface.cancel();
             }
         });
+
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private int numberOfInvoices(final List<CONTENT_TYPE> content){
+        int numberOfInvoices = 0;
+        for (CONTENT_TYPE object : content){
+            Document document = (Document) object;
+            ArrayList<Attachment> attachments = document.getAttachment();
+            for(Attachment attachment : attachments){
+                if(attachment.getType().equals(ApiConstants.INVOICE)){
+                    numberOfInvoices += 1;
+                }
+            }
+        }
+
+        return numberOfInvoices;
     }
 
     private String getContentTypeString(int count) {
@@ -259,15 +292,15 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             }
         } else {
             if (count > 1) {
-                res = R.string.document_plural;
+                res = R.string.letter_plural;
             } else {
-                res = R.string.document_singular;
+                res = R.string.letter_singular;
             }
         }
         return getString(res);
     }
 
-    private String getActionDeletePromtString(int count) {
+    private String getActionDeletePromptString(int count) {
         String type = getContentTypeString(count);
 
         if (count > 1) {
