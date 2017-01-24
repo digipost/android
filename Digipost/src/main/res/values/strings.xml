@@ -293,5 +293,6 @@
     <string name="invoice_delete_invoice_single">faktura</string>
     <string name="invoice_delete_invoice_plural">fakturaer</string>
     <string name="invoice_delete_multiple_files_including_n_invoices">Er du sikker på at du vil slette %1$s, inkludert %2$s? Om du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken.</string>
+    <string name="invoice_delete_multiple_files_including_n_invoices_active_type_2_agreement">Er du sikker på at du vil slette %1$s, inkludert %2$s fra både Digipost og nettbanken?\n\nOm du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken.</string>
 
 </resources>
