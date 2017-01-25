@@ -280,9 +280,12 @@
     <!-- Delete invoice document dialog -->
     <string name="invoice_delete_dialog_title">Slett faktura</string>
 
-    <string name="invoice_delete_dialog_paid_message">Er du sikker på at du vil slette fakturaen?\nOm du vil stoppe betalingen må du logge inn i nettbanken også</string>
-    <string name="invoice_delete_dialog_unpaid_message_10">Er du sikker på at du vil slette fakturaen?</string>
-    <string name="invoice_delete_dialog_unpaid_message_20">Er du sikker på at du vil slette fakturaen fra både Digipost og nettbanken?</string>
+    <string name="invoice_delete_dialog_paid_invoice_type_1_agreement">Er du sikker på at du vil slette fakturaen? Om du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken</string>
+    <string name="invoice_delete_dialog_paid_invoice_type_2_agreement">Er du sikker på at du vil slette fakturaen fra både Digipost og nettbanken? Om du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken</string>
+    <string name="invoice_delete_dialog_unpaid_invoice_type_1_agreement">Er du sikker på at du vil slette denne fakturaen?</string>
+    <string name="invoice_delete_dialog_unpaid_invoice_type_2_agreement">Er du sikker på at du vil slette fakturaen fra både Digipost og nettbanken?</string>
+    <string name="invoice_delete_dialog_invoice_no_agreement">Er du sikker på at du vil slette denne fakturaen?</string>
+
     <string name="invoice_delete_dialog_delete_button">Slett</string>
     <string name="invoice_delete_dialog_cancel_button">Avbryt</string>
 

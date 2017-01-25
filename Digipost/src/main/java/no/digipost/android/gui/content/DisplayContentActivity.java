@@ -191,25 +191,23 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
             Payment payment = invoice.getPayment();
 
-            if(SharedPreferencesUtilities.hasAnyBankAgreements(getApplicationContext())) {
+            if (SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2)) {
                 if (payment != null) {
-                    //Behandlet faktura, 1.0 & 2.0
-                    message = getString(R.string.invoice_delete_dialog_paid_message);
+                    message = getString(R.string.invoice_delete_dialog_paid_invoice_type_2_agreement);
                 } else {
-                    //Ubehandlet faktura, 1.0 & 2.0
-                    if (SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2)) {
-                        message = getString(R.string.invoice_delete_dialog_unpaid_message_20);
-                    } else {
-                        message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
-                    }
+                    message = getString(R.string.invoice_delete_dialog_unpaid_invoice_type_2_agreement);
                 }
-            }else{
-                message = getString(R.string.invoice_delete_dialog_unpaid_message_10);
+            } else if (SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_1)) {
+                if (payment != null) {
+                    message = getString(R.string.invoice_delete_dialog_paid_invoice_type_1_agreement);
+                } else {
+                    message = getString(R.string.invoice_delete_dialog_unpaid_invoice_type_1_agreement);
+                }
+            } else {
+                message = getString(R.string.invoice_delete_dialog_invoice_no_agreement);
             }
-            positiveAction = getString(R.string.invoice_delete_dialog_delete_button);
-            negativeAction = getString(R.string.invoice_delete_dialog_cancel_button);
         }
-        
+
         showActionDialog(originActivity, ApiConstants.DELETE, message, positiveAction, negativeAction );
     }
 
