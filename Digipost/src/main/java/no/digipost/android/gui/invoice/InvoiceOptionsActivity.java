@@ -15,7 +15,7 @@
  */
 
 
-package no.digipost.android.gui.content.invoice;
+package no.digipost.android.gui.invoice;
 
 import android.content.Context;
 import android.content.Intent;

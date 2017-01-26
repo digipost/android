@@ -96,8 +96,8 @@
                 android:name=".gui.content.PersonalSettingsActivity"
                 android:configChanges="orientation|screenSize"/>
         <activity
-                android:name=".gui.content.invoice.InvoiceBankActivity"/>
-        <activity android:name=".gui.content.invoice.InvoiceOptionsActivity">
+                android:name=".gui.invoice.InvoiceBankActivity"/>
+        <activity android:name=".gui.invoice.InvoiceOptionsActivity">
         </activity>
         <receiver
                 android:name="com.google.android.gms.gcm.GcmReceiver"

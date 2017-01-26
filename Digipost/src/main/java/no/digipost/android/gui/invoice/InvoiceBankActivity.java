@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui.content.invoice;
+package no.digipost.android.gui.invoice;
 
 import android.content.Intent;
 import android.net.Uri;
