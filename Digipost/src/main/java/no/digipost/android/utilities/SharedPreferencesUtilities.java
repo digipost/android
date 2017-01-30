@@ -26,15 +26,13 @@ import no.digipost.android.constants.ApplicationConstants;
 
 public class SharedPreferencesUtilities {
     private final static String HIDE_INVOICE_OPTIONS = "hide_invoice_options";
-    public final static String HAS_BANK_AGREEMENT_TYPE_1 = "hasBankAgreementType1";
-    public final static String HAS_BANK_AGREEMENT_TYPE_2 = "hasBankAgreementType2";
 
-    public static SharedPreferences getSharedPreferences(final Context context) {
+    public static SharedPreferences getDefault(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public static int screenlockChoice(final Context context) {
-        return getSharedPreferences(context).getInt(ApplicationConstants.SCREENLOCK_CHOICE,
+        return getDefault(context).getInt(ApplicationConstants.SCREENLOCK_CHOICE,
                 ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET);
     }
 
@@ -43,36 +41,36 @@ public class SharedPreferencesUtilities {
     }
 
     public static void storeScreenlockChoice(final Context context, final int choice) {
-        SharedPreferences.Editor edit = getSharedPreferences(context).edit();
+        SharedPreferences.Editor edit = getDefault(context).edit();
         edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE, choice);
         edit.apply();
     }
 
     public static String getEncryptedRefreshtokenCipher(final Context context) {
-        return getSharedPreferences(context).getString(ApiConstants.REFRESH_TOKEN, "");
+        return getDefault(context).getString(ApiConstants.REFRESH_TOKEN, "");
     }
 
     public static void storeEncryptedRefreshtokenCipher(final String cipher, final Context context) {
-        Editor editor = getSharedPreferences(context).edit();
+        Editor editor = getDefault(context).edit();
         editor.remove(ApiConstants.REFRESH_TOKEN);
         editor.putString(ApiConstants.REFRESH_TOKEN, cipher);
         editor.apply();
     }
 
     public static void setLogoutFailed(final Context context, boolean failed){
-        getSharedPreferences(context).edit().putBoolean(ApplicationConstants.LOGOUT_FAILED, failed).apply();
+        getDefault(context).edit().putBoolean(ApplicationConstants.LOGOUT_FAILED, failed).apply();
     }
 
     public static void deleteRefreshtoken(final Context context) {
         ContentOperations.setAccountToNull();
-        Editor edit = getSharedPreferences(context).edit();
+        Editor edit = getDefault(context).edit();
         edit.remove(ApiConstants.REFRESH_TOKEN);
         edit.apply();
     }
 
     public static int numberOfTimesAppHasRun(final Context context) {
-        Editor editor = getSharedPreferences(context).edit();
-        int numberOfTimesAppHasRun = getSharedPreferences(context).getInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, 1);
+        Editor editor = getDefault(context).edit();
+        int numberOfTimesAppHasRun = getDefault(context).getInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, 1);
         editor.putInt(ApplicationConstants.NUMBER_OF_TIMES_APP_HAS_RUN, numberOfTimesAppHasRun + 1);
         editor.apply();
 
@@ -80,7 +78,7 @@ public class SharedPreferencesUtilities {
     }
 
     public static boolean shouldDeleteStoredRefreshToken(final Context context) {
-        int storedSDKVersion = getSharedPreferences(context).getInt(ApplicationConstants.ANDROID_SDK_VERSION,0);
+        int storedSDKVersion = getDefault(context).getInt(ApplicationConstants.ANDROID_SDK_VERSION,0);
         int currentSDKVersion = android.os.Build.VERSION.SDK_INT;
         int androidM = android.os.Build.VERSION_CODES.M;
         storeCurrentAndroidSDKVersion(context);
@@ -89,7 +87,7 @@ public class SharedPreferencesUtilities {
     }
 
     private static void storeCurrentAndroidSDKVersion(final Context context){
-        Editor editor = getSharedPreferences(context).edit();
+        Editor editor = getDefault(context).edit();
         editor.putInt(ApplicationConstants.ANDROID_SDK_VERSION, android.os.Build.VERSION.SDK_INT);
         editor.apply();
     }
@@ -101,32 +99,19 @@ public class SharedPreferencesUtilities {
     }
 
     private static void storeCurrentAppVersionCode(final Context context){
-        Editor editor = getSharedPreferences(context).edit();
+        Editor editor = getDefault(context).edit();
         editor.putInt(ApplicationConstants.APP_VERSION, currentAppVersionCode(context));
         editor.apply();
     }
 
     public static void hideInvoiceOptionsDialog(final Context context){
-        Editor editor = getSharedPreferences(context).edit();
+        Editor editor = getDefault(context).edit();
         editor.putBoolean(HIDE_INVOICE_OPTIONS, true);
         editor.apply();
     }
 
     public static boolean showInvoiceOptionsDialog(final Context context){
-        return !getSharedPreferences(context).getBoolean(HIDE_INVOICE_OPTIONS, false);
+        return !getDefault(context).getBoolean(HIDE_INVOICE_OPTIONS, false);
     }
 
-    public static void setBankAgreement(final Context context, String agreement, boolean result){
-        Editor editor = getSharedPreferences(context).edit();
-        editor.putBoolean(agreement, result);
-        editor.apply();
-    }
-
-    public static boolean hasBankAgreement(final Context context, final String agreement){
-        return getSharedPreferences(context).getBoolean(agreement, false);
-    }
-
-    public static boolean hasAnyBankAgreements(final Context context){
-        return getSharedPreferences(context).getBoolean(HAS_BANK_AGREEMENT_TYPE_1, false) || getSharedPreferences(context).getBoolean(HAS_BANK_AGREEMENT_TYPE_2, false);
-    }
 }

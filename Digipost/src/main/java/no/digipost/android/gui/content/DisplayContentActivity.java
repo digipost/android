@@ -48,6 +48,7 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
+import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.invoice.InvoiceOptionsActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
@@ -111,7 +112,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         final Attachment attachment = DocumentContentStore.getDocumentAttachment();
 
         boolean attachmentIsInvoice = attachment != null && attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null;
-        boolean hasNoActiveBankAgreements = !SharedPreferencesUtilities.hasAnyBankAgreements(getApplicationContext());
+        boolean hasNoActiveBankAgreements = !InvoiceBankAgreements.hasActiveAgreements(getApplicationContext());
         boolean showInvoiceOptionsTips = SharedPreferencesUtilities.showInvoiceOptionsDialog(getApplicationContext());
 
         return attachmentIsInvoice && hasNoActiveBankAgreements && showInvoiceOptionsTips;
@@ -191,13 +192,13 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
             Payment payment = invoice.getPayment();
 
-            if (SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2)) {
+            if (InvoiceBankAgreements.hasActiveAgreementType(getApplicationContext(), InvoiceBankAgreements.TYPE_2)) {
                 if (payment != null) {
                     message = getString(R.string.invoice_delete_dialog_paid_invoice_type_2_agreement);
                 } else {
                     message = getString(R.string.invoice_delete_dialog_unpaid_invoice_type_2_agreement);
                 }
-            } else if (SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_1)) {
+            } else if (InvoiceBankAgreements.hasActiveAgreementType(getApplicationContext(), InvoiceBankAgreements.TYPE_1)) {
                 if (payment != null) {
                     message = getString(R.string.invoice_delete_dialog_paid_invoice_type_1_agreement);
                 } else {
@@ -252,15 +253,13 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     protected void setSendToBankMenuText(boolean sendToBankVisible) {
-        boolean hasType1BankAgreement = SharedPreferencesUtilities.hasBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2);
+        boolean hasActiveType2Agreement = InvoiceBankAgreements.hasActiveAgreementType(getApplicationContext(), InvoiceBankAgreements.TYPE_2);
 
-        if(hasType1BankAgreement){
+        if(hasActiveType2Agreement){
             sendToBank.setVisible(false);
         }else {
 
             if (sendToBankVisible) {
-
-
                 sendToBank.setVisible(true);
                 Payment payment = DocumentContentStore.getDocumentAttachment().getInvoice() == null ? null : DocumentContentStore
                         .getDocumentAttachment()
@@ -269,8 +268,8 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                 if (payment != null) {
                     sendToBank.setTitle(getString(R.string.sent_to_bank));
                 }else{
-                    boolean dontHaveAnyBankAgreement = !SharedPreferencesUtilities.hasAnyBankAgreements(getApplicationContext());
-                    if(dontHaveAnyBankAgreement){
+                    boolean hasNoActiveBankAgreements = !InvoiceBankAgreements.hasActiveAgreements(getApplicationContext());
+                    if(hasNoActiveBankAgreements){
                         sendToBank.setTitle(R.string.invoice_payment_tips_button);
                     }
                 }

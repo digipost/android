@@ -42,7 +42,16 @@
             return this.name;
         }
 
-        public boolean hasAgreementType(final String agreementType){
+        public boolean haveActiveAgreements(){
+            for(Agreement agreement : agreements){
+                if(agreement.active){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public boolean hasActiveAgreementType(final String agreementType){
             for(Agreement agreement : agreements){
                 if(agreement.active && agreementType.equals(agreement.agreementType)){
                     return true;

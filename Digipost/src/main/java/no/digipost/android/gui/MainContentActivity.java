@@ -67,6 +67,8 @@ import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.fragments.EditFolderFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
+import no.digipost.android.gui.invoice.InvoiceBankAgreements;
+import no.digipost.android.gui.invoice.InvoiceOverviewActivity;
 import no.digipost.android.model.*;
 import no.digipost.android.utilities.ApplicationUtilities;
 import no.digipost.android.utilities.DialogUtitities;
@@ -110,8 +112,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         GCMController.init(this);
-        refreshInvoiceBanksAgreementState();
-
+        InvoiceBankAgreements.refreshBankAgreements(getApplicationContext());
         drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             @Override
@@ -140,7 +141,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         setDrawerListeners();
 
         selectItem(ApplicationConstants.MAILBOX);
-        SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
+        SharedPreferencesUtilities.getDefault(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
 
         if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
             drawer.openDrawer(GravityCompat.START);
@@ -624,43 +625,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 }
 
             }.execute(null, null, null);
-    }
-
-    private void refreshInvoiceBanksAgreementState(){
-    	new AsyncTask<Void, Void, ArrayList<Bank>>() {
-
-    		@Override
-    		protected ArrayList<Bank> doInBackground(Void... params) {
-                ArrayList<Bank> banks;
-                try {
-                    banks = ContentOperations.getInvoiceBanksAgreementState(getApplicationContext());
-                }catch (Exception e){
-                    return null;
-                }
-                return banks;
-    		}
-
-    		@Override
-        protected void onPostExecute(final ArrayList<Bank> banks) {
-                if(banks != null){
-                    boolean hasBankAgreementType1 = false;
-                    boolean hasBankAgreementType2 = false;
-
-                    for(Bank bank : banks){
-                        if(bank.hasAgreementType(Agreement.AGREEMENT_TYPE_1)){
-                            hasBankAgreementType1 = true;
-                        }
-                        if(bank.hasAgreementType(Agreement.AGREEMENT_TYPE_2)){
-                            hasBankAgreementType2 = true;
-                        }
-                    }
-
-                    SharedPreferencesUtilities.setBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_1, hasBankAgreementType1);
-                    SharedPreferencesUtilities.setBankAgreement(getApplicationContext(), SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2, hasBankAgreementType2);
-                }
-        }
-
-    	}.execute(null, null, null);
     }
 
     private void startUploadActivity() {

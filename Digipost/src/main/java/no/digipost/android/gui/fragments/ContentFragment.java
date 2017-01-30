@@ -41,6 +41,7 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.recyclerview.*;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
@@ -161,6 +162,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         activityCommunicator.onEndRefreshContent();
         if(contentActionMode != null) contentActionMode.finish();
         swipeRefreshLayout.setRefreshing(false);
+
     }
 
     @Override
@@ -242,7 +244,8 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             String filesText = numberOfFiles +" "+ (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));
             String invoicesText = numberOfInvoices +" "+ (numberOfInvoices == 1 ? getString(R.string.invoice_delete_invoice_single) : getString(R.string.invoice_delete_invoice_plural));
 
-            if (SharedPreferencesUtilities.hasBankAgreement(context, SharedPreferencesUtilities.HAS_BANK_AGREEMENT_TYPE_2)) {
+
+            if (InvoiceBankAgreements.hasActiveAgreementType(context, InvoiceBankAgreements.TYPE_2)) {
                 messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices_active_type_2_agreement), filesText, invoicesText);
             }else {
                 messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices), filesText, invoicesText);
