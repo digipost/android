@@ -181,10 +181,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         return false;
     }
 
-    public boolean isDrawerClosed(){
-        return !drawer.isDrawerOpen(GravityCompat.START);
-    }
-
     private void setDrawerListeners() {
         drawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
