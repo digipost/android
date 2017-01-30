@@ -25,6 +25,7 @@
     <string name="drawer_my_folders">MINE MAPPER</string>
     <string name="drawer_my_account">MIN KONTO</string>
     <string name="drawer_change_account">Bytt konto</string>
+    <string name="drawer_invoice_overview">Fakturaoversikt</string>
     <string name="drawer_settings">Innstillinger</string>
     <string name="drawer_help">Hjelp</string>
     <string name="drawer_logout">Logg ut</string>
@@ -298,4 +299,7 @@
     <string name="invoice_delete_multiple_files_including_n_invoices">Er du sikker på at du vil slette %1$s, inkludert %2$s? Om du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken.</string>
     <string name="invoice_delete_multiple_files_including_n_invoices_active_type_2_agreement">Er du sikker på at du vil slette %1$s, inkludert %2$s fra både Digipost og nettbanken?\n\nOm du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken.</string>
 
+
+    <string name="invoice_overview_title">Fakturaoversikt</string>
+    <string name="invoice_overview_subtitle">Her kan du se en oversikt over alle dine aktive avtaler</string>
 </resources>

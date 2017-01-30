@@ -146,7 +146,9 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.account_32px, 0, 0, 0);
         } else if (name.equals(context.getResources().getString(R.string.drawer_settings))) {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.admin_32px, 0, 0, 0);
-        } else if (name.equals(context.getResources().getString(R.string.drawer_help))) {
+        } else if(name.equals(context.getResources().getString(R.string.drawer_invoice_overview))){
+            linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.usd_32, 0, 0, 0);
+        } if (name.equals(context.getResources().getString(R.string.drawer_help))) {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.help_32px, 0, 0, 0);
         } else if (name.equals(context.getResources().getString(R.string.drawer_logout))) {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.logout_32px, 0, 0, 0);

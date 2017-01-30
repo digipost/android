@@ -429,7 +429,13 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             startActivityForResult(intent, INTENT_REQUESTCODE);
             return true;
 
-        } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_help))) {
+        }
+        else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_invoice_overview))) {
+            Intent intent = new Intent(MainContentActivity.this, InvoiceOverviewActivity.class);
+            startActivity(intent);
+            return true;
+
+        }else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_help))) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiConstants.URL_HELP));
             startActivity(browserIntent);
             return true;
@@ -560,7 +566,9 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             }
         }
 
+
         drawerItems.add(getResources().getString(R.string.drawer_settings));
+        drawerItems.add(getResources().getString(R.string.drawer_invoice_overview));
         drawerItems.add(getResources().getString(R.string.drawer_help));
         drawerItems.add(getResources().getString(R.string.drawer_logout));
 

@@ -97,7 +97,9 @@
                 android:configChanges="orientation|screenSize"/>
         <activity
                 android:name=".gui.invoice.InvoiceBankActivity"/>
-        <activity android:name=".gui.invoice.InvoiceOptionsActivity">
+        <activity android:name="no.digipost.android.gui.invoice.InvoiceOptionsActivity">
+        </activity>
+        <activity android:name="no.digipost.android.gui.invoice.InvoiceOverviewActivity">
         </activity>
         <receiver
                 android:name="com.google.android.gms.gcm.GcmReceiver"
