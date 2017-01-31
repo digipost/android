@@ -112,7 +112,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         GCMController.init(this);
-        InvoiceBankAgreements.refreshBankAgreements(getApplicationContext());
+        InvoiceBankAgreements.updateBanksFromServer(getApplicationContext());
         drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             @Override

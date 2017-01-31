@@ -50,39 +50,45 @@ public class InvoiceBankAgreements {
         return getBanksWithActiveAgreements(context).size() > 0;
     }
 
-    public static void refreshBankAgreements(final Context context) {
-        Banks banks = getBanks(context);
+    public static void updateBanksFromServer(final Context context) {
+        Banks banks = getBanksFromServer(context);
         if (banks != null) {
-            storeBankAgreements(context, banks);
+            storeBanksCache(context, banks);
         } else {
-            clearBankAgreements(context);
+            clearBanksCache(context);
         }
     }
 
-    private static ArrayList<Bank> getBanksWithActiveAgreements(final Context context) {
-        String banksAsJSON = SharedPreferencesUtilities.getDefault(context).getString(INVOICE_BANKS, "");
+    public static ArrayList<Bank> getBanks(final Context context) {
+        return getBanksFromSharedPreferences(context).getBanks();
+    }
 
+    public static ArrayList<Bank> getBanksWithActiveAgreements(final Context context) {
+        return getBanksFromSharedPreferences(context).getBanksWithActiveAgreements();
+    }
+
+    private static Banks getBanksFromSharedPreferences(final Context context){
+        String banksAsJSON = SharedPreferencesUtilities.getDefault(context).getString(INVOICE_BANKS, "");
         if (!banksAsJSON.isEmpty()) {
             Type type = new TypeToken<Banks>() {}.getType();
-            Banks banks = new Gson().fromJson(banksAsJSON, type);
-            return banks.getBanksWithActiveAgreements();
+            return new Gson().fromJson(banksAsJSON, type);
         } else {
-            return new ArrayList<>();
+            return getBanksFromServer(context);
         }
     }
 
-    private static void storeBankAgreements(final Context context, Banks banks) {
+    private static void storeBanksCache(final Context context, Banks banks) {
         String banksAsJSON = new Gson().toJson(banks);
         SharedPreferences.Editor editor = SharedPreferencesUtilities.getDefault(context).edit();
         editor.putString(INVOICE_BANKS, banksAsJSON).apply();
     }
 
-    private static void clearBankAgreements(final Context context) {
+    private static void clearBanksCache(final Context context) {
         SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
         sharedPreferences.edit().remove(INVOICE_BANKS).apply();
     }
 
-    public static Banks getBanks(final Context context) {
+    private static Banks getBanksFromServer(final Context context) {
         try {
             GetBanksTask getBanksTask = new GetBanksTask(context);
             return getBanksTask.execute().get();

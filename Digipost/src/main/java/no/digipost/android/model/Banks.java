@@ -29,7 +29,7 @@ public class Banks {
     private ArrayList<Bank> banks;
 
     public ArrayList<Bank> getBanks() {
-        return banks;
+        return this.banks;
     }
 
     public ArrayList<Bank> getBanksWithActiveAgreements(){
