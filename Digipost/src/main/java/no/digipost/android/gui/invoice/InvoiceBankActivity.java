@@ -29,12 +29,11 @@ import android.widget.TextView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.R;
 import no.digipost.android.analytics.GAEventController;
+import no.digipost.android.model.Bank;
 
 import static java.lang.String.format;
 
 public class InvoiceBankActivity extends AppCompatActivity {
-
-    private InvoiceBank invoiceBank;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,29 +69,35 @@ public class InvoiceBankActivity extends AppCompatActivity {
         if(actionbar != null){
             actionbar.setDisplayHomeAsUpEnabled(true);
             actionbar.setHomeButtonEnabled(true);
-            String invoiceSubject = getIntent().getExtras().getString("InvoiceSubject");
+            String invoiceSubject = getIntent().getExtras().getString(InvoiceOptionsActivity.INTENT_ACTIONBAR_TITLE);
             actionbar.setTitle(invoiceSubject);
             actionbar.setDisplayShowTitleEnabled(true);
         }
     }
 
+    private Bank getBank(){
+        String bankName = getIntent().getExtras().getString(InvoiceOptionsActivity.INTENT_BANK_NAME);
+        return InvoiceBankAgreements.getBankByName(getApplicationContext(), bankName);
+    }
+
     private void setupLayout(){
-        this.invoiceBank = getIntent().getExtras().getParcelable("InvoiceBank");
-        if(this.invoiceBank != null) {
+        final Bank bank = getBank();
+
+        if(bank != null) {
             ImageView logo = (ImageView)findViewById(R.id.invoice_bank_logo);
             TextView title = (TextView) findViewById(R.id.invoice_bank_title);
             TextView subTitle = (TextView) findViewById(R.id.invoice_bank_subtitle);
             Button openBankUrlButton = (Button) findViewById(R.id.invoice_bank_url_button);
             Button readMoreButton = (Button) findViewById(R.id.invoice_bank_read_more_link);
 
-            int logoResourceId = getApplicationContext().getResources().getIdentifier(invoiceBank.getLogo()+"_large", "drawable", getApplicationContext().getPackageName());
+            int logoResourceId = getApplicationContext().getResources().getIdentifier(bank.getLogo()+"_large", "drawable", getApplicationContext().getPackageName());
             logo.setImageResource(logoResourceId);
-            logo.setContentDescription(invoiceBank.getName());
+            logo.setContentDescription(bank.getName());
 
-            if(invoiceBank.setupIsAvailable){
+            if(bank.offersAgreementType(InvoiceBankAgreements.TYPE_2)){
                 title.setText(R.string.invoice_bank_title_enabled);
                 subTitle.setText(R.string.invoice_bank_subtitle_enabled);
-                openBankUrlButton.setText(format(getString(R.string.invoice_bank_button_enabled), invoiceBank.getName()));
+                openBankUrlButton.setText(format(getString(R.string.invoice_bank_button_enabled), bank.getName()));
                 readMoreButton.setText(R.string.invoice_bank_read_more_enabled);
             }else{
                 title.setText(R.string.invoice_bank_title_disabled);
@@ -105,8 +110,8 @@ public class InvoiceBankActivity extends AppCompatActivity {
             openBankUrlButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    GAEventController.sendInvoiceClickedSetup20Link(InvoiceBankActivity.this, invoiceBank.getName());
-                    openExternalUrl(invoiceBank.getUrl());
+                    GAEventController.sendInvoiceClickedSetup20Link(InvoiceBankActivity.this, bank.getName());
+                    openExternalUrl(bank.getUrl());
                 }
             });
 
@@ -114,11 +119,11 @@ public class InvoiceBankActivity extends AppCompatActivity {
             readMoreButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(invoiceBank.setupIsAvailable) {
-                        GAEventController.sendInvoiceClickedDigipostOpenPagesLink(InvoiceBankActivity.this, invoiceBank.getName());
+                    if(bank.offersAgreementType(InvoiceBankAgreements.TYPE_2)) {
+                        GAEventController.sendInvoiceClickedDigipostOpenPagesLink(InvoiceBankActivity.this, bank.getName());
                         openExternalUrl("https://digipost.no/faktura");
                     }else{
-                        GAEventController.sendInvoiceClickedSetup10Link(InvoiceBankActivity.this, invoiceBank.getName());
+                        GAEventController.sendInvoiceClickedSetup10Link(InvoiceBankActivity.this, bank.getName());
                         openExternalUrl("https://digipost.no/app/post#/faktura");
                     }
                 }

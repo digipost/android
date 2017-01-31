@@ -38,8 +38,8 @@ public class InvoiceBankAgreements {
     public static boolean hasActiveAgreementType(final Context context, final String agreementType) {
         ArrayList<Bank> banksWithActiveAgreements = getBanksWithActiveAgreements(context);
         for (Bank bank : banksWithActiveAgreements) {
-            boolean hasActiveAgreementTypebank = bank.hasActiveAgreementType(agreementType);
-            if (hasActiveAgreementTypebank) {
+            boolean hasActiveAgreementType = bank.hasActiveAgreementType(agreementType);
+            if (hasActiveAgreementType) {
                 return true;
             }
         }
@@ -65,6 +65,16 @@ public class InvoiceBankAgreements {
 
     public static ArrayList<Bank> getBanksWithActiveAgreements(final Context context) {
         return getBanksFromSharedPreferences(context).getBanksWithActiveAgreements();
+    }
+
+    public static Bank getBankByName(final Context context, final String bankName){
+        ArrayList<Bank> banks = getBanks(context);
+        for(Bank bank :banks){
+            if(bank.getName().toUpperCase().equals(bankName.toUpperCase())){
+                return bank;
+            }
+        }
+        return null;
     }
 
     private static Banks getBanksFromSharedPreferences(final Context context){

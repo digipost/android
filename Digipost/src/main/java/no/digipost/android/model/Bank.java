@@ -59,4 +59,34 @@
             }
             return false;
         }
+
+        public boolean offersAgreementType(final String agreementType){
+            for(Agreement agreement : agreements){
+                if(agreementType.equals(agreement.agreementType)){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public String getLogo(){
+            switch (this.name.toUpperCase()){
+                case "DNB" :
+                    return "invoice_bank_logo_dnb";
+                case "KLP BANKEN" :
+                    return "invoice_bank_logo_klp";
+                case "SKANDIABANKEN" :
+                    return "invoice_bank_logo_skandiabanken";
+            }
+            return "";
+        }
+
+        public String getUrl(){
+            switch (this.name.toUpperCase()){
+                case "DNB" :
+                    return "https://www.dnb.no/privat/nettbank-mobil-og-kort/betaling/elektronisk-faktura.html";
+                default:
+                    return "https://www.digipost.no";
+            }
+        }
     }

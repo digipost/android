@@ -16,13 +16,21 @@
 
 package no.digipost.android.gui.invoice;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.R;
+import no.digipost.android.model.Bank;
+
+import java.util.ArrayList;
 
 public class InvoiceOverviewActivity extends AppCompatActivity {
 
@@ -65,9 +73,33 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
         return true;
     }
 
+    private void showBankFragment(Bank bank){
+        Log.d("Bank Fragment", bank.getName());
+    }
+
     private void setupListView() {
-        //ListView listView = (ListView) findViewById(R.id.invoice_overview_banks_listview);
-       // InvoiceOptionsActivity.InvoiceBankAdapter adapter = new InvoiceOptionsActivity.InvoiceBankAdapter(this, R.layout.invoice_bank_list_item, getInvoiceBanks());
-        //listView.setAdapter(adapter);
+        ListView listView = (ListView) findViewById(R.id.invoice_overview_banks_listview);
+        ArrayList<Bank> banks = InvoiceBankAgreements.getBanksWithActiveAgreements(getApplicationContext());
+        OverviewListAdapter adapter = new OverviewListAdapter(this, R.layout.invoice_bank_list_item, banks);
+        listView.setAdapter(adapter);
+    }
+
+    private class OverviewListAdapter extends BankListAdapter{
+
+        private OverviewListAdapter (final Context context,final int resource, ArrayList<Bank> banks){
+            super(context, resource, banks);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showBankFragment(getItem(position));
+                }
+            });
+            return view;
+        }
     }
 }

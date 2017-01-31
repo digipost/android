@@ -173,7 +173,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
     private void openBankOptionsActivity(final String invoiceSubject, final Activity activity) {
         Intent i = new Intent(activity, InvoiceOptionsActivity.class);
-        i.putExtra("InvoiceSubject", invoiceSubject);
+        i.putExtra(InvoiceOptionsActivity.INTENT_ACTIONBAR_TITLE, invoiceSubject);
         activity.startActivity(i);
     }
 
