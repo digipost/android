@@ -75,6 +75,8 @@
                     return "invoice_bank_logo_dnb";
                 case "KLP BANKEN" :
                     return "invoice_bank_logo_klp";
+                case "KLP" :
+                    return "invoice_bank_logo_klp";
                 case "SKANDIABANKEN" :
                     return "invoice_bank_logo_skandiabanken";
             }
