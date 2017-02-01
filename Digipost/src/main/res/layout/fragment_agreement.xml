@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="@color/white"
+              android:layout_margin="10dp"
+              android:padding="20dp"
+              android:minWidth="400dp"
+              android:layout_height="match_parent">
+
+    <TextView
+            android:id="@+id/fragment_agreement_bank_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"/>
+
+    <LinearLayout
+            android:id="@+id/fragment_agreement_type_1_view"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content">
+        <Button
+                android:id="@+id/invoice_overview_active_agreement_type_1"
+                android:layout_width="wrap_content"
+                android:text="@string/invoice_overview_active_agreement"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:textColor="@color/invoice_link"
+                android:layout_gravity="left|center_horizontal"/>
+        <Button
+                android:id="@+id/invoice_overview_agreement_terms_type_1"
+                android:layout_width="wrap_content"
+                android:text="@string/invoice_overview_agreement_terms"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:textColor="@color/invoice_link"
+                android:layout_gravity="left|center_horizontal"/>
+        <Button
+                android:id="@+id/invoice_overview_cancel_agreement_type_1"
+                android:layout_width="wrap_content"
+                android:text="@string/invoice_overview_cancel_agreement"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:textColor="@color/invoice_link"
+                android:layout_gravity="left|center_horizontal"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/fragment_agreement_type_2_view"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content">
+        <Button
+                android:id="@+id/invoice_overview_active_agreement_type_2"
+                android:layout_width="wrap_content"
+                android:text="@string/invoice_overview_active_agreement"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:textColor="@color/invoice_link"
+                android:layout_gravity="left|center_horizontal"/>
+        <Button
+                android:id="@+id/invoice_overview_agreement_terms_type_2"
+                android:layout_width="wrap_content"
+                android:text="@string/invoice_overview_agreement_terms"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:textColor="@color/invoice_link"
+                android:layout_gravity="left|center_horizontal"/>
+        <Button
+                android:id="@+id/invoice_overview_cancel_agreement_type_2"
+                android:layout_width="wrap_content"
+                android:text="@string/invoice_overview_cancel_agreement"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:textColor="@color/invoice_link"
+                android:layout_gravity="left|center_horizontal"/>
+
+    </LinearLayout>
+
+    <Button
+            android:id="@+id/fragment_agreement_close_button"
+            android:layout_width="wrap_content"
+            android:text="@string/close"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"/>
+
+</LinearLayout>

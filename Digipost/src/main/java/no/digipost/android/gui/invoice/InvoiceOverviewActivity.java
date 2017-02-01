@@ -16,6 +16,10 @@
 
 package no.digipost.android.gui.invoice;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,9 +29,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.R;
+import no.digipost.android.gui.fragments.EditFolderFragment;
 import no.digipost.android.model.Bank;
 
 import java.util.ArrayList;
@@ -74,7 +80,8 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
     }
 
     private void showBankFragment(Bank bank){
-        Log.d("Bank Fragment", bank.getName());
+        AgreementFragment agreementFragment = AgreementFragment.newInstance(bank);
+        agreementFragment.show(getFragmentManager(), "AgreementFragment");
     }
 
     private void setupListView() {
