@@ -79,6 +79,14 @@
             return "";
         }
 
+        public void setAgreementsOfTypeActiveState(final String agreementType, boolean activeState){
+            for (Agreement agreement : agreements){
+                if(agreement.agreementType.equals(agreementType)){
+                    agreement.active = activeState;
+                }
+            }
+        }
+
         public Agreement getAgreementForType(final String agreementType){
             for(Agreement agreement : agreements){
                 if(agreement.active && agreement.agreementType.equals(agreementType)){
