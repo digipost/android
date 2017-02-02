@@ -26,14 +26,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.R;
-import no.digipost.android.gui.fragments.EditFolderFragment;
 import no.digipost.android.model.Bank;
 
 import java.util.ArrayList;
