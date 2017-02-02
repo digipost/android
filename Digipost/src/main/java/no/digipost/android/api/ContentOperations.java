@@ -286,4 +286,9 @@ public class ContentOperations {
 
         return (Banks) JSONUtilities.processJackson(Banks.class, apiAccess.getApiJsonString(context, getAccount(context).getPrimaryAccount().getBanksUri(), null));
     }
+    public static void cancelBankAgreement(Context context, final String cancelAgreementURI) throws DigipostClientException, DigipostApiException,
+            DigipostAuthenticationException {
+        refreshApiAccess();
+        apiAccess.postput(context, ApiAccess.POST, cancelAgreementURI, null);
+    }
 }
