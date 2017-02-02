@@ -16,7 +16,12 @@
 
 package no.digipost.android.gui.invoice;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +29,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import no.digipost.android.R;
+import no.digipost.android.api.ContentOperations;
+import no.digipost.android.model.Agreement;
 import no.digipost.android.model.Bank;
+import no.digipost.android.model.Banks;
+import no.digipost.android.utilities.DialogUtitities;
 
 public class AgreementFragment extends DialogFragment {
     private static Bank bank;
@@ -49,6 +58,7 @@ public class AgreementFragment extends DialogFragment {
             ((Button) view.findViewById(R.id.invoice_overview_active_agreement_type_1)).setText(getString(R.string.invoice_overview_active_agreement, bank.getName()));
             (view.findViewById(R.id.invoice_overview_active_agreement_type_1)).setOnClickListener(clickListener);
             ((Button) view.findViewById(R.id.invoice_overview_active_agreement_type_1)).setTransformationMethod(null);
+
             //Avtalevilkår
             ((Button) view.findViewById(R.id.invoice_overview_agreement_terms_type_1)).setText(getString(R.string.invoice_overview_agreement_terms));
             (view.findViewById(R.id.invoice_overview_agreement_terms_type_1)).setOnClickListener(clickListener);
@@ -86,24 +96,103 @@ public class AgreementFragment extends DialogFragment {
         return InvoiceBankAgreements.hasActiveAgreementType(getActivity().getApplicationContext(),agreementType);
     }
 
+    private void displayInformationDialog(final String message){
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(getActivity(), message);
+        builder.setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    private void cancelAgreement(final String agreementType){
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(getActivity(), getString(R.string.invoice_overview_cancel_agreement_message),getString(R.string.invoice_overview_cancel_agreement_title));
+        builder.setPositiveButton(getString(R.string.invoice_overview_cancel_agreement_action_button), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                executeCancelAgreementTask(agreementType);
+            }
+        });
+        builder.setNegativeButton(getString(R.string.invoice_overview_cancel_agreement_cancel_button), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
     private class ClickListener implements View.OnClickListener{
 
         @Override
         public void onClick(View view) {
             if (view == getView().findViewById(R.id.invoice_overview_active_agreement_type_1)) {
-
+                displayInformationDialog("");
             }else if (view == getView().findViewById(R.id.invoice_overview_agreement_terms_type_1)) {
-
+                displayInformationDialog("");
             }else if (view == getView().findViewById(R.id.invoice_overview_cancel_agreement_type_1)) {
-
+                cancelAgreement(InvoiceBankAgreements.TYPE_1);
             }else if (view == getView().findViewById(R.id.invoice_overview_active_agreement_type_2)) {
-
+                displayInformationDialog("");
             }else if (view == getView().findViewById(R.id.invoice_overview_agreement_terms_type_2)) {
-
+                displayInformationDialog("");
             }else if (view == getView().findViewById(R.id.invoice_overview_cancel_agreement_type_2)) {
-
+                cancelAgreement(InvoiceBankAgreements.TYPE_2);
+            }else if(view == getView().findViewById(R.id.fragment_agreement_close_button)){
+                dismiss();
             }
-
         }
     }
+
+    private void executeCancelAgreementTask(String agreementType) {
+        Agreement agreement = bank.getAgreementForType(agreementType);
+        String cancelURI = agreement.getCancelUri();
+        CancelAgreementTask getBanksTask = new CancelAgreementTask(getActivity().getApplicationContext(), cancelURI, agreementType);
+        getBanksTask.execute();
+
+    }
+
+    private static class CancelAgreementTask extends AsyncTask<Void, Void, Boolean> {
+        private Context context;
+        private String cancelURI;
+        private String agreementType;
+
+        private CancelAgreementTask(final Context context, final String cancelURI, final String agreementType) {
+            this.context = context;
+            this.cancelURI = cancelURI;
+            this.agreementType = agreementType;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            bank.setAgreementsOfTypeActiveState(agreementType,false);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                ContentOperations.cancelBankAgreement(context, cancelURI);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            super.onPostExecute(success);
+            InvoiceBankAgreements.updateBanksFromServer(context);
+
+            if(success) {
+                TODO
+            }else{
+                bank.setAgreementsOfTypeActiveState(agreementType,true);
+            }
+        }
+    }
+
+
 }
