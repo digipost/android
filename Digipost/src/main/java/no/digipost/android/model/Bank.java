@@ -16,6 +16,7 @@
 
     package no.digipost.android.model;
 
+    import no.digipost.android.gui.invoice.InvoiceBankAgreements;
     import org.codehaus.jackson.annotate.JsonIgnoreProperties;
     import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -81,6 +82,15 @@
                     return "invoice_bank_logo_skandiabanken";
             }
             return "";
+        }
+
+        public Agreement getAgreementForType(final String agreementType){
+            for(Agreement agreement : agreements){
+                if(agreement.active && agreement.agreementType.equals(agreementType)){
+                    return agreement;
+                }
+            }
+            return null;
         }
 
         public String getUrl(){
