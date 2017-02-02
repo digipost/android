@@ -35,4 +35,13 @@ public class Agreement {
 
     @JsonProperty
     private ArrayList<Link> link;
+
+    public String getCancelUri() {
+        for (Link l : this.link) {
+            if (l.getRel().equals("//www.digipost.no/post/relations/terminate_bank_agreement")) {
+                return l.getUri();
+            }
+        }
+        return null;
+    }
 }
