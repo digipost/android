@@ -53,12 +53,7 @@
         }
 
         public boolean hasActiveAgreementType(final String agreementType){
-            for(Agreement agreement : agreements){
-                if(agreement.active && agreementType.equals(agreement.agreementType)){
-                    return true;
-                }
-            }
-            return false;
+            return getAgreementForType(agreementType)!= null;
         }
 
         public boolean offersAgreementType(final String agreementType){
