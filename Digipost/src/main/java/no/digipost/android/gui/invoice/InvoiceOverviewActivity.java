@@ -16,11 +16,8 @@
 
 package no.digipost.android.gui.invoice;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -36,6 +33,9 @@ import no.digipost.android.model.Bank;
 import java.util.ArrayList;
 
 public class InvoiceOverviewActivity extends AppCompatActivity {
+
+    private static ArrayList<Bank> banks;
+    private static OverviewListAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +57,11 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     private void setupActionBar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,6 +81,20 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
         return true;
     }
 
+    public static void changeAgreementStatus(final Context context, final String bankName, final String agreementType, boolean agreementTerminationSuccess){
+        for(Bank bank : banks){
+            if(bank.getName().equals(bankName)){
+                if(bank.hasActiveAgreementType(agreementType)) {
+                    bank.setAgreementsOfTypeActiveState(agreementType, agreementTerminationSuccess);
+                }
+            }
+        }
+
+        if(agreementTerminationSuccess) InvoiceBankAgreements.updateBanksFromServer(context);
+
+        adapter.notifyDataSetChanged();
+    }
+
     private void showBankFragment(Bank bank){
         AgreementFragment agreementFragment = AgreementFragment.newInstance(bank);
         agreementFragment.show(getFragmentManager(), "AgreementFragment");
@@ -83,8 +102,8 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
 
     private void setupListView() {
         ListView listView = (ListView) findViewById(R.id.invoice_overview_banks_listview);
-        ArrayList<Bank> banks = InvoiceBankAgreements.getBanksWithActiveAgreements(getApplicationContext());
-        OverviewListAdapter adapter = new OverviewListAdapter(this, R.layout.invoice_bank_list_item, banks);
+        banks = InvoiceBankAgreements.getBanksWithActiveAgreements(getApplicationContext());
+        adapter = new OverviewListAdapter(this, R.layout.invoice_bank_list_item, banks);
         listView.setAdapter(adapter);
     }
 
