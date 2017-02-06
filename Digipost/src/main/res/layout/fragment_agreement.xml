@@ -45,6 +45,12 @@
                 android:background="@color/transparent"
                 android:textColor="@color/invoice_link"
                 android:layout_gravity="left|center_horizontal"/>
+
+        <View android:background="#C7C7C7"
+              android:layout_width = "match_parent"
+              android:layout_height="2dp"/>
+        />
+
     </LinearLayout>
 
     <LinearLayout
