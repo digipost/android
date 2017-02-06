@@ -17,7 +17,6 @@
 package no.digipost.android.gui.invoice;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,7 +31,6 @@ import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.model.Agreement;
 import no.digipost.android.model.Bank;
-import no.digipost.android.model.Banks;
 import no.digipost.android.utilities.DialogUtitities;
 
 public class AgreementFragment extends DialogFragment {
@@ -151,10 +149,14 @@ public class AgreementFragment extends DialogFragment {
         String cancelURI = agreement.getCancelUri();
         CancelAgreementTask getBanksTask = new CancelAgreementTask(getActivity().getApplicationContext(), cancelURI, agreementType);
         getBanksTask.execute();
-
     }
 
-    private static class CancelAgreementTask extends AsyncTask<Void, Void, Boolean> {
+    private void changeLocalStateAndDismissFragment(Context context, final String agreementType, final boolean agreementTerminationSuccess){
+        InvoiceOverviewActivity.changeAgreementStatus(context, bank.getName(), agreementType, agreementTerminationSuccess);
+        dismiss();
+    }
+
+    private class CancelAgreementTask extends AsyncTask<Void, Void, Boolean> {
         private Context context;
         private String cancelURI;
         private String agreementType;
@@ -182,17 +184,9 @@ public class AgreementFragment extends DialogFragment {
         }
 
         @Override
-        protected void onPostExecute(Boolean success) {
-            super.onPostExecute(success);
-            InvoiceBankAgreements.updateBanksFromServer(context);
-
-            if(success) {
-                TODO
-            }else{
-                bank.setAgreementsOfTypeActiveState(agreementType,true);
-            }
+        protected void onPostExecute(Boolean AgreementTerminationSuccess) {
+            super.onPostExecute(AgreementTerminationSuccess);
+            changeLocalStateAndDismissFragment(context, agreementType, AgreementTerminationSuccess);
         }
     }
-
-
 }
