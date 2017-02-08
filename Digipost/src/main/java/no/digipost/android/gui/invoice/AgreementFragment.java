@@ -151,7 +151,7 @@ public class AgreementFragment extends DialogFragment {
         getBanksTask.execute();
     }
 
-    private void changeLocalStateAndDismissFragment(Context context, final String agreementType, final boolean agreementTerminationSuccess){
+    private void updateLocalStateAndDismissFragment(Context context, final String agreementType, final boolean agreementTerminationSuccess){
         InvoiceOverviewActivity.changeAgreementStatus(context, bank.getName(), agreementType, agreementTerminationSuccess);
         dismiss();
     }
@@ -184,9 +184,9 @@ public class AgreementFragment extends DialogFragment {
         }
 
         @Override
-        protected void onPostExecute(Boolean AgreementTerminationSuccess) {
-            super.onPostExecute(AgreementTerminationSuccess);
-            changeLocalStateAndDismissFragment(context, agreementType, AgreementTerminationSuccess);
+        protected void onPostExecute(Boolean agreementTerminationSuccess) {
+            super.onPostExecute(agreementTerminationSuccess);
+            updateLocalStateAndDismissFragment(context, agreementType, agreementTerminationSuccess);
         }
     }
 }
