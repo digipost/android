@@ -46,9 +46,10 @@ public class AgreementFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_agreement, container, false);
         ((TextView) view.findViewById(R.id.fragment_agreement_bank_name)).setText(bank.getName());
-        (view.findViewById(R.id.fragment_agreement_close_button)).setOnClickListener(clickListener);
 
         clickListener = new ClickListener();
+        (view.findViewById(R.id.fragment_agreement_close_button)).setOnClickListener(clickListener);
+
         if (shouldDisplayAgreementOfType(InvoiceBankAgreements.TYPE_1)){
             (view.findViewById(R.id.fragment_agreement_type_1_view)).setVisibility(View.VISIBLE);
 
