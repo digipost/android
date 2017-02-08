@@ -33,7 +33,7 @@ public class Banks {
     }
 
     public ArrayList<Bank> getBanksWithActiveAgreements(){
-        ArrayList<Bank> banks = new ArrayList<Bank>();
+        ArrayList<Bank> banks = new ArrayList<>();
         for(Bank bank : this.banks) {
             if (bank.haveActiveAgreements()) {
                 banks.add(bank);
