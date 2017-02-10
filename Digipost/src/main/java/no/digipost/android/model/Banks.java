@@ -32,6 +32,10 @@ public class Banks {
         return this.banks;
     }
 
+    public void setBanks(ArrayList<Bank> banks){
+        this.banks = banks;
+    }
+
     public ArrayList<Bank> getBanksWithActiveAgreements(){
         ArrayList<Bank> banks = new ArrayList<>();
         for(Bank bank : this.banks) {

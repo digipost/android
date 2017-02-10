@@ -59,6 +59,12 @@ public class InvoiceBankAgreements {
         }
     }
 
+    public static void replaceBanks(final Context context, ArrayList<Bank> updatedBanks){
+        Banks banks = getBanksFromSharedPreferences(context);
+        banks.setBanks(updatedBanks);
+        storeBanksCache(context, banks);
+    }
+
     public static ArrayList<Bank> getBanks(final Context context) {
         return getBanksFromSharedPreferences(context).getBanks();
     }

@@ -78,10 +78,10 @@
             return "";
         }
 
-        public void setAgreementsOfTypeActiveState(final String agreementType, boolean activeState){
+        public void setAgreementsOfTypeActiveState(final String agreementType, boolean agreementIsActive){
             for (Agreement agreement : agreements){
                 if(agreement.agreementType.equals(agreementType)){
-                    agreement.active = activeState;
+                    agreement.active = agreementIsActive;
                 }
             }
         }

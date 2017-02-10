@@ -16,8 +16,8 @@
 
 package no.digipost.android.gui.invoice;
 
+import android.app.FragmentManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -35,7 +35,8 @@ import java.util.ArrayList;
 public class InvoiceOverviewActivity extends AppCompatActivity {
 
     private static ArrayList<Bank> banks;
-    private static OverviewListAdapter adapter;
+    private OverviewListAdapter adapter;
+    private ListView listView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,14 +53,15 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    protected void onResume() {
+        super.onResume();
+        InvoiceBankAgreements.updateBanksFromServer(getApplicationContext());
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     private void setupActionBar() {
@@ -81,27 +83,37 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
         return true;
     }
 
-    public static void changeAgreementStatus(final Context context, final String bankName, final String agreementType, boolean agreementTerminationSuccess){
-        for(Bank bank : banks){
-            if(bank.getName().equals(bankName)){
-                if(bank.hasActiveAgreementType(agreementType)) {
-                    bank.setAgreementsOfTypeActiveState(agreementType, agreementTerminationSuccess);
-                }
+    private void updateListViewWithBanksWithActiveAgreements(){
+        ArrayList<Bank> updatedBanks = new ArrayList<>();
+        for(Bank bank : banks) {
+            if (bank.haveActiveAgreements()) {
+                updatedBanks.add(bank);
             }
         }
-
-        if(agreementTerminationSuccess) InvoiceBankAgreements.updateBanksFromServer(context);
-
+        InvoiceBankAgreements.replaceBanks(getApplicationContext(), updatedBanks);
+        listView.setAdapter(new OverviewListAdapter(this, R.layout.invoice_bank_list_item, updatedBanks));
         adapter.notifyDataSetChanged();
     }
 
+    public void changeAgreementStatus(final String bankName, final String agreementType, boolean agreementIsActive){
+        for(Bank bank : banks){
+            if(bank.getName().equals(bankName)){
+                if(bank.hasActiveAgreementType(agreementType)) {
+                    bank.setAgreementsOfTypeActiveState(agreementType, agreementIsActive);
+                }
+            }
+        }
+        updateListViewWithBanksWithActiveAgreements();
+    }
+
     private void showBankFragment(Bank bank){
+        FragmentManager fm = getFragmentManager();
         AgreementFragment agreementFragment = AgreementFragment.newInstance(bank);
-        agreementFragment.show(getFragmentManager(), "AgreementFragment");
+        agreementFragment.show(fm, "AgreementFragment");
     }
 
     private void setupListView() {
-        ListView listView = (ListView) findViewById(R.id.invoice_overview_banks_listview);
+        listView = (ListView) findViewById(R.id.invoice_overview_banks_listview);
         banks = InvoiceBankAgreements.getBanksWithActiveAgreements(getApplicationContext());
         adapter = new OverviewListAdapter(this, R.layout.invoice_bank_list_item, banks);
         listView.setAdapter(adapter);
