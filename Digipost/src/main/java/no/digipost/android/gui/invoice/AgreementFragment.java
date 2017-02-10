@@ -50,6 +50,7 @@ public class AgreementFragment extends DialogFragment {
         clickListener = new ClickListener();
         (view.findViewById(R.id.fragment_agreement_close_button)).setOnClickListener(clickListener);
 
+        boolean firstAgreementIsVisbile = false;
         if (shouldDisplayAgreementOfType(InvoiceBankAgreements.TYPE_1)){
             (view.findViewById(R.id.fragment_agreement_type_1_view)).setVisibility(View.VISIBLE);
 
@@ -61,11 +62,14 @@ public class AgreementFragment extends DialogFragment {
             //Avtalevilkår
             ((Button) view.findViewById(R.id.invoice_overview_agreement_terms_type_1)).setText(getString(R.string.invoice_overview_agreement_terms));
             (view.findViewById(R.id.invoice_overview_agreement_terms_type_1)).setOnClickListener(clickListener);
+            ((Button) view.findViewById(R.id.invoice_overview_agreement_terms_type_1)).setTransformationMethod(null);
 
             //Si opp avtalen
             ((Button) view.findViewById(R.id.invoice_overview_cancel_agreement_type_1)).setText(getString(R.string.invoice_overview_cancel_agreement));
             (view.findViewById(R.id.invoice_overview_cancel_agreement_type_1)).setOnClickListener(clickListener);
+            ((Button) view.findViewById(R.id.invoice_overview_cancel_agreement_type_1)).setTransformationMethod(null);
 
+            firstAgreementIsVisbile = true;
         }else{
             (view.findViewById(R.id.fragment_agreement_type_1_view)).setVisibility(View.GONE);
         }
@@ -76,20 +80,29 @@ public class AgreementFragment extends DialogFragment {
             //Aktiv avtale bank
             ((Button) view.findViewById(R.id.invoice_overview_active_agreement_type_2)).setText(getString(R.string.invoice_overview_active_agreement, bank.getName()));
             (view.findViewById(R.id.invoice_overview_active_agreement_type_2)).setOnClickListener(clickListener);
+            ((Button) view.findViewById(R.id.invoice_overview_active_agreement_type_2)).setTransformationMethod(null);
 
             //Avtalevilkår
             ((Button) view.findViewById(R.id.invoice_overview_agreement_terms_type_2)).setText(getString(R.string.invoice_overview_agreement_terms));
             (view.findViewById(R.id.invoice_overview_agreement_terms_type_2)).setOnClickListener(clickListener);
+            ((Button) view.findViewById(R.id.invoice_overview_agreement_terms_type_2)).setTransformationMethod(null);
 
             //Si opp avtalen
             ((Button) view.findViewById(R.id.invoice_overview_cancel_agreement_type_1)).setText(getString(R.string.invoice_overview_cancel_agreement));
             (view.findViewById(R.id.invoice_overview_cancel_agreement_type_2)).setOnClickListener(clickListener);
+            ((Button) view.findViewById(R.id.invoice_overview_cancel_agreement_type_2)).setTransformationMethod(null);
+
+            if(firstAgreementIsVisbile){
+                (view.findViewById(R.id.invoice_overview_agreement_divider)).setVisibility(View.VISIBLE);
+            }else{
+                (view.findViewById(R.id.invoice_overview_agreement_divider)).setVisibility(View.GONE);
+            }
         }else{
-            (view.findViewById(R.id.fragment_agreement_type_1_view)).setVisibility(View.GONE);
+            (view.findViewById(R.id.fragment_agreement_type_2_view)).setVisibility(View.GONE);
         }
 
         return view;
-    }
+        }
 
     private boolean shouldDisplayAgreementOfType(String agreementType){
         return InvoiceBankAgreements.hasActiveAgreementType(getActivity().getApplicationContext(),agreementType);
