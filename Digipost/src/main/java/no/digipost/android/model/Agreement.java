@@ -38,7 +38,7 @@ public class Agreement {
 
     public String getCancelUri() {
         for (Link l : this.link) {
-            if (l.getRel().equals("//www.digipost.no/post/relations/terminate_bank_agreement")) {
+            if (l.getRel().equals(ApiConstants.URL_API_TERMINATE_BANK_AGREEMENT)) {
                 return l.getUri();
             }
         }
