@@ -97,6 +97,8 @@ public class ApiConstants {
     public static final String URL_RELATIONS_UPDATE_FOLDERS = URL_RELATIONS + "update_folders";
     public static final String URL_RELATIONS_PUSH_REGISTRATION = URL_API + "/private/gcm_token";
 
+    public static final String URL_API_TERMINATE_BANK_AGREEMENT = URL_RELATIONS + "terminate_bank_agreement";
+
     public static final String URL_API_OAUTH_AUTHORIZE_NEW = Secret.ENV_URL + "api/oauth/authorize/new";
     public static final String URL_API_OAUTH_ACCESSTOKEN = Secret.ENV_URL + "api/oauth/accesstoken";
     public static final String URL_API_OAUTH_REVOKE = Secret.ENV_URL + "api/oauth/revoke";
