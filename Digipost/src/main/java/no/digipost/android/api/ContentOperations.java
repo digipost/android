@@ -289,6 +289,6 @@ public class ContentOperations {
     public static void cancelBankAgreement(Context context, final String cancelAgreementURI) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
         refreshApiAccess();
-        apiAccess.postput(context, ApiAccess.POST, cancelAgreementURI, null);
+        ApiAccess.delete(context, cancelAgreementURI);
     }
 }
