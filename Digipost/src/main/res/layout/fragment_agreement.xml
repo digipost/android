@@ -21,6 +21,8 @@
             android:visibility="gone"
             android:layout_marginTop="10dp"
             android:layout_height="wrap_content">
+
+
         <Button
                 android:id="@+id/invoice_overview_active_agreement_type_1"
                 android:layout_width="wrap_content"
@@ -28,15 +30,17 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:textColor="@color/invoice_link"
-                android:layout_gravity="left|center_horizontal"/>
+                android:gravity="left"/>
+
         <Button
                 android:id="@+id/invoice_overview_agreement_terms_type_1"
                 android:layout_width="wrap_content"
-                android:text="@string/invoice_overview_agreement_terms"
+                android:text="@string/invoice_overview_agreement_terms_type_1_title"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:textColor="@color/invoice_link"
-                android:layout_gravity="left|center_horizontal"/>
+                android:gravity="left"/>
+
         <Button
                 android:id="@+id/invoice_overview_cancel_agreement_type_1"
                 android:layout_width="wrap_content"
@@ -44,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:textColor="@color/invoice_link"
-                android:layout_gravity="left|center_horizontal"/>
+                android:gravity="left"/>
 
         <View android:id="@+id/invoice_overview_agreement_divider"
               android:background="#C7C7C7"
@@ -69,15 +73,15 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:textColor="@color/invoice_link"
-                android:layout_gravity="left|center_horizontal"/>
+                android:gravity="left"/>
         <Button
                 android:id="@+id/invoice_overview_agreement_terms_type_2"
                 android:layout_width="wrap_content"
-                android:text="@string/invoice_overview_agreement_terms"
+                android:text="@string/invoice_overview_agreement_terms_type_2_title"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:textColor="@color/invoice_link"
-                android:layout_gravity="left|center_horizontal"/>
+                android:gravity="left"/>
         <Button
                 android:id="@+id/invoice_overview_cancel_agreement_type_2"
                 android:layout_width="wrap_content"
@@ -85,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:textColor="@color/invoice_link"
-                android:layout_gravity="left|center_horizontal"/>
+                android:gravity="left"/>
 
     </LinearLayout>
 

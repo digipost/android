@@ -36,6 +36,7 @@ import no.digipost.android.utilities.DialogUtitities;
 public class AgreementFragment extends DialogFragment {
     private static Bank bank;
     private ClickListener clickListener;
+    protected Context context;
 
     static AgreementFragment newInstance(Bank bank) {
         AgreementFragment.bank = bank;
@@ -59,13 +60,11 @@ public class AgreementFragment extends DialogFragment {
             (view.findViewById(R.id.invoice_overview_active_agreement_type_1)).setOnClickListener(clickListener);
             ((Button) view.findViewById(R.id.invoice_overview_active_agreement_type_1)).setTransformationMethod(null);
 
-            //Avtalevilkår
-            ((Button) view.findViewById(R.id.invoice_overview_agreement_terms_type_1)).setText(getString(R.string.invoice_overview_agreement_terms));
+            //Samtykke
             (view.findViewById(R.id.invoice_overview_agreement_terms_type_1)).setOnClickListener(clickListener);
             ((Button) view.findViewById(R.id.invoice_overview_agreement_terms_type_1)).setTransformationMethod(null);
 
             //Si opp avtalen
-            ((Button) view.findViewById(R.id.invoice_overview_cancel_agreement_type_1)).setText(getString(R.string.invoice_overview_cancel_agreement));
             (view.findViewById(R.id.invoice_overview_cancel_agreement_type_1)).setOnClickListener(clickListener);
             ((Button) view.findViewById(R.id.invoice_overview_cancel_agreement_type_1)).setTransformationMethod(null);
 
@@ -83,12 +82,10 @@ public class AgreementFragment extends DialogFragment {
             ((Button) view.findViewById(R.id.invoice_overview_active_agreement_type_2)).setTransformationMethod(null);
 
             //Avtalevilkår
-            ((Button) view.findViewById(R.id.invoice_overview_agreement_terms_type_2)).setText(getString(R.string.invoice_overview_agreement_terms));
             (view.findViewById(R.id.invoice_overview_agreement_terms_type_2)).setOnClickListener(clickListener);
             ((Button) view.findViewById(R.id.invoice_overview_agreement_terms_type_2)).setTransformationMethod(null);
 
             //Si opp avtalen
-            ((Button) view.findViewById(R.id.invoice_overview_cancel_agreement_type_1)).setText(getString(R.string.invoice_overview_cancel_agreement));
             (view.findViewById(R.id.invoice_overview_cancel_agreement_type_2)).setOnClickListener(clickListener);
             ((Button) view.findViewById(R.id.invoice_overview_cancel_agreement_type_2)).setTransformationMethod(null);
 
@@ -102,14 +99,14 @@ public class AgreementFragment extends DialogFragment {
         }
 
         return view;
-        }
+    }
 
     private boolean shouldDisplayAgreementOfType(String agreementType){
         return InvoiceBankAgreements.hasActiveAgreementType(getActivity().getApplicationContext(),agreementType);
     }
 
-    private void displayInformationDialog(final String message){
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(getActivity(), message);
+    private void displayInformationDialog(final String message, final String title){
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(getActivity(), message, title);
         builder.setNegativeButton(getString(R.string.close), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -141,15 +138,18 @@ public class AgreementFragment extends DialogFragment {
         @Override
         public void onClick(View view) {
             if (view == getView().findViewById(R.id.invoice_overview_active_agreement_type_1)) {
-                displayInformationDialog("");
+                displayInformationDialog(getString(R.string.invoice_overview_agreement_active_agreement_type_1, bank.getName()),getString(R.string.invoice_overview_agreement_active_agreement_type_1_title, bank.getName()));
+
             }else if (view == getView().findViewById(R.id.invoice_overview_agreement_terms_type_1)) {
-                displayInformationDialog("");
+                displayInformationDialog(getString(R.string.invoice_overview_agreement_terms_type_1_text),getString(R.string.invoice_overview_agreement_terms_type_1_title));
             }else if (view == getView().findViewById(R.id.invoice_overview_cancel_agreement_type_1)) {
                 cancelAgreement(InvoiceBankAgreements.TYPE_1);
+
             }else if (view == getView().findViewById(R.id.invoice_overview_active_agreement_type_2)) {
-                displayInformationDialog("");
+                displayInformationDialog(getString(R.string.invoice_overview_agreement_active_agreement_type_2, bank.getName()),getString(R.string.invoice_overview_agreement_active_agreement_type_1_title, bank.getName()));
+
             }else if (view == getView().findViewById(R.id.invoice_overview_agreement_terms_type_2)) {
-                displayInformationDialog("");
+                displayInformationDialog(getString(R.string.invoice_overview_agreement_terms_type_2_text),getString(R.string.invoice_overview_agreement_terms_type_2_title));
             }else if (view == getView().findViewById(R.id.invoice_overview_cancel_agreement_type_2)) {
                 cancelAgreement(InvoiceBankAgreements.TYPE_2);
             }else if(view == getView().findViewById(R.id.fragment_agreement_close_button)){
@@ -165,8 +165,15 @@ public class AgreementFragment extends DialogFragment {
         getBanksTask.execute();
     }
 
-    private void updateLocalStateAndDismissFragment(Context context, final String agreementType, final boolean agreementTerminationSuccess){
-        InvoiceOverviewActivity.changeAgreementStatus(context, bank.getName(), agreementType, agreementTerminationSuccess);
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    private void updateLocalStateAndDismissFragment(final String agreementType, final boolean agreementTerminationSuccess){
+        boolean agreementIsActive = !agreementTerminationSuccess;
+        ((InvoiceOverviewActivity) getActivity()).changeAgreementStatus(bank.getName(), agreementType, agreementIsActive);
         dismiss();
     }
 
@@ -182,12 +189,6 @@ public class AgreementFragment extends DialogFragment {
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            bank.setAgreementsOfTypeActiveState(agreementType,false);
-        }
-
-        @Override
         protected Boolean doInBackground(Void... voids) {
             try {
                 ContentOperations.cancelBankAgreement(context, cancelURI);
@@ -200,7 +201,7 @@ public class AgreementFragment extends DialogFragment {
         @Override
         protected void onPostExecute(Boolean agreementTerminationSuccess) {
             super.onPostExecute(agreementTerminationSuccess);
-            updateLocalStateAndDismissFragment(context, agreementType, agreementTerminationSuccess);
+            updateLocalStateAndDismissFragment(agreementType, agreementTerminationSuccess);
         }
     }
 }

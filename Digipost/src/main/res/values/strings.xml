@@ -304,11 +304,22 @@
     <string name="invoice_overview_subtitle">Her kan du se en oversikt over alle dine aktive avtaler</string>
     <string name="invoice_overview_active_agreement">Aktiv avtale (fra %1$s)</string>
 
-    <string name="invoice_overview_agreement_terms">Avtalevilkår</string>
+    <string name="invoice_overview_agreement_terms_type_1_title">Samtykke</string>
+    <string name="invoice_overview_agreement_terms_type_1_text">For at du skal kunne sende fakturaer fra Digipost til forfallsregisteret i banken din, må du samtykke til at banken gir Digipost informasjon om kontonumrene dine.\n\nDu må også samtykke til at banken kan informere Digipost når fakturaer er mottatt, og at banken kan utbetale beløpet i fakturaene.\n\nDette trenger du bare å gjøre én gang.\n\nDu kan når som helst trekke tilbake samtykket.</string>
+
+    <string name="invoice_overview_agreement_terms_type_2_title">Avtalevilkår</string>
+    <string name="invoice_overview_agreement_terms_type_2_text">Avtalevilkår</string>
+
     <string name="invoice_overview_cancel_agreement">Si opp avtalen</string>
 
     <string name="invoice_overview_cancel_agreement_title">Si opp avtale</string>
     <string name="invoice_overview_cancel_agreement_message">Vil du avslutte avtalen om overføring av fakturaer fra Digipost til nettbanken?\n\nDu kan endre fakturaer som er lagt til betaling i nettbanken.</string>
     <string name="invoice_overview_cancel_agreement_action_button">Si opp avtalen</string>
     <string name="invoice_overview_cancel_agreement_cancel_button">Avbryt</string>
+
+
+    <string name="invoice_overview_agreement_active_agreement_type_1">Nå er den digitale postkassen og %1$s koblet slik at du enkelt kan legge fakturaen til betaling rett fra Digipost, helt uten innlogging i nettbanken.\n\nBeløpet belastes på forfallsdatoen og betaling forutsetter at du har dekning på kontoen.</string>
+    <string name="invoice_overview_agreement_active_agreement_type_1_title">Digipost faktura-avtale med %1$s</string>
+    <string name="invoice_overview_agreement_active_agreement_type_2">Alle fakturaer du mottar i Digipost vil automatisk vises i nettbanken din. Da kan du enkelt betale dem uten å sjekke postkassa først.\n\nLogg inn i nettbanken eller mobilbanken til %1$s og finn fakturaene dine klare til betaling under Betalingsoversikt eller Betale Faktura.</string>
+
 </resources>
