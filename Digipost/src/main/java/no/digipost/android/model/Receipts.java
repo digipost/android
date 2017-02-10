@@ -61,7 +61,7 @@ public class Receipts {
 	}
 
 	public ArrayList<Receipt> getReceipt() {
-		return receipt;
+		return receipt != null ? receipt : new ArrayList<Receipt>();
 	}
 
 	public void setReceipt(final ArrayList<Receipt> receipt) {
