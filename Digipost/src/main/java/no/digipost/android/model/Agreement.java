@@ -16,6 +16,7 @@
 
 package no.digipost.android.model;
 
+import no.digipost.android.constants.ApiConstants;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -23,9 +24,6 @@ import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Agreement {
-
-    public static final String AGREEMENT_TYPE_1 = "AGREEMENT_TYPE_1";
-    public static final String AGREEMENT_TYPE_2 = "AGREEMENT_TYPE_2";
 
     @JsonProperty
     public String agreementType;

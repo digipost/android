@@ -16,7 +16,6 @@
 
     package no.digipost.android.model;
 
-    import no.digipost.android.gui.invoice.InvoiceBankAgreements;
     import org.codehaus.jackson.annotate.JsonIgnoreProperties;
     import org.codehaus.jackson.annotate.JsonProperty;
 
