@@ -68,7 +68,7 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
     }
 
     private void toggleEmptyState(){
-        if(banks == null || banks.size() == 0){
+        if(banks == null || banks.size() == 0 || noActiveAgreements()){
             findViewById(R.id.invoice_overview_empty_state_view).setVisibility(View.VISIBLE);
             findViewById(R.id.invoice_overview_banks_listview).setVisibility(View.GONE);
             ((Button) findViewById(R.id.invoice_overview_empty_state_add_bank)).setTransformationMethod(null);
@@ -76,13 +76,21 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     showBankOptions();
-                    finish();
                 }
             });
         }else{
             findViewById(R.id.invoice_overview_empty_state_view).setVisibility(View.GONE);
             findViewById(R.id.invoice_overview_banks_listview).setVisibility(View.VISIBLE);
         }
+    }
+
+    private boolean noActiveAgreements(){
+        for(Bank bank : banks){
+            if(bank.haveActiveAgreements()){
+                return false;
+            }
+        }
+        return true;
     }
 
     private void showBankOptions(){
@@ -120,6 +128,7 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
         InvoiceBankAgreements.replaceBanks(getApplicationContext(), updatedBanks);
         listView.setAdapter(new OverviewListAdapter(this, R.layout.invoice_bank_list_item, updatedBanks));
         adapter.notifyDataSetChanged();
+        toggleEmptyState();
     }
 
     public void changeAgreementStatus(final String bankName, final String agreementType, boolean agreementIsActive){
