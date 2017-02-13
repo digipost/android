@@ -20,6 +20,8 @@ import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -101,6 +103,13 @@ public class AgreementFragment extends DialogFragment {
         return view;
     }
 
+    private void openAgreementTermsInBrowser(){
+        String bankName = bank.getName().toLowerCase().replace(" ", "");
+        String url = String.format("https://www.digipost.no/faktura-avtale-vilkaar/%1$s/nb",bankName);
+        Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browser);
+    }
+
     private boolean shouldDisplayAgreementOfType(String agreementType){
         return InvoiceBankAgreements.hasActiveAgreementType(getActivity().getApplicationContext(),agreementType);
     }
@@ -137,6 +146,7 @@ public class AgreementFragment extends DialogFragment {
 
         @Override
         public void onClick(View view) {
+
             if (view == getView().findViewById(R.id.invoice_overview_active_agreement_type_1)) {
                 displayInformationDialog(getString(R.string.invoice_overview_agreement_active_agreement_type_1, bank.getName()),getString(R.string.invoice_overview_agreement_active_agreement_type_1_title, bank.getName()));
 
@@ -146,8 +156,7 @@ public class AgreementFragment extends DialogFragment {
                 cancelAgreement(InvoiceBankAgreements.TYPE_1);
 
             }else if (view == getView().findViewById(R.id.invoice_overview_active_agreement_type_2)) {
-                displayInformationDialog(getString(R.string.invoice_overview_agreement_active_agreement_type_2, bank.getName()),getString(R.string.invoice_overview_agreement_active_agreement_type_1_title, bank.getName()));
-
+                openAgreementTermsInBrowser();
             }else if (view == getView().findViewById(R.id.invoice_overview_agreement_terms_type_2)) {
                 displayInformationDialog(getString(R.string.invoice_overview_agreement_terms_type_2_text),getString(R.string.invoice_overview_agreement_terms_type_2_title));
             }else if (view == getView().findViewById(R.id.invoice_overview_cancel_agreement_type_2)) {
