@@ -65,17 +65,7 @@
         }
 
         public String getLogo(){
-            switch (this.name.toUpperCase()){
-                case "DNB" :
-                    return "invoice_bank_logo_dnb";
-                case "KLP BANKEN" :
-                    return "invoice_bank_logo_klp";
-                case "KLP" :
-                    return "invoice_bank_logo_klp";
-                case "SKANDIABANKEN" :
-                    return "invoice_bank_logo_skandiabanken";
-            }
-            return "";
+            return  String.format("invoice_bank_logo_%1$s", this.name.toLowerCase().replace(" ", ""));
         }
 
         public void setAgreementsOfTypeActiveState(final String agreementType, boolean agreementIsActive){
