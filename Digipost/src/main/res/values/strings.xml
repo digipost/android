@@ -317,9 +317,11 @@
     <string name="invoice_overview_cancel_agreement_action_button">Si opp avtalen</string>
     <string name="invoice_overview_cancel_agreement_cancel_button">Avbryt</string>
 
-
     <string name="invoice_overview_agreement_active_agreement_type_1">Nå er den digitale postkassen og %1$s koblet slik at du enkelt kan legge fakturaen til betaling rett fra Digipost, helt uten innlogging i nettbanken.\n\nBeløpet belastes på forfallsdatoen og betaling forutsetter at du har dekning på kontoen.</string>
     <string name="invoice_overview_agreement_active_agreement_type_1_title">Digipost faktura-avtale med %1$s</string>
     <string name="invoice_overview_agreement_active_agreement_type_2">Alle fakturaer du mottar i Digipost vil automatisk vises i nettbanken din. Da kan du enkelt betale dem uten å sjekke postkassa først.\n\nLogg inn i nettbanken eller mobilbanken til %1$s og finn fakturaene dine klare til betaling under Betalingsoversikt eller Betale Faktura.</string>
+
+    <string name="invoice_overview_empty_state_message">Alle fakturaer du mottar i Digipost, kan enkelt overføres til nettbanken din. Legg til bank for å komme i gang.</string>
+    <string name="invoice_overview_empty_state_add_bank_button">Legg til bank</string>
 
 </resources>

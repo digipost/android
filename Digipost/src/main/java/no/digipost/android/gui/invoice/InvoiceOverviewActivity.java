@@ -18,6 +18,7 @@ package no.digipost.android.gui.invoice;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -25,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.R;
@@ -56,12 +58,37 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         InvoiceBankAgreements.updateBanksFromServer(getApplicationContext());
+        toggleEmptyState();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
+
+    private void toggleEmptyState(){
+        if(banks == null || banks.size() == 0){
+            findViewById(R.id.invoice_overview_empty_state_view).setVisibility(View.VISIBLE);
+            findViewById(R.id.invoice_overview_banks_listview).setVisibility(View.GONE);
+            ((Button) findViewById(R.id.invoice_overview_empty_state_add_bank)).setTransformationMethod(null);
+            findViewById(R.id.invoice_overview_empty_state_add_bank).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showBankOptions();
+                    finish();
+                }
+            });
+        }else{
+            findViewById(R.id.invoice_overview_empty_state_view).setVisibility(View.GONE);
+            findViewById(R.id.invoice_overview_banks_listview).setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showBankOptions(){
+        Intent i = new Intent(this, InvoiceOptionsActivity.class);
+        i.putExtra(InvoiceOptionsActivity.INTENT_ACTIONBAR_TITLE, getString(R.string.drawer_invoice_overview));
+        startActivity(i);
     }
 
     private void setupActionBar() {
@@ -72,7 +99,7 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
         if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
             actionbar.setHomeButtonEnabled(true);
-            actionbar.setTitle(getString(R.string.invoice_overview_title));
+            actionbar.setTitle(getString(R.string.drawer_invoice_overview));
             actionbar.setDisplayShowTitleEnabled(true);
         }
     }
