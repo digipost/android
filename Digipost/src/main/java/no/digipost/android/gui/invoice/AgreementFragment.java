@@ -154,11 +154,10 @@ public class AgreementFragment extends DialogFragment {
                 displayInformationDialog(getString(R.string.invoice_overview_agreement_terms_type_1_text),getString(R.string.invoice_overview_agreement_terms_type_1_title));
             }else if (view == getView().findViewById(R.id.invoice_overview_cancel_agreement_type_1)) {
                 cancelAgreement(InvoiceBankAgreements.TYPE_1);
-
             }else if (view == getView().findViewById(R.id.invoice_overview_active_agreement_type_2)) {
-                openAgreementTermsInBrowser();
+                displayInformationDialog(getString(R.string.invoice_overview_agreement_active_agreement_type_2, bank.getName()),getString(R.string.invoice_overview_agreement_active_agreement_type_1_title, bank.getName()));
             }else if (view == getView().findViewById(R.id.invoice_overview_agreement_terms_type_2)) {
-                displayInformationDialog(getString(R.string.invoice_overview_agreement_terms_type_2_text),getString(R.string.invoice_overview_agreement_terms_type_2_title));
+                openAgreementTermsInBrowser();
             }else if (view == getView().findViewById(R.id.invoice_overview_cancel_agreement_type_2)) {
                 cancelAgreement(InvoiceBankAgreements.TYPE_2);
             }else if(view == getView().findViewById(R.id.fragment_agreement_close_button)){
