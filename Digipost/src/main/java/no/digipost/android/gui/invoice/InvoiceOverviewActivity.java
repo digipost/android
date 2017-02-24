@@ -119,14 +119,11 @@ public class InvoiceOverviewActivity extends AppCompatActivity {
     }
 
     private void updateListViewWithBanksWithActiveAgreements(){
-        ArrayList<Bank> updatedBanks = new ArrayList<>();
-        for(Bank bank : banks) {
-            if (bank.haveActiveAgreements()) {
-                updatedBanks.add(bank);
-            }
-        }
-        InvoiceBankAgreements.replaceBanks(getApplicationContext(), updatedBanks);
-        listView.setAdapter(new OverviewListAdapter(this, R.layout.invoice_bank_list_item, updatedBanks));
+        for(Bank bank : banks)
+            if (!bank.haveActiveAgreements())
+                banks.remove(bank);
+
+        InvoiceBankAgreements.replaceBanks(getApplicationContext(), banks);
         adapter.notifyDataSetChanged();
         toggleEmptyState();
     }
