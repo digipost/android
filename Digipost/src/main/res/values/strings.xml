@@ -300,7 +300,7 @@
     <string name="invoice_delete_multiple_files_including_n_invoices_active_type_2_agreement">Er du sikker på at du vil slette %1$s, inkludert %2$s fra både Digipost og nettbanken?\n\nOm du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken.</string>
 
     <!--- Invoice Overview -->
-    <string name="invoice_overview_title">Aktive fakturaavtaler</string>
+    <string name="invoice_overview_title">Aktive faktura-avtaler</string>
     <string name="invoice_overview_subtitle">Her kan du se en oversikt over alle dine aktive avtaler</string>
     <string name="invoice_overview_active_agreement">Aktiv avtale (fra %1$s)</string>
 
