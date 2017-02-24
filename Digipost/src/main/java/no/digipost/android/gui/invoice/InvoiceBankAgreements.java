@@ -38,8 +38,7 @@ public class InvoiceBankAgreements {
     public static boolean hasActiveAgreementType(final Context context, final String agreementType) {
         ArrayList<Bank> banksWithActiveAgreements = getBanksWithActiveAgreements(context);
         for (Bank bank : banksWithActiveAgreements) {
-            boolean hasActiveAgreementType = bank.hasActiveAgreementType(agreementType);
-            if (hasActiveAgreementType) {
+            if (bank.hasActiveAgreementType(agreementType)) {
                 return true;
             }
         }
