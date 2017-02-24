@@ -42,12 +42,55 @@
             return this.name;
         }
 
-        public boolean hasAgreementType(final String agreementType){
+        public boolean haveActiveAgreements(){
             for(Agreement agreement : agreements){
-                if(agreement.active && agreementType.equals(agreement.agreementType)){
+                if(agreement.active){
                     return true;
                 }
             }
             return false;
+        }
+
+        public boolean hasActiveAgreementType(final String agreementType){
+            return getAgreementForType(agreementType)!= null;
+        }
+
+        public boolean offersAgreementType(final String agreementType){
+            for(Agreement agreement : agreements){
+                if(agreementType.equals(agreement.agreementType)){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public String getLogo(){
+            return  String.format("invoice_bank_logo_%1$s", this.name.toLowerCase().replace(" ", ""));
+        }
+
+        public void setAgreementsOfTypeActiveState(final String agreementType, boolean agreementIsActive){
+            for (Agreement agreement : agreements){
+                if(agreement.agreementType.equals(agreementType)){
+                    agreement.active = agreementIsActive;
+                }
+            }
+        }
+
+        public Agreement getAgreementForType(final String agreementType){
+            for(Agreement agreement : agreements){
+                if(agreement.active && agreement.agreementType.equals(agreementType)){
+                    return agreement;
+                }
+            }
+            return null;
+        }
+
+        public String getUrl(){
+            switch (this.name.toUpperCase()){
+                case "DNB" :
+                    return "https://www.dnb.no/privat/nettbank-mobil-og-kort/betaling/elektronisk-faktura.html";
+                default:
+                    return "https://www.digipost.no";
+            }
         }
     }

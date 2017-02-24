@@ -38,16 +38,16 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/invoice_options_title"
-                android:id="@+id/invoice_options_title"
+                android:text="@string/invoice_overview_title"
+                android:id="@+id/invoice_overview_title"
                 android:textColor="@color/invoice_title"
                 android:textSize="22sp"
                 android:layout_marginTop="30dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/invoice_options_subtitle"
-                android:id="@+id/invoice_options_subtitle"
+                android:text="@string/invoice_overview_subtitle"
+                android:id="@+id/invoice_overview_subtitle"
                 android:minLines="2"
                 android:textColor="@color/invoice_subtitle"
                 android:textSize="16sp"
@@ -59,10 +59,43 @@
                 android:layout_marginBottom="30dp"/>
     </LinearLayout>
     <ListView
-            android:id="@+id/invoice_options_banks_listview"
+            android:id="@+id/invoice_overview_banks_listview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.68"
             android:background="@color/invoice_background">
-
     </ListView>
+
+    <LinearLayout
+            android:id="@+id/invoice_overview_empty_state_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_horizontal"
+>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:gravity="center_horizontal"
+                android:text="@string/invoice_overview_empty_state_message"
+                android:textColor="@color/grey_filesize"/>
+
+        <Button
+                android:id="@+id/invoice_overview_empty_state_add_bank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/red_button_style"
+                android:text="@string/invoice_overview_empty_state_add_bank_button"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:layout_marginTop="40dp"
+                android:textSize="13dp"/>
+    </LinearLayout>
+
 </LinearLayout>

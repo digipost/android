@@ -19,6 +19,7 @@ package no.digipost.android.model;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -28,6 +29,21 @@ public class Banks {
     private ArrayList<Bank> banks;
 
     public ArrayList<Bank> getBanks() {
+        return this.banks;
+    }
+
+    public void setBanks(ArrayList<Bank> banks){
+        this.banks = banks;
+    }
+
+    public ArrayList<Bank> getBanksWithActiveAgreements(){
+        ArrayList<Bank> banks = new ArrayList<>();
+        for(Bank bank : this.banks) {
+            if (bank.haveActiveAgreements()) {
+                banks.add(bank);
+            }
+        }
+
         return banks;
     }
 }

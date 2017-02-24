@@ -25,7 +25,7 @@ import no.digipost.android.gui.content.SettingsActivity;
 public class SettingsUtilities {
 
     private static SharedPreferences getSharedPreferences(Context context) {
-        return SharedPreferencesUtilities.getSharedPreferences(context);
+        return SharedPreferencesUtilities.getDefault(context);
     }
 
     public static String getDefaultScreenPreference(Context context) {
