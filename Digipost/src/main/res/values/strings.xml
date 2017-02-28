@@ -237,6 +237,8 @@
     <string name="dialog_prompt_delete_document">Vil du slette brevet?
     </string>
 
+    <string name="dialog_prompt_open_help_new_window">Hjelpesiden vil bli åpnet i ekstern nettleser.</string>
+
     <string name="dialog_edit_folder_title">Velg navn og ikon</string>
     <string name="dialog_edit_folder_invalid_folder_name">Ugyldig navn</string>
 
