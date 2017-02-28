@@ -432,14 +432,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             return true;
 
         }else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_help))) {
-            new AlertDialog.Builder(this).setMessage(getString(R.string.dialog_prompt_open_help_new_window))
-                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiConstants.URL_HELP));
-                        startActivity(browserIntent);
-                    }
-                }).setNegativeButton(getString(R.string.abort), null).show();
+            openExternalHelpUrl();
             return true;
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_logout))) {
@@ -600,6 +593,17 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
     private ContentFragment getCurrentFragment() {
         return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);
+    }
+
+    private void openExternalHelpUrl() {
+        new AlertDialog.Builder(this).setMessage(getString(R.string.dialog_prompt_open_help_new_window))
+                .setPositiveButton(getString(R.string.open), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiConstants.URL_HELP));
+                        startActivity(browserIntent);
+                    }
+                }).setNegativeButton(getString(R.string.abort), null).show();
     }
 
     private void logOut() {
