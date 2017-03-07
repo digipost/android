@@ -43,6 +43,7 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.recyclerview.*;
+import no.digipost.android.gui.recyclerview.DividerItemDecoration;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Receipt;
