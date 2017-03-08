@@ -43,7 +43,7 @@ android {
         versionName '3.3.0'
         applicationId = "no.digipost.android"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         vectorDrawables.useSupportLibrary = true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
