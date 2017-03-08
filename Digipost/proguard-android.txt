@@ -1,0 +1,61 @@
+#  * Keep
+-keep class org.apache.http.** {*;}
+-keep class org.apache.commons.** { *; }
+-keep class org.codehaus.jackson.** { *; }
+-keep class com.sun.jersey.** { *; }
+-keep class com.sun.xml.** {*;}
+-keep class org.joda.time.** {*;}
+-keep class org.codehaus.jettison.**{*;}
+-keep class cz.msebera.android.httpclient.** {*;}
+-keep class com.terlici.dragndroplist.** {*;}
+-keep class com.nostra13.universalimageloader.** {*;}
+-keep class com.loopj.android.** {*;}
+-keep class com.google.gson.** {*;}
+-keep class com.google.firebase.** {*;}
+-keep class com.google.android.** {*;}
+-keep class com.google.gms.** {*;}
+-keep class android.view.inputmethod.** {*;}
+-keep class org.w3c.dom.bootstrap.** {*;}
+-keep class org.osgi.framework.** {*;}
+-keep class java.awt.image.RenderedImage.** {*;}
+-keep class com.facebook.crypto.** {*;}
+-keep class javax.imageio.** {*;}
+-keep class javax.activation.** {*;}
+-keep class org.eclipse.persistence.** {*;}
+-keep class android.support.** {*;}
+
+-keepattributes InnerClasses, EnclosingMethod, Signature, *Annotation*
+
+#  * dontnote
+-dontnote android.support.**
+-dontnote no.WebLoginDialogFragmentgipost.android.gui.recyclerview.RecyclerViewEmptySupport
+-dontnote javax.**
+-dontnote cz.msebera.android.httpclient.**
+-dontnote com.sun.**
+-dontnote org.apache.**
+-dontnote com.facebook.android.crypto.keychain.SecureRandomFix
+-dontnote android.net.http.**
+-dontnote android.view.inputmethod.**
+-dontnote com.google.android.gms.**
+-dontnote com.google.gson.internal.UnsafeAllocator
+-dontnote org.codehaus.jackson.map.deser.**
+-dontnote com.google.gson.internal.**
+
+#  * dontwarn
+
+-dontwarn android.view.inputmethod.**
+-dontwarn javax.activation.**
+-dontwarn java.beans.**
+-dontwarn org.w3c.dom.bootstrap.**
+-dontwarn java.awt.image.RenderedImage.**
+-dontwarn javax.imageio.**
+-dontwarn javax.xml.** 
+-dontwarn javax.ws.**
+-dontwarn org.apache.commons.**
+-dontwarn org.apache.http.**
+-dontwarn org.eclipse.persistence.**
+-dontwarn javax.activation.DataHandler
+-dontwarn com.sun.xml.**
+-dontwarn org.osgi.framework.**
+-dontwarn com.sun.jersey.**
+-dontwarn org.codehaus.jackson.xc.DataHandlerJsonDeserializer
