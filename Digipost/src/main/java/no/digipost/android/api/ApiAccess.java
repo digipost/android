@@ -20,7 +20,6 @@ import android.os.Build;
 import android.util.Log;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.entity.StringEntity;
@@ -36,7 +35,6 @@ import java.nio.charset.Charset;
 import javax.net.ssl.HttpsURLConnection;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
-
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.authentication.OAuth;
