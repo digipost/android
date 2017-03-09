@@ -1,61 +1,77 @@
-#  * Keep
--keep class org.apache.http.** {*;}
--keep class org.apache.commons.** { *; }
--keep class org.codehaus.jackson.** { *; }
+#  * keep
+
+#-keep class android.webkit.** {*;}
+#-keep class android.support.graphics.drawable.PathParser.** {*;}
+#-keep class android.support.v7.app.ResourcesFlusher
+#-keep class android.support.v7.widget.DrawableUtils
+#-keep class android.support.v7.app.ResourcesFlusher
+#-keep class android.support.v7.widget.ViewUtils
+-keep class com.google.firebase.FirebaseApp
+
+-keep class cz.msebera.android.httpclient.** {*;}
 -keep class com.sun.jersey.** { *; }
 -keep class com.sun.xml.** {*;}
--keep class org.joda.time.** {*;}
--keep class org.codehaus.jettison.**{*;}
--keep class cz.msebera.android.httpclient.** {*;}
+-keep class com.sun.ws.** {*;}
 -keep class com.terlici.dragndroplist.** {*;}
 -keep class com.nostra13.universalimageloader.** {*;}
 -keep class com.loopj.android.** {*;}
 -keep class com.google.gson.** {*;}
--keep class com.google.firebase.** {*;}
+#-keep class com.google.firebase.** {*;}
 -keep class com.google.android.** {*;}
 -keep class com.google.gms.** {*;}
--keep class android.view.inputmethod.** {*;}
+-keep class com.facebook.crypto.** {*;}
+-keep class org.apache.** {*;}
+-keep class org.apache.commons.** { *; }
+-keep class org.codehaus.jackson.** { *; }
 -keep class org.w3c.dom.bootstrap.** {*;}
 -keep class org.osgi.framework.** {*;}
+-keep class org.joda.time.** {*;}
+-keep class org.codehaus.jettison.**{*;}
+-keep class org.eclipse.persistence.** {*;}
 -keep class java.awt.image.RenderedImage.** {*;}
--keep class com.facebook.crypto.** {*;}
 -keep class javax.imageio.** {*;}
 -keep class javax.activation.** {*;}
--keep class org.eclipse.persistence.** {*;}
--keep class android.support.** {*;}
 
--keepattributes InnerClasses, EnclosingMethod, Signature, *Annotation*
+-keepattributes SetJavaScriptEnabled
+-keepattributes JavascriptInterface
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
+
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
 
 #  * dontnote
+
 -dontnote android.support.**
--dontnote no.WebLoginDialogFragmentgipost.android.gui.recyclerview.RecyclerViewEmptySupport
--dontnote javax.**
--dontnote cz.msebera.android.httpclient.**
--dontnote com.sun.**
--dontnote org.apache.**
--dontnote com.facebook.android.crypto.keychain.SecureRandomFix
+-dontnote android.webkit.**
 -dontnote android.net.http.**
 -dontnote android.view.inputmethod.**
+-dontnote cz.msebera.android.httpclient.**
+-dontnote com.facebook.android.crypto.keychain.SecureRandomFix
 -dontnote com.google.android.gms.**
 -dontnote com.google.gson.internal.UnsafeAllocator
--dontnote org.codehaus.jackson.map.deser.**
 -dontnote com.google.gson.internal.**
+-dontnote com.sun.**
+-dontnote org.codehaus.jackson.map.deser.**
+-dontnote org.apache.**
+-dontnote javax.**
+-dontnote InnerClasses
 
 #  * dontwarn
-
 -dontwarn android.view.inputmethod.**
+-dontwarn com.sun.xml.**
+-dontwarn com.sun.jersey.**
 -dontwarn javax.activation.**
 -dontwarn java.beans.**
--dontwarn org.w3c.dom.bootstrap.**
+-dontwarn javax.activation.DataHandler
 -dontwarn java.awt.image.RenderedImage.**
 -dontwarn javax.imageio.**
 -dontwarn javax.xml.** 
 -dontwarn javax.ws.**
+-dontwarn org.w3c.dom.bootstrap.**
 -dontwarn org.apache.commons.**
 -dontwarn org.apache.http.**
 -dontwarn org.eclipse.persistence.**
--dontwarn javax.activation.DataHandler
--dontwarn com.sun.xml.**
--dontwarn org.osgi.framework.**
--dontwarn com.sun.jersey.**
 -dontwarn org.codehaus.jackson.xc.DataHandlerJsonDeserializer
+-dontwarn org.osgi.framework.**
+-dontwarn InnerClasses
