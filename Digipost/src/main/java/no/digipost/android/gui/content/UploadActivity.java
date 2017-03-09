@@ -50,8 +50,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
-
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.utilities.*;
 import org.apache.commons.io.FilenameUtils;
