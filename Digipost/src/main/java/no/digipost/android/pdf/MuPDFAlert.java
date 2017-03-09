@@ -6,24 +6,24 @@ public class MuPDFAlert {
 		Warning,
 		Question,
 		Status
-	};
+	}
 
-	public enum ButtonPressed {
+    public enum ButtonPressed {
 		None,
 		Ok,
 		Cancel,
 		No,
 		Yes
-	};
+	}
 
-	public enum ButtonGroupType {
+    public enum ButtonGroupType {
 		Ok,
 		OkCancel,
 		YesNo,
 		YesNoCancel
-	};
+	}
 
-	public final String message;
+    public final String message;
 	public final IconType iconType;
 	public final ButtonGroupType buttonGroupType;
 	public final String title;

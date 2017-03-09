@@ -88,7 +88,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             }
         });
 
-        spinnerLayout = (View) view.findViewById(R.id.fragment_content_spinner_layout);
+        spinnerLayout = view.findViewById(R.id.fragment_content_spinner_layout);
         recyclerView = (RecyclerViewEmptySupport) view.findViewById(R.id.fragment_content_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);

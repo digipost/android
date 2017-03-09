@@ -37,10 +37,10 @@ import no.digipost.android.gui.MainContentActivity;
 
 public class DragNDropListView extends ListView {
 
-    public static interface OnItemDragNDropListener {
-        public void onItemDrag(DragNDropListView parent, View view, int position, long id);
+    public interface OnItemDragNDropListener {
+        void onItemDrag(DragNDropListView parent, View view, int position, long id);
 
-        public void onItemDrop(DragNDropListView parent, View view, int startPosition, int endPosition, long id);
+        void onItemDrop(DragNDropListView parent, View view, int startPosition, int endPosition, long id);
     }
 
     boolean mDragMode;

@@ -48,15 +48,15 @@ public class UpdateFoldersTask extends AsyncTask<Void, Void, String> {
             return ContentOperations.updateFolders(activity, folders);
         } catch (DigipostApiException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
-            activity.errorMessage = e.getMessage();
+            MainContentActivity.errorMessage = e.getMessage();
             return null ;
         } catch (DigipostClientException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
-            activity.errorMessage = e.getMessage();
+            MainContentActivity.errorMessage = e.getMessage();
             return null;
         } catch (DigipostAuthenticationException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
-            activity.errorMessage = e.getMessage();
+            MainContentActivity.errorMessage = e.getMessage();
             return null;
         }
     }

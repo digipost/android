@@ -189,7 +189,7 @@ public class MuPDFCore {
 	public synchronized boolean setFocusedWidgetText(int page, String text) {
 		boolean success;
 		gotoPage(page);
-		success = setFocusedWidgetTextInternal(text) != 0 ? true : false;
+		success = setFocusedWidgetTextInternal(text) != 0;
 
 		return success;
 	}

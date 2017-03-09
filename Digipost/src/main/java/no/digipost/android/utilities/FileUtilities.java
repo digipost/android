@@ -152,6 +152,6 @@ public class FileUtilities {
     }
 
     public static String getFileUri(File file) {
-        return ((Object) Uri.fromFile(file)).toString();
+        return Uri.fromFile(file).toString();
     }
 }
