@@ -1,24 +1,18 @@
 package no.digipost.android.pdf;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import no.digipost.android.R;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.os.Handler;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import no.digipost.android.R;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 class PatchInfo {
 	public BitmapHolder bmh;

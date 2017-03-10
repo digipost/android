@@ -16,6 +16,10 @@
 
 package no.digipost.android.utilities;
 
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.model.Document;
+import no.digipost.android.model.Folder;
+import no.digipost.android.model.Folders;
 import org.apache.http.entity.StringEntity;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
@@ -27,18 +31,7 @@ import org.codehaus.jackson.map.ser.FilterProvider;
 import org.codehaus.jackson.map.ser.impl.SimpleBeanPropertyFilter;
 import org.codehaus.jackson.map.ser.impl.SimpleFilterProvider;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.model.Document;
-import no.digipost.android.model.Folder;
-import no.digipost.android.model.Folders;
+import java.io.*;
 
 public class JSONUtilities {
 

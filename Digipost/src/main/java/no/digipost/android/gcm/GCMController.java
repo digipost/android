@@ -23,7 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.*;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 public class GCMController {
 

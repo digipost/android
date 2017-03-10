@@ -16,12 +16,7 @@
 
 package no.digipost.android.gui;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,18 +31,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.terlici.dragndroplist.DragNDropListView;
-import java.util.ArrayList;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
@@ -69,12 +58,12 @@ import no.digipost.android.gui.fragments.EditFolderFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.invoice.InvoiceOverviewActivity;
-import no.digipost.android.model.*;
-import no.digipost.android.utilities.ApplicationUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
-import no.digipost.android.utilities.NetworkUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
+import no.digipost.android.model.Account;
+import no.digipost.android.model.Folder;
+import no.digipost.android.model.Mailbox;
+import no.digipost.android.utilities.*;
+
+import java.util.ArrayList;
 
 import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 

@@ -28,35 +28,37 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import no.digipost.android.authentication.TokenStore;
-import no.digipost.android.gui.WebLoginActivity;
-import no.digipost.android.gui.adapters.DocumentAdapter;
-import no.digipost.android.model.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.ws.rs.core.HttpHeaders;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
+import no.digipost.android.gui.WebLoginActivity;
 import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
+import no.digipost.android.gui.adapters.DocumentAdapter;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
 import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
+import no.digipost.android.model.Attachment;
+import no.digipost.android.model.Document;
+import no.digipost.android.model.Documents;
+import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
+
+import javax.ws.rs.core.HttpHeaders;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 

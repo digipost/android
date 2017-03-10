@@ -18,7 +18,6 @@ package no.digipost.android.api.tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;

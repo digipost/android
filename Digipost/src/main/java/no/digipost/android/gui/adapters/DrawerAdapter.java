@@ -24,16 +24,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.terlici.dragndroplist.DragNDropSimpleAdapter;
-
-import java.util.ArrayList;
-import java.util.Map;
-
 import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Folder;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class DrawerAdapter extends DragNDropSimpleAdapter {
     protected Context context;

@@ -23,7 +23,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.widget.ProgressBar;
-
 import no.digipost.android.R;
 
 public class TextProgressBar extends ProgressBar {

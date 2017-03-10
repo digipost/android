@@ -21,7 +21,6 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import java.util.ArrayList;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
@@ -29,7 +28,8 @@ import no.digipost.android.model.Account;
 import no.digipost.android.model.Address;
 import no.digipost.android.model.PrimaryAccount;
 import no.digipost.android.model.Settings;
-import no.digipost.android.utilities.ApplicationUtilities;
+
+import java.util.ArrayList;
 
 public class PersonalSettingsActivity extends DigipostSettingsActivity {
     private TextView personalidentificationnumberObfuscated;

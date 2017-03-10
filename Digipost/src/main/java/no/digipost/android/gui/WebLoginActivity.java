@@ -18,14 +18,12 @@ package no.digipost.android.gui;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.webkit.*;
 import android.webkit.WebSettings.LayoutAlgorithm;
@@ -175,10 +173,13 @@ public class WebLoginActivity extends AppCompatActivity {
                 OAuth.retrieveMainAccess(state, code, WebLoginActivity.this, authenticationScope);
                 return SUCCESS;
             } catch (DigipostApiException e) {
+                e.printStackTrace();
                 return e.getMessage();
             } catch (DigipostClientException e) {
+                e.printStackTrace();
                 return e.getMessage();
             } catch (DigipostAuthenticationException e) {
+                e.printStackTrace();
                 return e.getMessage();
             }catch (Exception e){
                 e.printStackTrace();

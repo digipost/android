@@ -1,8 +1,5 @@
 package no.digipost.android.pdf;
 
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -15,6 +12,9 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Scroller;
+
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class ReaderView extends AdapterView<Adapter> implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener,
 		ScaleGestureDetector.OnScaleGestureListener, Runnable {

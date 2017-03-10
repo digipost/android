@@ -20,6 +20,17 @@ import android.os.Build;
 import android.util.Log;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import no.digipost.android.DigipostApplication;
+import no.digipost.android.R;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.api.exception.DigipostInvalidTokenException;
+import no.digipost.android.authentication.OAuth;
+import no.digipost.android.authentication.TokenStore;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.utilities.JSONUtilities;
+import no.digipost.android.utilities.NetworkUtilities;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.entity.StringEntity;
@@ -29,23 +40,14 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import java.io.*;
-import java.net.*;
-import java.nio.charset.Charset;
+
 import javax.net.ssl.HttpsURLConnection;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
-import no.digipost.android.DigipostApplication;
-import no.digipost.android.R;
-import no.digipost.android.authentication.OAuth;
-import no.digipost.android.authentication.TokenStore;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.api.exception.DigipostInvalidTokenException;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.utilities.JSONUtilities;
-import no.digipost.android.utilities.NetworkUtilities;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.Charset;
+
 import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT;
 
 public class ApiAccess {
