@@ -17,12 +17,12 @@ android {
         }
         buildTypes {
             debug {
-                minifyEnabled true
-                proguardFiles 'proguard-android.txt'
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             }
             release {
                 minifyEnabled true
-                proguardFiles 'proguard-android.txt'
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             }
         }
         applicationId 'no.digipost.android'
