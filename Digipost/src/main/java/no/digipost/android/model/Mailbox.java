@@ -16,12 +16,11 @@
 
 package no.digipost.android.model;
 
+import no.digipost.android.constants.ApiConstants;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.ArrayList;
-
-import no.digipost.android.constants.ApiConstants;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Mailbox  {

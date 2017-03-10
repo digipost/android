@@ -23,11 +23,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-
 import no.digipost.android.R;
 import no.digipost.android.model.Attachment;
+
+import java.util.ArrayList;
 
 public class AttachmentArrayAdapter extends ArrayAdapter<Attachment> {
     private Context context;

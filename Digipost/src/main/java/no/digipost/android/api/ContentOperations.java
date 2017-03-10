@@ -16,11 +16,6 @@
 package no.digipost.android.api;
 
 import android.content.Context;
-
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Date;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
@@ -35,6 +30,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.ws.rs.core.MultivaluedMap;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class ContentOperations {
 

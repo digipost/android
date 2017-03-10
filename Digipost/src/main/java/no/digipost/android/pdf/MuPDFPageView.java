@@ -1,6 +1,5 @@
 package no.digipost.android.pdf;
 
-import no.digipost.android.R;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +10,7 @@ import android.graphics.RectF;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.widget.EditText;
+import no.digipost.android.R;
 
 abstract class PassClickResultVisitor {
 	public abstract void visitText(PassClickResultText result);

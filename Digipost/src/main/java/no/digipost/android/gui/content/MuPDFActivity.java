@@ -23,32 +23,23 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.Toolbar;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.widget.*;
-import java.lang.reflect.Field;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.view.*;
+import android.widget.*;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
-import org.apache.commons.io.FilenameUtils;
-import java.util.concurrent.Executor;
 import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.pdf.MuPDFAlert;
-import no.digipost.android.pdf.MuPDFCore;
-import no.digipost.android.pdf.MuPDFPageAdapter;
-import no.digipost.android.pdf.MuPDFReaderView;
-import no.digipost.android.pdf.MuPDFView;
-import no.digipost.android.pdf.SearchTask;
-import no.digipost.android.pdf.SearchTaskResult;
+import no.digipost.android.pdf.*;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
+import org.apache.commons.io.FilenameUtils;
+
+import java.lang.reflect.Field;
+import java.util.concurrent.Executor;
 
 class ThreadPerTaskExecutor implements Executor {
     public void execute(Runnable r) {

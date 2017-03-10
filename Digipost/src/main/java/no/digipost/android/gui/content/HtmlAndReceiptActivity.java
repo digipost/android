@@ -16,10 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -32,12 +28,10 @@ import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
-import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.DataFormatUtilities;
-import no.digipost.android.utilities.DialogUtitities;
 
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
 

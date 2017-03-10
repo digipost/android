@@ -18,7 +18,6 @@ package no.digipost.android.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.content.SettingsActivity;
 

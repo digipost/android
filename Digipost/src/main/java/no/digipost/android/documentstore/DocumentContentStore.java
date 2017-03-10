@@ -16,12 +16,12 @@
 
 package no.digipost.android.documentstore;
 
-import java.util.ArrayList;
-
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Folder;
 import no.digipost.android.model.Receipt;
+
+import java.util.ArrayList;
 
 public class DocumentContentStore {
 	private static byte[] documentContent = null;

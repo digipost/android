@@ -18,15 +18,14 @@ package no.digipost.android.utilities;
 
 import android.content.Context;
 import android.os.AsyncTask;
-
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.concurrent.ExecutionException;
-
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostInvalidTokenException;
+
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.concurrent.ExecutionException;
 
 public class NetworkUtilities {
     public static final int HTTP_STATUS_SUCCESS = 200;

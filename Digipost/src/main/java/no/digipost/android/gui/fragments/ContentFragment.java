@@ -24,16 +24,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.*;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -43,11 +43,16 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.recyclerview.*;
-import no.digipost.android.gui.recyclerview.DividerItemDecoration;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Receipt;
-import no.digipost.android.utilities.*;
+import no.digipost.android.utilities.DataFormatUtilities;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.SettingsUtilities;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.String.format;
 
@@ -88,7 +93,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             }
         });
 
-        spinnerLayout = (View) view.findViewById(R.id.fragment_content_spinner_layout);
+        spinnerLayout = view.findViewById(R.id.fragment_content_spinner_layout);
         recyclerView = (RecyclerViewEmptySupport) view.findViewById(R.id.fragment_content_recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);

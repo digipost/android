@@ -21,9 +21,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.*;
-import java.util.ArrayList;
-import java.util.List;
-
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -38,6 +35,9 @@ import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReceiptFragment extends ContentFragment<Receipt> {
 
