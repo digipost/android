@@ -17,6 +17,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textSize="14sp"
+            android:textColor="@color/white"
             android:padding="5dp"
             android:background="@color/login_background"/>
 
