@@ -396,7 +396,7 @@ public class UploadActivity extends AppCompatActivity {
             if (object.isFile()) {
                 if (isImage(object)) {
                     ImageSize targetSize = new ImageSize(40, 40);
-                    ImageLoader.getInstance().loadImage(FileUtilities.getFileUri(object), targetSize, getImageLoaderOptions(), new SimpleImageLoadingListener() {
+                    ImageLoader.getInstance().loadImage("file://" + object.getAbsolutePath(), targetSize, getImageLoaderOptions(), new SimpleImageLoadingListener() {
                         @Override
                         public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                             super.onLoadingComplete(imageUri, view, loadedImage);
@@ -488,12 +488,10 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         private DisplayImageOptions getImageLoaderOptions() {
-            DisplayImageOptions options = new DisplayImageOptions.Builder()
+            return new DisplayImageOptions.Builder()
                     .cacheInMemory(true)
-                    .cacheOnDisc(true)
+                    .cacheOnDisk(true)
                     .build();
-
-            return options;
         }
 
         private boolean isImage(File f) {
