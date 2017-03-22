@@ -16,8 +16,11 @@
 package no.digipost.android.gui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -39,7 +42,7 @@ import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class LoginActivity extends Activity {
     private final int WEB_OAUTH_LOGIN_REQUEST = 0;
-    private Button loginButton, privacyButton, registrationButton;
+    private Button loginButton, privacyButton, registrationButton, forgotPasswordButton;
     private CheckBox rememberCheckbox;
     private Context context;
     private enum Login{
@@ -56,11 +59,20 @@ public class LoginActivity extends Activity {
         ButtonListener listener = new ButtonListener();
         loginButton = (Button) findViewById(R.id.login_loginButton);
         loginButton.setOnClickListener(listener);
+        loginButton.setTransformationMethod(null);
         privacyButton = (Button) findViewById(R.id.login_privacyButton);
         privacyButton.setOnClickListener(listener);
+        privacyButton.setTransformationMethod(null);
         registrationButton = (Button) findViewById(R.id.login_registrationButton);
         registrationButton.setOnClickListener(listener);
         rememberCheckbox = (CheckBox) findViewById(R.id.login_remember_me);
+        forgotPasswordButton = (Button) findViewById(R.id.login_forgotPasswordButton);
+        forgotPasswordButton.setOnClickListener(listener);
+        forgotPasswordButton.setTransformationMethod(null);
+        forgotPasswordButton.setPaintFlags(forgotPasswordButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        registrationButton.setPaintFlags(registrationButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        registrationButton.setTransformationMethod(null);
+
         LinearLayout idPortenLayout = (LinearLayout) findViewById(R.id.login_id_porten_layout);
         idPortenLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -145,14 +157,33 @@ public class LoginActivity extends Activity {
         finish();
     }
 
-    private void openPrivacyBrowser() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/juridisk/"));
+    private void openExternalBrowserWithUrl(String url){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
     }
 
-    public void openRegistrationDialog() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.digipost.no/app/registrering?utm_source=android_app&utm_medium=app&utm_campaign=app-link&utm_content=ny_bruker#/"));
-        startActivity(browserIntent);
+    private void showForgotPasswordDialog(){
+        AlertDialog.Builder forgetPasswordDialog = new AlertDialog.Builder(context);
+        forgetPasswordDialog.setTitle(getString(R.string.login_forgot_password_dialog_title));
+        forgetPasswordDialog.setMessage(R.string.login_forgot_password_dialog_message);
+
+        forgetPasswordDialog.setPositiveButton(getString(R.string.login_forgot_password_dialog_open_link_button), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                openExternalBrowserWithUrl("https://www.digipost.no/app/#/person/glemt");
+                dialog.dismiss();
+            }
+        });
+
+        forgetPasswordDialog.setNegativeButton(getString(R.string.login_forgot_password_dialog_close_button), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.dismiss();
+            }
+        });
+
+        forgetPasswordDialog.create().show();
+
     }
 
     private class ButtonListener implements OnClickListener {
@@ -161,11 +192,14 @@ public class LoginActivity extends Activity {
             if (v == loginButton) {
                 startLoginProcess();
             } else if (v == privacyButton) {
-                privacyButton.setTextColor(getResources().getColor(R.color.grey_filesize));
-                openPrivacyBrowser();
+                GAEventController.sendLoginClickEvent(LoginActivity.this, "personvern");
+                openExternalBrowserWithUrl("https://www.digipost.no/juridisk/");
             } else if (v == registrationButton) {
-                registrationButton.setTextColor(getResources().getColor(R.color.grey_filesize));
-                openRegistrationDialog();
+                GAEventController.sendLoginClickEvent(LoginActivity.this, "registrering");
+                openExternalBrowserWithUrl("https://www.digipost.no/app/registrering?utm_source=android_app&utm_medium=app&utm_campaign=app-link&utm_content=ny_bruker#/");
+            }else if (v == forgotPasswordButton){
+                GAEventController.sendLoginClickEvent(LoginActivity.this, "glemt-passord");
+                showForgotPasswordDialog();
             }
         }
     }

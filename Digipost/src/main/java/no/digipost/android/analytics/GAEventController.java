@@ -7,13 +7,19 @@ import no.digipost.android.DigipostApplication;
 
 public class GAEventController {
 
-    public static final String appLaunchOrigin = "app-launch-origin";
-    public static final String loginRememberMeOption = "login-remember-me";
-    public static final String LAUNCH_ORIGIN_NORMAL = "normal";;
+    public static final String LAUNCH_ORIGIN_NORMAL = "normal";
     public static final String LAUNCH_ORIGIN_PUSH = "push";
+
+    private static final String appLaunchOrigin = "app-launch-origin";
+    private static final String loginRememberMeOption = "login-remember-me";
+    private static final String FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT = "faktura-avtale-oppsett-kontekst-basert";
 
     public static void sendLaunchEvent(Activity activity, String actionText){
         sendEvent(activity, appLaunchOrigin, actionText, appLaunchOrigin+"-"+actionText);
+    }
+
+    public static void sendLoginClickEvent(Activity activity, String event){
+        sendEvent(activity, "innlogging", "klikk-link", event);
     }
 
     public static void sendRememberMeEvent(Activity activity, boolean enabled){
@@ -21,7 +27,27 @@ public class GAEventController {
         sendEvent(activity, loginRememberMeOption, actionText, loginRememberMeOption+"-"+actionText);
     }
 
-    public static void sendEvent(Activity activity, String category, String action, String label){
+    public static void sendInvoiceClickedChooseBankDialog(Activity activity, String buttonText){
+        sendEvent(activity, FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT, "klikk-start-oppsett", buttonText);
+    }
+
+    public static void sendInvoiceOpenBankViewFromListEvent(Activity activity, String bank){
+        sendEvent(activity, FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT, "klikk-bank-i-liste", bank);
+    }
+
+    public static void sendInvoiceClickedDigipostOpenPagesLink(Activity activity, String bank){
+        sendEvent(activity, FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT, "klikk-digipost-faktura-åpne-sider", bank);
+    }
+
+    public static void sendInvoiceClickedSetup10Link(Activity activity, String bank){
+        sendEvent(activity, FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT, "klikk-oppsett-avtale-type-1-link", bank);
+    }
+
+    public static void sendInvoiceClickedSetup20Link(Activity activity, String bank){
+        sendEvent(activity, FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT, "klikk-oppsett-avtale-type-2-link", bank);
+    }
+
+    private static void sendEvent(Activity activity, String category, String action, String label){
         getTracker(activity).send(new HitBuilders.EventBuilder()
                 .setCategory(category)
                 .setAction(action)

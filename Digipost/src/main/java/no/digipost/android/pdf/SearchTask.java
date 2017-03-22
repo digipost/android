@@ -1,12 +1,12 @@
 package no.digipost.android.pdf;
 
-import no.digipost.android.R;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.RectF;
 import android.os.Handler;
+import no.digipost.android.R;
 
 class ProgressDialogX extends ProgressDialog {
 	public ProgressDialogX(Context context) {

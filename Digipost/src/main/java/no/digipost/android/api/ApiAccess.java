@@ -20,6 +20,17 @@ import android.os.Build;
 import android.util.Log;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import no.digipost.android.DigipostApplication;
+import no.digipost.android.R;
+import no.digipost.android.api.exception.DigipostApiException;
+import no.digipost.android.api.exception.DigipostAuthenticationException;
+import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.api.exception.DigipostInvalidTokenException;
+import no.digipost.android.authentication.OAuth;
+import no.digipost.android.authentication.TokenStore;
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.utilities.JSONUtilities;
+import no.digipost.android.utilities.NetworkUtilities;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.entity.StringEntity;
@@ -29,22 +40,14 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import java.io.*;
-import java.net.*;
-import java.nio.charset.Charset;
+
 import javax.net.ssl.HttpsURLConnection;
 import javax.ws.rs.core.HttpHeaders;
-import no.digipost.android.DigipostApplication;
-import no.digipost.android.R;
-import no.digipost.android.authentication.OAuth;
-import no.digipost.android.authentication.TokenStore;
-import no.digipost.android.api.exception.DigipostApiException;
-import no.digipost.android.api.exception.DigipostAuthenticationException;
-import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.api.exception.DigipostInvalidTokenException;
-import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.utilities.JSONUtilities;
-import no.digipost.android.utilities.NetworkUtilities;
+import javax.ws.rs.core.MultivaluedMap;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.Charset;
+
 import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT;
 
 public class ApiAccess {
@@ -64,22 +67,34 @@ public class ApiAccess {
         return jerseyClient;
     }
 
-    private ClientResponse get(Context context, final String uri, final String header_accept) throws DigipostClientException,
+    private ClientResponse get(Context context, final String uri, final String header_accept, final MultivaluedMap<String, String> params) throws DigipostClientException,
             DigipostApiException, DigipostAuthenticationException {
 
         try {
             if (StringUtils.isBlank(TokenStore.getAccess())){
                 OAuth.updateAccessTokenWithRefreshToken(context);
             }
-            ClientResponse cr = getClient()
-                    .resource(uri)
-                    .header(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT)
-                    .header(ApiConstants.ACCEPT, header_accept)
-                    .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccess())
-                    .get(ClientResponse.class);
+
+            ClientResponse cr;
+            if(params == null) {
+                cr = getClient()
+                        .resource(uri)
+                        .header(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT)
+                        .header(ApiConstants.ACCEPT, header_accept)
+                        .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccess())
+                        .get(ClientResponse.class);
+            }else{
+                cr = getClient()
+                        .resource(uri)
+                        .queryParams(params)
+                        .header(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT)
+                        .header(ApiConstants.ACCEPT, header_accept)
+                        .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccess())
+                        .get(ClientResponse.class);
+            }
 
             if (cr.getStatus() == TEMPORARY_REDIRECT.getStatusCode()) {
-                return get(context, cr.getHeaders().getFirst(HttpHeaders.LOCATION), header_accept);
+                return get(context, cr.getHeaders().getFirst(HttpHeaders.LOCATION), header_accept, params);
             }
 
             return cr;
@@ -177,15 +192,15 @@ public class ApiAccess {
         return "" + cr.getStatus();
     }
 
-    public String getReceiptHTML(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-        ClientResponse cr = get(context, uri, ApiConstants.TEXT_HTML);
+    public String getReceiptHTML(Context context, final String uri, final MultivaluedMap<String, String> params) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        ClientResponse cr = get(context, uri, ApiConstants.TEXT_HTML, params);
 
         try {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {
             Log.e(TAG, context.getString(R.string.error_invalid_token));
             OAuth.updateAccessTokenWithRefreshToken(context);
-            return getReceiptHTML(context, uri);
+            return getReceiptHTML(context, uri, params);
         }
 
         return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());
@@ -236,14 +251,14 @@ public class ApiAccess {
         }
     }
 
-    public String getApiJsonString(Context context, final String uri) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-        ClientResponse cr = get(context, uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON);
+    public String getApiJsonString(Context context, final String uri, final MultivaluedMap<String, String> params) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        ClientResponse cr = get(context, uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON, params);
 
         try {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {
             OAuth.updateAccessTokenWithRefreshToken(context);
-            return getApiJsonString(context, uri);
+            return getApiJsonString(context, uri, params);
         }catch (Exception e){
             Log.e(TAG, e.getMessage());
         }

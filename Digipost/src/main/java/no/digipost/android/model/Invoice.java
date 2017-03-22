@@ -16,12 +16,11 @@
 
 package no.digipost.android.model;
 
-import java.util.ArrayList;
-
 import no.digipost.android.constants.ApiConstants;
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Invoice {
@@ -43,6 +42,9 @@ public class Invoice {
 
     @JsonProperty
     private String dueDate;
+
+    @JsonProperty
+    private boolean canBePaidByUser;
 
     public String getKid(){
         return kid;
@@ -70,6 +72,10 @@ public class Invoice {
 
     public void setLink(final ArrayList<Link> link) {
         this.link = link;
+    }
+
+    public boolean canBePaidByUser(){
+        return canBePaidByUser;
     }
 
     public String getSendToBank(){

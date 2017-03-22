@@ -1,8 +1,5 @@
 package no.digipost.android.pdf;
 
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -15,6 +12,9 @@ import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Scroller;
+
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 public class ReaderView extends AdapterView<Adapter> implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener,
 		ScaleGestureDetector.OnScaleGestureListener, Runnable {
@@ -332,18 +332,18 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 	}
 
 	protected void onSettle(View v) {
-	};
+	}
 
-	protected void onUnsettle(View v) {
-	};
+    protected void onUnsettle(View v) {
+	}
 
-	protected void onNotInUse(View v) {
-	};
+    protected void onNotInUse(View v) {
+	}
 
-	protected void onScaleChild(View v, Float scale) {
-	};
+    protected void onScaleChild(View v, Float scale) {
+	}
 
-	public View getDisplayedView() {
+    public View getDisplayedView() {
 		return mChildViews.get(mCurrent);
 	}
 
@@ -759,7 +759,7 @@ public class ReaderView extends AdapterView<Adapter> implements GestureDetector.
 			v.measure(MeasureSpec.EXACTLY | (int) (v.getMeasuredWidth() * scale * mScale),
 					MeasureSpec.EXACTLY | (int) (v.getMeasuredHeight() * scale * mScale));
 		} else {
-			v.measure(MeasureSpec.EXACTLY | (int) (v.getMeasuredWidth()), MeasureSpec.EXACTLY | (int) (v.getMeasuredHeight()));
+			v.measure(MeasureSpec.EXACTLY | v.getMeasuredWidth(), MeasureSpec.EXACTLY | v.getMeasuredHeight());
 		}
 	}
 

@@ -24,16 +24,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.terlici.dragndroplist.DragNDropSimpleAdapter;
-
-import java.util.ArrayList;
-import java.util.Map;
-
 import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Folder;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class DrawerAdapter extends DragNDropSimpleAdapter {
     protected Context context;
@@ -146,7 +144,9 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.account_32px, 0, 0, 0);
         } else if (name.equals(context.getResources().getString(R.string.drawer_settings))) {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.admin_32px, 0, 0, 0);
-        } else if (name.equals(context.getResources().getString(R.string.drawer_help))) {
+        } else if(name.equals(context.getResources().getString(R.string.drawer_invoice_overview))){
+            linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.money_light, 0, 0, 0);
+        } if (name.equals(context.getResources().getString(R.string.drawer_help))) {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.help_32px, 0, 0, 0);
         } else if (name.equals(context.getResources().getString(R.string.drawer_logout))) {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.logout_32px, 0, 0, 0);

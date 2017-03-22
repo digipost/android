@@ -28,35 +28,37 @@ import android.util.Log;
 import android.view.*;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import no.digipost.android.authentication.TokenStore;
-import no.digipost.android.gui.WebLoginActivity;
-import no.digipost.android.gui.adapters.DocumentAdapter;
-import no.digipost.android.model.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.ws.rs.core.HttpHeaders;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
+import no.digipost.android.gui.WebLoginActivity;
 import no.digipost.android.gui.adapters.AttachmentArrayAdapter;
+import no.digipost.android.gui.adapters.DocumentAdapter;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
 import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
+import no.digipost.android.model.Attachment;
+import no.digipost.android.model.Document;
+import no.digipost.android.model.Documents;
+import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
+
+import javax.ws.rs.core.HttpHeaders;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -75,7 +77,6 @@ public class DocumentFragment extends ContentFragment<Document> {
     private static String EXTRA_CONTENT = "content";
     private static final int INTENT_OPEN_ATTACHMENT_CONTENT = 0;
     private static final int INTENT_ID_PORTEN_WEBVIEW_LOGIN = 1;
-
     protected DocumentAdapter documentAdapter;
     protected boolean multiSelectEnabled;
     private ActionMode internalActionMode;
@@ -102,9 +103,24 @@ public class DocumentFragment extends ContentFragment<Document> {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+        setupNewDocumentAdapter();
+        return view;
+    }
+
+    private void setupNewDocumentAdapter(){
         documentAdapter = new DocumentAdapter(context, new ArrayList<Document>());
         recyclerView.setAdapter(documentAdapter);
-        return view;
+    }
+
+    public void loadMoreContent(){
+        if(documentAdapter != null && documentAdapter.remainingContentToGet()) {
+            updateAccountMeta(false);
+        }
+    }
+
+    public void clearExistingContent(){
+        if(documentAdapter != null)
+            documentAdapter.clearExistingContent();
     }
 
     @Override
@@ -180,9 +196,9 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     @Override
     public void onResume() {
-        updateAccountMeta();
         super.onResume();
         dismissUpdateProgressDialogIfExisting();
+        refreshItems();
     }
 
     @Override
@@ -222,7 +238,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     private void showMoveToFolderDialog(ArrayList<Document> documents) {
         folderDialog = null;
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+        View view = inflater.inflate(R.layout.generic_dialog_layout, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.abort),
                 new DialogInterface.OnClickListener() {
@@ -235,9 +251,9 @@ public class DocumentFragment extends ContentFragment<Document> {
         );
 
         builder.setView(view);
-        ListView moveToFolderListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+        ListView moveToFolderListView = (ListView) view.findViewById(R.id.generic_dialog_listview);
         ArrayList<Folder> folders = getMoveFolders();
-        folderAdapter = new FolderArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item, folders);
+        folderAdapter = new FolderArrayAdapter(getActivity(), R.layout.generic_dialog_list_item, folders);
         moveToFolderListView.setAdapter(folderAdapter);
         moveToFolderListView.setOnItemClickListener(new MoveToFolderListOnItemClickListener(documents));
 
@@ -283,7 +299,7 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     private void showAttachmentDialog(final Document document) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+        View view = inflater.inflate(R.layout.generic_dialog_layout, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setNegativeButton(getString(R.string.close),
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -295,8 +311,8 @@ public class DocumentFragment extends ContentFragment<Document> {
         );
         builder.setView(view);
 
-        ListView attachmentListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
-        attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.attachmentdialog_list_item, document.getAttachment());
+        ListView attachmentListView = (ListView) view.findViewById(R.id.generic_dialog_listview);
+        attachmentAdapter = new AttachmentArrayAdapter(getActivity(), R.layout.generic_dialog_list_item, document.getAttachment());
         attachmentListView.setAdapter(attachmentAdapter);
         attachmentListView.setOnItemClickListener(new AttachmentListOnItemClickListener(document));
 
@@ -522,7 +538,6 @@ public class DocumentFragment extends ContentFragment<Document> {
                         DocumentContentStore.setContent(responseBody, parentDocument, attachmentListPosition);
                         DocumentContentStore.setMoveFolders(getMoveFolders());
                         openAttachmentContent(attachment);
-                        updateAdapterDocument(parentDocument);
 
                         ArrayList<Attachment> attachments = parentDocument.getAttachment();
 
@@ -549,7 +564,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                     }
 
                     DialogUtitities.showToast(DocumentFragment.this.getActivity(), errorMessage);
-                    updateAccountMeta();
+                    updateAccountMeta(true);
                 }
 
                 @Override
@@ -568,14 +583,16 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     @Override
-    public void updateAccountMeta() {
+    public void updateAccountMeta(boolean clearContent) {
         if (getContent() > ApplicationConstants.numberOfStaticFolders) {
             if (getContent() - ApplicationConstants.numberOfStaticFolders == MainContentActivity.numberOfFolders) {
                 content = ApplicationConstants.MAILBOX;
             }
         }
 
-        GetDocumentMetaTask task = new GetDocumentMetaTask(getContent());
+        if(documentAdapter==null)setupNewDocumentAdapter();
+        String unixTimeOfNextDocument = documentAdapter.getGetUnixTimeOfNextDocument();
+        GetDocumentMetaTask task = new GetDocumentMetaTask(getContent(),clearContent, unixTimeOfNextDocument);
         task.execute();
     }
 
@@ -599,15 +616,10 @@ public class DocumentFragment extends ContentFragment<Document> {
     private void deleteDocument(Document document) {
         List<Document> documents = new ArrayList<>();
         documents.add(document);
-
         ContentDeleteTask contentDeleteTask = new ContentDeleteTask(documents);
         contentDeleteTask.execute();
     }
-
-    private void updateAdapterDocument(Document document) {
-        documentAdapter.replaceAtPosition(document, currentListPosition);
-    }
-
+        
     private void openUpdatedDocument(int position){
         Document document = documentAdapter.getItem(position);
         new OpenUpdatedDocumentTask(document).execute();
@@ -665,9 +677,13 @@ public class DocumentFragment extends ContentFragment<Document> {
         private final int content;
         private String errorMessage;
         private boolean invalidToken;
+        private boolean clearContent;
+        private String unixTimeOfNextDocument;
 
-        private GetDocumentMetaTask(final int content) {
+        private GetDocumentMetaTask(final int content, final boolean clearContent, final String unixTimeOfNextDocument) {
             this.content = content;
+            this.clearContent = clearContent;
+            this.unixTimeOfNextDocument = unixTimeOfNextDocument;
         }
 
         @Override
@@ -679,7 +695,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         @Override
         protected Documents doInBackground(final Void... params) {
             try {
-                return ContentOperations.getAccountContentMetaDocument(context, content);
+                return ContentOperations.getAccountContentMetaDocument(context, content, unixTimeOfNextDocument);
             } catch (DigipostApiException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
@@ -699,7 +715,12 @@ public class DocumentFragment extends ContentFragment<Document> {
         @Override
         protected void onPostExecute(final Documents newDocuments) {
             super.onPostExecute(newDocuments);
-            DocumentFragment.super.initialLoadingComplete();
+            DocumentFragment.super.hideBackgroundLoadingSpinner();
+
+            if(clearContent){
+                documentAdapter.clearExistingContent();
+            }
+
             if (isAdded()) {
                 if(listEmptyViewImage != null) listEmptyViewImage.setVisibility(View.GONE);
                 DocumentFragment.super.taskIsRunning = false;
@@ -718,7 +739,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                     DocumentFragment.super.setListEmptyViewNoNetwork(true);
                     DialogUtitities.showToast(DocumentFragment.this.context, errorMessage);
                 }
-
+                loadingMoreContent = false;
                 activityCommunicator.onUpdateAccountMeta();
                 activityCommunicator.onEndRefreshContent();
             }
@@ -727,6 +748,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            loadingMoreContent = false;
             activityCommunicator.onEndRefreshContent();
         }
     }
@@ -791,7 +813,6 @@ public class DocumentFragment extends ContentFragment<Document> {
             super.onCancelled();
             DocumentFragment.super.hideProgressDialog();
             DialogUtitities.showToast(context, progress + " av " + documents.size() + " ble flyttet.");
-            updateAccountMeta();
         }
 
         @Override
@@ -813,8 +834,8 @@ public class DocumentFragment extends ContentFragment<Document> {
                         attachmentDialog = null;
                     }
                 }
-                updateAccountMeta();
             }
+            refreshItems();
         }
     }
 
@@ -838,7 +859,6 @@ public class DocumentFragment extends ContentFragment<Document> {
             if (!DocumentFragment.super.progressDialogIsVisible) {
                 DocumentFragment.super.showContentProgressDialog(this, context.getString(R.string.loading_content));
             }
-
         }
 
         @Override

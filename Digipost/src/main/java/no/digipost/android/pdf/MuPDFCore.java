@@ -1,11 +1,11 @@
 package no.digipost.android.pdf;
 
-import java.util.ArrayList;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.PointF;
 import android.graphics.RectF;
+
+import java.util.ArrayList;
 
 public class MuPDFCore {
 	/* load our native library */
@@ -189,7 +189,7 @@ public class MuPDFCore {
 	public synchronized boolean setFocusedWidgetText(int page, String text) {
 		boolean success;
 		gotoPage(page);
-		success = setFocusedWidgetTextInternal(text) != 0 ? true : false;
+		success = setFocusedWidgetTextInternal(text) != 0;
 
 		return success;
 	}

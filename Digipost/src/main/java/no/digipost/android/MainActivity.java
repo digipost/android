@@ -16,21 +16,21 @@
 
 package no.digipost.android;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.authentication.OAuth;
 import no.digipost.android.authentication.AndroidLockSecurity;
+import no.digipost.android.authentication.OAuth;
 import no.digipost.android.gui.LoginActivity;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
-import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Bundle;
 
 public class MainActivity extends Activity {
 

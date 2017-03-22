@@ -24,28 +24,35 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.*;
-import android.util.Log;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import java.util.List;
-
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
+import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.recyclerview.*;
+import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.DataFormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.String.format;
 
@@ -64,7 +71,6 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected TextView listEmptyViewTitle;
     protected TextView listEmptyViewText;
     protected ImageView listEmptyViewImage;
-
     protected TextView listTopText;
     protected ProgressDialog progressDialog;
     protected boolean progressDialogIsVisible = false;
@@ -72,7 +78,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     protected ActionMode contentActionMode;
     protected View spinnerLayout;
     public static boolean activityDrawerOpen;
-
+    protected boolean loadingMoreContent = false;
     public abstract int getContent();
 
     @Override
@@ -83,13 +89,13 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         networkRetryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateAccountMeta();
+                updateAccountMeta(true);
             }
         });
 
-        spinnerLayout = (View) view.findViewById(R.id.fragment_content_spinner_layout);
+        spinnerLayout = view.findViewById(R.id.fragment_content_spinner_layout);
         recyclerView = (RecyclerViewEmptySupport) view.findViewById(R.id.fragment_content_recyclerview);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new DividerItemDecoration(context));
@@ -108,6 +114,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayoutWithEmpty.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                loadingMoreContent = true;
                 refreshItems();
             }
         });
@@ -120,6 +127,22 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         listTopText = (TextView) view.findViewById(R.id.fragment_content_listview_top_text);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setEmptyView(listEmptyViewNoContent);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int totalItem = layoutManager.getItemCount();
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                if (!loadingMoreContent && lastVisibleItem == totalItem - 1) {
+                    loadingMoreContent = true;
+                    loadMoreContent();
+                }
+            }
+        });
+
+        refreshItems();
 
         return view;
     }
@@ -130,9 +153,13 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     abstract void recyclerViewOnLongClick(int position);
 
     public abstract void finishActionMode();
+    public abstract void loadMoreContent();
+    public abstract void clearExistingContent();
 
-    void refreshItems() {
-        updateAccountMeta();
+    public void refreshItems() {
+        showBackgroundLoadingSpinner();
+        clearExistingContent();
+        updateAccountMeta(true);
         activityCommunicator.onStartRefreshContent();
         onItemsLoadComplete();
     }
@@ -140,8 +167,8 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     void onItemsLoadComplete() {
         activityCommunicator.onEndRefreshContent();
         if(contentActionMode != null) contentActionMode.finish();
-        recyclerView.getAdapter().notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
+
     }
 
     @Override
@@ -156,9 +183,14 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         FileUtilities.deleteTempFiles();
     }
 
-    protected void initialLoadingComplete(){
+    protected void hideBackgroundLoadingSpinner(){
         spinnerLayout.setVisibility(View.GONE);
         swipeRefreshLayout.setVisibility(View.VISIBLE);
+    }
+
+    protected void showBackgroundLoadingSpinner(){
+        spinnerLayout.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setVisibility(View.GONE);
     }
 
     protected void setListEmptyViewText(String title, String text) {
@@ -170,6 +202,11 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             if(text != null) listEmptyViewText.setText(text);
             listEmptyViewImage.setVisibility(View.GONE);
         }
+    }
+
+    protected void clearEmptyTextView(){
+        listEmptyViewTitle.setText("");
+        listEmptyViewText.setText("");
     }
 
     protected void setTopText(String text) {
@@ -200,9 +237,30 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     }
 
     private void showDeleteContentDialog(final List<CONTENT_TYPE> content) {
-        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context,
-                getActionDeletePromtString(content.size()), getString(R.string.delete));
-        alertDialogBuilder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+        String dialogTitle = getString(R.string.delete);
+        String deleteButtonText = getString(R.string.delete);
+        String cancelButtonText = getString(R.string.abort);
+        String messageText = getActionDeletePromptString(content.size());
+
+        boolean notReceipt = getContent() != ApplicationConstants.RECEIPTS;
+        int numberOfInvoices = numberOfInvoices(content);
+
+        if(notReceipt && numberOfInvoices > 0){
+            int numberOfFiles = content.size();
+            String filesText = numberOfFiles +" "+ (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));
+            String invoicesText = numberOfInvoices +" "+ (numberOfInvoices == 1 ? getString(R.string.invoice_delete_invoice_single) : getString(R.string.invoice_delete_invoice_plural));
+
+
+            if (InvoiceBankAgreements.hasActiveAgreementType(context, InvoiceBankAgreements.TYPE_2)) {
+                messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices_active_type_2_agreement), filesText, invoicesText);
+            }else {
+                messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices), filesText, invoicesText);
+            }
+        }
+
+        AlertDialog.Builder alertDialogBuilder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(context, messageText, dialogTitle);
+
+        alertDialogBuilder.setPositiveButton(deleteButtonText, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 finishActionMode();
@@ -210,15 +268,32 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
                 dialogInterface.dismiss();
             }
         });
-        alertDialogBuilder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
+
+        alertDialogBuilder.setNegativeButton(cancelButtonText, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 finishActionMode();
                 dialogInterface.cancel();
             }
         });
+
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private int numberOfInvoices(final List<CONTENT_TYPE> content){
+        int numberOfInvoices = 0;
+        for (CONTENT_TYPE object : content){
+            Document document = (Document) object;
+            ArrayList<Attachment> attachments = document.getAttachment();
+            for(Attachment attachment : attachments){
+                if(attachment.getType().equals(ApiConstants.INVOICE)){
+                    numberOfInvoices += 1;
+                }
+            }
+        }
+
+        return numberOfInvoices;
     }
 
     private String getContentTypeString(int count) {
@@ -231,15 +306,15 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             }
         } else {
             if (count > 1) {
-                res = R.string.document_plural;
+                res = R.string.letter_plural;
             } else {
-                res = R.string.document_singular;
+                res = R.string.letter_singular;
             }
         }
         return getString(res);
     }
 
-    private String getActionDeletePromtString(int count) {
+    private String getActionDeletePromptString(int count) {
         String type = getContentTypeString(count);
 
         if (count > 1) {
@@ -279,13 +354,10 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
                 return null;
             } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 return e.getMessage();
             } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 return e.getMessage();
             } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 invalidToken = true;
                 return e.getMessage();
             }
@@ -312,13 +384,12 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             taskIsRunning = false;
             DialogUtitities.showToast(context, format(getString(R.string.delete_cancelled), progress, content.size()));
             hideProgressDialog();
-            updateAccountMeta();
         }
 
         @Override
         protected void onPostExecute(final String result) {
             super.onPostExecute(result);
-            if(isAdded()) {
+            if (isAdded()) {
                 taskIsRunning = false;
                 if (result != null) {
                     DialogUtitities.showToast(context, result);
@@ -327,9 +398,8 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
                         activityCommunicator.requestLogOut();
                     }
                 }
-
                 hideProgressDialog();
-                updateAccountMeta();
+                refreshItems();
             }
         }
     }
@@ -358,7 +428,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         }
     }
 
-    public abstract void updateAccountMeta();
+    public abstract void updateAccountMeta(boolean clearContent);
 
     public interface ActivityCommunicator {
         void onStartRefreshContent();

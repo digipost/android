@@ -13,7 +13,7 @@
     <!-- ActionBar -->
     <color name="actionbar_title_color">#FFF</color>
     <color name="actionbar_subtitle_color">#f2f2f2</color>
-    <color name="actionbar_red_background">#D42319</color>
+    <color name="actionbar_red_background">#E01911</color>
     <color name="actionbar_dark_red_background">#AB1E16</color>
     <color name="searchbar_grey_hint">#FFF</color>
     <color name="actionbar_button_pressed_dark_red">#B00</color>
@@ -36,6 +36,11 @@
     <color name="checkbox_unchecked">#CCCCCC</color>
     <color name="checkbox_checked">#666666</color>
     <color name="grey_date">#828282</color>
+
+    <color name="invoice_title">#303030</color>
+    <color name="invoice_subtitle">#5E5E5E</color>
+    <color name="invoice_link">#0C72A8</color>
+    <color name="invoice_background">#f1f1f1</color>
 
     <!-- Misc -->
     <color name="transparent">#00000000</color>

@@ -18,12 +18,10 @@ package no.digipost.android.api.tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.NetworkUtilities;
@@ -51,16 +49,16 @@ public class CreateEditDeleteFolderTask extends AsyncTask<Void, Void, Integer> {
             return ContentOperations.createEditDeleteFolder(activity, folder, action);
         } catch (DigipostApiException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
-            activity.errorMessage = e.getMessage();
+            MainContentActivity.errorMessage = e.getMessage();
             return NetworkUtilities.BAD_REQUEST;
         } catch (DigipostClientException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
-            activity.errorMessage = e.getMessage();
+            MainContentActivity.errorMessage = e.getMessage();
             return NetworkUtilities.BAD_REQUEST;
         } catch (DigipostAuthenticationException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
-            activity.errorMessage = e.getMessage();
-            activity.invalidToken = true;
+            MainContentActivity.errorMessage = e.getMessage();
+            MainContentActivity.invalidToken = true;
             return NetworkUtilities.BAD_REQUEST;
         }
     }

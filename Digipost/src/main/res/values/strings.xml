@@ -25,6 +25,7 @@
     <string name="drawer_my_folders">MINE MAPPER</string>
     <string name="drawer_my_account">MIN KONTO</string>
     <string name="drawer_change_account">Bytt konto</string>
+    <string name="drawer_invoice_overview">Faktura-avtaler</string>
     <string name="drawer_settings">Innstillinger</string>
     <string name="drawer_help">Hjelp</string>
     <string name="drawer_logout">Logg ut</string>
@@ -98,6 +99,8 @@
     <string name="receipt_plural">kvitteringene</string>
     <string name="document_singular">dokumentet</string>
     <string name="document_plural">dokumentene</string>
+    <string name="letter_singular">brevet</string>
+    <string name="letter_plural">brevene</string>
     <string name="delete_multiple">Vil du slette disse %1$d %2$s?</string>
     <string name="delete_single">Vil du slette %1$s %2$s?</string>
     <string name="delete_progress_document">Sletter %1$s (%2$d/%3$d)</string>
@@ -106,6 +109,11 @@
 
     <!-- LoginActivity -->
     <string name="login_loginbutton_text">Logg inn i Digipost</string>
+    <string name="login_forgot_password_button_text">Glemt passord</string>
+    <string name="login_forgot_password_dialog_title">Glemt passord</string>
+    <string name="login_forgot_password_dialog_message">Du kan endre passord på digipost.no.\nBruk det nye passordet for å logge inn i appen.</string>
+    <string name="login_forgot_password_dialog_open_link_button">Til digipost.no</string>
+    <string name="login_forgot_password_dialog_close_button">Lukk</string>
     <string name="login_registrationbutton_text">Ny bruker</string>
     <string name="login_privacybutton_text">Personvern</string>
     <string name="login_header_logo_contentdescription">Digipost logo</string>
@@ -191,7 +199,7 @@
         igjen.
     </string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
-    <string name="error_invalid_token">Tilgang tilbaketrukket.</string>
+    <string name="error_invalid_token">Tilgang utløpt, vennligst logg inn på nytt</string>
     <string name="error_bad_request">En feil oppstod.</string>
     <string name="error_inputstreamtobyarray">En feil oppstod under åpning av innhold</string>
     <string name="error_no_activity_to_open_file">Du har ingen apper som kan åpne
@@ -205,9 +213,9 @@
     <string name="error_documents_in_delete_Folder">Kunne ikke slette mappen. Mappen inneholder dokumenter. Du må flytte eller slette disse før mappen kan slettes.</string>
 
     <!-- Prompts -->
-    <string name="sent_to_bank">Sendt til nettbank</string>
-    <string name="sending_to_bank">Sender til nettbank…</string>
-    <string name="dialog_send_to_bank">Send til nettbank</string>
+    <string name="sent_to_bank">Lagt til betaling</string>
+    <string name="sending_to_bank">Legger til betaling…</string>
+    <string name="dialog_send_to_bank">Legg til betaling</string>
     <string name="dialog_send_to_bank_not_paid_title">Vil du legge fakturaen i forfallsregisteret i nettbanken?</string>
     <string name="dialog_send_to_bank_not_paid_message_start">Fakturaen vil bli betalt på forfallsdatoen. Hvis du vil endre eller se på selve betalingen senere, må du logge inn i din nettbank.</string>
     <string name="dialog_send_to_bank_not_paid_message_end">Følgende konto vil belastes:\n%1$s</string>
@@ -228,9 +236,10 @@
     <string name="dialog_prompt_delete_receipt">Er du sikker på at du vil slette denne
         kvitteringen?
     </string>
-    <string name="dialog_prompt_delete_document">Er du sikker på at du vil slette dette
-        dokumentet?
+    <string name="dialog_prompt_delete_document">Vil du slette brevet?
     </string>
+
+    <string name="dialog_prompt_open_help_new_window">Hjelpesiden vil bli åpnet i ekstern nettleser.</string>
 
     <string name="dialog_edit_folder_title">Velg navn og ikon</string>
     <string name="dialog_edit_folder_invalid_folder_name">Ugyldig navn</string>
@@ -250,5 +259,73 @@
 
     <string name="dialog_create_folder_title">Opprett mappe</string>
     <string name="dialog_create_folder_save_button">Opprett</string>
+
+    <!--Invoice-->
+    <string name="invoice_bank_logo">Banklogo</string>
+    <string name="invoice_dialog_title">Enklere betaling</string>
+    <string name="invoice_dialog_subtitle">Unngå lange KID-numre og få fakturaene rett i nettbanken</string>
+    <string name="invoice_dialog_choose_bank_button">Velg bank</string>
+    <string name="invoice_dialog_later_button">Senere</string>
+    <string name="invoice_dialog_forget_button">Ikke vis meg igjen</string>
+
+    <string name="invoice_options_title">Velg bank</string>
+    <string name="invoice_options_subtitle">Alle fakturaer du mottar i Digipost, kan enkelt overføres til nettbanken din.</string>
+    <string name="invoice_options_more_soon">Flere banker kommer snart!</string>
+
+    <string name="invoice_bank_title_enabled">Få fakturaene i nettbanken også</string>
+    <string name="invoice_bank_subtitle_enabled">Alle fakturaer du mottar i Digipost vil automatisk vises i nettbanken din. Da kan du enkelt betale dem uten å sjekke postkassa først.</string>
+    <string name="invoice_bank_button_enabled">Logg inn i %1$s og inngå avtale</string>
+    <string name="invoice_bank_read_more_enabled">Les mer om Digipost faktura</string>
+
+    <string name="invoice_bank_title_disabled">Overfør fakturaer til nettbanken</string>
+    <string name="invoice_bank_subtitle_disabled">Fremover slipper du å skrive inn KID- og kontonummer når du skal behandle fakturaer mottatt i Digipost.\n\nI stedet kan du overføre fakturaen til betaling med ett enkelt klikk, uten å måtte logge inn i nettbanken.</string>
+    <string name="invoice_bank_button_disabled">Logg inn i %1$s for å komme i gang</string>
+    <string name="invoice_bank_read_more_disabled">Logg inn på digipost.no og inngå avtale</string>
+
+    <!-- Delete invoice document dialog -->
+    <string name="invoice_delete_dialog_title">Slett faktura</string>
+
+    <string name="invoice_delete_dialog_paid_invoice_type_1_agreement">Er du sikker på at du vil slette fakturaen? Om du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken</string>
+    <string name="invoice_delete_dialog_paid_invoice_type_2_agreement">Er du sikker på at du vil slette fakturaen fra både Digipost og nettbanken? Om du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken</string>
+    <string name="invoice_delete_dialog_unpaid_invoice_type_1_agreement">Er du sikker på at du vil slette denne fakturaen?</string>
+    <string name="invoice_delete_dialog_unpaid_invoice_type_2_agreement">Er du sikker på at du vil slette fakturaen fra både Digipost og nettbanken?</string>
+    <string name="invoice_delete_dialog_invoice_no_agreement">Er du sikker på at du vil slette denne fakturaen?</string>
+
+    <string name="invoice_delete_dialog_delete_button">Slett</string>
+    <string name="invoice_delete_dialog_cancel_button">Avbryt</string>
+
+    <!-- Delete invoice list dialog -->
+    <string name="invoice_payment_tips_button">Betalingstips</string>
+    <string name="invoice_delete_file_single">fil</string>
+    <string name="invoice_delete_file_plural">filer</string>
+    <string name="invoice_delete_invoice_single">faktura</string>
+    <string name="invoice_delete_invoice_plural">fakturaer</string>
+    <string name="invoice_delete_multiple_files_including_n_invoices">Er du sikker på at du vil slette %1$s, inkludert %2$s? Om du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken.</string>
+    <string name="invoice_delete_multiple_files_including_n_invoices_active_type_2_agreement">Er du sikker på at du vil slette %1$s, inkludert %2$s fra både Digipost og nettbanken?\n\nOm du vil stoppe betalinger lagt til forfall, må du logge inn i nettbanken.</string>
+
+    <!--- Invoice Overview -->
+    <string name="invoice_overview_title">Aktive faktura-avtaler</string>
+    <string name="invoice_overview_subtitle">Her kan du se en oversikt over alle dine aktive avtaler</string>
+    <string name="invoice_overview_active_agreement">Aktiv avtale (fra %1$s)</string>
+
+    <string name="invoice_overview_agreement_terms_type_1_title">Samtykke</string>
+    <string name="invoice_overview_agreement_terms_type_1_text">For at du skal kunne sende fakturaer fra Digipost til forfallsregisteret i banken din, må du samtykke til at banken gir Digipost informasjon om kontonumrene dine.\n\nDu må også samtykke til at banken kan informere Digipost når fakturaer er mottatt, og at banken kan utbetale beløpet i fakturaene.\n\nDette trenger du bare å gjøre én gang.\n\nDu kan når som helst trekke tilbake samtykket.</string>
+
+    <string name="invoice_overview_agreement_terms_type_2_title">Avtalevilkår</string>
+    <string name="invoice_overview_agreement_terms_type_2_text">Avtalevilkår</string>
+
+    <string name="invoice_overview_cancel_agreement">Si opp avtalen</string>
+
+    <string name="invoice_overview_cancel_agreement_title">Si opp avtale</string>
+    <string name="invoice_overview_cancel_agreement_message">Vil du avslutte avtalen om overføring av fakturaer fra Digipost til nettbanken?\n\nDu kan endre fakturaer som er lagt til betaling i nettbanken.</string>
+    <string name="invoice_overview_cancel_agreement_action_button">Si opp avtalen</string>
+    <string name="invoice_overview_cancel_agreement_cancel_button">Avbryt</string>
+
+    <string name="invoice_overview_agreement_active_agreement_type_1">Nå er den digitale postkassen og %1$s koblet slik at du enkelt kan legge fakturaen til betaling rett fra Digipost, helt uten innlogging i nettbanken.\n\nBeløpet belastes på forfallsdatoen og betaling forutsetter at du har dekning på kontoen.</string>
+    <string name="invoice_overview_agreement_active_agreement_type_1_title">Digipost faktura-avtale med %1$s</string>
+    <string name="invoice_overview_agreement_active_agreement_type_2">Alle fakturaer du mottar i Digipost vil automatisk vises i nettbanken din. Da kan du enkelt betale dem uten å sjekke postkassa først.\n\nLogg inn i nettbanken eller mobilbanken til %1$s og finn fakturaene dine klare til betaling under Betalingsoversikt eller Betale Faktura.</string>
+
+    <string name="invoice_overview_empty_state_message">Alle fakturaer du mottar i Digipost, kan enkelt overføres til nettbanken din. Legg til bank for å komme i gang.</string>
+    <string name="invoice_overview_empty_state_add_bank_button">Legg til bank</string>
 
 </resources>

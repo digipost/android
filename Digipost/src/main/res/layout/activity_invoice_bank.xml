@@ -1,0 +1,97 @@
+<!--
+/**
+ * Copyright (C) Posten Norge AS
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/invoice_background"
+              android:weightSum="1"
+        >
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:gravity="center|center_horizontal"
+            android:paddingTop="40dp"
+            android:paddingBottom="40dp"
+            android:layout_gravity="center">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:id="@+id/invoice_bank_logo"
+                android:src="@drawable/invoice_bank_logo_dnb_large"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/invoice_bank_logo"
+                android:scaleType="fitCenter"
+                />
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="396dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="25dp"
+            android:weightSum="1"
+            android:layout_marginBottom="0dp">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/invoice_title"
+                android:text="@string/invoice_bank_title_enabled"
+                android:id="@+id/invoice_bank_title"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:text="@string/invoice_bank_subtitle_enabled"
+                android:textSize="16sp"
+                android:id="@+id/invoice_bank_subtitle"
+                android:lineSpacingMultiplier="1.2"
+                android:textColor="@color/invoice_subtitle"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.55"/>
+
+        <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/red_button_style"
+                android:text="@string/invoice_bank_button_enabled"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:id="@+id/invoice_bank_url_button"
+                android:layout_marginTop="5dp"
+                android:textSize="15dp"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:textColor="@color/invoice_link"
+                android:background="@color/transparent"
+                android:layout_height="wrap_content"
+                android:text="@string/invoice_bank_read_more_enabled"
+                android:id="@+id/invoice_bank_read_more_link"
+                android:layout_gravity="left|center_horizontal"
+                android:layout_marginTop="5dp"
+                android:textSize="15dp"/>
+    </LinearLayout>
+
+</LinearLayout>

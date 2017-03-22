@@ -7,11 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-
 import no.digipost.android.R;
 import no.digipost.android.model.Folder;
+
+import java.util.ArrayList;
 
 
 public class FolderArrayAdapter extends ArrayAdapter<Folder> {
@@ -28,9 +27,9 @@ public class FolderArrayAdapter extends ArrayAdapter<Folder> {
     public View getView(final int position, final View convertView, final ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View row = inflater.inflate(R.layout.attachmentdialog_list_item, parent, false);
+        View row = inflater.inflate(R.layout.generic_dialog_list_item, parent, false);
 
-        TextView title = (TextView) row.findViewById(R.id.attachment_title);
+        TextView title = (TextView) row.findViewById(R.id.generic_dialog_list_item_title);
         Folder folder = folders.get(position);
         title.setText(folder.getName());
 

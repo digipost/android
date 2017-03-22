@@ -20,14 +20,14 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import java.util.ArrayList;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Settings;
 import no.digipost.android.model.ValidationRules;
-import no.digipost.android.utilities.ApplicationUtilities;
+
+import java.util.ArrayList;
 
 public class NotificationSettingsActivity extends DigipostSettingsActivity {
     private CheckBox newLetters;

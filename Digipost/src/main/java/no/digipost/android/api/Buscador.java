@@ -1,12 +1,12 @@
 package no.digipost.android.api;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import com.sun.jersey.spi.service.ServiceFinder;
 import com.sun.jersey.spi.service.ServiceFinder.DefaultServiceIteratorProvider;
 import com.sun.jersey.spi.service.ServiceFinder.ServiceIteratorProvider;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class Buscador<T> extends ServiceIteratorProvider<T> {
 

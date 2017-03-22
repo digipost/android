@@ -1,67 +1,37 @@
 apply plugin: 'com.android.application'
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0'
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
-    compile 'com.loopj.android:android-async-http:1.4.9'
-    compile 'org.apache.httpcomponents:httpmime:4.2.5'
-    compile 'org.apache.commons:commons-io:1.3.2'
-    compile 'commons-lang:commons-lang:2.3'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.8.5'
-
-    compile 'com.android.support:support-v13:24.1.1'
-    compile 'com.android.support:appcompat-v7:24.1.1'
-    compile 'com.android.support:recyclerview-v7:24.1.1'
-    compile 'com.android.support:support-v4:24.1.1'
-    compile 'com.android.support:design:24.1.1'
-
-    compile 'com.google.android.gms:play-services-analytics:9.2.1'
-    compile 'com.google.android.gms:play-services-gcm:9.2.1'
-    compile 'com.facebook.conceal:conceal:1.1.2@aar'
-    compile 'net.danlew:android.joda:2.9.1'
-    compile 'com.sun.jersey:jersey-client:1.19.1'
-    compile('com.sun.jersey:jersey-json:1.19') {
-        exclude module: 'jaxb-impl'
-    }
-}
 
 android {
     defaultConfig {
-        versionCode 43
-        versionName '3.0.0'
+        versionCode 56
+        versionName '3.3.0'
         applicationId = "no.digipost.android"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         vectorDrawables.useSupportLibrary = true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
         }
-
         aaptOptions {
             additionalParameters "--no-version-vectors"
         }
-
+        buildTypes {
+            debug {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+            release {
+                minifyEnabled true
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+        }
+        applicationId 'no.digipost.android'
     }
-
-    compileSdkVersion 24
-    buildToolsVersion '24.0.0'
-
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
-
         pickFirst 'META-INF/services/javax.ws.rs.ext.MessageBodyReader'
         pickFirst 'META-INF/services/javax.ws.rs.ext.MessageBodyWriter'
         pickFirst 'META-INF/LICENCE.txt'
@@ -77,6 +47,50 @@ android {
     }
     lintOptions {
         disable 'InvalidPackage'
+        abortOnError false
+    }
+    productFlavors {
+        flavor {
+        }
+    }
+}
+
+buildscript {
+    
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.0'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(include: '*.jar', dir: 'libs')
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'org.apache.httpcomponents:httpmime:4.2.5'
+    compile 'commons-io:commons-io:1.3.2'
+    compile 'commons-lang:commons-lang:2.3'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    compile 'com.android.support:support-v13:25.1.1'
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    compile 'com.android.support:recyclerview-v7:25.1.1'
+    compile 'com.android.support:support-v4:25.1.1'
+    compile 'com.android.support:design:25.1.1'
+    compile 'com.google.android.gms:play-services-analytics:10.2.0'
+    compile 'com.google.android.gms:play-services-gcm:10.2.0'
+    compile 'com.facebook.conceal:conceal:1.1.3@aar'
+    compile 'net.danlew:android.joda:2.9.7'
+    compile 'com.sun.jersey:jersey-client:1.19.3'
+    compile('com.sun.jersey:jersey-json:1.19.3') {
+        exclude module: 'jaxb-impl'
     }
 }
 

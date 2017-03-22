@@ -36,6 +36,7 @@
                 android:gravity="top|center_horizontal"
                 android:layout_gravity="top"
                 android:orientation="vertical"
+                android:layout_marginTop="20dp"
                 android:paddingLeft="48dp"
                 android:paddingBottom="250dp"
                 android:paddingRight="48dp">
@@ -59,13 +60,15 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/red_button_style"
                     android:text="@string/login_loginbutton_text"
+                    android:textSize="18sp"
                     android:textColor="@color/white"
                     android:textStyle="bold" />
-
             <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="0dp"
+                    android:layout_marginLeft="-4dp"
+                    android:layout_marginStart="-4dp"
                     android:layout_marginRight="0dp"
                     android:layout_marginTop="15dp"
                     android:orientation="horizontal">
@@ -76,19 +79,21 @@
                         android:layout_height="wrap_content"
                         android:contentDescription="@string/login_remember_me_contentdescription"
                         android:text="@string/login_remember_me"
+                        android:layout_marginEnd="30dp"
+                        android:layout_marginRight="30dp"
                         android:textColor="@color/login_grey_text"
-                        android:textSize="18sp" />
-
-                <View
-                        android:layout_width="1dip"
-                        android:layout_height="fill_parent"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginTop="10dp"
-                        android:background="#BFBFBF" />
-
-                <Button
+                        android:textSize="16sp"/>
+            <Button
+                    android:id="@+id/login_forgotPasswordButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:focusable="true"
+                    android:text="@string/login_forgot_password_button_text"
+                    android:textColor="@color/login_grey_text"
+                    android:textSize="16sp" />
+            </LinearLayout>
+            <Button
                         android:id="@+id/login_registrationButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -99,26 +104,25 @@
                         android:textSize="18sp" />
             </LinearLayout>
 
-            <LinearLayout
-                    android:id="@+id/login_id_porten_layout"
-                    android:layout_width="match_parent"
-                    android:background="@drawable/id_porten_box"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="40dp"
-                    android:padding="20dp"
-                    android:orientation="horizontal">
+        <LinearLayout
+                android:id="@+id/login_id_porten_layout"
+                android:layout_width="match_parent"
+                android:background="@drawable/id_porten_box"
+                android:layout_height="80dp"
+                android:layout_marginTop="40dp"
+                android:padding="20dp"
+                android:orientation="horizontal">
 
-                <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="13dp"
-                        android:src="@drawable/idporten_logo"/>
-                <TextView
-                        android:id="@+id/login_id_porten_textview"
-                        android:layout_width="wrap_content"
-                        android:textSize="16sp"
-                        android:layout_height="wrap_content"/>
-            </LinearLayout>
+            <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="13dp"
+                    android:src="@drawable/idporten_logo"/>
+            <TextView
+                    android:id="@+id/login_id_porten_textview"
+                    android:layout_width="wrap_content"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -127,7 +131,6 @@
             android:layout_height="wrap_content"
             android:gravity="bottom|center_horizontal"
             android:background="@color/grey_privacy_button_background">
-
     <Button
             android:id="@+id/login_privacyButton"
             android:layout_width="wrap_content"
@@ -138,6 +141,6 @@
             android:gravity="center"
             android:text="@string/login_privacybutton_text"
             android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:textSize="16sp"/>
     </LinearLayout>
 </LinearLayout>

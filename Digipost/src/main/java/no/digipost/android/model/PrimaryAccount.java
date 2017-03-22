@@ -16,12 +16,11 @@
 
 package no.digipost.android.model;
 
+import no.digipost.android.constants.ApiConstants;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.ArrayList;
-
-import no.digipost.android.constants.ApiConstants;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PrimaryAccount {
@@ -123,6 +122,8 @@ public class PrimaryAccount {
     public String getSettingsUri() {
         return getLinkByRelation(ApiConstants.URL_RELATIONS_ACCOUNT_SETTINGS);
     }
+
+    public String getBanksUri(){return getLinkByRelation(ApiConstants.URL_RELATIONS_BANKS);}
 
     public String getCurrentBankAccountUri(){
         return getLinkByRelation(ApiConstants.URL_RELATIONS_CURRENT_BANK_ACCOUNT);

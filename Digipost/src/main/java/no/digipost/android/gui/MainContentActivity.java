@@ -16,12 +16,7 @@
 
 package no.digipost.android.gui;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+import android.app.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,18 +31,12 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.terlici.dragndroplist.DragNDropListView;
-import java.util.ArrayList;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
@@ -67,14 +56,14 @@ import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.fragments.EditFolderFragment;
 import no.digipost.android.gui.fragments.ReceiptFragment;
+import no.digipost.android.gui.invoice.InvoiceBankAgreements;
+import no.digipost.android.gui.invoice.InvoiceOverviewActivity;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Folder;
 import no.digipost.android.model.Mailbox;
-import no.digipost.android.utilities.ApplicationUtilities;
-import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.FileUtilities;
-import no.digipost.android.utilities.NetworkUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
+import no.digipost.android.utilities.*;
+
+import java.util.ArrayList;
 
 import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 
@@ -95,7 +84,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     private int remainingDrawerChanges;
     private DragNDropListView drawerList;
     private DrawerAdapter drawerArrayAdapter;
-    private boolean refreshing;
     private Dialog mailboxDialog;
     private boolean showActionBarName;
     private Mailbox mailbox;
@@ -113,7 +101,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         GCMController.init(this);
-
+        InvoiceBankAgreements.updateBanksFromServer(getApplicationContext());
         drawer = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         drawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
             @Override
@@ -129,14 +117,12 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 getCurrentFragment().activityDrawerOpen = drawer.isDrawerOpen(GravityCompat.START);
             }
         };
-        
+
         drawer.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         drawerList = (DragNDropListView) findViewById(R.id.main_left_drawer);
         drawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         drawer.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-
-        refreshing = true;
         remainingDrawerChanges = 0;
         editDrawerMode = false;
         updateUI(false);
@@ -144,7 +130,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         setDrawerListeners();
 
         selectItem(ApplicationConstants.MAILBOX);
-        SharedPreferencesUtilities.getSharedPreferences(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
+        SharedPreferencesUtilities.getDefault(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
 
         if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
             drawer.openDrawer(GravityCompat.START);
@@ -182,10 +168,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         return false;
-    }
-
-    public boolean isDrawerClosed(){
-        return !drawer.isDrawerOpen(GravityCompat.START);
     }
 
     private void setDrawerListeners() {
@@ -256,6 +238,10 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
+        if(getCurrentFragment() != null && getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS){
+            MenuItem uploadButton = menu.findItem(R.id.menu_upload);
+            uploadButton.setVisible(false);
+        }
         updateTitles();
         return true;
     }
@@ -280,7 +266,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
         switch (item.getItemId()) {
             case R.id.menu_refresh:
-                getCurrentFragment().updateAccountMeta();
+                getCurrentFragment().refreshItems();
                 return true;
             case R.id.menu_upload:
                 startUploadActivity();
@@ -292,13 +278,11 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
     @Override
     public void onStartRefreshContent() {
-        refreshing = true;
         invalidateOptionsMenu();
     }
 
     @Override
     public void onEndRefreshContent() {
-        refreshing = false;
         invalidateOptionsMenu();
     }
 
@@ -357,6 +341,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         if (ContentOperations.changeMailbox(digipostAddress)) {
             getSupportActionBar().setTitle(name);
             account = null;
+            TokenStore.removeHighAuthenticationTokens();
             editDrawerMode = false;
             executeGetAccountTask();
             selectItem(ApplicationConstants.MAILBOX);
@@ -367,7 +352,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         mailboxDialog = null;
 
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.attachmentdialog_layout, null);
+        View view = inflater.inflate(R.layout.generic_dialog_layout, null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setNegativeButton(getString(R.string.abort),
                 new DialogInterface.OnClickListener() {
@@ -379,9 +364,9 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         );
 
         builder.setView(view);
-        ListView mailboxListView = (ListView) view.findViewById(R.id.attachmentdialog_listview);
+        ListView mailboxListView = (ListView) view.findViewById(R.id.generic_dialog_listview);
 
-        mailboxAdapter = new MailboxArrayAdapter(this, R.layout.attachmentdialog_list_item, mailboxes);
+        mailboxAdapter = new MailboxArrayAdapter(this, R.layout.generic_dialog_list_item, mailboxes);
         mailboxListView.setAdapter(mailboxAdapter);
         mailboxListView.setOnItemClickListener(new ChangeMailboxListOnItemClickListener());
 
@@ -429,9 +414,14 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             startActivityForResult(intent, INTENT_REQUESTCODE);
             return true;
 
-        } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_help))) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiConstants.URL_HELP));
-            startActivity(browserIntent);
+        }
+        else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_invoice_overview))) {
+            Intent intent = new Intent(MainContentActivity.this, InvoiceOverviewActivity.class);
+            startActivity(intent);
+            return true;
+
+        }else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_help))) {
+            openExternalHelpUrl();
             return true;
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_logout))) {
@@ -497,7 +487,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         if (account != null) {
             fragmentName = "";
             try {
-                if (getCurrentFragment().getContent() == ApplicationConstants.MAILBOX || getSupportActionBar().getTitle().equals("")) {
+                if (getCurrentFragment() != null && getCurrentFragment().getContent() == ApplicationConstants.MAILBOX || getSupportActionBar().getTitle().equals("")) {
                     fragmentName = mailbox.getName();
                 } else {
                     fragmentName = drawerListItems[getCurrentFragment().getContent()];
@@ -560,7 +550,9 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             }
         }
 
+
         drawerItems.add(getResources().getString(R.string.drawer_settings));
+        drawerItems.add(getResources().getString(R.string.drawer_invoice_overview));
         drawerItems.add(getResources().getString(R.string.drawer_help));
         drawerItems.add(getResources().getString(R.string.drawer_logout));
 
@@ -590,6 +582,17 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
     private ContentFragment getCurrentFragment() {
         return (ContentFragment) getFragmentManager().findFragmentById(R.id.main_content_frame);
+    }
+
+    private void openExternalHelpUrl() {
+        new AlertDialog.Builder(this).setMessage(getString(R.string.dialog_prompt_open_help_new_window))
+                .setPositiveButton(getString(R.string.open), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ApiConstants.URL_HELP));
+                        startActivity(browserIntent);
+                    }
+                }).setNegativeButton(getString(R.string.abort), null).show();
     }
 
     private void logOut() {
@@ -718,7 +721,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS) && getCurrentFragment() != null) {
-                getCurrentFragment().updateAccountMeta();
+                getCurrentFragment().refreshItems();
             }
         }
     }

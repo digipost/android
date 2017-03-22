@@ -16,15 +16,13 @@
 
 package no.digipost.android.authentication;
 
-import java.math.BigInteger;
-import java.security.SecureRandom;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-
-import com.google.android.gms.common.api.Api;
+import android.content.Context;
+import android.util.Base64;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.sun.jersey.spi.service.ServiceFinder;
 import no.digipost.android.R;
 import no.digipost.android.api.Buscador;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -37,15 +35,14 @@ import no.digipost.android.model.Access;
 import no.digipost.android.model.TokenValue;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
 import org.apache.commons.lang.StringUtils;
-import android.content.Context;
-import android.util.Base64;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
-import com.sun.jersey.spi.service.ServiceFinder;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 
 public class OAuth {
 

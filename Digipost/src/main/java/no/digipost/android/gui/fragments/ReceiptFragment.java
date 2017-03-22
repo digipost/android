@@ -20,16 +20,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.*;
-import android.widget.AdapterView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -41,16 +32,19 @@ import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.ReceiptAdapter;
 import no.digipost.android.gui.content.HtmlAndReceiptActivity;
-import no.digipost.android.gui.recyclerview.*;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.model.Receipts;
 import no.digipost.android.utilities.DialogUtitities;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReceiptFragment extends ContentFragment<Receipt> {
 
     protected ReceiptAdapter receiptAdapter;
     protected boolean multiSelectEnabled;
     protected int currentListPosition;
+    private int skip = 0;
 
     public static ReceiptFragment newInstance() {
         return new ReceiptFragment();
@@ -90,10 +84,20 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         }
     }
 
+    public void loadMoreContent(){
+        skip = receiptAdapter.getItemCount();
+        updateAccountMeta(false);
+    }
+
+    public void clearExistingContent(){
+        skip = 0;
+        if(receiptAdapter != null)receiptAdapter.clearExistingContent();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        updateAccountMeta();
+        refreshItems();
     }
 
     private void beginActionMode(int position){
@@ -128,8 +132,6 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
             switch (item.getItemId()) {
                 case R.id.main_context_menu_delete_receipt:
                     ReceiptFragment.super.deleteContent(receiptAdapter.getSelected());
-                    mode.finish();
-                    finishActionMode();
                     return true;
                 default:
                     finishActionMode();
@@ -147,15 +149,22 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         return ApplicationConstants.RECEIPTS;
     }
 
-    private void checkStatusAndDisplayReceipts(Receipts newReceipts) {
+    private void checkStatusAndDisplayReceipts(Receipts newReceipts, boolean clearContent) {
         if (isAdded()) {
+
+            int numberOfReceipts = newReceipts.getReceipt().size();
+            numberOfReceipts += receiptAdapter != null ? receiptAdapter.getItemCount() : 0;
+
+            if(clearContent) {
+                receiptAdapter.clearExistingContent();
+            }
 
             receiptAdapter.updateContent(newReceipts.getReceipt());
             int numberOfCards = Integer.parseInt(newReceipts.getNumberOfCards());
             int numberOfCardsReadyForVerification = Integer.parseInt(newReceipts.getNumberOfCardsReadyForVerification());
             int numberOfReceiptsHiddenUntilVerification = Integer.parseInt(newReceipts.getNumberOfReceiptsHiddenUntilVerification());
 
-            if (receiptAdapter.getReceipts().size() == 0) {
+            if (numberOfReceipts == 0) {
                 if (numberOfCards == 0) {
                     setListEmptyViewText(getString(R.string.emptyview_receipt_intro_title), getString(R.string.emptyview_receipt_intro_message));
                 } else if (numberOfCardsReadyForVerification > 0) {
@@ -180,9 +189,12 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         }
     }
 
-    public void updateAccountMeta() {
-        GetReceiptsMetaTask task = new GetReceiptsMetaTask();
-        task.execute();
+    public void updateAccountMeta(boolean clearContent) {
+        clearEmptyTextView();
+        if(receiptAdapter != null && receiptAdapter.remainingContentToGet()) {
+            GetReceiptsMetaTask task = new GetReceiptsMetaTask(clearContent);
+            task.execute();
+        }
     }
 
     public void openReceipt(Receipt receipt){
@@ -218,16 +230,13 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
             try {
                 return ContentOperations.getReceiptContentHTML(context, receipt);
             } catch (DigipostAuthenticationException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 invalidToken = true;
                 return null;
             } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 return null;
             } catch (DigipostClientException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 return null;
             }
@@ -264,10 +273,12 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     private class GetReceiptsMetaTask extends AsyncTask<Void, Void, Receipts> {
         private String errorMessage;
         private boolean invalidToken;
+        private boolean clearContent;
 
-        private GetReceiptsMetaTask() {
-            errorMessage = "";
-            invalidToken = false;
+        private GetReceiptsMetaTask(boolean clearContent) {
+            this.errorMessage = "";
+            this.invalidToken = false;
+            this.clearContent = clearContent;
         }
 
         @Override
@@ -279,7 +290,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         @Override
         protected Receipts doInBackground(final Void... params) {
             try {
-                return ContentOperations.getAccountContentMetaReceipt(context);
+                return ContentOperations.getAccountContentMetaReceipt(context, skip);
             } catch (DigipostApiException e) {
                 errorMessage = e.getMessage();
                 return null;
@@ -296,9 +307,9 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         @Override
         protected void onPostExecute(final Receipts receipts) {
             super.onPostExecute(receipts);
-            ReceiptFragment.super.initialLoadingComplete();
+            ReceiptFragment.super.hideBackgroundLoadingSpinner();
             if (receipts != null) {
-                checkStatusAndDisplayReceipts(receipts);
+                checkStatusAndDisplayReceipts(receipts,clearContent);
             } else {
                 DialogUtitities.showToast(ReceiptFragment.this.context, errorMessage);
 
@@ -309,6 +320,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
                 }
             }
 
+            loadingMoreContent = false;
             activityCommunicator.onUpdateAccountMeta();
             activityCommunicator.onEndRefreshContent();
         }
@@ -316,6 +328,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
         @Override
         protected void onCancelled() {
             super.onCancelled();
+            loadingMoreContent = false;
             activityCommunicator.onEndRefreshContent();
         }
     }
@@ -323,6 +336,7 @@ public class ReceiptFragment extends ContentFragment<Receipt> {
     private void deleteReceipt(Receipt receipt) {
         List<Receipt> receiptsToBeDelete = new ArrayList<>();
         receiptsToBeDelete.add(receipt);
+        receiptAdapter.clearExistingContent();
         ContentDeleteTask task = new ContentDeleteTask(receiptsToBeDelete);
         task.execute();
     }

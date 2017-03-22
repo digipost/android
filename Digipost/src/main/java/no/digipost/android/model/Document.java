@@ -16,14 +16,14 @@
 
 package no.digipost.android.model;
 
+import no.digipost.android.constants.ApiConstants;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonFilter;
+
 import java.util.ArrayList;
-import no.digipost.android.constants.ApiConstants;
-import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_IDPORTEN_3;
-import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_IDPORTEN_4;
-import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_TWO_FACTOR;
+
+import static no.digipost.android.constants.ApiConstants.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFilter("toJSON")

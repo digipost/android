@@ -21,20 +21,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-
-import java.util.ArrayList;
-
+import android.widget.*;
 import no.digipost.android.R;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Folder;
 import no.digipost.android.utilities.DialogUtitities;
+
+import java.util.ArrayList;
 
 public class EditFolderFragment extends DialogFragment {
 

@@ -4,37 +4,37 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 
 public interface MuPDFView {
-	public void setPage(int page, PointF size);
+	void setPage(int page, PointF size);
 
-	public void setScale(float scale);
+	void setScale(float scale);
 
-	public int getPage();
+	int getPage();
 
-	public void blank(int page);
+	void blank(int page);
 
-	public boolean passClickEvent(float x, float y);
+	boolean passClickEvent(float x, float y);
 
-	public LinkInfo hitLink(float x, float y);
+	LinkInfo hitLink(float x, float y);
 
-	public void selectText(float x0, float y0, float x1, float y1);
+	void selectText(float x0, float y0, float x1, float y1);
 
-	public void deselectText();
+	void deselectText();
 
-	public boolean copySelection();
+	boolean copySelection();
 
-	public void strikeOutSelection();
+	void strikeOutSelection();
 
-	public void setSearchBoxes(RectF searchBoxes[]);
+	void setSearchBoxes(RectF searchBoxes[]);
 
-	public void setLinkHighlighting(boolean f);
+	void setLinkHighlighting(boolean f);
 
-	public void setChangeReporter(Runnable reporter);
+	void setChangeReporter(Runnable reporter);
 
-	public void update();
+	void update();
 
-	public void addHq(boolean update);
+	void addHq(boolean update);
 
-	public void removeHq();
+	void removeHq();
 
-	public void releaseResources();
+	void releaseResources();
 }

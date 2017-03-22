@@ -16,9 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -31,12 +28,10 @@ import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
-import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.DataFormatUtilities;
-import no.digipost.android.utilities.DialogUtitities;
 
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
@@ -53,6 +48,9 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         setupWebView();
         setupActionBar();
         loadContent();
+        if (super.shouldShowInvoiceOptionsDialog(this)) {
+            super.showInvoiceOptionsDialog(this);
+        }
     }
 
     @Override
@@ -118,7 +116,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
                 super.openInvoiceTask();
                 return true;
             case R.id.htmlmenu_delete:
-                deleteAction(getString(R.string.dialog_prompt_delete_document), ApiConstants.DELETE);
+                deleteAction(this);
                 return true;
             case R.id.htmlmenu_move:
                 showMoveToFolderDialog();
@@ -140,53 +138,19 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
     private void setupActionBar() {
         try {
-            if (content_type != ApplicationConstants.RECEIPTS) {
-                Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
-                getSupportActionBar().setTitle(documentMeta.getSubject());
-                getSupportActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
-            } else {
-                Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
-                getSupportActionBar().setTitle(receiptMeta.getStoreName());
-                getSupportActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+            if(getSupportActionBar() != null) {
+                if (content_type != ApplicationConstants.RECEIPTS) {
+                    Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
+                    getSupportActionBar().setTitle(documentMeta.getSubject());
+                    getSupportActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
+                } else {
+                    Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
+                    getSupportActionBar().setTitle(receiptMeta.getStoreName());
+                    getSupportActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+                }
             }
         } catch (NullPointerException e) {
             //IGNORE
         }
-    }
-
-    private void deleteAction(String message, final String action) {
-
-        if (content_type == ApplicationConstants.RECEIPTS)
-            message = getString(R.string.dialog_prompt_delete_receipt);
-
-        String positiveButton = getString(R.string.yes);
-        if (action.equals(ApiConstants.DELETE)) {
-            positiveButton = getString(R.string.delete);
-        } else if (action.equals(ApiConstants.MOVE)) {
-            showMoveToFolderDialog();
-        }
-
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
-        builder.setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                executeAction(action);
-                dialogInterface.dismiss();
-            }
-        });
-        builder.setNegativeButton(R.string.abort, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        builder.create().show();
-    }
-
-    private void executeAction(String action) {
-        Intent i = new Intent(HtmlAndReceiptActivity.this, MainContentActivity.class);
-        i.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
-        setResult(RESULT_OK, i);
-        finish();
     }
 }

@@ -18,15 +18,14 @@ package no.digipost.android.api.tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
-import java.util.ArrayList;
-
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.model.Folder;
+
+import java.util.ArrayList;
 
 public class UpdateFoldersTask extends AsyncTask<Void, Void, String> {
     private MainContentActivity activity;
@@ -48,15 +47,15 @@ public class UpdateFoldersTask extends AsyncTask<Void, Void, String> {
             return ContentOperations.updateFolders(activity, folders);
         } catch (DigipostApiException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
-            activity.errorMessage = e.getMessage();
+            MainContentActivity.errorMessage = e.getMessage();
             return null ;
         } catch (DigipostClientException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
-            activity.errorMessage = e.getMessage();
+            MainContentActivity.errorMessage = e.getMessage();
             return null;
         } catch (DigipostAuthenticationException e) {
             Log.e(getClass().getName(), e.getMessage(), e);
-            activity.errorMessage = e.getMessage();
+            MainContentActivity.errorMessage = e.getMessage();
             return null;
         }
     }

@@ -37,6 +37,7 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptV
     private SparseBooleanArray selectedPositions = new SparseBooleanArray();
     private ReceiptViewHolder receiptViewHolder;
     private boolean multiSelectEnabled;
+    private boolean fetchedLastDocument;
 
     public ReceiptAdapter(Context context, ArrayList<Receipt> receipts){
         this.receipts = receipts;
@@ -52,9 +53,28 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptV
     }
 
     public void updateContent(ArrayList<Receipt> receipts){
-        this.receipts = receipts;
+        if(receipts.size() == 0) fetchedLastDocument = true;
+        if(this.receipts != null){
+            this.receipts.addAll(receipts);
+        }else {
+            this.receipts = receipts;
+            resetMultiSelectAndContentState();
+        }
+        notifyDataSetChanged();
+    }
+
+    private void resetMultiSelectAndContentState(){
         selectedPositions = new SparseBooleanArray();
         multiSelectEnabled = false;
+    }
+
+    public boolean remainingContentToGet(){
+        return !fetchedLastDocument;
+    }
+
+    public void clearExistingContent(){
+        fetchedLastDocument = false;
+        this.receipts = null;
         notifyDataSetChanged();
     }
 
