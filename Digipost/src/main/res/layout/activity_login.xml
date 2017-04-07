@@ -15,132 +15,129 @@
  * limitations under the License.
  */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/mountains">
 
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/mountains_background"
-              android:gravity="bottom|center_horizontal"
-              android:orientation="vertical">
-
-    <LinearLayout
+    <RelativeLayout
+            android:id="@+id/login_controller_layout"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="top"
-            android:orientation="vertical">
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="150dp">
+
+        <TextView
+                android:text="@string/login_idporten_login_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="82dp"
+                android:id="@+id/textView4"
+                android:textSize="16sp"
+                android:layout_below="@+id/login_passwordButton"
+                android:layout_alignLeft="@+id/login_passwordButton"
+                android:layout_alignStart="@+id/login_passwordButton"
+                android:textColor="@color/black"/>
+        <TextView
+                android:text="@string/login_idporten_login_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView5"
+                android:textSize="12sp"
+                android:layout_below="@+id/textView4"
+                android:layout_alignLeft="@+id/textView4"
+                android:layout_alignStart="@+id/textView4"
+                android:layout_marginTop="10dp"
+                android:layout_alignRight="@+id/login_passwordButton"
+                android:layout_alignEnd="@+id/login_passwordButton"
+                android:textColor="@color/black_subject"/>
+        <Button
+                android:text="@string/login_normal_login_button"
+                android:layout_marginTop="20dp"
+                android:id="@+id/login_passwordButton"
+                android:background="@drawable/light_grey_button"
+                android:layout_width="300dp" android:textAlignment="center" android:textColor="@color/white" android:textSize="16sp" android:layout_below="@+id/textView3"
+                android:layout_centerHorizontal="true"
+                android:layout_height="50dp"/>
+        <Button
+                android:text="@string/login_idporten_login_button"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="17dp"
+                android:id="@+id/login_idportenButton"
+                android:background="@drawable/red_button_style"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_below="@+id/textView5" android:layout_alignLeft="@+id/textView5" android:layout_alignStart="@+id/textView5" android:layout_alignRight="@+id/textView5"
+                android:layout_alignEnd="@+id/textView5"
+                android:layout_height="50dp"/>
+
+        <TextView
+                android:text="@string/login_normal_login_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView3"
+                android:textSize="12sp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black_subject"
+                android:layout_below="@+id/textView2" android:layout_alignLeft="@+id/login_passwordButton" android:layout_alignStart="@+id/login_passwordButton" android:layout_alignRight="@+id/login_passwordButton"
+                android:layout_alignEnd="@+id/login_passwordButton"/>
 
         <LinearLayout
-                android:id="@+id/login_disclaimer_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="top|center_horizontal"
-                android:layout_gravity="top"
-                android:orientation="vertical"
-                android:layout_marginTop="20dp"
-                android:paddingLeft="48dp"
-                android:paddingBottom="250dp"
-                android:paddingRight="48dp">
-
-            <ImageView
-                    android:id="@+id/login_loginlogo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/login_header_logo_contentdescription"
-                    android:cropToPadding="false"
-                    android:adjustViewBounds="true"
-                    android:gravity="center|center_vertical|center_horizontal"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:layout_marginBottom="20dp"
-                    android:src="@drawable/postenlogo_hvitskygge_" />
-
+                android:gravity="center_horizontal"
+                android:background="@color/grey_privacy_button_background"
+                android:layout_alignParentBottom="true" android:layout_alignParentLeft="true" android:layout_alignParentStart="true">
             <Button
-                    android:id="@+id/login_loginButton"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/red_button_style"
-                    android:text="@string/login_loginbutton_text"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-            <LinearLayout
+                    android:id="@+id/login_privacyButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="0dp"
-                    android:layout_marginLeft="-4dp"
-                    android:layout_marginStart="-4dp"
-                    android:layout_marginRight="0dp"
-                    android:layout_marginTop="15dp"
-                    android:orientation="horizontal">
-
-                <CheckBox
-                        android:id="@+id/login_remember_me"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/login_remember_me_contentdescription"
-                        android:text="@string/login_remember_me"
-                        android:layout_marginEnd="30dp"
-                        android:layout_marginRight="30dp"
-                        android:textColor="@color/login_grey_text"
-                        android:textSize="16sp"/>
-            <Button
-                    android:id="@+id/login_forgotPasswordButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@color/transparent"
+                    android:padding="3dp"
+                    android:background="@color/grey_privacy_button_background"
                     android:focusable="true"
-                    android:text="@string/login_forgot_password_button_text"
-                    android:textColor="@color/login_grey_text"
-                    android:textSize="16sp" />
-            </LinearLayout>
-            <Button
-                        android:id="@+id/login_registrationButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@color/transparent"
-                        android:focusable="true"
-                        android:text="@string/login_registrationbutton_text"
-                        android:textColor="@color/login_grey_text"
-                        android:textSize="18sp" />
-            </LinearLayout>
-
-        <LinearLayout
-                android:id="@+id/login_id_porten_layout"
-                android:layout_width="match_parent"
-                android:background="@drawable/id_porten_box"
-                android:layout_height="80dp"
-                android:layout_marginTop="40dp"
-                android:padding="20dp"
-                android:orientation="horizontal">
-
-            <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="13dp"
-                    android:src="@drawable/idporten_logo"/>
-            <TextView
-                    android:id="@+id/login_id_porten_textview"
-                    android:layout_width="wrap_content"
-                    android:textSize="16sp"
-                    android:layout_height="wrap_content"/>
+                    android:gravity="center"
+                    android:text="@string/login_privacybutton_text"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"/>
         </LinearLayout>
-    </LinearLayout>
+        <TextView
+                android:text="@string/login_normal_login_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_alignParentTop="true" android:layout_alignLeft="@+id/textView3" android:layout_alignStart="@+id/textView3"/>
+        <Button
+                android:text="@string/login_forgot_password_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black_subject"
+                android:id="@+id/login_forgotPasswordButton"
+                android:textSize="14sp" android:layout_below="@+id/login_passwordButton" android:layout_alignLeft="@+id/login_passwordButton" android:layout_alignStart="@+id/login_passwordButton"/>
+        <Button
+                android:text="@string/login_registrationbutton_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:id="@+id/login_registrationButton"
+                android:textSize="14sp"
+                android:textColor="@color/black_subject"
+                android:layout_alignBaseline="@+id/login_forgotPasswordButton" android:layout_alignBottom="@+id/login_forgotPasswordButton" android:layout_alignRight="@+id/login_passwordButton"
+                android:layout_alignEnd="@+id/login_passwordButton"/>
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom|center_horizontal"
-            android:background="@color/grey_privacy_button_background">
-    <Button
-            android:id="@+id/login_privacyButton"
+
+    </RelativeLayout>
+    <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:background="@color/grey_privacy_button_background"
-            android:focusable="true"
-            android:gravity="center"
-            android:text="@string/login_privacybutton_text"
-            android:textColor="@color/white"
-            android:textSize="16sp"/>
-    </LinearLayout>
-</LinearLayout>
+            android:src="@drawable/postenlogo_hvitskygge_"
+            android:id="@+id/login_posten_logo"
+            android:layout_marginTop="15dp" android:layout_alignParentTop="true" android:layout_centerHorizontal="true" android:contentDescription="@string/login_header_logo_contentdescription"/>
+</RelativeLayout>

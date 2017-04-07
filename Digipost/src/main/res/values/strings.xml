@@ -108,7 +108,14 @@
     <string name="delete_cancelled">%1$d av %2$d slettet.</string>
 
     <!-- LoginActivity -->
-    <string name="login_loginbutton_text">Logg inn i Digipost</string>
+    <string name="login_normal_login_title">Logg inn med Digipost-passord</string>
+    <string name="login_normal_login_description">Kun tilgang til å lese post fra privatpersoner og bedrifter, som naboen eller strømselskapet.</string>
+    <string name="login_normal_login_button">Logg inn med passord</string>
+
+    <string name="login_idporten_login_title">Logg inn med elektronisk ID</string>
+    <string name="login_idporten_login_description">Tilgang til å lese post fra det offentlige som kommunen, NAV eller HelseNorge.</string>
+    <string name="login_idporten_login_button">Logg inn via ID-porten</string>
+
     <string name="login_forgot_password_button_text">Glemt passord</string>
     <string name="login_forgot_password_dialog_title">Glemt passord</string>
     <string name="login_forgot_password_dialog_message">Du kan endre passord på digipost.no.\nBruk det nye passordet for å logge inn i appen.</string>
@@ -116,11 +123,7 @@
     <string name="login_forgot_password_dialog_close_button">Lukk</string>
     <string name="login_registrationbutton_text">Ny bruker</string>
     <string name="login_privacybutton_text">Personvern</string>
-    <string name="login_header_logo_contentdescription">Digipost logo</string>
-    <string name="login_remember_me">Forbli innlogget</string>
-    <string name="login_remember_me_contentdescription">Avhukingsboks for å velge at applikasjonen skal huske innloggingen</string>
-
-    <string name="login_id_porten_login_text_button">Logg inn med ID-porten for å lese post fra det offentlige</string>
+    <string name="login_header_logo_contentdescription">Posten Norge logo</string>
 
     <!-- ContextMenu -->
     <string name="context_refresh">Oppdater</string>
