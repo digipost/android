@@ -42,8 +42,7 @@ import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class LoginActivity extends Activity {
     private final int WEB_OAUTH_LOGIN_REQUEST = 0;
-    private Button loginButton, privacyButton, registrationButton, forgotPasswordButton;
-    private LinearLayout idPortenLayout;
+    private Button loginButton, privacyButton, registrationButton, forgotPasswordButton, idPortenButton;
     private Context context;
 
     private enum Login{
@@ -58,42 +57,32 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         context = this;
         ButtonListener listener = new ButtonListener();
-        loginButton = (Button) findViewById(R.id.login_loginButton);
+        loginButton = (Button) findViewById(R.id.login_passwordButton);
         loginButton.setOnClickListener(listener);
         loginButton.setTransformationMethod(null);
         privacyButton = (Button) findViewById(R.id.login_privacyButton);
         privacyButton.setOnClickListener(listener);
         privacyButton.setTransformationMethod(null);
-        registrationButton = (Button) findViewById(R.id.login_registrationButton);
-        registrationButton.setOnClickListener(listener);
+
         forgotPasswordButton = (Button) findViewById(R.id.login_forgotPasswordButton);
         forgotPasswordButton.setOnClickListener(listener);
         forgotPasswordButton.setTransformationMethod(null);
         forgotPasswordButton.setPaintFlags(forgotPasswordButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        registrationButton.setPaintFlags(registrationButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        registrationButton.setTransformationMethod(null);
-        idPortenLayout = (LinearLayout) findViewById(R.id.login_id_porten_layout);
-        idPortenLayout.setOnClickListener(listener);
-        idPortenLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SharedPreferencesUtilities.storeScreenlockChoice(getApplicationContext(), ApplicationConstants.SCREENLOCK_CHOICE_NO);
-                openWebView(Login.IDPORTEN);
-            }
-        });
 
-        TextView idPortenTextView = (TextView) findViewById(R.id.login_id_porten_textview);
-        final SpannableStringBuilder str = new SpannableStringBuilder(getString(R.string.login_id_porten_login_text_button));
-        str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 22, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        idPortenTextView.setText(str);
+        registrationButton = (Button) findViewById(R.id.login_registrationButton);
+        registrationButton.setOnClickListener(listener);
+        registrationButton.setTransformationMethod(null);
+        registrationButton.setPaintFlags(registrationButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        idPortenButton = (Button) findViewById(R.id.login_idportenButton);
+        idPortenButton.setOnClickListener(listener);
+        idPortenButton.setTransformationMethod(null);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         GCMController.reset(getApplicationContext());
-        privacyButton.setTextColor(getResources().getColor(R.color.grey_privacy_button_text));
-        registrationButton.setTextColor(getResources().getColor(R.color.login_grey_text));
     }
 
     private void startLoginProcess() {
@@ -102,8 +91,6 @@ public class LoginActivity extends Activity {
         }else{
             SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_NO);
         }
-
-        //GAEventController.sendRememberMeEvent(this, SharedPreferencesUtilities.screenlockChoice());
         openWebView(Login.NORMAL);
     }
 
@@ -185,7 +172,7 @@ public class LoginActivity extends Activity {
             }else if (v == forgotPasswordButton){
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "glemt-passord");
                 showForgotPasswordDialog();
-            }else if(v == idPortenLayout){
+            }else if(v == idPortenButton){
                 startIdPortenLoginProcess();
             }
         }
