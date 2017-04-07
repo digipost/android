@@ -79,22 +79,16 @@ public class LoginActivity extends Activity {
         GCMController.reset(getApplicationContext());
     }
 
-    private void startLoginProcess() {
-        openWebView(Login.NORMAL);
-    }
-
-    private void startIdPortenLoginProcess(){
-        openWebView(Login.IDPORTEN);
-    }
-
     private void openWebView(Login target) {
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(this, WebLoginActivity.class);
+
             if(Login.IDPORTEN == target){
                 i.putExtra("authenticationScope", ApiConstants.SCOPE_IDPORTEN_4);
             }else {
                 i.putExtra("authenticationScope", ApiConstants.SCOPE_FULL);
             }
+
             startActivityForResult(i, WEB_OAUTH_LOGIN_REQUEST);
 
         } else {
@@ -141,16 +135,14 @@ public class LoginActivity extends Activity {
                 dialog.dismiss();
             }
         });
-
         forgetPasswordDialog.create().show();
-
     }
 
     private class ButtonListener implements OnClickListener {
 
         public void onClick(final View v) {
             if (v == loginButton) {
-                startLoginProcess();
+                openWebView(Login.NORMAL);
             } else if (v == privacyButton) {
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "personvern");
                 openExternalBrowserWithUrl("https://www.digipost.no/juridisk/");
@@ -161,7 +153,7 @@ public class LoginActivity extends Activity {
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "glemt-passord");
                 showForgotPasswordDialog();
             }else if(v == idPortenButton){
-                startIdPortenLoginProcess();
+                openWebView(Login.IDPORTEN);
             }
         }
     }
