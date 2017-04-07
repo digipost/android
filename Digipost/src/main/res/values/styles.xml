@@ -61,4 +61,8 @@
         <item name="colorControlActivated">@color/checkbox_checked</item>
     </style>
 
+    <style name="DigipostBlackStatusbar" parent="Digipost">
+        <item name="colorPrimaryDark">@color/black</item>
+    </style>
+
 </resources>
