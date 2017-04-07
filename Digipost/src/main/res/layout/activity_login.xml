@@ -128,9 +128,10 @@
                 android:background="@color/transparent"
                 android:id="@+id/login_registrationButton"
                 android:textSize="14sp"
+                android:gravity="right"
                 android:textColor="@color/black_subject"
                 android:layout_alignBaseline="@+id/login_forgotPasswordButton" android:layout_alignBottom="@+id/login_forgotPasswordButton" android:layout_alignRight="@+id/login_passwordButton"
-                android:layout_alignEnd="@+id/login_passwordButton"/>
+                android:layout_alignEnd="@+id/login_passwordButton" android:textAlignment="textEnd"/>
 
 
     </RelativeLayout>
