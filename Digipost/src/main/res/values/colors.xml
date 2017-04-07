@@ -45,7 +45,7 @@
     <!-- Misc -->
     <color name="transparent">#00000000</color>
     <color name="white">#FFF</color>
-    <color name="black">#000</color>
+    <color name="black">#2a2929</color>
     <color name="busy_indicator">#C0202020</color>
     <color name="edit_folder_background">#3B3B3B</color>
 
@@ -58,6 +58,9 @@
     <color name="login_grey_text">#4D4D4D</color>
     <color name="login_id_porten_box_background">#FCFCFC</color>
     <color name="login_id_porten_box_border">#C4C4C4</color>
+    <color name="light_grey_button_normal">#757575</color>
+    <color name="light_grey_button_focused">#4D4D4D</color>
+    <color name="light_grey_button_pressed">#4D4D4D</color>
 
     <!-- Screenlock -->
     <color name="screenlock_header_background">#1F1F1F</color>
