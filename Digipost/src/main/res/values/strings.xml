@@ -16,6 +16,11 @@
     </string>
     <string name="yes_apply_screenlock">Skru på skjermlås</string>
     <string name="no_dont_use_screenlock">Avbryt</string>
+    <string name="screenlock_tips_title">Tips</string>
+    <string name="screenlock_tips_message">For at appen skal huske innloggingen må du skru på
+        skjermlås på enheten din. Dette vil fungere neste gang du logger inn.</string>
+    <string name="screenlock_show_tips">Vis meg</string>
+    <string name="screenlock_hide_tips">Ikke vis igjen</string>
 
     <!--Drawer -->
     <string name="drawer_create_new_folder_default_name">Mappenavn</string>

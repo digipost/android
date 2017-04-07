@@ -27,23 +27,18 @@ import no.digipost.android.constants.ApplicationConstants;
 public class SharedPreferencesUtilities {
     private final static String HIDE_INVOICE_OPTIONS = "hide_invoice_options";
 
+    public static boolean canDisplayScreenlockTips(final Context context) {
+        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
+        return sharedPreferences.getBoolean("HideScreenlockTips", true);
+    }
+
+    public static void hideScreenlockTips(final Context context) {
+        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
+        sharedPreferences.edit().putBoolean("HideScreenlockTips", false).apply();
+    }
+
     public static SharedPreferences getDefault(final Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    public static int screenlockChoice(final Context context) {
-        return getDefault(context).getInt(ApplicationConstants.SCREENLOCK_CHOICE,
-                ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET);
-    }
-
-    public static boolean screenlockChoiceYes(final Context context) {
-        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_YES;
-    }
-
-    public static void storeScreenlockChoice(final Context context, final int choice) {
-        SharedPreferences.Editor edit = getDefault(context).edit();
-        edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE, choice);
-        edit.apply();
     }
 
     public static String getEncryptedRefreshtokenCipher(final Context context) {
