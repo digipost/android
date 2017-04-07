@@ -85,7 +85,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     private DragNDropListView drawerList;
     private DrawerAdapter drawerArrayAdapter;
     private Dialog mailboxDialog;
-    private boolean showActionBarName;
     private Mailbox mailbox;
     private ArrayList<Mailbox> mailboxes;
     private Account account;
