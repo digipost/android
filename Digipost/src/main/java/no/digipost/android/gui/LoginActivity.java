@@ -23,22 +23,16 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.*;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.analytics.GAEventController;
-import no.digipost.android.authentication.AndroidLockSecurity;
 import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gcm.GCMController;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.NetworkUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class LoginActivity extends Activity {
     private final int WEB_OAUTH_LOGIN_REQUEST = 0;
@@ -86,16 +80,10 @@ public class LoginActivity extends Activity {
     }
 
     private void startLoginProcess() {
-        if (AndroidLockSecurity.canUseRefreshTokens(this)) {
-            SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_YES);
-        }else{
-            SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_NO);
-        }
         openWebView(Login.NORMAL);
     }
 
     private void startIdPortenLoginProcess(){
-        SharedPreferencesUtilities.storeScreenlockChoice(getApplicationContext(), ApplicationConstants.SCREENLOCK_CHOICE_NO);
         openWebView(Login.IDPORTEN);
     }
 

@@ -43,7 +43,7 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.tasks.CreateEditDeleteFolderTask;
 import no.digipost.android.api.tasks.GetAccountTask;
 import no.digipost.android.api.tasks.UpdateFoldersTask;
-import no.digipost.android.authentication.AndroidLockSecurity;
+import no.digipost.android.authentication.Screenlock;
 import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;

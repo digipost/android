@@ -78,7 +78,7 @@ public class TokenStore {
     }
 
     public static void storeRefreshTokenInSharedPreferences(Context context, String refreshToken) {
-        if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
+        if (Screenlock.canUseRefreshTokens(context)) {
             String cipher = new TokenEncryption(context, true).encrypt(refreshToken);
             SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
         }

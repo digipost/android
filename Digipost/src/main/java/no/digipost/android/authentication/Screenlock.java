@@ -21,23 +21,23 @@ import android.content.Context;
 import no.digipost.android.gcm.GCMController;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
-public class AndroidLockSecurity {
+public class Screenlock {
+
 	public static boolean canUseRefreshTokens(final Context context) {
 
-		if(!screenLockEnabled(context)){
+		if (!screenLockEnabled(context)) {
 			SharedPreferencesUtilities.deleteRefreshtoken(context);
 			GCMController.reset(context);
 		}
-
 		return screenLockEnabled(context);
 	}
 
-	public static boolean unableToUseStoredRefreshToken(final Context context){
+	public static boolean unableToUseStoredRefreshToken(final Context context) {
 		return !screenLockEnabled(context) && !SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(context).isEmpty();
 	}
 
 	public static boolean screenLockEnabled(final Context context) {
-			KeyguardManager keyguardMgr = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-			return keyguardMgr.isKeyguardSecure();
+		KeyguardManager keyguardMgr = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+		return keyguardMgr.isKeyguardSecure();
 	}
 }
