@@ -78,10 +78,8 @@ public class TokenStore {
     }
 
     public static void storeRefreshTokenInSharedPreferences(Context context, String refreshToken) {
-        if (Screenlock.canUseRefreshTokens(context)) {
-            String cipher = new TokenEncryption(context, true).encrypt(refreshToken);
-            SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
-        }
+        String cipher = new TokenEncryption(context, true).encrypt(refreshToken);
+        SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
     }
 
     public static String getRefreshTokenFromSharedPreferences(Context context){
@@ -104,7 +102,9 @@ public class TokenStore {
     }
 
     public static void storeToken(final Context context, final Access access, final String scope) {
-        if(scope.equals(ApiConstants.SCOPE_FULL)) storeRefreshTokenInSharedPreferences(context, access.getRefresh_token());
+        boolean storeRefreshToken = scope.equals(ApiConstants.SCOPE_FULL) && Screenlock.canUseRefreshTokens(context);
+        if(storeRefreshToken)storeRefreshTokenInSharedPreferences(context, access.getRefresh_token());
+
         updateToken(context, access.getAccess_token(),scope,access.getExpires_in());
     }
 }
