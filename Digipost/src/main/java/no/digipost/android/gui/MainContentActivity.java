@@ -137,11 +137,11 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        showScreenlockTips();
+        showTips();
     }
 
-    private void showScreenlockTips() {
-        if (SharedPreferencesUtilities.canDisplayScreenlockTips(this) && !TokenEncryption.screenLockEnabled(this)) {
+    private void showTips() {
+        if (SharedPreferencesUtilities.canDisplayScreenlockTips(this) && !TokenEncryption.screenLockEnabled(this) && !TokenStore.onlyLoggedInWithHigherAuthentication()) {
             new AlertDialog.Builder(this).setTitle(getString(R.string.screenlock_tips_title)).setMessage(getString(R.string.screenlock_tips_message))
                     .setPositiveButton(getString(R.string.screenlock_show_tips), new DialogInterface.OnClickListener() {
                         @Override
