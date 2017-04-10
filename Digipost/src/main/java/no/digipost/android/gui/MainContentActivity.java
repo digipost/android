@@ -43,7 +43,7 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.tasks.CreateEditDeleteFolderTask;
 import no.digipost.android.api.tasks.GetAccountTask;
 import no.digipost.android.api.tasks.UpdateFoldersTask;
-import no.digipost.android.authentication.Screenlock;
+import no.digipost.android.authentication.TokenEncryption;
 import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
@@ -141,7 +141,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     }
 
     private void showScreenlockTips() {
-        if (SharedPreferencesUtilities.canDisplayScreenlockTips(this) &&  !Screenlock.screenLockEnabled(this)) {
+        if (SharedPreferencesUtilities.canDisplayScreenlockTips(this) &&  !TokenEncryption.screenLockEnabled(this)) {
             new AlertDialog.Builder(this).setTitle(getString(R.string.screenlock_tips_title)).setMessage(getString(R.string.screenlock_tips_message))
                     .setPositiveButton(getString(R.string.screenlock_show_tips), new DialogInterface.OnClickListener() {
                         @Override
@@ -161,7 +161,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     @Override
     protected void onResume() {
         super.onResume();
-        if(Screenlock.unableToUseStoredRefreshToken(this)){
+        if(TokenEncryption.unableToUseStoredRefreshToken(this)){
             logOut();
         }
         GCMController.clearNotifications(this);

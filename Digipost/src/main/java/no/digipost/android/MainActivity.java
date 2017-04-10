@@ -26,7 +26,7 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.authentication.OAuth;
-import no.digipost.android.authentication.Screenlock;
+import no.digipost.android.authentication.TokenEncryption;
 import no.digipost.android.gui.LoginActivity;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.utilities.FileUtilities;
@@ -77,8 +77,8 @@ public class MainActivity extends Activity {
 	}
 
 	private void checkTokenAndScreenlockStatus() {
-		boolean canUseRefreshToken = Screenlock.canUseRefreshTokens(this);
-		boolean hasRefreshToken = (!SharedPreferencesUtilities.getEncryptedRefreshtokenCipher(this).isEmpty());
+		boolean canUseRefreshToken = TokenEncryption.canUseRefreshTokens(this);
+		boolean hasRefreshToken = SharedPreferencesUtilities.refreshTokenExist(this);
 		if (canUseRefreshToken && hasRefreshToken) {
 			new CheckTokenTask().execute();
 		} else {

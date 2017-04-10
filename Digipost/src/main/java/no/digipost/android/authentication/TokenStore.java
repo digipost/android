@@ -102,7 +102,7 @@ public class TokenStore {
     }
 
     public static void storeToken(final Context context, final Access access, final String scope) {
-        boolean storeRefreshToken = scope.equals(ApiConstants.SCOPE_FULL) && Screenlock.canUseRefreshTokens(context);
+        boolean storeRefreshToken = scope.equals(ApiConstants.SCOPE_FULL) && TokenEncryption.canUseRefreshTokens(context);
         if(storeRefreshToken)storeRefreshTokenInSharedPreferences(context, access.getRefresh_token());
 
         updateToken(context, access.getAccess_token(),scope,access.getExpires_in());

@@ -22,7 +22,6 @@ import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostInvalidTokenException;
-import no.digipost.android.authentication.Screenlock;
 
 import java.net.URL;
 import java.net.URLConnection;
