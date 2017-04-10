@@ -208,7 +208,7 @@
     </string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
     <string name="error_invalid_token">Tilgang utløpt, vennligst logg inn på nytt</string>
-    <string name="error_bad_request">En feil oppstod.</string>
+    <string name="error_bad_request">Beklager, en feil har oppstått. Vennligst prøv igjen.</string>
     <string name="error_inputstreamtobyarray">En feil oppstod under åpning av innhold</string>
     <string name="error_no_activity_to_open_file">Du har ingen apper som kan åpne
         denne filtypen.
