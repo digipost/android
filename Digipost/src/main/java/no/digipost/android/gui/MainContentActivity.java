@@ -141,7 +141,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     }
 
     private void showScreenlockTips() {
-        if (SharedPreferencesUtilities.canDisplayScreenlockTips(this) &&  !TokenEncryption.screenLockEnabled(this)) {
+        if (SharedPreferencesUtilities.canDisplayScreenlockTips(this) && !TokenEncryption.screenLockEnabled(this)) {
             new AlertDialog.Builder(this).setTitle(getString(R.string.screenlock_tips_title)).setMessage(getString(R.string.screenlock_tips_message))
                     .setPositiveButton(getString(R.string.screenlock_show_tips), new DialogInterface.OnClickListener() {
                         @Override
