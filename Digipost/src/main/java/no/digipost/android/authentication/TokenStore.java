@@ -70,7 +70,7 @@ public class TokenStore {
     public static void removeHighAuthenticationTokens(){
         if(tokens != null){
             for(Token token : tokens){
-                if(token.getScope() != ApiConstants.SCOPE_FULL){
+                if(!token.getScope().equals(ApiConstants.SCOPE_FULL)){
                     tokens.remove(token);
                 }
             }
