@@ -25,6 +25,8 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 
 public class SharedPreferencesUtilities {
+    private static SharedPreferences sharedPreferences;
+
     private final static String HIDE_INVOICE_OPTIONS = "hide_invoice_options";
 
     public static boolean canDisplayScreenlockTips(final Context context) {
@@ -38,11 +40,18 @@ public class SharedPreferencesUtilities {
     }
 
     public static SharedPreferences getDefault(final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context);
+        if(sharedPreferences == null){
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        }
+        return sharedPreferences;
     }
 
     public static String getEncryptedRefreshtokenCipher(final Context context) {
         return getDefault(context).getString(ApiConstants.REFRESH_TOKEN, "");
+    }
+
+    public static boolean refreshTokenExist(final Context context) {
+        return !getEncryptedRefreshtokenCipher(context).isEmpty();
     }
 
     public static void storeEncryptedRefreshtokenCipher(final String cipher, final Context context) {
