@@ -30,7 +30,7 @@ public class TokenStore {
     private static ArrayList<Token> tokens;
 
     public static boolean hasValidTokenForScope(String scope){
-        return !getAccessTokenForScope(scope).equals("");
+        return !getAccessTokenForScope(scope).isEmpty();
     }
 
     public static String getAccess(){
@@ -52,8 +52,6 @@ public class TokenStore {
                     } else if (scope.equals(ApiConstants.SCOPE_IDPORTEN_3) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)) {
                         return token.getAccess();
                     } else if (scope.equals(ApiConstants.SCOPE_IDPORTEN_4) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)) {
-                        return token.getAccess();
-                    }else{
                         return token.getAccess();
                     }
                 }
