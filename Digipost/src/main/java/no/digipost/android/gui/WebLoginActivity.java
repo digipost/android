@@ -182,7 +182,7 @@ public class WebLoginActivity extends AppCompatActivity {
                 return e.getMessage();
             }catch (Exception e){
                 e.printStackTrace();
-                return "Det oppstod en feil";
+                return getString(R.string.error_bad_request);
             }
         }
 
