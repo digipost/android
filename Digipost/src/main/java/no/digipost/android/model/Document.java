@@ -52,6 +52,8 @@ public class Document{
     @JsonProperty
     private String type;
     @JsonProperty
+    private boolean collectionNotice;
+    @JsonProperty
     private ArrayList<Link> link;
     @JsonProperty
     private ArrayList<Attachment> attachment;
@@ -115,6 +117,8 @@ public class Document{
         return authenticationLevel;
     }
 
+    public boolean hasCollectionNotice() {return this.collectionNotice;}
+
     public boolean requiresHighAuthenticationLevel() {
         return authenticationLevel.equals(AUTHENTICATION_LEVEL_TWO_FACTOR) ||
                 authenticationLevel.equals(AUTHENTICATION_LEVEL_IDPORTEN_3) ||
@@ -168,6 +172,10 @@ public class Document{
 
     public ArrayList<Link> getLink() {
         return link;
+    }
+
+    public boolean isInvoice(){
+        return getType().equals(ApiConstants.INVOICE);
     }
 
     public String getSelfUri() {

@@ -166,7 +166,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
     }
 
     public class DocumentViewHolder extends RecyclerView.ViewHolder{
-        private TextView title, subTitle, metaTop;
+        private TextView title, subTitle, metaTop,metaMiddle;
         private ImageView contentTypeImage;
         private View view;
         private CheckBox checkbox;
@@ -177,6 +177,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             title = (TextView) view.findViewById(R.id.content_title);
             subTitle = (TextView) view.findViewById(R.id.content_subTitle);
             metaTop = (TextView) view.findViewById(R.id.content_meta_top);
+            metaMiddle = (TextView) view.findViewById(R.id.content_meta_middle);
             contentTypeImage = (ImageView) view.findViewById(R.id.content_type_image);
             checkbox = (CheckBox) view.findViewById(R.id.content_checkbox);
             this.view = view;
@@ -219,6 +220,15 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
                 checkbox.setVisibility(View.VISIBLE);
             }else{
                 checkbox.setVisibility(View.GONE);
+            }
+
+            if(document.isInvoice()){
+                if(document.hasCollectionNotice()){
+                    metaMiddle.setText(context.getString(R.string.list_document_type_collection_notice));
+                }else {
+                    metaMiddle.setText(context.getString(R.string.list_document_type_invoice));
+                }
+                metaMiddle.setTypeface(null, Typeface.BOLD);
             }
         }
 
