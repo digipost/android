@@ -11,7 +11,6 @@ public class GAEventController {
     public static final String LAUNCH_ORIGIN_PUSH = "push";
 
     private static final String appLaunchOrigin = "app-launch-origin";
-    private static final String loginRememberMeOption = "login-remember-me";
     private static final String FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT = "faktura-avtale-oppsett-kontekst-basert";
 
     public static void sendLaunchEvent(Activity activity, String actionText){
