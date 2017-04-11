@@ -116,6 +116,10 @@
     <string name="delete_progress_receipt">Sletter %1$s %2$s (%3$d/%4$d)</string>
     <string name="delete_cancelled">%1$d av %2$d slettet.</string>
 
+    <!-- CollectionNotice -->
+    <string name="list_document_type_invoice">FAKTURA</string>
+    <string name="list_document_type_collection_notice">INKASSO</string>
+
     <!-- LoginActivity -->
     <string name="login_normal_login_title">Logg inn med Digipost-passord</string>
     <string name="login_normal_login_description">Kun tilgang til å lese post fra privatpersoner og bedrifter, som naboen eller strømselskapet.</string>

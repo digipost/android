@@ -63,7 +63,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:singleLine="true"
                 android:textColor="@color/black_subject"
                 android:textSize="18sp"/>
 
@@ -75,7 +74,6 @@
                 android:layout_marginTop="2sp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:singleLine="true"
                 android:textColor="@color/grey_creator"
                 android:textSize="14sp"/>
     </LinearLayout>
@@ -92,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textColor="@color/grey_date"
                 android:textSize="12sp"/>
 
@@ -101,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="right"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:textColor="@color/grey_filesize"
                 android:textSize="12sp"/>
 
