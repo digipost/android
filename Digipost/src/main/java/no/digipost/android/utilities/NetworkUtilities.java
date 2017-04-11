@@ -22,6 +22,7 @@ import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostInvalidTokenException;
+import no.digipost.android.authentication.TokenEncryption;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -44,7 +45,7 @@ public class NetworkUtilities {
             DigipostAuthenticationException {
 
         if (statusCode == HTTP_STATUS_UNAUTHORIZED) {
-            if (Screenlock.canUseRefreshTokens(context)) {
+            if (TokenEncryption.canUseRefreshTokens(context)) {
                 throw new DigipostInvalidTokenException();
             } else {
                 throw new DigipostAuthenticationException(context.getString(R.string.error_invalid_token));
