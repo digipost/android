@@ -141,7 +141,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     }
 
     private void showTips() {
-        if (SharedPreferencesUtilities.canDisplayScreenlockTips(this) && !TokenEncryption.screenLockEnabled(this) && !TokenStore.onlyLoggedInWithIDporten4()) {
+        if (SharedPreferencesUtilities.shouldDisplayScreenlockTips(this) && !TokenEncryption.screenLockEnabled(this) && !TokenStore.onlyLoggedInWithIDporten4()) {
             new AlertDialog.Builder(this).setTitle(getString(R.string.screenlock_tips_title)).setMessage(getString(R.string.screenlock_tips_message))
                     .setPositiveButton(getString(R.string.screenlock_show_tips), new DialogInterface.OnClickListener() {
                         @Override
@@ -155,6 +155,16 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                     SharedPreferencesUtilities.hideScreenlockTips(getApplicationContext());
                 }
             }).show();
+        }
+
+        if (TokenStore.onlyLoggedInWithIDporten4() && SharedPreferencesUtilities.shouldDisplayIDPortenTips(this)) {
+            new AlertDialog.Builder(this).setTitle(getString(R.string.idporten_tips_title)).setMessage(getString(R.string.idporten_tips_message))
+                    .setPositiveButton(getString(R.string.idporten_tips_ok_button), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SharedPreferencesUtilities.hideScreenlockTips(getApplicationContext());
+                        }
+                    }).show();
         }
     }
 

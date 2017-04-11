@@ -29,7 +29,7 @@ public class SharedPreferencesUtilities {
 
     private final static String HIDE_INVOICE_OPTIONS = "hide_invoice_options";
 
-    public static boolean canDisplayScreenlockTips(final Context context) {
+    public static boolean shouldDisplayScreenlockTips(final Context context) {
         SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
         return sharedPreferences.getBoolean("HideScreenlockTips", true);
     }
@@ -37,6 +37,16 @@ public class SharedPreferencesUtilities {
     public static void hideScreenlockTips(final Context context) {
         SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
         sharedPreferences.edit().putBoolean("HideScreenlockTips", false).apply();
+    }
+
+    public static boolean shouldDisplayIDPortenTips(final Context context) {
+        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
+        return sharedPreferences.getBoolean("HideIDPortenTips", true);
+    }
+
+    public static void hideIDPortenTips(final Context context) {
+        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
+        sharedPreferences.edit().putBoolean("HideIDPortenTips", false).apply();
     }
 
     public static SharedPreferences getDefault(final Context context) {
