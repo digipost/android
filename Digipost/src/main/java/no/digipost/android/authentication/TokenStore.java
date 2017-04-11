@@ -43,6 +43,8 @@ public class TokenStore {
                 if (!token.hasExpired()) {
                     if (scope.equals(ApiConstants.SCOPE_FULL) && token.getScope().equals(ApiConstants.SCOPE_FULL)) {
                         return token.getAccess();
+                    }else if (scope.equals(ApiConstants.SCOPE_FULL) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)){
+                        return token.getAccess();
                     }else if (scope.equals(ApiConstants.SCOPE_FULL_HIGH) && token.getScope().equals(ApiConstants.SCOPE_FULL_HIGH)) {
                         return token.getAccess();
                     }else if (scope.equals(ApiConstants.SCOPE_FULL_HIGH) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)) {
