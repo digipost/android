@@ -75,6 +75,15 @@ public class TokenStore {
         }
     }
 
+    public static boolean onlyLoggedInWithIDporten4() {
+        if(tokens != null && tokens.size() == 1 ) {
+            if(tokens.get(0).getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void storeRefreshTokenInSharedPreferences(Context context, String refreshToken) {
         String cipher = new TokenEncryption(context, true).encrypt(refreshToken);
         SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
