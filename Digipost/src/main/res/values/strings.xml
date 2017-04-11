@@ -17,9 +17,14 @@
     <string name="yes_apply_screenlock">Skru på skjermlås</string>
     <string name="no_dont_use_screenlock">Avbryt</string>
     <string name="screenlock_tips_title">Lei av å taste passord?</string>
-    <string name="screenlock_tips_message">Aktiver skjermlåsen på enheten din, så lagrer appen passordet ditt til neste innlogging.</string>
+    <string name="screenlock_tips_message">Aktiver skjermlåsen på enheten din, så husker vi deg ved neste innlogging.</string>
     <string name="screenlock_show_tips">Vis meg</string>
     <string name="screenlock_hide_tips">Ikke vis igjen</string>
+
+    <!-- IDPorten Tips-->
+    <string name="idporten_tips_title">Enklere innlogging</string>
+    <string name="idporten_tips_message">Logger du inn med passord istedenfor ID-porten, så husker vi deg ved neste innlogging.</string>
+    <string name="idporten_tips_ok_button">Ok</string>
 
     <!--Drawer -->
     <string name="drawer_create_new_folder_default_name">Mappenavn</string>

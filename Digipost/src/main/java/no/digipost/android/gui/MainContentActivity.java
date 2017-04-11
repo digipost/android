@@ -162,7 +162,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                     .setPositiveButton(getString(R.string.idporten_tips_ok_button), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            SharedPreferencesUtilities.hideScreenlockTips(getApplicationContext());
+                            SharedPreferencesUtilities.hideIDPortenTips(getApplicationContext());
                         }
                     }).show();
         }
