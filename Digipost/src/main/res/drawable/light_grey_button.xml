@@ -3,20 +3,20 @@
 
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/actionbar_button_pressed_dark_red"/>
+            <solid android:color="@color/light_grey_button_pressed"/>
         </shape>
     </item>
 
     <item android:state_focused="true">
         <shape>
-            <solid android:color="@color/actionbar_red_background"/>
+            <solid android:color="@color/light_grey_button_normal"/>
         </shape>
     </item>
 
     <item>
         <shape>
-            <solid android:color="@color/actionbar_red_background"/>
-         </shape>
-     </item>
+            <solid android:color="@color/light_grey_button_normal"/>
+        </shape>
+    </item>
 
- </selector>
+</selector>

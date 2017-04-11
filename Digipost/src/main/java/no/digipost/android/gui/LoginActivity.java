@@ -25,25 +25,24 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.*;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.analytics.GAEventController;
-import no.digipost.android.authentication.AndroidLockSecurity;
 import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gcm.GCMController;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.NetworkUtilities;
-import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class LoginActivity extends Activity {
     private final int WEB_OAUTH_LOGIN_REQUEST = 0;
-    private Button loginButton, privacyButton, registrationButton, forgotPasswordButton;
-    private CheckBox rememberCheckbox;
+    private Button loginButton, privacyButton, registrationButton, forgotPasswordButton, idPortenButton;
     private Context context;
+
+    private enum Login{
+        IDPORTEN,
+        NORMAL
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -52,64 +51,44 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         context = this;
         ButtonListener listener = new ButtonListener();
-        loginButton = (Button) findViewById(R.id.login_loginButton);
+        loginButton = (Button) findViewById(R.id.login_passwordButton);
         loginButton.setOnClickListener(listener);
         loginButton.setTransformationMethod(null);
         privacyButton = (Button) findViewById(R.id.login_privacyButton);
         privacyButton.setOnClickListener(listener);
         privacyButton.setTransformationMethod(null);
-        registrationButton = (Button) findViewById(R.id.login_registrationButton);
-        registrationButton.setOnClickListener(listener);
-        rememberCheckbox = (CheckBox) findViewById(R.id.login_remember_me);
+
         forgotPasswordButton = (Button) findViewById(R.id.login_forgotPasswordButton);
         forgotPasswordButton.setOnClickListener(listener);
         forgotPasswordButton.setTransformationMethod(null);
         forgotPasswordButton.setPaintFlags(forgotPasswordButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        registrationButton.setPaintFlags(registrationButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        registrationButton = (Button) findViewById(R.id.login_registrationButton);
+        registrationButton.setOnClickListener(listener);
         registrationButton.setTransformationMethod(null);
+        registrationButton.setPaintFlags(registrationButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+
+        idPortenButton = (Button) findViewById(R.id.login_idportenButton);
+        idPortenButton.setOnClickListener(listener);
+        idPortenButton.setTransformationMethod(null);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         GCMController.reset(getApplicationContext());
-        enableCheckBoxIfScreenlock();
-
-        rememberCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-                if (rememberCheckbox.isChecked()) {
-                    if (!AndroidLockSecurity.screenLockEnabled(getApplicationContext())) {
-                        Intent i = new Intent(LoginActivity.this, ScreenlockPreferenceActivity.class);
-                        startActivity(i);
-                    }
-                }
-            }
-        });
-        privacyButton.setTextColor(getResources().getColor(R.color.grey_privacy_button_text));
-        registrationButton.setTextColor(getResources().getColor(R.color.login_grey_text));
     }
 
-    private void enableCheckBoxIfScreenlock() {
-        if (!AndroidLockSecurity.canUseRefreshTokens(this)) {
-            rememberCheckbox.setChecked(false);
-        }
-    }
-
-    private void startLoginProcess() {
-        if (rememberCheckbox.isChecked()) {
-            SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_YES);
-            openWebView();
-        } else {
-            SharedPreferencesUtilities.storeScreenlockChoice(this, ApplicationConstants.SCREENLOCK_CHOICE_NO);
-            openWebView();
-        }
-    }
-
-    private void openWebView() {
+    private void openWebView(Login target) {
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(this, WebLoginActivity.class);
-            i.putExtra("authenticationScope", ApiConstants.SCOPE_FULL);
+
+            if(Login.IDPORTEN == target){
+                i.putExtra("authenticationScope", ApiConstants.SCOPE_IDPORTEN_4);
+            }else {
+                i.putExtra("authenticationScope", ApiConstants.SCOPE_FULL);
+            }
+
             startActivityForResult(i, WEB_OAUTH_LOGIN_REQUEST);
 
         } else {
@@ -127,7 +106,6 @@ public class LoginActivity extends Activity {
     }
 
     private void startMainContentActivity() {
-        GAEventController.sendRememberMeEvent(this, rememberCheckbox.isChecked());
         loginButton.setVisibility(View.INVISIBLE);
         Intent i = new Intent(LoginActivity.this, MainContentActivity.class);
         startActivity(i);
@@ -143,7 +121,6 @@ public class LoginActivity extends Activity {
         AlertDialog.Builder forgetPasswordDialog = new AlertDialog.Builder(context);
         forgetPasswordDialog.setTitle(getString(R.string.login_forgot_password_dialog_title));
         forgetPasswordDialog.setMessage(R.string.login_forgot_password_dialog_message);
-
         forgetPasswordDialog.setPositiveButton(getString(R.string.login_forgot_password_dialog_open_link_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
@@ -158,16 +135,15 @@ public class LoginActivity extends Activity {
                 dialog.dismiss();
             }
         });
-
         forgetPasswordDialog.create().show();
-
     }
 
     private class ButtonListener implements OnClickListener {
 
         public void onClick(final View v) {
             if (v == loginButton) {
-                startLoginProcess();
+                GAEventController.sendLoginClickEvent(LoginActivity.this, "passord");
+                openWebView(Login.NORMAL);
             } else if (v == privacyButton) {
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "personvern");
                 openExternalBrowserWithUrl("https://www.digipost.no/juridisk/");
@@ -177,6 +153,9 @@ public class LoginActivity extends Activity {
             }else if (v == forgotPasswordButton){
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "glemt-passord");
                 showForgotPasswordDialog();
+            }else if(v == idPortenButton){
+                GAEventController.sendLoginClickEvent(LoginActivity.this, "idporten");
+                openWebView(Login.IDPORTEN);
             }
         }
     }

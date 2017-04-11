@@ -30,7 +30,7 @@ public class TokenStore {
     private static ArrayList<Token> tokens;
 
     public static boolean hasValidTokenForScope(String scope){
-        return !getAccessTokenForScope(scope).equals("");
+        return !getAccessTokenForScope(scope).isEmpty();
     }
 
     public static String getAccess(){
@@ -42,6 +42,8 @@ public class TokenStore {
             for (Token token : tokens) {
                 if (!token.hasExpired()) {
                     if (scope.equals(ApiConstants.SCOPE_FULL) && token.getScope().equals(ApiConstants.SCOPE_FULL)) {
+                        return token.getAccess();
+                    }else if (scope.equals(ApiConstants.SCOPE_FULL) && token.getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)){
                         return token.getAccess();
                     }else if (scope.equals(ApiConstants.SCOPE_FULL_HIGH) && token.getScope().equals(ApiConstants.SCOPE_FULL_HIGH)) {
                         return token.getAccess();
@@ -68,18 +70,25 @@ public class TokenStore {
     public static void removeHighAuthenticationTokens(){
         if(tokens != null){
             for(Token token : tokens){
-                if(token.getScope() != ApiConstants.SCOPE_FULL){
+                if(!token.getScope().equals(ApiConstants.SCOPE_FULL)){
                     tokens.remove(token);
                 }
             }
         }
     }
 
-    public static void storeRefreshTokenInSharedPreferences(Context context, String refreshToken) {
-        if (SharedPreferencesUtilities.screenlockChoiceYes(context)) {
-            String cipher = new TokenEncryption(context, true).encrypt(refreshToken);
-            SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
+    public static boolean onlyLoggedInWithIDporten4() {
+        if(tokens != null && tokens.size() == 1 ) {
+            if(tokens.get(0).getScope().equals(ApiConstants.SCOPE_IDPORTEN_4)){
+                return true;
+            }
         }
+        return false;
+    }
+
+    public static void storeRefreshTokenInSharedPreferences(Context context, String refreshToken) {
+        String cipher = new TokenEncryption(context, true).encrypt(refreshToken);
+        SharedPreferencesUtilities.storeEncryptedRefreshtokenCipher(cipher, context);
     }
 
     public static String getRefreshTokenFromSharedPreferences(Context context){
@@ -102,7 +111,9 @@ public class TokenStore {
     }
 
     public static void storeToken(final Context context, final Access access, final String scope) {
-        if(scope.equals(ApiConstants.SCOPE_FULL)) storeRefreshTokenInSharedPreferences(context, access.getRefresh_token());
+        boolean storeRefreshToken = scope.equals(ApiConstants.SCOPE_FULL) && TokenEncryption.canUseRefreshTokens(context);
+        if(storeRefreshToken)storeRefreshTokenInSharedPreferences(context, access.getRefresh_token());
+
         updateToken(context, access.getAccess_token(),scope,access.getExpires_in());
     }
 }

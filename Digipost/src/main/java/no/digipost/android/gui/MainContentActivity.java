@@ -43,7 +43,7 @@ import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.tasks.CreateEditDeleteFolderTask;
 import no.digipost.android.api.tasks.GetAccountTask;
 import no.digipost.android.api.tasks.UpdateFoldersTask;
-import no.digipost.android.authentication.AndroidLockSecurity;
+import no.digipost.android.authentication.TokenEncryption;
 import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
@@ -85,7 +85,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     private DragNDropListView drawerList;
     private DrawerAdapter drawerArrayAdapter;
     private Dialog mailboxDialog;
-    private boolean showActionBarName;
     private Mailbox mailbox;
     private ArrayList<Mailbox> mailboxes;
     private Account account;
@@ -138,12 +137,41 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        showTips();
+    }
+
+    private void showTips() {
+        if (SharedPreferencesUtilities.shouldDisplayScreenlockTips(this) && !TokenEncryption.screenLockEnabled(this) && !TokenStore.onlyLoggedInWithIDporten4()) {
+            new AlertDialog.Builder(this).setTitle(getString(R.string.screenlock_tips_title)).setMessage(getString(R.string.screenlock_tips_message))
+                    .setPositiveButton(getString(R.string.screenlock_show_tips), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(MainContentActivity.this, ScreenlockPreferenceActivity.class);
+                            startActivity(intent);
+                        }
+                    }).setNegativeButton(getString(R.string.screenlock_hide_tips), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    SharedPreferencesUtilities.hideScreenlockTips(getApplicationContext());
+                }
+            }).show();
+        }
+
+        if (TokenStore.onlyLoggedInWithIDporten4() && SharedPreferencesUtilities.shouldDisplayIDPortenTips(this)) {
+            new AlertDialog.Builder(this).setTitle(getString(R.string.idporten_tips_title)).setMessage(getString(R.string.idporten_tips_message))
+                    .setPositiveButton(getString(R.string.idporten_tips_ok_button), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SharedPreferencesUtilities.hideIDPortenTips(getApplicationContext());
+                        }
+                    }).show();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(AndroidLockSecurity.unableToUseStoredRefreshToken(this)){
+        if(TokenEncryption.unableToUseStoredRefreshToken(this)){
             logOut();
         }
         GCMController.clearNotifications(this);

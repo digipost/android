@@ -25,29 +25,43 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 
 public class SharedPreferencesUtilities {
+    private static SharedPreferences sharedPreferences;
+
     private final static String HIDE_INVOICE_OPTIONS = "hide_invoice_options";
 
+    public static boolean shouldDisplayScreenlockTips(final Context context) {
+        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
+        return sharedPreferences.getBoolean("HideScreenlockTips", true);
+    }
+
+    public static void hideScreenlockTips(final Context context) {
+        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
+        sharedPreferences.edit().putBoolean("HideScreenlockTips", false).apply();
+    }
+
+    public static boolean shouldDisplayIDPortenTips(final Context context) {
+        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
+        return sharedPreferences.getBoolean("HideIDPortenTips", true);
+    }
+
+    public static void hideIDPortenTips(final Context context) {
+        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
+        sharedPreferences.edit().putBoolean("HideIDPortenTips", false).apply();
+    }
+
     public static SharedPreferences getDefault(final Context context) {
-        return PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    public static int screenlockChoice(final Context context) {
-        return getDefault(context).getInt(ApplicationConstants.SCREENLOCK_CHOICE,
-                ApplicationConstants.SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET);
-    }
-
-    public static boolean screenlockChoiceYes(final Context context) {
-        return screenlockChoice(context) == ApplicationConstants.SCREENLOCK_CHOICE_YES;
-    }
-
-    public static void storeScreenlockChoice(final Context context, final int choice) {
-        SharedPreferences.Editor edit = getDefault(context).edit();
-        edit.putInt(ApplicationConstants.SCREENLOCK_CHOICE, choice);
-        edit.apply();
+        if(sharedPreferences == null){
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        }
+        return sharedPreferences;
     }
 
     public static String getEncryptedRefreshtokenCipher(final Context context) {
         return getDefault(context).getString(ApiConstants.REFRESH_TOKEN, "");
+    }
+
+    public static boolean refreshTokenExist(final Context context) {
+        return !getEncryptedRefreshtokenCipher(context).isEmpty();
     }
 
     public static void storeEncryptedRefreshtokenCipher(final String cipher, final Context context) {

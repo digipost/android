@@ -16,7 +16,10 @@
 
 package no.digipost.android.authentication;
 
+import android.app.KeyguardManager;
 import android.content.Context;
+import no.digipost.android.gcm.GCMController;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class TokenEncryption {
     private CryptoAdapter cryptoAdapter;
@@ -29,11 +32,32 @@ public class TokenEncryption {
         return cryptoAdapter.isAvailable();
     }
 
-    public String encrypt(String plainText){return cryptoAdapter.encrypt(plainText);}
+    public String encrypt(String plainText){
+        return cryptoAdapter.encrypt(plainText);
+    }
 
     public String decrypt(String cipherText){
         return cryptoAdapter.decrypt(cipherText);
     }
 
-    public boolean keyStoreIsAvailable(){return (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M);}
+    public boolean keyStoreIsAvailable(){
+        return (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M);
+    }
+
+    public static boolean canUseRefreshTokens(final Context context) {
+        if (!screenLockEnabled(context)) {
+            SharedPreferencesUtilities.deleteRefreshtoken(context);
+            GCMController.reset(context);
+        }
+        return screenLockEnabled(context);
+    }
+
+    public static boolean unableToUseStoredRefreshToken(final Context context) {
+        return !screenLockEnabled(context) && SharedPreferencesUtilities.refreshTokenExist(context);
+    }
+
+    public static boolean screenLockEnabled(final Context context) {
+        KeyguardManager keyguardMgr = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        return keyguardMgr.isKeyguardSecure();
+    }
 }

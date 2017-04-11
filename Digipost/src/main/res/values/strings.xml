@@ -16,6 +16,15 @@
     </string>
     <string name="yes_apply_screenlock">Skru på skjermlås</string>
     <string name="no_dont_use_screenlock">Avbryt</string>
+    <string name="screenlock_tips_title">Lei av å taste passord?</string>
+    <string name="screenlock_tips_message">Aktiver skjermlåsen på enheten din, så husker vi deg ved neste innlogging.</string>
+    <string name="screenlock_show_tips">Vis meg</string>
+    <string name="screenlock_hide_tips">Ikke vis igjen</string>
+
+    <!-- IDPorten Tips-->
+    <string name="idporten_tips_title">Enklere innlogging</string>
+    <string name="idporten_tips_message">Logger du inn med passord istedenfor ID-porten, så husker vi deg ved neste innlogging.</string>
+    <string name="idporten_tips_ok_button">Ok</string>
 
     <!--Drawer -->
     <string name="drawer_create_new_folder_default_name">Mappenavn</string>
@@ -108,7 +117,14 @@
     <string name="delete_cancelled">%1$d av %2$d slettet.</string>
 
     <!-- LoginActivity -->
-    <string name="login_loginbutton_text">Logg inn i Digipost</string>
+    <string name="login_normal_login_title">Logg inn med Digipost-passord</string>
+    <string name="login_normal_login_description">Kun tilgang til å lese post fra privatpersoner og bedrifter, som naboen eller strømselskapet.</string>
+    <string name="login_normal_login_button">Logg inn med passord</string>
+
+    <string name="login_idporten_login_title">Logg inn med elektronisk ID</string>
+    <string name="login_idporten_login_description">Tilgang til å lese post fra det offentlige som kommunen, NAV eller HelseNorge.</string>
+    <string name="login_idporten_login_button">Logg inn via ID-porten</string>
+
     <string name="login_forgot_password_button_text">Glemt passord</string>
     <string name="login_forgot_password_dialog_title">Glemt passord</string>
     <string name="login_forgot_password_dialog_message">Du kan endre passord på digipost.no.\nBruk det nye passordet for å logge inn i appen.</string>
@@ -116,9 +132,7 @@
     <string name="login_forgot_password_dialog_close_button">Lukk</string>
     <string name="login_registrationbutton_text">Ny bruker</string>
     <string name="login_privacybutton_text">Personvern</string>
-    <string name="login_header_logo_contentdescription">Digipost logo</string>
-    <string name="login_remember_me">Forbli innlogget</string>
-    <string name="login_remember_me_contentdescription">Avhukingsboks for å velge at applikasjonen skal huske innloggingen</string>
+    <string name="login_header_logo_contentdescription">Posten Norge logo</string>
 
     <!-- ContextMenu -->
     <string name="context_refresh">Oppdater</string>
@@ -198,7 +212,7 @@
     </string>
     <string name="error_digipost_api">En feil oppstod under oppkoblingen mot Digipost.</string>
     <string name="error_invalid_token">Tilgang utløpt, vennligst logg inn på nytt</string>
-    <string name="error_bad_request">En feil oppstod.</string>
+    <string name="error_bad_request">Beklager, en feil har oppstått. Vennligst prøv igjen.</string>
     <string name="error_inputstreamtobyarray">En feil oppstod under åpning av innhold</string>
     <string name="error_no_activity_to_open_file">Du har ingen apper som kan åpne
         denne filtypen.
