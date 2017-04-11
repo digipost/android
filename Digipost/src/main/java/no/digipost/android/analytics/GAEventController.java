@@ -22,11 +22,6 @@ public class GAEventController {
         sendEvent(activity, "innlogging", "klikk-link", event);
     }
 
-    public static void sendRememberMeEvent(Activity activity, boolean enabled){
-        String actionText = (enabled ? "true" : "false");
-        sendEvent(activity, loginRememberMeOption, actionText, loginRememberMeOption+"-"+actionText);
-    }
-
     public static void sendInvoiceClickedChooseBankDialog(Activity activity, String buttonText){
         sendEvent(activity, FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT, "klikk-start-oppsett", buttonText);
     }
