@@ -142,6 +142,7 @@ public class LoginActivity extends Activity {
 
         public void onClick(final View v) {
             if (v == loginButton) {
+                GAEventController.sendLoginClickEvent(LoginActivity.this, "passord");
                 openWebView(Login.NORMAL);
             } else if (v == privacyButton) {
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "personvern");
@@ -153,6 +154,7 @@ public class LoginActivity extends Activity {
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "glemt-passord");
                 showForgotPasswordDialog();
             }else if(v == idPortenButton){
+                GAEventController.sendLoginClickEvent(LoginActivity.this, "idporten");
                 openWebView(Login.IDPORTEN);
             }
         }
