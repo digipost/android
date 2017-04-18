@@ -221,7 +221,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             }else{
                 checkbox.setVisibility(View.GONE);
             }
-
+            metaMiddle.setText("");
             if(document.isInvoice()){
                 if(document.hasCollectionNotice()){
                     metaMiddle.setText(context.getString(R.string.list_document_type_collection_notice));
