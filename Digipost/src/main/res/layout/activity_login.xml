@@ -35,7 +35,7 @@
                 android:text="@string/login_idporten_login_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="82dp"
+                android:layout_marginTop="15dp"
                 android:id="@+id/textView4"
                 android:textSize="16sp"
                 android:layout_below="@+id/login_passwordButton"
@@ -120,7 +120,7 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/black_subject"
                 android:id="@+id/login_forgotPasswordButton"
-                android:textSize="14sp" android:layout_below="@+id/login_passwordButton" android:layout_alignLeft="@+id/login_passwordButton" android:layout_alignStart="@+id/login_passwordButton"/>
+                android:textSize="14sp" android:layout_below="@+id/login_idportenButton" android:layout_alignLeft="@+id/login_passwordButton" android:layout_alignStart="@+id/login_passwordButton"/>
         <Button
                 android:text="@string/login_registrationbutton_text"
                 android:layout_width="wrap_content"
