@@ -166,8 +166,8 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
     }
 
     public class DocumentViewHolder extends RecyclerView.ViewHolder{
-        private TextView title, subTitle, metaTop,metaMiddle;
-        private ImageView contentTypeImage;
+        private TextView title, subTitle, metaTop, metaTypeDescription;
+        private ImageView contentTypeImage, contentStatusImage;
         private View view;
         private CheckBox checkbox;
         private Drawable lock = context.getResources().getDrawable(R.drawable.lock_32);
@@ -177,9 +177,10 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             title = (TextView) view.findViewById(R.id.content_title);
             subTitle = (TextView) view.findViewById(R.id.content_subTitle);
             metaTop = (TextView) view.findViewById(R.id.content_meta_top);
-            metaMiddle = (TextView) view.findViewById(R.id.content_meta_middle);
             contentTypeImage = (ImageView) view.findViewById(R.id.content_type_image);
             checkbox = (CheckBox) view.findViewById(R.id.content_checkbox);
+            metaTypeDescription = (TextView) view.findViewById(R.id.content_meta_type_description);
+            contentStatusImage = (ImageView) view.findViewById(R.id.content_status_image);
             this.view = view;
         }
 
@@ -221,14 +222,24 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
             }else{
                 checkbox.setVisibility(View.GONE);
             }
-            metaMiddle.setText("");
-            if(document.isInvoice()){
-                if(document.hasCollectionNotice()){
-                    metaMiddle.setText(context.getString(R.string.list_document_type_collection_notice));
-                }else {
-                    metaMiddle.setText(context.getString(R.string.list_document_type_invoice));
+
+            if (document.isInvoice()) {
+                metaTypeDescription.setTypeface(null, Typeface.ITALIC);
+                metaTypeDescription.setVisibility(View.VISIBLE);
+                contentStatusImage.setVisibility(View.VISIBLE);
+                if (document.hasCollectionNotice()) {
+                    metaTypeDescription.setText(context.getString(R.string.list_document_type_collection_notice));
+                } else if (document.isPaid()) {
+                    contentStatusImage.setImageDrawable(context.getResources().getDrawable(R.drawable.added_to_payments_32px));
+                    metaTypeDescription.setText(R.string.list_document_type_invoice_paid);
+                } else {
+                    contentStatusImage.setImageDrawable(context.getResources().getDrawable(R.drawable.unpaid_32px));
+                    metaTypeDescription.setText(R.string.list_document_type_invoice_unpaid);
                 }
-                metaMiddle.setTypeface(null, Typeface.BOLD);
+            } else {
+                metaTypeDescription.setText("");
+                metaTypeDescription.setVisibility(View.GONE);
+                contentStatusImage.setVisibility(View.GONE);
             }
         }
 

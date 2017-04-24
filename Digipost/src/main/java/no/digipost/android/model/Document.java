@@ -54,6 +54,8 @@ public class Document{
     @JsonProperty
     private boolean collectionNotice;
     @JsonProperty
+    private boolean paid;
+    @JsonProperty
     private ArrayList<Link> link;
     @JsonProperty
     private ArrayList<Attachment> attachment;
@@ -176,6 +178,10 @@ public class Document{
 
     public boolean isInvoice(){
         return getType().equals(ApiConstants.INVOICE);
+    }
+
+    public boolean isPaid() {
+        return this.paid;
     }
 
     public String getSelfUri() {
