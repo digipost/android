@@ -223,20 +223,20 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
                 checkbox.setVisibility(View.GONE);
             }
 
-            if(document.isInvoice()){
+            if (document.isInvoice()) {
                 metaTypeDescription.setTypeface(null, Typeface.ITALIC);
                 metaTypeDescription.setVisibility(View.VISIBLE);
                 contentStatusImage.setVisibility(View.VISIBLE);
-                if(document.hasCollectionNotice()){
+                if (document.hasCollectionNotice()) {
                     metaTypeDescription.setText(context.getString(R.string.list_document_type_collection_notice));
-                }else if (document.isPaid()){
+                } else if (document.isPaid()) {
                     contentStatusImage.setImageDrawable(context.getResources().getDrawable(R.drawable.added_to_payments_32px));
                     metaTypeDescription.setText(R.string.list_document_type_invoice_paid);
-                } else{
+                } else {
                     contentStatusImage.setImageDrawable(context.getResources().getDrawable(R.drawable.unpaid_32px));
                     metaTypeDescription.setText(R.string.list_document_type_invoice_unpaid);
                 }
-            }else{
+            } else {
                 metaTypeDescription.setText("");
                 metaTypeDescription.setVisibility(View.GONE);
                 contentStatusImage.setVisibility(View.GONE);
