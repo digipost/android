@@ -117,7 +117,6 @@
     <string name="delete_cancelled">%1$d av %2$d slettet.</string>
 
     <!-- CollectionNotice -->
-    <string name="list_document_type_invoice">FAKTURA</string>
     <string name="list_document_type_invoice_paid">Faktura: Lagt til betaling</string>
     <string name="list_document_type_invoice_unpaid">Faktura: Ubehandlet</string>
     <string name="list_document_type_collection_notice">INKASSO</string>
