@@ -80,8 +80,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/black_subject"
-                android:text="Eiendomsskatt"
-                android:textSize="18sp"/>
+                android:textSize="16sp"/>
 
         <TextView
                 android:id="@+id/content_subTitle"
@@ -91,7 +90,6 @@
                 android:layout_marginTop="3sp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Oslo Kommune"
                 android:textColor="@color/grey_creator"
                 android:textSize="14sp"/>
 
@@ -103,7 +101,6 @@
                 android:layout_marginTop="3sp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Faktura: Lagt til betaling"
                 android:textColor="@color/grey_creator"
                 android:textSize="14sp"/>
     </LinearLayout>
