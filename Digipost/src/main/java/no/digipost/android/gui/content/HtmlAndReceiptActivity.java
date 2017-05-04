@@ -151,8 +151,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
             if(getSupportActionBar() != null) {
                 if (content_type != ApplicationConstants.RECEIPTS) {
                     Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
-                    getSupportActionBar().setTitle(documentMeta.getSubject());
-                    getSupportActionBar().setSubtitle(DocumentContentStore.getDocumentParent().getCreatorName());
+                    setActionBar(documentMeta.getSubject());
                 } else {
                     Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
                     getSupportActionBar().setTitle(receiptMeta.getStoreName());

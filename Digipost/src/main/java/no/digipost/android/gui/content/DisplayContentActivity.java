@@ -184,13 +184,23 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     protected void showInformationDialog() {
-        String documentSubject = DocumentContentStore.getDocumentParent() != null ? DocumentContentStore.getDocumentParent().getSubject() : "";
-        String attachmentSubject = DocumentContentStore.getDocumentAttachment() != null ? DocumentContentStore.getDocumentAttachment().getSubject() : "";
-        new AlertDialog.Builder(this).setMessage(formatInfoText(documentSubject, attachmentSubject)).setNegativeButton(getString(R.string.close), null).show();
+        if (content_type != ApplicationConstants.RECEIPTS && DocumentContentStore.getDocumentParent() != null && DocumentContentStore.getDocumentAttachment() != null) {
+            new AlertDialog.Builder(this).setMessage(getFormattedInfoText()).setNegativeButton(getString(R.string.close), null).show();
+        }
     }
 
-    private Spanned formatInfoText(final String documentSubject, final String attachmentSubject){
-        String infoText = documentSubject.equals(attachmentSubject) ? String.format("<b>%1$s</b>", documentSubject) : String.format("<b> %1$s </b> <br><br> %2$s ", documentSubject,attachmentSubject);
+    private Spanned getFormattedInfoText(){
+        String documentSubject = DocumentContentStore.getDocumentParent().getSubject();
+        String attachmentSubject = DocumentContentStore.getDocumentAttachment().getSubject();
+
+        String infoText = String.format("<b>%1$s</b>", documentSubject);
+
+        if(!attachmentSubject.equals(documentSubject)) {
+            infoText += String.format("<br><br> %1$s ", DocumentContentStore.getDocumentAttachment().getSubject());
+        }
+
+        infoText += String.format("<br><br> %1$s", DocumentContentStore.getDocumentParent().getCreatorName());
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return Html.fromHtml(infoText,Html.FROM_HTML_MODE_LEGACY);
         }else{
@@ -258,10 +268,9 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         finish();
     }
 
-    public void setActionBar(String title, String subTitle) {
+    public void setActionBar(String title) {
         if(getSupportActionBar()!=null) {
             getSupportActionBar().setTitle(title);
-            getSupportActionBar().setSubtitle(subTitle);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
     }
