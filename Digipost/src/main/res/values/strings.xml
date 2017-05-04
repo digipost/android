@@ -78,6 +78,7 @@
     <string name="saving">Lagrer…</string>
     <string name="uploaded">Opplastet</string>
     <string name="public_entity">Offentlig: %s</string>
+    <string name="information">Informasjon</string>
 
     <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjoner, som flytt og slett</string>
 

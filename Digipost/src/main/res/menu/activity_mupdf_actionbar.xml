@@ -42,4 +42,10 @@
             android:title="@string/save_to_device">
     </item>
 
+    <item
+            android:id="@+id/htmlmenu_info"
+            android:title="@string/information"
+            app:showAsAction="never">
+    </item>
+
 </menu>

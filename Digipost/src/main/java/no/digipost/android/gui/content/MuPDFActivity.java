@@ -529,6 +529,9 @@ public class MuPDFActivity extends DisplayContentActivity {
             case R.id.pdfmenu_save:
                 super.downloadFile();
                 return true;
+            case R.id.htmlmenu_info:
+                showInformationDialog();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

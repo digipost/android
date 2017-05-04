@@ -20,4 +20,9 @@
             android:visible="false"
             android:showAsAction="never"/>
 
+    <item
+            android:id="@+id/htmlmenu_info"
+            android:title="@string/information"
+            android:showAsAction="ifRoom"/>
+
 </menu>
