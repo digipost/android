@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
@@ -44,6 +45,12 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         setContentView(R.layout.activity_html_and_receipt);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInformationDialog();
+            }
+        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupWebView();
         setupActionBar();
@@ -84,17 +91,17 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_html_actionbar, menu);
-
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
-        MenuItem move = menu.findItem(R.id.htmlmenu_move);
 
         if (content_type != ApplicationConstants.RECEIPTS) {
-            move.setVisible(true);
+            menu.findItem(R.id.htmlmenu_move).setVisible(true);
+        }else{
+            menu.findItem(R.id.htmlmenu_info).setVisible(false);
         }
 
         boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
@@ -120,6 +127,9 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
                 return true;
             case R.id.htmlmenu_move:
                 showMoveToFolderDialog();
+                return true;
+            case R.id.htmlmenu_info:
+                showInformationDialog();
                 return true;
         }
 

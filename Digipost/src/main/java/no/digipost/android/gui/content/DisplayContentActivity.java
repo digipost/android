@@ -16,6 +16,7 @@
 
 package no.digipost.android.gui.content;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -23,9 +24,14 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -175,6 +181,21 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         Intent i = new Intent(activity, InvoiceOptionsActivity.class);
         i.putExtra(InvoiceOptionsActivity.INTENT_ACTIONBAR_TITLE, invoiceSubject);
         activity.startActivity(i);
+    }
+
+    protected void showInformationDialog() {
+        String documentSubject = DocumentContentStore.getDocumentParent() != null ? DocumentContentStore.getDocumentParent().getSubject() : "";
+        String attachmentSubject = DocumentContentStore.getDocumentAttachment() != null ? DocumentContentStore.getDocumentAttachment().getSubject() : "";
+        new AlertDialog.Builder(this).setMessage(formatInfoText(documentSubject, attachmentSubject)).setNegativeButton(getString(R.string.close), null).show();
+    }
+
+    private Spanned formatInfoText(final String documentSubject, final String attachmentSubject){
+        String infoText = documentSubject.equals(attachmentSubject) ? String.format("<b>%1$s</b>", documentSubject) : String.format("<b> %1$s </b> <br><br> %2$s ", documentSubject,attachmentSubject);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(infoText,Html.FROM_HTML_MODE_LEGACY);
+        }else{
+            return Html.fromHtml(infoText);
+        }
     }
 
     protected void deleteAction(final Activity originActivity) {

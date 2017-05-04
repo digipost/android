@@ -219,6 +219,12 @@ public class MuPDFActivity extends DisplayContentActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInformationDialog();
+            }
+        });
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         selectActionModeCallback = new SelectActionModeCallback();
         mAlertBuilder = new AlertDialog.Builder(this);
