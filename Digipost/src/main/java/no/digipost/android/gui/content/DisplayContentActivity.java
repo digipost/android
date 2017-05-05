@@ -16,6 +16,7 @@
 
 package no.digipost.android.gui.content;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -23,9 +24,14 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -177,6 +183,31 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         activity.startActivity(i);
     }
 
+    protected void showInformationDialog() {
+        if (content_type != ApplicationConstants.RECEIPTS && DocumentContentStore.getDocumentParent() != null && DocumentContentStore.getDocumentAttachment() != null) {
+            new AlertDialog.Builder(this).setMessage(getFormattedInfoText()).setNegativeButton(getString(R.string.close), null).show();
+        }
+    }
+
+    private Spanned getFormattedInfoText(){
+        String documentSubject = DocumentContentStore.getDocumentParent().getSubject();
+        String attachmentSubject = DocumentContentStore.getDocumentAttachment().getSubject();
+
+        String infoText = String.format("<b>%1$s</b>", documentSubject);
+
+        if(!attachmentSubject.equals(documentSubject)) {
+            infoText += String.format("<br><br> %1$s ", DocumentContentStore.getDocumentAttachment().getSubject());
+        }
+
+        infoText += String.format("<br><br> %1$s", DocumentContentStore.getDocumentParent().getCreatorName());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(infoText,Html.FROM_HTML_MODE_LEGACY);
+        }else{
+            return Html.fromHtml(infoText);
+        }
+    }
+
     protected void deleteAction(final Activity originActivity) {
 
         String message = getString(R.string.dialog_prompt_delete_document);
@@ -237,10 +268,9 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         finish();
     }
 
-    public void setActionBar(String title, String subTitle) {
+    public void setActionBar(String title) {
         if(getSupportActionBar()!=null) {
             getSupportActionBar().setTitle(title);
-            getSupportActionBar().setSubtitle(subTitle);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
     }
