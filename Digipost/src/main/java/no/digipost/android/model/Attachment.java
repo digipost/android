@@ -42,6 +42,8 @@ public class Attachment {
 	private String type;
 	@JsonProperty
 	private ArrayList<Link> link;
+	@JsonProperty
+	private ArrayList<Metadata> metadata;
     @JsonProperty
     private Invoice invoice;
 	@JsonProperty
