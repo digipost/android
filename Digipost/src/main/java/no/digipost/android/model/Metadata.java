@@ -16,15 +16,50 @@
 
 package no.digipost.android.model;
 
+import no.digipost.android.utilities.FormatUtilities;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+
 import java.util.ArrayList;
+import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 
 public class Metadata {
 
     @JsonProperty
-    private String type;
+    String type;
 
+    @JsonProperty
+    String subTitle;
+
+    @JsonProperty
+    String startTime;
+
+    @JsonProperty
+    String endTime;
+
+    @JsonProperty
+    String arrivalTime;
+
+    @JsonProperty
+    MetadataAddress address;
+
+    @JsonProperty
+    String place;
+
+    @JsonProperty
+    ArrayList<Info> info;
+
+    public Date getStartDate() {
+        return FormatUtilities.getDate(startTime);
+    }
+
+    public Date getEndDate() {
+        return FormatUtilities.getDate(endTime);
+    }
+
+    public Date getArrivalDate() {
+        return FormatUtilities.getDate(arrivalTime);
+    }
 }

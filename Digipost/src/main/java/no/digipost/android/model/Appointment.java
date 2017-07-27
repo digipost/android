@@ -17,37 +17,8 @@
 package no.digipost.android.model;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 
-public class Appointment {
-    String title = "";
-    @JsonProperty
-    String creatorName = "";
-
-    @JsonProperty
-    String startTime;
-
-    @JsonProperty
-    String  endTime;
-
-    @JsonProperty
-    String  arrivalTimeDate;
-
-    String arrivalTime;
-    String place;
-    String streetAddress;
-    String postalCode;
-    String city;
-    @JsonProperty
-    String address;
-    @JsonProperty
-    String subTitle;
-
-    String infoTitle1;
-    String infoText1;
-    String infoTitle2;
-    String infoText2;
+public class Appointment extends Metadata {
 }

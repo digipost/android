@@ -16,6 +16,20 @@
 
 package no.digipost.android.model;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+
 public class MetadataAddress {
+
+    @JsonProperty
+    String city;
+
+    @JsonProperty
+    String postalCode;
+
+    @JsonProperty
+    String streetAddress;
 
 }
