@@ -46,7 +46,7 @@ import no.digipost.android.gui.recyclerview.*;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Receipt;
-import no.digipost.android.utilities.DataFormatUtilities;
+import no.digipost.android.utilities.FormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
@@ -374,7 +374,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             } else if (values[0] instanceof Receipt) {
                 Receipt receipt = (Receipt) values[0];
                 progressDialog.setMessage(format(getString(R.string.delete_progress_receipt), receipt.getStoreName(),
-                        DataFormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()), progress, content.size()));
+                        FormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()), progress, content.size()));
             }
         }
 

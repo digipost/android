@@ -26,7 +26,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.model.Receipt;
-import no.digipost.android.utilities.DataFormatUtilities;
+import no.digipost.android.utilities.FormatUtilities;
 
 import java.util.ArrayList;
 
@@ -145,10 +145,10 @@ public class ReceiptAdapter extends RecyclerView.Adapter<ReceiptAdapter.ReceiptV
 
         public void bindReceipt(Receipt receipt, int position){
             title.setText(receipt.getStoreName());
-            subTitle.setText(DataFormatUtilities.getFormattedAmount(receipt.getAmount()) + " "
-                    + DataFormatUtilities.getFormattedCurrency(receipt.getCurrency()));
+            subTitle.setText(FormatUtilities.getFormattedAmount(receipt.getAmount()) + " "
+                    + FormatUtilities.getFormattedCurrency(receipt.getCurrency()));
             subTitle.setTextColor(context.getResources().getColor(R.color.green));
-            metaTop.setText(DataFormatUtilities.getFormattedDate(receipt.getTimeOfPurchase()));
+            metaTop.setText(FormatUtilities.getFormattedDate(receipt.getTimeOfPurchase()));
 
             boolean selected = isSelected(position);
             checkbox.setChecked(selected);

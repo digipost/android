@@ -16,7 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -24,12 +23,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -325,7 +322,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     private void showPaidInvoiceDialog(Invoice invoice) {
-        String timePaid = DataFormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
+        String timePaid = FormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
 
         String title = getString(R.string.dialog_send_to_bank_paid_title);
         String message = format(getString(R.string.dialog_send_to_bank_paid_message), timePaid);
