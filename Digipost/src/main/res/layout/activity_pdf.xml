@@ -23,6 +23,7 @@
         android:fitsSystemWindows="true">
 
     <include layout="@layout/toolbar"/>
+    <include layout="@layout/metadata_view"/>
 
     <RelativeLayout
             android:id="@+id/pdf_relative_layout"
