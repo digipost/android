@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.model.Metadata;
@@ -61,6 +62,17 @@ public class AppointmentView extends Fragment{
             ((TextView) view.findViewById(R.id.appointment_info2_text)).setVisibility(View.GONE);
         }
 
+        ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addToCalendar(appointment);
+            }
+        });
+
         return view;
+    }
+
+    private void addToCalendar(Metadata appointment){
+
     }
 }

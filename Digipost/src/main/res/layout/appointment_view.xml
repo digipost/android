@@ -173,7 +173,7 @@
             android:text="Legg til i kalender"
             android:layout_width="match_parent"
             android:layout_marginTop="17dp"
-            android:id="@+id/login_idportenButton"
+            android:id="@+id/appointment_add_to_calendar"
             android:background="@drawable/red_button_style"
             android:textColor="@color/white"
             android:textSize="16sp"
