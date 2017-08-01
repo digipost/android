@@ -23,10 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import no.digipost.android.R;
-import no.digipost.android.model.Info;
 import no.digipost.android.model.Metadata;
-
-import java.util.ArrayList;
 
 public class AppointmentView extends Fragment{
 
