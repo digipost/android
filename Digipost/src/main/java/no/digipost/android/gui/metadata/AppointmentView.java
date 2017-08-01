@@ -23,13 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import no.digipost.android.R;
-import no.digipost.android.gui.invoice.AgreementFragment
 import no.digipost.android.model.Metadata;
 
 public class AppointmentView extends Fragment{
 
     private static Metadata appointment;
-    private TextView title, subTitle, dateTitle, time, date, arrivalTitle, arrivalText, placeTitle, placeWhere, placeAddress, infoTitle1, infoText1, infoTitle2, infoText2;
 
     public static AppointmentView newInstance(Metadata appointment) {
         AppointmentView.appointment = appointment;

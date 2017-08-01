@@ -48,7 +48,6 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
-import no.digipost.android.gui.adapters.MetadataAdapter;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
