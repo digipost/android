@@ -231,13 +231,11 @@ public class MuPDFActivity extends DisplayContentActivity {
         intent = getIntent();
         String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
         if (openFilepath != null) {
-            setActionBar(FilenameUtils.getName(openFilepath), null);
+            setActionBar(FilenameUtils.getName(openFilepath));
             core = openFile(openFilepath);
             SearchTaskResult.set(null);
         } else if (core == null && DocumentContentStore.getDocumentContent() != null) {
-            setActionBar(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore
-                    .getDocumentParent()
-                    .getCreatorName());
+            setActionBar(DocumentContentStore.getDocumentAttachment().getSubject());
 
             byte buffer[] = DocumentContentStore.getDocumentContent();
 
