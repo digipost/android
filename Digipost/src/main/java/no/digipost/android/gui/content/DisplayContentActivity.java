@@ -101,11 +101,8 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     protected void setupMetadataView() {
-        this.gridLayout = (GridLayout) findViewById(R.id.document_view_gridview);
-        //this.gridLayout.setAdapter(new MetadataAdapter(getApplicationContext()));
-
         if(content_type != ApplicationConstants.RECEIPTS) {
-         //   showMetadata();
+            showMetadata();
         }
     }
 
@@ -115,15 +112,23 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
             ArrayList<Metadata> metadataList = attachment.getMetadata();
             for (Metadata metadata : metadataList) {
                 if (metadata.type.equals(Metadata.APPOINTMENT)) {
-                    Appointment appointment = (Appointment) metadata;
-                    addAppointmentView(appointment);
+                    addAppointmentView(metadata);
                 }
             }
         }
     }
 
-    private void addAppointmentView(Appointment appointment) {
-        AppointmentView appointmentView = new AppointmentView();
+    private void addAppointmentView(Metadata appointment) {
+        LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container_layout);
+        AppointmentView appointmentView = AppointmentView.newInstance(appointment);
+
+        LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.VERTICAL);
+        ll.setId(12345);
+        getFragmentManager().beginTransaction().add(ll.getId(), appointmentView, "appointmentView").commit();
+
+        containerLayout.addView(ll,0);
+
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {
