@@ -49,7 +49,7 @@
                         android:orientation="vertical"
                         android:minWidth="1dp"
                         android:background="@color/white"
-                        android:layout_height="1000dp">
+                        android:layout_height="600dp">
                 </LinearLayout>
             </GridLayout>
     </ScrollView>
