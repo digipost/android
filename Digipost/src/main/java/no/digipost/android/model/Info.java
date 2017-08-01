@@ -23,8 +23,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Info {
     @JsonProperty
-    String title;
+    public String title;
 
     @JsonProperty
-    String text;
+    public String text;
 }

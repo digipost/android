@@ -29,6 +29,8 @@ public class Metadata {
 
     public static final String APPOINTMENT = "Appointment";
 
+    public String title;
+
     @JsonProperty
     public String type;
 
@@ -51,7 +53,17 @@ public class Metadata {
     public String place;
 
     @JsonProperty
-    ArrayList<Info> info;
+    public ArrayList<Info> info;
+
+    public String getStartTimeString() { return "kl " + startTime;};
+
+    public String getStartDateString() { return startTime;};
+
+    public String getPlace() { return place;}
+
+    public String getPlaceAddress() { return address.streetAddress +", " +  address.postalCode + address.city; }
+
+    public String getArrivalInfo() { return arrivalTime; }
 
     public Date getStartDate() {
         return FormatUtilities.getDate(startTime);

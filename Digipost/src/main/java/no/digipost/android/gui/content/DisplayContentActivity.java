@@ -118,9 +118,9 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     private void addAppointmentView(Metadata appointment) {
+        appointment.title = "Du har fått en innkalling fra " + DocumentContentStore.getDocumentParent().getCreatorName();
         LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container_layout);
         AppointmentView appointmentView = AppointmentView.newInstance(appointment);
-
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.VERTICAL);
         ll.setId(12345);

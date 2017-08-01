@@ -23,7 +23,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import no.digipost.android.R;
+import no.digipost.android.model.Info;
 import no.digipost.android.model.Metadata;
+
+import java.util.ArrayList;
 
 public class AppointmentView extends Fragment{
 
@@ -37,7 +40,29 @@ public class AppointmentView extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.appointment_view, container, false);
-        ((TextView) view.findViewById(R.id.appointment_title)).setText(appointment.subTitle);
+        ((TextView) view.findViewById(R.id.appointment_title)).setText(appointment.title);
+        ((TextView) view.findViewById(R.id.appointment_subtitle)).setText(appointment.subTitle);
+        ((TextView) view.findViewById(R.id.appointment_date_time)).setText(appointment.getStartTimeString());
+        ((TextView) view.findViewById(R.id.appointment_date_date)).setText(appointment.getStartDateString());
+        ((TextView) view.findViewById(R.id.appointment_place_where)).setText(appointment.getPlace());
+        ((TextView) view.findViewById(R.id.appointment_place_address)).setText(appointment.getPlaceAddress());
+        ((TextView) view.findViewById(R.id.appointment_arrival_info_text)).setText(appointment.getArrivalInfo());
+
+        if (appointment.info.size() > 0) {
+            ((TextView) view.findViewById(R.id.appointment_info1_title)).setText(appointment.info.get(0).title);
+            ((TextView) view.findViewById(R.id.appointment_info1_text)).setText(appointment.info.get(0).text);
+        }else{
+            ((TextView) view.findViewById(R.id.appointment_info1_title)).setVisibility(View.GONE);
+            ((TextView) view.findViewById(R.id.appointment_info1_text)).setVisibility(View.GONE);
+        }
+
+        if(appointment.info.size() > 1) {
+            ((TextView) view.findViewById(R.id.appointment_info2_title)).setText(appointment.info.get(1).title);
+            ((TextView) view.findViewById(R.id.appointment_info2_text)).setText(appointment.info.get(1).text);
+        }else{
+            ((TextView) view.findViewById(R.id.appointment_info2_title)).setVisibility(View.GONE);
+            ((TextView) view.findViewById(R.id.appointment_info2_text)).setVisibility(View.GONE);
+        }
 
         return view;
     }
