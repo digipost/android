@@ -23,13 +23,34 @@
         android:fitsSystemWindows="true">
 
     <include layout="@layout/toolbar"/>
-    <include layout="@layout/metadata_view"/>
 
-    <RelativeLayout
-            android:id="@+id/pdf_relative_layout"
+    <ScrollView
             android:layout_width="match_parent"
-            android:background="@color/white"
+            android:background="#F00"
             android:layout_height="match_parent">
-    </RelativeLayout>
 
+            <GridLayout
+                    android:id="@+id/document_view_gridview"
+                    android:layout_width="match_parent"
+                    android:background="#0F0"
+                    android:layout_height="500dp"
+                    android:orientation="vertical"
+                    android:columnCount="1"
+                    >
+
+                <include layout="@layout/appointment_view"
+                         android:layout_height="wrap_content"
+                         android:layout_width="match_parent"/>
+
+                <LinearLayout
+                        android:id="@+id/pdf_relative_layout"
+                        android:layout_width="match_parent"
+                        android:minHeight="1dp"
+                        android:orientation="vertical"
+                        android:minWidth="1dp"
+                        android:background="@color/white"
+                        android:layout_height="1000dp">
+                </LinearLayout>
+            </GridLayout>
+    </ScrollView>
 </LinearLayout>

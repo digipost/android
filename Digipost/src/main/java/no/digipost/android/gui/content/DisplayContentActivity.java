@@ -34,10 +34,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.*;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
@@ -51,10 +48,12 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
+import no.digipost.android.gui.adapters.MetadataAdapter;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.invoice.InvoiceOptionsActivity;
+import no.digipost.android.gui.metadata.AppointmentView;
 import no.digipost.android.model.*;
 import no.digipost.android.utilities.*;
 
@@ -72,6 +71,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     private FolderArrayAdapter folderAdapter;
     private String location;
     private String folderId;
+    private GridLayout gridLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +85,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                 finish();
             }
         }
+
     }
 
     @Override
@@ -97,6 +98,32 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
+
+    protected void setupMetadataView() {
+        this.gridLayout = (GridLayout) findViewById(R.id.document_view_gridview);
+        //this.gridLayout.setAdapter(new MetadataAdapter(getApplicationContext()));
+
+        if(content_type != ApplicationConstants.RECEIPTS) {
+         //   showMetadata();
+        }
+    }
+
+    private void showMetadata() {
+        Attachment attachment = DocumentContentStore.getDocumentAttachment();
+        if (attachment != null && attachment.getMetadata() != null) {
+            ArrayList<Metadata> metadataList = attachment.getMetadata();
+            for (Metadata metadata : metadataList) {
+                if (metadata.type.equals(Metadata.APPOINTMENT)) {
+                    Appointment appointment = (Appointment) metadata;
+                    addAppointmentView(appointment);
+                }
+            }
+        }
+    }
+
+    private void addAppointmentView(Appointment appointment) {
+        AppointmentView appointmentView = new AppointmentView();
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {

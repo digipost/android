@@ -27,26 +27,28 @@ import java.util.Date;
 
 public class Metadata {
 
-    @JsonProperty
-    String type;
+    public static final String APPOINTMENT = "Appointment";
 
     @JsonProperty
-    String subTitle;
+    public String type;
 
     @JsonProperty
-    String startTime;
+    public String subTitle;
 
     @JsonProperty
-    String endTime;
+    public String startTime;
 
     @JsonProperty
-    String arrivalTime;
+    public String endTime;
 
     @JsonProperty
-    MetadataAddress address;
+    public String arrivalTime;
 
     @JsonProperty
-    String place;
+    public MetadataAddress address;
+
+    @JsonProperty
+    public String place;
 
     @JsonProperty
     ArrayList<Info> info;

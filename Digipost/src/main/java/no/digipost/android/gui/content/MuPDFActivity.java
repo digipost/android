@@ -269,6 +269,7 @@ public class MuPDFActivity extends DisplayContentActivity {
         if (super.shouldShowInvoiceOptionsDialog(this)) {
             super.showInvoiceOptionsDialog(this);
         }
+        super.setupMetadataView();
     }
 
 
@@ -317,7 +318,7 @@ public class MuPDFActivity extends DisplayContentActivity {
         };
 
         mDocView.setLinksEnabled(true);
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.pdf_relative_layout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.pdf_relative_layout);
         layout.addView(mDocView);
         layout.setBackgroundResource(R.drawable.login_background);
     }

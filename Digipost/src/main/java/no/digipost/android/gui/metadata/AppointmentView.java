@@ -16,9 +16,16 @@
 
 package no.digipost.android.gui.metadata;
 
-public class AppointmentView {
+import android.app.Fragment;
+import android.os.Bundle;
+import no.digipost.android.model.Appointment;
 
-    public AppointmentView() {
+public class AppointmentView extends Fragment{
 
+    static Appointment appointment;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 }

@@ -3,8 +3,8 @@
               android:id="@+id/appointment_view"
               android:background="@color/white"
               android:orientation="vertical"
-
               android:layout_width="match_parent"
+              android:layout_marginBottom="40dp"
               android:layout_height="wrap_content">
     <TextView
             android:id="@+id/appointment_title"

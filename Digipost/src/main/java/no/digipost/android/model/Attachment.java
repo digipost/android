@@ -113,6 +113,10 @@ public class Attachment {
 		return userKeyEncrypted;
 	}
 
+	public ArrayList<Metadata> getMetadata() {
+		return metadata;
+	}
+
 	public String getContentUri() {
 		for (Link l : link) {
 			if (l.getRel().equals(ApiConstants.URL_RELATIONS_DOCUMENT_GET_CONTENT)) {
