@@ -41,12 +41,12 @@ public class FormatUtilities {
 
     public static String getTimeString(final String date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        return simpleDateFormat.format(getDate(date));
+        return getDate(date) != null ? simpleDateFormat.format(getDate(date)) : null;
     }
 
     public static String getDateString(final String date) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM.dd.yyyy", Locale.getDefault());
-        return simpleDateFormat.format(getDate(date));
+        return getDate(date) != null ? simpleDateFormat.format(getDate(date)) : null;
     }
 
 
