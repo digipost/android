@@ -72,6 +72,13 @@ public class AppointmentView extends Fragment{
         return view;
     }
 
+    private void openMaps(){
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q="+appointment.getPlaceAddress());
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        startActivity(mapIntent);
+    }
+
     private void addToCalendar(Metadata appointment){
 
     }

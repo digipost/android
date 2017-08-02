@@ -43,7 +43,7 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:paddingLeft="25dp"
+            android:paddingLeft="30dp"
             android:paddingRight="25dp"
             android:layout_height="wrap_content">
 
@@ -57,7 +57,7 @@
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:paddingLeft="5dp"
+                android:paddingLeft="10dp"
                 android:layout_height="wrap_content">
             <TextView
                     android:id="@+id/appointment_date_title"
@@ -118,9 +118,9 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:paddingLeft="25dp"
+            android:paddingLeft="30dp"
             android:paddingRight="25dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_height="wrap_content">
         <ImageView
                 android:id="@+id/metadata_place_img"
@@ -133,7 +133,7 @@
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:paddingLeft="5dp"
+                android:paddingLeft="10dp"
                 android:layout_height="wrap_content">
             <TextView
                     android:id="@+id/appointment_place_title"
@@ -154,15 +154,17 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
             />
-
-            <TextView
+            <Button
                     android:id="@+id/appointment_place_address"
                     android:text="Storgata 23, 0011 Oslo"
-                    android:textSize="16sp"
-                    android:textColor="@color/metadata_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textStyle="normal"
+                    android:textSize="16sp"
+                    android:background="@color/transparent"
+                    android:textColor="#005C7A"
                     android:layout_marginTop="10dp"
+                    android:gravity="center"
             />
         </LinearLayout>
     </LinearLayout>
@@ -180,9 +182,8 @@
             android:textAlignment="gravity"
             android:gravity="center"
             android:layout_height="50dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-    />
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
     />
 
     <View
