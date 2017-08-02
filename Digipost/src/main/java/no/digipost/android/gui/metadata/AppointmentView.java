@@ -17,6 +17,8 @@
 package no.digipost.android.gui.metadata;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.model.Metadata;
+
+import java.util.Date;
 
 public class AppointmentView extends Fragment{
 
@@ -43,7 +47,6 @@ public class AppointmentView extends Fragment{
         ((TextView) view.findViewById(R.id.appointment_date_time)).setText(appointment.getStartTimeString());
         ((TextView) view.findViewById(R.id.appointment_date_date)).setText(appointment.getStartDateString());
         ((TextView) view.findViewById(R.id.appointment_place_where)).setText(appointment.getPlace());
-        ((TextView) view.findViewById(R.id.appointment_place_address)).setText(appointment.getPlaceAddress());
         ((TextView) view.findViewById(R.id.appointment_arrival_info_text)).setText(appointment.getArrivalInfo());
 
         if (appointment.info.size() > 0) {
@@ -62,6 +65,15 @@ public class AppointmentView extends Fragment{
             ((TextView) view.findViewById(R.id.appointment_info2_text)).setVisibility(View.GONE);
         }
 
+        ((Button) view.findViewById(R.id.appointment_place_address)).setText(appointment.getPlaceAddress());
+        ((Button) view.findViewById(R.id.appointment_place_address)).setTransformationMethod(null);
+        ((Button) view.findViewById(R.id.appointment_place_address)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openMaps();
+            }
+        });
+        ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setTransformationMethod(null);
         ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
