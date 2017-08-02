@@ -63,7 +63,14 @@ public class Metadata {
 
     public String getPlaceAddress() { return address.streetAddress +", " +  address.postalCode + address.city; }
 
-    public String getArrivalInfo() { return arrivalTime; }
+    public String getArrivalInfo() {
+        String arrivalDateString = FormatUtilities.getTimeString(arrivalTime);
+        if (arrivalDateString != null) {
+            return "kl " + arrivalDateString;
+        } else {
+            return arrivalTime;
+        }
+    }
 
     public Date getStartDate() {
         return FormatUtilities.getDate(startTime);
