@@ -26,13 +26,13 @@
 
     <ScrollView
             android:layout_width="match_parent"
-            android:background="#F00"
+            android:background="#F7F7F7"
             android:layout_height="match_parent">
 
             <GridLayout
                     android:id="@+id/document_view_gridview"
                     android:layout_width="match_parent"
-                    android:background="#0F0"
+                    android:background="#F7F7F7"
                     android:layout_height="500dp"
                     android:orientation="vertical"
                     android:columnCount="1"
