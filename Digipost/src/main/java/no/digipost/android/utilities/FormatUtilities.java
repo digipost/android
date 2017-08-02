@@ -30,7 +30,7 @@ public class FormatUtilities {
     private static final String GUI_DATETIME_FORMAT = "d. MMM yyyy, HH:mm";
 
     public static Date getDate(final String date) {
-        SimpleDateFormat fromApi = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZ", Locale.getDefault());
+        SimpleDateFormat fromApi = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", Locale.getDefault());
         try {
             return fromApi.parse(date);
         }catch (ParseException e){
@@ -39,15 +39,16 @@ public class FormatUtilities {
         return null;
     }
 
-    public static String getDateString(final String date) {
-        SimpleDateFormat guiFormat = new SimpleDateFormat(GUI_DATE_FORMAT, Locale.getDefault());
-        return guiFormat.format(getDate(date));
+    public static String getTimeString(final String date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return simpleDateFormat.format(getDate(date));
     }
 
-    public static String getTimeString(final String date) {
-        SimpleDateFormat guiFormat = new SimpleDateFormat(GUI_DATE_FORMAT, Locale.getDefault());
-        return "kl " + guiFormat.format(getDate(date));
+    public static String getDateString(final String date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM.dd.yyyy", Locale.getDefault());
+        return simpleDateFormat.format(getDate(date));
     }
+
 
     public static String getFormattedDate(final String date) {
         String date_substring = date.substring(0, 10);

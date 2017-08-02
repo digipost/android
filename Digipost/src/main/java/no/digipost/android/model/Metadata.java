@@ -55,9 +55,9 @@ public class Metadata {
     @JsonProperty
     public ArrayList<Info> info;
 
-    public String getStartTimeString() { return "kl " + startTime;};
+    public String getStartTimeString() { return "kl " + FormatUtilities.getTimeString(startTime);};
 
-    public String getStartDateString() { return startTime;};
+    public String getStartDateString() { return FormatUtilities.getDateString(startTime);};
 
     public String getPlace() { return place;}
 
