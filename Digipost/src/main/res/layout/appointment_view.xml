@@ -9,7 +9,7 @@
               android:layout_height="wrap_content">
     <TextView
             android:id="@+id/appointment_title"
-            android:text="Du har fått en innkalling fra Unilabs Røntgen Majorstua"
+            android:text=""
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/metadata_title"
@@ -28,7 +28,7 @@
 
     <TextView
             android:id="@+id/appointment_subtitle"
-            android:text="Undersøke smerter i ryggen"
+            android:text=""
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/metadata_title"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content">
             <TextView
                     android:id="@+id/appointment_date_title"
-                    android:text="Tid:"
+                    android:text="@string/appointment_time"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/metadata_title"
@@ -73,7 +73,7 @@
             />
             <TextView
                     android:id="@+id/appointment_date_time"
-                    android:text="kl 10:00"
+                    android:text=""
                     android:textSize="16sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
             />
             <TextView
                     android:id="@+id/appointment_date_date"
-                    android:text="27.06.2017"
+                    android:text=""
                     android:textSize="16sp"
                     android:textColor="@color/metadata_text"
                     android:layout_width="match_parent"
@@ -99,7 +99,7 @@
 
             <TextView
                     android:id="@+id/appointment_arrival_info_title"
-                    android:text="Oppmøte:"
+                    android:text="@string/appointment_arrival"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/metadata_title"
@@ -108,7 +108,7 @@
             />
             <TextView
                     android:id="@+id/appointment_arrival_info_text"
-                    android:text="kl 10:00"
+                    android:text=""
                     android:textSize="16sp"
                     android:textColor="@color/metadata_text"
                     android:layout_width="match_parent"
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content">
             <TextView
                     android:id="@+id/appointment_place_title"
-                    android:text="Sted:"
+                    android:text="@string/appointment_place"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/metadata_title"
@@ -149,7 +149,7 @@
 
             <TextView
                     android:id="@+id/appointment_place_where"
-                    android:text="Oslo City Røntgen"
+                    android:text=""
                     android:textSize="16sp"
                     android:textColor="@color/metadata_text"
                     android:layout_width="match_parent"
@@ -158,7 +158,7 @@
             />
             <Button
                     android:id="@+id/appointment_place_address"
-                    android:text="Storgata 23, 0011 Oslo"
+                    android:text=""
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textStyle="normal"
@@ -174,7 +174,7 @@
     <!-- legg til i kalender -->
 
     <Button
-            android:text="Legg til i kalender"
+            android:text="@string/add_to_calendar"
             android:layout_width="match_parent"
             android:layout_marginTop="17dp"
             android:id="@+id/appointment_add_to_calendar"
@@ -220,7 +220,7 @@
 
             <TextView
                     android:id="@+id/appointment_info1_title"
-                    android:text="Forberedelser:"
+                    android:text=""
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/metadata_title"
@@ -238,7 +238,7 @@
 
         <TextView
                 android:id="@+id/appointment_info1_text"
-                android:text="Husk å ta med gamle røntgen-bilder hvis du har dette tilgjengelig"
+                android:text=""
                 android:textSize="16sp"
                 android:textColor="@color/metadata_text"
                 android:layout_width="match_parent"
@@ -248,7 +248,7 @@
 
         <TextView
                 android:id="@+id/appointment_info2_title"
-                android:text="Forberedelser:"
+                android:text=""
                 android:textSize="16sp"
                 android:textColor="@color/metadata_title"
                 android:textStyle="bold"
@@ -260,9 +260,7 @@
 
         <TextView
                 android:id="@+id/appointment_info2_text"
-                android:text="Din time omfattes av undersøkelseskvoten det offentlige har tildelt Posten Norge AS. Henvisningen gir deg
-også rett til å velge andre undersøkelsessteder. Informasjon om ventetider og rettigheter angående fritt behandlingsvalg får du på https://helsenorge.no/velg-behandlingssted og telefon.
-Ta gjerne kontakt med Unilabs på telefon om du har spørsmål. Du finner mer informasjon om oss på www.unilabs.no"
+                android:text=""
                 android:textSize="16sp"
                 android:textColor="@color/metadata_text"
                 android:layout_width="match_parent"
