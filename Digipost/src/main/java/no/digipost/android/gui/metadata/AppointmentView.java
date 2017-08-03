@@ -94,6 +94,16 @@ public class AppointmentView extends Fragment{
         return view;
     }
 
+    private void checkPermissions(int callbackId, String... permissionsId) {
+        boolean permissions = true;
+        for (String p : permissionsId) {
+            permissions = permissions && ContextCompat.checkSelfPermission(getActivity(), p) == PackageManager.PERMISSION_GRANTED;
+        }
+
+        if (!permissions)
+            ActivityCompat.requestPermissions(getActivity(), permissionsId, callbackId);
+    }
+
     private void openMaps(String address){
         Uri gmmIntentUri = Uri.parse("geo:0,0?q="+address);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -126,5 +136,6 @@ public class AppointmentView extends Fragment{
         });
 
         builder.create().show();
+        this.checkPermissions(42, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
     }
 }
