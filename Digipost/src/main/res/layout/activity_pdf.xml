@@ -29,28 +29,20 @@
             android:background="#F7F7F7"
             android:layout_height="match_parent">
 
-            <GridLayout
-                    android:id="@+id/document_view_gridview"
+        <LinearLayout
+                android:id="@+id/container_layout"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+            <LinearLayout
+                    android:id="@+id/pdf_relative_layout"
                     android:layout_width="match_parent"
-                    android:background="#F7F7F7"
-                    android:layout_height="500dp"
+                    android:minHeight="1dp"
                     android:orientation="vertical"
-                    android:columnCount="1"
-                    >
-
-                <include layout="@layout/appointment_view"
-                         android:layout_height="wrap_content"
-                         android:layout_width="match_parent"/>
-
-                <LinearLayout
-                        android:id="@+id/pdf_relative_layout"
-                        android:layout_width="match_parent"
-                        android:minHeight="1dp"
-                        android:orientation="vertical"
-                        android:minWidth="1dp"
-                        android:background="@color/white"
-                        android:layout_height="600dp">
-                </LinearLayout>
-            </GridLayout>
+                    android:minWidth="1dp"
+                    android:background="@color/white"
+                    android:layout_height="600dp">
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 </LinearLayout>
