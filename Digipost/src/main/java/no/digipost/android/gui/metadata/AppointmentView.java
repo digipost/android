@@ -16,7 +16,10 @@
 
 package no.digipost.android.gui.metadata;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,71 +30,101 @@ import android.widget.Button;
 import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.model.Metadata;
+import no.digipost.android.utilities.DialogUtitities;
 
 import java.util.Date;
 
 public class AppointmentView extends Fragment{
 
-    private static Metadata appointment;
+    private static Metadata staticAppointment;
+    private Activity activity;
 
-    public static AppointmentView newInstance(Metadata appointment) {
-        AppointmentView.appointment = appointment;
+    public static AppointmentView newInstance(final Metadata appointment) {
+        staticAppointment = appointment;
         return new AppointmentView();
+    }
+
+    public void updateActivity(Activity activity) {
+        activity = activity;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.appointment_view, container, false);
-        ((TextView) view.findViewById(R.id.appointment_title)).setText(appointment.title);
-        ((TextView) view.findViewById(R.id.appointment_subtitle)).setText(appointment.subTitle);
-        ((TextView) view.findViewById(R.id.appointment_date_time)).setText(appointment.getStartTimeString());
-        ((TextView) view.findViewById(R.id.appointment_date_date)).setText(appointment.getStartDateString());
-        ((TextView) view.findViewById(R.id.appointment_place_where)).setText(appointment.getPlace());
-        ((TextView) view.findViewById(R.id.appointment_arrival_info_text)).setText(appointment.getArrivalInfo());
 
-        if (appointment.info.size() > 0) {
-            ((TextView) view.findViewById(R.id.appointment_info1_title)).setText(appointment.info.get(0).title);
-            ((TextView) view.findViewById(R.id.appointment_info1_text)).setText(appointment.info.get(0).text);
+        View view = inflater.inflate(R.layout.appointment_view, container, false);
+        ((TextView) view.findViewById(R.id.appointment_title)).setText(staticAppointment.title);
+        ((TextView) view.findViewById(R.id.appointment_subtitle)).setText(staticAppointment.subTitle);
+        ((TextView) view.findViewById(R.id.appointment_date_time)).setText(staticAppointment.getStartTimeString());
+        ((TextView) view.findViewById(R.id.appointment_date_date)).setText(staticAppointment.getStartDateString());
+        ((TextView) view.findViewById(R.id.appointment_place_where)).setText(staticAppointment.getPlace());
+        ((TextView) view.findViewById(R.id.appointment_arrival_info_text)).setText(staticAppointment.getArrivalInfo());
+
+        if (staticAppointment.info.size() > 0) {
+            ((TextView) view.findViewById(R.id.appointment_info1_title)).setText(staticAppointment.info.get(0).title);
+            ((TextView) view.findViewById(R.id.appointment_info1_text)).setText(staticAppointment.info.get(0).text);
         }else{
             ((TextView) view.findViewById(R.id.appointment_info1_title)).setVisibility(View.GONE);
             ((TextView) view.findViewById(R.id.appointment_info1_text)).setVisibility(View.GONE);
         }
 
-        if(appointment.info.size() > 1) {
-            ((TextView) view.findViewById(R.id.appointment_info2_title)).setText(appointment.info.get(1).title);
-            ((TextView) view.findViewById(R.id.appointment_info2_text)).setText(appointment.info.get(1).text);
+        if(staticAppointment.info.size() > 1) {
+            ((TextView) view.findViewById(R.id.appointment_info2_title)).setText(staticAppointment.info.get(1).title);
+            ((TextView) view.findViewById(R.id.appointment_info2_text)).setText(staticAppointment.info.get(1).text);
         }else{
             ((TextView) view.findViewById(R.id.appointment_info2_title)).setVisibility(View.GONE);
             ((TextView) view.findViewById(R.id.appointment_info2_text)).setVisibility(View.GONE);
         }
 
-        ((Button) view.findViewById(R.id.appointment_place_address)).setText(appointment.getPlaceAddress());
+        ((Button) view.findViewById(R.id.appointment_place_address)).setText(staticAppointment.getPlaceAddress());
         ((Button) view.findViewById(R.id.appointment_place_address)).setTransformationMethod(null);
         ((Button) view.findViewById(R.id.appointment_place_address)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openMaps();
+                openMaps(staticAppointment.getPlaceAddress());
             }
         });
         ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setTransformationMethod(null);
         ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addToCalendar(appointment);
+                showCalendarDialog(staticAppointment);
             }
         });
 
         return view;
     }
 
-    private void openMaps(){
-        Uri gmmIntentUri = Uri.parse("geo:0,0?q="+appointment.getPlaceAddress());
+    private void openMaps(String address){
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q="+address);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
     }
 
     private void addToCalendar(Metadata appointment){
+        Date startDate = appointment.getStartDate();
+        Date endDate = appointment.getStartDate();
+    }
 
+    private void showCalendarDialog(final Metadata appointment) {
+        String title = getString(R.string.add_to_calendar);
+        String message = appointment.subTitle
+                + "\n\n" + appointment.getStartDateString() + " - " + appointment.getStartTimeString()
+                + "\n\n" + getString(R.string.appointment_calendar_disclaimer) ;
+
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(getActivity(), message, title);
+
+        builder.setPositiveButton(getString(R.string.add_to_calendar), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                addToCalendar(appointment);
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+
+        builder.create().show();
     }
 }
