@@ -16,13 +16,20 @@
 
 package no.digipost.android.gui.metadata;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +39,7 @@ import no.digipost.android.R;
 import no.digipost.android.model.Metadata;
 import no.digipost.android.utilities.DialogUtitities;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class AppointmentView extends Fragment{
@@ -111,18 +119,8 @@ public class AppointmentView extends Fragment{
         startActivity(mapIntent);
     }
 
-    private void addToCalendar(Metadata appointment){
-        Date startDate = appointment.getStartDate();
-        Date endDate = appointment.getStartDate();
-    }
-
     private void showCalendarDialog(final Metadata appointment) {
-        String title = getString(R.string.add_to_calendar);
-        String message = appointment.subTitle
-                + "\n\n" + appointment.getStartDateString() + " - " + appointment.getStartTimeString()
-                + "\n\n" + getString(R.string.appointment_calendar_disclaimer) ;
-
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(getActivity(), message, title);
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(getActivity(), getString(R.string.appointment_calendar_disclaimer), appointment.subTitle);
 
         builder.setPositiveButton(getString(R.string.add_to_calendar), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
@@ -137,5 +135,30 @@ public class AppointmentView extends Fragment{
 
         builder.create().show();
         this.checkPermissions(42, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
+
     }
+
+    private void addToCalendar(Metadata appointment){
+        String description = appointment.subTitle + "\n\n" + appointment.getInfoTitleAndText();
+
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.setTime(appointment.getStartDate());
+
+        Calendar endTime = Calendar.getInstance();
+        endTime.setTime(appointment.getEndDate());
+
+        ContentResolver cr = getActivity().getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.DTSTART, beginTime.getTimeInMillis());
+        values.put(CalendarContract.Events.DTEND, endTime.getTimeInMillis());
+        values.put(CalendarContract.Events.TITLE, appointment.subTitle);
+        values.put(CalendarContract.Events.EVENT_LOCATION, appointment.getPlaceAddress() + " - " + appointment.getPlace());
+        values.put(CalendarContract.Events.DESCRIPTION, description);
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, beginTime.getTimeZone().toString());
+        values.put(CalendarContract.Events.CALENDAR_ID, 1);
+        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+
+    }
+
+
 }

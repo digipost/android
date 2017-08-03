@@ -72,6 +72,14 @@ public class Metadata {
         }
     }
 
+    public String getInfoTitleAndText() {
+        String infoText = "";
+        for (Info i : info) {
+            infoText += i.title + "\n" + i.text + "\n\n";
+        }
+        return infoText;
+    }
+
     public Date getStartDate() {
         return FormatUtilities.getDate(startTime);
     }
