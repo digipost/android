@@ -107,7 +107,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
     private void showMetadata() {
         Attachment attachment = DocumentContentStore.getDocumentAttachment();
-        if (attachment != null && attachment.getMetadata() != null) {
+        if (DocumentContentStore.getDocumentAttachment() != null) {
             ArrayList<Metadata> metadataList = attachment.getMetadata();
             for (Metadata metadata : metadataList) {
                 if (metadata.type.equals(Metadata.APPOINTMENT)) {
@@ -120,11 +120,13 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     private void addAppointmentView(Metadata appointment) {
         appointment.title = "Du har fått en innkalling fra " + DocumentContentStore.getDocumentParent().getCreatorName();
         LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container_layout);
-        AppointmentView appointmentView = AppointmentView.newInstance(appointment);
+        AppointmentView appointmentView = AppointmentView.newInstance();
+        appointmentView.setAppointment(appointment);
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setId(12345);
-        getFragmentManager().beginTransaction().add(ll.getId(), appointmentView, "appointmentView").commit();
+        int randomId = (int) (Math.random()*100);
+        ll.setId(randomId);
+        getFragmentManager().beginTransaction().add(ll.getId(), appointmentView, "appointmentView" + randomId).commit();
 
         containerLayout.addView(ll,0);
 

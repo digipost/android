@@ -38,64 +38,59 @@ import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.model.Metadata;
 import no.digipost.android.utilities.DialogUtitities;
-
 import java.util.Calendar;
-import java.util.Date;
 
 public class AppointmentView extends Fragment{
 
-    private static Metadata staticAppointment;
-    private Activity activity;
+    private Metadata appointment;
 
-    public static AppointmentView newInstance(final Metadata appointment) {
-        staticAppointment = appointment;
+    public static AppointmentView newInstance() {
         return new AppointmentView();
     }
 
-    public void updateActivity(Activity activity) {
-        activity = activity;
+    public void setAppointment(Metadata appointment) {
+        this.appointment = appointment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.appointment_view, container, false);
-        ((TextView) view.findViewById(R.id.appointment_title)).setText(staticAppointment.title);
-        ((TextView) view.findViewById(R.id.appointment_subtitle)).setText(staticAppointment.subTitle);
-        ((TextView) view.findViewById(R.id.appointment_date_time)).setText(staticAppointment.getStartTimeString());
-        ((TextView) view.findViewById(R.id.appointment_date_date)).setText(staticAppointment.getStartDateString());
-        ((TextView) view.findViewById(R.id.appointment_place_where)).setText(staticAppointment.getPlace());
-        ((TextView) view.findViewById(R.id.appointment_arrival_info_text)).setText(staticAppointment.getArrivalInfo());
+        ((TextView) view.findViewById(R.id.appointment_title)).setText(appointment.title);
+        ((TextView) view.findViewById(R.id.appointment_subtitle)).setText(appointment.subTitle);
+        ((TextView) view.findViewById(R.id.appointment_date_time)).setText(appointment.getStartTimeString());
+        ((TextView) view.findViewById(R.id.appointment_date_date)).setText(appointment.getStartDateString());
+        ((TextView) view.findViewById(R.id.appointment_place_where)).setText(appointment.getPlace());
+        ((TextView) view.findViewById(R.id.appointment_arrival_info_text)).setText(appointment.getArrivalInfo());
 
-        if (staticAppointment.info.size() > 0) {
-            ((TextView) view.findViewById(R.id.appointment_info1_title)).setText(staticAppointment.info.get(0).title);
-            ((TextView) view.findViewById(R.id.appointment_info1_text)).setText(staticAppointment.info.get(0).text);
+        if (appointment.info.size() > 0) {
+            ((TextView) view.findViewById(R.id.appointment_info1_title)).setText(appointment.info.get(0).title);
+            ((TextView) view.findViewById(R.id.appointment_info1_text)).setText(appointment.info.get(0).text);
         }else{
             ((TextView) view.findViewById(R.id.appointment_info1_title)).setVisibility(View.GONE);
             ((TextView) view.findViewById(R.id.appointment_info1_text)).setVisibility(View.GONE);
         }
 
-        if(staticAppointment.info.size() > 1) {
-            ((TextView) view.findViewById(R.id.appointment_info2_title)).setText(staticAppointment.info.get(1).title);
-            ((TextView) view.findViewById(R.id.appointment_info2_text)).setText(staticAppointment.info.get(1).text);
+        if(appointment.info.size() > 1) {
+            ((TextView) view.findViewById(R.id.appointment_info2_title)).setText(appointment.info.get(1).title);
+            ((TextView) view.findViewById(R.id.appointment_info2_text)).setText(appointment.info.get(1).text);
         }else{
             ((TextView) view.findViewById(R.id.appointment_info2_title)).setVisibility(View.GONE);
             ((TextView) view.findViewById(R.id.appointment_info2_text)).setVisibility(View.GONE);
         }
 
-        ((Button) view.findViewById(R.id.appointment_place_address)).setText(staticAppointment.getPlaceAddress());
+        ((Button) view.findViewById(R.id.appointment_place_address)).setText(appointment.getPlaceAddress());
         ((Button) view.findViewById(R.id.appointment_place_address)).setTransformationMethod(null);
         ((Button) view.findViewById(R.id.appointment_place_address)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openMaps(staticAppointment.getPlaceAddress());
+                openMaps(appointment.getPlaceAddress());
             }
         });
         ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setTransformationMethod(null);
         ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCalendarDialog(staticAppointment);
+                showCalendarDialog(appointment);
             }
         });
 
