@@ -37,9 +37,7 @@
             <LinearLayout
                     android:id="@+id/pdf_relative_layout"
                     android:layout_width="match_parent"
-                    android:minHeight="1dp"
                     android:orientation="vertical"
-                    android:minWidth="1dp"
                     android:background="@color/white"
                     android:layout_height="600dp">
             </LinearLayout>
