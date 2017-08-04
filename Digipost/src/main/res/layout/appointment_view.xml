@@ -5,18 +5,20 @@
               android:background="@color/white"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:paddingBottom="40dp"
+              android:paddingBottom="50dp"
+              android:layout_marginBottom="10dp"
               android:layout_height="wrap_content">
     <TextView
             android:id="@+id/appointment_title"
             android:text=""
             android:textSize="20sp"
+            android:lineSpacingMultiplier="1.2"
             android:textStyle="bold"
             android:textColor="@color/metadata_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
     />
@@ -29,13 +31,14 @@
     <TextView
             android:id="@+id/appointment_subtitle"
             android:text=""
+            android:lineSpacingMultiplier="1.2"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/metadata_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:paddingLeft="25dp"
             android:paddingRight="25dp"
     />
@@ -75,24 +78,16 @@
                     android:id="@+id/appointment_date_time"
                     android:text=""
                     android:textSize="16sp"
+                    android:lineSpacingMultiplier="1.2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/metadata_text"
 
             />
-            <TextView
-                    android:id="@+id/appointment_date_date"
-                    android:text=""
-                    android:textSize="16sp"
-                    android:textColor="@color/metadata_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-            />
         </LinearLayout>
         <LinearLayout
-                android:paddingLeft="15dp"
+                android:paddingLeft="30dp"
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -110,6 +105,7 @@
                     android:id="@+id/appointment_arrival_info_text"
                     android:text=""
                     android:textSize="16sp"
+                    android:lineSpacingMultiplier="1.2"
                     android:textColor="@color/metadata_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -165,7 +161,6 @@
                     android:textSize="16sp"
                     android:background="@color/transparent"
                     android:textColor="#0E63B0"
-                    android:layout_marginTop="10dp"
                     android:gravity="center"
             />
         </LinearLayout>
@@ -244,6 +239,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:lineSpacingMultiplier="1.2"
         />
 
         <TextView
@@ -254,7 +250,7 @@
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
         />
 
 
@@ -266,6 +262,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:lineSpacingMultiplier="1.2"
         />
         </LinearLayout>
     </LinearLayout>

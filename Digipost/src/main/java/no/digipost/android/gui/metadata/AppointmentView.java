@@ -57,8 +57,7 @@ public class AppointmentView extends Fragment{
         View view = inflater.inflate(R.layout.appointment_view, container, false);
         ((TextView) view.findViewById(R.id.appointment_title)).setText(appointment.title);
         ((TextView) view.findViewById(R.id.appointment_subtitle)).setText(appointment.subTitle);
-        ((TextView) view.findViewById(R.id.appointment_date_time)).setText(appointment.getStartTimeString());
-        ((TextView) view.findViewById(R.id.appointment_date_date)).setText(appointment.getStartDateString());
+        ((TextView) view.findViewById(R.id.appointment_date_time)).setText(appointment.getStartTimeString() + "\n" + appointment.getStartDateString());
         ((TextView) view.findViewById(R.id.appointment_place_where)).setText(appointment.getPlace());
         ((TextView) view.findViewById(R.id.appointment_arrival_info_text)).setText(appointment.getArrivalInfo());
 
@@ -115,7 +114,7 @@ public class AppointmentView extends Fragment{
     }
 
     private void showCalendarDialog(final Metadata appointment) {
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(getActivity(), getString(R.string.appointment_calendar_disclaimer), appointment.subTitle);
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(getActivity(), getString(R.string.appointment_calendar_disclaimer), getString(R.string.add_to_calendar));
 
         builder.setPositiveButton(getString(R.string.add_to_calendar), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
