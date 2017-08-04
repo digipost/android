@@ -28,13 +28,18 @@ public class FormatUtilities {
     private static final String GUI_DATE_FORMAT = "d. MMM yyyy";
     private static final String API_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm";
     private static final String GUI_DATETIME_FORMAT = "d. MMM yyyy, HH:mm";
+    private static final String TIME_FORMAT_WITH_MILLIS = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ";
+    private static final String TIME_FORMAT_WITHOUT_MILLIS = "yyyy-MM-dd'T'HH:mm:ssZZZ";
 
     public static Date getDate(final String date) {
-        SimpleDateFormat fromApi = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", Locale.getDefault());
         try {
-            return fromApi.parse(date);
-        }catch (ParseException e){
-            // Ignore
+            return new SimpleDateFormat(TIME_FORMAT_WITH_MILLIS, Locale.getDefault()).parse(date);
+        }catch (ParseException e1){
+            try {
+                return new SimpleDateFormat(TIME_FORMAT_WITHOUT_MILLIS, Locale.getDefault()).parse(date);
+            }catch (ParseException e2) {
+                //Ignore
+            }
         }
         return null;
     }
