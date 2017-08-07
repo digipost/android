@@ -24,11 +24,23 @@
 
     <include layout="@layout/toolbar"/>
 
-    <RelativeLayout
-            android:id="@+id/pdf_relative_layout"
+    <ScrollView
             android:layout_width="match_parent"
-            android:background="@color/white"
+            android:background="#F7F7F7"
             android:layout_height="match_parent">
-    </RelativeLayout>
 
+        <LinearLayout
+                android:id="@+id/container_layout"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+            <LinearLayout
+                    android:id="@+id/pdf_relative_layout"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:background="@color/white"
+                    android:layout_height="600dp">
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

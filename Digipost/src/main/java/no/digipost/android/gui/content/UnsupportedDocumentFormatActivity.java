@@ -54,7 +54,7 @@ public class UnsupportedDocumentFormatActivity extends DisplayContentActivity {
             finish();
             return;
         }
-        setActionBar(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore.getDocumentParent().getCreatorName());
+        setActionBar(DocumentContentStore.getDocumentAttachment().getSubject());
         TextView message = (TextView) findViewById(R.id.unsupported_message);
         message.setText(format(getString(R.string.unsupported_message_top), DocumentContentStore.getDocumentAttachment().getFileType()));
 

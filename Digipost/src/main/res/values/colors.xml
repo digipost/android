@@ -65,4 +65,10 @@
     <!-- Screenlock -->
     <color name="screenlock_header_background">#1F1F1F</color>
 
+    <!-- metadata -->
+
+    <color name="metadata_title">#212121</color>
+    <color name="metadata_text">#2E2E2E</color>
+    <color name="metadata_divider">#EDEDED</color>
+
 </resources>

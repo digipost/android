@@ -16,7 +16,6 @@
 
 package no.digipost.android.gui.content;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -24,12 +23,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -37,10 +34,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.*;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
@@ -58,6 +52,7 @@ import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.invoice.InvoiceOptionsActivity;
+import no.digipost.android.gui.metadata.AppointmentView;
 import no.digipost.android.model.*;
 import no.digipost.android.utilities.*;
 
@@ -75,6 +70,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     private FolderArrayAdapter folderAdapter;
     private String location;
     private String folderId;
+    private GridLayout gridLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +84,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                 finish();
             }
         }
+
     }
 
     @Override
@@ -100,6 +97,39 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
+
+    protected void setupMetadataView() {
+        if(content_type != ApplicationConstants.RECEIPTS) {
+            showMetadata();
+        }
+    }
+
+    private void showMetadata() {
+        Attachment attachment = DocumentContentStore.getDocumentAttachment();
+        if (DocumentContentStore.getDocumentAttachment() != null) {
+            ArrayList<Metadata> metadataList = attachment.getMetadata();
+            for (Metadata metadata : metadataList) {
+                if (metadata.type.equals(Metadata.APPOINTMENT)) {
+                    addAppointmentView(metadata);
+                }
+            }
+        }
+    }
+
+    private void addAppointmentView(Metadata appointment) {
+        appointment.title = "Du har fått en innkalling fra " + DocumentContentStore.getDocumentParent().getCreatorName();
+        LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container_layout);
+        AppointmentView appointmentView = AppointmentView.newInstance();
+        appointmentView.setAppointment(appointment);
+        LinearLayout ll = new LinearLayout(this);
+        ll.setOrientation(LinearLayout.VERTICAL);
+        int randomId = (int) (Math.random()*100);
+        ll.setId(randomId);
+        getFragmentManager().beginTransaction().add(ll.getId(), appointmentView, "appointmentView" + randomId).commit();
+
+        containerLayout.addView(ll,0);
+
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {
@@ -325,7 +355,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     private void showPaidInvoiceDialog(Invoice invoice) {
-        String timePaid = DataFormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
+        String timePaid = FormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
 
         String title = getString(R.string.dialog_send_to_bank_paid_title);
         String message = format(getString(R.string.dialog_send_to_bank_paid_message), timePaid);

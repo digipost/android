@@ -16,6 +16,15 @@
 
 package no.digipost.android.model;
 
-public class Content {
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+
+public class Info {
+    @JsonProperty
+    public String title;
+
+    @JsonProperty
+    public String text;
 }

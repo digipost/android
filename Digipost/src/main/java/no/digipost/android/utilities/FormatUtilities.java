@@ -19,17 +19,45 @@ package no.digipost.android.utilities;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
-public class DataFormatUtilities {
-    public static final String API_DATE_FORMAT = "yyyy-MM-dd";
-    public static final String GUI_DATE_FORMAT = "d. MMM yyyy";
-    public static final String API_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm";
-    public static final String GUI_DATETIME_FORMAT = "d. MMM yyyy, HH:mm";
+public class FormatUtilities {
+
+    private static final String API_DATE_FORMAT = "yyyy-MM-dd";
+    private static final String GUI_DATE_FORMAT = "d. MMM yyyy";
+    private static final String API_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm";
+    private static final String GUI_DATETIME_FORMAT = "d. MMM yyyy, HH:mm";
+    private static final String TIME_FORMAT_WITH_MILLIS = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ";
+    private static final String TIME_FORMAT_WITHOUT_MILLIS = "yyyy-MM-dd'T'HH:mm:ssZZZ";
+
+    public static Date getDate(final String date) {
+        try {
+            return new SimpleDateFormat(TIME_FORMAT_WITH_MILLIS, Locale.getDefault()).parse(date);
+        }catch (ParseException e1){
+            try {
+                return new SimpleDateFormat(TIME_FORMAT_WITHOUT_MILLIS, Locale.getDefault()).parse(date);
+            }catch (ParseException e2) {
+                //Ignore
+            }
+        }
+        return null;
+    }
+
+    public static String getTimeString(final String date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        return getDate(date) != null ? simpleDateFormat.format(getDate(date)) : null;
+    }
+
+    public static String getDateString(final String date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM.dd.yyyy", Locale.getDefault());
+        return getDate(date) != null ? simpleDateFormat.format(getDate(date)) : null;
+    }
+
 
     public static String getFormattedDate(final String date) {
         String date_substring = date.substring(0, 10);
-        SimpleDateFormat fromApi = new SimpleDateFormat(API_DATE_FORMAT);
+        SimpleDateFormat fromApi = new SimpleDateFormat(API_DATE_FORMAT, Locale.getDefault());
         SimpleDateFormat guiFormat = new SimpleDateFormat(GUI_DATE_FORMAT, Locale.getDefault());
         String formatted = null;
         try {
@@ -42,7 +70,7 @@ public class DataFormatUtilities {
 
     public static String getFormattedDateTime(final String date) {
         String date_substring = date.substring(0, 16);
-        SimpleDateFormat fromApi = new SimpleDateFormat(API_DATETIME_FORMAT);
+        SimpleDateFormat fromApi = new SimpleDateFormat(API_DATETIME_FORMAT, Locale.getDefault());
         SimpleDateFormat guiFormat = new SimpleDateFormat(GUI_DATETIME_FORMAT, Locale.getDefault());
         String formatted = null;
         try {

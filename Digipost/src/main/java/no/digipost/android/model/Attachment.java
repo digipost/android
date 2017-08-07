@@ -42,6 +42,8 @@ public class Attachment {
 	private String type;
 	@JsonProperty
 	private ArrayList<Link> link;
+	@JsonProperty
+	private ArrayList<Metadata> metadata;
     @JsonProperty
     private Invoice invoice;
 	@JsonProperty
@@ -109,6 +111,10 @@ public class Attachment {
 
 	public boolean isUserKeyEncrypted() {
 		return userKeyEncrypted;
+	}
+
+	public ArrayList<Metadata> getMetadata() {
+		return metadata;
 	}
 
 	public String getContentUri() {

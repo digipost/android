@@ -32,7 +32,7 @@ import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Receipt;
-import no.digipost.android.utilities.DataFormatUtilities;
+import no.digipost.android.utilities.FormatUtilities;
 
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
@@ -58,6 +58,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         if (super.shouldShowInvoiceOptionsDialog(this)) {
             super.showInvoiceOptionsDialog(this);
         }
+        super.setupMetadataView();
     }
 
     @Override
@@ -155,7 +156,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
                 } else {
                     Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
                     getSupportActionBar().setTitle(receiptMeta.getStoreName());
-                    getSupportActionBar().setSubtitle(DataFormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+                    getSupportActionBar().setSubtitle(FormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
                 }
             }
         } catch (NullPointerException e) {

@@ -30,7 +30,7 @@ import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Document;
-import no.digipost.android.utilities.DataFormatUtilities;
+import no.digipost.android.utilities.FormatUtilities;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -187,7 +187,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
         public void bindDocument(Document document, int position){
             title.setText(document.getSubject());
             subTitle.setText(getSubTitleText(document));
-            metaTop.setText(DataFormatUtilities.getFormattedDate(document.getCreated()));
+            metaTop.setText(FormatUtilities.getFormattedDate(document.getCreated()));
 
             if (!document.isRead()) {
                 itemView.setBackgroundResource(R.drawable.content_list_item_unread);

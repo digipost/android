@@ -22,10 +22,23 @@
 
     <include layout="@layout/toolbar"/>
 
-    <WebView
-            android:id="@+id/web_html"
-            android:layout_width="fill_parent"
-            android:layout_height="0sp"
-            android:layout_weight="1"/>
+    <ScrollView
+            android:layout_width="match_parent"
+            android:background="#F7F7F7"
+            android:layout_height="match_parent">
+        
+        <LinearLayout
+                android:id="@+id/container_layout"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:background="#F7F7F7"
+                android:layout_height="match_parent">
+            <WebView
+                    android:id="@+id/web_html"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+            />
+        </LinearLayout>
 
+    </ScrollView>
 </LinearLayout>

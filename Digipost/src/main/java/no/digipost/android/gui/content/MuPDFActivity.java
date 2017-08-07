@@ -231,13 +231,11 @@ public class MuPDFActivity extends DisplayContentActivity {
         intent = getIntent();
         String openFilepath = intent.getStringExtra(ACTION_OPEN_FILEPATH);
         if (openFilepath != null) {
-            setActionBar(FilenameUtils.getName(openFilepath), null);
+            setActionBar(FilenameUtils.getName(openFilepath));
             core = openFile(openFilepath);
             SearchTaskResult.set(null);
         } else if (core == null && DocumentContentStore.getDocumentContent() != null) {
-            setActionBar(DocumentContentStore.getDocumentAttachment().getSubject(), DocumentContentStore
-                    .getDocumentParent()
-                    .getCreatorName());
+            setActionBar(DocumentContentStore.getDocumentAttachment().getSubject());
 
             byte buffer[] = DocumentContentStore.getDocumentContent();
 
@@ -269,6 +267,7 @@ public class MuPDFActivity extends DisplayContentActivity {
         if (super.shouldShowInvoiceOptionsDialog(this)) {
             super.showInvoiceOptionsDialog(this);
         }
+        super.setupMetadataView();
     }
 
 
@@ -317,9 +316,9 @@ public class MuPDFActivity extends DisplayContentActivity {
         };
 
         mDocView.setLinksEnabled(true);
-        RelativeLayout layout = (RelativeLayout) findViewById(R.id.pdf_relative_layout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.pdf_relative_layout);
         layout.addView(mDocView);
-        layout.setBackgroundResource(R.drawable.login_background);
+        layout.setBackgroundResource(R.drawable.document_background);
     }
 
     @Override
