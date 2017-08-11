@@ -17,7 +17,6 @@
 package no.digipost.android.gui.metadata;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
