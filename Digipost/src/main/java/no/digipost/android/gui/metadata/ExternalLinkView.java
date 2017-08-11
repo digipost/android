@@ -17,6 +17,11 @@
 package no.digipost.android.gui.metadata;
 
 import android.app.Fragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import no.digipost.android.R;
 import no.digipost.android.model.Metadata;
 
 public class ExternalLinkView extends Fragment{
@@ -31,4 +36,9 @@ public class ExternalLinkView extends Fragment{
         this.externallink = externallink;
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.externallink_view, container, false);
+        return view;
+    }
 }
