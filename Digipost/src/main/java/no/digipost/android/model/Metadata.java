@@ -31,6 +31,12 @@ public class Metadata {
 
     public String title;
 
+    public String text;
+
+    public String deadline;
+
+    public String url;
+
     @JsonProperty
     public String type;
 
