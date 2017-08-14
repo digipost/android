@@ -28,6 +28,7 @@ import java.util.Date;
 public class Metadata {
 
     public static final String APPOINTMENT = "Appointment";
+    public static final String EXTERNAL_LINK = "ExternalLink";
 
     public String title;
 

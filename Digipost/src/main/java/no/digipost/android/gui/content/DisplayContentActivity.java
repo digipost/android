@@ -18,6 +18,7 @@ package no.digipost.android.gui.content;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -53,6 +54,7 @@ import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.invoice.InvoiceOptionsActivity;
 import no.digipost.android.gui.metadata.AppointmentView;
+import no.digipost.android.gui.metadata.ExternalLinkView;
 import no.digipost.android.model.*;
 import no.digipost.android.utilities.*;
 
@@ -109,27 +111,40 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         Attachment attachment = DocumentContentStore.getDocumentAttachment();
         if (DocumentContentStore.getDocumentAttachment() != null) {
             ArrayList<Metadata> metadataList = attachment.getMetadata();
-            for (Metadata metadata : metadataList) {
-                if (metadata.type.equals(Metadata.APPOINTMENT)) {
-                    addAppointmentView(metadata);
+            if(metadataList != null) {
+                for (Metadata metadata : metadataList) {
+                    if (metadata.type.equals(Metadata.APPOINTMENT)) {
+                        addAppointmentView(metadata);
+                    }else if (metadata.type.equals(Metadata.EXTERNAL_LINK)){
+                        addExternalLinkView(metadata);
+                    }
                 }
             }
         }
     }
 
-    private void addAppointmentView(Metadata appointment) {
-        appointment.title = "Du har fått en innkalling fra " + DocumentContentStore.getDocumentParent().getCreatorName();
-        LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container_layout);
+    private void addExternalLinkView(Metadata metadata) {
+        ExternalLinkView externalLinkView = ExternalLinkView.newInstance();
+        externalLinkView.setExternallink(metadata);
+        addViewToContainerLayout(externalLinkView);
+    }
+
+    private void addAppointmentView(Metadata metadata) {
+        metadata.title = "Du har fått en innkalling fra " + DocumentContentStore.getDocumentParent().getCreatorName();
         AppointmentView appointmentView = AppointmentView.newInstance();
-        appointmentView.setAppointment(appointment);
+        appointmentView.setAppointment(metadata);
+        addViewToContainerLayout(appointmentView);
+
+    }
+
+    private void addViewToContainerLayout(Fragment fragment){
+        LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container_layout);
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.VERTICAL);
         int randomId = (int) (Math.random()*100);
         ll.setId(randomId);
-        getFragmentManager().beginTransaction().add(ll.getId(), appointmentView, "appointmentView" + randomId).commit();
-
+        getFragmentManager().beginTransaction().add(ll.getId(), fragment, "MetadataView" + randomId).commit();
         containerLayout.addView(ll,0);
-
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {
