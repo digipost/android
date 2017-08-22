@@ -47,23 +47,16 @@ public class ExternalLinkView extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.externallink_view, container, false);
 
-        String deadline = "";
-        if(FormatUtilities.getDate(externallink.deadline).after(new Date())){
-            deadline = getString(R.string.externallink_deadline) + FormatUtilities.getDateString(externallink.deadline);
-        }else{
-            deadline = (R.string.externallink_deadline_expired) + FormatUtilities.getDateString(externallink.deadline);
-        }
-
-        ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.description);
-        ((TextView) view.findViewById(R.id.externallink_deadline)).setText(deadline);
+        if(externallink.deadline != null) ((TextView) view.findViewById(R.id.externallink_deadline)).setText(deadlineText());
+        if(externallink.description != null) ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.description);
+        if(externallink.buttonText != null) ((Button) view.findViewById(R.id.externallink_open_link)).setText(externallink.buttonText);
         ((Button) view.findViewById(R.id.externallink_open_link)).setTransformationMethod(null);
         ((Button) view.findViewById(R.id.externallink_open_link)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(externallink.urlIsActive) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(externallink.url));
-                    startActivity(browserIntent);
-                }else{
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(externallink.url));
+                startActivity(browserIntent);
+                if(!deadlineIsValid()) {
                     ((TextView) view.findViewById(R.id.externallink_deadline)).setTextColor(R.color.actionbar_button_pressed_medium_red);
                 }
             }
@@ -71,9 +64,18 @@ public class ExternalLinkView extends Fragment{
         return view;
     }
 
-    private String getDeadlineText() {
-        String formattedDate = FormatUtilities.getDateString(externallink.deadline);
+    private String deadlineText() {
+        String deadline = "";
+        if(deadlineIsValid()){
+            deadline = getString(R.string.externallink_deadline) + FormatUtilities.getDateString(externallink.deadline);
+        }else if(externallink.deadline != null){
+            deadline = (R.string.externallink_deadline_expired) + FormatUtilities.getDateString(externallink.deadline);
+        }
+        return deadline;
+    }
 
-        return formattedDate;
+    private boolean deadlineIsValid(){
+        Date deadline = FormatUtilities.getDate(externallink.deadline);
+        return deadline != null && deadline.after(new Date());
     }
 }
