@@ -29,6 +29,8 @@ import no.digipost.android.R;
 import no.digipost.android.model.Metadata;
 import no.digipost.android.utilities.FormatUtilities;
 
+import java.util.Date;
+
 public class ExternalLinkView extends Fragment{
 
     private Metadata externallink;
@@ -45,10 +47,15 @@ public class ExternalLinkView extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.externallink_view, container, false);
 
-        String formattedDeadline = FormatUtilities.getDateString(externallink.deadline);
+        String deadline = "";
+        if(FormatUtilities.getDate(externallink.deadline).after(new Date())){
+            deadline = getString(R.string.externallink_deadline) + FormatUtilities.getDateString(externallink.deadline);
+        }else{
+            deadline = (R.string.externallink_deadline_expired) + FormatUtilities.getDateString(externallink.deadline);
+        }
 
         ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.description);
-        ((TextView) view.findViewById(R.id.externallink_deadline)).setText(formattedDeadline);
+        ((TextView) view.findViewById(R.id.externallink_deadline)).setText(deadline);
         ((Button) view.findViewById(R.id.externallink_open_link)).setTransformationMethod(null);
         ((Button) view.findViewById(R.id.externallink_open_link)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,5 +69,11 @@ public class ExternalLinkView extends Fragment{
             }
         });
         return view;
+    }
+
+    private String getDeadlineText() {
+        String formattedDate = FormatUtilities.getDateString(externallink.deadline);
+
+        return formattedDate;
     }
 }

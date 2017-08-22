@@ -353,5 +353,7 @@
     <string name="appointment_place">Sted:</string>
     <string name="appointment_calendar_disclaimer">Obs! Innkallingen kan inneholde sensitiv informasjon som kan bli synlig for de som eventuelt har tilgang til din kalender.</string>
     <string name="externallink_open_link_text">Gi tilbakemelding</string>
+    <string name="externallink_deadline">Frist: </string>
+    <string name="externallink_deadline_expired">Frist utløpt: </string>
 
 </resources>
