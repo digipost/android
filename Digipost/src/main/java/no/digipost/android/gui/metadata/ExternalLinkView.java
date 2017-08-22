@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.model.Metadata;
+import no.digipost.android.utilities.FormatUtilities;
 
 public class ExternalLinkView extends Fragment{
 
@@ -43,15 +44,21 @@ public class ExternalLinkView extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.externallink_view, container, false);
-        ((TextView) view.findViewById(R.id.externallink_title)).setText(externallink.title);
-        ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.text);
-        ((TextView) view.findViewById(R.id.externallink_deadline)).setText(externallink.deadline);
+
+        String formattedDeadline = FormatUtilities.getDateString(externallink.deadline);
+
+        ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.description);
+        ((TextView) view.findViewById(R.id.externallink_deadline)).setText(formattedDeadline);
         ((Button) view.findViewById(R.id.externallink_open_link)).setTransformationMethod(null);
         ((Button) view.findViewById(R.id.externallink_open_link)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(externallink.url));
-                startActivity(browserIntent);
+                if(externallink.urlIsActive) {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(externallink.url));
+                    startActivity(browserIntent);
+                }else{
+                    ((TextView) view.findViewById(R.id.externallink_deadline)).setTextColor(R.color.actionbar_button_pressed_medium_red);
+                }
             }
         });
         return view;

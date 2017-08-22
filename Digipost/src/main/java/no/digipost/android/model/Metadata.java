@@ -30,16 +30,23 @@ public class Metadata {
     public static final String APPOINTMENT = "Appointment";
     public static final String EXTERNAL_LINK = "ExternalLink";
 
-    public String title;
+    @JsonProperty
+    public String type;
 
-    public String text;
-
-    public String deadline;
-
+    @JsonProperty
     public String url;
 
     @JsonProperty
-    public String type;
+    public String deadline;
+
+    @JsonProperty
+    public String description;
+
+    @JsonProperty
+    public String buttonText;
+
+    @JsonProperty
+    public Boolean urlIsActive;
 
     @JsonProperty
     public String subTitle;

@@ -111,6 +111,8 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         Attachment attachment = DocumentContentStore.getDocumentAttachment();
         if (DocumentContentStore.getDocumentAttachment() != null) {
             ArrayList<Metadata> metadataList = attachment.getMetadata();
+            metadataList.add(mockExternalLink());
+
             if(metadataList != null) {
                 for (Metadata metadata : metadataList) {
                     if (metadata.type.equals(Metadata.APPOINTMENT)) {
@@ -121,6 +123,16 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private Metadata mockExternalLink() {
+        Metadata metadata = new Metadata();
+        metadata.type = "ExternalLink";
+        metadata.description = "Avsender ber deg akseptere eller avslå tilbudet om barnehageplass.";
+        metadata.deadline = "2017-09-09T13:37:00+02:00";
+        metadata.buttonText = "Gå til Digipost";
+        metadata.urlIsActive = true;
+        return metadata;
     }
 
     private void addExternalLinkView(Metadata metadata) {
@@ -134,7 +146,6 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         AppointmentView appointmentView = AppointmentView.newInstance();
         appointmentView.setAppointment(metadata);
         addViewToContainerLayout(appointmentView);
-
     }
 
     private void addViewToContainerLayout(Fragment fragment){
