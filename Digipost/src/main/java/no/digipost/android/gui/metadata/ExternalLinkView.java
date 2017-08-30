@@ -46,8 +46,6 @@ public class ExternalLinkView extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.externallink_view, container, false);
-
-        if(externallink.deadline != null) ((TextView) view.findViewById(R.id.externallink_deadline)).setText(deadlineText());
         if(externallink.description != null) ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.description);
         if(externallink.buttonText != null) ((Button) view.findViewById(R.id.externallink_open_link)).setText(externallink.buttonText);
         ((Button) view.findViewById(R.id.externallink_open_link)).setTransformationMethod(null);
@@ -56,11 +54,13 @@ public class ExternalLinkView extends Fragment{
             public void onClick(View view) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(externallink.url));
                 startActivity(browserIntent);
-                if(!deadlineIsValid()) {
-                    ((TextView) view.findViewById(R.id.externallink_deadline)).setTextColor(R.color.actionbar_button_pressed_medium_red);
-                }
             }
         });
+
+        ((TextView) view.findViewById(R.id.externallink_deadline)).setText(deadlineText());
+        if(!deadlineIsValid()) {
+            ((TextView) view.findViewById(R.id.externallink_deadline)).setTextColor(R.color.actionbar_button_pressed_medium_red);
+        }
         return view;
     }
 
