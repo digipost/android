@@ -113,13 +113,11 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
             ArrayList<Metadata> metadataList = attachment.getMetadata();
             metadataList.add(mockExternalLink());
 
-            if(metadataList != null) {
-                for (Metadata metadata : metadataList) {
-                    if (metadata.type.equals(Metadata.APPOINTMENT)) {
-                        addAppointmentView(metadata);
-                    }else if (metadata.type.equals(Metadata.EXTERNAL_LINK)){
-                        addExternalLinkView(metadata);
-                    }
+            for (Metadata metadata : metadataList) {
+                if (metadata.type.equals(Metadata.APPOINTMENT)) {
+                    addAppointmentView(metadata);
+                } else if (metadata.type.equals(Metadata.EXTERNAL_LINK)) {
+                    addExternalLinkView(metadata);
                 }
             }
         }
