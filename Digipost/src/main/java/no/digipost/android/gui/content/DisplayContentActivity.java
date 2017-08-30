@@ -119,6 +119,13 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                     addExternalLinkView(metadata);
                 }
             }
+            ScrollView containerScrollView = (ScrollView) findViewById(R.id.container_scrollview);
+            if (metadataList.size() == 0) {
+                containerScrollView.setFocusable(false);
+            }else {
+                containerScrollView.setFocusable(true);
+
+            }
         }
     }
 
