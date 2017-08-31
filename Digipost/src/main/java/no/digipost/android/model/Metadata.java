@@ -95,6 +95,14 @@ public class Metadata {
         return infoText;
     }
 
+    public String getButtonText() {
+        return buttonText != null ? buttonText: "Gå videre";
+    }
+
+    public String getDescription() {
+        return description != null ? description : "";
+    }
+
     public Date getStartDate() {
         return FormatUtilities.getDate(startTime);
     }

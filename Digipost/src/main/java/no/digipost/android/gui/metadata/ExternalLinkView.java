@@ -49,8 +49,8 @@ public class ExternalLinkView extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.externallink_view, container, false);
-        if(externallink.description != null) ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.description);
-        if(externallink.buttonText != null) ((Button) view.findViewById(R.id.externallink_open_link)).setText(externallink.buttonText);
+        ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.getDescription());
+        ((Button) view.findViewById(R.id.externallink_open_link)).setText(externallink.getButtonText());
         ((Button) view.findViewById(R.id.externallink_open_link)).setTransformationMethod(null);
         ((Button) view.findViewById(R.id.externallink_open_link)).setOnClickListener(new View.OnClickListener() {
             @Override
