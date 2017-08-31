@@ -39,7 +39,7 @@ public class ExternalLinkWebview extends AppCompatActivity{
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         Bundle bundle = getIntent().getExtras();
-        String url = bundle.getString("url");
+        String url = bundle.getString("url", "https://www.digipost.no");
         myWebView.loadUrl(url);
     }
 }
