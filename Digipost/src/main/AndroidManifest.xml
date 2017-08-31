@@ -76,6 +76,9 @@
                 android:name=".gui.WebLoginActivity"
                 android:configChanges="orientation|screenSize"/>
         <activity
+                android:name=".gui.metadata.ExternalLinkWebview"
+                android:configChanges="orientation|screenSize"/>
+        <activity
                 android:name=".gui.content.HtmlAndReceiptActivity"
                 android:configChanges="orientation|screenSize"/>
         <activity android:name=".gui.content.MuPDFActivity"/>
