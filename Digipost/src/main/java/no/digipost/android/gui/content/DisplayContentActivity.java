@@ -111,8 +111,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         Attachment attachment = DocumentContentStore.getDocumentAttachment();
         if (DocumentContentStore.getDocumentAttachment() != null) {
             ArrayList<Metadata> metadataList = attachment.getMetadata();
-            metadataList.add(mockExternalLink());
-
+            
             for (Metadata metadata : metadataList) {
                 if (metadata.type.equals(Metadata.APPOINTMENT)) {
                     addAppointmentView(metadata);
