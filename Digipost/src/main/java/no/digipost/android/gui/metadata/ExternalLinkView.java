@@ -26,6 +26,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import no.digipost.android.R;
+import no.digipost.android.gui.MainContentActivity;
+import no.digipost.android.gui.ScreenlockPreferenceActivity;
+import no.digipost.android.gui.content.DisplayContentActivity;
 import no.digipost.android.model.Metadata;
 import no.digipost.android.utilities.FormatUtilities;
 
@@ -52,8 +55,9 @@ public class ExternalLinkView extends Fragment{
         ((Button) view.findViewById(R.id.externallink_open_link)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(externallink.url));
-                startActivity(browserIntent);
+                Intent intent = new Intent(getActivity(), ExternalLinkWebview.class);
+                intent.putExtra("url", externallink.url);
+                startActivity(intent);
             }
         });
 
