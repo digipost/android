@@ -16,12 +16,20 @@
 
 package no.digipost.android.gui.metadata;
 
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import no.digipost.android.R;
 
 public class ExternalLinkWebview extends AppCompatActivity{
@@ -33,13 +41,42 @@ public class ExternalLinkWebview extends AppCompatActivity{
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setBackgroundDrawable(new ColorDrawable(0xff454545));
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = this.getWindow();
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.setStatusBarColor(ContextCompat.getColor(this, R.color.metadata_externalbrowser_top_background));
+            }
+        }
 
-        WebView myWebView = (WebView) findViewById(R.id.externallink_webview);
-        WebSettings webSettings = myWebView.getSettings();
+        WebView webView = (WebView) findViewById(R.id.externallink_webview);
+        WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         Bundle bundle = getIntent().getExtras();
         String url = bundle.getString("url", "https://www.digipost.no");
-        myWebView.loadUrl(url);
+        webView.loadUrl(url);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                if(actionBar != null) {
+                    actionBar.setTitle(view.getTitle());
+                    actionBar.setSubtitle(view.getUrl());
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
     }
 }
