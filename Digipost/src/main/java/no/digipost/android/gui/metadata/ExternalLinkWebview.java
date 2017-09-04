@@ -27,9 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import android.webkit.*;
 import no.digipost.android.R;
 
 public class ExternalLinkWebview extends AppCompatActivity{
@@ -54,11 +52,11 @@ public class ExternalLinkWebview extends AppCompatActivity{
         }
 
         WebView webView = (WebView) findViewById(R.id.externallink_webview);
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
         Bundle bundle = getIntent().getExtras();
         String url = bundle.getString("url", "https://www.digipost.no");
-        webView.loadUrl(url);
+        enableCookies(webView);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -68,7 +66,22 @@ public class ExternalLinkWebview extends AppCompatActivity{
                     actionBar.setSubtitle(view.getUrl());
                 }
             }
+
         });
+        webView.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String url, String userAgent, String content, String mimeType, long contentLength) {
+
+            }
+        });
+        webView.loadUrl(url);
+    }
+
+    private void enableCookies(WebView webView){
+        CookieManager.getInstance().setAcceptCookie(true);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
+        }
     }
 
     @Override
