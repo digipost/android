@@ -16,9 +16,14 @@
 
 package no.digipost.android.gui.metadata;
 
+import android.app.AlertDialog;
+import android.app.DownloadManager;
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -29,6 +34,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.*;
 import no.digipost.android.R;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.Permissions;
 
 public class ExternalLinkWebview extends AppCompatActivity{
 
@@ -69,12 +76,66 @@ public class ExternalLinkWebview extends AppCompatActivity{
 
         });
         webView.setDownloadListener(new DownloadListener() {
+
             @Override
             public void onDownloadStart(String url, String userAgent, String content, String mimeType, long contentLength) {
-
+                if (!mimeType.equals("text/html")) {
+                    showDownloadDialog(url);
+                }
             }
         });
-        webView.loadUrl(url);
+        webView.loadUrl("https://www.digipost.no/testbrev.pdf");
+    }
+
+    private void showDownloadDialog(final String url) {
+        String title = getString(R.string.externallink_download_title);
+        String message = getString(R.string.externallink_download_message);
+
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
+
+        builder.setPositiveButton(getString(R.string.externallink_download_title), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                boolean writePermissionsAllowed = Permissions.requestWritePermissionsIfMissing(getApplicationContext(), getParent());
+                while(!writePermissionsAllowed) {
+                    writePermissionsAllowed = Permissions.requestWritePermissionsIfMissing(getApplicationContext(), getParent());
+                }
+                downloadFile(url);
+                dialog.dismiss();
+            }
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+                finish();
+            }
+        });
+
+        builder.create().show();
+    }
+
+    private void downloadFile(final String url) {
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        String IDPORTEN = "https://idporten.difi.no";
+        String idPortenSession = CookieManager.getInstance().getCookie(IDPORTEN);
+        if (idPortenSession != null) request.addRequestHeader(IDPORTEN, idPortenSession);
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, url);
+
+        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        dm.enqueue(request);
+    }
+
+    private void showDownloadSuccessDialog() {
+        String message = "";
+        String title = "";
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(getApplicationContext(),message,title);
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        builder.create().show();
     }
 
     private void enableCookies(WebView webView){

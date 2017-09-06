@@ -135,6 +135,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         metadata.description = "Avsender ber deg akseptere eller avslå tilbudet om barnehageplass.";
         metadata.deadline = "2017-09-09T13:37:00+02:00";
         metadata.buttonText = "Gå til Digipost";
+        metadata.url = "https://www.digipost.no";
         metadata.urlIsActive = true;
         return metadata;
     }
