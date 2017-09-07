@@ -355,11 +355,12 @@
     <string name="appointment_calendar_disclaimer">Obs! Innkallingen kan inneholde sensitiv informasjon som kan bli synlig for de som eventuelt har tilgang til din kalender.</string>
 
     <string name="externallink_open_link_text">Gi tilbakemelding</string>
-    <string name="externallink_deadline">Frist: </string>
-    <string name="externallink_deadline_expired">Frist utløpt: </string>
+    <string name="externallink_deadline">Frist:\u0020</string>
+    <string name="externallink_deadline_expired">Frist utløpt:\u0020</string>
 
     <string name="externallink_download_title">Last ned</string>
-    <string name="externallink_download_message">Last ned filen</string>
-    <string name="externallink_download_success_message">Filen ble lastet ned.</string>
+    <string name="externallink_download_message">Vil du laste ned %1$s fra %2$s?</string>
+    <string name="externallink_download_success_message">%1$s ble lastet ned.</string>
+    <string name="externallink_permissions">Appen trenger tilgang til å laste ned eksterne filer fra avsender.</string>
 
 </resources>
