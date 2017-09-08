@@ -49,6 +49,7 @@ public class ExternalLinkWebview extends AppCompatActivity{
     private WebView webView;
     private String fileName;
     private String fileUrl;
+    private BroadcastReceiver onComplete;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,9 +90,9 @@ public class ExternalLinkWebview extends AppCompatActivity{
         webView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String url, String userAgent, String content, String mimeType, long contentLength) {
-                fileName = URLUtil.guessFileName(url, content,mimeType);
-
-                BroadcastReceiver onComplete = new BroadcastReceiver() {
+                fileName = URLUtil.guessFileName(url, content, mimeType);
+                fileUrl = url;
+                onComplete = new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         showDownloadSuccessDialog(context);
@@ -101,7 +102,7 @@ public class ExternalLinkWebview extends AppCompatActivity{
                 registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                 if (!mimeType.equals("text/html")) {
                     if(FileUtilities.isStorageWriteAllowed(getApplicationContext())) {
-                        showDownloadDialog();
+                        showDownloadDialog(userAgent, content, mimeType, contentLength);
                     }else{
                         showMissingPermissionsDialog();
                     }
@@ -116,7 +117,15 @@ public class ExternalLinkWebview extends AppCompatActivity{
         }
     }
 
-    private void showDownloadDialog() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(onComplete != null) {
+            unregisterReceiver(onComplete);
+        }
+    }
+
+    private void showDownloadDialog(final String userAgent, final String content, final String mimeType, final long contentLength) {
         String hostUrl = "";
         try {
             hostUrl = new URL(fileUrl).getHost();
@@ -130,7 +139,7 @@ public class ExternalLinkWebview extends AppCompatActivity{
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
         builder.setPositiveButton(getString(R.string.externallink_download_title), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-                downloadFile(fileUrl);
+                downloadFile(userAgent, content, mimeType, contentLength);
                 dialog.dismiss();
             }
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
@@ -181,13 +190,14 @@ public class ExternalLinkWebview extends AppCompatActivity{
         builder.create().show();
     }
 
-    private void downloadFile(final String url) {
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+    private void downloadFile(final String userAgent, final String content, final String mimeType, final long contentLength) {
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(fileUrl));
         String idPortenSession = CookieManager.getInstance().getCookie("https://idporten.difi.no");
         if (idPortenSession != null) request.addRequestHeader("Cookie", idPortenSession);
+        request.setMimeType(mimeType);
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, url);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
         DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         dm.enqueue(request);
