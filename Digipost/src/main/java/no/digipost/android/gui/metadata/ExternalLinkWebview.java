@@ -16,7 +16,6 @@
 
 package no.digipost.android.gui.metadata;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -50,13 +49,11 @@ public class ExternalLinkWebview extends AppCompatActivity{
     private WebView webView;
     private String fileName;
     private String fileUrl;
-    private Activity activity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_externallink_webview);
-        this.activity = activity;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
@@ -75,9 +72,9 @@ public class ExternalLinkWebview extends AppCompatActivity{
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
         Bundle bundle = getIntent().getExtras();
-        String url = bundle.getString("url", "https://www.digipost.no");
-        enableCookies(webView);
+        fileUrl = bundle.getString("url", "https://www.digipost.no");
 
+        enableCookies(webView);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -93,7 +90,6 @@ public class ExternalLinkWebview extends AppCompatActivity{
             @Override
             public void onDownloadStart(String url, String userAgent, String content, String mimeType, long contentLength) {
                 fileName = URLUtil.guessFileName(url, content,mimeType);
-                fileUrl = url;
 
                 BroadcastReceiver onComplete = new BroadcastReceiver() {
                     @Override
@@ -101,15 +97,20 @@ public class ExternalLinkWebview extends AppCompatActivity{
                         showDownloadSuccessDialog(context);
                     }
                 };
+
                 registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
                 if (!mimeType.equals("text/html")) {
-                    showDownloadDialog();
+                    if(FileUtilities.isStorageWriteAllowed(getApplicationContext())) {
+                        showDownloadDialog();
+                    }else{
+                        showMissingPermissionsDialog();
+                    }
                 }
             }
         });
 
         if(FileUtilities.isStorageWriteAllowed(this)){
-            webView.loadUrl("https://www.sundar.no/testbrev.pdf");
+            webView.loadUrl(fileUrl);
         }else{
             showPermissionsDialog();
         }
@@ -143,11 +144,13 @@ public class ExternalLinkWebview extends AppCompatActivity{
     }
 
     private void showPermissionsDialog() {
+
         String message = getString(R.string.externallink_permissions);
-        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+        final Activity activity = this;
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(activity, message);
         builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-                Permissions.requestWritePermissionsIfMissing(getBaseContext(), activity);
+                Permissions.requestWritePermissionsIfMissing(activity, activity);
                 dialog.dismiss();
             }
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
@@ -163,9 +166,19 @@ public class ExternalLinkWebview extends AppCompatActivity{
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(FileUtilities.isStorageWriteAllowed(this)){
-            webView.loadUrl(fileUrl);
-        }
+        webView.loadUrl(fileUrl);
+    }
+
+    private void showMissingPermissionsDialog(){
+        String message = getString(R.string.externallink_permissions);
+        AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.dismiss();
+                finish();
+            }
+        });
+        builder.create().show();
     }
 
     private void downloadFile(final String url) {
