@@ -164,7 +164,7 @@ public class ExternalLinkWebview extends AppCompatActivity{
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(FileUtilities.isStorageWriteAllowed(this)){
-            webView.loadUrl("https://www.digipost.no/testbrev.pdf");
+            webView.loadUrl(fileUrl);
         }
     }
 
