@@ -18,6 +18,7 @@ package no.digipost.android.gui.metadata;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -63,7 +64,7 @@ public class ExternalLinkView extends Fragment{
 
         ((TextView) view.findViewById(R.id.externallink_deadline)).setText(deadlineText());
         if(!deadlineIsValid()) {
-            ((TextView) view.findViewById(R.id.externallink_deadline)).setTextColor(R.color.actionbar_button_pressed_medium_red);
+            ((TextView) view.findViewById(R.id.externallink_deadline)).setTextColor(Color.RED);
         }
         return view;
     }
@@ -73,8 +74,9 @@ public class ExternalLinkView extends Fragment{
         if(deadlineIsValid()){
             deadline = getString(R.string.externallink_deadline) + FormatUtilities.getDateString(externallink.deadline);
         }else if(externallink.deadline != null){
-            deadline = (R.string.externallink_deadline_expired) + FormatUtilities.getDateString(externallink.deadline);
+            deadline = getString(R.string.externallink_deadline_expired) + FormatUtilities.getDateString(externallink.deadline);
         }
+
         return deadline;
     }
 
