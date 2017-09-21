@@ -20,6 +20,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,9 +57,7 @@ public class ExternalLinkView extends Fragment{
         ((Button) view.findViewById(R.id.externallink_open_link)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ExternalLinkWebview.class);
-                intent.putExtra("url", externallink.url);
-                startActivity(intent);
+                openExternalLink(externallink.url);
             }
         });
 
@@ -67,6 +66,17 @@ public class ExternalLinkView extends Fragment{
             ((TextView) view.findViewById(R.id.externallink_deadline)).setTextColor(Color.RED);
         }
         return view;
+    }
+
+    private void openExternalLink(final String url){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Intent intent = new Intent(getActivity(), ExternalLinkWebview.class);
+            intent.putExtra("url", url);
+            startActivity(intent);
+        }else{
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
+        }
     }
 
     private String deadlineText() {
