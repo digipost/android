@@ -29,7 +29,7 @@
 
 
     <application
-            android:name=".DigipostApplication"
+            android:name="no.digipost.android.DigipostApplication"
             android:allowBackup="false"
             android:fullBackupContent="false"
             android:hardwareAccelerated="true"
@@ -41,7 +41,7 @@
         <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing" android:value="true" />
 
         <activity
-                android:name=".MainActivity"
+                android:name="no.digipost.android.MainActivity"
                 android:configChanges="orientation|screenSize"
                 android:label="@string/app_name"
                 android:screenOrientation="portrait"
@@ -64,46 +64,46 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".gui.LoginActivity"
+                android:name="no.digipost.android.gui.LoginActivity"
                 android:configChanges="orientation|screenSize"
                 android:launchMode="singleTop"
                 android:theme="@style/DigipostBlackStatusbar"/>
         <activity
-                android:name=".gui.ScreenlockPreferenceActivity"
+                android:name="no.digipost.android.gui.ScreenlockPreferenceActivity"
                 android:configChanges="orientation|screenSize"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".gui.MainContentActivity"
+                android:name="no.digipost.android.gui.MainContentActivity"
                 android:configChanges="orientation|screenSize"
                 android:screenOrientation="portrait"/>
         <activity
-                android:name=".gui.WebLoginActivity"
+                android:name="no.digipost.android.gui.WebLoginActivity"
                 android:configChanges="orientation|screenSize"/>
         <activity
                 android:name="no.digipost.android.gui.metadata.ExternalLinkWebview"
                 android:configChanges="orientation|screenSize"/>
         <activity
-                android:name=".gui.content.HtmlAndReceiptActivity"
+                android:name="no.digipost.android.gui.content.HtmlAndReceiptActivity"
                 android:configChanges="orientation|screenSize"/>
         <activity android:name=".gui.content.MuPDFActivity"/>
         <activity
-                android:name=".gui.content.UnsupportedDocumentFormatActivity"
+                android:name="no.digipost.android.gui.content.UnsupportedDocumentFormatActivity"
                 android:configChanges="orientation|screenSize"/>
         <activity
-                android:name=".gui.content.UploadActivity"
+                android:name="no.digipost.android.gui.content.UploadActivity"
                 android:configChanges="orientation|screenSize"/>
         <activity
-                android:name=".gui.content.SettingsActivity"
+                android:name="no.digipost.android.gui.content.SettingsActivity"
                 android:configChanges="orientation|screenSize"/>
         <activity
-                android:name=".gui.content.NotificationSettingsActivity"
+                android:name="no.digipost.android.gui.content.NotificationSettingsActivity"
                 android:configChanges="orientation|screenSize"
                 android:windowSoftInputMode="stateHidden"/>
         <activity
-                android:name=".gui.content.PersonalSettingsActivity"
+                android:name="no.digipost.android.gui.content.PersonalSettingsActivity"
                 android:configChanges="orientation|screenSize"/>
         <activity
-                android:name=".gui.invoice.InvoiceBankActivity"/>
+                android:name="no.digipost.android.gui.invoice.InvoiceBankActivity"/>
         <activity android:name="no.digipost.android.gui.invoice.InvoiceOptionsActivity">
         </activity>
         <activity android:name="no.digipost.android.gui.invoice.InvoiceOverviewActivity">
@@ -132,7 +132,7 @@
                 android:enabled="true"
                 android:exported="false"/>
         <service
-                android:name=".gcm.ListenerService"
+                android:name="no.digipost.android.gcm.ListenerService"
                 android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
@@ -146,7 +146,7 @@
             </intent-filter>
         </service>
         <service
-                android:name=".gcm.RegistrationService"
+                android:name="no.digipost.android.gcm.RegistrationService"
                 android:exported="false">
         </service>
 
