@@ -111,7 +111,6 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         Attachment attachment = DocumentContentStore.getDocumentAttachment();
         if (DocumentContentStore.getDocumentAttachment() != null) {
             ArrayList<Metadata> metadataList = attachment.getMetadata();
-            
             for (Metadata metadata : metadataList) {
                 if (metadata.type.equals(Metadata.APPOINTMENT)) {
                     addAppointmentView(metadata);
@@ -127,17 +126,6 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
             }
         }
-    }
-
-    private Metadata mockExternalLink() {
-        Metadata metadata = new Metadata();
-        metadata.type = "ExternalLink";
-        metadata.description = "Avsender ber deg akseptere eller avslå tilbudet om barnehageplass.";
-        metadata.deadline = "2017-11-11T13:37:00+02:00";
-        metadata.buttonText = "Gå til Digipost";
-        metadata.url = "https://www.altinn.no"; //https://svarut.ks.no/forsendelse/380bc218-f076-4b29-8724-39d498a719d3/1";
-        metadata.urlIsActive = true;
-        return metadata;
     }
 
     private void addExternalLinkView(Metadata metadata) {
