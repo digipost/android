@@ -194,8 +194,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
 
     private void downloadFile(final String userAgent, final String content, final String mimeType, final long contentLength) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(fileUrl));
-        String idPortenSession = CookieManager.getInstance().getCookie("https://idporten.difi.no");
-        if (idPortenSession != null) request.addRequestHeader("Cookie", idPortenSession);
+        request.addRequestHeader("Cookie", CookieManager.getInstance().getCookie(fileUrl));
         request.setMimeType(mimeType);
         request.allowScanningByMediaScanner();
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
