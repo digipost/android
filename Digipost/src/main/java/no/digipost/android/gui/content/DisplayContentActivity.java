@@ -107,24 +107,34 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         }
     }
 
-    private void showMetadata() {
+    private ArrayList<Metadata> getMetadata() {
         Attachment attachment = DocumentContentStore.getDocumentAttachment();
-        if (DocumentContentStore.getDocumentAttachment() != null) {
-            ArrayList<Metadata> metadataList = attachment.getMetadata();
-            for (Metadata metadata : metadataList) {
-                if (metadata.type.equals(Metadata.APPOINTMENT)) {
-                    addAppointmentView(metadata);
-                } else if (metadata.type.equals(Metadata.EXTERNAL_LINK)) {
-                    addExternalLinkView(metadata);
-                }
-            }
-            ScrollView containerScrollView = (ScrollView) findViewById(R.id.container_scrollview);
-            if (metadataList.size() == 0) {
-                containerScrollView.setFocusable(false);
-            }else {
-                containerScrollView.setFocusable(true);
 
+        if (attachment != null) {
+            return attachment.getMetadata();
+        }
+
+        return new ArrayList<>();
+    }
+
+    private void showMetadata() {
+        ArrayList<Metadata> metadataList = getMetadata();
+
+        for (Metadata metadata : metadataList) {
+            if (metadata.type.equals(Metadata.APPOINTMENT)) {
+                addAppointmentView(metadata);
+            } else if (metadata.type.equals(Metadata.EXTERNAL_LINK)) {
+                addExternalLinkView(metadata);
             }
+        }
+
+        ScrollView containerScrollView = (ScrollView) findViewById(R.id.container_scrollview);
+
+        if (metadataList.size() == 0) {
+            containerScrollView.setFocusable(false);
+        } else {
+            containerScrollView.setFocusable(true);
+
         }
     }
 
