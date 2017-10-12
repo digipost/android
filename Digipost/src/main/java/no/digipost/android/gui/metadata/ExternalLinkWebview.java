@@ -141,7 +141,8 @@ public class ExternalLinkWebview extends AppCompatActivity {
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
         builder.setPositiveButton(getString(R.string.externallink_download_title), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-                downloadFile(userAgent, content, mimeType, contentLength);
+                DownloadManagerWithCookies dm = new DownloadManagerWithCookies(getApplicationContext());
+                dm.downloadFile(fileName, fileUrl, userAgent, content, mimeType, contentLength);
                 dialog.dismiss();
             }
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
@@ -190,18 +191,6 @@ public class ExternalLinkWebview extends AppCompatActivity {
             }
         });
         builder.create().show();
-    }
-
-    private void downloadFile(final String userAgent, final String content, final String mimeType, final long contentLength) {
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(fileUrl));
-        request.addRequestHeader("Cookie", CookieManager.getInstance().getCookie(fileUrl));
-        request.setMimeType(mimeType);
-        request.allowScanningByMediaScanner();
-        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-
-        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-        dm.enqueue(request);
     }
 
     private void showDownloadSuccessDialog(final Context downloadContext) {
