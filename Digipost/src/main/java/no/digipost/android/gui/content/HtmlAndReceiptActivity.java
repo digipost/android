@@ -73,6 +73,33 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
+    private void setupWebView() {
+        webView = (WebView) findViewById(R.id.web_html);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
+        webView.getSettings().setLoadWithOverviewMode(true);
+    }
+
+    private void setupActionBar() {
+        try {
+            if(getSupportActionBar() != null) {
+                if (content_type != ApplicationConstants.RECEIPTS) {
+                    Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
+                    setActionBar(documentMeta.getSubject());
+                } else {
+                    Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
+                    getSupportActionBar().setTitle(receiptMeta.getStoreName());
+                    getSupportActionBar().setSubtitle(FormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+                }
+            }
+        } catch (NullPointerException e) {
+            //IGNORE
+        }
+    }
+
     private void loadContent() {
         String html = "";
         if (content_type == ApplicationConstants.RECEIPTS) {
@@ -135,32 +162,5 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void setupWebView() {
-        webView = (WebView) findViewById(R.id.web_html);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.getSettings().setSupportZoom(true);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setDisplayZoomControls(false);
-        webView.getSettings().setLoadWithOverviewMode(true);
-    }
-
-    private void setupActionBar() {
-        try {
-            if(getSupportActionBar() != null) {
-                if (content_type != ApplicationConstants.RECEIPTS) {
-                    Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
-                    setActionBar(documentMeta.getSubject());
-                } else {
-                    Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
-                    getSupportActionBar().setTitle(receiptMeta.getStoreName());
-                    getSupportActionBar().setSubtitle(FormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
-                }
-            }
-        } catch (NullPointerException e) {
-            //IGNORE
-        }
     }
 }
