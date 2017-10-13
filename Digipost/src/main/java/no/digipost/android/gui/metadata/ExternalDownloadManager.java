@@ -24,7 +24,7 @@ import android.webkit.CookieManager;
 
 public class ExternalDownloadManager {
 
-    final Context context;
+    private final Context context;
 
     public ExternalDownloadManager(final Context context) {
         this.context = context;
