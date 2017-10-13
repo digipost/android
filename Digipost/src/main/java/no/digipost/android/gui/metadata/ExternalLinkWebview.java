@@ -141,7 +141,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(this, message, title);
         builder.setPositiveButton(getString(R.string.externallink_download_title), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-                DownloadManagerWithCookies dm = new DownloadManagerWithCookies(getApplicationContext());
+                ExternalDownloadManager dm = new ExternalDownloadManager(getApplicationContext());
                 dm.downloadFile(fileName, fileUrl, userAgent, content, mimeType, contentLength);
                 dialog.dismiss();
             }
