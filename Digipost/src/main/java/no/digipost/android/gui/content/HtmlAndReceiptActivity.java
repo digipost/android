@@ -16,6 +16,7 @@
 
 package no.digipost.android.gui.content;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
@@ -30,6 +32,7 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.gui.metadata.ExternalLinkWebview;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.FormatUtilities;
@@ -81,6 +84,17 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         webView.getSettings().setBuiltInZoomControls(true);
         webView.getSettings().setDisplayZoomControls(false);
         webView.getSettings().setLoadWithOverviewMode(true);
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onLoadResource(WebView view, String url) {
+                if (!url.equals(webView.getUrl())) {
+                    Intent intent = new Intent(getApplicationContext(), ExternalLinkWebview.class);
+                    intent.putExtra("url", url);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void setupActionBar() {
