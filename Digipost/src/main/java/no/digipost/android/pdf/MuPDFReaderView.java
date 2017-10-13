@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import no.digipost.android.gui.metadata.ExternalLinkWebview;
 
 public class MuPDFReaderView extends ReaderView {
 	private final Context mContext;
@@ -67,7 +68,8 @@ public class MuPDFReaderView extends ReaderView {
 
 					@Override
 					public void visitExternal(LinkInfoExternal li) {
-						Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(li.url));
+						Intent intent = new Intent(mContext, ExternalLinkWebview.class);
+						intent.putExtra("url", li.url);
 						mContext.startActivity(intent);
 					}
 
