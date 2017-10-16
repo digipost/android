@@ -163,7 +163,6 @@ public class ExternalLinkWebview extends AppCompatActivity {
     }
 
     private void showPermissionsDialog() {
-
         String message = getString(R.string.externallink_permissions);
         final Activity activity = this;
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(activity, message);
