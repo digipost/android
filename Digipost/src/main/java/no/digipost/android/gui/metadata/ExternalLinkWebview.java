@@ -24,14 +24,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.*;
 import android.webkit.*;
 import android.widget.ProgressBar;
@@ -228,7 +226,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void openInExternalBrowser(){
+    private void openInExternalBrowser() {
         String url = this.webView.getUrl();
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
@@ -238,7 +236,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.externallink_actionbar_open_action) {
             openInExternalBrowser();
-        }else if (item.getItemId() == android.R.id.home) {
+        } else if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
         }
