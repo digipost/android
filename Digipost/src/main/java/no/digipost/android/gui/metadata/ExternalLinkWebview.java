@@ -32,10 +32,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
 import android.webkit.*;
 import android.widget.ProgressBar;
 import no.digipost.android.R;
@@ -225,8 +222,23 @@ public class ExternalLinkWebview extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_externallink_actionbar, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void openInExternalBrowser(){
+        String url = this.webView.getUrl();
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == R.id.externallink_actionbar_open_action) {
+            openInExternalBrowser();
+        }else if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
         }

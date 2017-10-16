@@ -363,4 +363,6 @@
     <string name="externallink_download_success_message">%1$s ble lastet ned.</string>
     <string name="externallink_permissions">Appen trenger tilgang til å laste ned eksterne filer fra avsender.</string>
 
+    <string name="externallink_actionbar_open_action">Åpne i ekstern nettleser</string>
+
 </resources>
