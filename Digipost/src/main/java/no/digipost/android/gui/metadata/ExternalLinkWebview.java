@@ -31,10 +31,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.*;
+import android.widget.ProgressBar;
 import no.digipost.android.R;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
@@ -51,6 +54,8 @@ public class ExternalLinkWebview extends AppCompatActivity {
     private String fileName;
     private String fileUrl;
     private BroadcastReceiver onComplete;
+    private ProgressBar progressSpinner;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,10 +63,12 @@ public class ExternalLinkWebview extends AppCompatActivity {
         setContentView(R.layout.activity_externallink_webview);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setBackgroundDrawable(new ColorDrawable(0xff454545));
+
 
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = this.getWindow();
@@ -71,6 +78,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
             }
         }
 
+        progressSpinner = (ProgressBar) findViewById(R.id.externallink_spinner);
         webView = (WebView) findViewById(R.id.externallink_webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
@@ -79,14 +87,18 @@ public class ExternalLinkWebview extends AppCompatActivity {
 
         enableCookies(webView);
         webView.setWebViewClient(new WebViewClient() {
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
+                progressSpinner.setVisibility(View.GONE);
+                webView.setVisibility(View.VISIBLE);
+
                 if (actionBar != null) {
-                    actionBar.setTitle(view.getTitle());
-                    actionBar.setSubtitle(view.getUrl());
+                    actionBar.setTitle(view.getUrl());
                 }
             }
+
         });
 
         webView.setDownloadListener(new DownloadListener() {
