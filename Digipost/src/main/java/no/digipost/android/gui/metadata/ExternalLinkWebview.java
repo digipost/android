@@ -30,9 +30,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.*;
 import android.webkit.*;
 import android.widget.ProgressBar;
@@ -40,7 +37,6 @@ import no.digipost.android.R;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.Permissions;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -60,11 +56,14 @@ public class ExternalLinkWebview extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_externallink_webview);
+        Bundle bundle = getIntent().getExtras();
+        fileUrl = bundle.getString("url", "https://www.digipost.no");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setTitle("");
+            setActionBarTitle(fileUrl);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setBackgroundDrawable(new ColorDrawable(0xff2E2E2E));
 
@@ -80,8 +79,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
         webView = (WebView) findViewById(R.id.externallink_webview);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
-        Bundle bundle = getIntent().getExtras();
-        fileUrl = bundle.getString("url", "https://www.digipost.no");
+
 
         enableCookies(webView);
         webView.setWebViewClient(new WebViewClient() {
@@ -101,13 +99,16 @@ public class ExternalLinkWebview extends AppCompatActivity {
 
         webView.setDownloadListener(new DownloadListener() {
             @Override
-            public void onDownloadStart(String url, String userAgent, String content, String mimeType, long contentLength) {
+            public void onDownloadStart(final String url, final String userAgent, final String content, final String mimeType,final long contentLength) {
                 fileName = URLUtil.guessFileName(url, content, mimeType);
                 fileUrl = url;
                 onComplete = new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        showDownloadSuccessDialog(context);
+                        String action = intent.getAction();
+                        if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
+                            showDownloadSuccessDialog(context);
+                        }
                     }
                 };
 
@@ -169,6 +170,13 @@ public class ExternalLinkWebview extends AppCompatActivity {
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 dialog.cancel();
+                finish();
+            }
+        }).setNeutralButton(R.string.externallink_actionbar_open_external, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                openInExternalApp(webView.getUrl());
+                dialog.dismiss();
                 finish();
             }
         });
@@ -239,16 +247,15 @@ public class ExternalLinkWebview extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void openInExternalBrowser() {
-        String url = this.webView.getUrl();
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(browserIntent);
+    private void openInExternalApp(final String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(intent);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.externallink_actionbar_open_action) {
-            openInExternalBrowser();
+            openInExternalApp(this.webView.getUrl());
         } else if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
