@@ -360,7 +360,7 @@
 
     <string name="externallink_download_title">Last ned</string>
     <string name="externallink_download_message">Vil du laste ned %1$s fra %2$s?</string>
-    <string name="externallink_download_success_message">%1$s ble lastet ned.</string>
+    <string name="externallink_download_success_message">%1$s ble lastet ned til enheten.</string>
     <string name="externallink_permissions">Appen trenger tilgang til å laste ned eksterne filer fra avsender.</string>
     <string name="externallink_actionbar_open_action">Åpne i ekstern nettleser</string>
     <string name="externallink_actionbar_open_external">Åpne utenfor app</string>
