@@ -90,7 +90,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
                 webView.setVisibility(View.VISIBLE);
 
                 if (actionBar != null) {
-                    actionBar.setTitle(view.getUrl());
+                    actionBar.setTitle(getShortUrl(view.getUrl()));
                 }
             }
 
@@ -123,6 +123,14 @@ public class ExternalLinkWebview extends AppCompatActivity {
             webView.loadUrl(fileUrl);
         } else {
             showPermissionsDialog();
+        }
+    }
+
+    private String getShortUrl(final String longUrl) {
+        try {
+            return new URL(longUrl).getHost();
+        }catch (MalformedURLException e){
+            return longUrl;
         }
     }
 
