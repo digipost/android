@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -88,13 +89,19 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
             @Override
             public void onLoadResource(WebView view, String url) {
-                if (!url.equals(webView.getUrl())) {
+                if (content_type != ApplicationConstants.RECEIPTS && !url.equals(webView.getUrl())){
                     Intent intent = new Intent(getApplicationContext(), ExternalLinkWebview.class);
                     intent.putExtra("url", url);
                     startActivity(intent);
                 }
             }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return content_type == ApplicationConstants.RECEIPTS || super.shouldOverrideUrlLoading(view, request);
+            }
         });
+
     }
 
     private void setupActionBar() {
