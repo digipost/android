@@ -129,11 +129,14 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         }
 
         ScrollView containerScrollView = (ScrollView) findViewById(R.id.container_scrollview);
+        containerScrollView.setFillViewport(true);
 
         if (metadataList.size() == 0) {
             containerScrollView.setFocusable(false);
+            containerScrollView.setSmoothScrollingEnabled(false);
         } else {
             containerScrollView.setFocusable(true);
+            containerScrollView.setSmoothScrollingEnabled(true);
 
         }
     }
