@@ -30,6 +30,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.*;
 import android.webkit.*;
 import android.widget.ProgressBar;
@@ -50,7 +53,8 @@ public class ExternalLinkWebview extends AppCompatActivity {
     private String fileUrl;
     private BroadcastReceiver onComplete;
     private ProgressBar progressSpinner;
-
+    private ActionBar actionBar;
+    private boolean firstLoad = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,12 +62,11 @@ public class ExternalLinkWebview extends AppCompatActivity {
         setContentView(R.layout.activity_externallink_webview);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        final ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setTitle("");
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setBackgroundDrawable(new ColorDrawable(0xff454545));
-
+            actionBar.setBackgroundDrawable(new ColorDrawable(0xff2E2E2E));
 
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 Window window = this.getWindow();
@@ -86,12 +89,12 @@ public class ExternalLinkWebview extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                progressSpinner.setVisibility(View.GONE);
-                webView.setVisibility(View.VISIBLE);
-
-                if (actionBar != null) {
-                    actionBar.setTitle(getShortUrl(view.getUrl()));
+                if(firstLoad) {
+                    progressSpinner.setVisibility(View.GONE);
+                    webView.setVisibility(View.VISIBLE);
+                    firstLoad = false;
                 }
+                setActionBarTitle(view.getUrl());
             }
 
         });
@@ -126,11 +129,14 @@ public class ExternalLinkWebview extends AppCompatActivity {
         }
     }
 
-    private String getShortUrl(final String longUrl) {
-        try {
-            return new URL(longUrl).getHost();
-        }catch (MalformedURLException e){
-            return longUrl;
+    private void setActionBarTitle(String url) {
+        if (actionBar != null) {
+            try {
+                url = new URL(url).getHost();
+            }catch (MalformedURLException e){
+                //IGNORE
+            }
+            actionBar.setTitle(url);
         }
     }
 
