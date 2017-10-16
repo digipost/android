@@ -172,7 +172,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
                 dialog.cancel();
                 finish();
             }
-        }).setNeutralButton(R.string.externallink_actionbar_open_external, new DialogInterface.OnClickListener() {
+        }).setNeutralButton(R.string.externallink_actionbar_open_in_browser, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 openInExternalApp(webView.getUrl());
@@ -188,7 +188,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
         String message = getString(R.string.externallink_permissions);
         final Activity activity = this;
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(activity, message);
-        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.externallink_continue), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 Permissions.requestWritePermissionsIfMissing(activity, activity);
                 dialog.dismiss();
@@ -212,7 +212,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
     private void showMissingPermissionsDialog() {
         String message = getString(R.string.externallink_permissions);
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(this, message);
-        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.externallink_continue), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 dialog.dismiss();
                 finish();
