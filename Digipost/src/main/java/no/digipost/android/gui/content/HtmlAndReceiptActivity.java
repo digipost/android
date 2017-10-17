@@ -17,6 +17,7 @@
 package no.digipost.android.gui.content;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -37,6 +38,10 @@ import no.digipost.android.gui.metadata.ExternalLinkWebview;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.FormatUtilities;
+
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
@@ -89,10 +94,9 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
             @Override
             public void onLoadResource(WebView view, String url) {
+
                 if (content_type != ApplicationConstants.RECEIPTS && !url.equals(webView.getUrl())){
-                    Intent intent = new Intent(getApplicationContext(), ExternalLinkWebview.class);
-                    intent.putExtra("url", url);
-                    startActivity(intent);
+                    openExternalLink(url);
                 }
             }
 
@@ -101,7 +105,23 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
                 return content_type == ApplicationConstants.RECEIPTS || super.shouldOverrideUrlLoading(view, request);
             }
         });
+    }
 
+    private void openExternalLink(final String url) {
+        try {
+            String scheme = new URL(url).toURI().getScheme();
+
+            if (scheme.equals("https")) {
+                Intent intent = new Intent(getApplicationContext(), ExternalLinkWebview.class);
+                intent.putExtra("url", url);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            }
+        }catch (Exception e){
+            //Ignore
+        }
     }
 
     private void setupActionBar() {
