@@ -34,6 +34,8 @@ import no.digipost.android.gui.content.DisplayContentActivity;
 import no.digipost.android.model.Metadata;
 import no.digipost.android.utilities.FormatUtilities;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 
 public class ExternalLinkView extends Fragment{
@@ -69,7 +71,14 @@ public class ExternalLinkView extends Fragment{
     }
 
     private void openExternalLink(final String url){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        String scheme = "http";
+        try{
+            scheme = new URL(url).toURI().getScheme();
+        }catch (Exception e) {
+            //Ignore
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && scheme.equals("https")) {
             Intent intent = new Intent(getActivity(), ExternalLinkWebview.class);
             intent.putExtra("url", url);
             startActivity(intent);
