@@ -33,6 +33,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.*;
 import android.webkit.*;
 import android.widget.ProgressBar;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
@@ -55,6 +57,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_externallink_webview);
         Bundle bundle = getIntent().getExtras();
         fileUrl = bundle.getString("url", "https://www.digipost.no");
@@ -128,6 +131,18 @@ public class ExternalLinkWebview extends AppCompatActivity {
         } else {
             showPermissionsDialog();
         }
+    }
+    
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
     private void setActionBarTitle(String url) {
