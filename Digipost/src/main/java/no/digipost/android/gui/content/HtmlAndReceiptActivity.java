@@ -38,9 +38,6 @@ import no.digipost.android.gui.metadata.ExternalLinkWebview;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.FormatUtilities;
-
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
@@ -84,7 +81,6 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
     private void setupWebView() {
         webView = (WebView) findViewById(R.id.web_html);
-        webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setUseWideViewPort(true);
         webView.getSettings().setSupportZoom(true);
         webView.getSettings().setBuiltInZoomControls(true);
@@ -94,7 +90,6 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
             @Override
             public void onLoadResource(WebView view, String url) {
-
                 if (content_type != ApplicationConstants.RECEIPTS && !url.equals(webView.getUrl())){
                     openExternalLink(url);
                 }
