@@ -206,7 +206,11 @@ public class ExternalLinkWebview extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        webView.loadUrl(fileUrl);
+        if (FileUtilities.isStorageWriteAllowed(this)) {
+            webView.loadUrl(fileUrl);
+        }else{
+            finish();
+        }
     }
 
     private void showMissingPermissionsDialog() {
