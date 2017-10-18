@@ -10,6 +10,8 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import no.digipost.android.gui.metadata.ExternalLinkWebview;
 
+import java.net.URL;
+
 public class MuPDFReaderView extends ReaderView {
 	private final Context mContext;
 	private boolean mLinksEnabled = false;
@@ -68,9 +70,7 @@ public class MuPDFReaderView extends ReaderView {
 
 					@Override
 					public void visitExternal(LinkInfoExternal li) {
-						Intent intent = new Intent(mContext, ExternalLinkWebview.class);
-						intent.putExtra("url", li.url);
-						mContext.startActivity(intent);
+						openExternalLink(li.url);
 					}
 
 					@Override
@@ -91,6 +91,22 @@ public class MuPDFReaderView extends ReaderView {
 			}
 		}
 		return super.onSingleTapUp(e);
+	}
+
+	private void openExternalLink(final String url) {
+		try {
+			String scheme = new URL(url).toURI().getScheme();
+			if (scheme.equals("https")) {
+				Intent intent = new Intent(mContext, ExternalLinkWebview.class);
+				intent.putExtra("url", url);
+				mContext.startActivity(intent);
+			} else {
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				mContext.startActivity(intent);
+			}
+		}catch (Exception e){
+			//Ignore
+		}
 	}
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
