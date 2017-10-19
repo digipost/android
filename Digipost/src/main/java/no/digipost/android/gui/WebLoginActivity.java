@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.*;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import no.digipost.android.DigipostApplication;
@@ -65,9 +66,23 @@ public class WebLoginActivity extends AppCompatActivity {
         String url = OAuth.getAuthorizeURL(authenticationScope);
         enableCookies(webView);
         webView.loadUrl(url);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-        webView.getSettings().setDomStorageEnabled(true);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
+        settings.setDomStorageEnabled(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(true);
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(false);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        webView.setScrollbarFadingEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
         webView.setWebViewClient(new MyWebViewClient());
     }
 

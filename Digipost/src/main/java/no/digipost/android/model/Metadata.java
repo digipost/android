@@ -28,11 +28,26 @@ import java.util.Date;
 public class Metadata {
 
     public static final String APPOINTMENT = "Appointment";
+    public static final String EXTERNAL_LINK = "ExternalLink";
 
     public String title;
-
     @JsonProperty
     public String type;
+
+    @JsonProperty
+    public String url;
+
+    @JsonProperty
+    public String deadline;
+
+    @JsonProperty
+    public String description;
+
+    @JsonProperty
+    public String buttonText;
+
+    @JsonProperty
+    public Boolean urlIsActive;
 
     @JsonProperty
     public String subTitle;
@@ -78,6 +93,14 @@ public class Metadata {
             infoText += i.title + "\n" + i.text + "\n\n";
         }
         return infoText;
+    }
+
+    public String getButtonText() {
+        return buttonText != null ? buttonText: "Gå videre";
+    }
+
+    public String getDescription() {
+        return description != null ? description : "";
     }
 
     public Date getStartDate() {

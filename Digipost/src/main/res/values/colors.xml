@@ -70,5 +70,6 @@
     <color name="metadata_title">#212121</color>
     <color name="metadata_text">#2E2E2E</color>
     <color name="metadata_divider">#EDEDED</color>
+    <color name="metadata_externalbrowser_top_background">#2E2E2E</color>
 
 </resources>

@@ -18,6 +18,7 @@ package no.digipost.android.gui.content;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -53,6 +54,7 @@ import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.invoice.InvoiceOptionsActivity;
 import no.digipost.android.gui.metadata.AppointmentView;
+import no.digipost.android.gui.metadata.ExternalLinkView;
 import no.digipost.android.model.*;
 import no.digipost.android.utilities.*;
 
@@ -105,31 +107,61 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         }
     }
 
-    private void showMetadata() {
+    private ArrayList<Metadata> getMetadata() {
         Attachment attachment = DocumentContentStore.getDocumentAttachment();
-        if (DocumentContentStore.getDocumentAttachment() != null) {
-            ArrayList<Metadata> metadataList = attachment.getMetadata();
-            for (Metadata metadata : metadataList) {
-                if (metadata.type.equals(Metadata.APPOINTMENT)) {
-                    addAppointmentView(metadata);
-                }
+
+        if (attachment != null) {
+            return attachment.getMetadata();
+        }
+
+        return new ArrayList<>();
+    }
+
+    private void showMetadata() {
+        ArrayList<Metadata> metadataList = getMetadata();
+
+        for (Metadata metadata : metadataList) {
+            if (metadata.type.equals(Metadata.APPOINTMENT)) {
+                addAppointmentView(metadata);
+            } else if (metadata.type.equals(Metadata.EXTERNAL_LINK)) {
+                addExternalLinkView(metadata);
             }
+        }
+
+        ScrollView containerScrollView = (ScrollView) findViewById(R.id.container_scrollview);
+        containerScrollView.setFillViewport(true);
+
+        if (metadataList.size() == 0) {
+            containerScrollView.setFocusable(false);
+            containerScrollView.setSmoothScrollingEnabled(false);
+        } else {
+            containerScrollView.setFocusable(true);
+            containerScrollView.setSmoothScrollingEnabled(true);
+
         }
     }
 
-    private void addAppointmentView(Metadata appointment) {
-        appointment.title = "Du har fått en innkalling fra " + DocumentContentStore.getDocumentParent().getCreatorName();
-        LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container_layout);
+    private void addExternalLinkView(Metadata metadata) {
+        ExternalLinkView externalLinkView = ExternalLinkView.newInstance();
+        externalLinkView.setExternallink(metadata);
+        addViewToContainerLayout(externalLinkView);
+    }
+
+    private void addAppointmentView(Metadata metadata) {
+        metadata.title = "Du har fått en innkalling fra " + DocumentContentStore.getDocumentParent().getCreatorName();
         AppointmentView appointmentView = AppointmentView.newInstance();
-        appointmentView.setAppointment(appointment);
+        appointmentView.setAppointment(metadata);
+        addViewToContainerLayout(appointmentView);
+    }
+
+    private void addViewToContainerLayout(Fragment fragment){
+        LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container_layout);
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.VERTICAL);
         int randomId = (int) (Math.random()*100);
         ll.setId(randomId);
-        getFragmentManager().beginTransaction().add(ll.getId(), appointmentView, "appointmentView" + randomId).commit();
-
+        getFragmentManager().beginTransaction().add(ll.getId(), fragment, "MetadataView" + randomId).commit();
         containerLayout.addView(ll,0);
-
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {
@@ -244,7 +276,10 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         String positiveAction = getString(R.string.delete);
         String negativeAction = getString(R.string.abort);
 
-        Invoice invoice = DocumentContentStore.getDocumentAttachment().getInvoice();
+        Invoice invoice = null;
+        if (content_type != ApplicationConstants.RECEIPTS) {
+            invoice = DocumentContentStore.getDocumentAttachment().getInvoice();
+        }
 
         if (content_type == ApplicationConstants.RECEIPTS) {
             message = getString(R.string.dialog_prompt_delete_receipt);

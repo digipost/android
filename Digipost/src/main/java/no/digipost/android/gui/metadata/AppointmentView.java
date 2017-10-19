@@ -17,7 +17,6 @@
 package no.digipost.android.gui.metadata;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
@@ -145,7 +144,7 @@ public class AppointmentView extends Fragment{
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, beginTime.getTimeInMillis());
         values.put(CalendarContract.Events.DTEND, endTime.getTimeInMillis());
-        values.put(CalendarContract.Events.TITLE, appointment.subTitle);
+        values.put(CalendarContract.Events.TITLE, appointment.title);
         values.put(CalendarContract.Events.EVENT_LOCATION, appointment.getPlaceAddress() + " - " + appointment.getPlace());
         values.put(CalendarContract.Events.DESCRIPTION, description);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, beginTime.getTimeZone().toString());

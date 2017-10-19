@@ -16,13 +16,17 @@
 
 package no.digipost.android.gui.content;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
@@ -30,9 +34,11 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.fragments.ContentFragment;
+import no.digipost.android.gui.metadata.ExternalLinkWebview;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Receipt;
 import no.digipost.android.utilities.FormatUtilities;
+import java.net.URL;
 
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
@@ -71,6 +77,63 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
+    }
+
+    private void setupWebView() {
+        webView = (WebView) findViewById(R.id.web_html);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setSupportZoom(true);
+        webView.getSettings().setBuiltInZoomControls(true);
+        webView.getSettings().setDisplayZoomControls(false);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public void onLoadResource(WebView view, String url) {
+                if (content_type != ApplicationConstants.RECEIPTS && !url.equals(webView.getUrl())){
+                    openExternalLink(url);
+                }
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return content_type == ApplicationConstants.RECEIPTS || super.shouldOverrideUrlLoading(view, request);
+            }
+        });
+    }
+
+    private void openExternalLink(final String url) {
+        try {
+            String scheme = new URL(url).toURI().getScheme();
+
+            if (scheme.equals("https")) {
+                Intent intent = new Intent(getApplicationContext(), ExternalLinkWebview.class);
+                intent.putExtra("url", url);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            }
+        }catch (Exception e){
+            //Ignore
+        }
+    }
+
+    private void setupActionBar() {
+        try {
+            if(getSupportActionBar() != null) {
+                if (content_type != ApplicationConstants.RECEIPTS) {
+                    Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
+                    setActionBar(documentMeta.getSubject());
+                } else {
+                    Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
+                    getSupportActionBar().setTitle(receiptMeta.getStoreName());
+                    getSupportActionBar().setSubtitle(FormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
+                }
+            }
+        } catch (NullPointerException e) {
+            //IGNORE
+        }
     }
 
     private void loadContent() {
@@ -135,32 +198,5 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void setupWebView() {
-        webView = (WebView) findViewById(R.id.web_html);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.getSettings().setSupportZoom(true);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setDisplayZoomControls(false);
-        webView.getSettings().setLoadWithOverviewMode(true);
-    }
-
-    private void setupActionBar() {
-        try {
-            if(getSupportActionBar() != null) {
-                if (content_type != ApplicationConstants.RECEIPTS) {
-                    Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
-                    setActionBar(documentMeta.getSubject());
-                } else {
-                    Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
-                    getSupportActionBar().setTitle(receiptMeta.getStoreName());
-                    getSupportActionBar().setSubtitle(FormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
-                }
-            }
-        } catch (NullPointerException e) {
-            //IGNORE
-        }
     }
 }

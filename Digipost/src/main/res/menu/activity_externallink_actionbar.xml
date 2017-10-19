@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+            android:id="@+id/externallink_actionbar_open_action"
+            android:title="@string/externallink_actionbar_open_in_browser"
+            app:showAsAction="never"/>
+
+</menu>

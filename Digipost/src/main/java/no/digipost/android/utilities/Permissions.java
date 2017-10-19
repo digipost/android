@@ -24,12 +24,13 @@ import android.support.v4.app.ActivityCompat;
 public class Permissions {
     private final static int REQUEST_WRITE_EXTERNAL_STORAGE = 0;
 
-    public static void requestWritePermissionsIfMissing(Context context, Activity activity){
+    public static boolean requestWritePermissionsIfMissing(Context context, Activity activity){
 
         if(!FileUtilities.isStorageWriteAllowed(context)) {
             ActivityCompat.requestPermissions(activity,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_WRITE_EXTERNAL_STORAGE);
         }
+        return FileUtilities.isStorageWriteAllowed(context);
     }
 }
