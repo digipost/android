@@ -3,8 +3,8 @@ apply plugin: 'com.android.application'
 
 android {
     defaultConfig {
-        versionCode 64
-        versionName '3.3.6'
+        versionCode 65
+        versionName '3.3.5'
         applicationId = "no.digipost.android"
         minSdkVersion 16
         targetSdkVersion 25
