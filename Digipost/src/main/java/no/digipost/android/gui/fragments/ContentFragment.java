@@ -243,18 +243,19 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         String messageText = getActionDeletePromptString(content.size());
 
         boolean notReceipt = getContent() != ApplicationConstants.RECEIPTS;
-        int numberOfInvoices = numberOfInvoices(content);
+        if(notReceipt) {
+            int numberOfInvoices = numberOfInvoices(content);
+            if (numberOfInvoices > 0) {
+                int numberOfFiles = content.size();
+                String filesText = numberOfFiles + " " + (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));
+                String invoicesText = numberOfInvoices + " " + (numberOfInvoices == 1 ? getString(R.string.invoice_delete_invoice_single) : getString(R.string.invoice_delete_invoice_plural));
 
-        if(notReceipt && numberOfInvoices > 0){
-            int numberOfFiles = content.size();
-            String filesText = numberOfFiles +" "+ (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));
-            String invoicesText = numberOfInvoices +" "+ (numberOfInvoices == 1 ? getString(R.string.invoice_delete_invoice_single) : getString(R.string.invoice_delete_invoice_plural));
 
-
-            if (InvoiceBankAgreements.hasActiveAgreementType(context, InvoiceBankAgreements.TYPE_2)) {
-                messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices_active_type_2_agreement), filesText, invoicesText);
-            }else {
-                messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices), filesText, invoicesText);
+                if (InvoiceBankAgreements.hasActiveAgreementType(context, InvoiceBankAgreements.TYPE_2)) {
+                    messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices_active_type_2_agreement), filesText, invoicesText);
+                } else {
+                    messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices), filesText, invoicesText);
+                }
             }
         }
 

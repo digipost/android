@@ -276,7 +276,10 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         String positiveAction = getString(R.string.delete);
         String negativeAction = getString(R.string.abort);
 
-        Invoice invoice = DocumentContentStore.getDocumentAttachment().getInvoice();
+        Invoice invoice = null;
+        if (content_type != ApplicationConstants.RECEIPTS) {
+            invoice = DocumentContentStore.getDocumentAttachment().getInvoice();
+        }
 
         if (content_type == ApplicationConstants.RECEIPTS) {
             message = getString(R.string.dialog_prompt_delete_receipt);
