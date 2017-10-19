@@ -80,9 +80,24 @@ public class ExternalLinkWebview extends AppCompatActivity {
 
         progressSpinner = (ProgressBar) findViewById(R.id.externallink_spinner);
         webView = (WebView) findViewById(R.id.externallink_webview);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.getSettings().setDomStorageEnabled(true);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        settings.setDomStorageEnabled(true);
+        settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(true);
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        settings.setDisplayZoomControls(false);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        webView.setScrollbarFadingEnabled(true);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
 
         enableCookies(webView);
         webView.setWebViewClient(new WebViewClient() {
@@ -97,7 +112,6 @@ public class ExternalLinkWebview extends AppCompatActivity {
                 }
                 setActionBarTitle(view.getUrl());
             }
-
         });
 
         webView.setDownloadListener(new DownloadListener() {
