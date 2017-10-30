@@ -128,16 +128,22 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
             }
         }
 
+        toggleContainerViews(metadataList.size());
+    }
+
+    private void toggleContainerViews(final int metadataSize) {
+        LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container_layout);
         ScrollView containerScrollView = (ScrollView) findViewById(R.id.container_scrollview);
         containerScrollView.setFillViewport(true);
 
-        if (metadataList.size() == 0) {
-            containerScrollView.setFocusable(false);
-            containerScrollView.setSmoothScrollingEnabled(false);
-        } else {
+        if (metadataSize > 0) {
+            containerLayout.setFocusable(true);
             containerScrollView.setFocusable(true);
             containerScrollView.setSmoothScrollingEnabled(true);
-
+        } else {
+            containerLayout.setFocusable(false);
+            containerScrollView.setFocusable(false);
+            containerScrollView.setSmoothScrollingEnabled(false);
         }
     }
 
