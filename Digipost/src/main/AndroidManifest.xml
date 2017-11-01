@@ -37,8 +37,6 @@
             android:theme="@style/Digipost"
             android:vmSafeMode="true">
 
-        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing" android:value="true" />
-
         <activity
                 android:name="no.digipost.android.MainActivity"
                 android:configChanges="orientation|screenSize"
