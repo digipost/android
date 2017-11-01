@@ -159,14 +159,6 @@ public class WebLoginActivity extends AppCompatActivity {
                 return true;
             }
             return false;
-
-        }
-
-        @Override
-        public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError err) {
-            super.onReceivedError(view,req,err);
-            setResult(RESULT_CANCELED);
-            finish();
         }
     }
 
