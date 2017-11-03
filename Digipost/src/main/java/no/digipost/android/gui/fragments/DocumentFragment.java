@@ -211,12 +211,14 @@ public class DocumentFragment extends ContentFragment<Document> {
                     String action = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION);
 
                     if (action.equals(ApiConstants.MOVE)) {
+                        dismissAttachmentDialog();
                         updateCurrentDocument = false;
                         String toLocation = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_LOCATION);
                         String folderId = data.getStringExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_FOLDERID);
                         executeDocumentMoveTask(DocumentContentStore.getDocumentParent(),null, toLocation, folderId);
 
                     } else if (action.equals(ApiConstants.DELETE)) {
+                        dismissAttachmentDialog();
                         updateCurrentDocument = false;
                         deleteDocument(DocumentContentStore.getDocumentParent());
                     }
@@ -319,7 +321,12 @@ public class DocumentFragment extends ContentFragment<Document> {
         builder.setTitle(attachmentAdapter.getMainSubject());
         attachmentDialog = builder.create();
         attachmentDialog.show();
+    }
 
+    private void dismissAttachmentDialog() {
+        if (attachmentDialog != null) {
+            attachmentDialog.dismiss();
+        }
     }
 
     private void openListItem(final Document document) {
@@ -829,10 +836,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                         activityCommunicator.requestLogOut();
                     }
                 } else {
-                    if (attachmentDialog != null) {
-                        attachmentDialog.dismiss();
-                        attachmentDialog = null;
-                    }
+                    dismissAttachmentDialog();
                 }
             }
             refreshItems();
