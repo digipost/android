@@ -319,7 +319,13 @@ public class DocumentFragment extends ContentFragment<Document> {
         builder.setTitle(attachmentAdapter.getMainSubject());
         attachmentDialog = builder.create();
         attachmentDialog.show();
+    }
 
+    private void dismissAttachmentDialog() {
+        if (attachmentDialog != null) {
+            attachmentDialog.dismiss();
+            attachmentDialog = null;
+        }
     }
 
     private void openListItem(final Document document) {
@@ -670,6 +676,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             } else {
                 getAttachmentContent(parentDocument, position, attachment);
             }
+            dismissAttachmentDialog();
         }
     }
 
@@ -829,10 +836,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                         activityCommunicator.requestLogOut();
                     }
                 } else {
-                    if (attachmentDialog != null) {
-                        attachmentDialog.dismiss();
-                        attachmentDialog = null;
-                    }
+                    dismissAttachmentDialog();
                 }
             }
             refreshItems();
