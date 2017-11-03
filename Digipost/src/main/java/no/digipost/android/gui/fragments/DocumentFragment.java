@@ -326,7 +326,6 @@ public class DocumentFragment extends ContentFragment<Document> {
     private void dismissAttachmentDialog() {
         if (attachmentDialog != null) {
             attachmentDialog.dismiss();
-            attachmentDialog = null;
         }
     }
 
