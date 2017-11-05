@@ -3,8 +3,8 @@ apply plugin: 'com.android.application'
 
 android {
     defaultConfig {
-        versionCode 67
-        versionName '3.3.7'
+        versionCode 68
+        versionName '3.3.8'
         applicationId = "no.digipost.android"
         minSdkVersion 16
         targetSdkVersion 25
@@ -56,12 +56,12 @@ android {
 }
 
 buildscript {
-    
+
     repositories {
         jcenter()
         mavenCentral()
     }
-    
+
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
     }
