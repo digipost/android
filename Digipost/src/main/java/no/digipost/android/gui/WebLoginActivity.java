@@ -83,7 +83,6 @@ public class WebLoginActivity extends AppCompatActivity {
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         webView.setScrollbarFadingEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
-        webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void setAuthenticationScope(Bundle extras){
