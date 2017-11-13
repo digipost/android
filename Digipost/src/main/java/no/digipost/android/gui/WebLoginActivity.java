@@ -50,11 +50,6 @@ public class WebLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.fragment_login_webview);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         setAuthenticationScope(getIntent().getExtras());
         checkIfAppIsOnline();
         WebView webView = (WebView) findViewById(R.id.login_webview);
@@ -64,7 +59,6 @@ public class WebLoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Avbryt");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     private void setupWebView(WebView webView){
@@ -83,7 +77,6 @@ public class WebLoginActivity extends AppCompatActivity {
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         webView.setScrollbarFadingEnabled(true);
         webView.setWebViewClient(new MyWebViewClient());
-        webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     private void setAuthenticationScope(Bundle extras){
