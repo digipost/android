@@ -126,10 +126,13 @@ public class DocumentFragment extends ContentFragment<Document> {
     @Override
     void recyclerViewOnClick(int position){
         currentListPosition = position;
-        if(multiSelectEnabled){
-            documentAdapter.select(position);
-        }else {
-            openUpdatedDocument(documentAdapter.getDocuments().get(position));
+        if(position != -1) {
+            if (multiSelectEnabled) {
+                documentAdapter.select(position);
+            } else {
+                Document document = documentAdapter.getDocuments().get(position);
+                openUpdatedDocument(documentAdapter.getDocuments().get(position));
+            }
         }
     }
 
