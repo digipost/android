@@ -43,6 +43,7 @@ import java.net.URL;
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
     private WebView webView;
+    private boolean externalWebviewAvailable = true;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
     protected void onStart() {
         super.onStart();
         GoogleAnalytics.getInstance(this).reportActivityStart(this);
+        externalWebviewAvailable = true;
     }
 
     @Override
@@ -87,11 +89,12 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         webView.getSettings().setDisplayZoomControls(false);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.setWebViewClient(new WebViewClient() {
-
             @Override
             public void onLoadResource(WebView view, String url) {
-                if (content_type != ApplicationConstants.RECEIPTS && !url.equals(webView.getUrl())){
+                if (content_type != ApplicationConstants.RECEIPTS && !url.equals(webView.getUrl()) && externalWebviewAvailable){
+                    externalWebviewAvailable = false;
                     openExternalLink(url);
+                    finish();
                 }
             }
 
