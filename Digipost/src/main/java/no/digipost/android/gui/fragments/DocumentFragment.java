@@ -131,7 +131,9 @@ public class DocumentFragment extends ContentFragment<Document> {
                 documentAdapter.select(position);
             } else {
                 Document document = documentAdapter.getDocuments().get(position);
-                openUpdatedDocument(documentAdapter.getDocuments().get(position));
+                if(document != null) {
+                    openUpdatedDocument(document);
+                }
             }
         }
     }
