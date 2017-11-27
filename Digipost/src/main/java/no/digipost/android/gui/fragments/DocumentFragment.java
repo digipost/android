@@ -126,10 +126,15 @@ public class DocumentFragment extends ContentFragment<Document> {
     @Override
     void recyclerViewOnClick(int position){
         currentListPosition = position;
-        if(multiSelectEnabled){
-            documentAdapter.select(position);
-        }else {
-            openUpdatedDocument(documentAdapter.getDocuments().get(position));
+        if(position != -1) {
+            if (multiSelectEnabled) {
+                documentAdapter.select(position);
+            } else {
+                Document document = documentAdapter.getDocuments().get(position);
+                if(document != null) {
+                    openUpdatedDocument(document);
+                }
+            }
         }
     }
 
@@ -358,11 +363,11 @@ public class DocumentFragment extends ContentFragment<Document> {
         builder.setPositiveButton(getString(R.string.dialog_id_porten_unlock), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 openHighAuthenticationWebView(document);
-                dialog.dismiss();
+                if(dialog != null) dialog.dismiss();
             }
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
+                if(dialog != null) dialog.cancel();
                 dismissUpdateProgressDialogIfExisting();
             }
         });
@@ -504,7 +509,7 @@ public class DocumentFragment extends ContentFragment<Document> {
 
         updateProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.abort), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int which) {
-                updateProgressDialog.dismiss();
+                dismissUpdateProgressDialogIfExisting();
                 openAttachment = false;
 
                 if (asyncHttpClient != null) {

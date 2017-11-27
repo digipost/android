@@ -87,11 +87,11 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         webView.getSettings().setDisplayZoomControls(false);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.setWebViewClient(new WebViewClient() {
-
             @Override
             public void onLoadResource(WebView view, String url) {
                 if (content_type != ApplicationConstants.RECEIPTS && !url.equals(webView.getUrl())){
                     openExternalLink(url);
+                    view.stopLoading();
                 }
             }
 

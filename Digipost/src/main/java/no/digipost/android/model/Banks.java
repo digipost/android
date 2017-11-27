@@ -28,7 +28,7 @@ public class Banks {
     private ArrayList<Bank> banks;
 
     public ArrayList<Bank> getBanks() {
-        return this.banks;
+        return this.banks != null ? banks : new ArrayList<Bank>();
     }
 
     public void setBanks(ArrayList<Bank> banks){

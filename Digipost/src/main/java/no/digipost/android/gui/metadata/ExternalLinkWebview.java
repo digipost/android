@@ -92,13 +92,6 @@ public class ExternalLinkWebview extends AppCompatActivity {
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         webView.setScrollbarFadingEnabled(true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        } else {
-            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-
         enableCookies(webView);
         webView.setWebViewClient(new WebViewClient() {
 

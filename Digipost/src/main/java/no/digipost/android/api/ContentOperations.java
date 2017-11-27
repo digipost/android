@@ -107,10 +107,15 @@ public class ContentOperations {
         } else {
             content -= ApplicationConstants.numberOfStaticFolders;
             ArrayList<Folder> folders = mailbox.getFolders().getFolder();
-            Folder folder = folders.get(content);
-            folder = (Folder) JSONUtilities.processJackson(Folder.class, apiAccess.getApiJsonString(context, folder.getSelfUri(), params));
-            return folder != null ? folder.getDocuments() : null;
+
+            if (folders != null && content < folders.size()) {
+                Folder folder = (Folder) JSONUtilities.processJackson(Folder.class, apiAccess.getApiJsonString(context, folders.get(content).getSelfUri(), params));
+                if (folder != null) {
+                    return folder.getDocuments();
+                }
+            }
         }
+        return null;
     }
 
     public static String getUploadUri(Context context, int content) throws DigipostApiException, DigipostClientException,

@@ -88,7 +88,8 @@ public class InvoiceBankAgreements {
             Type type = new TypeToken<Banks>() {}.getType();
             return new Gson().fromJson(banksAsJSON, type);
         } else {
-            return getBanksFromServer(context);
+            Banks banks = getBanksFromServer(context);
+            return banks != null ? banks : new Banks();
         }
     }
 
