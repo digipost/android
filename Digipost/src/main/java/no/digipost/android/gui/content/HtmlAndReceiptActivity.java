@@ -18,6 +18,7 @@ package no.digipost.android.gui.content;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -88,18 +89,26 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.setWebViewClient(new WebViewClient() {
             @Override
-            public void onLoadResource(WebView view, String url) {
-                if (content_type != ApplicationConstants.RECEIPTS && !url.equals(webView.getUrl())){
-                    openExternalLink(url);
-                    view.stopLoading();
-                }
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                overrideUrlLoading(url);
+                return content_type != ApplicationConstants.RECEIPTS || super.shouldOverrideUrlLoading(view, url);
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                return content_type == ApplicationConstants.RECEIPTS || super.shouldOverrideUrlLoading(view, request);
+                if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    overrideUrlLoading(request.getUrl().toString());
+                }
+                return content_type != ApplicationConstants.RECEIPTS || super.shouldOverrideUrlLoading(view, request);
             }
         });
+    }
+
+    private void overrideUrlLoading(String url) {
+        if(url != null) {
+            openExternalLink(url);
+            this.webView.stopLoading();
+        }
     }
 
     private void openExternalLink(final String url) {
