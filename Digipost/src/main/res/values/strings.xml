@@ -30,7 +30,7 @@
     <string name="drawer_create_new_folder_default_name">Mappenavn</string>
     <string name="drawer_create_folder">Opprett mappe</string>
     <string name="drawer_inbox">Postkassen</string>
-    <string name="drawer_receipts">E-Kvitteringer</string>
+    <string name="drawer_receipts">Kvitteringer</string>
     <string name="drawer_my_folders">MINE MAPPER</string>
     <string name="drawer_my_account">MIN KONTO</string>
     <string name="drawer_change_account">Bytt konto</string>
