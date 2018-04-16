@@ -167,6 +167,8 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
             return R.drawable.trophy_32;
         } else if (type.equals(context.getString(R.string.icon_box))) {
             return R.drawable.archive_32;
+        } else if (type.equals(context.getString(R.string.icon_receipt))) {
+            return R.drawable.receipt_32;
         } else if (type.equals(context.getString(R.string.icon_home))) {
             return R.drawable.home_32;
         } else if (type.equals(context.getString(R.string.icon_star))) {
