@@ -6,7 +6,7 @@ android {
         versionCode 71
         versionName '3.4.1'
         applicationId = "no.digipost.android"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 25
         vectorDrawables.useSupportLibrary = true
         ndk {
@@ -28,7 +28,7 @@ android {
         applicationId 'no.digipost.android'
     }
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '27.0.3'
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
@@ -49,8 +49,9 @@ android {
         disable 'InvalidPackage'
         abortOnError false
     }
+    flavorDimensions "app"
     productFlavors {
-        flavor {
+        app {
         }
     }
 }
@@ -60,10 +61,11 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
+        google()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:3.1.1'
     }
 }
 
