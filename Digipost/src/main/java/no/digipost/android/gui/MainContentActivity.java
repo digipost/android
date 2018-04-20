@@ -55,7 +55,6 @@ import no.digipost.android.gui.content.UploadActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.fragments.EditFolderFragment;
-import no.digipost.android.gui.fragments.ReceiptFragment;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.invoice.InvoiceOverviewActivity;
 import no.digipost.android.model.Account;
@@ -266,10 +265,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.activity_main_content_actionbar, menu);
-        if(getCurrentFragment() != null && getCurrentFragment().getContent() == ApplicationConstants.RECEIPTS){
-            MenuItem uploadButton = menu.findItem(R.id.menu_upload);
-            uploadButton.setVisible(false);
-        }
         updateTitles();
         return true;
     }
@@ -470,9 +465,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 if (content == ApplicationConstants.MAILBOX) {
                     contentFragment = DocumentFragment.newInstance(ApplicationConstants.MAILBOX);
 
-                } else if (content == ApplicationConstants.RECEIPTS) {
-                    contentFragment = ReceiptFragment.newInstance();
-
                 } else if (content > ApplicationConstants.FOLDERS_LABEL && content < inboxReceiptsAndFolders) {
                     contentFragment = DocumentFragment.newInstance(content);
 
@@ -537,7 +529,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
         //Add main menu
         drawerItems.add(getResources().getString(R.string.drawer_inbox));
-        drawerItems.add(getResources().getString(R.string.drawer_receipts));
         drawerItems.add(getResources().getString(R.string.drawer_my_folders));
 
         ArrayList<Folder> fs = null;

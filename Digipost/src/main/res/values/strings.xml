@@ -30,7 +30,6 @@
     <string name="drawer_create_new_folder_default_name">Mappenavn</string>
     <string name="drawer_create_folder">Opprett mappe</string>
     <string name="drawer_inbox">Postkassen</string>
-    <string name="drawer_receipts">Kvitteringer</string>
     <string name="drawer_my_folders">MINE MAPPER</string>
     <string name="drawer_my_account">MIN KONTO</string>
     <string name="drawer_change_account">Bytt konto</string>
@@ -114,7 +113,7 @@
     <string name="letter_singular">brevet</string>
     <string name="letter_plural">brevene</string>
     <string name="delete_multiple">Vil du slette disse %1$d %2$s?</string>
-    <string name="delete_single">Vil du slette %1$s %2$s?</string>
+    <string name="delete_single">Vil du slette dette %1$s?</string>
     <string name="delete_progress_document">Sletter %1$s (%2$d/%3$d)</string>
     <string name="delete_progress_receipt">Sletter %1$s %2$s (%3$d/%4$d)</string>
     <string name="delete_cancelled">%1$d av %2$d slettet.</string>

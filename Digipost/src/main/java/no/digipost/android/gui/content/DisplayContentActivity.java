@@ -72,7 +72,6 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     private FolderArrayAdapter folderAdapter;
     private String location;
     private String folderId;
-    private GridLayout gridLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +79,9 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pdf);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
-        if(content_type != ApplicationConstants.RECEIPTS) {
-            if (DocumentContentStore.getDocumentAttachment() == null || DocumentContentStore.getDocumentParent() == null) {
-                DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
-                finish();
-            }
+        if (DocumentContentStore.getDocumentAttachment() == null || DocumentContentStore.getDocumentParent() == null) {
+            DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
+            finish();
         }
 
     }
@@ -102,9 +99,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     protected void setupMetadataView() {
-        if(content_type != ApplicationConstants.RECEIPTS) {
-            showMetadata();
-        }
+        showMetadata();
     }
 
     private ArrayList<Metadata> getMetadata() {
@@ -252,7 +247,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     protected void showInformationDialog() {
-        if (content_type != ApplicationConstants.RECEIPTS && DocumentContentStore.getDocumentParent() != null && DocumentContentStore.getDocumentAttachment() != null) {
+        if (DocumentContentStore.getDocumentParent() != null && DocumentContentStore.getDocumentAttachment() != null) {
             new AlertDialog.Builder(this).setMessage(getFormattedInfoText()).setNegativeButton(getString(R.string.close), null).show();
         }
     }
@@ -282,15 +277,8 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         String positiveAction = getString(R.string.delete);
         String negativeAction = getString(R.string.abort);
 
-        Invoice invoice = null;
-        if (content_type != ApplicationConstants.RECEIPTS) {
-            invoice = DocumentContentStore.getDocumentAttachment().getInvoice();
-        }
-
-        if (content_type == ApplicationConstants.RECEIPTS) {
-            message = getString(R.string.dialog_prompt_delete_receipt);
-
-        }else if(invoice != null){
+        Invoice invoice = DocumentContentStore.getDocumentAttachment().getInvoice();
+        if(invoice != null){
 
             Payment payment = invoice.getPayment();
 
@@ -528,7 +516,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         private Attachment attachment;
         private boolean invalidToken;
 
-        public SendToBankTask(final Attachment attachment, final Document document) {
+        SendToBankTask(final Attachment attachment, final Document document) {
             this.document = document;
             this.attachment = attachment;
         }
@@ -545,10 +533,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                 ContentOperations.sendToBank(DisplayContentActivity.this, attachment);
                 DocumentContentStore.setDocumentParent(ContentOperations.getDocumentSelf(DisplayContentActivity.this, document));
                 return true;
-            } catch (DigipostApiException e) {
-                errorMessage = e.getMessage();
-                return false;
-            } catch (DigipostClientException e) {
+            } catch (DigipostApiException | DigipostClientException e) {
                 errorMessage = e.getMessage();
                 return false;
             } catch (DigipostAuthenticationException e) {
@@ -598,11 +583,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         protected CurrentBankAccount doInBackground(Void... voids) {
             try {
                 return ContentOperations.getCurrentBankAccount(DisplayContentActivity.this);
-            } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return null;
-            } catch (DigipostClientException e) {
+            } catch (DigipostApiException | DigipostClientException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 return null;
@@ -627,7 +608,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     private class MoveToFolderListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public MoveToFolderListOnItemClickListener() {
+        MoveToFolderListOnItemClickListener() {
         }
 
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
@@ -662,8 +643,6 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
             try {
                 FileUtilities.writeFileToDevice(getApplicationContext());
                 return true;
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }

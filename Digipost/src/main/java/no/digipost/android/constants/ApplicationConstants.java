@@ -20,11 +20,6 @@ public class ApplicationConstants {
 
 	public static final String HMACSHA256 = "HmacSHA256";
 
-	public static final String SCREENLOCK_CHOICE = "SCREENLOCK_CHOICE";
-	public static final int SCREENLOCK_CHOICE_HAS_NO_BEEN_TAKEN_YET = 0;
-	public static final int SCREENLOCK_CHOICE_NO = 1;
-	public static final int SCREENLOCK_CHOICE_YES = 2;
-
     public static final boolean FEATURE_SEND_TO_BANK_VISIBLE = true;
     public static final String NUMBER_OF_TIMES_APP_HAS_RUN = "numberOfTimesAppHasRun";
     public static final int NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN = 1;
@@ -34,8 +29,7 @@ public class ApplicationConstants {
     public static final String LOGOUT_FAILED = "logoutFailed";
 
     public static final int MAILBOX = 0;
-    public static final int RECEIPTS = 1;
-    public static final int FOLDERS_LABEL = 2;
-    public static final int numberOfStaticFolders = 3;
+    public static final int FOLDERS_LABEL = 1;
+    public static final int numberOfStaticFolders = 2;
 
 }
