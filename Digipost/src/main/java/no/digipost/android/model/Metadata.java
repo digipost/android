@@ -82,9 +82,11 @@ public class Metadata {
         String arrivalDateString = FormatUtilities.getTimeString(arrivalTime);
         if (arrivalDateString != null) {
             return "kl " + arrivalDateString;
-        } else {
+        } else if(arrivalTime != null) {
             return arrivalTime;
         }
+
+        return "";
     }
 
     public String getInfoTitleAndText() {

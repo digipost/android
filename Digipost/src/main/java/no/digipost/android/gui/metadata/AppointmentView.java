@@ -68,7 +68,7 @@ public class AppointmentView extends Fragment{
             ((TextView) view.findViewById(R.id.appointment_info1_text)).setVisibility(View.GONE);
         }
 
-        if(appointment.info.size() > 1) {
+        if(appointment.info != null && appointment.info.size() > 1) {
             ((TextView) view.findViewById(R.id.appointment_info2_title)).setText(appointment.info.get(1).title);
             ((TextView) view.findViewById(R.id.appointment_info2_text)).setText(appointment.info.get(1).text);
         }else{
