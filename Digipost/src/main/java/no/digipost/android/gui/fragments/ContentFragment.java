@@ -44,7 +44,6 @@ import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.recyclerview.*;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
-import no.digipost.android.utilities.FormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
@@ -294,10 +293,10 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
 
     private String getContentTypeString(int count) {
         if (count > 1) {
-            return getString(R.string.letter_plural);
+            return getString(R.string.message_plural);
         }
 
-        return getString(R.string.letter_singular);
+        return getString(R.string.message_singular);
     }
 
     private String getActionDeletePromptString(int count) {

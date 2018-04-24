@@ -84,38 +84,18 @@
     <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjoner, som flytt og slett</string>
 
     <!-- EmptyView -->
-    <string name="emptyview_mailbox">Brev du mottar i Digipost vil bli lagt her.\nDu kan også laste opp egne filer i mapper</string>
+    <string name="emptyview_mailbox">Meldinger du mottar i Digipost vil bli lagt her.\nDu kan også laste opp egne filer i mapper</string>
     <string name="emptyview_folder">Last opp filer for sikker lagring.\nDu kan enkelt flytte innhold mellom mapper.</string>
     <string name="emptyview_image">Tom mappe illustrasjon</string>
 
-
-    <!-- EmptyView - Receipt -->
-    <string name="emptyview_receipt_intro_title">Kom i gang med elektroniske kvitteringer</string>
-    <string name="emptyview_receipt_intro_message">Med Digipost har du tilgang til kvitteringene dine der du er. Se kvitteringer på mobil, nettbrett eller datamaskin. Tjenesten er gratis å bruke.</string>
-
-    <string name="emptyview_receipt_verification_title">Verifisering</string>
-    <string name="emptyview_receipt_verification_message">For å se kvitteringer må du først bekrefte at de kommer fra ditt bankkort. Det gjør du ved å taste inn kjøpesummen fra et kjøp gjort i en butikk som støtter elektroniske kvitteringer.</string>
-
-    <string name="emptyview_receipt_registrated_title">Registert</string>
-    <string name="emptyview_receipt_registrated_message">Neste steg er å betale med bankkortet i en butikk som støtter elektroniske kvitteringer. Bruk kvitteringen til å bekrefte at du eier bankkortet. Etterpå vil resten gå automatisk.
-    </string>
-
-    <!-- Receipt TopText -->
-    <string name="receipt_toptext_register_cards">For å motta elektroniske kvitteringer må du legge til et bankkort</string>
-    <string name="receipt_toptext_one_hidden_receipt">En kvittering er skjult. For å se denne må du bekrefte at du eier bankkortet</string>
-    <string name="receipt_toptext_multiple_hidden_receipts">Du har %1$d skjulte kvitteringer. For å se disse må du bekrefte at du eier bankkortet</string>
-
     <!-- ContentFragment -->
-    <string name="receipt_singular">kvitteringen</string>
-    <string name="receipt_plural">kvitteringene</string>
     <string name="document_singular">dokumentet</string>
     <string name="document_plural">dokumentene</string>
-    <string name="letter_singular">brevet</string>
-    <string name="letter_plural">brevene</string>
+    <string name="message_singular">meldingen</string>
+    <string name="message_plural">meldingene</string>
     <string name="delete_multiple">Vil du slette disse %1$d %2$s?</string>
-    <string name="delete_single">Vil du slette dette %1$s?</string>
+    <string name="delete_single">Vil du slette denne %1$s?</string>
     <string name="delete_progress_document">Sletter %1$s (%2$d/%3$d)</string>
-    <string name="delete_progress_receipt">Sletter %1$s %2$s (%3$d/%4$d)</string>
     <string name="delete_cancelled">%1$d av %2$d slettet.</string>
 
     <!-- CollectionNotice -->
@@ -177,20 +157,20 @@
     <string name="preferences">Innstillinger</string>
     <string name="pref_general_settings">Generelle innstillinger</string>
     <string name="pref_show_bank_id_documents_title">BankID &amp; Buypass</string>
-    <string name="pref_show_bank_id_documents_summary">Vis brev som krever innlogging med BankID eller Buypass</string>
+    <string name="pref_show_bank_id_documents_summary">Vis dokumenter som krever innlogging med BankID eller Buypass</string>
     <string name="pref_screen_rotation_title">Skjermrotasjon</string>
     <string name="pref_screen_rotation_summary">Tillat skjermrotasjon</string>
     <string name="pref_screen_confirm_delete_title">Bekreft før sletting</string>
     <string name="pref_screen_confirm_delete_summary">Vis bekreftelsesdialog før sletting</string>
     <string name="pref_screen_personal_settings_title">Personlige innstillinger</string>
     <string name="pref_screen_notification_settings_title">Varslingsinnstillinger</string>
-    <string name="pref_notification_settings_letters_title">Varsling om nye brev</string>
-    <string name="pref_notification_settings_letters_new_title">E-post om nye brev</string>
-    <string name="pref_notification_settings_letters_new_subtitle">Send meg en e-post hvis jeg får et nytt brev</string>
-    <string name="pref_notification_settings_letters_unread_title">Ukentlig e-post om uleste brev</string>
-    <string name="pref_notification_settings_letters_unread_subtitle">Send meg en e-post hver uke hvis jeg har uleste brev.</string>
-    <string name="pref_notification_settings_letters_important_title">SMS om ekstra viktige brev</string>
-    <string name="pref_notification_settings_letters_important_subtitle">Tillat avsendere å sende meg en SMS-melding om viktige brev.</string>
+    <string name="pref_notification_settings_letters_title">Varsling om nye meldinger</string>
+    <string name="pref_notification_settings_letters_new_title">E-post om nye meldinger</string>
+    <string name="pref_notification_settings_letters_new_subtitle">Send meg en e-post hvis jeg får en nytt melding</string>
+    <string name="pref_notification_settings_letters_unread_title">Ukentlig e-post om uleste meldinger</string>
+    <string name="pref_notification_settings_letters_unread_subtitle">Send meg en e-post hver uke hvis jeg har uleste meldinger.</string>
+    <string name="pref_notification_settings_letters_important_title">SMS om ekstra viktige meldinger</string>
+    <string name="pref_notification_settings_letters_important_subtitle">Tillat avsendere å sende meg en SMS-melding om viktige meldinger.</string>
     <string name="pref_notification_settings_contact_info_title">Kontaktinformasjon</string>
     <string name="pref_notification_settings_contact_info_phone_title">Ditt mobilnummer</string>
     <string name="pref_notification_settings_contact_info_phone_hint">Mobilnummer</string>
@@ -209,7 +189,7 @@
     <string name="pref_personal_settings_info_usage_subtitle">Posten lanserer jevnlig nye produkter og tjenester og kan sende deg informasjon om dette.</string>
     <string name="pref_personal_settings_search_visibility_title">Synlighet i søk</string>
     <string name="pref_personal_settings_search_visibility_accepts_title">Jeg godtar at min adresse er synlig for andre brukere</string>
-    <string name="pref_personal_settings_search_visibility_accepts_subtitle">For at andre brukere skal kunne sende deg brev uten å kjenne digipostadressen din, må du være synlig i adressesøket.</string>
+    <string name="pref_personal_settings_search_visibility_accepts_subtitle">For at andre brukere skal kunne sende deg meldinger uten å kjenne digipostadressen din, må du være synlig i adressesøket.</string>
     <string name="pref_personal_settings_button">Lagre innstillinger</string>
     <string name="pref_personal_settings_loading">Laster dine innstillinger…</string>
 
@@ -248,14 +228,11 @@
 
     <string name="dialog_opening_receipt_yes">Åpne og send kvittering</string>
     <string name="dialog_opening_receipt_title">Avsender krever lesekvittering</string>
-    <string name="dialog_opening_receipt_message">Når du åpner dette brevet, vil det bli
+    <string name="dialog_opening_receipt_message">Når du åpner denne meldingen, vil det bli
         sendt en lesekvittering til avsenderen.
     </string>
 
-    <string name="dialog_prompt_delete_receipt">Er du sikker på at du vil slette denne
-        kvitteringen?
-    </string>
-    <string name="dialog_prompt_delete_document">Vil du slette brevet?
+    <string name="dialog_prompt_delete_document">Vil du slette meldingen?
     </string>
 
     <string name="dialog_prompt_open_help_new_window">Hjelpesiden vil bli åpnet i ekstern nettleser.</string>
@@ -265,15 +242,15 @@
 
     <string name="dialog_error_two_factor_title">Høyere sikkerhetsnivå</string>
     <string name="dialog_error_two_factor_message">Avsenderen krever at du logger inn på et høyere
-        sikkerhetsnivå for å åpne brevet. Logg inn på Digipost.no for å se innholdet.</string>
+        sikkerhetsnivå for å åpne meldingen. Logg inn på Digipost.no for å se innholdet.</string>
 
 
     <string name="dialog_id_porten_title">Høyere sikkerhetsnivå</string>
     <string name="dialog_id_porten_unlock">Logg inn</string>
-    <string name="dialog_id_porten_message">Avsenderen krever at du logger inn på et høyere sikkerhetsnivå for å åpne brevet.</string>
+    <string name="dialog_id_porten_message">Avsenderen krever at du logger inn på et høyere sikkerhetsnivå for å åpne meldingen.</string>
 
-    <string name="dialog_error_user_key_encrypted_title">Brukernøkkelkryptert brev</string>
-    <string name="dialog_error_user_key_encrypted_message">Dette brevet er kryptert med den offentlige nøkkelen
+    <string name="dialog_error_user_key_encrypted_title">Brukernøkkelkryptert dokument</string>
+    <string name="dialog_error_user_key_encrypted_message">Dette dokumentet er kryptert med den offentlige nøkkelen
         din og kan ikke vises i appen. Logg inn på Digipost.no for å laste ned innholdet.</string>
 
     <string name="dialog_create_folder_title">Opprett mappe</string>
