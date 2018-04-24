@@ -267,7 +267,7 @@ public class MuPDFActivity extends DisplayContentActivity {
         if (super.shouldShowInvoiceOptionsDialog(this)) {
             super.showInvoiceOptionsDialog(this);
         }
-        super.setupMetadataView();
+         super.showMetadata();
     }
 
 

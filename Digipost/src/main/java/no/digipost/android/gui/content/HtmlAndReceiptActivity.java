@@ -65,7 +65,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         if (super.shouldShowInvoiceOptionsDialog(this)) {
             super.showInvoiceOptionsDialog(this);
         }
-        super.setupMetadataView();
+        super.showMetadata();
     }
 
     @Override
