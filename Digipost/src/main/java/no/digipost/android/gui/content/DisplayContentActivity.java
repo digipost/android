@@ -16,14 +16,12 @@
 
 package no.digipost.android.gui.content;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.ProgressDialog;
+import android.app.*;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,10 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
+import android.view.*;
 import android.widget.*;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
@@ -72,7 +67,6 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     private FolderArrayAdapter folderAdapter;
     private String location;
     private String folderId;
-    private GridLayout gridLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,8 +106,8 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     protected void showMetadata() {
-        ArrayList<Metadata> metadataList = getMetadata();
 
+        ArrayList<Metadata> metadataList = getMetadata();
         for (Metadata metadata : metadataList) {
             if (metadata.type.equals(Metadata.APPOINTMENT)) {
                 addAppointmentView(metadata);
@@ -121,7 +115,6 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
                 addExternalLinkView(metadata);
             }
         }
-
         toggleContainerViews(metadataList.size());
     }
 
@@ -131,6 +124,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         containerScrollView.setFillViewport(true);
 
         if (metadataSize > 0) {
+            updatePDFLayoutSize();
             containerLayout.setFocusable(true);
             containerScrollView.setFocusable(true);
             containerScrollView.setSmoothScrollingEnabled(true);
@@ -138,6 +132,16 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
             containerLayout.setFocusable(false);
             containerScrollView.setFocusable(false);
             containerScrollView.setSmoothScrollingEnabled(false);
+        }
+    }
+
+    private void updatePDFLayoutSize() {
+        LinearLayout pdfContainer = (LinearLayout) findViewById(R.id.pdf_layout);
+        if(pdfContainer != null) {
+            Point size = new Point();
+            getWindowManager().getDefaultDisplay().getSize(size);
+            pdfContainer.getLayoutParams().height = size.y;
+            pdfContainer.requestLayout();
         }
     }
 
@@ -156,12 +160,12 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
 
     private void addViewToContainerLayout(Fragment fragment){
         LinearLayout containerLayout = (LinearLayout) findViewById(R.id.container_layout);
-        LinearLayout ll = new LinearLayout(this);
-        ll.setOrientation(LinearLayout.VERTICAL);
-        int randomId = (int) (Math.random()*100);
-        ll.setId(randomId);
-        getFragmentManager().beginTransaction().add(ll.getId(), fragment, "MetadataView" + randomId).commit();
-        containerLayout.addView(ll,0);
+        LinearLayout metadataLayout = new LinearLayout(this);
+        metadataLayout.setOrientation(LinearLayout.VERTICAL);
+        int randomId = (int) (Math.random()*100000);
+        metadataLayout.setId(randomId);
+        getFragmentManager().beginTransaction().add(metadataLayout.getId(), fragment, "MetadataView" + randomId).commit();
+        containerLayout.addView(metadataLayout,0);
     }
 
     protected void showContentProgressDialog(final AsyncTask task, String message) {
