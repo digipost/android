@@ -263,11 +263,6 @@ public abstract class PageView extends ViewGroup {
 		// Render the page in the background
 		mDrawEntire = new AsyncTask<Void, Void, Bitmap>() {
 			protected Bitmap doInBackground(Void... v) {
-				if(mSize.x == 0 && mSize.y == 0) {
-					mSize.x = 1;
-					mSize.y = 1;
-				}
-
 				return drawPage(mSize.x, mSize.y, 0, 0, mSize.x, mSize.y);
 			}
 
