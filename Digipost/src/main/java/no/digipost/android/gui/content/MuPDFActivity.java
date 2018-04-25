@@ -316,7 +316,7 @@ public class MuPDFActivity extends DisplayContentActivity {
         };
 
         mDocView.setLinksEnabled(true);
-        LinearLayout layout = (LinearLayout) findViewById(R.id.pdf_relative_layout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.pdf_layout);
         layout.addView(mDocView);
         layout.setBackgroundResource(R.drawable.document_background);
     }
