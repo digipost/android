@@ -34,12 +34,14 @@ public class FormatUtilities {
     public static Date getDate(final String date) {
         try {
             return new SimpleDateFormat(TIME_FORMAT_WITH_MILLIS, Locale.getDefault()).parse(date);
-        }catch (ParseException e1){
+        } catch (ParseException e1){
             try {
                 return new SimpleDateFormat(TIME_FORMAT_WITHOUT_MILLIS, Locale.getDefault()).parse(date);
             }catch (ParseException e2) {
                 //Ignore
             }
+        } catch (NullPointerException npe){
+            // Ignore
         }
         return null;
     }
