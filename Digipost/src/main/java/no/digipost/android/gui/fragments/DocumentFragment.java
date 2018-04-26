@@ -162,7 +162,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         if(contentActionMode != null)contentActionMode.finish();
         if(internalActionMode != null)internalActionMode.finish();
         multiSelectEnabled = false;
-        documentAdapter.setSelectable(multiSelectEnabled);
+        documentAdapter.setSelectable(false);
     }
 
     private class SelectActionModeCallback implements ActionMode.Callback {
@@ -293,9 +293,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                         moveLocations.add(0, postkassen);
                     }
 
-                    for (Folder f : folders) {
-                        moveLocations.add(f);
-                    }
+                    moveLocations.addAll(folders);
                 }
             }
             return moveLocations;
@@ -708,11 +706,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         protected Documents doInBackground(final Void... params) {
             try {
                 return ContentOperations.getAccountContentMetaDocument(context, content, unixTimeOfNextDocument);
-            } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                errorMessage = e.getMessage();
-                return null;
-            } catch (DigipostClientException e) {
+            } catch (DigipostApiException | DigipostClientException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 errorMessage = e.getMessage();
                 return null;
@@ -803,10 +797,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 invalidToken = true;
                 return e.getMessage();
-            } catch (DigipostApiException e) {
-                Log.e(getClass().getName(), e.getMessage(), e);
-                return e.getMessage();
-            } catch (DigipostClientException e) {
+            } catch (DigipostApiException | DigipostClientException e) {
                 Log.e(getClass().getName(), e.getMessage(), e);
                 return e.getMessage();
             }
@@ -876,10 +867,7 @@ public class DocumentFragment extends ContentFragment<Document> {
                 document = (Document) JSONUtilities.processJackson(Document.class, ContentOperations.sendOpeningReceipt(context, attachment));
                 attachment = document.getAttachment().get(attachmentPosition);
                 return true;
-            } catch (DigipostApiException e) {
-                errorMessage = e.getMessage();
-                return false;
-            } catch (DigipostClientException e) {
+            } catch (DigipostApiException | DigipostClientException e) {
                 errorMessage = e.getMessage();
                 return false;
             } catch (DigipostAuthenticationException e) {

@@ -18,7 +18,6 @@ package no.digipost.android.gui.content;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -37,8 +36,7 @@ import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.metadata.ExternalLinkWebview;
 import no.digipost.android.model.Attachment;
-import no.digipost.android.model.Receipt;
-import no.digipost.android.utilities.FormatUtilities;
+
 import java.net.URL;
 
 public class HtmlAndReceiptActivity extends DisplayContentActivity {
@@ -91,15 +89,13 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 overrideUrlLoading(url);
-                return content_type != ApplicationConstants.RECEIPTS || super.shouldOverrideUrlLoading(view, url);
+                return true;
             }
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    overrideUrlLoading(request.getUrl().toString());
-                }
-                return content_type != ApplicationConstants.RECEIPTS || super.shouldOverrideUrlLoading(view, request);
+                overrideUrlLoading(request.getUrl().toString());
+                return true;
             }
         });
     }
@@ -131,14 +127,8 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
     private void setupActionBar() {
         try {
             if(getSupportActionBar() != null) {
-                if (content_type != ApplicationConstants.RECEIPTS) {
-                    Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
-                    setActionBar(documentMeta.getSubject());
-                } else {
-                    Receipt receiptMeta = DocumentContentStore.getDocumentReceipt();
-                    getSupportActionBar().setTitle(receiptMeta.getStoreName());
-                    getSupportActionBar().setSubtitle(FormatUtilities.getFormattedDateTime(receiptMeta.getTimeOfPurchase()));
-                }
+                Attachment documentMeta = DocumentContentStore.getDocumentAttachment();
+                setActionBar(documentMeta.getSubject());
             }
         } catch (NullPointerException e) {
             //IGNORE
@@ -147,14 +137,10 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
 
     private void loadContent() {
         String html = "";
-        if (content_type == ApplicationConstants.RECEIPTS) {
-            html = getIntent().getStringExtra(ApiConstants.GET_RECEIPT);
-        } else {
-            try {
-                html = new String(DocumentContentStore.getDocumentContent(), ApiConstants.ENCODING);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            html = new String(DocumentContentStore.getDocumentContent(), ApiConstants.ENCODING);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         webView.loadDataWithBaseURL(null, html, ApiConstants.MIME, ApiConstants.ENCODING, null);
@@ -171,11 +157,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         sendToBank = menu.findItem(R.id.htmlmenu_send_to_bank);
 
-        if (content_type != ApplicationConstants.RECEIPTS) {
-            menu.findItem(R.id.htmlmenu_move).setVisible(true);
-        }else{
-            menu.findItem(R.id.htmlmenu_info).setVisible(false);
-        }
+        menu.findItem(R.id.htmlmenu_move).setVisible(true);
 
         boolean sendToBankVisible = getIntent().getBooleanExtra(ContentFragment.INTENT_SEND_TO_BANK, false);
 

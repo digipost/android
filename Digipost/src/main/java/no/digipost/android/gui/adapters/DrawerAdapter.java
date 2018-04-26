@@ -38,8 +38,8 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
     private TextView linkName;
     private TextView unreadView;
     private ImageView handlerImage;
-    int foldersStart;
-    int foldersEnd;
+    private int foldersStart;
+    private int foldersEnd;
     private View line;
     private int unreadLetters;
     private ArrayList<Folder> folders;
@@ -70,7 +70,7 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
     }
 
     private void updateUnreadView() {
-        unreadView.setText("" + unreadLetters);
+        unreadView.setText(String.valueOf(unreadLetters));
         unreadView.setVisibility(View.VISIBLE);
     }
 
@@ -88,9 +88,6 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
             if (position == ApplicationConstants.MAILBOX) {
                 linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.inbox_32, 0, 0, 0);
                 updateUnreadView();
-
-            } else if (position == ApplicationConstants.RECEIPTS) {
-                linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.tag_32, 0, 0, 0);
 
             } else if (position < foldersStart
                     && content.get(position).equals(context.getResources().getString(R.string.drawer_my_folders))) {
@@ -136,7 +133,7 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
         }
     }
 
-    private int setIconBelowFolders(String name) {
+    private void setIconBelowFolders(String name) {
 
         if (name.equals(context.getResources().getString(R.string.drawer_my_account))) {
             drawLabel();
@@ -151,7 +148,6 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
         } else if (name.equals(context.getResources().getString(R.string.drawer_logout))) {
             linkName.setCompoundDrawablesWithIntrinsicBounds(R.drawable.logout_32px, 0, 0, 0);
         }
-        return 0;
     }
 
     private int getFolderIcon(CharSequence type) {
@@ -199,13 +195,10 @@ public class DrawerAdapter extends DragNDropSimpleAdapter {
     public boolean isEnabled(int position) {
         if (MainContentActivity.editDrawerMode) {
             return position >= foldersStart && position <= foldersEnd;
-        } else {
-            if (position != ApplicationConstants.FOLDERS_LABEL) {
-                if (position != MainContentActivity.numberOfFolders + ApplicationConstants.numberOfStaticFolders + 1) {
-                    return true;
-                }
-            }
+        } else if (position != ApplicationConstants.FOLDERS_LABEL) {
+            return position != MainContentActivity.numberOfFolders + ApplicationConstants.numberOfStaticFolders + 1;
         }
+
         return false;
     }
 }

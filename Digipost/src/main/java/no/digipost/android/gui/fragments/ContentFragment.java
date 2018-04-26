@@ -40,13 +40,10 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.recyclerview.*;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
-import no.digipost.android.model.Receipt;
-import no.digipost.android.utilities.FormatUtilities;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
 import no.digipost.android.utilities.SettingsUtilities;
@@ -242,20 +239,17 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         String cancelButtonText = getString(R.string.abort);
         String messageText = getActionDeletePromptString(content.size());
 
-        boolean notReceipt = getContent() != ApplicationConstants.RECEIPTS;
-        if(notReceipt) {
-            int numberOfInvoices = numberOfInvoices(content);
-            if (numberOfInvoices > 0) {
-                int numberOfFiles = content.size();
-                String filesText = numberOfFiles + " " + (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));
-                String invoicesText = numberOfInvoices + " " + (numberOfInvoices == 1 ? getString(R.string.invoice_delete_invoice_single) : getString(R.string.invoice_delete_invoice_plural));
+        int numberOfInvoices = numberOfInvoices(content);
+        if (numberOfInvoices > 0) {
+            int numberOfFiles = content.size();
+            String filesText = numberOfFiles + " " + (numberOfFiles == 1 ? getString(R.string.invoice_delete_file_single) : getString(R.string.invoice_delete_file_plural));
+            String invoicesText = numberOfInvoices + " " + (numberOfInvoices == 1 ? getString(R.string.invoice_delete_invoice_single) : getString(R.string.invoice_delete_invoice_plural));
 
 
-                if (InvoiceBankAgreements.hasActiveAgreementType(context, InvoiceBankAgreements.TYPE_2)) {
-                    messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices_active_type_2_agreement), filesText, invoicesText);
-                } else {
-                    messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices), filesText, invoicesText);
-                }
+            if (InvoiceBankAgreements.hasActiveAgreementType(context, InvoiceBankAgreements.TYPE_2)) {
+                messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices_active_type_2_agreement), filesText, invoicesText);
+            } else {
+                messageText = format(getString(R.string.invoice_delete_multiple_files_including_n_invoices), filesText, invoicesText);
             }
         }
 
@@ -298,21 +292,11 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     }
 
     private String getContentTypeString(int count) {
-        int res;
-        if (getContent() == ApplicationConstants.RECEIPTS) {
-            if (count > 1) {
-                res = R.string.receipt_plural;
-            } else {
-                res = R.string.receipt_singular;
-            }
-        } else {
-            if (count > 1) {
-                res = R.string.letter_plural;
-            } else {
-                res = R.string.letter_singular;
-            }
+        if (count > 1) {
+            return getString(R.string.message_plural);
         }
-        return getString(res);
+
+        return getString(R.string.message_singular);
     }
 
     private String getActionDeletePromptString(int count) {
@@ -322,8 +306,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
             return format(getString(R.string.delete_multiple), count, type);
         }
 
-        String pronomen = getContent() == ApplicationConstants.RECEIPTS ? "denne" : "dette";
-        return format(getString(R.string.delete_single), pronomen, type);
+        return format(getString(R.string.delete_single), type);
     }
 
     protected class ContentDeleteTask extends AsyncTask<Void, CONTENT_TYPE, String> {
@@ -368,15 +351,9 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
         protected void onProgressUpdate(CONTENT_TYPE... values) {
             super.onProgressUpdate(values);
 
-            if (values[0] instanceof Document) {
-                Document document = (Document) values[0];
-                progressDialog.setMessage(format(getString(R.string.delete_progress_document), document.getSubject(),
-                        progress, content.size()));
-            } else if (values[0] instanceof Receipt) {
-                Receipt receipt = (Receipt) values[0];
-                progressDialog.setMessage(format(getString(R.string.delete_progress_receipt), receipt.getStoreName(),
-                        FormatUtilities.getFormattedDateTime(receipt.getTimeOfPurchase()), progress, content.size()));
-            }
+            Document document = (Document) values[0];
+            progressDialog.setMessage(format(getString(R.string.delete_progress_document), document.getSubject(),
+                    progress, content.size()));
         }
 
         @Override

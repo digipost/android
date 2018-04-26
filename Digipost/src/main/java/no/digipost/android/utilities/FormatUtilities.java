@@ -52,7 +52,7 @@ public class FormatUtilities {
     }
 
     public static String getDateString(final String date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM.dd.yyyy", Locale.getDefault());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
         return getDate(date) != null ? simpleDateFormat.format(getDate(date)) : null;
     }
 
