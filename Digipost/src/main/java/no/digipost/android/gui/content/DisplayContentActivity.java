@@ -99,10 +99,6 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
-    protected void setupMetadataView() {
-        showMetadata();
-    }
-
     private ArrayList<Metadata> getMetadata() {
         Attachment attachment = DocumentContentStore.getDocumentAttachment();
 
@@ -113,7 +109,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         return new ArrayList<>();
     }
 
-    private void showMetadata() {
+    protected void showMetadata() {
         ArrayList<Metadata> metadataList = getMetadata();
         for (Metadata metadata : metadataList) {
             if (metadata.type.equals(Metadata.APPOINTMENT)) {
