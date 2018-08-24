@@ -65,7 +65,12 @@
         }
 
         public String getLogo(){
-            return  String.format("invoice_bank_logo_%1$s", this.name.toLowerCase().replace(" ", ""));
+            String bankResourceName = this.name.toLowerCase()
+                    .replace(" ", "")
+                    .replace("æ","ae")
+                    .replace("ø","o")
+                    .replace("å","a");
+            return  String.format("invoice_bank_logo_%1$s", bankResourceName);
         }
 
         public void setAgreementsOfTypeActiveState(final String agreementType, boolean agreementIsActive){
