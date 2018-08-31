@@ -85,14 +85,22 @@ public class InvoiceBankActivity extends AppCompatActivity {
 
         if(bank != null) {
             ImageView logo = (ImageView)findViewById(R.id.invoice_bank_logo);
+            TextView bankName = (TextView)findViewById(R.id.invoice_bank_name);
             TextView title = (TextView) findViewById(R.id.invoice_bank_title);
             TextView subTitle = (TextView) findViewById(R.id.invoice_bank_subtitle);
             Button openBankUrlButton = (Button) findViewById(R.id.invoice_bank_url_button);
             Button readMoreButton = (Button) findViewById(R.id.invoice_bank_read_more_link);
 
             int logoResourceId = getApplicationContext().getResources().getIdentifier(bank.getLogo()+"_large", "drawable", getApplicationContext().getPackageName());
-            logo.setImageResource(logoResourceId);
-            logo.setContentDescription(bank.getName());
+            if(logoResourceId != 0) {
+                logo.setImageResource(logoResourceId);
+                logo.setContentDescription(bank.getName());
+            }else {
+                logo.setVisibility(View.GONE);
+                bankName.setVisibility(View.VISIBLE);
+                bankName.setText(bank.getName());
+            }
+
 
             if(bank.offersAgreementType(InvoiceBankAgreements.TYPE_2)){
                 title.setText(R.string.invoice_bank_title_enabled);
