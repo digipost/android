@@ -42,6 +42,17 @@
                 android:contentDescription="@string/invoice_bank_logo"
                 android:scaleType="fitCenter"
                 />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:id="@+id/invoice_bank_name"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            />
     </LinearLayout>
 
     <LinearLayout

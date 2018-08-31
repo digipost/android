@@ -23,6 +23,7 @@
               android:id="@+id/invoice_options_bank_list_item"
               android:orientation="horizontal"
               android:clickable="true"
+              android:focusable="true"
               android:paddingBottom="20dp"
               android:paddingLeft="20dp"
               android:paddingStart="20dp"
@@ -37,5 +38,14 @@
             android:scaleType="fitStart"
             android:id="@+id/invoice_options_bank_item_list_logo"
             android:layout_weight="0.57"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:scaleType="fitStart"
+        android:id="@+id/invoice_options_bank_item_list_name"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:layout_weight="0.57"
+        android:visibility="gone"/>
 
 </LinearLayout>

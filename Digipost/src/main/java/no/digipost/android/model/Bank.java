@@ -65,7 +65,12 @@
         }
 
         public String getLogo(){
-            return  String.format("invoice_bank_logo_%1$s", this.name.toLowerCase().replace(" ", ""));
+            String bankResourceName = this.name.toLowerCase()
+                    .replace(" ", "")
+                    .replace("æ","ae")
+                    .replace("ø","o")
+                    .replace("å","a");
+            return  String.format("invoice_bank_logo_%1$s", bankResourceName);
         }
 
         public void setAgreementsOfTypeActiveState(final String agreementType, boolean agreementIsActive){
@@ -90,7 +95,17 @@
                 case "DNB" :
                     return "https://www.dnb.no/privat/nettbank-mobil-og-kort/betaling/elektronisk-faktura.html";
                 default:
-                    return "https://www.digipost.no";
+                    return getBankHomepage();
             }
         }
+
+        private String getBankHomepage(){
+            for (Link bankLink : link) {
+                if(bankLink.getRel().contains("bank_homepage")){
+                    return bankLink.getUri();
+                }
+            }
+            return "https://www.digipost.no";
+        }
+
     }
