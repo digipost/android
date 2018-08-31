@@ -95,7 +95,17 @@
                 case "DNB" :
                     return "https://www.dnb.no/privat/nettbank-mobil-og-kort/betaling/elektronisk-faktura.html";
                 default:
-                    return "https://www.digipost.no";
+                    return getBankHomepage();
             }
         }
+
+        private String getBankHomepage(){
+            for (Link bankLink : link) {
+                if(bankLink.getRel().contains("bank_homepage")){
+                    return bankLink.getUri();
+                }
+            }
+            return "https://www.digipost.no";
+        }
+
     }

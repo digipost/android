@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.model.Bank;
 
@@ -31,7 +32,10 @@ public class BankListAdapter extends ArrayAdapter<Bank> {
 
     private ArrayList<Bank> banks;
 
-    public class ViewHolder {private ImageView bankLogo;}
+    public class ViewHolder {
+        private ImageView bankLogo;
+        private TextView bankName;
+    }
 
     public BankListAdapter(Context context, int textViewResourceId, ArrayList<Bank> banks) {
         super(context, textViewResourceId, banks);
@@ -58,7 +62,14 @@ public class BankListAdapter extends ArrayAdapter<Bank> {
         }
 
         int logoResourceId = getContext().getResources().getIdentifier((bank.getLogo()), "drawable", getContext().getPackageName());
-        viewHolder.bankLogo.setImageResource(logoResourceId);
+        if(logoResourceId != 0) {
+            viewHolder.bankLogo.setImageResource(logoResourceId);
+        }else {
+            viewHolder.bankLogo.setVisibility(View.GONE);
+            viewHolder.bankName = (TextView) convertView.findViewById(R.id.invoice_options_bank_item_list_name);
+            viewHolder.bankName.setVisibility(View.VISIBLE);
+            viewHolder.bankName.setText(bank.getName());
+        }
 
         return convertView;
     }
