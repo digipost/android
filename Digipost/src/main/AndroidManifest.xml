@@ -82,6 +82,9 @@
         <activity
                 android:name="no.digipost.android.gui.content.HtmlAndReceiptActivity"
                 android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name="no.digipost.android.gui.content.ImageActivity"
+            android:configChanges="orientation|screenSize"/>
         <activity android:name=".gui.content.MuPDFActivity"/>
         <activity
                 android:name="no.digipost.android.gui.content.UnsupportedDocumentFormatActivity"
