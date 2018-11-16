@@ -155,7 +155,7 @@
 
     <!-- Preferences -->
     <string name="preferences">Innstillinger</string>
-    <string name="pref_general_settings">Generelle innstillinger</string>
+    <string name="pref_general_settings">App innstillinger</string>
     <string name="pref_show_bank_id_documents_title">BankID &amp; Buypass</string>
     <string name="pref_show_bank_id_documents_summary">Vis dokumenter som krever innlogging med BankID eller Buypass</string>
     <string name="pref_screen_rotation_title">Skjermrotasjon</string>
@@ -163,7 +163,7 @@
     <string name="pref_screen_confirm_delete_title">Bekreft før sletting</string>
     <string name="pref_screen_confirm_delete_summary">Vis bekreftelsesdialog før sletting</string>
     <string name="pref_screen_personal_settings_title">Personlige innstillinger</string>
-    <string name="pref_screen_notification_settings_title">Varslingsinnstillinger</string>
+    <string name="pref_screen_notification_settings_title">Kontaktopplysninger</string>
     <string name="pref_notification_settings_letters_title">Varsling om nye meldinger</string>
     <string name="pref_notification_settings_letters_new_title">E-post om nye meldinger</string>
     <string name="pref_notification_settings_letters_new_subtitle">Send meg en e-post hvis jeg får en nytt melding</string>
@@ -171,9 +171,10 @@
     <string name="pref_notification_settings_letters_unread_subtitle">Send meg en e-post hver uke hvis jeg har uleste meldinger.</string>
     <string name="pref_notification_settings_letters_important_title">SMS om ekstra viktige meldinger</string>
     <string name="pref_notification_settings_letters_important_subtitle">Tillat avsendere å sende meg en SMS-melding om viktige meldinger.</string>
-    <string name="pref_notification_settings_contact_info_title">Kontaktinformasjon</string>
+    <string name="pref_notification_settings_contact_info_title">Kontaktopplysninger</string>
     <string name="pref_notification_settings_contact_info_phone_title">Ditt mobilnummer</string>
     <string name="pref_notification_settings_contact_info_phone_hint">Mobilnummer</string>
+    <string name="pref_notification_settings_contact_info_countrycode_hint">Landkode</string>
     <string name="pref_notification_settings_contact_info_email_title">Dine e-postadresser</string>
     <string name="pref_notification_settings_contact_info_email_hint">E-postadresse</string>
     <string name="pref_notification_settings_button">Lagre varslingsinnstillinger</string>

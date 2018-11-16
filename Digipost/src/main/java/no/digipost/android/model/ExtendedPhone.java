@@ -24,7 +24,10 @@ import java.util.ArrayList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtendedPhone {
     @JsonProperty
-    private String phoneNumber;
+    public String phoneNumber;
+
+    @JsonProperty
+    public String countryCode;
 
     @JsonProperty
     private String verified;

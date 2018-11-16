@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +50,8 @@ public abstract class DigipostSettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("uri", "DigipostSettingsActivity onCreate");
+
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         executeGetAccountTask();
     }
@@ -216,7 +219,6 @@ public abstract class DigipostSettingsActivity extends Activity {
         protected void onPostExecute(Settings settings) {
             super.onPostExecute(settings);
             hideSettingsProgressDialog();
-
             if (settings == null) {
                 DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
                 setSettingsEnabled(false);
@@ -226,8 +228,8 @@ public abstract class DigipostSettingsActivity extends Activity {
                 }
             } else {
                 accountSettings = settings;
-                updateUI(accountSettings);
                 setAccountInfo(userAccount);
+                updateUI(accountSettings);
                 setSettingsEnabled(true);
             }
         }

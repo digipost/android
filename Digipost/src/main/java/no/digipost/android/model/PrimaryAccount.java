@@ -16,6 +16,8 @@
 
 package no.digipost.android.model;
 
+import android.util.Log;
+
 import no.digipost.android.constants.ApiConstants;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -119,8 +121,8 @@ public class PrimaryAccount {
         return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_UPLOAD);
 	}
 
-    public String getSettingsUri() {
-        return getLinkByRelation(ApiConstants.URL_RELATIONS_ACCOUNT_SETTINGS);
+    public String getMailboxSettingsUri() {
+        return getLinkByRelation(ApiConstants.URL_RELATIONS_MAILBOX_SETTINGS);
     }
 
     public String getBanksUri(){return getLinkByRelation(ApiConstants.URL_RELATIONS_BANKS);}
@@ -131,6 +133,7 @@ public class PrimaryAccount {
 
     private String getLinkByRelation(String relation) {
         for (Link l : link) {
+            Log.d("getSettings link", l.getRel() + " : "+l.getUri());
             if (l.getRel().equals(relation)) {
                 return l.getUri();
             }

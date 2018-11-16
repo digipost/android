@@ -24,10 +24,13 @@ import java.util.ArrayList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtendedEmail {
     @JsonProperty
-    private String email;
+    public String email;
 
     @JsonProperty
     private String verified;
+
+    @JsonProperty
+    private String underVerification;
 
     @JsonProperty
     private ArrayList<Link> link;

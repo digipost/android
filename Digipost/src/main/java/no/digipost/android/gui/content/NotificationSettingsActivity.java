@@ -16,28 +16,24 @@
 
 package no.digipost.android.gui.content;
 
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.model.Account;
+import no.digipost.android.model.ExtendedEmail;
 import no.digipost.android.model.Settings;
 import no.digipost.android.model.ValidationRules;
 
 import java.util.ArrayList;
 
 public class NotificationSettingsActivity extends DigipostSettingsActivity {
-    private CheckBox newLetters;
-    private CheckBox unreadLetters;
-    private CheckBox importantLetters;
-    private EditText mobileNumber;
-    private EditText email1;
-    private EditText email2;
-    private EditText email3;
 
+    private EditText countryCode, mobileNumber, email1, email2, email3;
     private ValidationRules validationRules;
 
     @Override
@@ -45,8 +41,11 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_notification_settings);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle(getString(R.string.pref_screen_notification_settings_title));
+        ActionBar actionbar = getActionBar();
+        if(actionbar != null) {
+            actionbar.setHomeButtonEnabled(true);
+            actionbar.setTitle(getString(R.string.pref_screen_notification_settings_title));
+        }
 
         createUI();
     }
@@ -64,9 +63,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     private void createUI() {
-        newLetters = (CheckBox) findViewById(R.id.notification_settings_new_letters);
-        unreadLetters = (CheckBox) findViewById(R.id.notification_settings_unread_letters);
-        importantLetters = (CheckBox) findViewById(R.id.notification_settings_important_letters);
+        countryCode = (EditText) findViewById(R.id.notification_settings_countrycode);
         mobileNumber = (EditText) findViewById(R.id.notification_settings_mobile);
         email1 = (EditText) findViewById(R.id.notification_settings_email1);
         email2 = (EditText) findViewById(R.id.notification_settings_email2);
@@ -76,24 +73,18 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     @Override
     protected void updateUI(Settings settings) {
-        newLetters.setChecked(Boolean.parseBoolean(settings.getNotificationEmail()));
-        unreadLetters.setChecked(Boolean.parseBoolean(settings.getReminderEmail()));
-        importantLetters.setChecked(Boolean.parseBoolean(settings.getNotificationSmsPaidBySender()));
+        mobileNumber.setText((settings.getPhoneNumber() != null) ? settings.getPhoneNumber() : "");
 
-        mobileNumber.setText((settings.getPhonenumber() != null) ? settings.getPhonenumber() : "");
-
-        ArrayList<String> emails = settings.getEmail();
-
-        email1.setText((emails.size() > 0) ? emails.get(0) : "");
-        email2.setText((emails.size() > 1) ? emails.get(1) : "");
-        email3.setText((emails.size() > 2) ? emails.get(2) : "");
+        ArrayList<ExtendedEmail> emails = settings.getExtendedEmails();
+        if(emails != null) {
+            email1.setText((emails.size() > 0) ? emails.get(0).email : "");
+            email2.setText((emails.size() > 1) ? emails.get(1).email : "");
+            email3.setText((emails.size() > 2) ? emails.get(2).email : "");
+        }
     }
 
     @Override
     protected void setSettingsEnabled(boolean state) {
-        newLetters.setEnabled(state);
-        unreadLetters.setEnabled(state);
-        importantLetters.setEnabled(state);
         mobileNumber.setEnabled(state);
         email1.setEnabled(state);
         email2.setEnabled(state);
@@ -147,16 +138,13 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     @Override
     protected void setSelectedAccountSettings() throws Exception {
-        accountSettings.setNotificationEmail(Boolean.toString(newLetters.isChecked()));
-        accountSettings.setReminderEmail(Boolean.toString(unreadLetters.isChecked()));
-        accountSettings.setNotificationSmsPaidBySender(Boolean.toString(importantLetters.isChecked()));
 
         String stringMobileNumber = mobileNumber.getText().toString().trim();
         validateMobileNumber(stringMobileNumber);
-        accountSettings.setPhonenumber(stringMobileNumber);
+        //accountSettings.setPhonenumber(stringMobileNumber);
 
         ArrayList<String> emails = getEmails();
         validateEmails(emails);
-        accountSettings.setEmail(emails);
+        //accountSettings.setExtendedEmailAdresses(emails);
     }
 }

@@ -35,13 +35,10 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.gui.MainContentActivity;
 
 public class SettingsActivity extends AppCompatActivity {
-    public static final String KEY_PREF_GENERAL_SETTINGS = "pref_generalSettings";
     public static final String KEY_PREF_DEFAULT_SCREEN = "pref_defaultScreen";
     public static final String KEY_PREF_CONFIRM_DELETE = "pref_confirmDelete";
     public static final String KEY_PREF_CONFIRM_MOVE = "pref_confirmMove";
-    public static final String KEY_PREF_DOCUMENTS_SETTINGS = "pref_documentsSettings";
     public static final String KEY_PREF_SHOW_BANK_ID_DOCUMENTS = "pref_showBankIDDocuments";
-    public static final String KEY_PREF_PERSONAL_SETTINGS = "pref_personalSettings";
     public static final String KEY_PREF_NOTIFICATION_SETTINGS = "pref_notificationSettings";
 
     @Override
@@ -54,7 +51,6 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
-
     }
 
     @Override
@@ -86,15 +82,6 @@ public class SettingsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
 
-            /*Preference personalSettings = findPreference(KEY_PREF_PERSONAL_SETTINGS);
-            personalSettings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    startActivityForResult(preference.getIntent(), MainContentActivity.INTENT_REQUESTCODE);
-                    return true;
-                }
-            });
-
             Preference notificationSettings = findPreference(KEY_PREF_NOTIFICATION_SETTINGS);
             notificationSettings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -102,9 +89,8 @@ public class SettingsActivity extends AppCompatActivity {
                     startActivityForResult(preference.getIntent(), MainContentActivity.INTENT_REQUESTCODE);
                     return true;
                 }
-            });*/
+            });
 
-            //setSummary(getPreferenceManager().getSharedPreferences(), findPreference(KEY_PREF_DEFAULT_SCREEN));
         }
 
         @Override
@@ -115,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            setSummary(sharedPreferences, findPreference(key));
+            onSharedPreferenceChanged(sharedPreferences, key);
         }
 
         @Override
@@ -143,14 +129,6 @@ public class SettingsActivity extends AppCompatActivity {
         public void onPause() {
             super.onPause();
             getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-        }
-
-        private void setSummary(SharedPreferences sharedPreferences, Preference preference) {
-            String key = preference.getKey();
-
-            if (key.equals(KEY_PREF_DEFAULT_SCREEN)) {
-                //preference.setSummary(MainContentActivity.drawerListitems[Integer.parseInt(sharedPreferences.getString(key, Integer.toString(ApplicationConstants.MAILBOX)))]);
-            }
         }
 
         private void finishActivityWithAction(String action) {

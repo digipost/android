@@ -22,120 +22,43 @@ import org.codehaus.jackson.map.annotate.JsonFilter;
 
 import java.util.ArrayList;
 
+import no.digipost.android.constants.ApiConstants;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFilter("toJSON")
 public class Settings {
-    @JsonProperty
-    private ArrayList<SenderBlockingStatus> senderBlockingStatus;
 
     @JsonProperty
-    private String acceptsInformation;
+    private ArrayList<ExtendedEmail> emailAddress;
 
     @JsonProperty
-    private String visibleInSearch;
-
-    @JsonProperty
-    private String notificationEmail;
-
-    @JsonProperty
-    private String reminderEmail;
-
-    @JsonProperty
-    private String notificationSmsPaidBySender;
-
-    @JsonProperty
-    private ArrayList<String> email;
-
-    @JsonProperty
-    private ArrayList<ExtendedEmail> extendedEmail;
-
-    @JsonProperty
-    private ExtendedPhone extendedPhone;
-
-    @JsonProperty
-    private String phonenumber;
+    private ExtendedPhone mobilePhoneNumber;
 
     @JsonProperty
     private ArrayList<Link> link;
 
-    public ArrayList<SenderBlockingStatus> getSenderBlockingStatus() {
-        return senderBlockingStatus;
+    public ArrayList<ExtendedEmail> getExtendedEmails() {
+        return emailAddress;
     }
 
-    public void setSenderBlockingStatus(ArrayList<SenderBlockingStatus> senderBlockingStatus) {
-        this.senderBlockingStatus = senderBlockingStatus;
-    }
-
-    public String getAcceptsInformation() {
-        return acceptsInformation;
-    }
-
-    public void setAcceptsInformation(String acceptsInformation) {
-        this.acceptsInformation = acceptsInformation;
-    }
-
-    public String getVisibleInSearch() {
-        return visibleInSearch;
-    }
-
-    public void setVisibleInSearch(String visibleInSearch) {
-        this.visibleInSearch = visibleInSearch;
-    }
-
-    public String getNotificationEmail() {
-        return notificationEmail;
-    }
-
-    public void setNotificationEmail(String notificationEmail) {
-        this.notificationEmail = notificationEmail;
-    }
-
-    public String getReminderEmail() {
-        return reminderEmail;
-    }
-
-    public void setReminderEmail(String reminderEmail) {
-        this.reminderEmail = reminderEmail;
-    }
-
-    public String getNotificationSmsPaidBySender() {
-        return notificationSmsPaidBySender;
-    }
-
-    public void setNotificationSmsPaidBySender(String notificationSmsPaidBySender) {
-        this.notificationSmsPaidBySender = notificationSmsPaidBySender;
-    }
-
-    public ArrayList<String> getEmail() {
-        return email;
-    }
-
-    public void setEmail(ArrayList<String> email) {
-        this.email = email;
-    }
-
-    public ArrayList<ExtendedEmail> getExtendedEmail() {
-        return extendedEmail;
-    }
-
-    public void setExtendedEmail(ArrayList<ExtendedEmail> extendedEmail) {
-        this.extendedEmail = extendedEmail;
+    public void setExtendedEmailAdresses(ArrayList<ExtendedEmail> extendeEmailAdresses) {
+        this.emailAddress = emailAddress;
     }
 
     public ExtendedPhone getExtendedPhone() {
-        return extendedPhone;
+        return mobilePhoneNumber;
     }
 
-    public void setExtendedPhone(ExtendedPhone extendedPhone) {
-        this.extendedPhone = extendedPhone;
+    public String getPhoneNumber() {
+        return getExtendedPhone() != null ? getExtendedPhone().phoneNumber : "";
     }
 
-    public String getPhonenumber() {
-        return phonenumber;
+    public String getCountryCode() {
+        return getExtendedPhone() != null ? getExtendedPhone().countryCode : "";
     }
 
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
+    public void setMobilePhoneNumber(ExtendedPhone mobilePhoneNumber) {
+        this.mobilePhoneNumber = mobilePhoneNumber;
     }
 
     public ArrayList<Link> getLink() {
@@ -146,9 +69,9 @@ public class Settings {
         this.link = link;
     }
 
-    public String getSettingsUri() {
+    public String getUpdateSettingsUri() {
         for (Link l : link) {
-            if (l.getRel().equals("https://www.digipost.no/post/relations/update_account_settings")) {
+            if (l.getRel().equals(ApiConstants.UPDATE_MAILBOX_SETTINGS)) {
                 return l.getUri();
             }
         }

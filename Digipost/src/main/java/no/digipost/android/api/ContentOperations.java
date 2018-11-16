@@ -16,6 +16,8 @@
 package no.digipost.android.api;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
@@ -210,7 +212,7 @@ public class ContentOperations {
     public static void updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException,
             DigipostClientException, DigipostApiException {
         refreshApiAccess();
-        apiAccess.postput(context, ApiAccess.POST, settings.getSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
+        apiAccess.postput(context, ApiAccess.POST, settings.getUpdateSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
     }
 
     public static String sendOpeningReceipt(Context context, final Attachment attachment) throws DigipostClientException,
@@ -262,7 +264,9 @@ public class ContentOperations {
         if (apiAccess == null) {
             apiAccess = new ApiAccess();
         }
-        return (Settings) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getSettingsUri(), null));
+
+        String mailboxSettingsUri = getAccount(context).getPrimaryAccount().getMailboxSettingsUri();
+        return (Settings) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, mailboxSettingsUri, null));
     }
 
     public static Banks getBanks(final Context context)throws DigipostClientException, DigipostAuthenticationException,

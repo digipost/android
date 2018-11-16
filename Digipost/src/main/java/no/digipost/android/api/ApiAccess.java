@@ -252,8 +252,10 @@ public class ApiAccess {
     }
 
     public String getApiJsonString(Context context, final String uri, final MultivaluedMap<String, String> params) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
+        if(uri == null) {
+            return null;
+        }
         ClientResponse cr = get(context, uri, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON, params);
-
         try {
             NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
         } catch (DigipostInvalidTokenException e) {

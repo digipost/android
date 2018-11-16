@@ -2,8 +2,22 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
+        android:title="@string/pref_screen_personal_settings_title"
+        >
+        <Preference
+            android:key="pref_notificationSettings"
+            android:title="@string/pref_screen_notification_settings_title"
+            >
+
+            <intent android:targetPackage="no.digipost.android"
+                android:targetClass="no.digipost.android.gui.content.NotificationSettingsActivity"/>
+        </Preference>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
             android:title="@string/pref_general_settings"
-            android:key="pref_generalSettings">
+        android:key="pref_generalSettings">
 
         <SwitchPreference
                 android:key="pref_confirmDelete"
