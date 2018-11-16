@@ -19,6 +19,8 @@ package no.digipost.android.gui.content;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.EditText;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -35,6 +37,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     private EditText countryCode, mobileNumber, email1, email2, email3;
     private ValidationRules validationRules;
+    private TextWatcher emailValidator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +71,30 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     private void createUI() {
         countryCode = findViewById(R.id.notification_settings_countrycode);
         mobileNumber = findViewById(R.id.notification_settings_mobile);
+        emailValidator = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String email = charSequence.toString();
+                if(!validEmail(email)){
+                    Log.d("Settings", "invalid email: " + email);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
         email1 = findViewById(R.id.notification_settings_email1);
+        email1.addTextChangedListener(emailValidator);
         email2 = findViewById(R.id.notification_settings_email2);
+        email2.addTextChangedListener(emailValidator);
         email3 = findViewById(R.id.notification_settings_email3);
+        email3.addTextChangedListener(emailValidator);
         settingsButton = findViewById(R.id.notification_settings_save);
     }
 
@@ -110,9 +134,13 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         }
     }
 
+    private boolean validEmail(String email) {
+        return email.matches(validationRules.getEmail());
+    }
+
     private void validateEmails(ArrayList<String> emails) throws Exception {
         for (String email : emails) {
-            if (!email.matches(validationRules.getEmail())) {
+            if (validEmail(email)) {
                 throw new Exception("Ikke gyldig email-adresse: " + email);
             }
         }
