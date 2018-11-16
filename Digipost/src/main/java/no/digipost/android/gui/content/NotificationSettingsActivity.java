@@ -49,8 +49,8 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar =  getSupportActionBar();
         if(actionBar != null){
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(getString(R.string.pref_screen_notification_settings_title));
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(getString(R.string.pref_screen_notification_settings_title));
         }
 
         createUI();
@@ -89,6 +89,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
             }
         };
+
         email1 = findViewById(R.id.notification_settings_email1);
         email1.addTextChangedListener(emailValidator);
         email2 = findViewById(R.id.notification_settings_email2);
@@ -100,7 +101,6 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     @Override
     protected void updateUI(Settings settings) {
-        Log.d("update settings uri", settings.getUpdateSettingsUri());
         countryCode.setText((settings.getCountryCode() != null) ? settings.getCountryCode() : "");
         mobileNumber.setText((settings.getPhoneNumber() != null) ? settings.getPhoneNumber() : "");
 
@@ -138,47 +138,11 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         return email.matches(validationRules.getEmail());
     }
 
-    private void validateEmails(ArrayList<String> emails) throws Exception {
-        for (String email : emails) {
-            if (validEmail(email)) {
-                throw new Exception("Ikke gyldig email-adresse: " + email);
-            }
-        }
-    }
-
-    private ArrayList<String> getEmails() {
-        ArrayList<String> emails = new ArrayList<String>();
-
-        String stringEmail = email1.getText().toString().trim();
-
-        if (!stringEmail.equals("")) {
-            emails.add(stringEmail);
-        }
-
-        stringEmail = email2.getText().toString().trim();
-
-        if (!stringEmail.equals("")) {
-            emails.add(stringEmail);
-        }
-
-        stringEmail = email3.getText().toString().trim();
-
-        if (!stringEmail.equals("")) {
-            emails.add(stringEmail);
-        }
-
-        return emails;
-    }
-
     @Override
     protected void setSelectedAccountSettings() throws Exception {
-
-        String stringMobileNumber = mobileNumber.getText().toString().trim();
-        validateMobileNumber(stringMobileNumber);
-        //accountSettings.setPhonenumber(stringMobileNumber);
-
-        ArrayList<String> emails = getEmails();
-        validateEmails(emails);
-        //accountSettings.setExtendedEmailAdresses(emails);
+        accountSettings.setPhoneNumber(mobileNumber.getText().toString().trim());
+        accountSettings.setEmailAddress(email1.getText().toString().trim(), 0);
+        accountSettings.setEmailAddress(email2.getText().toString().trim(), 1);
+        accountSettings.setEmailAddress(email3.getText().toString().trim(), 2);
     }
 }

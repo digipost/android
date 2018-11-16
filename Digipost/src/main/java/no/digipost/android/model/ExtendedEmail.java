@@ -34,4 +34,8 @@ public class ExtendedEmail {
 
     @JsonProperty
     private ArrayList<Link> link;
+
+    public ExtendedEmail(String email) {
+        this.email = email;
+    }
 }

@@ -1,12 +1,12 @@
 /**
  * Copyright (C) Posten Norge AS
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,6 +45,19 @@ public class Settings {
         this.emailAddress = emailAddress;
     }
 
+    public void setEmailAddress(String email, int index) {
+        ArrayList<ExtendedEmail> emails = this.emailAddress;
+        if (email.isEmpty() && emails.get(index) != null) {
+            emails.remove(index);
+        } else if (index >= emails.size()) {
+            emails.add(new ExtendedEmail(email));
+        } else {
+            ExtendedEmail extendedEmail = emails.get(index);
+            extendedEmail.email = email;
+            emails.set(index, extendedEmail);
+        }
+    }
+
     public ExtendedPhone getExtendedPhone() {
         return mobilePhoneNumber;
     }
@@ -53,15 +66,19 @@ public class Settings {
         return getExtendedPhone() != null ? getExtendedPhone().phoneNumber : "";
     }
 
+    public void setPhoneNumber(String phoneNumber) {
+        this.getExtendedPhone().phoneNumber = phoneNumber;
+    }
+
     public String getCountryCode() {
         return getExtendedPhone() != null ? getExtendedPhone().countryCode : "";
     }
 
-    public void setMobilePhoneNumber(ExtendedPhone mobilePhoneNumber) {
-        this.mobilePhoneNumber = mobilePhoneNumber;
+    public void setCountryCode(String countryCode) {
+        this.getExtendedPhone().countryCode = countryCode;
     }
 
-    public ArrayList<Link> getLink() {
+    private ArrayList<Link> getLink() {
         return link;
     }
 
