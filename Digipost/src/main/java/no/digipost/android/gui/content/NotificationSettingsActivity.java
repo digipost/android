@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
@@ -67,16 +66,17 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     private void createUI() {
-        countryCode = (EditText) findViewById(R.id.notification_settings_countrycode);
-        mobileNumber = (EditText) findViewById(R.id.notification_settings_mobile);
-        email1 = (EditText) findViewById(R.id.notification_settings_email1);
-        email2 = (EditText) findViewById(R.id.notification_settings_email2);
-        email3 = (EditText) findViewById(R.id.notification_settings_email3);
-        settingsButton = (Button) findViewById(R.id.notification_settings_save);
+        countryCode = findViewById(R.id.notification_settings_countrycode);
+        mobileNumber = findViewById(R.id.notification_settings_mobile);
+        email1 = findViewById(R.id.notification_settings_email1);
+        email2 = findViewById(R.id.notification_settings_email2);
+        email3 = findViewById(R.id.notification_settings_email3);
+        settingsButton = findViewById(R.id.notification_settings_save);
     }
 
     @Override
     protected void updateUI(Settings settings) {
+        Log.d("update settings uri", settings.getUpdateSettingsUri());
         countryCode.setText((settings.getCountryCode() != null) ? settings.getCountryCode() : "");
         mobileNumber.setText((settings.getPhoneNumber() != null) ? settings.getPhoneNumber() : "");
 

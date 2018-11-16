@@ -239,8 +239,7 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
     private void executeUpdateSettingsTask() {
         try {
             setSelectedAccountSettings();
-            UpdateSettingsTask updateSettingsTask = new UpdateSettingsTask(accountSettings);
-            updateSettingsTask.execute();
+            new UpdateSettingsTask(accountSettings).execute();
         } catch (Exception e) {
             showInvalidInputDialog(e.getMessage());
         }
