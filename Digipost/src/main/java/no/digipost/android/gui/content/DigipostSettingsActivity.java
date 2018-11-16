@@ -23,6 +23,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,7 +40,7 @@ import no.digipost.android.model.Account;
 import no.digipost.android.model.Settings;
 import no.digipost.android.utilities.DialogUtitities;
 
-public abstract class DigipostSettingsActivity extends Activity {
+public abstract class DigipostSettingsActivity extends AppCompatActivity {
 
     protected Account userAccount;
     protected Settings accountSettings;

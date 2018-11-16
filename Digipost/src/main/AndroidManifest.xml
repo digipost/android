@@ -97,7 +97,6 @@
         <activity
             android:name="no.digipost.android.gui.content.NotificationSettingsActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/DigipostBlackStatusbar"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name="no.digipost.android.gui.invoice.InvoiceBankActivity" />
         <activity android:name="no.digipost.android.gui.invoice.InvoiceOptionsActivity"></activity>

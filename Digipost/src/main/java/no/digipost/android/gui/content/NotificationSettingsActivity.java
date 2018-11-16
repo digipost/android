@@ -16,8 +16,9 @@
 
 package no.digipost.android.gui.content;
 
-import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,10 +42,13 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_notification_settings);
-        ActionBar actionbar = getActionBar();
-        if(actionbar != null) {
-            actionbar.setHomeButtonEnabled(true);
-            actionbar.setTitle(getString(R.string.pref_screen_notification_settings_title));
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar =  getSupportActionBar();
+        if(actionBar != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(getString(R.string.pref_screen_notification_settings_title));
         }
 
         createUI();
