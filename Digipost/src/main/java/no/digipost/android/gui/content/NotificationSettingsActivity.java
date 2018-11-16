@@ -73,6 +73,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     @Override
     protected void updateUI(Settings settings) {
+        countryCode.setText((settings.getCountryCode() != null) ? settings.getCountryCode() : "");
         mobileNumber.setText((settings.getPhoneNumber() != null) ? settings.getPhoneNumber() : "");
 
         ArrayList<ExtendedEmail> emails = settings.getExtendedEmails();
@@ -86,6 +87,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     @Override
     protected void setSettingsEnabled(boolean state) {
         mobileNumber.setEnabled(state);
+        countryCode.setEnabled(state);
         email1.setEnabled(state);
         email2.setEnabled(state);
         email3.setEnabled(state);
