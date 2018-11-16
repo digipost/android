@@ -133,7 +133,6 @@ public class PrimaryAccount {
 
     private String getLinkByRelation(String relation) {
         for (Link l : link) {
-            Log.d("getSettings link", l.getRel() + " : "+l.getUri());
             if (l.getRel().equals(relation)) {
                 return l.getUri();
             }

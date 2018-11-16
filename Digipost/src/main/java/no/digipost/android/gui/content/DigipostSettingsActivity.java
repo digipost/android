@@ -50,8 +50,6 @@ public abstract class DigipostSettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("uri", "DigipostSettingsActivity onCreate");
-
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         executeGetAccountTask();
     }
