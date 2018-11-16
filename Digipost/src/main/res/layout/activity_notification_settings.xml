@@ -2,7 +2,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <include layout="@layout/toolbar" />
@@ -107,6 +108,7 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/red_button_style"
                 android:text="@string/pref_notification_settings_button"
+                android:textColor="@color/white"
                 android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>

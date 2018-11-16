@@ -177,7 +177,7 @@
     <string name="pref_notification_settings_contact_info_countrycode_hint">Landkode</string>
     <string name="pref_notification_settings_contact_info_email_title">Dine e-postadresser</string>
     <string name="pref_notification_settings_contact_info_email_hint">E-postadresse</string>
-    <string name="pref_notification_settings_button">Lagre varslingsinnstillinger</string>
+    <string name="pref_notification_settings_button">Lagre kontaktinformasjon</string>
     <string name="pref_personal_settings_info_title">Personlig informasjon</string>
     <string name="pref_personal_settings_info_personalidentificationnumber">Fødselsnummer</string>
     <string name="pref_personal_settings_info_full_name">Navn</string>
