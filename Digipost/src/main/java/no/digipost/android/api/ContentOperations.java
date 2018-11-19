@@ -16,7 +16,6 @@
 package no.digipost.android.api;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import no.digipost.android.api.exception.DigipostApiException;

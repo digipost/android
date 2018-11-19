@@ -85,9 +85,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable editable) { }
         };
 
         email1 = findViewById(R.id.notification_settings_email1);
@@ -101,14 +99,14 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     @Override
     protected void updateUI(Settings settings) {
-        countryCode.setText((settings.getCountryCode() != null) ? settings.getCountryCode() : "");
-        mobileNumber.setText((settings.getPhoneNumber() != null) ? settings.getPhoneNumber() : "");
+        countryCode.setText(settings.getCountryCode());
+        mobileNumber.setText(settings.getPhoneNumber());
 
         ArrayList<ExtendedEmail> emails = settings.getExtendedEmails();
         if(emails != null) {
-            email1.setText((emails.size() > 0) ? emails.get(0).email : "");
-            email2.setText((emails.size() > 1) ? emails.get(1).email : "");
-            email3.setText((emails.size() > 2) ? emails.get(2).email : "");
+            email1.setText((emails.size() > 0) ? emails.get(0).getEmail() : "");
+            email2.setText((emails.size() > 1) ? emails.get(1).getEmail() : "");
+            email3.setText((emails.size() > 2) ? emails.get(2).getEmail() : "");
         }
     }
 

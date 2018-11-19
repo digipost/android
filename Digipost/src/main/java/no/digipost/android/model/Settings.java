@@ -37,55 +37,6 @@ public class Settings {
     @JsonProperty
     private ArrayList<Link> link;
 
-    public ArrayList<ExtendedEmail> getExtendedEmails() {
-        return emailAddress;
-    }
-
-    public void setExtendedEmailAdresses(ArrayList<ExtendedEmail> extendeEmailAdresses) {
-        this.emailAddress = emailAddress;
-    }
-
-    public void setEmailAddress(String email, int index) {
-        ArrayList<ExtendedEmail> emails = this.emailAddress;
-        if (email.isEmpty() && emails.get(index) != null) {
-            emails.remove(index);
-        } else if (index >= emails.size()) {
-            emails.add(new ExtendedEmail(email));
-        } else {
-            ExtendedEmail extendedEmail = emails.get(index);
-            extendedEmail.email = email;
-            emails.set(index, extendedEmail);
-        }
-    }
-
-    public ExtendedPhone getExtendedPhone() {
-        return mobilePhoneNumber;
-    }
-
-    public String getPhoneNumber() {
-        return getExtendedPhone() != null ? getExtendedPhone().phoneNumber : "";
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.getExtendedPhone().phoneNumber = phoneNumber;
-    }
-
-    public String getCountryCode() {
-        return getExtendedPhone() != null ? getExtendedPhone().countryCode : "";
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.getExtendedPhone().countryCode = countryCode;
-    }
-
-    private ArrayList<Link> getLink() {
-        return link;
-    }
-
-    public void setLink(ArrayList<Link> link) {
-        this.link = link;
-    }
-
     public String getUpdateSettingsUri() {
         for (Link l : link) {
             if (l.getRel().equals(ApiConstants.UPDATE_MAILBOX_SETTINGS)) {
@@ -93,5 +44,40 @@ public class Settings {
             }
         }
         return null;
+    }
+
+    public ArrayList<ExtendedEmail> getExtendedEmails() {
+        return emailAddress;
+    }
+
+    public String getPhoneNumber() {
+        return this.mobilePhoneNumber.getExtendedPhone();
+    }
+
+    public String getCountryCode() {
+        return this.mobilePhoneNumber.getCountryCode();
+    }
+
+    public void setEmailAddress(String email, int index) {
+        ArrayList<ExtendedEmail> emails = this.emailAddress;
+        if (email.isEmpty() && emails.get(index) != null) {
+            emails.remove(index);
+        } else if (index >= emails.size()) {
+            ExtendedEmail extendedEmail = new ExtendedEmail();
+            extendedEmail.email = email;
+            emails.add(extendedEmail);
+        } else {
+            ExtendedEmail extendedEmail = emails.get(index);
+            extendedEmail.email = email;
+            emails.set(index, extendedEmail);
+        }
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.mobilePhoneNumber.phoneNumber = phoneNumber;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.mobilePhoneNumber.countryCode = countryCode;
     }
 }

@@ -23,15 +23,18 @@ import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtendedPhone {
+
     @JsonProperty
     public String phoneNumber;
 
     @JsonProperty
     public String countryCode;
 
-    @JsonProperty
-    private String verified;
+    public String getExtendedPhone() {
+        return this.phoneNumber != null ? this.phoneNumber : "";
+    }
 
-    @JsonProperty
-    private ArrayList<Link> link;
+    public String getCountryCode() {
+        return this.countryCode != null ? this.countryCode : "";
+    }
 }
