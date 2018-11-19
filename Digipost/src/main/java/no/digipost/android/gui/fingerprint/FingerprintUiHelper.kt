@@ -22,7 +22,7 @@ class FingerprintUiHelper internal constructor(private val fingerprintMgr: Finge
     private var selfCancelled = false
 
     private val resetErrorTextRunnable = Runnable {
-        icon.setImageResource(R.drawable.ic_fp_40px)
+        icon.setImageResource(R.drawable.fingerprint_40px_icon)
         errorTextView.run {
             setTextColor(errorTextView.resources.getColor(R.color.fingerprint_hint_color, null))
             text = errorTextView.resources.getString(R.string.fingerprint_hint)
@@ -33,7 +33,7 @@ class FingerprintUiHelper internal constructor(private val fingerprintMgr: Finge
         cancellationSignal = CancellationSignal()
         selfCancelled = false
         fingerprintMgr.authenticate(null, cancellationSignal, 0, this, null)
-        icon.setImageResource(R.drawable.ic_fp_40px)
+        icon.setImageResource(R.drawable.fingerprint_40px_icon)
     }
 
     fun isListening() : Boolean {
