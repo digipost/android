@@ -76,13 +76,7 @@ class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiH
         fingerprintUiHelper.stopListening()
     }
 
-    override fun onFingerprintError() {
-        println("fingerprint: ERROR")
-        callback.backupAuthentication()
-    }
-
     override fun onFingerprintAuthenticated() {
-        println("fingerprint: OK!")
         callback.authenticationOK()
     }
 

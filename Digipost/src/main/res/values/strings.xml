@@ -354,5 +354,6 @@
     <string name="fingerprint_screenlock_tips">Skru på skjermlås for å få tilgang til denne siden</string>
     <string name="fingerprint_cancel">Avbryt</string>
     <string name="fingerprint_secondary">Bruk kode</string>
+    <string name="fingerprint_too_many_request">For mange forsøk. Benytt kode eller prøv på nytt senere</string>
 
 </resources>

@@ -50,8 +50,10 @@ class FingerprintUiHelper internal constructor(private val fingerprintMgr: Finge
 
     override fun onAuthenticationError(errMsgId: Int, errString: CharSequence) {
         if (!selfCancelled) {
-            showError(errString)
-            icon.postDelayed({ callback.onFingerprintError() }, ERROR_TIMEOUT_MILLIS)
+            errorTextView.removeCallbacks(resetErrorTextRunnable)
+            errorTextView.text = errorTextView.resources.getString(R.string.fingerprint_too_many_request)
+
+            icon.setImageResource(R.drawable.fingerprint_error_icon)
         }
     }
 
@@ -85,7 +87,6 @@ class FingerprintUiHelper internal constructor(private val fingerprintMgr: Finge
 
     interface Callback {
         fun onFingerprintAuthenticated()
-        fun onFingerprintError()
     }
 
     companion object {
