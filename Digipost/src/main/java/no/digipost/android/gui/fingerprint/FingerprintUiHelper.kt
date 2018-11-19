@@ -106,7 +106,7 @@ class FingerprintUiHelper internal constructor(private val fingerprintMgr: Finge
     }
 
     companion object {
-        val ERROR_TIMEOUT_MILLIS: Long = 1600
-        val SUCCESS_DELAY_MILLIS: Long = 1300
+        const val ERROR_TIMEOUT_MILLIS: Long = 1500
+        const val SUCCESS_DELAY_MILLIS: Long = 1200
     }
 }
