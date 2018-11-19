@@ -102,7 +102,7 @@
         <activity android:name="no.digipost.android.gui.invoice.InvoiceBankActivity" />
         <activity android:name="no.digipost.android.gui.invoice.InvoiceOptionsActivity" />
         <activity android:name="no.digipost.android.gui.invoice.InvoiceOverviewActivity" />
-        <activity android:name="no.digipost.android.gui.fingerprint.FingerprintActitivy" />
+        <activity android:name="no.digipost.android.gui.fingerprint.FingerprintActivity" />
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"

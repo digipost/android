@@ -10,7 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 
-class FingerprintActitivy :  AppCompatActivity(), FingerprintAuthenticationDialogFragment.Callback {
+class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialogFragment.Callback {
 
     private val CREDENTIAL_REQUEST_CODE_ACITIVTY = 1
     private var IS_AUTHENTICATING = false
@@ -25,7 +25,7 @@ class FingerprintActitivy :  AppCompatActivity(), FingerprintAuthenticationDialo
 
         val fingerprintManager = getSystemService(FingerprintManager::class.java)
         if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
-            fragment.setCallback(this@FingerprintActitivy)
+            fragment.setCallback(this@FingerprintActivity)
             fragment.show(supportFragmentManager, "DIALOG_TAG")
 
         } else {
@@ -68,7 +68,7 @@ class FingerprintActitivy :  AppCompatActivity(), FingerprintAuthenticationDialo
 
 
     fun start(context: Context, activityID: String) {
-        val intent = Intent(context, FingerprintActitivy::class.java)
+        val intent = Intent(context, FingerprintActivity::class.java)
         intent.putExtra(NEXT_ACTIVITY_ID, activityID)
         context.startActivity(intent)
     }
