@@ -31,7 +31,7 @@ class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiH
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+        isCancelable = false
         return inflater.inflate(R.layout.fingerprint_dialog_container,container,false)
     }
 
