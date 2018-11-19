@@ -9,20 +9,22 @@ import android.hardware.fingerprint.FingerprintManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.widget.Toast
+import no.digipost.android.gui.content.SettingsActivity
 
 class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialogFragment.Callback {
 
     private val CREDENTIAL_REQUEST_CODE_ACITIVTY = 1
     private var IS_AUTHENTICATING = false
     private val fragment = FingerprintAuthenticationDialogFragment()
-    private val NEXT_ACTIVITY_ID = "NEXT_ACTIVITY"
-    private lateinit var nextActivity: String
+    private lateinit var nextActivity: Class<*>
 
 
     @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        nextActivity = intent.extras[NEXT_ACTIVITY_ID] as Class<*>
         val fingerprintManager = getSystemService(FingerprintManager::class.java)
         if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
             fragment.setCallback(this@FingerprintActivity)
@@ -51,8 +53,8 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
 
 
     override fun authenticationOK() {
-        supportFragmentManager.beginTransaction().remove(fragment).commit()
-
+        val intent = Intent(this, nextActivity)
+        startActivity(intent)
     }
 
     override fun cancelAuthentication() {
@@ -67,10 +69,20 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
     }
 
 
-    fun start(context: Context, activityID: String) {
-        val intent = Intent(context, FingerprintActivity::class.java)
-        intent.putExtra(NEXT_ACTIVITY_ID, activityID)
-        context.startActivity(intent)
+    companion object {
+        public fun startActivityWithFingerprint (context: Context, activityClass: Class<*>) {
+            val keyguard = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+            if (!keyguard.isKeyguardSecure) {
+                Toast.makeText(context, "Skjermlås ikke på", Toast.LENGTH_LONG).show()
+                return
+            }
+
+            val intent = Intent(context, FingerprintActivity::class.java)
+            intent.putExtra(this.NEXT_ACTIVITY_ID, activityClass)
+            context.startActivity(intent)
+        }
+
+        private const val NEXT_ACTIVITY_ID = "NEXT_ACTIVITY"
     }
 
 }

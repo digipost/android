@@ -52,6 +52,7 @@ import no.digipost.android.gui.adapters.DrawerAdapter;
 import no.digipost.android.gui.adapters.MailboxArrayAdapter;
 import no.digipost.android.gui.content.SettingsActivity;
 import no.digipost.android.gui.content.UploadActivity;
+import no.digipost.android.gui.fingerprint.FingerprintActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.fragments.EditFolderFragment;
@@ -434,7 +435,8 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_settings))) {
             Intent intent = new Intent(MainContentActivity.this, SettingsActivity.class);
-            startActivityForResult(intent, INTENT_REQUESTCODE);
+            FingerprintActivity.Companion.startActivityWithFingerprint(this, SettingsActivity.class);
+            //startActivityForResult(intent, INTENT_REQUESTCODE);
             return true;
 
         }
