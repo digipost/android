@@ -27,7 +27,7 @@ import no.digipost.android.constants.ApiConstants;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFilter("toJSON")
-public class Settings {
+public class MailboxSettings {
 
     @JsonProperty
     private ArrayList<ExtendedEmail> emailAddress;
@@ -37,6 +37,12 @@ public class Settings {
 
     @JsonProperty
     private ArrayList<Link> link;
+
+    @JsonProperty
+    private ArrayList<SenderBlockingStatus> senderBlockingStatus;
+
+    @JsonProperty
+    private ArrayList<Setting> setting;
 
     @JsonIgnore
     public String getUpdateSettingsUri() {

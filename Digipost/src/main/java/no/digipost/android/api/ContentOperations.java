@@ -210,16 +210,10 @@ public class ContentOperations {
         return NetworkUtilities.SUCCESS;
     }
 
-    public static String updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException,
+    public static String updateAccountSettings(Context context, MailboxSettings mailboxSettings) throws DigipostAuthenticationException,
             DigipostClientException, DigipostApiException {
         refreshApiAccess();
-        try {
-            Log.d("Settingsx", "POST json: " + EntityUtils.toString(JSONUtilities.createJsonFromJackson(settings)));
-        }catch (Exception e) {
-        }
-
-        String response = apiAccess.postput(context, ApiAccess.POST, settings.getUpdateSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
-        return response;
+        return apiAccess.postput(context, ApiAccess.POST, mailboxSettings.getUpdateSettingsUri(), JSONUtilities.createJsonFromJackson(mailboxSettings));
     }
 
     public static String sendOpeningReceipt(Context context, final Attachment attachment) throws DigipostClientException,
@@ -266,14 +260,14 @@ public class ContentOperations {
         ApiAccess.uploadFile(context, uploadUri, file);
     }
 
-    public static Settings getSettings(Context context) throws DigipostClientException, DigipostAuthenticationException,
+    public static MailboxSettings getSettings(Context context) throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
         if (apiAccess == null) {
             apiAccess = new ApiAccess();
         }
 
         String mailboxSettingsUri = getAccount(context).getPrimaryAccount().getMailboxSettingsUri();
-        return (Settings) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, mailboxSettingsUri, null));
+        return (MailboxSettings) JSONUtilities.processJackson(MailboxSettings.class, apiAccess.getApiJsonString(context, mailboxSettingsUri, null));
     }
 
     public static Banks getBanks(final Context context)throws DigipostClientException, DigipostAuthenticationException,

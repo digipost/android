@@ -35,13 +35,13 @@ import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Account;
-import no.digipost.android.model.Settings;
+import no.digipost.android.model.MailboxSettings;
 import no.digipost.android.utilities.DialogUtitities;
 
 public abstract class DigipostSettingsActivity extends AppCompatActivity {
 
     protected Account userAccount;
-    protected Settings accountSettings;
+    protected MailboxSettings accountMailboxSettings;
 
     protected Button settingsButton;
     protected ProgressDialog settingsProgressDialog;
@@ -179,14 +179,14 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
         }
     }
 
-    protected abstract void updateUI(Settings settings);
+    protected abstract void updateUI(MailboxSettings mailboxSettings);
 
     private void executeGetSettingsTask() {
         GetSettingsTask getSettingsTask = new GetSettingsTask();
         getSettingsTask.execute();
     }
 
-    private class GetSettingsTask extends AsyncTask<Void, Void, Settings> {
+    private class GetSettingsTask extends AsyncTask<Void, Void, MailboxSettings> {
         private String errorMessage;
         private boolean invalidToken;
 
@@ -196,7 +196,7 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Settings doInBackground(Void... voids) {
+        protected MailboxSettings doInBackground(Void... voids) {
             try {
                 return ContentOperations.getSettings(DigipostSettingsActivity.this);
             } catch (DigipostClientException e) {
@@ -213,10 +213,10 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Settings settings) {
-            super.onPostExecute(settings);
+        protected void onPostExecute(MailboxSettings mailboxSettings) {
+            super.onPostExecute(mailboxSettings);
             hideSettingsProgressDialog();
-            if (settings == null) {
+            if (mailboxSettings == null) {
                 DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
                 setSettingsEnabled(false);
 
@@ -224,9 +224,9 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
                     finishActivityWithAction(ApiConstants.LOGOUT);
                 }
             } else {
-                accountSettings = settings;
+                accountMailboxSettings = mailboxSettings;
                 setAccountInfo(userAccount);
-                updateUI(accountSettings);
+                updateUI(accountMailboxSettings);
                 setSettingsEnabled(true);
             }
         }
@@ -237,18 +237,18 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
     private void executeUpdateSettingsTask() {
         try {
             setSelectedAccountSettings();
-            new UpdateSettingsTask(accountSettings).execute();
+            new UpdateSettingsTask(accountMailboxSettings).execute();
         } catch (Exception e) {
             showInvalidInputDialog(e.getMessage());
         }
     }
 
     protected class UpdateSettingsTask extends AsyncTask<Void, Void, String> {
-        private Settings settings;
+        private MailboxSettings mailboxSettings;
         private boolean invalidToken;
 
-        public UpdateSettingsTask(Settings settings) {
-            this.settings = settings;
+        public UpdateSettingsTask(MailboxSettings mailboxSettings) {
+            this.mailboxSettings = mailboxSettings;
         }
 
         @Override
@@ -260,7 +260,7 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... voids) {
             try {
-                ContentOperations.updateAccountSettings(DigipostSettingsActivity.this, settings);
+                ContentOperations.updateAccountSettings(DigipostSettingsActivity.this, mailboxSettings);
                 return null;
             } catch (DigipostAuthenticationException e) {
                 invalidToken = true;

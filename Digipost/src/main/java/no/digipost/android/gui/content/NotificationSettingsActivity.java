@@ -28,7 +28,7 @@ import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.ExtendedEmail;
-import no.digipost.android.model.Settings;
+import no.digipost.android.model.MailboxSettings;
 import no.digipost.android.model.ValidationRules;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String email = charSequence.toString();
                 if(!validEmail(email)){
-                    Log.d("Settings", "invalid email: " + email);
+                    Log.d("MailboxSettings", "invalid email: " + email);
                 }
             }
 
@@ -98,11 +98,11 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     @Override
-    protected void updateUI(Settings settings) {
-        countryCode.setText(settings.getCountryCode());
-        mobileNumber.setText(settings.getPhoneNumber());
+    protected void updateUI(MailboxSettings mailboxSettings) {
+        countryCode.setText(mailboxSettings.getCountryCode());
+        mobileNumber.setText(mailboxSettings.getPhoneNumber());
 
-        ArrayList<ExtendedEmail> emails = settings.getExtendedEmails();
+        ArrayList<ExtendedEmail> emails = mailboxSettings.getExtendedEmails();
         if(emails != null) {
             email1.setText((emails.size() > 0) ? emails.get(0).getEmail() : "");
             email2.setText((emails.size() > 1) ? emails.get(1).getEmail() : "");
@@ -138,9 +138,9 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     @Override
     protected void setSelectedAccountSettings() throws Exception {
-        accountSettings.setPhoneNumber(mobileNumber.getText().toString().trim());
-        accountSettings.setEmailAddress(email1.getText().toString().trim(), 0);
-        accountSettings.setEmailAddress(email2.getText().toString().trim(), 1);
-        accountSettings.setEmailAddress(email3.getText().toString().trim(), 2);
+        accountMailboxSettings.setPhoneNumber(mobileNumber.getText().toString().trim());
+        accountMailboxSettings.setEmailAddress(email1.getText().toString().trim(), 0);
+        accountMailboxSettings.setEmailAddress(email2.getText().toString().trim(), 1);
+        accountMailboxSettings.setEmailAddress(email3.getText().toString().trim(), 2);
     }
 }
