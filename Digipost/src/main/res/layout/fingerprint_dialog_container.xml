@@ -48,14 +48,15 @@
         <Button
             android:id="@+id/fingerprint_cancel_button"
             style="?android:attr/buttonBarNegativeButtonStyle"
-            android:text="Cancel"
+            android:text="@string/fingerprint_cancel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"/>
 
         <Button
             android:id="@+id/fingerprint_second_dialog_button"
             style="?android:attr/buttonBarPositiveButtonStyle"
-            android:text="Password"
+            android:text="@string/fingerprint_secondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

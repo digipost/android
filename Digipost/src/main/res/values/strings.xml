@@ -346,11 +346,13 @@
     <string name="externallink_continue">Fortsett</string>
     <string name="externallink_actionbar_open_in_browser">Åpne i nettleser</string>
 
-    <string name="fingerprint_description">Confirm fingerprint to continue</string>
-    <string name="fingerprint_icon_description">Fingerprint icon</string>
-    <string name="fingerprint_hint">Touch sensor</string>
-    <string name="fingerprint_not_recognized">Fingerprint not recognized. Try again</string>
-    <string name="fingerprint_success">Fingerprint recognized</string>
+    <string name="fingerprint_description">Bekreft fingeravtrykk for å fortsette</string>
+    <string name="fingerprint_icon_description">fingeravtrykkikon</string>
+    <string name="fingerprint_hint">Plasser fingeren på avleser</string>
+    <string name="fingerprint_not_recognized">Fingeravtrykk ikke gjenkjent. Prøv igjen</string>
+    <string name="fingerprint_success">Fingeravtrykk gjenkjent</string>
     <string name="fingerprint_screenlock_tips">Skru på skjermlås for å få tilgang til denne siden</string>
+    <string name="fingerprint_cancel">Avbryt</string>
+    <string name="fingerprint_secondary">Bruk kode</string>
 
 </resources>
