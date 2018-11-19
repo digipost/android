@@ -28,7 +28,7 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
         val fingerprintManager = getSystemService(FingerprintManager::class.java)
         if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
             fragment.setCallback(this@FingerprintActivity)
-            fragment.show(supportFragmentManager, "DIALOG_TAG")
+            fragment.show(supportFragmentManager, "FINGERPRINT_FRAGMENT")
 
         } else {
             backupAuthentication()
