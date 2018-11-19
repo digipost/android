@@ -16,6 +16,7 @@
 
 package no.digipost.android.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonFilter;
@@ -37,6 +38,7 @@ public class Settings {
     @JsonProperty
     private ArrayList<Link> link;
 
+    @JsonIgnore
     public String getUpdateSettingsUri() {
         for (Link l : link) {
             if (l.getRel().equals(ApiConstants.UPDATE_MAILBOX_SETTINGS)) {
@@ -46,14 +48,17 @@ public class Settings {
         return null;
     }
 
+    @JsonIgnore
     public ArrayList<ExtendedEmail> getExtendedEmails() {
         return emailAddress;
     }
 
+    @JsonIgnore
     public String getPhoneNumber() {
-        return this.mobilePhoneNumber.getExtendedPhone();
+        return this.mobilePhoneNumber.getPhoneNumber();
     }
 
+    @JsonIgnore
     public String getCountryCode() {
         return this.mobilePhoneNumber.getCountryCode();
     }

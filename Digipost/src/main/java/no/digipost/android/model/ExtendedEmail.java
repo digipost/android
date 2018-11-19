@@ -27,13 +27,10 @@ public class ExtendedEmail {
     public String email;
 
     @JsonProperty
-    private String verified;
+    public boolean verified;
 
     @JsonProperty
-    private String underVerification;
-
-    @JsonProperty
-    private ArrayList<Link> link;
+    public boolean underVerification;
 
     public String getEmail() {
         return this.email != null ? this.email : "";

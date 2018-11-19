@@ -16,6 +16,7 @@
 package no.digipost.android.api;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -27,6 +28,7 @@ import no.digipost.android.model.*;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -208,10 +210,16 @@ public class ContentOperations {
         return NetworkUtilities.SUCCESS;
     }
 
-    public static void updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException,
+    public static String updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException,
             DigipostClientException, DigipostApiException {
         refreshApiAccess();
-        apiAccess.postput(context, ApiAccess.POST, settings.getUpdateSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
+        try {
+            Log.d("Settingsx", "POST json: " + EntityUtils.toString(JSONUtilities.createJsonFromJackson(settings)));
+        }catch (Exception e) {
+        }
+
+        String response = apiAccess.postput(context, ApiAccess.POST, settings.getUpdateSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
+        return response;
     }
 
     public static String sendOpeningReceipt(Context context, final Attachment attachment) throws DigipostClientException,
