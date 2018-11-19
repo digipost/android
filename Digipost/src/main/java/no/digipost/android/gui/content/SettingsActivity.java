@@ -101,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            onSharedPreferenceChanged(sharedPreferences, key);
+
         }
 
         @Override
