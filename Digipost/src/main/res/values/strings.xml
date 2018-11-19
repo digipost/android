@@ -351,5 +351,6 @@
     <string name="fingerprint_hint">Touch sensor</string>
     <string name="fingerprint_not_recognized">Fingerprint not recognized. Try again</string>
     <string name="fingerprint_success">Fingerprint recognized</string>
+    <string name="fingerprint_screenlock_tips">Skru på skjermlås for å få tilgang til denne siden</string>
 
 </resources>

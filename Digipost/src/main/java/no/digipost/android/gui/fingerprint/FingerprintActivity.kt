@@ -9,6 +9,8 @@ import android.hardware.fingerprint.FingerprintManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import no.digipost.android.R
+import no.digipost.android.utilities.DialogUtitities
 
 class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialogFragment.Callback {
 
@@ -69,7 +71,10 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
 
     companion object {
         fun startActivityWithFingerprint (context: Context, activityClass: Class<*>) {
-            if (! isKeyguardSecure(context)) return
+            if (! isKeyguardSecure(context)) {
+                DialogUtitities.showLongToast(context, context.getString(R.string.fingerprint_screenlock_tips))
+                return
+            }
 
             val intent = Intent(context, FingerprintActivity::class.java)
             intent.putExtra(this.NEXT_ACTIVITY_ID, activityClass)
