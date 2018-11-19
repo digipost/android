@@ -9,8 +9,6 @@ import android.hardware.fingerprint.FingerprintManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
-import no.digipost.android.gui.content.SettingsActivity
 
 class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialogFragment.Callback {
 
@@ -70,16 +68,17 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
 
 
     companion object {
-        public fun startActivityWithFingerprint (context: Context, activityClass: Class<*>) {
-            val keyguard = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-            if (!keyguard.isKeyguardSecure) {
-                Toast.makeText(context, "Skjermlås ikke på", Toast.LENGTH_LONG).show()
-                return
-            }
+        fun startActivityWithFingerprint (context: Context, activityClass: Class<*>) {
+            if (! isKeyguardSecure(context)) return
 
             val intent = Intent(context, FingerprintActivity::class.java)
             intent.putExtra(this.NEXT_ACTIVITY_ID, activityClass)
             context.startActivity(intent)
+        }
+
+        fun isKeyguardSecure(context: Context): Boolean {
+            val keyguard = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
+            return keyguard.isKeyguardSecure
         }
 
         private const val NEXT_ACTIVITY_ID = "NEXT_ACTIVITY"
