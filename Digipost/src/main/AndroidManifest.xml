@@ -93,9 +93,6 @@
             android:name="no.digipost.android.gui.content.UploadActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="no.digipost.android.gui.content.SettingsActivity"
-            android:configChanges="orientation|screenSize" />
-        <activity
             android:name="no.digipost.android.gui.content.NotificationSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden" />
