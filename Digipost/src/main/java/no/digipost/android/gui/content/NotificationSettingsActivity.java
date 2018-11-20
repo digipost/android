@@ -143,7 +143,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         boolean email1Valid = emailAppersValid(validationRules, email1);
         boolean email2Valid = emailAppersValid(validationRules, email2);
         boolean email3Valid = emailAppersValid(validationRules, email3);
-        boolean mobileNumberValid = validMobileNumber(mobileNumber.getText().toString());
+        boolean mobileNumberValid = phoneNumberAppersValid(validationRules, mobileNumber);
         return email1Valid && email2Valid && email3Valid && mobileNumberValid;
     }
 
@@ -172,10 +172,6 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     @Override
     protected void setAccountInfo(Account account) {
         validationRules = account.getValidationRules();
-    }
-
-    private boolean validMobileNumber(String mobileNumber) {
-        return mobileNumber.matches(validationRules.getPhoneNumber());
     }
 
     @Override
