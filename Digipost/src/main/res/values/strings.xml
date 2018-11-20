@@ -163,7 +163,10 @@
     <string name="pref_screen_confirm_delete_title">Bekreft før sletting</string>
     <string name="pref_screen_confirm_delete_summary">Vis bekreftelsesdialog før sletting</string>
     <string name="pref_screen_personal_settings_title">Personlige innstillinger</string>
-    <string name="pref_screen_notification_settings_title">Kontaktopplysninger</string>
+
+    <string name="pref_screen_notification_settings_title">Din kontaktinformasjon</string>
+    <string name="pref_screen_notification_settings_subtitle">Vi bruker e-postadressen og mobilnummeret til å varsle deg om nye meldinger, så se over og rediger informasjonen slik at den er riktig.</string>
+
     <string name="pref_notification_settings_letters_title">Varsling om nye meldinger</string>
     <string name="pref_notification_settings_letters_new_title">E-post om nye meldinger</string>
     <string name="pref_notification_settings_letters_new_subtitle">Send meg en e-post hvis jeg får en nytt melding</string>
@@ -172,10 +175,10 @@
     <string name="pref_notification_settings_letters_important_title">SMS om ekstra viktige meldinger</string>
     <string name="pref_notification_settings_letters_important_subtitle">Tillat avsendere å sende meg en SMS-melding om viktige meldinger.</string>
     <string name="pref_notification_settings_contact_info_title">Kontaktopplysninger</string>
-    <string name="pref_notification_settings_contact_info_phone_title">Ditt mobilnummer</string>
+    <string name="pref_notification_settings_contact_info_phone_title">Ditt mobilnummer:</string>
     <string name="pref_notification_settings_contact_info_phone_hint">Mobilnummer</string>
     <string name="pref_notification_settings_contact_info_countrycode_hint">Landkode</string>
-    <string name="pref_notification_settings_contact_info_email_title">Dine e-postadresser</string>
+    <string name="pref_notification_settings_contact_info_email_title">E-postadresser:</string>
     <string name="pref_notification_settings_contact_info_email_hint">E-postadresse</string>
     <string name="pref_notification_settings_button">Lagre kontaktinformasjon</string>
     <string name="pref_personal_settings_info_title">Personlig informasjon</string>

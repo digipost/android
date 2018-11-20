@@ -15,38 +15,36 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="20dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:orientation="vertical"
-                android:padding="10dp"
-                android:paddingLeft="20dp">
+                android:layout_gravity="top|center_horizontal"
+                android:textStyle="bold"
+                android:text="@string/pref_screen_notification_settings_title"
+                android:textSize="17sp" />
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/pref_notification_settings_contact_info_title"
-                    android:textSize="17sp" />
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="@string/pref_screen_notification_settings_subtitle"
+                android:textSize="17sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10sp"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_marginBottom="5dp"
+                    android:textStyle="bold"
                     android:text="@string/pref_notification_settings_contact_info_email_title"
                     android:textSize="16sp" />
 
@@ -78,6 +76,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="5dp"
+                    android:layout_marginTop="20dp"
+                    android:textStyle="bold"
                     android:text="@string/pref_notification_settings_contact_info_phone_title"
                     android:textSize="16sp" />
 
