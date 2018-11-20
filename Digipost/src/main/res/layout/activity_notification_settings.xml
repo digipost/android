@@ -32,6 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|center_horizontal"
                 android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
                 android:text="@string/pref_screen_notification_settings_subtitle"
                 android:textSize="17sp" />
 
