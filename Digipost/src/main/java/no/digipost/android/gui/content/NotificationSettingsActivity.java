@@ -78,7 +78,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.menu_save){
-            executeUpdateSettingsTask();
+            save();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -134,13 +134,11 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     private boolean inputIsValid() {
-        boolean email1Valid = validEmail(email1.getText().toString());
+        boolean email1Valid = validEmailOrEmpty(email1);
         boolean email2Valid = validEmailOrEmpty(email2);
         boolean email3Valid = validEmailOrEmpty(email3);
         boolean mobileNumberValid = validMobileNumber(mobileNumber.getText().toString());
-        boolean allEmailsValid = email1Valid && email2Valid && email3Valid && mob;
-
-        return false;
+        return email1Valid && email2Valid && email3Valid && mobileNumberValid;
     }
 
     @Override

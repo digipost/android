@@ -233,7 +233,7 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showSettingsProgressDialog("Oppdaterer dine innstillinger...");
+            showSettingsProgressDialog("Henter dine innstillinger...");
         }
 
         @Override
