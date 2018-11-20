@@ -22,12 +22,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
@@ -69,21 +66,23 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_notification_settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_save){
+            executeUpdateSettingsTask();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void createUI() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        Button saveButton = new Button(this);
-        saveButton.setText(getString(R.string.save));
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
-        params.gravity = Gravity.END;
-        saveButton.setLayoutParams(params);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                executeUpdateSettingsTask();
-            }
-        });
-        toolbar.addView(saveButton);
-
         setSupportActionBar(toolbar);
         ActionBar actionBar =  getSupportActionBar();
         if(actionBar != null){
