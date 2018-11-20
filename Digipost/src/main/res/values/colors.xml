@@ -72,4 +72,10 @@
     <color name="metadata_divider">#EDEDED</color>
     <color name="metadata_externalbrowser_top_background">#2E2E2E</color>
 
+
+    <!-- Fingerprint -->
+    <color name="fingerprint_hint_color">#42000000</color>
+    <color name="fingerprint_warning_color">#f4511e</color>
+    <color name="fingerprint_success_color">#009688</color>
+
 </resources>

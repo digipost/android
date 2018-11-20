@@ -46,7 +46,6 @@ import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
 import no.digipost.android.utilities.DialogUtitities;
 import no.digipost.android.utilities.FileUtilities;
-import no.digipost.android.utilities.SettingsUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -226,11 +225,7 @@ public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     }
 
     protected void deleteContent(List<CONTENT_TYPE> content) {
-        if (SettingsUtilities.getConfirmDeletePreference(context)) {
-            showDeleteContentDialog(content);
-        } else {
-            executeContentDeleteTask(content);
-        }
+        showDeleteContentDialog(content);
     }
 
     private void showDeleteContentDialog(final List<CONTENT_TYPE> content) {

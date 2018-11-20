@@ -20,6 +20,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -92,15 +93,13 @@
             android:name="no.digipost.android.gui.content.UploadActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="no.digipost.android.gui.content.SettingsActivity"
-            android:configChanges="orientation|screenSize" />
-        <activity
             android:name="no.digipost.android.gui.content.NotificationSettingsActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name="no.digipost.android.gui.invoice.InvoiceBankActivity" />
-        <activity android:name="no.digipost.android.gui.invoice.InvoiceOptionsActivity"></activity>
-        <activity android:name="no.digipost.android.gui.invoice.InvoiceOverviewActivity"></activity>
+        <activity android:name="no.digipost.android.gui.invoice.InvoiceOptionsActivity" />
+        <activity android:name="no.digipost.android.gui.invoice.InvoiceOverviewActivity" />
+        <activity android:name="no.digipost.android.gui.fingerprint.FingerprintActivity" />
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -141,7 +140,7 @@
         </service>
         <service
             android:name="no.digipost.android.gcm.RegistrationService"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.gms.version"
