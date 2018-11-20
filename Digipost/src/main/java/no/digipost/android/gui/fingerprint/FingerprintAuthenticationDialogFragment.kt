@@ -47,7 +47,7 @@ class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiH
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        isCancelable = false
+        dialog.setCanceledOnTouchOutside(false)
         return inflater.inflate(R.layout.fingerprint_dialog_container,container,false)
     }
 
@@ -90,6 +90,11 @@ class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiH
     override fun onPause() {
         super.onPause()
         fingerprintUiHelper.stopListening()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        activity.finish()
     }
 
     override fun onFingerprintAuthenticated() {

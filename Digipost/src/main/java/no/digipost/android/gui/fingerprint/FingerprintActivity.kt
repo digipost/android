@@ -45,7 +45,6 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
         if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
             fragment.setCallback(this@FingerprintActivity)
             fragment.show(supportFragmentManager, "FINGERPRINT_FRAGMENT")
-
         } else {
             backupAuthentication()
         }
