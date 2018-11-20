@@ -22,7 +22,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
@@ -37,22 +42,12 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     private EditText countryCode, mobileNumber, email1, email2, email3;
     private ValidationRules validationRules;
-    private TextWatcher emailValidator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_notification_settings);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar =  getSupportActionBar();
-        if(actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(getString(R.string.pref_screen_notification_settings_title));
-        }
-
         createUI();
     }
 
@@ -75,9 +70,30 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     private void createUI() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        Button saveButton = new Button(this);
+        saveButton.setText(getString(R.string.save));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.FILL_PARENT);
+        params.gravity = Gravity.END;
+        saveButton.setLayoutParams(params);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                executeUpdateSettingsTask();
+            }
+        });
+        toolbar.addView(saveButton);
+
+        setSupportActionBar(toolbar);
+        ActionBar actionBar =  getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(getString(R.string.pref_screen_notification_settings_title));
+        }
+
         countryCode = findViewById(R.id.notification_settings_countrycode);
         mobileNumber = findViewById(R.id.notification_settings_mobile);
-        emailValidator = new TextWatcher() {
+        TextWatcher emailValidator = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }

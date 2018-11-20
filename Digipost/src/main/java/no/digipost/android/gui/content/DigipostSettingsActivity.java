@@ -234,7 +234,7 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
 
     protected abstract void setSelectedAccountSettings() throws Exception;
 
-    private void executeUpdateSettingsTask() {
+    protected void executeUpdateSettingsTask() {
         try {
             setSelectedAccountSettings();
             new UpdateSettingsTask(accountMailboxSettings).execute();
