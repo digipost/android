@@ -22,9 +22,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top|center_horizontal"
-                android:textStyle="bold"
                 android:text="@string/pref_screen_notification_settings_title"
-                android:textSize="17sp" />
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -44,9 +45,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
-                    android:textStyle="bold"
                     android:text="@string/pref_notification_settings_contact_info_email_title"
-                    android:textSize="16sp" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
 
                 <EditText
@@ -54,7 +56,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/pref_notification_settings_contact_info_email_hint"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/black" />
 
                 <EditText
                     android:id="@+id/notification_settings_email2"
@@ -74,26 +77,34 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginTop="20dp"
-                    android:textStyle="bold"
                     android:text="@string/pref_notification_settings_contact_info_phone_title"
-                    android:textSize="16sp" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/notification_settings_mobile"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/pref_notification_settings_contact_info_phone_hint"
-                    android:inputType="phone" />
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/notification_settings_countrycode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/pref_notification_settings_contact_info_countrycode_hint"
-                    android:inputType="phone" />
+                    <EditText
+                        android:id="@+id/notification_settings_countrycode"
+                        android:layout_width="40sp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/pref_notification_settings_contact_info_countrycode_hint"
+                        android:inputType="phone" />
+
+                    <EditText
+                        android:id="@+id/notification_settings_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/pref_notification_settings_contact_info_phone_hint"
+                        android:inputType="phone" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
