@@ -35,8 +35,11 @@ import no.digipost.android.model.ExtendedEmail;
 import no.digipost.android.model.MailboxSettings;
 import no.digipost.android.model.ValidationRules;
 import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.ValidationUtillities;
 
 import java.util.ArrayList;
+
+import static no.digipost.android.utilities.ValidationUtillities.*;
 
 public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
@@ -103,7 +106,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String email = charSequence.toString();
-                if(!validEmail(email)){
+                if(!emailAppersValid(validationRules, email)){
                     Log.d("MailboxSettings", "invalid email: " + email);
                 }
             }
@@ -134,9 +137,9 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     private boolean inputIsValid() {
-        boolean email1Valid = validEmailOrEmpty(email1);
-        boolean email2Valid = validEmailOrEmpty(email2);
-        boolean email3Valid = validEmailOrEmpty(email3);
+        boolean email1Valid = emailAppersValid(validationRules, email1);
+        boolean email2Valid = emailAppersValid(validationRules, email2);
+        boolean email3Valid = emailAppersValid(validationRules, email3);
         boolean mobileNumberValid = validMobileNumber(mobileNumber.getText().toString());
         return email1Valid && email2Valid && email3Valid && mobileNumberValid;
     }
@@ -170,15 +173,6 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     private boolean validMobileNumber(String mobileNumber) {
         return mobileNumber.matches(validationRules.getPhoneNumber());
-    }
-
-    private boolean validEmailOrEmpty(EditText email){
-        String emailText = email.getText().toString().trim();
-        return emailText.isEmpty() || validEmail(emailText);
-    }
-
-    private boolean validEmail(String email) {
-        return email.matches(validationRules.getEmail());
     }
 
     @Override
