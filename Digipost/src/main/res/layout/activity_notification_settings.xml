@@ -109,19 +109,6 @@
 
             </LinearLayout>
 
-            <Button
-
-                android:id="@+id/notification_settings_save"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/red_button_style"
-                android:text="@string/pref_notification_settings_button"
-                android:textColor="@color/white"
-                android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

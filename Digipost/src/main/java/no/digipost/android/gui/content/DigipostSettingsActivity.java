@@ -43,7 +43,6 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
     protected Account userAccount;
     protected MailboxSettings accountMailboxSettings;
 
-    protected Button settingsButton;
     protected ProgressDialog settingsProgressDialog;
 
     @Override
@@ -105,29 +104,9 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
 
     protected abstract void setSettingsEnabled(boolean state);
 
-    protected void setButtonState(boolean state, String message) {
-        if (state) {
-            settingsButton.setText(message);
-//            settingsButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    executeUpdateSettingsTask();
-//                }
-//            });
-        } else {
-            settingsButton.setText(R.string.error_try_again);
-            settingsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    executeGetAccountTask();
-                }
-            });
-        }
-    }
-
     protected abstract void setAccountInfo(Account account);
 
-    private void executeGetAccountTask() {
+    protected void executeGetAccountTask() {
         GetAccountTask getAccountTask = new GetAccountTask();
         getAccountTask.execute();
     }

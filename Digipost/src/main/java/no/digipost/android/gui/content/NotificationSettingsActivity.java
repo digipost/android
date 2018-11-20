@@ -118,28 +118,29 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         email2.addTextChangedListener(emailValidator);
         email3 = findViewById(R.id.notification_settings_email3);
         email3.addTextChangedListener(emailValidator);
-        settingsButton = findViewById(R.id.notification_settings_save);
-            settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean email1Valid = validEmail(email1.getText().toString());
-                boolean email2Valid = validEmailOrEmpty(email2);
-                boolean email3Valid = validEmailOrEmpty(email3);
-                boolean mobileNumberValid = validMobileNumber(mobileNumber.getText().toString());
+    }
 
-                boolean allEmailsValid = email1Valid && email2Valid && email3Valid;
+    private void save() {
+        if(inputIsValid()) {
+            executeUpdateSettingsTask();
+        } else{
+            AlertDialog.Builder dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(NotificationSettingsActivity.this, "Message", "Title");
+            dialog.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {}
+            });
+            dialog.show();
+        }
+    }
 
-                if( ! allEmailsValid) {
-                    AlertDialog.Builder dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(NotificationSettingsActivity.this, "Message", "Title");
-                    dialog.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {}
-                    });
-                    dialog.show();
+    private boolean inputIsValid() {
+        boolean email1Valid = validEmail(email1.getText().toString());
+        boolean email2Valid = validEmailOrEmpty(email2);
+        boolean email3Valid = validEmailOrEmpty(email3);
+        boolean mobileNumberValid = validMobileNumber(mobileNumber.getText().toString());
+        boolean allEmailsValid = email1Valid && email2Valid && email3Valid && mob;
 
-                }
-            }
-        });
+        return false;
     }
 
     @Override
@@ -162,8 +163,6 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         email1.setEnabled(state);
         email2.setEnabled(state);
         email3.setEnabled(state);
-
-        super.setButtonState(state, getString(R.string.pref_notification_settings_button));
     }
 
     @Override
