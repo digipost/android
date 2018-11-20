@@ -127,7 +127,10 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         if(inputIsValid()) {
             executeUpdateSettingsTask();
         } else{
-            AlertDialog.Builder dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(NotificationSettingsActivity.this, "Message", "Title");
+            String dialogTitle = getString(R.string.pref_screen_notification_settings_invalid_email_title);
+            String dialogMessage = getString(R.string.pref_screen_notification_settings_invalid_email_message);
+
+            AlertDialog.Builder dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(NotificationSettingsActivity.this, dialogMessage, dialogTitle);
             dialog.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {}
