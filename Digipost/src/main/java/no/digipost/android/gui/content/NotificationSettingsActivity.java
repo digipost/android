@@ -16,6 +16,8 @@
 
 package no.digipost.android.gui.content;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +34,7 @@ import no.digipost.android.model.Account;
 import no.digipost.android.model.ExtendedEmail;
 import no.digipost.android.model.MailboxSettings;
 import no.digipost.android.model.ValidationRules;
+import no.digipost.android.utilities.DialogUtitities;
 
 import java.util.ArrayList;
 
@@ -116,6 +119,27 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         email3 = findViewById(R.id.notification_settings_email3);
         email3.addTextChangedListener(emailValidator);
         settingsButton = findViewById(R.id.notification_settings_save);
+            settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean email1Valid = validEmail(email1.getText().toString());
+                boolean email2Valid = validEmailOrEmpty(email2);
+                boolean email3Valid = validEmailOrEmpty(email3);
+                boolean mobileNumberValid = validMobileNumber(mobileNumber.getText().toString());
+
+                boolean allEmailsValid = email1Valid && email2Valid && email3Valid;
+
+                if( ! allEmailsValid) {
+                    AlertDialog.Builder dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(NotificationSettingsActivity.this, "Message", "Title");
+                    dialog.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {}
+                    });
+                    dialog.show();
+
+                }
+            }
+        });
     }
 
     @Override
@@ -147,10 +171,13 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         validationRules = account.getValidationRules();
     }
 
-    private void validateMobileNumber(String mobileNumber) throws Exception {
-        if (!mobileNumber.matches(validationRules.getPhoneNumber())) {
-            throw new Exception("Ikke gyldig telefonnummer: " + mobileNumber);
-        }
+    private boolean validMobileNumber(String mobileNumber) {
+        return mobileNumber.matches(validationRules.getPhoneNumber());
+    }
+
+    private boolean validEmailOrEmpty(EditText email){
+        String emailText = email.getText().toString().trim();
+        return emailText.isEmpty() || validEmail(emailText);
     }
 
     private boolean validEmail(String email) {

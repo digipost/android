@@ -108,12 +108,12 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
     protected void setButtonState(boolean state, String message) {
         if (state) {
             settingsButton.setText(message);
-            settingsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    executeUpdateSettingsTask();
-                }
-            });
+//            settingsButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    executeUpdateSettingsTask();
+//                }
+//            });
         } else {
             settingsButton.setText(R.string.error_try_again);
             settingsButton.setOnClickListener(new View.OnClickListener() {
