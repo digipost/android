@@ -35,7 +35,6 @@ import no.digipost.android.model.ExtendedEmail;
 import no.digipost.android.model.MailboxSettings;
 import no.digipost.android.model.ValidationRules;
 import no.digipost.android.utilities.DialogUtitities;
-import no.digipost.android.utilities.ValidationUtillities;
 
 import java.util.ArrayList;
 
@@ -106,7 +105,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String email = charSequence.toString();
-                if(!emailAppersValid(validationRules, email)){
+                if(!emailAppearsValid(validationRules, email)){
                     Log.d("MailboxSettings", "invalid email: " + email);
                 }
             }
@@ -140,10 +139,10 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     private boolean inputIsValid() {
-        boolean email1Valid = emailAppersValid(validationRules, email1);
-        boolean email2Valid = emailAppersValid(validationRules, email2);
-        boolean email3Valid = emailAppersValid(validationRules, email3);
-        boolean mobileNumberValid = phoneNumberAppersValid(validationRules, mobileNumber);
+        boolean email1Valid = emailAppearsValid(validationRules, email1);
+        boolean email2Valid = emailAppearsValid(validationRules, email2);
+        boolean email3Valid = emailAppearsValid(validationRules, email3);
+        boolean mobileNumberValid = phoneNumberAppearsValid(validationRules, mobileNumber);
         return email1Valid && email2Valid && email3Valid && mobileNumberValid;
     }
 
