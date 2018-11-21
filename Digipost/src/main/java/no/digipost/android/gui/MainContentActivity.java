@@ -433,9 +433,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             return true;
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_settings))) {
-            Intent intent = new Intent(MainContentActivity.this, NotificationSettingsActivity.class);
             FingerprintActivity.Companion.startActivityWithFingerprint(this, NotificationSettingsActivity.class);
-            //startActivityForResult(intent, INTENT_REQUESTCODE);
             return true;
 
         }

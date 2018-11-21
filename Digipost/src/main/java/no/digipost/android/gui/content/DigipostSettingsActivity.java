@@ -147,10 +147,6 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
                 hideSettingsProgressDialog();
                 DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
 
-                if (invalidToken) {
-                    finishActivityWithAction(ApiConstants.LOGOUT);
-                }
-
                 setSettingsEnabled(false);
             } else {
                 userAccount = result;
@@ -199,10 +195,6 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
             if (mailboxSettings == null) {
                 DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
                 setSettingsEnabled(false);
-
-                if (invalidToken) {
-                    finishActivityWithAction(ApiConstants.LOGOUT);
-                }
             } else {
                 accountMailboxSettings = mailboxSettings;
                 setAccountInfo(userAccount);
@@ -260,9 +252,6 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
             if (result != null) {
                 DialogUtitities.showToast(DigipostSettingsActivity.this, result);
                 GAEventController.sendKontaktopplysningerOppdatert(DigipostSettingsActivity.this, "lagring", "feilet");
-                if (invalidToken) {
-                    finishActivityWithAction(ApiConstants.LOGOUT);
-                }
             } else {
                 DialogUtitities.showToast(DigipostSettingsActivity.this, "Dine varslingsinnstillinger ble oppdatert.");
                 GAEventController.sendKontaktopplysningerOppdatert(DigipostSettingsActivity.this, "lagring", "vellykket");
@@ -270,10 +259,4 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
         }
     }
 
-    private void finishActivityWithAction(String action) {
-        Intent intent = new Intent();
-        intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
 }
