@@ -5,14 +5,31 @@ import no.digipost.android.model.ValidationRules
 
 object ValidationUtillities {
     @JvmStatic
-    fun emailAppearsValid(validationRules: ValidationRules, email: EditText) : Boolean {
+    fun emailAppearsValid(validationRules: ValidationRules, email: EditText): Boolean {
         return emailAppearsValid(validationRules, email.text.toString())
     }
 
     @JvmStatic
-    fun emailAppearsValid(validationRules: ValidationRules, email: String) : Boolean {
+    fun emailAppearsValid(validationRules: ValidationRules, email: String): Boolean {
         val trimmedEmail = email.trim()
-        return trimmedEmail.isEmpty() || trimmedEmail.matches(validationRules.email.toRegex())
+        return trimmedEmail.isEmpty() ||
+                (trimmedEmail.matches(validationRules.email.toRegex()) && emailNotBlacklisted(email))
+    }
+
+    private fun emailNotBlacklisted(email: String): Boolean {
+        val splitEmail = email.split("@")
+
+        if (splitEmail.size > 1) {
+            val domain = splitEmail[1];
+
+            val blacklistedDomains = arrayOf("digipost.no", "digipost.com", "example.com", "gmai.com", "gmail.co")
+            blacklistedDomains.forEach {
+                if (domain.toLowerCase() == it) {
+                    return false
+                }
+            }
+        }
+        return true
     }
 
 
