@@ -96,14 +96,14 @@
                         android:layout_width="50sp"
                         android:layout_height="wrap_content"
                         android:hint="@string/pref_notification_settings_contact_info_countrycode_hint"
-                        android:inputType="phone" />
+                        android:inputType="number" />
 
                     <EditText
                         android:id="@+id/notification_settings_mobile"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/pref_notification_settings_contact_info_phone_hint"
-                        android:inputType="phone" />
+                        android:inputType="number" />
 
                 </LinearLayout>
 
