@@ -24,6 +24,6 @@ object ValidationUtillities {
     @JvmStatic
     fun phoneNumberAppearsValid(validationRules: ValidationRules, phoneNumber: String): Boolean {
         val trimmedPhoneNumber = phoneNumber.trim()
-        return trimmedPhoneNumber.isEmpty() || trimmedPhoneNumber.matches(validationRules.phoneNumber.toRegex())
+        return trimmedPhoneNumber.matches(validationRules.phoneNumber.toRegex())
     }
 }
