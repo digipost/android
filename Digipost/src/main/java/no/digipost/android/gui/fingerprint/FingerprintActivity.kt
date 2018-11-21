@@ -108,6 +108,9 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
             if (! isKeyguardSecure(context)) {
                 DialogUtitities.showLongToast(context, context.getString(R.string.fingerprint_screenlock_tips))
                 return
+            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                DialogUtitities.showLongToast(context, context.getString(R.string.preferences_requires_android_m))
+                return
             }
 
             val intent = Intent(context, FingerprintActivity::class.java)

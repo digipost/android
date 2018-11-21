@@ -155,6 +155,7 @@
 
     <!-- Preferences -->
     <string name="preferences">Innstillinger</string>
+    <string name="preferences_requires_android_m">Innstillinger krever Android Marshmallow (M) og oppover.</string>
     <string name="pref_general_settings">App innstillinger</string>
     <string name="pref_show_bank_id_documents_title">BankID &amp; Buypass</string>
     <string name="pref_show_bank_id_documents_summary">Vis dokumenter som krever innlogging med BankID eller Buypass</string>
