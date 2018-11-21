@@ -65,9 +65,10 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
         }
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroy() {
+        super.onDestroy()
         GoogleAnalytics.getInstance(this).reportActivityStop(this)
+        finish()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -93,11 +93,6 @@ class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiH
         fingerprintUiHelper.stopListening()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        activity.finish()
-    }
-
     override fun onFingerprintAuthenticated() {
         GAEventController.sendAuthenticationEvent(activity, "ok" , "fingerprint")
         callback.authenticationOK()
