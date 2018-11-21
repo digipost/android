@@ -91,7 +91,7 @@ public class MailboxSettings {
             if(email.isEmpty()){
                 emails.remove(index);
                 GAEventController.sendKontaktopplysningerOppdatert(activity, "e-post", "fjerner eksisterende");
-            }else {
+            } else if (! emails.get(index).email.equals(email)) {
                 ExtendedEmail extendedEmail = new ExtendedEmail();
                 extendedEmail.email = email;
                 emails.set(index, extendedEmail);
