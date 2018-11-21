@@ -74,8 +74,7 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CREDENTIAL_REQUEST_CODE_ACITIVTY) {
             if(resultCode == Activity.RESULT_OK){
-                GAEventController.sendAuthenticationEvent(this, "ok" , "sekundær")
-                authenticationOK()
+                authenticationOK("sekundær")
             }else{
                 GAEventController.sendAuthenticationEvent(this, "avbrutt" , "sekundær")
             }
@@ -84,7 +83,8 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
     }
 
 
-    override fun authenticationOK() {
+    override fun authenticationOK(type: String) {
+        GAEventController.sendAuthenticationEvent(this, "ok" , type)
         val intent = Intent(this, nextActivity)
         startActivity(intent)
     }

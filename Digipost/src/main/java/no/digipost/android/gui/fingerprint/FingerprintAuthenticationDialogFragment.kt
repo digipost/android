@@ -94,12 +94,11 @@ class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiH
     }
 
     override fun onFingerprintAuthenticated() {
-        GAEventController.sendAuthenticationEvent(activity, "ok" , "fingerprint")
-        callback.authenticationOK()
+        callback.authenticationOK("fingerprint")
     }
 
     interface Callback {
-        fun authenticationOK()
+        fun authenticationOK(type: String)
         fun backupAuthentication()
         fun cancelAuthentication()
 
