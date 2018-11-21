@@ -175,9 +175,24 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     @Override
     protected void setSelectedAccountSettings() {
+        accountMailboxSettings.setCountryCode(formattedCountryCode());
         accountMailboxSettings.setPhoneNumber(mobileNumber.getText().toString().trim(), this);
         accountMailboxSettings.setEmailAddress(email1.getText().toString().trim(), 0, this);
         accountMailboxSettings.setEmailAddress(email2.getText().toString().trim(), 1, this);
         accountMailboxSettings.setEmailAddress(email3.getText().toString().trim(), 2, this);
+    }
+
+
+    private String formattedCountryCode() {
+        String code = countryCode.getText().toString().trim();
+        while (code.startsWith("0")) {
+            code = code.substring(1);
+        }
+
+        if(code.isEmpty()){
+            return "47";
+        }
+
+        return code;
     }
 }

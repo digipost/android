@@ -96,7 +96,8 @@
                         android:layout_width="50sp"
                         android:layout_height="wrap_content"
                         android:hint="@string/pref_notification_settings_contact_info_countrycode_hint"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:maxLength="4" />
 
                     <EditText
                         android:id="@+id/notification_settings_mobile"
