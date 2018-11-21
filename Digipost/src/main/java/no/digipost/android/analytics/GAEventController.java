@@ -12,6 +12,7 @@ public class GAEventController {
 
     private static final String appLaunchOrigin = "app-launch-origin";
     private static final String FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT = "faktura-avtale-oppsett-kontekst-basert";
+    private static final String KONTAKTOPPLYSINGER = "kontaktopplysninger";
 
     public static void sendLaunchEvent(Activity activity, String actionText){
         sendEvent(activity, appLaunchOrigin, actionText, appLaunchOrigin+"-"+actionText);
@@ -39,6 +40,10 @@ public class GAEventController {
 
     public static void sendInvoiceClickedSetup20Link(Activity activity, String bank){
         sendEvent(activity, FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT, "klikk-oppsett-avtale-type-2-link", bank);
+    }
+
+    public static void sendKontaktopplysningerOppdatert(Activity activity, String action, String label) {
+        sendEvent(activity, KONTAKTOPPLYSINGER, action, label);
     }
 
     private static void sendEvent(Activity activity, String category, String action, String label){

@@ -16,6 +16,7 @@
 
 package no.digipost.android.model;
 
+import android.app.Activity;
 import android.util.Log;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -28,6 +29,7 @@ import org.codehaus.jackson.map.annotate.JsonFilter;
 import java.util.ArrayList;
 
 import no.digipost.android.DigipostApplication;
+import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.constants.ApiConstants;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -74,7 +76,7 @@ public class MailboxSettings {
         return this.mobilePhoneNumber.getCountryCode();
     }
 
-    public void setEmailAddress(String email, int index) {
+    public void setEmailAddress(String email, int index, Activity activity) {
         ArrayList<ExtendedEmail> emails = this.emailAddress;
 
         if (index >= emails.size()) {
@@ -82,20 +84,33 @@ public class MailboxSettings {
                 ExtendedEmail extendedEmail = new ExtendedEmail();
                 extendedEmail.email = email;
                 emails.add(extendedEmail);
+                GAEventController.sendKontaktopplysningerOppdatert(activity, "e-post", "legger til ny");
             }
 
         } else {
             if(email.isEmpty()){
                 emails.remove(index);
+                GAEventController.sendKontaktopplysningerOppdatert(activity, "e-post", "fjerner eksisterende");
             }else {
                 ExtendedEmail extendedEmail = new ExtendedEmail();
                 extendedEmail.email = email;
                 emails.set(index, extendedEmail);
+                GAEventController.sendKontaktopplysningerOppdatert(activity, "e-post", "oppdaterer eksisterende");
             }
         }
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber, Activity activity) {
+        String oldPhone = mobilePhoneNumber.phoneNumber;
+
+        if (oldPhone.isEmpty() && !phoneNumber.isEmpty()) {
+            GAEventController.sendKontaktopplysningerOppdatert(activity, "telefonnummer", "legger tli nytt");
+        } else if (!oldPhone.isEmpty() && phoneNumber.isEmpty()) {
+            GAEventController.sendKontaktopplysningerOppdatert(activity, "telefonnummer", "fjerner eksisterende");
+        } else if (!oldPhone.equals(phoneNumber)) {
+            GAEventController.sendKontaktopplysningerOppdatert(activity, "telefonnummer", "oppdaterer eksisterende");
+        }
+
         this.mobilePhoneNumber.phoneNumber = phoneNumber;
     }
 

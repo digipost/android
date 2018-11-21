@@ -175,10 +175,10 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     @Override
-    protected void setSelectedAccountSettings() throws Exception {
-        accountMailboxSettings.setPhoneNumber(mobileNumber.getText().toString().trim());
-        accountMailboxSettings.setEmailAddress(email1.getText().toString().trim(), 0);
-        accountMailboxSettings.setEmailAddress(email2.getText().toString().trim(), 1);
-        accountMailboxSettings.setEmailAddress(email3.getText().toString().trim(), 2);
+    protected void setSelectedAccountSettings() {
+        accountMailboxSettings.setPhoneNumber(mobileNumber.getText().toString().trim(), this);
+        accountMailboxSettings.setEmailAddress(email1.getText().toString().trim(), 0, this);
+        accountMailboxSettings.setEmailAddress(email2.getText().toString().trim(), 1, this);
+        accountMailboxSettings.setEmailAddress(email3.getText().toString().trim(), 2, this);
     }
 }
