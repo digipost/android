@@ -30,6 +30,7 @@ import android.widget.EditText;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
+import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.ExtendedEmail;
 import no.digipost.android.model.MailboxSettings;
@@ -126,6 +127,8 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         if(inputIsValid()) {
             executeUpdateSettingsTask();
         } else{
+            GAEventController.sendKontaktopplysningerOppdatert(this, "lagring", "feil i inputfelter");
+
             String dialogTitle = getString(R.string.pref_screen_notification_settings_invalid_email_title);
             String dialogMessage = getString(R.string.pref_screen_notification_settings_invalid_email_message);
 

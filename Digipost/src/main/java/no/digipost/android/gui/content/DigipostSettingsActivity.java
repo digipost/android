@@ -29,6 +29,7 @@ import android.widget.Button;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
+import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
@@ -258,12 +259,13 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
 
             if (result != null) {
                 DialogUtitities.showToast(DigipostSettingsActivity.this, result);
-
+                GAEventController.sendKontaktopplysningerOppdatert(DigipostSettingsActivity.this, "lagring", "feilet");
                 if (invalidToken) {
                     finishActivityWithAction(ApiConstants.LOGOUT);
                 }
             } else {
                 DialogUtitities.showToast(DigipostSettingsActivity.this, "Dine varslingsinnstillinger ble oppdatert.");
+                GAEventController.sendKontaktopplysningerOppdatert(DigipostSettingsActivity.this, "lagring", "vellykket");
             }
         }
     }
