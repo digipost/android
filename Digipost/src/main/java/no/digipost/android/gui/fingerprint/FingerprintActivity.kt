@@ -25,9 +25,12 @@ import android.hardware.fingerprint.FingerprintManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.google.android.gms.analytics.GoogleAnalytics
 import no.digipost.android.R
+import no.digipost.android.analytics.GAEventController
 import no.digipost.android.utilities.DialogUtitities
 
+@TargetApi(Build.VERSION_CODES.M)
 class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialogFragment.Callback {
 
     private val CREDENTIAL_REQUEST_CODE_ACITIVTY = 1
@@ -36,7 +39,6 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
     private lateinit var nextActivity: Class<*>
 
 
-    @TargetApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,9 +47,15 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
         if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
             fragment.setCallback(this@FingerprintActivity)
             fragment.show(supportFragmentManager, "FINGERPRINT_FRAGMENT")
+            GAEventController.sendAuthenticationEvent(this, "påbegynt", "fingerprint" )
         } else {
             backupAuthentication()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        GoogleAnalytics.getInstance(this).reportActivityStart(this)
     }
 
     override fun onPause() {
@@ -57,10 +65,18 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
         }
     }
 
+    override fun onStop() {
+        super.onStop()
+        GoogleAnalytics.getInstance(this).reportActivityStop(this)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == CREDENTIAL_REQUEST_CODE_ACITIVTY) {
             if(resultCode == Activity.RESULT_OK){
+                GAEventController.sendAuthenticationEvent(this, "ok" , "sekundær")
                 authenticationOK()
+            }else{
+                GAEventController.sendAuthenticationEvent(this, "avbrutt" , "sekundær")
             }
         }
         IS_AUTHENTICATING = false
@@ -73,10 +89,12 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
     }
 
     override fun cancelAuthentication() {
+        GAEventController.sendAuthenticationEvent(this, "avbrutt" , "fingerprint")
         finish()
     }
 
     override fun backupAuthentication() {
+        GAEventController.sendAuthenticationEvent(this, "påbegynt", "sekundær" )
         val keyguard = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
         val intent = keyguard.createConfirmDeviceCredentialIntent(null, null)
         IS_AUTHENTICATING = true

@@ -28,7 +28,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import no.digipost.android.R
+import no.digipost.android.analytics.GAEventController
 
+@TargetApi(Build.VERSION_CODES.M)
 class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiHelper.Callback {
 
     private lateinit var fingerprintUiHelper: FingerprintUiHelper
@@ -51,7 +53,6 @@ class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiH
         return inflater.inflate(R.layout.fingerprint_dialog_container,container,false)
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val imageFingerprintIcon  = view.findViewById(R.id.fingerprint_icon) as ImageView
         val textFingerprintStatus = view.findViewById(R.id.fingerprint_status) as TextView
@@ -98,6 +99,7 @@ class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiH
     }
 
     override fun onFingerprintAuthenticated() {
+        GAEventController.sendAuthenticationEvent(activity, "ok" , "fingerprint")
         callback.authenticationOK()
     }
 

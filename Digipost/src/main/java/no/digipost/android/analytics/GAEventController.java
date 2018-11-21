@@ -13,6 +13,7 @@ public class GAEventController {
     private static final String appLaunchOrigin = "app-launch-origin";
     private static final String FAKTURA_AVTALE_OPPSETT_KONTEKST_BASERT = "faktura-avtale-oppsett-kontekst-basert";
     private static final String KONTAKTOPPLYSINGER = "kontaktopplysninger";
+    private static final String ENHET_AUTENTISERING = "enhet-autentisering";
 
     public static void sendLaunchEvent(Activity activity, String actionText){
         sendEvent(activity, appLaunchOrigin, actionText, appLaunchOrigin+"-"+actionText);
@@ -44,6 +45,10 @@ public class GAEventController {
 
     public static void sendKontaktopplysningerOppdatert(Activity activity, String action, String label) {
         sendEvent(activity, KONTAKTOPPLYSINGER, action, label);
+    }
+
+    public static void sendAuthenticationEvent(Activity activity, String action, String type) {
+        sendEvent(activity, ENHET_AUTENTISERING, action, type);
     }
 
     private static void sendEvent(Activity activity, String category, String action, String label){
