@@ -11,7 +11,8 @@ object ValidationUtillities {
 
     @JvmStatic
     fun emailAppersValid(validationRules: ValidationRules, email: String) : Boolean {
-        return email.isEmpty() || email.matches(validationRules.email.toRegex())
+        val trimmedEmail = email.trim()
+        return trimmedEmail.isEmpty() || trimmedEmail.matches(validationRules.email.toRegex())
     }
 
 
@@ -22,6 +23,7 @@ object ValidationUtillities {
 
     @JvmStatic
     fun phoneNumberAppersValid(validationRules: ValidationRules, phoneNumber: String): Boolean {
-        return phoneNumber.matches(validationRules.phoneNumber.toRegex())
+        val trimmedPhoneNumber = phoneNumber.trim()
+        return trimmedPhoneNumber.isEmpty() || trimmedPhoneNumber.matches(validationRules.phoneNumber.toRegex())
     }
 }
