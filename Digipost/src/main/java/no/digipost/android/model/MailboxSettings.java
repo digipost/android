@@ -16,6 +16,10 @@
 
 package no.digipost.android.model;
 
+import android.util.Log;
+
+import com.google.android.gms.analytics.GoogleAnalytics;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -23,6 +27,7 @@ import org.codehaus.jackson.map.annotate.JsonFilter;
 
 import java.util.ArrayList;
 
+import no.digipost.android.DigipostApplication;
 import no.digipost.android.constants.ApiConstants;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -71,16 +76,22 @@ public class MailboxSettings {
 
     public void setEmailAddress(String email, int index) {
         ArrayList<ExtendedEmail> emails = this.emailAddress;
-        if (email.isEmpty() && emails.get(index) != null) {
-            emails.remove(index);
-        } else if (index >= emails.size()) {
-            ExtendedEmail extendedEmail = new ExtendedEmail();
-            extendedEmail.email = email;
-            emails.add(extendedEmail);
+
+        if (index >= emails.size()) {
+            if (!email.isEmpty()) {
+                ExtendedEmail extendedEmail = new ExtendedEmail();
+                extendedEmail.email = email;
+                emails.add(extendedEmail);
+            }
+
         } else {
-            ExtendedEmail extendedEmail = emails.get(index);
-            extendedEmail.email = email;
-            emails.set(index, extendedEmail);
+            if(email.isEmpty()){
+                emails.remove(index);
+            }else {
+                ExtendedEmail extendedEmail = new ExtendedEmail();
+                extendedEmail.email = email;
+                emails.set(index, extendedEmail);
+            }
         }
     }
 
