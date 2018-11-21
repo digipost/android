@@ -358,5 +358,6 @@
     <string name="fingerprint_cancel">Avbryt</string>
     <string name="fingerprint_secondary">Bruk kode</string>
     <string name="fingerprint_too_many_request">For mange forsøk. Benytt kode eller prøv på nytt senere</string>
+    <string name="fingerprint_secondary_title">Åpne innstillinger</string>
 
 </resources>

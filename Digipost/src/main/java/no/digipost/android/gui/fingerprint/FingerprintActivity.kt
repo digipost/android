@@ -35,6 +35,7 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
 
     private val CREDENTIAL_REQUEST_CODE_ACITIVTY = 1
     private var IS_AUTHENTICATING = false
+    private var CAN_USE_FINGERPRINT = true
     private val fragment = FingerprintAuthenticationDialogFragment()
     private lateinit var nextActivity: Class<*>
 
@@ -49,6 +50,7 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
             fragment.show(supportFragmentManager, "FINGERPRINT_FRAGMENT")
             GAEventController.sendAuthenticationEvent(this, "påbegynt", "fingerprint" )
         } else {
+            CAN_USE_FINGERPRINT = false
             backupAuthentication()
         }
     }
@@ -77,6 +79,9 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
                 authenticationOK("sekundær")
             }else{
                 GAEventController.sendAuthenticationEvent(this, "avbrutt" , "sekundær")
+                if (! CAN_USE_FINGERPRINT){
+                    finish()
+                }
             }
         }
         IS_AUTHENTICATING = false
@@ -97,7 +102,7 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
     override fun backupAuthentication() {
         GAEventController.sendAuthenticationEvent(this, "påbegynt", "sekundær" )
         val keyguard = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-        val intent = keyguard.createConfirmDeviceCredentialIntent(null, null)
+        val intent = keyguard.createConfirmDeviceCredentialIntent(getString(R.string.fingerprint_secondary_title), null)
         IS_AUTHENTICATING = true
         this.startActivityForResult(intent, CREDENTIAL_REQUEST_CODE_ACITIVTY)
     }
