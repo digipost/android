@@ -124,13 +124,23 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     private void save() {
-        if(inputIsValid()) {
+        boolean emailIsValid = emailIsValid();
+        boolean phoneNumberValid = phoneNumberAppearsValid(validationRules, mobileNumber);
+
+        if(emailIsValid && phoneNumberValid) {
             executeUpdateSettingsTask();
         } else{
             GAEventController.sendKontaktopplysningerOppdatert(this, "lagring", "feil i inputfelter");
 
-            String dialogTitle = getString(R.string.pref_screen_notification_settings_invalid_email_title);
-            String dialogMessage = getString(R.string.pref_screen_notification_settings_invalid_email_message);
+            String dialogTitle;
+            String dialogMessage;
+            if(!emailIsValid) {
+                dialogTitle = getString(R.string.pref_screen_notification_settings_invalid_email_title);
+                dialogMessage = getString(R.string.pref_screen_notification_settings_invalid_email_message);
+            }else {
+                dialogTitle = getString(R.string.pref_screen_notification_settings_invalid_phone_title);
+                dialogMessage = getString(R.string.pref_screen_notification_settings_invalid_phone_message);
+            }
 
             AlertDialog.Builder dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(NotificationSettingsActivity.this, dialogMessage, dialogTitle);
             dialog.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -141,12 +151,11 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         }
     }
 
-    private boolean inputIsValid() {
+    private boolean emailIsValid() {
         boolean email1Valid = emailAppearsValid(validationRules, email1);
         boolean email2Valid = emailAppearsValid(validationRules, email2);
         boolean email3Valid = emailAppearsValid(validationRules, email3);
-        boolean mobileNumberValid = phoneNumberAppearsValid(validationRules, mobileNumber);
-        return email1Valid && email2Valid && email3Valid && mobileNumberValid;
+        return email1Valid && email2Valid && email3Valid;
     }
 
     @Override

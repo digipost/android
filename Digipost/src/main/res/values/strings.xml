@@ -169,6 +169,8 @@
     <string name="pref_screen_notification_settings_subtitle">Vi bruker e-postadressen og mobilnummeret til å varsle deg om nye meldinger, så se over og rediger informasjonen slik at den er riktig.</string>
     <string name="pref_screen_notification_settings_invalid_email_title">Dobbeltsjekk dine e-postadresser</string>
     <string name="pref_screen_notification_settings_invalid_email_message">Det kan se ut til at du har oppgitt en ugyldig e-postadresse. Se over at alt stemmer og prøv på nytt.</string>
+    <string name="pref_screen_notification_settings_invalid_phone_title">Dobbeltsjekk ditt mobilnummer</string>
+    <string name="pref_screen_notification_settings_invalid_phone_message">Det kan se ut til at du har oppgitt et ugyldig mobilnummer. Sjekk at det stemmer og prøv på nytt.</string>
 
     <string name="pref_notification_settings_letters_title">Varsling om nye meldinger</string>
     <string name="pref_notification_settings_letters_new_title">E-post om nye meldinger</string>
