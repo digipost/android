@@ -16,14 +16,15 @@ package no.digipost.android.utilities
  * limitations under the License.
  */
 
-import android.widget.EditText
 import no.digipost.android.model.ValidationRules
 
 object ValidationUtillities {
 
+
     @JvmStatic
-    fun emailAppearsValid(validationRules: ValidationRules, email: EditText): Boolean {
-        return emailAppearsValid(validationRules, email.text.toString())
+    fun phoneNumberAppearsValid(validationRules: ValidationRules, phoneNumber: String): Boolean {
+        val trimmedPhoneNumber = phoneNumber.trim()
+        return trimmedPhoneNumber.matches(validationRules.phoneNumber.toRegex())
     }
 
     @JvmStatic
@@ -47,17 +48,5 @@ object ValidationUtillities {
             }
         }
         return true
-    }
-
-
-    @JvmStatic
-    fun phoneNumberAppearsValid(validationRules: ValidationRules, phoneNumber: EditText): Boolean {
-        return phoneNumberAppearsValid(validationRules, phoneNumber.text.toString())
-    }
-
-    @JvmStatic
-    fun phoneNumberAppearsValid(validationRules: ValidationRules, phoneNumber: String): Boolean {
-        val trimmedPhoneNumber = phoneNumber.trim()
-        return trimmedPhoneNumber.matches(validationRules.phoneNumber.toRegex())
     }
 }

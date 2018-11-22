@@ -102,7 +102,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     private void save() {
         boolean emailIsValid = emailIsValid();
-        boolean phoneNumberValid = phoneNumberAppearsValid(validationRules, mobileNumber);
+        boolean phoneNumberValid = phoneNumberAppearsValid(validationRules, mobileNumbeGjorde );
 
         if(emailIsValid && phoneNumberValid) {
             executeUpdateSettingsTask();
@@ -129,9 +129,9 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     private boolean emailIsValid() {
-        boolean email1Valid = emailAppearsValid(validationRules, email1);
-        boolean email2Valid = emailAppearsValid(validationRules, email2);
-        boolean email3Valid = emailAppearsValid(validationRules, email3);
+        boolean email1Valid = emailAppearsValid(validationRules, email1.getText().toString());
+        boolean email2Valid = emailAppearsValid(validationRules, email2.getText().toString());
+        boolean email3Valid = emailAppearsValid(validationRules, email3.getText().toString());
         return email1Valid && email2Valid && email3Valid;
     }
 
