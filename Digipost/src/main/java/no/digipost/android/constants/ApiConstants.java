@@ -84,11 +84,10 @@ public class ApiConstants {
     public static final String URL_RELATIONS_DOCUMENT_DELETE = URL_RELATIONS + "delete_document";
     public static final String URL_RELATIONS_DOCUMENT_SEND_OPENING_RECEIPT = URL_RELATIONS + "send_opening_receipt";
     public static final String URL_RELATIONS_ACCOUNT_SETTINGS = URL_RELATIONS + "account_settings";
+    public static final String URL_RELATIONS_MAILBOX_SETTINGS = URL_RELATIONS + "mailbox_settings";
     public static final String URL_RELATIONS_CURRENT_BANK_ACCOUNT = URL_RELATIONS + "current_bank_account";
     public static final String URL_RELATIONS_BANK_HOMEPAGE = URL_RELATIONS + "bank_homepage";
     public static final String URL_RELATIONS_SEND_TO_BANK = URL_RELATIONS + "send_to_bank";
-    public static final String URL_RELATIONS_RECEIPT_HTML = URL_RELATIONS + "get_receipt_as_html";
-    public static final String URL_RELATIONS_RECEIPT_DELETE = URL_RELATIONS + "delete_receipt";
     public static final String URL_RELATIONS_BANKS = URL_RELATIONS + "banks";
 
     public static final String URL_RELATIONS_CHANGE_FOLDER = URL_RELATIONS + "change_folder";
@@ -104,5 +103,6 @@ public class ApiConstants {
     public static final String URL_API_OAUTH_REVOKE = Secret.ENV_URL + "api/oauth/revoke";
 
     public static final String URL_HELP = "https://www.digipost.no/hjelp/#android";
+    public static final String UPDATE_MAILBOX_SETTINGS = URL_RELATIONS + "update_mailbox_settings";
 
 }

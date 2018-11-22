@@ -1,180 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <include layout="@layout/toolbar" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/screenlock_header_background"
-            android:gravity="left"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:paddingLeft="20dp">
+            android:layout_margin="20dp"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_marginLeft="5dp"
-                android:text="@string/pref_notification_settings_letters_title"
-                android:textColor="@color/white"
+                android:layout_gravity="top|center_horizontal"
+                android:text="@string/pref_screen_notification_settings_title"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:text="@string/pref_screen_notification_settings_subtitle"
                 android:textSize="17sp" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
-
-            <CheckBox
-                android:id="@+id/notification_settings_new_letters"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_notification_settings_letters_new_title" />
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="@string/pref_notification_settings_letters_new_subtitle" />
+                android:orientation="vertical">
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
-
-            <CheckBox
-                android:id="@+id/notification_settings_unread_letters"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_notification_settings_letters_unread_title" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="@string/pref_notification_settings_letters_unread_subtitle" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
-
-            <CheckBox
-                android:id="@+id/notification_settings_important_letters"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/pref_notification_settings_letters_important_title" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="@string/pref_notification_settings_letters_important_subtitle" />
-
-        </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/pref_notification_settings_contact_info_email_title"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/screenlock_header_background"
-            android:gravity="left"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:paddingLeft="20dp">
+                <EditText
+                    android:id="@+id/notification_settings_email1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/pref_notification_settings_contact_info_email_hint"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_marginLeft="5dp"
-                android:text="@string/pref_notification_settings_contact_info_title"
-                android:textColor="@color/white"
-                android:textSize="17sp" />
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/notification_settings_email2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/pref_notification_settings_contact_info_email_hint"
+                    android:inputType="textEmailAddress" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10sp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="10dp"
-                android:text="@string/pref_notification_settings_contact_info_phone_title"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/notification_settings_mobile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/pref_notification_settings_contact_info_phone_hint"
-                android:inputType="phone" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/pref_notification_settings_contact_info_email_title"
-                android:textSize="16sp" />
+                <EditText
+                    android:id="@+id/notification_settings_email3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/pref_notification_settings_contact_info_email_hint"
+                    android:inputType="textEmailAddress" />
 
 
-            <EditText
-                android:id="@+id/notification_settings_email1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/pref_notification_settings_contact_info_email_hint"
-                android:inputType="textEmailAddress" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/pref_notification_settings_contact_info_phone_title"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/notification_settings_email2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/pref_notification_settings_contact_info_email_hint"
-                android:inputType="textEmailAddress" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/notification_settings_email3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/pref_notification_settings_contact_info_email_hint"
-                android:inputType="textEmailAddress" />
+                    <EditText
+                        android:id="@+id/notification_settings_countrycode"
+                        android:layout_width="50sp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/pref_notification_settings_contact_info_countrycode_hint"
+                        android:inputType="number"
+                        android:maxLength="4" />
+
+                    <EditText
+                        android:id="@+id/notification_settings_mobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/pref_notification_settings_contact_info_phone_hint"
+                        android:inputType="number" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
-
-        <Button
-
-            android:id="@+id/notification_settings_save"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/red_button_style"
-            android:text="@string/pref_notification_settings_button"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

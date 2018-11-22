@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 /**
  * Copyright (C) Posten Norge AS
  *
@@ -17,142 +16,135 @@
  */
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="no.digipost.android">
+    package="no.digipost.android">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
 
     <application
-            android:name="no.digipost.android.DigipostApplication"
-            android:allowBackup="false"
-            android:fullBackupContent="false"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/app_name"
-            android:theme="@style/Digipost"
-            android:vmSafeMode="true">
+        android:name="no.digipost.android.DigipostApplication"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Digipost"
+        android:vmSafeMode="true">
 
         <activity
-                android:name="no.digipost.android.MainActivity"
-                android:configChanges="orientation|screenSize"
-                android:label="@string/app_name"
-                android:screenOrientation="portrait"
-                android:theme="@android:style/Theme.Holo.NoActionBar">
+            android:name="no.digipost.android.MainActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                        android:host="www.digipost.no"
-                        android:pathPrefix="/app/#/"
-                        android:scheme="https"/>
+                    android:host="www.digipost.no"
+                    android:pathPrefix="/app/#/"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
-                android:name="no.digipost.android.gui.LoginActivity"
-                android:configChanges="orientation|screenSize"
-                android:launchMode="singleTop"
-                android:theme="@style/DigipostBlackStatusbar"/>
+            android:name="no.digipost.android.gui.LoginActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop"
+            android:theme="@style/DigipostBlackStatusbar" />
         <activity
-                android:name="no.digipost.android.gui.ScreenlockPreferenceActivity"
-                android:configChanges="orientation|screenSize"
-                android:screenOrientation="portrait"/>
+            android:name="no.digipost.android.gui.ScreenlockPreferenceActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
         <activity
-                android:name="no.digipost.android.gui.MainContentActivity"
-                android:configChanges="orientation|screenSize"
-                android:screenOrientation="portrait"/>
+            android:name="no.digipost.android.gui.MainContentActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
         <activity
-                android:name="no.digipost.android.gui.WebLoginActivity"
-                android:configChanges="orientation|screenSize"/>
+            android:name="no.digipost.android.gui.WebLoginActivity"
+            android:configChanges="orientation|screenSize" />
         <activity
-                android:name="no.digipost.android.gui.metadata.ExternalLinkWebview"
-                android:configChanges="orientation|screenSize"/>
+            android:name="no.digipost.android.gui.metadata.ExternalLinkWebview"
+            android:configChanges="orientation|screenSize" />
         <activity
-                android:name="no.digipost.android.gui.content.HtmlAndReceiptActivity"
-                android:configChanges="orientation|screenSize"/>
+            android:name="no.digipost.android.gui.content.HtmlAndReceiptActivity"
+            android:configChanges="orientation|screenSize" />
         <activity
             android:name="no.digipost.android.gui.content.ImageActivity"
-            android:configChanges="orientation|screenSize"/>
-        <activity android:name=".gui.content.MuPDFActivity"/>
+            android:configChanges="orientation|screenSize" />
+        <activity android:name=".gui.content.MuPDFActivity" />
         <activity
-                android:name="no.digipost.android.gui.content.UnsupportedDocumentFormatActivity"
-                android:configChanges="orientation|screenSize"/>
+            android:name="no.digipost.android.gui.content.UnsupportedDocumentFormatActivity"
+            android:configChanges="orientation|screenSize" />
         <activity
-                android:name="no.digipost.android.gui.content.UploadActivity"
-                android:configChanges="orientation|screenSize"/>
+            android:name="no.digipost.android.gui.content.UploadActivity"
+            android:configChanges="orientation|screenSize" />
         <activity
-                android:name="no.digipost.android.gui.content.SettingsActivity"
-                android:configChanges="orientation|screenSize"/>
-        <activity
-                android:name="no.digipost.android.gui.content.NotificationSettingsActivity"
-                android:configChanges="orientation|screenSize"
-                android:windowSoftInputMode="stateHidden"/>
-        <activity
-                android:name="no.digipost.android.gui.content.PersonalSettingsActivity"
-                android:configChanges="orientation|screenSize"/>
-        <activity
-                android:name="no.digipost.android.gui.invoice.InvoiceBankActivity"/>
-        <activity android:name="no.digipost.android.gui.invoice.InvoiceOptionsActivity">
-        </activity>
-        <activity android:name="no.digipost.android.gui.invoice.InvoiceOverviewActivity">
-        </activity>
-        <receiver
-                android:name="com.google.android.gms.gcm.GcmReceiver"
-                android:exported="true"
-                android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+            android:name="no.digipost.android.gui.content.NotificationSettingsActivity"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name="no.digipost.android.gui.invoice.InvoiceBankActivity" />
+        <activity android:name="no.digipost.android.gui.invoice.InvoiceOptionsActivity" />
+        <activity android:name="no.digipost.android.gui.invoice.InvoiceOverviewActivity" />
+        <activity android:name="no.digipost.android.gui.fingerprint.FingerprintActivity" />
 
-                <category android:name="no.digipost.android.gcmreceiver"/>
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="no.digipost.android.gcmreceiver" />
             </intent-filter>
         </receiver>
         <receiver
-                android:name="com.google.android.gms.analytics.AnalyticsReceiver"
-                android:enabled="true"
-                android:exported="false">
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH"/>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
             </intent-filter>
         </receiver>
 
         <service
-                android:name="com.google.android.gms.analytics.AnalyticsService"
-                android:enabled="true"
-                android:exported="false"/>
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false" />
         <service
-                android:name="no.digipost.android.gcm.ListenerService"
-                android:exported="false">
+            android:name="no.digipost.android.gcm.ListenerService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-                android:name=".gcm.MyInstanceIDListenerService"
-                android:exported="false">
+            android:name=".gcm.MyInstanceIDListenerService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
         <service
-                android:name="no.digipost.android.gcm.RegistrationService"
-                android:exported="false">
-        </service>
+            android:name="no.digipost.android.gcm.RegistrationService"
+            android:exported="false" />
 
         <meta-data
-                android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version"/>
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
     </application>
 

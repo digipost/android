@@ -155,7 +155,8 @@
 
     <!-- Preferences -->
     <string name="preferences">Innstillinger</string>
-    <string name="pref_general_settings">Generelle innstillinger</string>
+    <string name="preferences_requires_android_m">Innstillinger krever Android Marshmallow (M) og oppover.</string>
+    <string name="pref_general_settings">App innstillinger</string>
     <string name="pref_show_bank_id_documents_title">BankID &amp; Buypass</string>
     <string name="pref_show_bank_id_documents_summary">Vis dokumenter som krever innlogging med BankID eller Buypass</string>
     <string name="pref_screen_rotation_title">Skjermrotasjon</string>
@@ -163,7 +164,14 @@
     <string name="pref_screen_confirm_delete_title">Bekreft før sletting</string>
     <string name="pref_screen_confirm_delete_summary">Vis bekreftelsesdialog før sletting</string>
     <string name="pref_screen_personal_settings_title">Personlige innstillinger</string>
-    <string name="pref_screen_notification_settings_title">Varslingsinnstillinger</string>
+
+    <string name="pref_screen_notification_settings_title">Din kontaktinformasjon</string>
+    <string name="pref_screen_notification_settings_subtitle">Vi bruker e-postadressen og mobilnummeret til å varsle deg om nye meldinger, så se over og rediger informasjonen slik at den er riktig.</string>
+    <string name="pref_screen_notification_settings_invalid_email_title">Dobbeltsjekk dine e-postadresser</string>
+    <string name="pref_screen_notification_settings_invalid_email_message">Det kan se ut til at du har oppgitt en ugyldig e-postadresse. Se over at alt stemmer og prøv på nytt.</string>
+    <string name="pref_screen_notification_settings_invalid_phone_title">Dobbeltsjekk ditt mobilnummer</string>
+    <string name="pref_screen_notification_settings_invalid_phone_message">Det kan se ut til at du har oppgitt et ugyldig mobilnummer. Sjekk at det stemmer og prøv på nytt.</string>
+    <string name="pref_screen_notification_settings_updating">Lagrer kontaktopplysninger</string>
     <string name="pref_notification_settings_letters_title">Varsling om nye meldinger</string>
     <string name="pref_notification_settings_letters_new_title">E-post om nye meldinger</string>
     <string name="pref_notification_settings_letters_new_subtitle">Send meg en e-post hvis jeg får en nytt melding</string>
@@ -171,12 +179,13 @@
     <string name="pref_notification_settings_letters_unread_subtitle">Send meg en e-post hver uke hvis jeg har uleste meldinger.</string>
     <string name="pref_notification_settings_letters_important_title">SMS om ekstra viktige meldinger</string>
     <string name="pref_notification_settings_letters_important_subtitle">Tillat avsendere å sende meg en SMS-melding om viktige meldinger.</string>
-    <string name="pref_notification_settings_contact_info_title">Kontaktinformasjon</string>
-    <string name="pref_notification_settings_contact_info_phone_title">Ditt mobilnummer</string>
+    <string name="pref_notification_settings_contact_info_title">Kontaktopplysninger</string>
+    <string name="pref_notification_settings_contact_info_phone_title">Ditt mobilnummer:</string>
     <string name="pref_notification_settings_contact_info_phone_hint">Mobilnummer</string>
-    <string name="pref_notification_settings_contact_info_email_title">Dine e-postadresser</string>
+    <string name="pref_notification_settings_contact_info_countrycode_hint">47</string>
+    <string name="pref_notification_settings_contact_info_email_title">E-postadresser:</string>
     <string name="pref_notification_settings_contact_info_email_hint">E-postadresse</string>
-    <string name="pref_notification_settings_button">Lagre varslingsinnstillinger</string>
+    <string name="pref_notification_settings_button">Lagre kontaktinformasjon</string>
     <string name="pref_personal_settings_info_title">Personlig informasjon</string>
     <string name="pref_personal_settings_info_personalidentificationnumber">Fødselsnummer</string>
     <string name="pref_personal_settings_info_full_name">Navn</string>
@@ -190,8 +199,8 @@
     <string name="pref_personal_settings_search_visibility_title">Synlighet i søk</string>
     <string name="pref_personal_settings_search_visibility_accepts_title">Jeg godtar at min adresse er synlig for andre brukere</string>
     <string name="pref_personal_settings_search_visibility_accepts_subtitle">For at andre brukere skal kunne sende deg meldinger uten å kjenne digipostadressen din, må du være synlig i adressesøket.</string>
-    <string name="pref_personal_settings_button">Lagre innstillinger</string>
-    <string name="pref_personal_settings_loading">Laster dine innstillinger…</string>
+    <string name="pref_personal_settings_loading">Henter kontaktinformasjon</string>
+    <string name="pref_personal_settings_saved_successfully">Lagring vellykket</string>
 
     <!-- Errors -->
     <string name="error_your_network">Nettverksfeil. \nSjekk internettforbindelsen din og prøv
@@ -341,5 +350,16 @@
     <string name="externallink_permissions">For å laste ned filer fra avsender, må du gi appen tilgang til åpne filer på enheten din.</string>
     <string name="externallink_continue">Fortsett</string>
     <string name="externallink_actionbar_open_in_browser">Åpne i nettleser</string>
+
+    <string name="fingerprint_description">Bekreft fingeravtrykk for å fortsette</string>
+    <string name="fingerprint_icon_description">fingeravtrykkikon</string>
+    <string name="fingerprint_hint">Plasser fingeren på avleser</string>
+    <string name="fingerprint_not_recognized">Fingeravtrykk ikke gjenkjent. Prøv igjen</string>
+    <string name="fingerprint_success">Fingeravtrykk gjenkjent</string>
+    <string name="fingerprint_screenlock_tips">Skru på skjermlås for å få tilgang til denne siden</string>
+    <string name="fingerprint_cancel">Avbryt</string>
+    <string name="fingerprint_secondary">Bruk kode</string>
+    <string name="fingerprint_too_many_request">For mange forsøk. Benytt kode eller prøv på nytt senere</string>
+    <string name="fingerprint_secondary_title">Åpne innstillinger</string>
 
 </resources>

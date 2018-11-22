@@ -50,8 +50,9 @@ import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.gcm.GCMController;
 import no.digipost.android.gui.adapters.DrawerAdapter;
 import no.digipost.android.gui.adapters.MailboxArrayAdapter;
-import no.digipost.android.gui.content.SettingsActivity;
+import no.digipost.android.gui.content.NotificationSettingsActivity;
 import no.digipost.android.gui.content.UploadActivity;
+import no.digipost.android.gui.fingerprint.FingerprintActivity;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.fragments.EditFolderFragment;
@@ -128,7 +129,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         setDrawerListeners();
 
         selectItem(ApplicationConstants.MAILBOX);
-        SharedPreferencesUtilities.getDefault(this).registerOnSharedPreferenceChangeListener(new SettingsChangedlistener());
 
         if (SharedPreferencesUtilities.numberOfTimesAppHasRun(this) <= ApplicationConstants.NUMBER_OF_TIMES_DRAWER_SHOULD_OPEN) {
             drawer.openDrawer(GravityCompat.START);
@@ -433,8 +433,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             return true;
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_settings))) {
-            Intent intent = new Intent(MainContentActivity.this, SettingsActivity.class);
-            startActivityForResult(intent, INTENT_REQUESTCODE);
+            FingerprintActivity.Companion.startActivityWithFingerprint(this, NotificationSettingsActivity.class);
             return true;
 
         }
@@ -732,16 +731,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         } else {
             DialogUtitities.showToast(MainContentActivity.this, errorMessage);
             logOut();
-        }
-    }
-
-    private class SettingsChangedlistener implements OnSharedPreferenceChangeListener {
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals(SettingsActivity.KEY_PREF_SHOW_BANK_ID_DOCUMENTS) && getCurrentFragment() != null) {
-                getCurrentFragment().refreshItems();
-            }
         }
     }
 

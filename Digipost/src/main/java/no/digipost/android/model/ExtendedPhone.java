@@ -16,6 +16,7 @@
 
 package no.digipost.android.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
@@ -23,12 +24,19 @@ import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtendedPhone {
-    @JsonProperty
-    private String phoneNumber;
 
     @JsonProperty
-    private String verified;
+    public String phoneNumber;
 
     @JsonProperty
-    private ArrayList<Link> link;
+    public String countryCode;
+
+    @JsonIgnore
+    public String getPhoneNumber() {
+        return this.phoneNumber != null ? this.phoneNumber : "";
+    }
+
+    public String getCountryCode() {
+        return this.countryCode != null ? this.countryCode : "";
+    }
 }

@@ -16,34 +16,30 @@
 
 package no.digipost.android.gui.content;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
+import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
-import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Account;
-import no.digipost.android.model.Settings;
+import no.digipost.android.model.MailboxSettings;
 import no.digipost.android.utilities.DialogUtitities;
 
-public abstract class DigipostSettingsActivity extends Activity {
+public abstract class DigipostSettingsActivity extends AppCompatActivity {
 
     protected Account userAccount;
-    protected Settings accountSettings;
+    protected MailboxSettings accountMailboxSettings;
 
-    protected Button settingsButton;
     protected ProgressDialog settingsProgressDialog;
 
     @Override
@@ -105,29 +101,9 @@ public abstract class DigipostSettingsActivity extends Activity {
 
     protected abstract void setSettingsEnabled(boolean state);
 
-    protected void setButtonState(boolean state, String message) {
-        if (state) {
-            settingsButton.setText(message);
-            settingsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    executeUpdateSettingsTask();
-                }
-            });
-        } else {
-            settingsButton.setText(R.string.error_try_again);
-            settingsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    executeGetAccountTask();
-                }
-            });
-        }
-    }
-
     protected abstract void setAccountInfo(Account account);
 
-    private void executeGetAccountTask() {
+    protected void executeGetAccountTask() {
         GetAccountTask getAccountTask = new GetAccountTask();
         getAccountTask.execute();
     }
@@ -167,10 +143,6 @@ public abstract class DigipostSettingsActivity extends Activity {
                 hideSettingsProgressDialog();
                 DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
 
-                if (invalidToken) {
-                    finishActivityWithAction(ApiConstants.LOGOUT);
-                }
-
                 setSettingsEnabled(false);
             } else {
                 userAccount = result;
@@ -179,14 +151,14 @@ public abstract class DigipostSettingsActivity extends Activity {
         }
     }
 
-    protected abstract void updateUI(Settings settings);
+    protected abstract void updateUI(MailboxSettings mailboxSettings);
 
     private void executeGetSettingsTask() {
         GetSettingsTask getSettingsTask = new GetSettingsTask();
         getSettingsTask.execute();
     }
 
-    private class GetSettingsTask extends AsyncTask<Void, Void, Settings> {
+    private class GetSettingsTask extends AsyncTask<Void, Void, MailboxSettings> {
         private String errorMessage;
         private boolean invalidToken;
 
@@ -196,7 +168,7 @@ public abstract class DigipostSettingsActivity extends Activity {
         }
 
         @Override
-        protected Settings doInBackground(Void... voids) {
+        protected MailboxSettings doInBackground(Void... voids) {
             try {
                 return ContentOperations.getSettings(DigipostSettingsActivity.this);
             } catch (DigipostClientException e) {
@@ -213,21 +185,16 @@ public abstract class DigipostSettingsActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(Settings settings) {
-            super.onPostExecute(settings);
+        protected void onPostExecute(MailboxSettings mailboxSettings) {
+            super.onPostExecute(mailboxSettings);
             hideSettingsProgressDialog();
-
-            if (settings == null) {
+            if (mailboxSettings == null) {
                 DialogUtitities.showToast(DigipostSettingsActivity.this, errorMessage);
                 setSettingsEnabled(false);
-
-                if (invalidToken) {
-                    finishActivityWithAction(ApiConstants.LOGOUT);
-                }
             } else {
-                accountSettings = settings;
-                updateUI(accountSettings);
+                accountMailboxSettings = mailboxSettings;
                 setAccountInfo(userAccount);
+                updateUI(accountMailboxSettings);
                 setSettingsEnabled(true);
             }
         }
@@ -235,34 +202,33 @@ public abstract class DigipostSettingsActivity extends Activity {
 
     protected abstract void setSelectedAccountSettings() throws Exception;
 
-    private void executeUpdateSettingsTask() {
+    protected void executeUpdateSettingsTask() {
         try {
             setSelectedAccountSettings();
-            UpdateSettingsTask updateSettingsTask = new UpdateSettingsTask(accountSettings);
-            updateSettingsTask.execute();
+            new UpdateSettingsTask(accountMailboxSettings).execute();
         } catch (Exception e) {
             showInvalidInputDialog(e.getMessage());
         }
     }
 
     protected class UpdateSettingsTask extends AsyncTask<Void, Void, String> {
-        private Settings settings;
+        private MailboxSettings mailboxSettings;
         private boolean invalidToken;
 
-        public UpdateSettingsTask(Settings settings) {
-            this.settings = settings;
+        public UpdateSettingsTask(MailboxSettings mailboxSettings) {
+            this.mailboxSettings = mailboxSettings;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showSettingsProgressDialog("Oppdaterer dine innstillinger...");
+            showSettingsProgressDialog(getResources().getString(R.string.pref_screen_notification_settings_updating));
         }
 
         @Override
         protected String doInBackground(Void... voids) {
             try {
-                ContentOperations.updateAccountSettings(DigipostSettingsActivity.this, settings);
+                ContentOperations.updateAccountSettings(DigipostSettingsActivity.this, mailboxSettings);
                 return null;
             } catch (DigipostAuthenticationException e) {
                 invalidToken = true;
@@ -281,20 +247,12 @@ public abstract class DigipostSettingsActivity extends Activity {
 
             if (result != null) {
                 DialogUtitities.showToast(DigipostSettingsActivity.this, result);
-
-                if (invalidToken) {
-                    finishActivityWithAction(ApiConstants.LOGOUT);
-                }
+                GAEventController.sendKontaktopplysningerOppdatert(DigipostSettingsActivity.this, "lagring", "feilet");
             } else {
-                DialogUtitities.showToast(DigipostSettingsActivity.this, "Dine varslingsinnstillinger ble oppdatert.");
+                DialogUtitities.showToast(DigipostSettingsActivity.this, getResources().getString(R.string.pref_personal_settings_saved_successfully));
+                GAEventController.sendKontaktopplysningerOppdatert(DigipostSettingsActivity.this, "lagring", "vellykket");
             }
         }
     }
 
-    private void finishActivityWithAction(String action) {
-        Intent intent = new Intent();
-        intent.putExtra(ApiConstants.FRAGMENT_ACTIVITY_RESULT_ACTION, action);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
 }

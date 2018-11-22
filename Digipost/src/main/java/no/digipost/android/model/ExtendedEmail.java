@@ -24,11 +24,15 @@ import java.util.ArrayList;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExtendedEmail {
     @JsonProperty
-    private String email;
+    public String email;
 
     @JsonProperty
-    private String verified;
+    public boolean verified;
 
     @JsonProperty
-    private ArrayList<Link> link;
+    public boolean underVerification;
+
+    public String getEmail() {
+        return this.email != null ? this.email : "";
+    }
 }

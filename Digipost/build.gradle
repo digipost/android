@@ -1,13 +1,14 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 
 android {
     defaultConfig {
-        versionCode 75
-        versionName '3.5.0'
+        versionCode 76
+        versionName '3.6.0'
         applicationId = "no.digipost.android"
         minSdkVersion 21
-        targetSdkVersion 26
+        targetSdkVersion 28
         vectorDrawables.useSupportLibrary = true
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
@@ -28,7 +29,7 @@ android {
         applicationId 'no.digipost.android'
     }
     compileSdkVersion 26
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
@@ -57,15 +58,16 @@ android {
 }
 
 buildscript {
-
     repositories {
-        jcenter()
-        mavenCentral()
         google()
+        maven {
+            url 'https://dl.google.com/dl/android/maven2'
+        }
+        jcenter()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
@@ -94,6 +96,7 @@ dependencies {
     implementation('com.sun.jersey:jersey-json:1.19.3') {
         exclude module: 'jaxb-impl'
     }
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 apply plugin: 'com.google.gms.google-services'

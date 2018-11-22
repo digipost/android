@@ -25,5 +25,5 @@ public class SenderBlockingStatus {
     private Sender sender;
 
     @JsonProperty
-    private String blocked;
+    private boolean blocked;
 }

@@ -16,6 +16,8 @@
 package no.digipost.android.api;
 
 import android.content.Context;
+import android.util.Log;
+
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
@@ -26,6 +28,7 @@ import no.digipost.android.model.*;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -207,10 +210,10 @@ public class ContentOperations {
         return NetworkUtilities.SUCCESS;
     }
 
-    public static void updateAccountSettings(Context context, Settings settings) throws DigipostAuthenticationException,
+    public static String updateAccountSettings(Context context, MailboxSettings mailboxSettings) throws DigipostAuthenticationException,
             DigipostClientException, DigipostApiException {
         refreshApiAccess();
-        apiAccess.postput(context, ApiAccess.POST, settings.getSettingsUri(), JSONUtilities.createJsonFromJackson(settings));
+        return apiAccess.postput(context, ApiAccess.POST, mailboxSettings.getUpdateSettingsUri(), JSONUtilities.createJsonFromJackson(mailboxSettings));
     }
 
     public static String sendOpeningReceipt(Context context, final Attachment attachment) throws DigipostClientException,
@@ -257,12 +260,14 @@ public class ContentOperations {
         ApiAccess.uploadFile(context, uploadUri, file);
     }
 
-    public static Settings getSettings(Context context) throws DigipostClientException, DigipostAuthenticationException,
+    public static MailboxSettings getSettings(Context context) throws DigipostClientException, DigipostAuthenticationException,
             DigipostApiException {
         if (apiAccess == null) {
             apiAccess = new ApiAccess();
         }
-        return (Settings) JSONUtilities.processJackson(Settings.class, apiAccess.getApiJsonString(context, getCurrentMailbox(context).getSettingsUri(), null));
+
+        String mailboxSettingsUri = getAccount(context).getPrimaryAccount().getMailboxSettingsUri();
+        return (MailboxSettings) JSONUtilities.processJackson(MailboxSettings.class, apiAccess.getApiJsonString(context, mailboxSettingsUri, null));
     }
 
     public static Banks getBanks(final Context context)throws DigipostClientException, DigipostAuthenticationException,

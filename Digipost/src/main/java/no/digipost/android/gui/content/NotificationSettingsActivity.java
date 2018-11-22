@@ -16,28 +16,31 @@
 
 package no.digipost.android.gui.content;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.CheckBox;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
+import no.digipost.android.analytics.GAEventController;
 import no.digipost.android.model.Account;
-import no.digipost.android.model.Settings;
+import no.digipost.android.model.ExtendedEmail;
+import no.digipost.android.model.MailboxSettings;
 import no.digipost.android.model.ValidationRules;
+import no.digipost.android.utilities.DialogUtitities;
 
 import java.util.ArrayList;
 
-public class NotificationSettingsActivity extends DigipostSettingsActivity {
-    private CheckBox newLetters;
-    private CheckBox unreadLetters;
-    private CheckBox importantLetters;
-    private EditText mobileNumber;
-    private EditText email1;
-    private EditText email2;
-    private EditText email3;
+import static no.digipost.android.utilities.ValidationUtillities.*;
 
+public class NotificationSettingsActivity extends DigipostSettingsActivity {
+
+    private EditText countryCode, mobileNumber, email1, email2, email3;
     private ValidationRules validationRules;
 
     @Override
@@ -45,9 +48,6 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         super.onCreate(savedInstanceState);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         setContentView(R.layout.activity_notification_settings);
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setTitle(getString(R.string.pref_screen_notification_settings_title));
-
         createUI();
     }
 
@@ -58,48 +58,103 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
     }
 
-    private void createUI() {
-        newLetters = (CheckBox) findViewById(R.id.notification_settings_new_letters);
-        unreadLetters = (CheckBox) findViewById(R.id.notification_settings_unread_letters);
-        importantLetters = (CheckBox) findViewById(R.id.notification_settings_important_letters);
-        mobileNumber = (EditText) findViewById(R.id.notification_settings_mobile);
-        email1 = (EditText) findViewById(R.id.notification_settings_email1);
-        email2 = (EditText) findViewById(R.id.notification_settings_email2);
-        email3 = (EditText) findViewById(R.id.notification_settings_email3);
-        settingsButton = (Button) findViewById(R.id.notification_settings_save);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_notification_settings, menu);
+        return true;
     }
 
     @Override
-    protected void updateUI(Settings settings) {
-        newLetters.setChecked(Boolean.parseBoolean(settings.getNotificationEmail()));
-        unreadLetters.setChecked(Boolean.parseBoolean(settings.getReminderEmail()));
-        importantLetters.setChecked(Boolean.parseBoolean(settings.getNotificationSmsPaidBySender()));
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.menu_save){
+            save();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        mobileNumber.setText((settings.getPhonenumber() != null) ? settings.getPhonenumber() : "");
+    private void createUI() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar =  getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(getString(R.string.pref_screen_notification_settings_title));
+        }
 
-        ArrayList<String> emails = settings.getEmail();
+        countryCode = findViewById(R.id.notification_settings_countrycode);
+        mobileNumber = findViewById(R.id.notification_settings_mobile);
+        email1 = findViewById(R.id.notification_settings_email1);
+        email2 = findViewById(R.id.notification_settings_email2);
+        email3 = findViewById(R.id.notification_settings_email3);
+    }
 
-        email1.setText((emails.size() > 0) ? emails.get(0) : "");
-        email2.setText((emails.size() > 1) ? emails.get(1) : "");
-        email3.setText((emails.size() > 2) ? emails.get(2) : "");
+    private void save() {
+        boolean emailIsValid = emailIsValid();
+        boolean phoneNumberValid = phoneNumberAppearsValid(validationRules, mobileNumber.getText().toString());
+
+        if(emailIsValid && phoneNumberValid) {
+            executeUpdateSettingsTask();
+        } else{
+            GAEventController.sendKontaktopplysningerOppdatert(this, "lagring", "feil i inputfelter");
+
+            String dialogTitle;
+            String dialogMessage;
+            if(!emailIsValid) {
+                dialogTitle = getString(R.string.pref_screen_notification_settings_invalid_email_title);
+                dialogMessage = getString(R.string.pref_screen_notification_settings_invalid_email_message);
+            }else {
+                dialogTitle = getString(R.string.pref_screen_notification_settings_invalid_phone_title);
+                dialogMessage = getString(R.string.pref_screen_notification_settings_invalid_phone_message);
+            }
+
+            AlertDialog.Builder dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(NotificationSettingsActivity.this, dialogMessage, dialogTitle);
+            dialog.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {}
+            });
+            dialog.show();
+        }
+    }
+
+    private boolean emailIsValid() {
+        boolean email1Valid = emailAppearsValid(validationRules, email1.getText().toString());
+        boolean email2Valid = emailAppearsValid(validationRules, email2.getText().toString());
+        boolean email3Valid = emailAppearsValid(validationRules, email3.getText().toString());
+        return email1Valid && email2Valid && email3Valid;
+    }
+
+    @Override
+    protected void updateUI(MailboxSettings mailboxSettings) {
+        countryCode.setText(mailboxSettings.getCountryCode());
+        mobileNumber.setText(mailboxSettings.getPhoneNumber());
+
+        ArrayList<ExtendedEmail> emails = mailboxSettings.getExtendedEmails();
+        if(emails != null) {
+            email1.setText((emails.size() > 0) ? emails.get(0).getEmail() : "");
+            email2.setText((emails.size() > 1) ? emails.get(1).getEmail() : "");
+            email3.setText((emails.size() > 2) ? emails.get(2).getEmail() : "");
+        }
     }
 
     @Override
     protected void setSettingsEnabled(boolean state) {
-        newLetters.setEnabled(state);
-        unreadLetters.setEnabled(state);
-        importantLetters.setEnabled(state);
         mobileNumber.setEnabled(state);
+        countryCode.setEnabled(state);
         email1.setEnabled(state);
         email2.setEnabled(state);
         email3.setEnabled(state);
-
-        super.setButtonState(state, getString(R.string.pref_notification_settings_button));
     }
 
     @Override
@@ -107,56 +162,26 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
         validationRules = account.getValidationRules();
     }
 
-    private void validateMobileNumber(String mobileNumber) throws Exception {
-        if (!mobileNumber.matches(validationRules.getPhoneNumber())) {
-            throw new Exception("Ikke gyldig telefonnummer: " + mobileNumber);
-        }
-    }
-
-    private void validateEmails(ArrayList<String> emails) throws Exception {
-        for (String email : emails) {
-            if (!email.matches(validationRules.getEmail())) {
-                throw new Exception("Ikke gyldig email-adresse: " + email);
-            }
-        }
-    }
-
-    private ArrayList<String> getEmails() {
-        ArrayList<String> emails = new ArrayList<String>();
-
-        String stringEmail = email1.getText().toString().trim();
-
-        if (!stringEmail.equals("")) {
-            emails.add(stringEmail);
-        }
-
-        stringEmail = email2.getText().toString().trim();
-
-        if (!stringEmail.equals("")) {
-            emails.add(stringEmail);
-        }
-
-        stringEmail = email3.getText().toString().trim();
-
-        if (!stringEmail.equals("")) {
-            emails.add(stringEmail);
-        }
-
-        return emails;
-    }
-
     @Override
-    protected void setSelectedAccountSettings() throws Exception {
-        accountSettings.setNotificationEmail(Boolean.toString(newLetters.isChecked()));
-        accountSettings.setReminderEmail(Boolean.toString(unreadLetters.isChecked()));
-        accountSettings.setNotificationSmsPaidBySender(Boolean.toString(importantLetters.isChecked()));
+    protected void setSelectedAccountSettings() {
+        accountMailboxSettings.setCountryCode(formattedCountryCode());
+        accountMailboxSettings.setPhoneNumber(mobileNumber.getText().toString().trim(), this);
+        accountMailboxSettings.setEmailAddress(email1.getText().toString().trim(), 0, this);
+        accountMailboxSettings.setEmailAddress(email2.getText().toString().trim(), 1, this);
+        accountMailboxSettings.setEmailAddress(email3.getText().toString().trim(), 2, this);
+    }
 
-        String stringMobileNumber = mobileNumber.getText().toString().trim();
-        validateMobileNumber(stringMobileNumber);
-        accountSettings.setPhonenumber(stringMobileNumber);
 
-        ArrayList<String> emails = getEmails();
-        validateEmails(emails);
-        accountSettings.setEmail(emails);
+    private String formattedCountryCode() {
+        String code = countryCode.getText().toString().trim();
+        while (code.startsWith("0")) {
+            code = code.substring(1);
+        }
+
+        if(code.isEmpty()){
+            return "47";
+        }
+
+        return code;
     }
 }

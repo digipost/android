@@ -56,6 +56,12 @@
         <item name="android:textColor">@color/actionbar_subtitle_color</item>
     </style>
 
+    <style name="WhiteTextColor" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+    </style>`
+
     <style name="CheckBoxStyle" parent="Theme.AppCompat.Light">
         <item name="colorControlNormal">@color/checkbox_unchecked</item>
         <item name="colorControlActivated">@color/checkbox_checked</item>
