@@ -21,8 +21,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -97,29 +95,9 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
         countryCode = findViewById(R.id.notification_settings_countrycode);
         mobileNumber = findViewById(R.id.notification_settings_mobile);
-        TextWatcher emailValidator = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                String email = charSequence.toString();
-                if(!emailAppearsValid(validationRules, email)){
-                    Log.d("MailboxSettings", "invalid email: " + email);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) { }
-        };
-
         email1 = findViewById(R.id.notification_settings_email1);
-        email1.addTextChangedListener(emailValidator);
         email2 = findViewById(R.id.notification_settings_email2);
-        email2.addTextChangedListener(emailValidator);
         email3 = findViewById(R.id.notification_settings_email3);
-        email3.addTextChangedListener(emailValidator);
     }
 
     private void save() {
