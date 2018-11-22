@@ -102,7 +102,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
 
     private void save() {
         boolean emailIsValid = emailIsValid();
-        boolean phoneNumberValid = phoneNumberAppearsValid(validationRules, mobileNumbeGjorde );
+        boolean phoneNumberValid = phoneNumberAppearsValid(validationRules, mobileNumber.getText().toString());
 
         if(emailIsValid && phoneNumberValid) {
             executeUpdateSettingsTask();
