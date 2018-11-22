@@ -226,7 +226,7 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showSettingsProgressDialog("Henter dine innstillinger...");
+            showSettingsProgressDialog(getResources().getString(R.string.pref_screen_notification_settings_updating));
         }
 
         @Override
@@ -253,7 +253,7 @@ public abstract class DigipostSettingsActivity extends AppCompatActivity {
                 DialogUtitities.showToast(DigipostSettingsActivity.this, result);
                 GAEventController.sendKontaktopplysningerOppdatert(DigipostSettingsActivity.this, "lagring", "feilet");
             } else {
-                DialogUtitities.showToast(DigipostSettingsActivity.this, "Dine varslingsinnstillinger ble oppdatert.");
+                DialogUtitities.showToast(DigipostSettingsActivity.this, getResources().getString(R.string.pref_personal_settings_saved_successfully));
                 GAEventController.sendKontaktopplysningerOppdatert(DigipostSettingsActivity.this, "lagring", "vellykket");
             }
         }
