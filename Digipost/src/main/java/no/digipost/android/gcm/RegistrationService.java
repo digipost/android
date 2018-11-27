@@ -17,24 +17,27 @@
 
 package no.digipost.android.gcm;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 import android.support.v4.content.LocalBroadcastManager;
+
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
-public class RegistrationService extends IntentService {
+public class RegistrationService extends JobIntentService {
 
     private static final String TAG = "RegIntentService";
 
-    public RegistrationService(){super(TAG);}
+    public RegistrationService(){super();}
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
         SharedPreferencesUtilities.setLogoutFailed(getApplicationContext(),false);
         try {
             InstanceID instanceID = InstanceID.getInstance(this);
