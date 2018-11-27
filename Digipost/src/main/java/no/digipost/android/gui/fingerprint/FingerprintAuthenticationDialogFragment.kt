@@ -28,7 +28,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import no.digipost.android.R
-import no.digipost.android.analytics.GAEventController
 
 @TargetApi(Build.VERSION_CODES.M)
 class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiHelper.Callback {
@@ -95,7 +94,7 @@ class FingerprintAuthenticationDialogFragment : DialogFragment(), FingerprintUiH
 
     override fun onDestroy() {
         super.onDestroy()
-        activity.finish()
+        activity?.finish()
     }
 
     override fun onFingerprintAuthenticated() {
