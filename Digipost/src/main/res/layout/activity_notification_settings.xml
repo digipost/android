@@ -92,6 +92,14 @@
                     android:orientation="horizontal"
                     android:layout_marginBottom="80dp">
 
+                    <TextView
+                      android:id="@+id/notification_settings_countrycode_prefix"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginRight="-4sp"
+                      android:layout_marginTop="-2sp"
+                      android:text="@string/pref_notification_settings_contact_info_countrycode_hint_prefix"/>
+
                     <EditText
                         android:id="@+id/notification_settings_countrycode"
                         android:layout_width="50sp"

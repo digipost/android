@@ -182,7 +182,8 @@
     <string name="pref_notification_settings_contact_info_title">Kontaktopplysninger</string>
     <string name="pref_notification_settings_contact_info_phone_title">Ditt mobilnummer:</string>
     <string name="pref_notification_settings_contact_info_phone_hint">Mobilnummer</string>
-    <string name="pref_notification_settings_contact_info_countrycode_hint">+47</string>
+    <string name="pref_notification_settings_contact_info_countrycode_hint">47</string>
+    <string name="pref_notification_settings_contact_info_countrycode_hint_prefix">+</string>
     <string name="pref_notification_settings_contact_info_email_title">E-postadresser:</string>
     <string name="pref_notification_settings_contact_info_email_hint">E-postadresse</string>
     <string name="pref_notification_settings_button">Lagre kontaktinformasjon</string>
