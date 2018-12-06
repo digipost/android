@@ -65,14 +65,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/pref_notification_settings_contact_info_email_hint"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress|textNoSuggestions" />
 
                 <EditText
                     android:id="@+id/notification_settings_email3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/pref_notification_settings_contact_info_email_hint"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress|textNoSuggestions" />
 
 
                 <TextView
