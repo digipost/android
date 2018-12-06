@@ -96,9 +96,10 @@
                       android:id="@+id/notification_settings_countrycode_prefix"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:layout_marginRight="-4sp"
+                      android:layout_marginEnd="-4sp"
                       android:layout_marginTop="-2sp"
-                      android:text="@string/pref_notification_settings_contact_info_countrycode_hint_prefix"/>
+                      android:text="@string/pref_notification_settings_contact_info_countrycode_hint_prefix"
+                      android:textColor="@color/black" />
 
                     <EditText
                         android:id="@+id/notification_settings_countrycode"
