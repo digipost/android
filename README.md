@@ -3,7 +3,12 @@ Digipost for Android
 
 Digipost for Android er en app for Android som gir tilgang til brukerens sikre digitale postkasse i Digipost. Bruker må opprette en konto på https://www.digipost.no/.
 
-App-en kan lastes ned fra Google Play, https://play.google.com/store/apps/details?id=no.digipost.android.
+App-en er tilgjengelig på Google Play, trykk nedenfor for å laste den ned.  
+<a href='https://play.google.com/store/apps/details?id=no.digipost.android'>
+    <img alt='Tilgjengelig på Google Play'
+         height="80"
+         src='https://play.google.com/intl/en_us/badges/images/generic/no_badge_web_generic.png'/>
+</a>
 
 Kildekoden som er skrevet av Posten er her tilgjengelig som fri programvare under lisensen *Apache License, Version 2.0*, som beskrevet i [lisensfilen](https://github.com/digipost/android/blob/master/LICENSE.txt "LICENSE").
 
