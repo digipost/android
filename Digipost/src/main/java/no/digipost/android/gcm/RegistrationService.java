@@ -17,6 +17,7 @@
 
 package no.digipost.android.gcm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
@@ -26,6 +27,8 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+
+import java.util.concurrent.Executors;
 
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
@@ -52,33 +55,25 @@ public class RegistrationService extends JobIntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
-    private void sendRegistrationToServer(String token) {
-        new AsyncTask<String, Void, Boolean>() {
-
+    private void sendRegistrationToServer(final String token) {
+        final Context applicationContext = getApplicationContext();
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
-            protected Boolean doInBackground(String... params) {
+            public void run() {
                 try {
-                   return ContentOperations.sendGCMRegistrationToken(getApplicationContext(), params[0]);
+                    boolean success = ContentOperations.sendGCMRegistrationToken(applicationContext, token);
+                    if (success) {
+                        PreferenceManager
+                                .getDefaultSharedPreferences(applicationContext)
+                                .edit()
+                                .putBoolean(GCMController.SENT_TOKEN_TO_SERVER, true)
+                                .apply();
+                    }
                 }catch (Exception e){
                     e.printStackTrace();
                 }
-                return false;
             }
-
-            @Override
-            protected void onCancelled() {
-                super.onCancelled();
-            }
-
-            @Override
-            protected void onPostExecute(Boolean success) {
-                super.onPostExecute(success);
-
-                if(success)
-                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, true).apply();
-            }
-
-        }.execute(token, null, null);
+        });
     }
 
 }
