@@ -19,7 +19,6 @@ package no.digipost.android.gcm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
@@ -35,20 +34,20 @@ import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class RegistrationService extends JobIntentService {
 
-    private static final String TAG = "RegIntentService";
-
-    public RegistrationService(){super();}
+    public RegistrationService() {
+        super();
+    }
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
-        SharedPreferencesUtilities.setLogoutFailed(getApplicationContext(),false);
+        SharedPreferencesUtilities.setLogoutFailed(getApplicationContext(), false);
         try {
             InstanceID instanceID = InstanceID.getInstance(this);
             String token = instanceID.getToken(GCMController.DEFAULT_SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             sendRegistrationToServer(token);
         } catch (Exception e) {
             e.printStackTrace();
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean(GCMController.SENT_TOKEN_TO_SERVER, false).apply();
+            setSentTokenPreference(getApplicationContext(), false);
         }
 
         Intent registrationComplete = new Intent(GCMController.REGISTRATION_COMPLETE);
@@ -60,20 +59,24 @@ public class RegistrationService extends JobIntentService {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
+                boolean success = false;
                 try {
-                    boolean success = ContentOperations.sendGCMRegistrationToken(applicationContext, token);
-                    if (success) {
-                        PreferenceManager
-                                .getDefaultSharedPreferences(applicationContext)
-                                .edit()
-                                .putBoolean(GCMController.SENT_TOKEN_TO_SERVER, true)
-                                .apply();
-                    }
-                }catch (Exception e){
+                    success = ContentOperations.sendGCMRegistrationToken(applicationContext, token);
+                } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    setSentTokenPreference(applicationContext, success);
                 }
             }
         });
+    }
+
+    private void setSentTokenPreference(Context applicationContext, boolean value) {
+        PreferenceManager
+                .getDefaultSharedPreferences(applicationContext)
+                .edit()
+                .putBoolean(GCMController.SENT_TOKEN_TO_SERVER, value)
+                .apply();
     }
 
 }
