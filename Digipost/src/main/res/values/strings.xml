@@ -105,7 +105,7 @@
 
     <!-- LoginActivity -->
     <string name="login_normal_login_title">Logg inn med Digipost-passord</string>
-    <string name="login_normal_login_description">Kun tilgang til å lese post fra privatpersoner og bedrifter, som naboen eller strømselskapet.</string>
+    <string name="login_normal_login_description">Kun tilgang til å lese post fra privatpersoner og bedrifter.</string>
     <string name="login_normal_login_button">Logg inn med passord</string>
 
     <string name="login_idporten_login_title">Logg inn med elektronisk ID</string>
