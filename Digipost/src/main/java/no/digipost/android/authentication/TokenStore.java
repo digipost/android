@@ -17,13 +17,14 @@ package no.digipost.android.authentication;
  */
 
 import android.content.Context;
-import net.danlew.android.joda.JodaTimeAndroid;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.model.Access;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
-import org.joda.time.DateTime;
-
-import java.util.ArrayList;
 
 public class TokenStore {
 
@@ -100,14 +101,17 @@ public class TokenStore {
         if (tokens == null) tokens = new ArrayList<>();
         boolean tokenExist = false;
 
-        JodaTimeAndroid.init(context);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, Integer.parseInt(expiration)-10);
+        Date date = calendar.getTime();
+
         for(int i = 0; i < tokens.size(); i++) {
             if (tokens.get(i).getScope().equals(scope)) {
-                tokens.set(i, new Token(access,  scope, DateTime.now().plusSeconds(Integer.parseInt(expiration)-10)));
+                tokens.set(i, new Token(access,  scope, date));
                 tokenExist = true;
             }
         }
-        if(!tokenExist) tokens.add(new Token(access, scope, DateTime.now().plusSeconds(Integer.parseInt(expiration)-10)));
+        if(!tokenExist) tokens.add(new Token(access, scope, date));
     }
 
     public static void storeToken(final Context context, final Access access, final String scope) {

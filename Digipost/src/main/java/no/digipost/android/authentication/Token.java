@@ -16,14 +16,15 @@
 
 package no.digipost.android.authentication;
 
-import org.joda.time.DateTime;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Token {
     private String access;
     private String scope;
-    private DateTime expiration;
+    private Date expiration;
 
-    public Token(String access, String scope, DateTime expiration){
+    public Token(String access, String scope, Date expiration){
         this.access = access;
         this.scope = scope;
         this.expiration = expiration;
@@ -38,7 +39,8 @@ public class Token {
     }
 
     public boolean hasExpired(){
-        return expiration.isBeforeNow();
+        Date now = Calendar.getInstance().getTime();
+        return expiration.before(now);
     }
 
 }
