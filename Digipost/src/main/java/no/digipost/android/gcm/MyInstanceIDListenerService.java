@@ -21,7 +21,6 @@ import android.content.Intent;
 import com.google.firebase.messaging.FirebaseMessagingService;
 
 public class MyInstanceIDListenerService extends FirebaseMessagingService {
-    private static final String TAG = "MyInstanceIDLS";
 
     @Override
     public void onNewToken(String token) {
