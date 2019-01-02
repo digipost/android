@@ -22,10 +22,12 @@ import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.JobIntentService;
-import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.concurrent.Executors;
 
@@ -41,21 +43,22 @@ public class RegistrationService extends JobIntentService {
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
         SharedPreferencesUtilities.setLogoutFailed(getApplicationContext(), false);
-        try {
-            InstanceID instanceID = InstanceID.getInstance(this);
-            String token = instanceID.getToken(GCMController.DEFAULT_SENDER_ID, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            sendRegistrationToServer(token);
-        } catch (Exception e) {
-            e.printStackTrace();
-            setSentTokenPreference(getApplicationContext(), false);
-        }
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if (!task.isSuccessful()) {
+                    Log.w(RegistrationService.class.getName(), "getInstanceId failed", task.getException());
+                    return;
+                }
 
-        Intent registrationComplete = new Intent(GCMController.REGISTRATION_COMPLETE);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
+                // Get new Instance ID token
+                String token = task.getResult().getToken();
+                sendRegistrationToServer(token, getApplicationContext());
+            }
+        });
     }
 
-    private void sendRegistrationToServer(final String token) {
-        final Context applicationContext = getApplicationContext();
+    private static void sendRegistrationToServer(final String token, final Context applicationContext) {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
@@ -71,7 +74,7 @@ public class RegistrationService extends JobIntentService {
         });
     }
 
-    private void setSentTokenPreference(Context applicationContext, boolean value) {
+    private static void setSentTokenPreference(Context applicationContext, boolean value) {
         PreferenceManager
                 .getDefaultSharedPreferences(applicationContext)
                 .edit()
