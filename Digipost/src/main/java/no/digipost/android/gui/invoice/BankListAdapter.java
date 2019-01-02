@@ -30,8 +30,6 @@ import java.util.ArrayList;
 
 public class BankListAdapter extends ArrayAdapter<Bank> {
 
-    private ArrayList<Bank> banks;
-
     public class ViewHolder {
         private ImageView bankLogo;
         private TextView bankName;
@@ -39,23 +37,19 @@ public class BankListAdapter extends ArrayAdapter<Bank> {
 
     public BankListAdapter(Context context, int textViewResourceId, ArrayList<Bank> banks) {
         super(context, textViewResourceId, banks);
-        this.banks = banks;
     }
 
-    public Bank getItem(int position){
-        return banks.get(position);
-    }
-
+    @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         BankListAdapter.ViewHolder viewHolder;
 
         final Bank bank = getItem(position);
-
         if (convertView == null) {
             convertView = LayoutInflater.from(this.getContext()).inflate(R.layout.invoice_bank_list_item, parent, false);
             viewHolder = new BankListAdapter.ViewHolder();
             viewHolder.bankLogo = (ImageView) convertView.findViewById(R.id.invoice_options_bank_item_list_logo);
             viewHolder.bankLogo.setContentDescription(bank.getName());
+            viewHolder.bankName = (TextView) convertView.findViewById(R.id.invoice_options_bank_item_list_name);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (BankListAdapter.ViewHolder) convertView.getTag();
@@ -64,9 +58,10 @@ public class BankListAdapter extends ArrayAdapter<Bank> {
         int logoResourceId = getContext().getResources().getIdentifier((bank.getLogo()), "drawable", getContext().getPackageName());
         if(logoResourceId != 0) {
             viewHolder.bankLogo.setImageResource(logoResourceId);
+            viewHolder.bankLogo.setVisibility(View.VISIBLE);
+            viewHolder.bankName.setVisibility(View.GONE);
         }else {
             viewHolder.bankLogo.setVisibility(View.GONE);
-            viewHolder.bankName = (TextView) convertView.findViewById(R.id.invoice_options_bank_item_list_name);
             viewHolder.bankName.setVisibility(View.VISIBLE);
             viewHolder.bankName.setText(bank.getName());
         }
