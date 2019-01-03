@@ -26,16 +26,14 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.webkit.MimeTypeMap;
-import net.danlew.android.joda.JodaTimeAndroid;
-import no.digipost.android.documentstore.DocumentContentStore;
+
 import org.apache.commons.io.FilenameUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import no.digipost.android.documentstore.DocumentContentStore;
 
 public class FileUtilities {
     public static final String TEMP_FILE_NAME = "temp";
@@ -79,10 +77,7 @@ public class FileUtilities {
 
         try{
             String tempDate = DocumentContentStore.getDocumentParent().getCreated();
-            DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            DateTime jodatime = dtf.parseDateTime(tempDate);
-            DateTimeFormatter dtfOut = DateTimeFormat.forPattern("yyyy.MM.dd");
-            dateCreated = dtfOut.print(jodatime) + " ";
+            dateCreated = FormatUtilities.getDateString(tempDate);
         }catch (Exception e){
         }
 
@@ -143,7 +138,6 @@ public class FileUtilities {
     }
 
     public static void makeFileVisible(Context context, File file) {
-        JodaTimeAndroid.init(context);
         Long contentLength = Long.parseLong(DocumentContentStore.getDocumentAttachment().getFileSize());
         DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         String mimeType = getMimeType(file);

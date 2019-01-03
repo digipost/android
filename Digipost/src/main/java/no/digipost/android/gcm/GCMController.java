@@ -19,9 +19,9 @@ package no.digipost.android.gcm;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -29,13 +29,10 @@ public class GCMController {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public static final String SENT_TOKEN_TO_SERVER = "sentTokenToServer";
-    public static final String REGISTRATION_COMPLETE = "registrationComplete";
-    public static final String DEFAULT_SENDER_ID = "1079051739965";
 
     public static void init(Activity activity){
         if (!isDeviceRegistered(activity) && playServicesAvailable(activity)) {
-            Intent intent = new Intent(activity, RegistrationService.class);
-            activity.startService(intent);
+            RegistrationUtil.sendRegistrationToServer(activity.getApplicationContext());
         }
     }
 

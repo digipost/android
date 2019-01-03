@@ -16,15 +16,12 @@
 
 package no.digipost.android.gcm;
 
-import android.content.Intent;
-import com.google.android.gms.iid.InstanceIDListenerService;
+import com.google.firebase.messaging.FirebaseMessagingService;
 
-public class MyInstanceIDListenerService extends InstanceIDListenerService{
-    private static final String TAG = "MyInstanceIDLS";
+public class MyInstanceIDListenerService extends FirebaseMessagingService {
 
     @Override
-    public void onTokenRefresh() {
-        Intent intent = new Intent(this, RegistrationService.class);
-        startService(intent);
+    public void onNewToken(String token) {
+        RegistrationUtil.sendRegistrationToServer(getApplicationContext());
     }
 }

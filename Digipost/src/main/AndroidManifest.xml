@@ -100,17 +100,6 @@
         <activity android:name="no.digipost.android.gui.invoice.InvoiceOptionsActivity" />
         <activity android:name="no.digipost.android.gui.invoice.InvoiceOverviewActivity" />
         <activity android:name="no.digipost.android.gui.fingerprint.FingerprintActivity" />
-
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="no.digipost.android.gcmreceiver" />
-            </intent-filter>
-        </receiver>
         <receiver
             android:name="com.google.android.gms.analytics.AnalyticsReceiver"
             android:enabled="true"
@@ -125,22 +114,17 @@
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name="no.digipost.android.gcm.ListenerService"
-            android:exported="false">
+            android:name="no.digipost.android.gcm.ListenerService">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".gcm.MyInstanceIDListenerService"
-            android:exported="false">
+            android:name=".gcm.MyInstanceIDListenerService">
             <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name="no.digipost.android.gcm.RegistrationService"
-            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.gms.version"

@@ -16,13 +16,13 @@
 
 package no.digipost.android.gcm;
 
-import android.os.Bundle;
-import com.google.android.gms.gcm.GcmListenerService;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
-public class ListenerService extends GcmListenerService {
+public class ListenerService extends FirebaseMessagingService {
 
     @Override
-    public void onMessageReceived(String from, Bundle data) {
-        super.onMessageReceived(from, data);
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
     }
 }
