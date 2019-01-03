@@ -18,10 +18,8 @@
 package no.digipost.android.gcm;
 
 import android.content.Context;
-import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.JobIntentService;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,41 +32,36 @@ import java.util.concurrent.Executors;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.utilities.SharedPreferencesUtilities;
 
-public class RegistrationService extends JobIntentService {
+public class RegistrationUtil {
 
-    public RegistrationService() {
-        super();
-    }
-
-    @Override
-    protected void onHandleWork(@NonNull Intent intent) {
-        SharedPreferencesUtilities.setLogoutFailed(getApplicationContext(), false);
+    static void sendRegistrationToServer(final Context context) {
+        SharedPreferencesUtilities.setLogoutFailed(context, false);
         FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
             @Override
             public void onComplete(@NonNull Task<InstanceIdResult> task) {
                 if (!task.isSuccessful()) {
-                    Log.w(RegistrationService.class.getName(), "getInstanceId failed", task.getException());
+                    Log.w(RegistrationUtil.class.getName(), "getInstanceId failed", task.getException());
                     return;
                 }
 
                 // Get new Instance ID token
                 String token = task.getResult().getToken();
-                sendRegistrationToServer(token, getApplicationContext());
+                sendRegistrationToServer(token, context);
             }
         });
     }
 
-    private static void sendRegistrationToServer(final String token, final Context applicationContext) {
+    private static void sendRegistrationToServer(final String token, final Context context) {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
                 boolean success = false;
                 try {
-                    success = ContentOperations.sendGCMRegistrationToken(applicationContext, token);
+                    success = ContentOperations.sendGCMRegistrationToken(context, token);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
-                    setSentTokenPreference(applicationContext, success);
+                    setSentTokenPreference(context, success);
                 }
             }
         });
