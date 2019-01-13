@@ -51,24 +51,24 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
         context = this;
         ButtonListener listener = new ButtonListener();
-        loginButton = (Button) findViewById(R.id.login_passwordButton);
+        loginButton = findViewById(R.id.login_passwordButton);
         loginButton.setOnClickListener(listener);
         loginButton.setTransformationMethod(null);
         privacyButton = (Button) findViewById(R.id.login_privacyButton);
         privacyButton.setOnClickListener(listener);
         privacyButton.setTransformationMethod(null);
 
-        forgotPasswordButton = (Button) findViewById(R.id.login_forgotPasswordButton);
+        forgotPasswordButton = findViewById(R.id.login_forgotPasswordButton);
         forgotPasswordButton.setOnClickListener(listener);
         forgotPasswordButton.setTransformationMethod(null);
         forgotPasswordButton.setPaintFlags(forgotPasswordButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        registrationButton = (Button) findViewById(R.id.login_registrationButton);
+        registrationButton = findViewById(R.id.login_registrationButton);
         registrationButton.setOnClickListener(listener);
         registrationButton.setTransformationMethod(null);
         registrationButton.setPaintFlags(registrationButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-        idPortenButton = (Button) findViewById(R.id.login_idportenButton);
+        idPortenButton = findViewById(R.id.login_idportenButton);
         idPortenButton.setOnClickListener(listener);
         idPortenButton.setTransformationMethod(null);
     }
