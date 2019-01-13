@@ -124,7 +124,7 @@ public class LoginActivity extends Activity {
         forgetPasswordDialog.setPositiveButton(getString(R.string.login_forgot_password_dialog_open_link_button), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
-                openExternalBrowserWithUrl("https://www.digipost.no/app/#/person/glemt");
+                openExternalBrowserWithUrl(ApiConstants.URL_FORGOT_PASSWD);
                 dialog.dismiss();
             }
         });
@@ -146,10 +146,10 @@ public class LoginActivity extends Activity {
                 openWebView(Login.NORMAL);
             } else if (v == privacyButton) {
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "personvern");
-                openExternalBrowserWithUrl("https://www.digipost.no/juridisk/");
+                openExternalBrowserWithUrl(ApiConstants.URL_PRIVACY);
             } else if (v == registrationButton) {
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "registrering");
-                openExternalBrowserWithUrl("https://www.digipost.no/app/registrering?utm_source=android_app&utm_medium=app&utm_campaign=app-link&utm_content=ny_bruker#/");
+                openExternalBrowserWithUrl(ApiConstants.URL_REGISTRATION);
             }else if (v == forgotPasswordButton){
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "glemt-passord");
                 showForgotPasswordDialog();
