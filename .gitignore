@@ -1,17 +1,17 @@
-#Key
+# Key
 Digipost/src/main/java/no/digipost/android/authentication/Secret.java
 
-#built application files
+# Built application files
 *.apk
 *.ap_
 
-# files for the dex VM
+# Files for the dex VM
 *.dex
 
 # Java class files
 *.class
 
-# generated files
+# Generated files
 bin/
 gen/
 
@@ -30,8 +30,8 @@ Thumbs.db
 
 # Android Studio
 .idea
+
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
 build/
-digipost-android.iml
-Digipost/Digipost.iml
+*.iml

@@ -14,13 +14,6 @@ Kildekoden som er skrevet av Posten er her tilgjengelig som fri programvare unde
 
 Viktig:
 ------
-For å kunne bruke koden og få tilgang til Digipost sitt api vil du trenge client id og client secret. Hvordan du får tak i det kan du lese mer om på https://www.digipost.no/plattform/annet/oauth/ 
-Når du har fått client id og client secret er du nødt til å opprette en fil kalt Secret.java,legge den i mappen src/no/digipost/android/authentication og gi den følgende innhold:
+For å kunne kjøre applikasjonen og få tilgang til Digipost applikasjonen sitt API trenger du en client id, client secret, og redirect uri. Hvordan du får tak i disse verdiene kan leses mer om på https://www.digipost.no/plattform/annet/oauth/.
 
-    package no.digipost.android.authentication;
-    public class Secret {
-      public static final String CLIENT_ID = "";
-      public static final String CLIENT_SECRET = "";
-      public static final String REDIRECT_URI = "";
-      public static final String ENV_URL = "https://www.digipost.no/post/";
-    }
+Når man har fått tak i verdiene må det legges inn i Secret.java klassen. Den ligger under _src/main/java/no/digipost/android/authentication/Secret.java_, eller søk etter _TODO_.

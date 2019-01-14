@@ -104,5 +104,8 @@ public class ApiConstants {
 
     public static final String URL_HELP = "https://www.digipost.no/hjelp/#android";
     public static final String UPDATE_MAILBOX_SETTINGS = URL_RELATIONS + "update_mailbox_settings";
+    public static final String URL_PRIVACY = "https://www.digipost.no/juridisk/";
+    public static final String URL_REGISTRATION = "https://www.digipost.no/app/registrering?utm_source=android_app&utm_medium=app&utm_campaign=app-link&utm_content=ny_bruker#/";
+    public static final String URL_FORGOT_PASSWD = "https://www.digipost.no/app/#/person/glemt";
 
 }
