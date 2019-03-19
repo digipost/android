@@ -30,7 +30,7 @@ public class ApiConstants {
     public static final String GET_RECEIPT = "receipt";
     public static final String GET_RECEIPT_SKIP = "skip";
     public static final String GET_DOCUMENT_LIMIT = "limit";
-    public static final int GET_DOCUMENT_LIMIT_N = 101;
+    public static final int GET_DOCUMENT_LIMIT_N = 50;
     public static final String GET_DOCUMENT_LASTSEEN = "lastseen";
 
     public static final String CREATE = "create";
