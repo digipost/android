@@ -4,8 +4,8 @@ apply plugin: 'kotlin-android'
 
 android {
     defaultConfig {
-        versionCode 78
-        versionName '3.6.2'
+        versionCode 79
+        versionName '3.6.3'
         applicationId = "no.digipost.android"
         minSdkVersion 21
         targetSdkVersion 28
