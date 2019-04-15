@@ -29,6 +29,7 @@ import android.widget.*;
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.analytics.GAEventController;
+import no.digipost.android.authentication.DigipostOauthScope;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.gcm.GCMController;
 import no.digipost.android.utilities.DialogUtitities;
@@ -84,9 +85,9 @@ public class LoginActivity extends Activity {
             Intent i = new Intent(this, WebLoginActivity.class);
 
             if(Login.IDPORTEN == target){
-                i.putExtra("authenticationScope", ApiConstants.SCOPE_IDPORTEN_4);
+                i.putExtra("authenticationScope", DigipostOauthScope.FULL_IDPORTEN4.asApiConstant());
             }else {
-                i.putExtra("authenticationScope", ApiConstants.SCOPE_FULL);
+                i.putExtra("authenticationScope", DigipostOauthScope.FULL.asApiConstant());
             }
 
             startActivityForResult(i, WEB_OAUTH_LOGIN_REQUEST);

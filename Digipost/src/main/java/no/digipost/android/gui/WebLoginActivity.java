@@ -25,7 +25,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.*;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import no.digipost.android.DigipostApplication;
@@ -33,6 +32,7 @@ import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
+import no.digipost.android.authentication.DigipostOauthScope;
 import no.digipost.android.authentication.OAuth;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.utilities.DialogUtitities;
@@ -41,7 +41,7 @@ import no.digipost.android.utilities.NetworkUtilities;
 public class WebLoginActivity extends AppCompatActivity {
 
     private final String SUCCESS = "SUCCESS";
-    private String authenticationScope = ApiConstants.SCOPE_FULL;
+    private DigipostOauthScope authenticationScope = DigipostOauthScope.FULL;
     private int currentListPosition = -1;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -80,14 +80,13 @@ public class WebLoginActivity extends AppCompatActivity {
     }
 
     private void setAuthenticationScope(Bundle extras){
-        try {
-            authenticationScope = extras.getString("authenticationScope");
-            if(!authenticationScope.equals(ApiConstants.SCOPE_FULL)){
-                currentListPosition = extras.getInt("currentListPosition");
+        authenticationScope = DigipostOauthScope.fromApiConstant(extras.getString("authenticationScope"));
+        if(authenticationScope == DigipostOauthScope.NONE) {
+            authenticationScope = DigipostOauthScope.FULL;
+        } else if (authenticationScope != DigipostOauthScope.FULL) {
+            currentListPosition = extras.getInt("currentListPosition");
         }
-        }catch (NullPointerException e){
-            authenticationScope = ApiConstants.SCOPE_FULL;
-        }
+
     }
 
     private void checkIfAppIsOnline(){
@@ -190,7 +189,7 @@ public class WebLoginActivity extends AppCompatActivity {
         protected void onPostExecute(final String result) {
             if(SUCCESS.equals(result)) {
                 Intent resultIntent = new Intent();
-                if(!authenticationScope.equals(ApiConstants.SCOPE_FULL) && currentListPosition != -1)
+                if(authenticationScope != DigipostOauthScope.FULL && currentListPosition != -1)
                     resultIntent.putExtra("currentListPosition", currentListPosition);
                 setResult(RESULT_OK, resultIntent);
             }else{

@@ -32,12 +32,12 @@ public class TokenEncryption {
         return cryptoAdapter.isAvailable();
     }
 
-    public String encrypt(String plainText){
-        return cryptoAdapter.encrypt(plainText);
+    public String encrypt(RefreshToken refreshToken){
+        return cryptoAdapter.encrypt(refreshToken.toEncryptableString());
     }
 
-    public String decrypt(String cipherText){
-        return cryptoAdapter.decrypt(cipherText);
+    public RefreshToken decrypt(String cipherText){
+        return RefreshToken.fromEncryptableString(cryptoAdapter.decrypt(cipherText));
     }
 
     public boolean keyStoreIsAvailable(){

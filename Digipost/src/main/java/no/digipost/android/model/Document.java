@@ -16,6 +16,7 @@
 
 package no.digipost.android.model;
 
+import no.digipost.android.authentication.DigipostOauthScope;
 import no.digipost.android.constants.ApiConstants;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -122,21 +123,21 @@ public class Document{
     public boolean hasCollectionNotice() {return this.collectionNotice;}
 
     public boolean requiresHighAuthenticationLevel() {
-        return authenticationLevel.equals(AUTHENTICATION_LEVEL_TWO_FACTOR) ||
-                authenticationLevel.equals(AUTHENTICATION_LEVEL_IDPORTEN_3) ||
-                authenticationLevel.equals(AUTHENTICATION_LEVEL_IDPORTEN_4);
+        return authenticationLevel.equalsIgnoreCase(AUTHENTICATION_LEVEL_TWO_FACTOR) ||
+                authenticationLevel.equalsIgnoreCase(AUTHENTICATION_LEVEL_IDPORTEN_3) ||
+                authenticationLevel.equalsIgnoreCase(AUTHENTICATION_LEVEL_IDPORTEN_4);
     }
 
-    public String getAuthenticationScope() {
+    public DigipostOauthScope getAuthenticationScope() {
         switch (authenticationLevel){
             case AUTHENTICATION_LEVEL_TWO_FACTOR:
-                return ApiConstants.SCOPE_FULL_HIGH;
+                return DigipostOauthScope.FULL_HIGHAUTH;
             case AUTHENTICATION_LEVEL_IDPORTEN_3:
-                return ApiConstants.SCOPE_IDPORTEN_3;
+                return DigipostOauthScope.FULL_IDPORTEN3;
             case AUTHENTICATION_LEVEL_IDPORTEN_4:
-                return ApiConstants.SCOPE_IDPORTEN_4;
+                return DigipostOauthScope.FULL_IDPORTEN4;
             default:
-                return ApiConstants.SCOPE_FULL;
+                return DigipostOauthScope.FULL;
         }
     }
 

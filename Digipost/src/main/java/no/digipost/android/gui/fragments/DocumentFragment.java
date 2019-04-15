@@ -59,7 +59,6 @@ import no.digipost.android.utilities.NetworkUtilities;
 
 import javax.ws.rs.core.HttpHeaders;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -379,7 +378,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     private void openHighAuthenticationWebView(Document document){
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(getActivity(), WebLoginActivity.class);
-            i.putExtra("authenticationScope", document.getAuthenticationScope());
+            i.putExtra("authenticationScope", document.getAuthenticationScope().asApiConstant());
             i.putExtra("currentListPosition", currentListPosition);
             startActivityForResult(i, DocumentFragment.INTENT_ID_PORTEN_WEBVIEW_LOGIN);
         } else {
