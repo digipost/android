@@ -261,8 +261,6 @@ public class ApiAccess {
         } catch (DigipostInvalidTokenException e) {
             OAuth.updateAccessTokenWithRefreshToken(context);
             return getApiJsonString(context, uri, params);
-        }catch (Exception e){
-            Log.e(TAG, e.getMessage());
         }
 
         return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());

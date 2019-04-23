@@ -490,9 +490,8 @@ public class DocumentFragment extends ContentFragment<Document> {
                 this.document = ContentOperations.getDocumentSelf(getActivity(), document);
                 return true;
             } catch (Exception e) {
-                //IGNORE
+                return false;
             }
-            return false;
         }
 
         @Override
@@ -500,6 +499,9 @@ public class DocumentFragment extends ContentFragment<Document> {
             super.onPostExecute(success);
             if(success){
                 openListItem(this.document);
+            } else {
+                dismissUpdateProgressDialogIfExisting();
+                DialogUtitities.showLongToast(context, getString(R.string.error_failed_to_open_with_intent));
             }
         }
     }
