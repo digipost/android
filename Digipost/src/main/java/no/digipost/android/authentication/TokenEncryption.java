@@ -28,10 +28,6 @@ public class TokenEncryption {
         cryptoAdapter = keyStoreIsAvailable() ? new KeyStoreAdapter(shouldRegenerateKeyPair) : new ConcealAdapter(context);
     }
 
-    public boolean isAvailable(){
-        return cryptoAdapter.isAvailable();
-    }
-
     public String encrypt(RefreshToken refreshToken){
         return cryptoAdapter.encrypt(refreshToken.toEncryptableString());
     }
@@ -44,12 +40,14 @@ public class TokenEncryption {
         return (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M);
     }
 
-    public static boolean canUseRefreshTokens(final Context context) {
-        if (!screenLockEnabled(context)) {
+    public static boolean canUseRefreshTokens(Context context) {
+        if (screenLockEnabled(context)) {
+            return true;
+        } else {
             SharedPreferencesUtilities.deleteRefreshtoken(context);
             GCMController.reset(context);
+            return false;
         }
-        return screenLockEnabled(context);
     }
 
     public static boolean unableToUseStoredRefreshToken(final Context context) {
