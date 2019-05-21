@@ -115,9 +115,7 @@ public class WebLoginActivity extends AppCompatActivity {
 
     private void enableCookies(WebView webView){
         CookieManager.getInstance().setAcceptCookie(true);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
-        }
+        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
     }
 
     @Override
