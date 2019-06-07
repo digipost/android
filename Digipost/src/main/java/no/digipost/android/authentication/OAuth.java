@@ -35,7 +35,6 @@ import no.digipost.android.model.Access;
 import no.digipost.android.model.TokenValue;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
-import org.apache.commons.lang.StringUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -71,7 +70,7 @@ public class OAuth {
         Access access = getAccessData(params, context);
 		verifyState(state, context);
 		verifyAuthentication(access.getId_token(), context);
-		TokenStore.storeToken(context, access, scope);
+		TokenStore.storeToken(context, access, access.getScopeOrDefault(scope));
 	}
 
 	public static void updateAccessTokenWithRefreshToken(final Context context) throws DigipostApiException,

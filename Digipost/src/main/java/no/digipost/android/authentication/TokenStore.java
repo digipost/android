@@ -53,16 +53,6 @@ public class TokenStore {
         SharedPreferencesUtilities.deleteRefreshtoken(context);
     }
 
-    public static void removeHighAuthenticationTokens(){
-        if(tokens != null){
-            for(Token token : tokens){
-                if(token.getScope() != DigipostOauthScope.FULL){
-                    tokens.remove(token);
-                }
-            }
-        }
-    }
-
     public static boolean onlyLoggedInWithIDporten4() {
         if(tokens != null && tokens.size() == 1 ) {
             if(tokens.get(0).getScope() == DigipostOauthScope.FULL_IDPORTEN4){
@@ -84,25 +74,29 @@ public class TokenStore {
 
     public static void updateToken(Access access, DigipostOauthScope defaultScope){
         if (tokens == null) tokens = new ArrayList<>();
-        boolean tokenExist = false;
-
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, Integer.parseInt(access.getExpires_in())-10);
         Date date = calendar.getTime();
 
-        final Token newToken = new AccessToken(access.getAccess_token(), DigipostOauthScope.fromApiConstant(access.getScopeOrDefault(defaultScope.asApiConstant())), date);
+        final Token newToken = new AccessToken(access.getAccess_token(), access.getScopeOrDefault(defaultScope), date);
+
+        boolean tokenIsSet = false;
         for(int i = 0; i < tokens.size(); i++) {
-            if (tokens.get(i).getScope() == defaultScope) {
+            if (tokens.get(i).getScope() == newToken.scope) {
                 tokens.set(i, newToken);
-                tokenExist = true;
+                tokenIsSet = true;
             }
         }
-        if(!tokenExist) tokens.add(newToken);
+        if(!tokenIsSet) {
+            tokens.add(newToken);
+        }
     }
 
     public static void storeToken(Context context, Access access, DigipostOauthScope defaultScope) {
-        boolean storeRefreshToken = defaultScope == DigipostOauthScope.FULL && TokenEncryption.canUseRefreshTokens(context);
-        if(storeRefreshToken)storeRefreshTokenInSharedPreferences(context, new RefreshToken(access.getRefresh_token(), defaultScope));
+        boolean storeRefreshToken = TokenEncryption.canUseRefreshTokens(context);
+        if(storeRefreshToken) {
+            storeRefreshTokenInSharedPreferences(context, new RefreshToken(access.getRefresh_token(), defaultScope));
+        }
 
         updateToken(access, defaultScope);
     }
