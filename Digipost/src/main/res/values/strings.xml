@@ -36,6 +36,7 @@
     <string name="drawer_invoice_overview">Faktura-avtaler</string>
     <string name="drawer_settings">Innstillinger</string>
     <string name="drawer_help">Hjelp</string>
+    <string name="drawer_login">Logg inn</string>
     <string name="drawer_logout">Logg ut</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -80,6 +81,7 @@
     <string name="uploaded">Opplastet</string>
     <string name="public_entity">Offentlig: %s</string>
     <string name="information">Informasjon</string>
+    <string name="or">eller</string>
 
     <string name="move_checkbox_description">Avhukingsboks for å velge flere listeelementer til mengdeoperasjoner, som flytt og slett</string>
 
@@ -104,12 +106,12 @@
     <string name="list_document_type_collection_notice">Inkasso</string>
 
     <!-- LoginActivity -->
-    <string name="login_normal_login_title">Logg inn med Digipost-passord</string>
+    <string name="login_normal_login_title">Passord-innlogging</string>
     <string name="login_normal_login_description">Kun tilgang til å lese post fra privatpersoner og bedrifter.</string>
-    <string name="login_normal_login_button">Logg inn med passord</string>
+    <string name="login_normal_login_button">Med fødselsnr. og passord</string>
 
     <string name="login_idporten_login_title">Logg inn med elektronisk ID</string>
-    <string name="login_idporten_login_description">Tilgang til å lese post fra det offentlige som kommunen, NAV eller HelseNorge.</string>
+    <string name="login_idporten_login_description">Du kan velge logge inn med BankID, BankID på mobil, eller Buypass ID</string>
     <string name="login_idporten_login_button">Logg inn via ID-porten</string>
 
     <string name="login_forgot_password_button_text">Glemt passord</string>
@@ -117,8 +119,11 @@
     <string name="login_forgot_password_dialog_message">Du kan endre passord på digipost.no.\nBruk det nye passordet for å logge inn i appen.</string>
     <string name="login_forgot_password_dialog_open_link_button">Til digipost.no</string>
     <string name="login_forgot_password_dialog_close_button">Lukk</string>
-    <string name="login_registrationbutton_text">Ny bruker</string>
-    <string name="login_privacybutton_text">Personvern</string>
+    <string name="login_register_title">Har du ikke Digipost-konto?</string>
+    <string name="login_registrationbutton_text">Registrer deg her</string>
+    <string name="login_privacy_title">Personvern i Digipost</string>
+    <string name="login_privacybutton_text">Les mer her</string>
+    <string name="login_idporten_login_description_short">Tilgang til å lese all post i Digipost</string>
     <string name="login_header_logo_contentdescription">Posten Norge logo</string>
 
     <!-- ContextMenu -->
@@ -362,5 +367,8 @@
     <string name="fingerprint_secondary">Bruk kode</string>
     <string name="fingerprint_too_many_request">For mange forsøk. Benytt kode eller prøv på nytt senere</string>
     <string name="fingerprint_secondary_title">Åpne innstillinger</string>
+    <string name="paperplane">Et papirfly</string>
+    <string name="single_padlock">En hengelås</string>
+    <string name="double_padlock">To hengelåser</string>
 
 </resources>

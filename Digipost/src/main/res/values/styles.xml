@@ -12,6 +12,8 @@
         <item name="android:windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:actionModeBackground">@color/actionbar_multi_select_grey</item>
+        <item name="android:textColorPrimary">@color/dds_sort_kaffe</item>
+        <item name="android:textColor">@color/dds_sort_kaffe</item>
     </style>
 
     <style name="Digipost.NoActionBar">
