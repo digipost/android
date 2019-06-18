@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- digipost design system -->
+    <color name="dds_frokostkaffe">#e32d22</color>
+    <color name="dds_sort_kaffe">#444444</color>
+    <color name="dds_maskinkaffe">#666666</color>
+    <color name="dds_filtergra">#c1c1c1</color>
+    <color name="dds_melkeskum">#e6e6e6</color>
+    <color name="dds_bla_java">#006fb7</color>
+    <color name="dds_kjeldsberg">#fdbb2f</color>
+    <color name="dds_gronn_te">#26B576</color>
+    <color name="dds_postkassegronn">#005441</color>
+
     <!-- Drawer -->
     <color name="main_drawer_grey_background">#292B2B</color>
     <color name="main_drawer_grey_text">#595959</color>
