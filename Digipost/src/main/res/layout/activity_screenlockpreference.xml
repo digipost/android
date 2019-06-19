@@ -25,7 +25,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/actionbar_red_background"
+        android:background="?android:attr/colorPrimary"
         android:gravity="center"
         android:layout_weight="6"
         android:orientation="vertical">
@@ -112,7 +112,6 @@
                 android:focusable="true"
                 android:gravity="center|center_horizontal"
                 android:text="@string/login_privacybutton_text"
-                android:textColor="@color/login_grey_text"
                 android:textSize="18sp"
                 android:layout_gravity="center" />
         </LinearLayout>
