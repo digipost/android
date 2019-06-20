@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.os.Handler;
 import no.digipost.android.R;
 

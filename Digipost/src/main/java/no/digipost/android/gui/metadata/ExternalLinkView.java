@@ -20,23 +20,19 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import no.digipost.android.R;
-import no.digipost.android.gui.MainContentActivity;
-import no.digipost.android.gui.ScreenlockPreferenceActivity;
-import no.digipost.android.gui.content.DisplayContentActivity;
-import no.digipost.android.model.Metadata;
-import no.digipost.android.utilities.FormatUtilities;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+
+import no.digipost.android.R;
+import no.digipost.android.model.Metadata;
+import no.digipost.android.utilities.FormatUtilities;
 
 public class ExternalLinkView extends Fragment{
 
@@ -78,7 +74,7 @@ public class ExternalLinkView extends Fragment{
             //Ignore
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && scheme.equals("https")) {
+        if (scheme.equals("https")) {
             Intent intent = new Intent(getActivity(), ExternalLinkWebview.class);
             intent.putExtra("url", url);
             startActivity(intent);

@@ -28,28 +28,26 @@ public class TokenEncryption {
         cryptoAdapter = keyStoreIsAvailable() ? new KeyStoreAdapter(shouldRegenerateKeyPair) : new ConcealAdapter(context);
     }
 
-    public boolean isAvailable(){
-        return cryptoAdapter.isAvailable();
+    public String encrypt(RefreshToken refreshToken){
+        return cryptoAdapter.encrypt(refreshToken.toEncryptableString());
     }
 
-    public String encrypt(String plainText){
-        return cryptoAdapter.encrypt(plainText);
-    }
-
-    public String decrypt(String cipherText){
-        return cryptoAdapter.decrypt(cipherText);
+    public RefreshToken decrypt(String cipherText){
+        return RefreshToken.fromEncryptableString(cryptoAdapter.decrypt(cipherText));
     }
 
     public boolean keyStoreIsAvailable(){
         return (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M);
     }
 
-    public static boolean canUseRefreshTokens(final Context context) {
-        if (!screenLockEnabled(context)) {
+    public static boolean canUseRefreshTokens(Context context) {
+        if (screenLockEnabled(context)) {
+            return true;
+        } else {
             SharedPreferencesUtilities.deleteRefreshtoken(context);
             GCMController.reset(context);
+            return false;
         }
-        return screenLockEnabled(context);
     }
 
     public static boolean unableToUseStoredRefreshToken(final Context context) {

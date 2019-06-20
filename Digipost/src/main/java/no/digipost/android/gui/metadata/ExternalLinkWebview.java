@@ -70,12 +70,10 @@ public class ExternalLinkWebview extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setBackgroundDrawable(new ColorDrawable(0xff2E2E2E));
 
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Window window = this.getWindow();
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(ContextCompat.getColor(this, R.color.metadata_externalbrowser_top_background));
-            }
+            Window window = this.getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.metadata_externalbrowser_top_background));
         }
 
         progressSpinner = (ProgressBar) findViewById(R.id.externallink_spinner);
@@ -261,9 +259,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
 
     private void enableCookies(WebView webView) {
         CookieManager.getInstance().setAcceptCookie(true);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
-        }
+        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, true);
     }
 
     @Override

@@ -18,6 +18,8 @@ package no.digipost.android.model;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import no.digipost.android.authentication.DigipostOauthScope;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Access {
 	@JsonProperty
@@ -34,6 +36,9 @@ public class Access {
 
 	@JsonProperty
 	private String id_token;
+
+	@JsonProperty
+	private String scope;
 
 	public String getAccess_token() {
 		return access_token;
@@ -53,5 +58,9 @@ public class Access {
 
 	public String getId_token() {
 		return id_token;
+	}
+
+	public DigipostOauthScope getScopeOrDefault(DigipostOauthScope defaultScope) {
+		return this.scope != null ? DigipostOauthScope.fromApiConstant(this.scope) : defaultScope;
 	}
 }

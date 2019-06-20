@@ -16,10 +16,33 @@
 package no.digipost.android.api;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.charset.Charset;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MultivaluedMap;
+
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.exception.DigipostApiException;
@@ -31,22 +54,6 @@ import no.digipost.android.authentication.TokenStore;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.utilities.JSONUtilities;
 import no.digipost.android.utilities.NetworkUtilities;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
-import java.io.*;
-import java.net.URL;
-import java.nio.charset.Charset;
 
 import static com.sun.jersey.api.client.ClientResponse.Status.TEMPORARY_REDIRECT;
 
@@ -221,11 +228,7 @@ public class ApiAccess {
                 HttpsURLConnection httpsClient = (HttpsURLConnection) url.openConnection();
                 httpsClient.setRequestMethod("POST");
                 httpsClient.setDoOutput(true);
-                if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    httpsClient.setFixedLengthStreamingMode(multipartEntity.getContentLength());
-                }else {
-                    httpsClient.setChunkedStreamingMode(0);
-                }
+                httpsClient.setFixedLengthStreamingMode(multipartEntity.getContentLength());
                 httpsClient.setRequestProperty("Connection", "Keep-Alive");
                 httpsClient.addRequestProperty("Content-length", multipartEntity.getContentLength()+"");
                 httpsClient.setRequestProperty(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccess());
@@ -261,8 +264,6 @@ public class ApiAccess {
         } catch (DigipostInvalidTokenException e) {
             OAuth.updateAccessTokenWithRefreshToken(context);
             return getApiJsonString(context, uri, params);
-        }catch (Exception e){
-            Log.e(TAG, e.getMessage());
         }
 
         return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());

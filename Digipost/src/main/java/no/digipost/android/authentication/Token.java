@@ -16,31 +16,23 @@
 
 package no.digipost.android.authentication;
 
-import java.util.Calendar;
-import java.util.Date;
+public abstract class Token {
+    final String token;
+    final DigipostOauthScope scope;
 
-public class Token {
-    private String access;
-    private String scope;
-    private Date expiration;
-
-    public Token(String access, String scope, Date expiration){
-        this.access = access;
+    Token(String token, DigipostOauthScope scope) {
+        this.token = token;
         this.scope = scope;
-        this.expiration = expiration;
     }
 
-    public String getAccess(){
-        return this.access;
+    public String getToken(){
+        return this.token;
     }
 
-    public String getScope(){
+    public DigipostOauthScope getScope(){
         return scope;
     }
 
-    public boolean hasExpired(){
-        Date now = Calendar.getInstance().getTime();
-        return expiration.before(now);
-    }
+    public abstract boolean hasExpired();
 
 }

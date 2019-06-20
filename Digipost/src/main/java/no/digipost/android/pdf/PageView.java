@@ -3,17 +3,24 @@ package no.digipost.android.pdf;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import no.digipost.android.R;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import no.digipost.android.R;
 
 class PatchInfo {
 	public BitmapHolder bmh;
@@ -433,15 +440,9 @@ public abstract class PageView extends ViewGroup {
 		if (text.length() == 0)
 			return false;
 
-		int currentApiVersion = android.os.Build.VERSION.SDK_INT;
-		if (currentApiVersion >= android.os.Build.VERSION_CODES.HONEYCOMB) {
-			ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipboardManager cm = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
 
-			cm.setPrimaryClip(ClipData.newPlainText("MuPDF", text));
-		} else {
-			android.text.ClipboardManager cm = (android.text.ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-			cm.setText(text);
-		}
+		cm.setPrimaryClip(ClipData.newPlainText("MuPDF", text));
 
 		mSelectBox = null;
 		mSearchView.invalidate();

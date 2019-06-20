@@ -3,6 +3,7 @@ package no.digipost.android.pdf;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;

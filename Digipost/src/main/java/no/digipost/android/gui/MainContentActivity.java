@@ -16,11 +16,15 @@
 
 package no.digipost.android.gui;
 
-import android.app.*;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -31,12 +35,21 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.*;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.terlici.dragndroplist.DragNDropListView;
+
+import java.util.ArrayList;
+
 import no.digipost.android.DigipostApplication;
 import no.digipost.android.R;
 import no.digipost.android.api.ContentOperations;
@@ -61,11 +74,11 @@ import no.digipost.android.gui.invoice.InvoiceOverviewActivity;
 import no.digipost.android.model.Account;
 import no.digipost.android.model.Folder;
 import no.digipost.android.model.Mailbox;
-import no.digipost.android.utilities.*;
-
-import java.util.ArrayList;
-
-import static android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import no.digipost.android.utilities.ApplicationUtilities;
+import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.FileUtilities;
+import no.digipost.android.utilities.NetworkUtilities;
+import no.digipost.android.utilities.SharedPreferencesUtilities;
 
 public class MainContentActivity extends AppCompatActivity implements ContentFragment.ActivityCommunicator, NavigationView.OnNavigationItemSelectedListener {
     public static final int INTENT_REQUESTCODE = 0;
@@ -364,7 +377,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         if (ContentOperations.changeMailbox(digipostAddress)) {
             getSupportActionBar().setTitle(name);
             account = null;
-            TokenStore.removeHighAuthenticationTokens();
             editDrawerMode = false;
             executeGetAccountTask();
             selectItem(ApplicationConstants.MAILBOX);
@@ -735,9 +747,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
     }
 
     private class ChangeMailboxListOnItemClickListener implements AdapterView.OnItemClickListener {
-        public ChangeMailboxListOnItemClickListener() {
-        }
-
         public void onItemClick(final AdapterView<?> arg0, final View arg1, final int position, final long arg3) {
             Mailbox mailbox = mailboxAdapter.getItem(position);
             selectMailbox(mailbox.getDigipostaddress(), mailbox.getName());
