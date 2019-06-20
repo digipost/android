@@ -35,199 +35,206 @@
         android:textSize="22sp" />
 
 
-    <RelativeLayout
-        android:id="@+id/login_controller_layout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/idporten_loginTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_alignParentTop="true"
-            android:text="@string/login_idporten_login_title"
-            android:textStyle="bold"
-            android:textSize="22sp" />
-
-        <ImageView
-            android:id="@+id/dobbel_hengelaas_icon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_below="@+id/idporten_loginTitle"
-            android:layout_alignStart="@+id/idporten_loginTitle"
-            android:layout_marginTop="10dp"
-            android:contentDescription="@string/double_padlock"
-            android:src="@drawable/dobbel_hengelaas" />
-
-        <TextView
-            android:id="@+id/login_idporten_login_description_short"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/idporten_loginTitle"
-            android:layout_toEndOf="@+id/dobbel_hengelaas_icon"
-            android:layout_alignBottom="@id/dobbel_hengelaas_icon"
-            android:layout_marginStart="7dp"
-            android:gravity="center_vertical"
-            android:text="@string/login_idporten_login_description_short"
-            android:textStyle="bold"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/login_idporten_login_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="40dp"
-            android:layout_below="@+id/dobbel_hengelaas_icon"
-            android:layout_alignStart="@+id/idporten_loginTitle"
-            android:layout_marginTop="10dp"
-            android:text="@string/login_idporten_login_description"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/login_idportenButton"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/login_idporten_login_description"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/red_button_style"
-            android:text="@string/drawer_login"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-        <View
-            android:id="@+id/divider1"
+        android:layout_height="match_parent"
+        android:layout_marginTop="57dp">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@+id/login_idportenButton"
-            android:layout_marginTop="50dp"
-            android:background="@color/dds_filtergra" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/login_divider_or"
-            android:layout_width="50dp"
-            android:layout_height="16sp"
-            android:layout_alignBottom="@id/divider1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="-3sp"
-            android:background="@color/white"
-            android:gravity="center"
-            android:text="@string/or"
-            android:textColor="@color/dds_filtergra"
-            android:textSize="14sp" />
+            <RelativeLayout
+                android:id="@+id/login_controller_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="43dp"
+                android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/hengelaas_icon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_below="@+id/divider1"
-            android:layout_alignStart="@+id/dobbel_hengelaas_icon"
-            android:layout_marginTop="30dp"
-            android:contentDescription="@string/single_padlock"
-            android:src="@drawable/hengelaas" />
+                <TextView
+                    android:id="@+id/idporten_loginTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="40dp"
+                    android:text="@string/login_idporten_login_title"
+                    android:textStyle="bold"
+                    android:textSize="22sp" />
 
-        <TextView
-            android:id="@+id/login_normal_loginTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/divider1"
-            android:layout_alignStart="@+id/login_idporten_login_description_short"
-            android:layout_marginTop="30dp"
-            android:text="@string/login_normal_login_title"
-            android:textStyle="bold"
-            android:textSize="14sp" />
+                <ImageView
+                    android:id="@+id/dobbel_hengelaas_icon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_below="@+id/idporten_loginTitle"
+                    android:layout_alignStart="@+id/idporten_loginTitle"
+                    android:layout_marginTop="10dp"
+                    android:contentDescription="@string/double_padlock"
+                    android:src="@drawable/dobbel_hengelaas" />
 
-        <Button
-            android:id="@+id/login_passwordButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/login_normal_loginTitle"
-            android:layout_alignStart="@+id/login_normal_loginTitle"
-            android:gravity="start"
-            android:background="@color/transparent"
-            android:text="@string/login_normal_login_button"
-            android:textColor="@color/dds_bla_java"
-            android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/login_idporten_login_description_short"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/idporten_loginTitle"
+                    android:layout_toEndOf="@+id/dobbel_hengelaas_icon"
+                    android:layout_alignBottom="@id/dobbel_hengelaas_icon"
+                    android:layout_marginStart="7dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/login_idporten_login_description_short"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
 
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@+id/login_passwordButton"
-            android:layout_marginTop="15dp"
-            android:background="@color/dds_filtergra" />
+                <TextView
+                    android:id="@+id/login_idporten_login_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="40dp"
+                    android:layout_below="@+id/dobbel_hengelaas_icon"
+                    android:layout_alignStart="@+id/idporten_loginTitle"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/login_idporten_login_description"
+                    android:textSize="14sp" />
 
-        <ImageView
-            android:id="@+id/papirfly_icon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_below="@+id/divider2"
-            android:layout_alignStart="@+id/dobbel_hengelaas_icon"
-            android:layout_marginTop="20dp"
-            android:contentDescription="@string/paperplane"
-            android:src="@drawable/papirfly_icon" />
+                <Button
+                    android:id="@+id/login_idportenButton"
+                    android:layout_width="200dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/login_idporten_login_description"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="25dp"
+                    android:background="@drawable/red_button_style"
+                    android:text="@string/drawer_login"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/login_register_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/divider2"
-            android:layout_marginTop="20dp"
-            android:layout_alignStart="@+id/login_idporten_login_description_short"
-            android:text="@string/login_register_title"
-            android:textStyle="bold"
-            android:textSize="14sp" />
+                <View
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_below="@+id/login_idportenButton"
+                    android:layout_marginTop="50dp"
+                    android:background="@color/dds_filtergra" />
 
-        <Button
-            android:id="@+id/login_registrationButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/login_register_title"
-            android:layout_alignStart="@+id/login_register_title"
-            android:gravity="start"
-            android:background="@color/transparent"
-            android:textColor="@color/dds_bla_java"
-            android:text="@string/login_registrationbutton_text"
-            android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/login_divider_or"
+                    android:layout_width="50dp"
+                    android:layout_height="16sp"
+                    android:layout_alignBottom="@id/divider1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="-3sp"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:text="@string/or"
+                    android:textColor="@color/dds_filtergra"
+                    android:textSize="14sp" />
 
-        <View
-            android:id="@+id/divider3"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_below="@+id/login_registrationButton"
-            android:layout_marginTop="15dp"
-            android:background="@color/dds_filtergra" />
+                <ImageView
+                    android:id="@+id/hengelaas_icon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_below="@+id/divider1"
+                    android:layout_alignStart="@+id/dobbel_hengelaas_icon"
+                    android:layout_marginTop="30dp"
+                    android:contentDescription="@string/single_padlock"
+                    android:src="@drawable/hengelaas" />
 
-        <TextView
-            android:id="@+id/login_privacy_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/divider3"
-            android:layout_alignStart="@+id/login_idporten_login_description_short"
-            android:layout_marginTop="20dp"
-            android:text="@string/login_privacy_title"
-            android:textStyle="bold"
-            android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/login_normal_loginTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/divider1"
+                    android:layout_alignStart="@+id/login_idporten_login_description_short"
+                    android:layout_marginTop="30dp"
+                    android:text="@string/login_normal_login_title"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
 
-        <Button
-            android:id="@+id/login_privacyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/login_privacy_title"
-            android:layout_alignStart="@+id/login_privacy_title"
-            android:gravity="start"
-            android:background="@color/transparent"
-            android:textColor="@color/dds_bla_java"
-            android:focusable="true"
-            android:text="@string/login_privacybutton_text"
-            android:textSize="14sp" />
+                <Button
+                    android:id="@+id/login_passwordButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_normal_loginTitle"
+                    android:layout_alignStart="@+id/login_normal_loginTitle"
+                    android:gravity="start"
+                    android:background="@color/transparent"
+                    android:text="@string/login_normal_login_button"
+                    android:textColor="@color/dds_bla_java"
+                    android:textSize="14sp" />
 
-    </RelativeLayout>
+                <View
+                    android:id="@+id/divider2"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_below="@+id/login_passwordButton"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/dds_filtergra" />
 
+                <ImageView
+                    android:id="@+id/papirfly_icon"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_below="@+id/divider2"
+                    android:layout_alignStart="@+id/dobbel_hengelaas_icon"
+                    android:layout_marginTop="20dp"
+                    android:contentDescription="@string/paperplane"
+                    android:src="@drawable/papirfly_icon" />
+
+                <TextView
+                    android:id="@+id/login_register_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/divider2"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignStart="@+id/login_idporten_login_description_short"
+                    android:text="@string/login_register_title"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/login_registrationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_register_title"
+                    android:layout_alignStart="@+id/login_register_title"
+                    android:gravity="start"
+                    android:background="@color/transparent"
+                    android:textColor="@color/dds_bla_java"
+                    android:text="@string/login_registrationbutton_text"
+                    android:textSize="14sp" />
+
+                <View
+                    android:id="@+id/divider3"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_below="@+id/login_registrationButton"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/dds_filtergra" />
+
+                <TextView
+                    android:id="@+id/login_privacy_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/divider3"
+                    android:layout_alignStart="@+id/login_idporten_login_description_short"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/login_privacy_title"
+                    android:textStyle="bold"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/login_privacyButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/login_privacy_title"
+                    android:layout_alignStart="@+id/login_privacy_title"
+                    android:gravity="start"
+                    android:background="@color/transparent"
+                    android:textColor="@color/dds_bla_java"
+                    android:focusable="true"
+                    android:text="@string/login_privacybutton_text"
+                    android:textSize="14sp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
