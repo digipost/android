@@ -76,7 +76,7 @@ public class LoginActivity extends Activity {
             Intent i = new Intent(this, WebLoginActivity.class);
 
             if(Login.IDPORTEN == target){
-                i.putExtra("authenticationScope", DigipostOauthScope.FULL_IDPORTEN4.asApiConstant());
+                i.putExtra("authenticationScope", DigipostOauthScope.FULL_IDPORTEN3.asApiConstant());
             }else {
                 i.putExtra("authenticationScope", DigipostOauthScope.FULL.asApiConstant());
             }

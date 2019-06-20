@@ -111,7 +111,7 @@
     <string name="login_normal_login_button">Med fødselsnr. og passord</string>
 
     <string name="login_idporten_login_title">Logg inn med elektronisk ID</string>
-    <string name="login_idporten_login_description">Du kan velge logge inn med BankID, BankID på mobil, eller Buypass ID</string>
+    <string name="login_idporten_login_description">Du kan velge logge inn med MinID, BankID, BankID på mobil, eller Buypass ID</string>
     <string name="login_idporten_login_button">Logg inn via ID-porten</string>
 
     <string name="login_forgot_password_button_text">Glemt passord</string>
