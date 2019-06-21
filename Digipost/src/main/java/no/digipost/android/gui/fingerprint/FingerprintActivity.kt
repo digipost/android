@@ -44,11 +44,16 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
         super.onCreate(savedInstanceState)
 
         nextActivity = intent.extras[NEXT_ACTIVITY_ID] as Class<*>
-        val fingerprintManager = getSystemService(FingerprintManager::class.java)
-        if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
-            fragment.setCallback(this@FingerprintActivity)
-            fragment.show(supportFragmentManager, "FINGERPRINT_FRAGMENT")
-            GAEventController.sendAuthenticationEvent(this, "påbegynt", "fingerprint" )
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            val fingerprintManager = getSystemService(FingerprintManager::class.java)
+            if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
+                fragment.setCallback(this@FingerprintActivity)
+                fragment.show(supportFragmentManager, "FINGERPRINT_FRAGMENT")
+                GAEventController.sendAuthenticationEvent(this, "påbegynt", "fingerprint" )
+            } else {
+                CAN_USE_FINGERPRINT = false
+                backupAuthentication()
+            }
         } else {
             CAN_USE_FINGERPRINT = false
             backupAuthentication()
@@ -112,9 +117,6 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
         fun startActivityWithFingerprint (context: Context, activityClass: Class<*>) {
             if (! isKeyguardSecure(context)) {
                 DialogUtitities.showLongToast(context, context.getString(R.string.fingerprint_screenlock_tips))
-                return
-            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                DialogUtitities.showLongToast(context, context.getString(R.string.preferences_requires_android_m))
                 return
             }
 
