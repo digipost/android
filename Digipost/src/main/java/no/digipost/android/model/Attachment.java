@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 
-public class Attachment {
+public class Attachment extends RequiresOauthScope {
 
 	@JsonProperty
 	private String subject;
@@ -53,32 +53,17 @@ public class Attachment {
 		return subject;
 	}
 
-	public void setSubject(final String subject) {
-		this.subject = subject;
-	}
-
 	public String getFileType() {
 		return fileType;
-	}
-
-	public void setFileType(final String fileType) {
-		this.fileType = fileType;
 	}
 
 	public String getFileSize() {
 		return fileSize;
 	}
 
-	public void setFileSize(final String fileSize) {
-		this.fileSize = fileSize;
-	}
-
+	@Override
 	public String getAuthenticationLevel() {
 		return authenticationLevel;
-	}
-
-	public void setAuthenticationLevel(final String authenticationLevel) {
-		this.authenticationLevel = authenticationLevel;
 	}
 
 	public boolean isRead() {
@@ -93,16 +78,8 @@ public class Attachment {
 		return type;
 	}
 
-	public void setType(final String type) {
-		this.type = type;
-	}
-
 	public ArrayList<Link> getLink() {
 		return link;
-	}
-
-	public void setLink(final ArrayList<Link> link) {
-		this.link = link;
 	}
 
     public Invoice getInvoice(){

@@ -38,12 +38,15 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
     private var CAN_USE_FINGERPRINT = true
     private val fragment = FingerprintAuthenticationDialogFragment()
     private lateinit var nextActivity: Class<*>
+    private var nextActivityExtraInfo: Bundle? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         nextActivity = intent.extras[NEXT_ACTIVITY_ID] as Class<*>
+        nextActivityExtraInfo = intent.extras[NEXT_ACTIVITY_EXTRAS] as Bundle?
+
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             val fingerprintManager = getSystemService(FingerprintManager::class.java)
             if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
@@ -96,6 +99,9 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
     override fun authenticationOK(type: String) {
         GAEventController.sendAuthenticationEvent(this, "ok" , type)
         val intent = Intent(this, nextActivity)
+        if (nextActivityExtraInfo != null) {
+            intent.putExtras(nextActivityExtraInfo!!)
+        }
         startActivity(intent)
     }
 
@@ -114,7 +120,7 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
 
 
     companion object {
-        fun startActivityWithFingerprint (context: Context, activityClass: Class<*>) {
+        fun startActivityWithFingerprint (context: Context, activityClass: Class<*>, extraActivityInfo: Bundle?) {
             if (! isKeyguardSecure(context)) {
                 DialogUtitities.showLongToast(context, context.getString(R.string.fingerprint_screenlock_tips))
                 return
@@ -122,6 +128,9 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
 
             val intent = Intent(context, FingerprintActivity::class.java)
             intent.putExtra(this.NEXT_ACTIVITY_ID, activityClass)
+            if (extraActivityInfo != null) {
+                intent.putExtra(this.NEXT_ACTIVITY_EXTRAS, extraActivityInfo)
+            }
             context.startActivity(intent)
         }
 
@@ -131,6 +140,8 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
         }
 
         private const val NEXT_ACTIVITY_ID = "NEXT_ACTIVITY"
+        private const val NEXT_ACTIVITY_EXTRAS = "NEXT_ACTIVITY_EXTRAS"
+
     }
 
 }

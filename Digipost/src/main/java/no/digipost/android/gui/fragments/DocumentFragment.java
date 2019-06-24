@@ -49,6 +49,7 @@ import no.digipost.android.gui.content.HtmlAndReceiptActivity;
 import no.digipost.android.gui.content.ImageActivity;
 import no.digipost.android.gui.content.MuPDFActivity;
 import no.digipost.android.gui.content.UnsupportedDocumentFormatActivity;
+import no.digipost.android.gui.fingerprint.FingerprintActivity;
 import no.digipost.android.model.Attachment;
 import no.digipost.android.model.Document;
 import no.digipost.android.model.Documents;
@@ -444,30 +445,33 @@ public class DocumentFragment extends ContentFragment<Document> {
 
     private void openAttachmentContent(final Attachment attachment) {
         String fileType = attachment.getFileType();
-        Intent intent = getFileTypeIntent(fileType);
+        Class nextActivity = getActivityFromFiletype(fileType);
 
+        Bundle bundle = new Bundle();
         if (attachment.getType().equals(ApiConstants.INVOICE) && attachment.getInvoice() != null) {
-            intent.putExtra(INTENT_SEND_TO_BANK, true);
+            bundle.putBoolean(INTENT_SEND_TO_BANK, true);
         }
-
-        intent.putExtra(INTENT_CONTENT, getContent());
-        startActivityForResult(intent, DocumentFragment.INTENT_OPEN_ATTACHMENT_CONTENT);
+        bundle.putInt(INTENT_CONTENT, getContent());
+        bundle.putBoolean(INTENT_ATTACHMENT_IS_SENSITIVE, attachment.requiresHighAuthenticationLevel());
+        if (attachment.requiresHighAuthenticationLevel()) {
+            FingerprintActivity.Companion.startActivityWithFingerprint(context, nextActivity, bundle);
+        } else {
+            Intent intent = new Intent(context, nextActivity);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, DocumentFragment.INTENT_OPEN_ATTACHMENT_CONTENT);
+        }
     }
 
-    private Intent getFileTypeIntent(String fileType) {
-
-        switch (fileType) {
-            case ApiConstants.FILETYPE_PDF:
-                return new Intent(context, MuPDFActivity.class);
-            case ApiConstants.FILETYPE_HTML:
-                return new Intent(context, HtmlAndReceiptActivity.class);
+    private Class<?> getActivityFromFiletype(String fileType) {
+        if (ApiConstants.FILETYPE_PDF.equals(fileType)) {
+            return MuPDFActivity.class;
+        } else if (ApiConstants.FILETYPE_HTML.equals(fileType)) {
+            return HtmlAndReceiptActivity.class;
+        } else if (asList(ApiConstants.FILETYPES_IMAGE).contains(fileType)) {
+            return ImageActivity.class;
+        } else {
+            return UnsupportedDocumentFormatActivity.class;
         }
-
-        if (asList(ApiConstants.FILETYPES_IMAGE).contains(fileType)) {
-            return new Intent(context, ImageActivity.class);
-        }
-
-        return new Intent(context, UnsupportedDocumentFormatActivity.class);
     }
 
     private class OpenUpdatedDocumentTask extends AsyncTask<Void, Void, Boolean> {

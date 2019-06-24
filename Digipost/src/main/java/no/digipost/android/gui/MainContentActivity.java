@@ -445,7 +445,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             return true;
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_settings))) {
-            FingerprintActivity.Companion.startActivityWithFingerprint(this, NotificationSettingsActivity.class);
+            FingerprintActivity.Companion.startActivityWithFingerprint(this, NotificationSettingsActivity.class, null);
             return true;
 
         }
