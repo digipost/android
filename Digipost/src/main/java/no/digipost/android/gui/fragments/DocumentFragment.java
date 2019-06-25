@@ -348,7 +348,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     }
 
     private void handleHighAuthenticationLevelDocument(Document document){
-        if (TokenStore.hasValidTokenForScope(document.getAuthenticationScope())){
+        if (TokenStore.hasValidTokenForScope(document.getRequiredAuthenticationScope())){
             findDocumentAttachments(document);
         }else{
             openHighAuthenticationLevelDialog(document);
@@ -379,7 +379,7 @@ public class DocumentFragment extends ContentFragment<Document> {
     private void openHighAuthenticationWebView(Document document){
         if (NetworkUtilities.isOnline()) {
             Intent i = new Intent(getActivity(), WebLoginActivity.class);
-            i.putExtra("authenticationScope", document.getAuthenticationScope().asApiConstant());
+            i.putExtra("authenticationScope", document.getRequiredAuthenticationScope().asApiConstant());
             i.putExtra("currentListPosition", currentListPosition);
             startActivityForResult(i, DocumentFragment.INTENT_ID_PORTEN_WEBVIEW_LOGIN);
         } else {
@@ -393,7 +393,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             showAttachmentDialog(document);
         } else {
             Attachment attachment = document.getAttachment().get(0);
-            if (TokenStore.hasValidTokenForScope(document.getAuthenticationScope())) {
+            if (TokenStore.hasValidTokenForScope(document.getRequiredAuthenticationScope())) {
                 getAttachmentContent(document, 0, attachment);
             }
         }
@@ -454,7 +454,7 @@ public class DocumentFragment extends ContentFragment<Document> {
         bundle.putInt(INTENT_CONTENT, getContent());
         bundle.putBoolean(INTENT_ATTACHMENT_IS_SENSITIVE, attachment.requiresHighAuthenticationLevel());
         if (attachment.requiresHighAuthenticationLevel()) {
-            FingerprintActivity.Companion.startActivityWithFingerprint(context, nextActivity, bundle);
+            FingerprintActivity.Companion.startActivityWithFingerprint(context, nextActivity, attachment.getRequiredAuthenticationScope().getLevel(), getString(R.string.fingerprint_open_secure_document), bundle);
         } else {
             Intent intent = new Intent(context, nextActivity);
             intent.putExtras(bundle);
@@ -543,7 +543,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             asyncHttpClient = new AsyncHttpClient();
             asyncHttpClient.addHeader(HttpHeaders.USER_AGENT, DigipostApplication.USER_AGENT);
             asyncHttpClient.addHeader(ApiConstants.ACCEPT, ApiConstants.CONTENT_OCTET_STREAM);
-            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccessTokenForScope(parentDocument.getAuthenticationScope()));
+            asyncHttpClient.addHeader(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccessTokenForScope(parentDocument.getRequiredAuthenticationScope()));
             asyncHttpClient.get(context, attachment.getContentUri(), new AsyncHttpResponseHandler() {
 
                 @Override

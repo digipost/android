@@ -168,16 +168,6 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
                 }
             }).show();
         }
-
-        if (TokenStore.onlyLoggedInWithIDporten4() && SharedPreferencesUtilities.shouldDisplayIDPortenTips(this)) {
-            new AlertDialog.Builder(this).setTitle(getString(R.string.idporten_tips_title)).setMessage(getString(R.string.idporten_tips_message))
-                    .setPositiveButton(getString(R.string.idporten_tips_ok_button), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            SharedPreferencesUtilities.hideIDPortenTips(getApplicationContext());
-                        }
-                    }).show();
-        }
     }
 
     @Override
@@ -445,7 +435,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
             return true;
 
         } else if (drawerListItems[content].equals(getResources().getString(R.string.drawer_settings))) {
-            FingerprintActivity.Companion.startActivityWithFingerprint(this, NotificationSettingsActivity.class, null);
+            FingerprintActivity.Companion.startActivityWithFingerprint(this, NotificationSettingsActivity.class, 2, getString(R.string.fingerprint_secondary_title), null);
             return true;
 
         }
@@ -632,6 +622,7 @@ public class MainContentActivity extends AppCompatActivity implements ContentFra
         ContentOperations.resetState();
         mailbox = null;
         account = null;
+        SharedPreferencesUtilities.clearRecentAuthenticationTimers();
         Intent intent = new Intent(MainContentActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();

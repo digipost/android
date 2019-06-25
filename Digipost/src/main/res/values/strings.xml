@@ -21,11 +21,6 @@
     <string name="screenlock_show_tips">Vis meg</string>
     <string name="screenlock_hide_tips">Ikke vis igjen</string>
 
-    <!-- IDPorten Tips-->
-    <string name="idporten_tips_title">Enklere innlogging</string>
-    <string name="idporten_tips_message">Logger du inn med passord istedenfor ID-porten, så husker vi deg ved neste innlogging.</string>
-    <string name="idporten_tips_ok_button">Ok</string>
-
     <!--Drawer -->
     <string name="drawer_create_new_folder_default_name">Mappenavn</string>
     <string name="drawer_create_folder">Opprett mappe</string>
@@ -370,5 +365,6 @@
     <string name="paperplane">Et papirfly</string>
     <string name="single_padlock">En hengelås</string>
     <string name="double_padlock">To hengelåser</string>
+    <string name="fingerprint_open_secure_document">Åpne sikkert dokument</string>
 
 </resources>

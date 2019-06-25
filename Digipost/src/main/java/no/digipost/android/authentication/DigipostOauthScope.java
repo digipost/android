@@ -44,4 +44,8 @@ public enum DigipostOauthScope {
     public String asApiConstant() {
         return apiConstantName;
     }
+
+    public int getLevel() {
+        return level;
+    }
 }

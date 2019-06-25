@@ -9,7 +9,7 @@ import static no.digipost.android.constants.ApiConstants.AUTHENTICATION_LEVEL_TW
 abstract class RequiresOauthScope {
     abstract String getAuthenticationLevel();
 
-    public DigipostOauthScope getAuthenticationScope() {
+    public DigipostOauthScope getRequiredAuthenticationScope() {
         switch (getAuthenticationLevel()){
             case AUTHENTICATION_LEVEL_TWO_FACTOR:
                 return DigipostOauthScope.FULL_HIGHAUTH;

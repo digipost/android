@@ -28,7 +28,9 @@ import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.analytics.GoogleAnalytics
 import no.digipost.android.R
 import no.digipost.android.analytics.GAEventController
+import no.digipost.android.authentication.TokenEncryption
 import no.digipost.android.utilities.DialogUtitities
+import no.digipost.android.utilities.SharedPreferencesUtilities
 
 @TargetApi(Build.VERSION_CODES.M)
 class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialogFragment.Callback {
@@ -39,14 +41,21 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
     private val fragment = FingerprintAuthenticationDialogFragment()
     private lateinit var nextActivity: Class<*>
     private var nextActivityExtraInfo: Bundle? = null
+    private lateinit var title: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        nextActivity = intent.extras[NEXT_ACTIVITY_ID] as Class<*>
-        nextActivityExtraInfo = intent.extras[NEXT_ACTIVITY_EXTRAS] as Bundle?
+        nextActivity = intent!!.extras!![NEXT_ACTIVITY_ID] as Class<*>
+        nextActivityExtraInfo = intent!!.extras[NEXT_ACTIVITY_EXTRAS] as Bundle?
+        val requiredLevel = intent!!.extras!![AUTHENTICATION_LEVEL] as Int
+        title = intent!!.extras!![AUTHENTICATION_TITLE] as String
 
+        if (  SharedPreferencesUtilities.userRecentlyAuthenticatedHighLevel() || ( requiredLevel < 3 && SharedPreferencesUtilities.userRecentlyAuthenticated() )) {
+            authenticationOK("allerede")
+            return
+        }
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             val fingerprintManager = getSystemService(FingerprintManager::class.java)
             if (fingerprintManager.isHardwareDetected && fingerprintManager.hasEnrolledFingerprints()) {
@@ -102,6 +111,7 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
         if (nextActivityExtraInfo != null) {
             intent.putExtras(nextActivityExtraInfo!!)
         }
+        SharedPreferencesUtilities.markUserRecentlyAuthenticated()
         startActivity(intent)
     }
 
@@ -113,33 +123,28 @@ class FingerprintActivity :  AppCompatActivity(), FingerprintAuthenticationDialo
     override fun backupAuthentication() {
         GAEventController.sendAuthenticationEvent(this, "påbegynt", "sekundær" )
         val keyguard = getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-        val intent = keyguard.createConfirmDeviceCredentialIntent(getString(R.string.fingerprint_secondary_title), null)
+        val intent = keyguard.createConfirmDeviceCredentialIntent(title, null)
         IS_AUTHENTICATING = true
         this.startActivityForResult(intent, CREDENTIAL_REQUEST_CODE_ACITIVTY)
     }
 
 
     companion object {
-        fun startActivityWithFingerprint (context: Context, activityClass: Class<*>, extraActivityInfo: Bundle?) {
-            if (! isKeyguardSecure(context)) {
-                DialogUtitities.showLongToast(context, context.getString(R.string.fingerprint_screenlock_tips))
-                return
-            }
+        fun startActivityWithFingerprint (context: Context, activityClass: Class<*>, level: Int, authDialogTitle: String, extraActivityInfo: Bundle?) {
 
             val intent = Intent(context, FingerprintActivity::class.java)
             intent.putExtra(this.NEXT_ACTIVITY_ID, activityClass)
+            intent.putExtra(this.AUTHENTICATION_LEVEL, level)
+            intent.putExtra(this.AUTHENTICATION_TITLE, authDialogTitle)
             if (extraActivityInfo != null) {
                 intent.putExtra(this.NEXT_ACTIVITY_EXTRAS, extraActivityInfo)
             }
             context.startActivity(intent)
         }
 
-        fun isKeyguardSecure(context: Context): Boolean {
-            val keyguard = context.getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager
-            return keyguard.isKeyguardSecure
-        }
-
         private const val NEXT_ACTIVITY_ID = "NEXT_ACTIVITY"
+        private const val AUTHENTICATION_LEVEL = "AUTHENTICATION_LEVEL"
+        private const val AUTHENTICATION_TITLE = "AUTHENTICATION_TITLE"
         private const val NEXT_ACTIVITY_EXTRAS = "NEXT_ACTIVITY_EXTRAS"
 
     }
