@@ -362,9 +362,6 @@
     <string name="fingerprint_secondary">Bruk kode</string>
     <string name="fingerprint_too_many_request">For mange forsøk. Benytt kode eller prøv på nytt senere</string>
     <string name="fingerprint_secondary_title">Åpne innstillinger</string>
-    <string name="paperplane">Et papirfly</string>
-    <string name="single_padlock">En hengelås</string>
-    <string name="double_padlock">To hengelåser</string>
     <string name="fingerprint_open_secure_document">Åpne sikkert dokument</string>
 
 </resources>

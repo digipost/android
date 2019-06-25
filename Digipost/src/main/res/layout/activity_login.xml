@@ -67,7 +67,6 @@
                     android:layout_below="@+id/idporten_loginTitle"
                     android:layout_alignStart="@+id/idporten_loginTitle"
                     android:layout_marginTop="10dp"
-                    android:contentDescription="@string/double_padlock"
                     android:src="@drawable/dobbel_hengelaas" />
 
                 <TextView
@@ -135,7 +134,6 @@
                     android:layout_below="@+id/divider1"
                     android:layout_alignStart="@+id/dobbel_hengelaas_icon"
                     android:layout_marginTop="30dp"
-                    android:contentDescription="@string/single_padlock"
                     android:src="@drawable/hengelaas" />
 
                 <TextView
@@ -176,7 +174,6 @@
                     android:layout_below="@+id/divider2"
                     android:layout_alignStart="@+id/dobbel_hengelaas_icon"
                     android:layout_marginTop="20dp"
-                    android:contentDescription="@string/paperplane"
                     android:src="@drawable/papirfly_icon" />
 
                 <TextView
