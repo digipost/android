@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- digipost design system -->
+    <color name="dds_frokostkaffe">#e32d22</color>
+    <color name="dds_sort_kaffe">#444444</color>
+    <color name="dds_maskinkaffe">#666666</color>
+    <color name="dds_filtergra">#c1c1c1</color>
+    <color name="dds_melkeskum">#e6e6e6</color>
+    <color name="dds_bla_java">#006fb7</color>
+    <color name="dds_kjeldsberg">#fdbb2f</color>
+    <color name="dds_gronn_te">#26B576</color>
+    <color name="dds_postkassegronn">#005441</color>
+
     <!-- Drawer -->
     <color name="main_drawer_grey_background">#292B2B</color>
     <color name="main_drawer_grey_text">#595959</color>
@@ -13,39 +24,34 @@
     <!-- ActionBar -->
     <color name="actionbar_title_color">#FFF</color>
     <color name="actionbar_subtitle_color">#f2f2f2</color>
-    <color name="actionbar_red_background">#E01911</color>
-    <color name="actionbar_dark_red_background">#AB1E16</color>
     <color name="searchbar_grey_hint">#FFF</color>
     <color name="actionbar_button_pressed_dark_red">#B00</color>
-    <color name="actionbar_button_pressed_medium_red">#CF0404</color>
     <color name="actionbar_multi_select_grey">#424242</color>
 
     <!-- ListView -->
     <color name="list_pressed">#cecece</color>
     <color name="list_multiselected">#CCCCCC</color>
     <color name="list_focused">#DDDDDD</color>
-    <color name="green">#2a2929</color>
-    <color name="blue">#2a2929</color>
-    <color name="black_subject">#2a2929</color>
-    <color name="grey_filesize">#5f5f5f</color>
-    <color name="grey_creator">#444142</color>
-    <color name="list_divider">#DEDEDE</color>
+    <color name="black_subject">@color/dds_sort_kaffe</color>
+    <color name="grey_filesize">@color/dds_maskinkaffe</color>
+    <color name="grey_creator">@color/dds_sort_kaffe</color>
+    <color name="list_divider">@color/dds_filtergra</color>
     <color name="list_element_opened">#F7F7F7</color>
     <color name="toptext_background">#292b2d</color>
     <color name="search_highlight_color">#EBEB86</color>
-    <color name="checkbox_unchecked">#CCCCCC</color>
-    <color name="checkbox_checked">#666666</color>
-    <color name="grey_date">#828282</color>
+    <color name="checkbox_unchecked">@color/dds_filtergra</color>
+    <color name="checkbox_checked">@color/dds_maskinkaffe</color>
+    <color name="grey_date">@color/dds_filtergra</color>
 
-    <color name="invoice_title">#303030</color>
-    <color name="invoice_subtitle">#5E5E5E</color>
+    <color name="invoice_title">@color/dds_sort_kaffe</color>
+    <color name="invoice_subtitle">@color/dds_maskinkaffe</color>
     <color name="invoice_link">#0C72A8</color>
     <color name="invoice_background">#f1f1f1</color>
 
     <!-- Misc -->
     <color name="transparent">#00000000</color>
     <color name="white">#FFF</color>
-    <color name="black">#2a2929</color>
+    <color name="black">@color/dds_sort_kaffe</color>
     <color name="busy_indicator">#C0202020</color>
     <color name="edit_folder_background">#3B3B3B</color>
 
@@ -53,29 +59,20 @@
     <color name="login_background">#292b2d</color>
     <color name="grey_button_background_normal">#5E5E5E</color>
     <color name="grey_button_background_pressed">#3B3B3B</color>
-    <color name="grey_privacy_button_background">#303030</color>
-    <color name="grey_privacy_button_text">#F5F5F5</color>
-    <color name="login_grey_text">#4D4D4D</color>
     <color name="login_id_porten_box_background">#FCFCFC</color>
     <color name="login_id_porten_box_border">#C4C4C4</color>
-    <color name="light_grey_button_normal">#757575</color>
-    <color name="light_grey_button_focused">#4D4D4D</color>
-    <color name="light_grey_button_pressed">#4D4D4D</color>
-
-    <!-- Screenlock -->
-    <color name="screenlock_header_background">#1F1F1F</color>
 
     <!-- metadata -->
 
-    <color name="metadata_title">#212121</color>
-    <color name="metadata_text">#2E2E2E</color>
-    <color name="metadata_divider">#EDEDED</color>
-    <color name="metadata_externalbrowser_top_background">#2E2E2E</color>
+    <color name="metadata_title">@color/dds_sort_kaffe</color>
+    <color name="metadata_text">@color/dds_sort_kaffe</color>
+    <color name="metadata_divider">@color/dds_melkeskum</color>
+    <color name="metadata_externalbrowser_top_background">@color/black</color>
 
 
     <!-- Fingerprint -->
-    <color name="fingerprint_hint_color">#42000000</color>
-    <color name="fingerprint_warning_color">#f4511e</color>
-    <color name="fingerprint_success_color">#009688</color>
+    <color name="fingerprint_hint_color">@color/dds_maskinkaffe</color>
+    <color name="fingerprint_warning_color">@color/dds_kjeldsberg</color>
+    <color name="fingerprint_success_color">@color/dds_gronn_te</color>
 
 </resources>

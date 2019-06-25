@@ -16,11 +16,8 @@
 package no.digipost.android.gui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -37,7 +34,7 @@ import no.digipost.android.utilities.NetworkUtilities;
 
 public class LoginActivity extends Activity {
     private final int WEB_OAUTH_LOGIN_REQUEST = 0;
-    private Button loginButton, privacyButton, registrationButton, forgotPasswordButton, idPortenButton;
+    private Button loginButton, privacyButton, registrationButton, idPortenButton;
     private Context context;
 
     private enum Login{
@@ -59,15 +56,9 @@ public class LoginActivity extends Activity {
         privacyButton.setOnClickListener(listener);
         privacyButton.setTransformationMethod(null);
 
-        forgotPasswordButton = findViewById(R.id.login_forgotPasswordButton);
-        forgotPasswordButton.setOnClickListener(listener);
-        forgotPasswordButton.setTransformationMethod(null);
-        forgotPasswordButton.setPaintFlags(forgotPasswordButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-
         registrationButton = findViewById(R.id.login_registrationButton);
         registrationButton.setOnClickListener(listener);
         registrationButton.setTransformationMethod(null);
-        registrationButton.setPaintFlags(registrationButton.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         idPortenButton = findViewById(R.id.login_idportenButton);
         idPortenButton.setOnClickListener(listener);
@@ -85,7 +76,7 @@ public class LoginActivity extends Activity {
             Intent i = new Intent(this, WebLoginActivity.class);
 
             if(Login.IDPORTEN == target){
-                i.putExtra("authenticationScope", DigipostOauthScope.FULL_IDPORTEN4.asApiConstant());
+                i.putExtra("authenticationScope", DigipostOauthScope.FULL_IDPORTEN3.asApiConstant());
             }else {
                 i.putExtra("authenticationScope", DigipostOauthScope.FULL.asApiConstant());
             }
@@ -118,27 +109,6 @@ public class LoginActivity extends Activity {
         startActivity(browserIntent);
     }
 
-    private void showForgotPasswordDialog(){
-        AlertDialog.Builder forgetPasswordDialog = new AlertDialog.Builder(context);
-        forgetPasswordDialog.setTitle(getString(R.string.login_forgot_password_dialog_title));
-        forgetPasswordDialog.setMessage(R.string.login_forgot_password_dialog_message);
-        forgetPasswordDialog.setPositiveButton(getString(R.string.login_forgot_password_dialog_open_link_button), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                openExternalBrowserWithUrl(ApiConstants.URL_FORGOT_PASSWD);
-                dialog.dismiss();
-            }
-        });
-
-        forgetPasswordDialog.setNegativeButton(getString(R.string.login_forgot_password_dialog_close_button), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                dialog.dismiss();
-            }
-        });
-        forgetPasswordDialog.create().show();
-    }
-
     private class ButtonListener implements OnClickListener {
 
         public void onClick(final View v) {
@@ -151,9 +121,6 @@ public class LoginActivity extends Activity {
             } else if (v == registrationButton) {
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "registrering");
                 openExternalBrowserWithUrl(ApiConstants.URL_REGISTRATION);
-            }else if (v == forgotPasswordButton){
-                GAEventController.sendLoginClickEvent(LoginActivity.this, "glemt-passord");
-                showForgotPasswordDialog();
             }else if(v == idPortenButton){
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "idporten");
                 openWebView(Login.IDPORTEN);

@@ -9,13 +9,13 @@
 
     <item android:state_focused="true">
         <shape>
-            <solid android:color="@color/actionbar_red_background"/>
+            <solid android:color="?android:attr/colorPrimary"/>
         </shape>
     </item>
 
     <item>
         <shape>
-            <solid android:color="@color/actionbar_red_background"/>
+            <solid android:color="?android:attr/colorPrimary"/>
          </shape>
      </item>
 

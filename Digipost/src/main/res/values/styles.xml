@@ -3,8 +3,8 @@
 
     <style name="Digipost" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/ActionBarStyle</item>
-        <item name="colorPrimary">@color/actionbar_red_background</item>
-        <item name="colorPrimaryDark">@color/actionbar_red_background</item>
+        <item name="colorPrimary">@color/dds_frokostkaffe</item>
+        <item name="colorPrimaryDark">@color/dds_frokostkaffe</item>
         <item name="android:actionBarItemBackground">@drawable/actionbar_item_background</item>
         <item name="android:homeAsUpIndicator">@drawable/up_indicator</item>
         <item name="android:windowBackground">@drawable/application_window_background</item>
@@ -12,6 +12,8 @@
         <item name="android:windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:actionModeBackground">@color/actionbar_multi_select_grey</item>
+        <item name="android:textColorPrimary">@color/dds_sort_kaffe</item>
+        <item name="android:textColor">@color/dds_sort_kaffe</item>
     </style>
 
     <style name="Digipost.NoActionBar">
@@ -40,11 +42,15 @@
         <item name="android:subtitleTextStyle">@style/SubtitleTextStyle</item>
         <item name="android:icon">@android:color/transparent</item>
         <item name="android:actionBarItemBackground">@drawable/actionbar_item_background</item>
-        <item name="android:background">@color/actionbar_red_background</item>
+        <item name="android:background">@color/dds_frokostkaffe</item>
         <item name="android:displayOptions">showHome|homeAsUp|showTitle</item>
     </style>
 
-    <style name="Digipost.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="Digipost.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
 
     <style name="Digipost.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
