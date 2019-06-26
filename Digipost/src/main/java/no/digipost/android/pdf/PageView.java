@@ -39,7 +39,7 @@ class PatchInfo {
 }
 
 // Make our ImageViews opaque to optimize redraw
-class OpaqueImageView extends ImageView {
+class OpaqueImageView extends android.support.v7.widget.AppCompatImageView {
 
 	public OpaqueImageView(Context context) {
 		super(context);
