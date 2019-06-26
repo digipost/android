@@ -14,7 +14,6 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:ellipsize="start"
-            android:maxLines="1"
             android:singleLine="true"
             android:textSize="14sp"
             android:textColor="@color/white"
