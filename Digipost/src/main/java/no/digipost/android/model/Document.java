@@ -16,7 +16,6 @@
 
 package no.digipost.android.model;
 
-import no.digipost.android.authentication.DigipostOauthScope;
 import no.digipost.android.constants.ApiConstants;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -24,11 +23,9 @@ import org.codehaus.jackson.map.annotate.JsonFilter;
 
 import java.util.ArrayList;
 
-import static no.digipost.android.constants.ApiConstants.*;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFilter("toJSON")
-public class Document{
+public class Document extends RequiresOauthScope {
 
     @JsonProperty
     private String subject;
@@ -65,9 +62,6 @@ public class Document{
         return attachment;
     }
 
-    public void setAttachment(final ArrayList<Attachment> attachment) {
-        this.attachment = attachment;
-    }
     public String getFolderId(){
         return folderId;
     }
@@ -76,74 +70,32 @@ public class Document{
         return subject;
     }
 
-    public void setSubject(final String subject) {
-        this.subject = subject;
-    }
-
     public String getCreatorName() {
         return creatorName;
-    }
-
-    public void setCreatorName(final String creatorName) {
-        this.creatorName = creatorName;
     }
 
     public String getCreated() {
         return created;
     }
 
-    public void setCreated(final String created) {
-        this.created = created;
-    }
-
     public String getFileType() {
         return fileType;
-    }
-
-    public void setFileType(final String fileType) {
-        this.fileType = fileType;
     }
 
     public String getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(final String fileSize) {
-        this.fileSize = fileSize;
-    }
-
     public Origin getOrigin() {
         return Origin.parse(origin);
     }
 
+    @Override
     public String getAuthenticationLevel() {
         return authenticationLevel;
     }
 
     public boolean hasCollectionNotice() {return this.collectionNotice;}
-
-    public boolean requiresHighAuthenticationLevel() {
-        return authenticationLevel.equalsIgnoreCase(AUTHENTICATION_LEVEL_TWO_FACTOR) ||
-                authenticationLevel.equalsIgnoreCase(AUTHENTICATION_LEVEL_IDPORTEN_3) ||
-                authenticationLevel.equalsIgnoreCase(AUTHENTICATION_LEVEL_IDPORTEN_4);
-    }
-
-    public DigipostOauthScope getAuthenticationScope() {
-        switch (authenticationLevel){
-            case AUTHENTICATION_LEVEL_TWO_FACTOR:
-                return DigipostOauthScope.FULL_HIGHAUTH;
-            case AUTHENTICATION_LEVEL_IDPORTEN_3:
-                return DigipostOauthScope.FULL_IDPORTEN3;
-            case AUTHENTICATION_LEVEL_IDPORTEN_4:
-                return DigipostOauthScope.FULL_IDPORTEN4;
-            default:
-                return DigipostOauthScope.FULL;
-        }
-    }
-
-    public void setAuthenticationLevel(final String authenticationLevel) {
-        this.authenticationLevel = authenticationLevel;
-    }
 
     public String getLocation() {
         return location;
@@ -167,10 +119,6 @@ public class Document{
 
     public String getType() {
         return type;
-    }
-
-    public void setType(final String type) {
-        this.type = type;
     }
 
     public ArrayList<Link> getLink() {
@@ -205,15 +153,5 @@ public class Document{
         }
         return null;
     }
-
-    public boolean hasOpeningReceipt() {
-        for (Attachment a : attachment) {
-            if(a.getOpeningReceiptUri() != null){
-                return true;
-            }
-        }
-        return false;
-    }
-
 
 }

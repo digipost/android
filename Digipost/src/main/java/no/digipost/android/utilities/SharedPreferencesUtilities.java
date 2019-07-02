@@ -19,15 +19,19 @@ package no.digipost.android.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import no.digipost.android.api.ContentOperations;
 import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 
 public class SharedPreferencesUtilities {
+    private static final long FIFTEEN_MINUTES_IN_MS = 15 * 60 * 1000;
     private static SharedPreferences sharedPreferences;
 
     private final static String HIDE_INVOICE_OPTIONS = "hide_invoice_options";
+    private static Long lastPasswordOrFingerprintAuth;
+    private static Long lastHighLevelAuth;
 
     public static boolean shouldDisplayScreenlockTips(final Context context) {
         SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
@@ -37,16 +41,6 @@ public class SharedPreferencesUtilities {
     public static void hideScreenlockTips(final Context context) {
         SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
         sharedPreferences.edit().putBoolean("HideScreenlockTips", false).apply();
-    }
-
-    public static boolean shouldDisplayIDPortenTips(final Context context) {
-        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
-        return sharedPreferences.getBoolean("HideIDPortenTips", true);
-    }
-
-    public static void hideIDPortenTips(final Context context) {
-        SharedPreferences sharedPreferences = SharedPreferencesUtilities.getDefault(context);
-        sharedPreferences.edit().putBoolean("HideIDPortenTips", false).apply();
     }
 
     public static SharedPreferences getDefault(final Context context) {
@@ -128,4 +122,25 @@ public class SharedPreferencesUtilities {
         return !getDefault(context).getBoolean(HIDE_INVOICE_OPTIONS, false);
     }
 
+    public static boolean userRecentlyAuthenticated() {
+        return (lastPasswordOrFingerprintAuth != null && SystemClock.elapsedRealtime() - lastPasswordOrFingerprintAuth < FIFTEEN_MINUTES_IN_MS ) || userRecentlyAuthenticatedHighLevel();
+    }
+
+    public static boolean userRecentlyAuthenticatedHighLevel() {
+        return lastHighLevelAuth != null && SystemClock.elapsedRealtime() - lastHighLevelAuth < FIFTEEN_MINUTES_IN_MS;
+    }
+
+    public static void markUserRecentlyAuthenticated() {
+        lastPasswordOrFingerprintAuth = SystemClock.elapsedRealtime();
+    }
+
+    public static void markUserRecentlyAuthenticatedHighLevel() {
+        lastHighLevelAuth = SystemClock.elapsedRealtime();
+    }
+
+
+    public static void clearRecentAuthenticationTimers() {
+        lastHighLevelAuth = null;
+        lastPasswordOrFingerprintAuth = null;
+    }
 }

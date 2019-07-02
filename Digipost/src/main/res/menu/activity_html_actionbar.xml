@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
             android:id="@+id/htmlmenu_send_to_bank"
             android:title="@string/dialog_send_to_bank"
             android:visible="false"
-            android:showAsAction="ifRoom"/>
+            app:showAsAction="ifRoom" />
 
     <item
             android:id="@+id/htmlmenu_delete"
             android:title="@string/delete"
             android:icon="@drawable/ic_action_delete"
-            android:showAsAction="never"/>
+            app:showAsAction="never" />
 
     <item
             android:id="@+id/htmlmenu_move"
             android:title="@string/move"
             android:visible="false"
-            android:showAsAction="never"/>
+            app:showAsAction="never" />
 
     <item
             android:id="@+id/htmlmenu_info"
             android:title="@string/information"
-            android:showAsAction="ifRoom"/>
+            app:showAsAction="ifRoom" />
 
 </menu>

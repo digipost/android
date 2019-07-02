@@ -248,7 +248,7 @@ public class ExternalLinkWebview extends AppCompatActivity {
     private void showDownloadSuccessDialog(final Context downloadContext) {
         String message = format(getString(R.string.externallink_download_success_message), fileName);
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessage(downloadContext, message);
-        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 dialog.dismiss();
                 finish();

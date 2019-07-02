@@ -55,6 +55,7 @@ import static java.lang.String.format;
 public abstract class ContentFragment<CONTENT_TYPE> extends Fragment {
     public static final String INTENT_CONTENT = "content";
     public static final String INTENT_SEND_TO_BANK = "sendToBank";
+    public static final String INTENT_ATTACHMENT_IS_SENSITIVE = "attachmentIsSensitive";
 
     ActivityCommunicator activityCommunicator;
 

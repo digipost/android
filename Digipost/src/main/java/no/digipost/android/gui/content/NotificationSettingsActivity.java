@@ -120,7 +120,7 @@ public class NotificationSettingsActivity extends DigipostSettingsActivity {
             }
 
             AlertDialog.Builder dialog = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(NotificationSettingsActivity.this, dialogMessage, dialogTitle);
-            dialog.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+            dialog.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {}
             });

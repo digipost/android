@@ -73,6 +73,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     private FolderArrayAdapter folderAdapter;
     private String location;
     private String folderId;
+    private boolean isSensitive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pdf);
         ((DigipostApplication) getApplication()).getTracker(DigipostApplication.TrackerName.APP_TRACKER);
         content_type = getIntent().getIntExtra(ContentFragment.INTENT_CONTENT, 0);
+        isSensitive = getIntent().getBooleanExtra(ContentFragment.INTENT_ATTACHMENT_IS_SENSITIVE, false);
         if (DocumentContentStore.getDocumentAttachment() == null || DocumentContentStore.getDocumentParent() == null) {
             DialogUtitities.showToast(this, getString(R.string.error_failed_to_open_document));
             finish();
@@ -97,6 +99,9 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         GoogleAnalytics.getInstance(this).reportActivityStop(this);
+        if (isSensitive) {
+            finish();
+        }
     }
 
     private ArrayList<Metadata> getMetadata() {
