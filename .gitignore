@@ -4,6 +4,7 @@ Digipost/src/main/java/no/digipost/android/authentication/Secret.java
 # Built application files
 *.apk
 *.ap_
+Digipost/app/*
 
 # Files for the dex VM
 *.dex
