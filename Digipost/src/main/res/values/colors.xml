@@ -38,7 +38,6 @@
     <color name="list_divider">@color/dds_filtergra</color>
     <color name="list_element_opened">#F7F7F7</color>
     <color name="toptext_background">#292b2d</color>
-    <color name="search_highlight_color">#EBEB86</color>
     <color name="checkbox_unchecked">@color/dds_filtergra</color>
     <color name="checkbox_checked">@color/dds_maskinkaffe</color>
     <color name="grey_date">@color/dds_filtergra</color>
@@ -59,8 +58,6 @@
     <color name="login_background">#292b2d</color>
     <color name="grey_button_background_normal">#5E5E5E</color>
     <color name="grey_button_background_pressed">#3B3B3B</color>
-    <color name="login_id_porten_box_background">#FCFCFC</color>
-    <color name="login_id_porten_box_border">#C4C4C4</color>
 
     <!-- metadata -->
 

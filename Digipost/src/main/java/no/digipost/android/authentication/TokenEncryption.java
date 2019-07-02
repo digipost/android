@@ -36,7 +36,7 @@ public class TokenEncryption {
         return RefreshToken.fromEncryptableString(cryptoAdapter.decrypt(cipherText));
     }
 
-    public boolean keyStoreIsAvailable(){
+    private static boolean keyStoreIsAvailable(){
         return (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M);
     }
 

@@ -199,20 +199,6 @@ public class ApiAccess {
         return "" + cr.getStatus();
     }
 
-    public String getReceiptHTML(Context context, final String uri, final MultivaluedMap<String, String> params) throws DigipostApiException, DigipostClientException, DigipostAuthenticationException {
-        ClientResponse cr = get(context, uri, ApiConstants.TEXT_HTML, params);
-
-        try {
-            NetworkUtilities.checkHttpStatusCode(context, cr.getStatus());
-        } catch (DigipostInvalidTokenException e) {
-            Log.e(TAG, context.getString(R.string.error_invalid_token));
-            OAuth.updateAccessTokenWithRefreshToken(context);
-            return getReceiptHTML(context, uri, params);
-        }
-
-        return JSONUtilities.getJsonStringFromInputStream(cr.getEntityInputStream());
-    }
-
     public static void uploadFile(Context context, String uri, File file) throws DigipostClientException {
         try {
             try {
