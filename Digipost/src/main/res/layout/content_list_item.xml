@@ -22,7 +22,7 @@
               android:background="@drawable/content_list_item"
               android:id="@+id/content_layout"
               android:orientation="horizontal"
-              android:clickable="true"
+              android:focusable="true"
               android:paddingBottom="22dp"
               android:paddingLeft="10dp"
               android:paddingStart="10dp"
