@@ -151,11 +151,10 @@ public class ApiAccess {
         return JSONUtilities.getJsonStringFromInputStream(result);
     }
 
-    public static String delete(Context context, final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
-        Client client = Client.create();
+    public String delete(Context context, final String uri) throws DigipostClientException, DigipostApiException, DigipostAuthenticationException {
         ClientResponse cr;
         try {
-            cr = client
+            cr = getClient()
                     .resource(uri)
                     .header(ApiConstants.ACCEPT, ApiConstants.APPLICATION_VND_DIGIPOST_V2_JSON)
                     .header(ApiConstants.AUTHORIZATION, ApiConstants.BEARER + TokenStore.getAccess())
