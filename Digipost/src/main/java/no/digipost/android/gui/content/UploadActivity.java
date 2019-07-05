@@ -495,7 +495,7 @@ public class UploadActivity extends AppCompatActivity {
         }
 
         private boolean isImage(File f) {
-            for (String extension : ApiConstants.FILETYPES_IMAGE) {
+            for (String extension : ApiConstants.INSTANCE.getFILETYPES_IMAGE()) {
                 if (FilenameUtils.getExtension(f.getName()).equals(extension)) {
                     return true;
                 }
