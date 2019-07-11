@@ -21,7 +21,6 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -35,26 +34,31 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import no.digipost.android.R;
-import no.digipost.android.model.Metadata;
+import no.digipost.android.model.datatypes.Appointment;
 import no.digipost.android.utilities.DialogUtitities;
 import java.util.Calendar;
 
 public class AppointmentView extends Fragment{
 
-    private Metadata appointment;
+    private Appointment appointment;
+    private String appointmentTitle;
 
     public static AppointmentView newInstance() {
         return new AppointmentView();
     }
 
-    public void setAppointment(Metadata appointment) {
+    public void setAppointmentData(Appointment appointment) {
         this.appointment = appointment;
+    }
+
+    public void setTitle(String title) {
+        appointmentTitle = title;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.appointment_view, container, false);
-        ((TextView) view.findViewById(R.id.appointment_title)).setText(appointment.title);
+        ((TextView) view.findViewById(R.id.appointment_title)).setText(appointmentTitle);
         ((TextView) view.findViewById(R.id.appointment_subtitle)).setText(appointment.subTitle);
         ((TextView) view.findViewById(R.id.appointment_date_time)).setText(appointment.getStartTimeString() + "\n" + appointment.getStartDateString());
         ((TextView) view.findViewById(R.id.appointment_place_where)).setText(appointment.getPlace());
@@ -78,19 +82,10 @@ public class AppointmentView extends Fragment{
 
         ((Button) view.findViewById(R.id.appointment_place_address)).setText(appointment.getPlaceAddress());
         ((Button) view.findViewById(R.id.appointment_place_address)).setTransformationMethod(null);
-        ((Button) view.findViewById(R.id.appointment_place_address)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMaps(appointment.getPlaceAddress());
-            }
-        });
+        ((Button) view.findViewById(R.id.appointment_place_address)).setOnClickListener(view12 -> openMaps(appointment.getPlaceAddress()));
+
         ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setTransformationMethod(null);
-        ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showCalendarDialog(appointment);
-            }
-        });
+        ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setOnClickListener(view1 -> showCalendarDialog(appointment));
 
         return view;
     }
@@ -112,26 +107,20 @@ public class AppointmentView extends Fragment{
         startActivity(mapIntent);
     }
 
-    private void showCalendarDialog(final Metadata appointment) {
+    private void showCalendarDialog(final Appointment appointment) {
         AlertDialog.Builder builder = DialogUtitities.getAlertDialogBuilderWithMessageAndTitle(getActivity(), getString(R.string.appointment_calendar_disclaimer), getString(R.string.add_to_calendar));
 
-        builder.setPositiveButton(getString(R.string.add_to_calendar), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                addToCalendar(appointment);
-                dialog.dismiss();
-            }
-        }).setCancelable(false).setNegativeButton(getString(R.string.abort), new DialogInterface.OnClickListener() {
-            public void onClick(final DialogInterface dialog, final int id) {
-                dialog.cancel();
-            }
-        });
+        builder.setPositiveButton(getString(R.string.add_to_calendar), (dialog, id) -> {
+            addToCalendar(appointment);
+            dialog.dismiss();
+        }).setCancelable(false).setNegativeButton(getString(R.string.abort), (dialog, id) -> dialog.cancel());
 
         builder.create().show();
         this.checkPermissions(42, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
 
     }
 
-    private void addToCalendar(Metadata appointment){
+    private void addToCalendar(Appointment appointment){
         String description = appointment.subTitle + "\n\n" + appointment.getInfoTitleAndText();
 
         Calendar beginTime = Calendar.getInstance();
@@ -144,7 +133,7 @@ public class AppointmentView extends Fragment{
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, beginTime.getTimeInMillis());
         values.put(CalendarContract.Events.DTEND, endTime.getTimeInMillis());
-        values.put(CalendarContract.Events.TITLE, appointment.title);
+        values.put(CalendarContract.Events.TITLE, appointmentTitle);
         values.put(CalendarContract.Events.EVENT_LOCATION, appointment.getPlaceAddress() + " - " + appointment.getPlace());
         values.put(CalendarContract.Events.DESCRIPTION, description);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, beginTime.getTimeZone().toString());

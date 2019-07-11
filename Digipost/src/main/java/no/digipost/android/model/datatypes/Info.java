@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package no.digipost.android.model;
+package no.digipost.android.model.datatypes;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
+public class Info extends DataType {
+    public final String title;
+    public final String text;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+    public Info(String title, String text) {
+        super(Info.class.getSimpleName());
+        this.title = title;
+        this.text = text;
+    }
 
-public class Info {
-    @JsonProperty
-    public String title;
+    public static Info fromWrapper(RawDataTypeWrapper w) {
+        return new Info(w.getString("title"), w.getString("text"));
+    }
 
-    @JsonProperty
-    public String text;
+    @Override
+    public Info expandToType() {
+        return this;
+    }
 }

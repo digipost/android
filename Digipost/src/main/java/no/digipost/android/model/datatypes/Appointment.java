@@ -14,61 +14,48 @@
  * limitations under the License.
  */
 
-package no.digipost.android.model;
+package no.digipost.android.model.datatypes;
 
 import no.digipost.android.utilities.FormatUtilities;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+public class Appointment extends DataType {
 
-public class Metadata {
+    public final String title;
+    public final String subTitle;
+    public final String startTime;
+    public final String endTime;
+    public final String arrivalTime;
+    public final DataTypeAddress address;
+    public final String place;
 
-    public static final String APPOINTMENT = "Appointment";
-    public static final String EXTERNAL_LINK = "ExternalLink";
+    public List<Info> info;
 
-    public String title;
-    @JsonProperty
-    public String type;
+    private Appointment(String title, String subTitle, String startTime, String endTime, String arrivalTime, DataTypeAddress address, String place, List<Info> infoList) {
+        super(Appointment.class.getSimpleName());
+        this.title = title;
+        this.subTitle = subTitle;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.arrivalTime = arrivalTime;
+        this.address = address;
+        this.place = place;
+    }
 
-    @JsonProperty
-    public String url;
-
-    @JsonProperty
-    public String deadline;
-
-    @JsonProperty
-    public String description;
-
-    @JsonProperty
-    public String buttonText;
-
-    @JsonProperty
-    public Boolean urlIsActive;
-
-    @JsonProperty
-    public String subTitle;
-
-    @JsonProperty
-    public String startTime;
-
-    @JsonProperty
-    public String endTime;
-
-    @JsonProperty
-    public String arrivalTime;
-
-    @JsonProperty
-    public MetadataAddress address;
-
-    @JsonProperty
-    public String place;
-
-    @JsonProperty
-    public ArrayList<Info> info;
+    public static Appointment fromWrapper(RawDataTypeWrapper w) {
+        ArrayList<Info> infolist = new ArrayList<>();
+        for (Object info: w.get("info", List.class)) {
+            infolist.add(Info.fromWrapper(new RawDataTypeWrapper((HashMap<String,Object>)info)));
+        }
+        return new Appointment(w.getString("title"), w.getString("subTitle"),
+                w.getString("startTime"), w.getString("endTime"), w.getString("arrivalTime"),
+                DataTypeAddress.fromWrapper(new RawDataTypeWrapper(w.get("address", HashMap.class))),
+                w.getString("place"), infolist);
+    }
 
     public String getStartTimeString() { return "kl " + FormatUtilities.getTimeString(startTime);};
 
@@ -103,14 +90,6 @@ public class Metadata {
         return infoText;
     }
 
-    public String getButtonText() {
-        return buttonText != null ? buttonText: "Gå videre";
-    }
-
-    public String getDescription() {
-        return description != null ? description : "";
-    }
-
     public Date getStartDate() {
         return FormatUtilities.getDate(startTime);
     }
@@ -119,7 +98,8 @@ public class Metadata {
         return FormatUtilities.getDate(endTime);
     }
 
-    public Date getArrivalDate() {
-        return FormatUtilities.getDate(arrivalTime);
+    @Override
+    public Appointment expandToType() {
+        return this;
     }
 }

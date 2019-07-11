@@ -46,7 +46,6 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
@@ -57,6 +56,9 @@ import no.digipost.android.gui.invoice.InvoiceOptionsActivity;
 import no.digipost.android.gui.metadata.AppointmentView;
 import no.digipost.android.gui.metadata.ExternalLinkView;
 import no.digipost.android.model.*;
+import no.digipost.android.model.datatypes.Appointment;
+import no.digipost.android.model.datatypes.DataType;
+import no.digipost.android.model.datatypes.ExternalLink;
 import no.digipost.android.utilities.*;
 
 import java.util.ArrayList;
@@ -104,26 +106,23 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         }
     }
 
-    private ArrayList<Metadata> getMetadata() {
+    protected void showDataType() {
         Attachment attachment = DocumentContentStore.getDocumentAttachment();
-
-        if (attachment != null) {
-            return attachment.getMetadata();
+        if (attachment == null) {
+            return;
         }
 
-        return new ArrayList<>();
-    }
-
-    protected void showMetadata() {
-        ArrayList<Metadata> metadataList = getMetadata();
-        for (Metadata metadata : metadataList) {
-            if (metadata.type.equals(Metadata.APPOINTMENT)) {
-                addAppointmentView(metadata);
-            } else if (metadata.type.equals(Metadata.EXTERNAL_LINK)) {
-                addExternalLinkView(metadata);
+        int renderedDataTypes = 0;
+        for (DataType dataType : attachment.getMetadata()) {
+            if (dataType.type.equals(DataType.APPOINTMENT)) {
+                addAppointmentView(dataType.expandToType());
+                renderedDataTypes++;
+            } else if (dataType.type.equals(DataType.EXTERNAL_LINK)) {
+                addExternalLinkView(dataType.expandToType());
+                renderedDataTypes++;
             }
         }
-        toggleContainerViews(metadataList.size());
+        toggleContainerViews(renderedDataTypes);
     }
 
     private void toggleContainerViews(final int metadataSize) {
@@ -153,16 +152,16 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         }
     }
 
-    private void addExternalLinkView(Metadata metadata) {
+    private void addExternalLinkView(ExternalLink dataType) {
         ExternalLinkView externalLinkView = ExternalLinkView.newInstance();
-        externalLinkView.setExternallink(metadata);
+        externalLinkView.setExternallink(dataType);
         addViewToContainerLayout(externalLinkView);
     }
 
-    private void addAppointmentView(Metadata metadata) {
-        metadata.title = "Du har fått en innkalling fra " + DocumentContentStore.getDocumentParent().getCreatorName();
+    private void addAppointmentView(Appointment dataType) {
         AppointmentView appointmentView = AppointmentView.newInstance();
-        appointmentView.setAppointment(metadata);
+        appointmentView.setTitle(getString(R.string.appointment_title_from, DocumentContentStore.getDocumentParent().getCreatorName()));
+        appointmentView.setAppointmentData(dataType);
         addViewToContainerLayout(appointmentView);
     }
 

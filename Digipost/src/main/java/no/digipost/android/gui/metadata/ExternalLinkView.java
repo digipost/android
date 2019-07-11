@@ -31,26 +31,26 @@ import java.net.URL;
 import java.util.Date;
 
 import no.digipost.android.R;
-import no.digipost.android.model.Metadata;
+import no.digipost.android.model.datatypes.ExternalLink;
 import no.digipost.android.utilities.FormatUtilities;
 
 public class ExternalLinkView extends Fragment{
 
-    private Metadata externallink;
+    private ExternalLink externallink;
 
     public static ExternalLinkView newInstance() {
         return new ExternalLinkView();
     }
 
-    public void setExternallink(Metadata externallink) {
+    public void setExternallink(ExternalLink externallink) {
         this.externallink = externallink;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.externallink_view, container, false);
-        ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.getDescription());
-        ((Button) view.findViewById(R.id.externallink_open_link)).setText(externallink.getButtonText());
+        ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.description);
+        ((Button) view.findViewById(R.id.externallink_open_link)).setText(buttonText());
         ((Button) view.findViewById(R.id.externallink_open_link)).setTransformationMethod(null);
         ((Button) view.findViewById(R.id.externallink_open_link)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +93,10 @@ public class ExternalLinkView extends Fragment{
         }
 
         return deadline;
+    }
+
+    private String buttonText() {
+        return externallink.buttonText != null ? externallink.buttonText : getString(R.string.proceed);
     }
 
     private boolean deadlineIsValid(){
