@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui.metadata;
+package no.digipost.android.gui.datatype;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -22,12 +22,9 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,33 +33,30 @@ import android.widget.TextView;
 import no.digipost.android.R;
 import no.digipost.android.model.datatypes.Appointment;
 import no.digipost.android.utilities.DialogUtitities;
+import no.digipost.android.utilities.Permissions;
+
 import java.util.Calendar;
 
-public class AppointmentView extends Fragment{
+public class AppointmentView extends Fragment {
 
     private Appointment appointment;
     private String appointmentTitle;
 
-    public static AppointmentView newInstance() {
-        return new AppointmentView();
-    }
-
-    public void setAppointmentData(Appointment appointment) {
-        this.appointment = appointment;
-    }
-
-    public void setTitle(String title) {
-        appointmentTitle = title;
+    public static AppointmentView newInstance(Appointment appointment, String title) {
+        AppointmentView appointmentView = new AppointmentView();
+        appointmentView.appointment = appointment;
+        appointmentView.appointmentTitle = title;
+        return appointmentView;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.appointment_view, container, false);
-        ((TextView) view.findViewById(R.id.appointment_title)).setText(appointmentTitle);
-        ((TextView) view.findViewById(R.id.appointment_subtitle)).setText(appointment.subTitle);
-        ((TextView) view.findViewById(R.id.appointment_date_time)).setText(appointment.getStartTimeString() + "\n" + appointment.getStartDateString());
-        ((TextView) view.findViewById(R.id.appointment_place_where)).setText(appointment.getPlace());
-        ((TextView) view.findViewById(R.id.appointment_arrival_info_text)).setText(appointment.getArrivalInfo());
+        ((TextView) view.findViewById(R.id.event_title)).setText(appointmentTitle);
+        ((TextView) view.findViewById(R.id.event_subtitle)).setText(appointment.subTitle);
+        ((TextView) view.findViewById(R.id.event_date_time)).setText(appointment.getStartTimeString() + "\n" + appointment.getStartDateString());
+        ((TextView) view.findViewById(R.id.event_place_where)).setText(appointment.getPlace());
+        ((TextView) view.findViewById(R.id.event_arrival_info_text)).setText(appointment.getArrivalInfo());
 
         if (appointment.info != null && appointment.info.size() > 0) {
             ((TextView) view.findViewById(R.id.appointment_info1_title)).setText(appointment.info.get(0).title);
@@ -80,24 +74,14 @@ public class AppointmentView extends Fragment{
             ((TextView) view.findViewById(R.id.appointment_info2_text)).setVisibility(View.GONE);
         }
 
-        ((Button) view.findViewById(R.id.appointment_place_address)).setText(appointment.getPlaceAddress());
-        ((Button) view.findViewById(R.id.appointment_place_address)).setTransformationMethod(null);
-        ((Button) view.findViewById(R.id.appointment_place_address)).setOnClickListener(view12 -> openMaps(appointment.getPlaceAddress()));
+        ((Button) view.findViewById(R.id.event_place_address)).setText(appointment.getPlaceAddress());
+        ((Button) view.findViewById(R.id.event_place_address)).setTransformationMethod(null);
+        ((Button) view.findViewById(R.id.event_place_address)).setOnClickListener(view12 -> openMaps(appointment.getPlaceAddress()));
 
-        ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setTransformationMethod(null);
-        ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setOnClickListener(view1 -> showCalendarDialog(appointment));
+        ((Button) view.findViewById(R.id.event_add_to_calendar)).setTransformationMethod(null);
+        ((Button) view.findViewById(R.id.event_add_to_calendar)).setOnClickListener(view1 -> showCalendarDialog(appointment));
 
         return view;
-    }
-
-    private void checkPermissions(int callbackId, String... permissionsId) {
-        boolean permissions = true;
-        for (String p : permissionsId) {
-            permissions = permissions && ContextCompat.checkSelfPermission(getActivity(), p) == PackageManager.PERMISSION_GRANTED;
-        }
-
-        if (!permissions)
-            ActivityCompat.requestPermissions(getActivity(), permissionsId, callbackId);
     }
 
     private void openMaps(String address){
@@ -116,7 +100,10 @@ public class AppointmentView extends Fragment{
         }).setCancelable(false).setNegativeButton(getString(R.string.abort), (dialog, id) -> dialog.cancel());
 
         builder.create().show();
-        this.checkPermissions(42, Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
+        boolean canDoCalendarOperations = Permissions.checkPermissions(getActivity(), Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
+        if (!canDoCalendarOperations) {
+            Permissions.requestPermissions(42, getActivity(), Manifest.permission.READ_CALENDAR, Manifest.permission.WRITE_CALENDAR);
+        }
 
     }
 

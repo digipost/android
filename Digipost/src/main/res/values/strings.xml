@@ -336,6 +336,7 @@
 
     <string name="add_to_calendar">Legg til i kalender</string>
     <string name="appointment_time">Tid:</string>
+    <string name="appointment_when">Når:</string>
     <string name="appointment_arrival">Oppmøte:</string>
     <string name="appointment_place">Sted:</string>
     <string name="appointment_calendar_disclaimer">Obs! Innkallingen kan inneholde sensitiv informasjon som kan bli synlig for de som eventuelt har tilgang til din kalender.</string>

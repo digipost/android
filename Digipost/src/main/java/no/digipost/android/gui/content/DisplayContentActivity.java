@@ -49,15 +49,17 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
+import no.digipost.android.gui.datatype.EventView;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.invoice.InvoiceOptionsActivity;
-import no.digipost.android.gui.metadata.AppointmentView;
-import no.digipost.android.gui.metadata.ExternalLinkView;
+import no.digipost.android.gui.datatype.AppointmentView;
+import no.digipost.android.gui.datatype.ExternalLinkView;
 import no.digipost.android.model.*;
 import no.digipost.android.model.datatypes.Appointment;
 import no.digipost.android.model.datatypes.DataType;
+import no.digipost.android.model.datatypes.Event;
 import no.digipost.android.model.datatypes.ExternalLink;
 import no.digipost.android.utilities.*;
 
@@ -120,6 +122,9 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
             } else if (dataType.type.equals(DataType.EXTERNAL_LINK)) {
                 addExternalLinkView(dataType.expandToType());
                 renderedDataTypes++;
+            } else if (dataType.type.equals(DataType.EVENT)) {
+                addEventView(dataType.expandToType());
+                renderedDataTypes++;
             }
         }
         toggleContainerViews(renderedDataTypes);
@@ -152,16 +157,18 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         }
     }
 
+    private void addEventView(Event dataType) {
+        EventView eventView = EventView.Companion.newInstance(dataType, DocumentContentStore.getDocumentParent().getSubject());
+        addViewToContainerLayout(eventView);
+    }
+
     private void addExternalLinkView(ExternalLink dataType) {
-        ExternalLinkView externalLinkView = ExternalLinkView.newInstance();
-        externalLinkView.setExternallink(dataType);
+        ExternalLinkView externalLinkView = ExternalLinkView.newInstance(dataType);
         addViewToContainerLayout(externalLinkView);
     }
 
     private void addAppointmentView(Appointment dataType) {
-        AppointmentView appointmentView = AppointmentView.newInstance();
-        appointmentView.setTitle(getString(R.string.appointment_title_from, DocumentContentStore.getDocumentParent().getCreatorName()));
-        appointmentView.setAppointmentData(dataType);
+        AppointmentView appointmentView = AppointmentView.newInstance(dataType, getString(R.string.appointment_title_from, DocumentContentStore.getDocumentParent().getCreatorName()));
         addViewToContainerLayout(appointmentView);
     }
 
@@ -394,7 +401,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     private void showPaidInvoiceDialog(Invoice invoice) {
-        String timePaid = FormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
+        String timePaid = FormatUtilities.formatDateStringColloquial(invoice.getPayment().getTimePaid());
 
         String title = getString(R.string.dialog_send_to_bank_paid_title);
         String message = format(getString(R.string.dialog_send_to_bank_paid_message), timePaid);

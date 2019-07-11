@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/event_view"
+              android:background="@color/white"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:paddingBottom="50dp"
+              android:layout_marginBottom="10dp"
+              android:layout_height="wrap_content">
+    <TextView
+            android:id="@+id/event_title"
+            android:text=""
+            android:textSize="20sp"
+            android:lineSpacingMultiplier="1.2"
+            android:textStyle="bold"
+            android:textColor="@color/metadata_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+    />
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/metadata_divider">
+    </View>
+
+    <TextView
+            android:id="@+id/event_subtitle"
+            android:text=""
+            android:lineSpacingMultiplier="1.2"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/metadata_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+    />
+    <TextView
+        android:id="@+id/event_arrival_info_text"
+        android:text=""
+        android:textSize="16sp"
+        android:textColor="@color/metadata_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        />
+    <!-- place & time -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/event_place_title"
+            android:text="@string/appointment_place"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/metadata_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <TextView
+            android:id="@+id/event_place_where"
+            android:text=""
+            android:textSize="16sp"
+            android:textColor="@color/metadata_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            />
+        <Button
+            android:id="@+id/event_place_address"
+            android:text=""
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="normal"
+            android:textSize="16sp"
+            android:background="@color/transparent"
+            android:textColor="@color/dds_bla_java"
+            android:gravity="left"
+            />
+        <TextView
+            android:id="@+id/event_date_title"
+            android:text="@string/appointment_when"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/metadata_title"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            />
+        <TextView
+            android:id="@+id/event_date_time"
+            android:text=""
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textColor="@color/metadata_text"
+
+            />
+    </LinearLayout>
+
+    <!-- legg til i kalender -->
+
+    <Button
+        android:text="@string/add_to_calendar"
+        android:layout_width="match_parent"
+        android:layout_marginTop="17dp"
+        android:id="@+id/event_add_to_calendar"
+        android:background="@drawable/red_button_style"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textAlignment="gravity"
+        android:gravity="center"
+        android:layout_height="50dp"
+        android:layout_marginLeft="55dp"
+        android:layout_marginRight="55dp"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="30dp"
+        android:background="@color/metadata_divider">
+    </View>
+
+    <!-- infotekst -->
+
+    <LinearLayout
+        android:id="@+id/event_info_and_links"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/event_info_layout"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</LinearLayout>

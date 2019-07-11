@@ -3,7 +3,9 @@ package no.digipost.android.utilities;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 /**
  /**
@@ -27,10 +29,21 @@ public class Permissions {
     public static boolean requestWritePermissionsIfMissing(Context context, Activity activity){
 
         if(!FileUtilities.isStorageWriteAllowed(context)) {
-            ActivityCompat.requestPermissions(activity,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_WRITE_EXTERNAL_STORAGE);
+            Permissions.requestPermissions(REQUEST_WRITE_EXTERNAL_STORAGE, activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         return FileUtilities.isStorageWriteAllowed(context);
     }
+
+    public static boolean checkPermissions(Activity activity, String... permissionsId) {
+        boolean permissions = true;
+        for (String p : permissionsId) {
+            permissions = permissions && ContextCompat.checkSelfPermission(activity, p) == PackageManager.PERMISSION_GRANTED;
+        }
+        return permissions;
+    }
+
+    public static void requestPermissions(int callbackId, Activity activity, String... permissionsId) {
+        ActivityCompat.requestPermissions(activity, permissionsId, callbackId);
+    }
+
 }

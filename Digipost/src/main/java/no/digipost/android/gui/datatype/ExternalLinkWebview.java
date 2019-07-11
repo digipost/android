@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui.metadata;
+package no.digipost.android.gui.datatype;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -22,7 +22,6 @@ import android.app.DownloadManager;
 import android.content.*;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

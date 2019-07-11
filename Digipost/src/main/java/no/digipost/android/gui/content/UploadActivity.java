@@ -413,7 +413,7 @@ public class UploadActivity extends AppCompatActivity {
                     thumbnail.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_grey_file));
                 }
 
-                size.setText(FormatUtilities.getFormattedFileSize(object.length()));
+                size.setText(FormatUtilities.formatFileSize(object.length()));
                 extension.setText("." + FilenameUtils.getExtension(object.getName()));
             } else {
                 thumbnail.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_grey_folder));

@@ -32,8 +32,7 @@ public class Appointment extends DataType {
     public final String arrivalTime;
     public final DataTypeAddress address;
     public final String place;
-
-    public List<Info> info;
+    public final List<Info> info;
 
     private Appointment(String title, String subTitle, String startTime, String endTime, String arrivalTime, DataTypeAddress address, String place, List<Info> infoList) {
         super(Appointment.class.getSimpleName());
@@ -44,9 +43,10 @@ public class Appointment extends DataType {
         this.arrivalTime = arrivalTime;
         this.address = address;
         this.place = place;
+        this.info = infoList;
     }
 
-    public static Appointment fromWrapper(RawDataTypeWrapper w) {
+    static Appointment fromWrapper(RawDataTypeWrapper w) {
         ArrayList<Info> infolist = new ArrayList<>();
         for (Object info: w.get("info", List.class)) {
             infolist.add(Info.fromWrapper(new RawDataTypeWrapper((HashMap<String,Object>)info)));
@@ -57,9 +57,9 @@ public class Appointment extends DataType {
                 w.getString("place"), infolist);
     }
 
-    public String getStartTimeString() { return "kl " + FormatUtilities.getTimeString(startTime);};
+    public String getStartTimeString() { return "kl " + FormatUtilities.formatTimeString(startTime);};
 
-    public String getStartDateString() { return FormatUtilities.getDateString(startTime);};
+    public String getStartDateString() { return FormatUtilities.formatDateString(startTime);};
 
     public String getPlace() { return place;}
 
@@ -72,13 +72,12 @@ public class Appointment extends DataType {
     }
 
     public String getArrivalInfo() {
-        String arrivalDateString = FormatUtilities.getTimeString(arrivalTime);
+        String arrivalDateString = FormatUtilities.formatTimeString(arrivalTime);
         if (arrivalDateString != null) {
             return "kl " + arrivalDateString;
         } else if(arrivalTime != null) {
             return arrivalTime;
         }
-
         return "";
     }
 
@@ -91,11 +90,11 @@ public class Appointment extends DataType {
     }
 
     public Date getStartDate() {
-        return FormatUtilities.getDate(startTime);
+        return FormatUtilities.parseDate(startTime);
     }
 
     public Date getEndDate() {
-        return FormatUtilities.getDate(endTime);
+        return FormatUtilities.parseDate(endTime);
     }
 
     @Override

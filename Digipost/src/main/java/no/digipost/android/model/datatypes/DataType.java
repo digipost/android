@@ -23,6 +23,7 @@ public abstract class DataType {
 
     public static final String APPOINTMENT = Appointment.class.getSimpleName();
     public static final String EXTERNAL_LINK = ExternalLink.class.getSimpleName();
+    public static final String EVENT = Event.class.getSimpleName();
 
     public final String type;
 
@@ -36,6 +37,8 @@ public abstract class DataType {
             return Appointment.fromWrapper(w);
         } else if (EXTERNAL_LINK.equalsIgnoreCase(w.getType())) {
             return ExternalLink.fromWrapper(w);
+        } else if (EVENT.equalsIgnoreCase(w.getType())) {
+            return Event.fromWrapper(w);
         }
         return null;
     }

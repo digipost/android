@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/appointment_view"
+              android:id="@+id/event_view"
               android:background="@color/white"
               android:orientation="vertical"
               android:layout_width="match_parent"
@@ -9,7 +9,7 @@
               android:layout_marginBottom="10dp"
               android:layout_height="wrap_content">
     <TextView
-            android:id="@+id/appointment_title"
+            android:id="@+id/event_title"
             android:text=""
             android:textSize="20sp"
             android:lineSpacingMultiplier="1.2"
@@ -29,7 +29,7 @@
     </View>
 
     <TextView
-            android:id="@+id/appointment_subtitle"
+            android:id="@+id/event_subtitle"
             android:text=""
             android:lineSpacingMultiplier="1.2"
             android:textSize="20sp"
@@ -65,7 +65,7 @@
                 android:paddingLeft="10dp"
                 android:layout_height="wrap_content">
             <TextView
-                    android:id="@+id/appointment_date_title"
+                    android:id="@+id/event_date_title"
                     android:text="@string/appointment_time"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -75,7 +75,7 @@
 
             />
             <TextView
-                    android:id="@+id/appointment_date_time"
+                    android:id="@+id/event_date_time"
                     android:text=""
                     android:textSize="16sp"
                     android:lineSpacingMultiplier="1.2"
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
             />
             <TextView
-                    android:id="@+id/appointment_arrival_info_text"
+                    android:id="@+id/event_arrival_info_text"
                     android:text=""
                     android:textSize="16sp"
                     android:lineSpacingMultiplier="1.2"
@@ -134,7 +134,7 @@
                 android:paddingLeft="10dp"
                 android:layout_height="wrap_content">
             <TextView
-                    android:id="@+id/appointment_place_title"
+                    android:id="@+id/event_place_title"
                     android:text="@string/appointment_place"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -144,7 +144,7 @@
             />
 
             <TextView
-                    android:id="@+id/appointment_place_where"
+                    android:id="@+id/event_place_where"
                     android:text=""
                     android:textSize="16sp"
                     android:textColor="@color/metadata_text"
@@ -153,7 +153,7 @@
                     android:layout_marginTop="10dp"
             />
             <Button
-                    android:id="@+id/appointment_place_address"
+                    android:id="@+id/event_place_address"
                     android:text=""
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -172,7 +172,7 @@
             android:text="@string/add_to_calendar"
             android:layout_width="match_parent"
             android:layout_marginTop="17dp"
-            android:id="@+id/appointment_add_to_calendar"
+            android:id="@+id/event_add_to_calendar"
             android:background="@drawable/red_button_style"
             android:textColor="@color/white"
             android:textSize="16sp"
