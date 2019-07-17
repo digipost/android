@@ -28,6 +28,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 
@@ -80,6 +81,26 @@ class EventView : Fragment() {
         view.findViewById<Button>(R.id.event_add_to_calendar).transformationMethod = null
         view.findViewById<Button>(R.id.event_add_to_calendar).setOnClickListener { showCalendarDialog(event) }
 
+        if (event.barcode != null) {
+            val barcode = event.barcode
+            view.findViewById<TextView>(R.id.barcode_title).text = event.barcodeLabel
+            val bitmap = BarcodeUtil.createBarcodeBitmap(barcode)
+            view.findViewById<ImageView>(R.id.barcode_code_rendered).setImageBitmap(bitmap)
+            if (barcode.showValueInBarcode) {
+                view.findViewById<TextView>(R.id.barcode_code_text).text = event.barcode.barcodeValue
+            } else {
+                view.findViewById<TextView>(R.id.barcode_code_text).visibility = View.GONE
+            }
+            view.findViewById<TextView>(R.id.barcode_text).text = barcode.barcodeText
+
+        } else {
+            view.findViewById<View>(R.id.barcode_title).visibility = View.GONE
+            view.findViewById<View>(R.id.barcode_code_rendered).visibility = View.GONE
+            view.findViewById<View>(R.id.barcode_code_text).visibility = View.GONE
+            view.findViewById<View>(R.id.barcode_textbox).visibility = View.GONE
+            view.findViewById<View>(R.id.barcode_bottom_divider).visibility = View.GONE
+        }
+
         val infoAndLinksView = view.findViewById<LinearLayout>(R.id.event_info_and_links)
         for (link in event.links) {
             val linkButton = Button(activity)
@@ -93,6 +114,7 @@ class EventView : Fragment() {
         }
         return view
     }
+
 
     private fun openMaps(address: String) {
         val gmmIntentUri = Uri.parse("geo:0,0?q=$address")

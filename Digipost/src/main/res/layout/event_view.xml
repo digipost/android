@@ -139,8 +139,76 @@
         android:layout_height="1dp"
         android:layout_marginTop="35dp"
         android:layout_marginBottom="30dp"
-        android:background="@color/metadata_divider">
-    </View>
+        android:background="@color/metadata_divider" />
+
+
+    <TextView
+        android:id="@+id/barcode_title"
+        android:text=""
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/metadata_title"
+        android:layout_marginTop="5dp"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <ImageView
+        android:id="@+id/barcode_code_rendered"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp"
+        app:srcCompat="@drawable/metadata_info"
+        />
+    <TextView
+        android:id="@+id/barcode_code_text"
+        android:text=""
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:gravity="center"
+        android:textColor="@color/metadata_text"
+        />
+    <LinearLayout
+        android:id="@+id/barcode_textbox"
+        android:orientation="horizontal"
+        android:layout_marginTop="15sp"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/metadata_info_img"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="5sp"
+            app:srcCompat="@drawable/metadata_info"
+            />
+        <TextView
+            android:id="@+id/barcode_text"
+            android:text=""
+            android:textSize="16sp"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textColor="@color/metadata_text"
+            />
+    </LinearLayout>
+    <View
+        android:id="@+id/barcode_bottom_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="30dp"
+        android:background="@color/metadata_divider" />
 
     <!-- infotekst -->
 

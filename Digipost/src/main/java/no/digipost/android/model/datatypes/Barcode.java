@@ -16,6 +16,26 @@
 
 package no.digipost.android.model.datatypes;
 
-public class Barcode {
+public class Barcode extends DataType {
+    public final String barcodeValue;
+    public final String barcodeType;
+    public final String barcodeText;
+    public final boolean showValueInBarcode;
 
+    private Barcode(String barcodeValue, String barcodeType, String barcodeText, Boolean showValueInBarcode) {
+        super(Barcode.class.getSimpleName());
+        this.barcodeValue = barcodeValue;
+        this.barcodeType = barcodeType;
+        this.barcodeText = barcodeText;
+        this.showValueInBarcode = showValueInBarcode != null ? showValueInBarcode : true;
+    }
+
+    public static Barcode fromWrapper(RawDataTypeWrapper w) {
+        return new Barcode(w.getString("barcodeValue"), w.getString("barcodeType"), w.getString("barcodeText"), w.get("showValueInBarcode", Boolean.class));
+    }
+
+    @Override
+    public Barcode expandToType() {
+        return this;
+    }
 }

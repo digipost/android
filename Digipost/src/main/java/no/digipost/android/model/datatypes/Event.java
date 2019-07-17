@@ -64,7 +64,7 @@ public class Event extends DataType {
         return new Event(w.getString("subTitle"), timeList,
                 w.getString("timeLabel"), w.getString("description"), w.getString("place"), w.getString("placeLabel"),
                 DataTypeAddress.fromWrapper(new RawDataTypeWrapper(w.get("address", HashMap.class))), infoList,
-                w.getString("barcodeLabel"), null, links);
+                w.getString("barcodeLabel"), Barcode.fromWrapper(new RawDataTypeWrapper(w.get("barcode", HashMap.class))), links);
     }
 
     @Override
