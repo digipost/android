@@ -61,18 +61,6 @@ class EventView : Fragment() {
         view.findViewById<TextView>(R.id.event_place_where).text = event.place
         view.findViewById<TextView>(R.id.event_arrival_info_text).text = event.description
 
-        val textinfolinearView = view.findViewById<LinearLayout>(R.id.event_info_layout)
-        for (info in event.info) {
-            val infoTitle = TextView(activity)
-            infoTitle.text = info.title
-            infoTitle.setTextAppearance(activity, R.style.Digipost_InfoTextTitle)
-            val infoText = TextView(activity)
-            infoText.text = info.text
-            infoText.setTextAppearance(activity, R.style.Digipost_InfoText)
-            textinfolinearView.addView(infoTitle)
-            textinfolinearView.addView(infoText)
-        }
-
         view.findViewById<TextView>(R.id.event_place_title).text = event.placeLabel
         view.findViewById<Button>(R.id.event_place_address).text = event.getPlaceAddress()
         view.findViewById<Button>(R.id.event_place_address).transformationMethod = null
@@ -101,6 +89,20 @@ class EventView : Fragment() {
             view.findViewById<View>(R.id.barcode_bottom_divider).visibility = View.GONE
         }
 
+        val textinfolinearView = view.findViewById<LinearLayout>(R.id.event_info_layout)
+        for (info in event.info) {
+            val infoTitle = TextView(activity)
+            infoTitle.text = info.title
+            infoTitle.setTextAppearance(activity, R.style.Digipost_InfoTextTitle)
+            val infoText = TextView(activity)
+            infoText.text = info.text
+            infoText.setTextAppearance(activity, R.style.Digipost_InfoText)
+            textinfolinearView.addView(infoTitle)
+            textinfolinearView.addView(infoText)
+            val titleLayout = infoTitle.layoutParams as ViewGroup.MarginLayoutParams
+            titleLayout.topMargin = 25
+        }
+
         val infoAndLinksView = view.findViewById<LinearLayout>(R.id.event_info_and_links)
         for (link in event.links) {
             val linkButton = Button(activity)
@@ -109,7 +111,8 @@ class EventView : Fragment() {
             linkButton.setOnClickListener { openExternalLink(link.url) }
             linkButton.setTextAppearance(activity, R.style.Digipost_DataTypeLinkButton)
             linkButton.setBackgroundResource(0)
-            linkButton.gravity = Gravity.LEFT
+            linkButton.gravity = Gravity.START
+            linkButton.setPadding(0, 0,0,0)
             infoAndLinksView.addView(linkButton)
         }
         return view
