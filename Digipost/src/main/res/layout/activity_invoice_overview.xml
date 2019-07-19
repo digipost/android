@@ -95,7 +95,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:layout_marginTop="40dp"
-                android:textSize="13dp"/>
+                android:textSize="13sp"/>
     </LinearLayout>
 
 </LinearLayout>

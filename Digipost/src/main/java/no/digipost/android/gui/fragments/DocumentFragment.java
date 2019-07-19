@@ -467,7 +467,7 @@ public class DocumentFragment extends ContentFragment<Document> {
             return MuPDFActivity.class;
         } else if (ApiConstants.FILETYPE_HTML.equals(fileType)) {
             return HtmlAndReceiptActivity.class;
-        } else if (asList(ApiConstants.FILETYPES_IMAGE).contains(fileType)) {
+        } else if (asList(ApiConstants.INSTANCE.getFILETYPES_IMAGE()).contains(fileType)) {
             return ImageActivity.class;
         } else {
             return UnsupportedDocumentFormatActivity.class;

@@ -202,7 +202,7 @@ public class ContentOperations {
                 return NetworkUtilities.BAD_REQUEST;
 
             case ApiConstants.DELETE:
-                if (ApiAccess.delete(context, folder.getDeleteUri()) != null) {
+                if (apiAccess.delete(context, folder.getDeleteUri()) != null) {
                     return NetworkUtilities.SUCCESS;
                 }
                 return NetworkUtilities.BAD_REQUEST_DELETE;
@@ -250,7 +250,7 @@ public class ContentOperations {
     public static void deleteContent(Context context, final Object object) throws DigipostApiException, DigipostClientException,
             DigipostAuthenticationException {
         refreshApiAccess();
-        ApiAccess.delete(context, ((Document) object).getDeleteUri());
+        apiAccess.delete(context, ((Document) object).getDeleteUri());
     }
 
     public static void uploadFile(Context context, File file, int content) throws DigipostClientException, DigipostAuthenticationException,
@@ -279,6 +279,6 @@ public class ContentOperations {
     public static void cancelBankAgreement(Context context, final String cancelAgreementURI) throws DigipostClientException, DigipostApiException,
             DigipostAuthenticationException {
         refreshApiAccess();
-        ApiAccess.delete(context, cancelAgreementURI);
+        apiAccess.delete(context, cancelAgreementURI);
     }
 }

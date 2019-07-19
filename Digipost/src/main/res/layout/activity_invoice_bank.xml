@@ -91,7 +91,7 @@
                 android:textColor="@color/white"
                 android:id="@+id/invoice_bank_url_button"
                 android:layout_marginTop="5dp"
-                android:textSize="15dp"/>
+                android:textSize="15sp"/>
 
         <Button
                 android:layout_width="wrap_content"
@@ -102,7 +102,7 @@
                 android:id="@+id/invoice_bank_read_more_link"
                 android:layout_gravity="left|center_horizontal"
                 android:layout_marginTop="5dp"
-                android:textSize="15dp"/>
+                android:textSize="15sp"/>
     </LinearLayout>
 
 </LinearLayout>
