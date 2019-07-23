@@ -52,11 +52,11 @@ public class AppointmentView extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.appointment_view, container, false);
-        ((TextView) view.findViewById(R.id.event_title)).setText(appointmentTitle);
-        ((TextView) view.findViewById(R.id.event_subtitle)).setText(appointment.subTitle);
-        ((TextView) view.findViewById(R.id.event_date_time)).setText(appointment.getStartTimeString() + "\n" + appointment.getStartDateString());
-        ((TextView) view.findViewById(R.id.event_place_where)).setText(appointment.getPlace());
-        ((TextView) view.findViewById(R.id.event_arrival_info_text)).setText(appointment.getArrivalInfo());
+        ((TextView) view.findViewById(R.id.appointment_title)).setText(appointmentTitle);
+        ((TextView) view.findViewById(R.id.appointment_subtitle)).setText(appointment.subTitle);
+        ((TextView) view.findViewById(R.id.appointment_date_time)).setText(appointment.getStartTimeString() + "\n" + appointment.getStartDateString());
+        ((TextView) view.findViewById(R.id.appointment_place_where)).setText(appointment.getPlace());
+        ((TextView) view.findViewById(R.id.appointment_arrival_info_text)).setText(appointment.getArrivalInfo());
 
         if (appointment.info != null && appointment.info.size() > 0) {
             ((TextView) view.findViewById(R.id.appointment_info1_title)).setText(appointment.info.get(0).title);
@@ -74,12 +74,12 @@ public class AppointmentView extends Fragment {
             ((TextView) view.findViewById(R.id.appointment_info2_text)).setVisibility(View.GONE);
         }
 
-        ((Button) view.findViewById(R.id.event_place_address)).setText(appointment.getPlaceAddress());
-        ((Button) view.findViewById(R.id.event_place_address)).setTransformationMethod(null);
-        ((Button) view.findViewById(R.id.event_place_address)).setOnClickListener(view12 -> openMaps(appointment.getPlaceAddress()));
+        ((Button) view.findViewById(R.id.appointment_place_address)).setText(appointment.getPlaceAddress());
+        ((Button) view.findViewById(R.id.appointment_place_address)).setTransformationMethod(null);
+        ((Button) view.findViewById(R.id.appointment_place_address)).setOnClickListener(view12 -> openMaps(appointment.getPlaceAddress()));
 
-        ((Button) view.findViewById(R.id.event_add_to_calendar)).setTransformationMethod(null);
-        ((Button) view.findViewById(R.id.event_add_to_calendar)).setOnClickListener(view1 -> showCalendarDialog(appointment));
+        ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setTransformationMethod(null);
+        ((Button) view.findViewById(R.id.appointment_add_to_calendar)).setOnClickListener(view1 -> showCalendarDialog(appointment));
 
         return view;
     }
