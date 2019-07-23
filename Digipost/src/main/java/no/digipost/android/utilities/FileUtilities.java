@@ -77,7 +77,7 @@ public class FileUtilities {
 
         try{
             String tempDate = DocumentContentStore.getDocumentParent().getCreated();
-            dateCreated = FormatUtilities.getDateString(tempDate);
+            dateCreated = FormatUtilities.formatDateString(tempDate);
         }catch (Exception e){
         }
 

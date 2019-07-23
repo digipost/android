@@ -187,7 +187,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.Docume
         public void bindDocument(Document document, int position){
             title.setText(document.getSubject());
             subTitle.setText(getSubTitleText(document));
-            metaTop.setText(FormatUtilities.getFormattedDate(document.getCreated()));
+            metaTop.setText(FormatUtilities.formatDateStringColloquial(document.getCreated()));
 
             if (!document.isRead()) {
                 itemView.setBackgroundResource(R.drawable.content_list_item_unread);

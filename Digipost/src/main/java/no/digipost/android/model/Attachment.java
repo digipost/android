@@ -16,11 +16,14 @@
 
 package no.digipost.android.model;
 
-import no.digipost.android.constants.ApiConstants;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import no.digipost.android.constants.ApiConstants;
+import no.digipost.android.model.datatypes.DataType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 
@@ -43,7 +46,7 @@ public class Attachment extends RequiresOauthScope {
 	@JsonProperty
 	private ArrayList<Link> link;
 	@JsonProperty
-	private ArrayList<Metadata> metadata;
+	private ArrayList<HashMap> metadata;
     @JsonProperty
     private Invoice invoice;
 	@JsonProperty
@@ -90,8 +93,14 @@ public class Attachment extends RequiresOauthScope {
 		return userKeyEncrypted;
 	}
 
-	public ArrayList<Metadata> getMetadata() {
-		return metadata;
+	public ArrayList<DataType> getMetadata() {
+		ArrayList<DataType> list = new ArrayList<>();
+		for (HashMap data: metadata) {
+		    DataType parsedType = DataType.fromRawMap(data);
+		    if (parsedType != null)
+				list.add(parsedType);
+		}
+		return list;
 	}
 
 	public String getContentUri() {

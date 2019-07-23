@@ -16,98 +16,86 @@
 
 package no.digipost.android.utilities;
 
-import java.text.DecimalFormat;
+import org.jetbrains.annotations.NotNull;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import no.digipost.android.model.datatypes.TimeInterval;
+
 public class FormatUtilities {
 
-    private static final String API_DATE_FORMAT = "yyyy-MM-dd";
-    private static final String GUI_DATE_FORMAT = "d. MMM yyyy";
-    private static final String API_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm";
-    private static final String GUI_DATETIME_FORMAT = "d. MMM yyyy, HH:mm";
-    private static final String TIME_FORMAT_WITH_MILLIS = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZ";
-    private static final String TIME_FORMAT_WITHOUT_MILLIS = "yyyy-MM-dd'T'HH:mm:ssZZZ";
+    private static final SimpleDateFormat ISO8601_DATE = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    private static final SimpleDateFormat ISO8601_DATETIME = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZ", Locale.US);
+    private static final SimpleDateFormat DATETIME_WITHOUT_MILLIS = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZ", Locale.US);
 
-    public static Date getDate(final String date) {
-        try {
-            return new SimpleDateFormat(TIME_FORMAT_WITH_MILLIS, Locale.getDefault()).parse(date);
-        } catch (ParseException e1){
+    public static Date parseDate(String date) {
+        if (date != null) {
             try {
-                return new SimpleDateFormat(TIME_FORMAT_WITHOUT_MILLIS, Locale.getDefault()).parse(date);
-            }catch (ParseException e2) {
-                //Ignore
+                return ISO8601_DATETIME.parse(date);
+            } catch (ParseException e1) {
+                try {
+                    return DATETIME_WITHOUT_MILLIS.parse(date);
+                } catch (ParseException e2) {
+                    //Ignore
+                }
             }
-        } catch (NullPointerException npe){
-            // Ignore
         }
         return null;
     }
 
-    public static String getTimeString(final String date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        return getDate(date) != null ? simpleDateFormat.format(getDate(date)) : null;
+    public static String formatTimeString(String date) {
+        Date parsedDate = parseDate(date);
+        return parsedDate != null ? formatTime(parsedDate) : null;
     }
 
-    public static String getDateString(final String date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-        return getDate(date) != null ? simpleDateFormat.format(getDate(date)) : null;
+    @NotNull
+    public static String formatTime(@NotNull Date date) {
+        return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(date);
     }
 
+    public static String formatTimeInterval(TimeInterval interval) {
+        String firstDay = formatDate(interval.startTime);
+        String lastDay  = formatDate(interval.endTime);
+        if (firstDay.equals(lastDay)) {
+            return firstDay + ", kl. " + formatTime(interval.startTime) + " - " + formatTime(interval.endTime);
+        } else {
+            return firstDay + ", kl. " + formatTime(interval.startTime) + " - " + lastDay + ", kl. " + formatTime(interval.endTime);
+        }
+    }
 
-    public static String getFormattedDate(final String date) {
-        String date_substring = date.substring(0, 10);
-        SimpleDateFormat fromApi = new SimpleDateFormat(API_DATE_FORMAT, Locale.getDefault());
-        SimpleDateFormat guiFormat = new SimpleDateFormat(GUI_DATE_FORMAT, Locale.getDefault());
+    public static String formatDateString(String date) {
+        Date parsedDate = parseDate(date);
+        return parsedDate != null ? formatDate(parsedDate) : null;
+    }
+
+    public static String formatDate(Date parsedDate) {
+        return new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(parsedDate);
+    }
+
+    public static String formatDateStringColloquial(String date) {
         String formatted = null;
         try {
-            formatted = guiFormat.format(fromApi.parse(date_substring));
+            formatted = new SimpleDateFormat("d. MMM yyyy", Locale.getDefault())
+                    .format(ISO8601_DATE.parse(date));
         } catch (ParseException e) {
             // Ignore
         }
         return formatted;
     }
 
-    public static String getFormattedDateTime(final String date) {
-        String date_substring = date.substring(0, 16);
-        SimpleDateFormat fromApi = new SimpleDateFormat(API_DATETIME_FORMAT, Locale.getDefault());
-        SimpleDateFormat guiFormat = new SimpleDateFormat(GUI_DATETIME_FORMAT, Locale.getDefault());
-        String formatted = null;
-        try {
-            formatted = guiFormat.format(fromApi.parse(date_substring));
-        } catch (ParseException e) {
-            // Ignore
-        }
-        return formatted;
-    }
-
-    public static String getFormattedFileSize(final long bytes) {
+    public static String formatFileSize(long bytes) {
         String[] units = new String[]{"B", "KB", "MB", "GB"};
-        for (int i = 3; i >= 0; i--) {
+        for (int i = units.length; i >= 0; i--) {
             double exp = Math.pow(1024, i);
             if (bytes > exp) {
                 float n = (float) (bytes / exp);
                 String format = i > 1 ? "%3.1f" : "%3.0f";
-                return String.format(format, n) + " " + units[i];
+                return String.format(Locale.getDefault(), format, n) + " " + units[i];
             }
         }
         return Long.toString(bytes);
-    }
-
-    public static String getFormattedAmount(final String amount) {
-        Double number = Double.valueOf(amount);
-        DecimalFormat dec = new DecimalFormat("#.00");
-
-        return dec.format(number);
-    }
-
-    public static String getFormattedCurrency(final String currency) {
-        if ("NOK".equals(currency)) {
-            return "kr.";
-        }
-
-        return currency;
     }
 }

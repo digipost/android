@@ -77,7 +77,7 @@
             android:name="no.digipost.android.gui.WebLoginActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name="no.digipost.android.gui.metadata.ExternalLinkWebview"
+            android:name="no.digipost.android.gui.datatype.ExternalLinkWebview"
             android:configChanges="orientation|screenSize" />
         <activity
             android:name="no.digipost.android.gui.content.HtmlAndReceiptActivity"

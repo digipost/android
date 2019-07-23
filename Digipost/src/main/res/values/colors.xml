@@ -59,7 +59,7 @@
     <color name="grey_button_background_normal">#5E5E5E</color>
     <color name="grey_button_background_pressed">#3B3B3B</color>
 
-    <!-- metadata -->
+    <!-- dataType -->
 
     <color name="metadata_title">@color/dds_sort_kaffe</color>
     <color name="metadata_text">@color/dds_sort_kaffe</color>

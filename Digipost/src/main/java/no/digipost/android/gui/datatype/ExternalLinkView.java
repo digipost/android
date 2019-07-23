@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui.metadata;
+package no.digipost.android.gui.datatype;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -31,33 +31,26 @@ import java.net.URL;
 import java.util.Date;
 
 import no.digipost.android.R;
-import no.digipost.android.model.Metadata;
+import no.digipost.android.model.datatypes.ExternalLink;
 import no.digipost.android.utilities.FormatUtilities;
 
 public class ExternalLinkView extends Fragment{
 
-    private Metadata externallink;
+    private ExternalLink externallink;
 
-    public static ExternalLinkView newInstance() {
-        return new ExternalLinkView();
-    }
-
-    public void setExternallink(Metadata externallink) {
-        this.externallink = externallink;
+    public static ExternalLinkView newInstance(ExternalLink externalLink) {
+        ExternalLinkView externalLinkView = new ExternalLinkView();
+        externalLinkView.externallink = externalLink;
+        return externalLinkView;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.externallink_view, container, false);
-        ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.getDescription());
-        ((Button) view.findViewById(R.id.externallink_open_link)).setText(externallink.getButtonText());
+        ((TextView) view.findViewById(R.id.externallink_text)).setText(externallink.description);
+        ((Button) view.findViewById(R.id.externallink_open_link)).setText(buttonText());
         ((Button) view.findViewById(R.id.externallink_open_link)).setTransformationMethod(null);
-        ((Button) view.findViewById(R.id.externallink_open_link)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openExternalLink(externallink.url);
-            }
-        });
+        ((Button) view.findViewById(R.id.externallink_open_link)).setOnClickListener(view1 -> openExternalLink(externallink.url));
 
         ((TextView) view.findViewById(R.id.externallink_deadline)).setText(deadlineText());
         if(!deadlineIsValid()) {
@@ -87,16 +80,20 @@ public class ExternalLinkView extends Fragment{
     private String deadlineText() {
         String deadline = "";
         if(deadlineIsValid()){
-            deadline = getString(R.string.externallink_deadline) + FormatUtilities.getDateString(externallink.deadline);
+            deadline = getString(R.string.externallink_deadline) + FormatUtilities.formatDateString(externallink.deadline);
         }else if(externallink.deadline != null){
-            deadline = getString(R.string.externallink_deadline_expired) + FormatUtilities.getDateString(externallink.deadline);
+            deadline = getString(R.string.externallink_deadline_expired) + FormatUtilities.formatDateString(externallink.deadline);
         }
 
         return deadline;
     }
 
+    private String buttonText() {
+        return externallink.buttonText != null ? externallink.buttonText : getString(R.string.proceed);
+    }
+
     private boolean deadlineIsValid(){
-        Date deadline = FormatUtilities.getDate(externallink.deadline);
+        Date deadline = FormatUtilities.parseDate(externallink.deadline);
         return deadline != null && deadline.after(new Date());
     }
 }

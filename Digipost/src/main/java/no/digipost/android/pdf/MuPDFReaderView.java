@@ -8,7 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import no.digipost.android.gui.metadata.ExternalLinkWebview;
+import no.digipost.android.gui.datatype.ExternalLinkWebview;
 
 import java.net.URL;
 

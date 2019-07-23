@@ -34,7 +34,7 @@ import no.digipost.android.constants.ApiConstants;
 import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.fragments.ContentFragment;
-import no.digipost.android.gui.metadata.ExternalLinkWebview;
+import no.digipost.android.gui.datatype.ExternalLinkWebview;
 import no.digipost.android.model.Attachment;
 
 import java.net.URL;
@@ -63,7 +63,7 @@ public class HtmlAndReceiptActivity extends DisplayContentActivity {
         if (super.shouldShowInvoiceOptionsDialog(this)) {
             super.showInvoiceOptionsDialog(this);
         }
-        super.showMetadata();
+        super.showDataType();
     }
 
     @Override

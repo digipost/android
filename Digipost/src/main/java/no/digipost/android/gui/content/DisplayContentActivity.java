@@ -46,17 +46,21 @@ import no.digipost.android.api.exception.DigipostApiException;
 import no.digipost.android.api.exception.DigipostAuthenticationException;
 import no.digipost.android.api.exception.DigipostClientException;
 import no.digipost.android.constants.ApiConstants;
-import no.digipost.android.constants.ApplicationConstants;
 import no.digipost.android.documentstore.DocumentContentStore;
 import no.digipost.android.gui.MainContentActivity;
 import no.digipost.android.gui.adapters.FolderArrayAdapter;
+import no.digipost.android.gui.datatype.EventView;
 import no.digipost.android.gui.fragments.ContentFragment;
 import no.digipost.android.gui.fragments.DocumentFragment;
 import no.digipost.android.gui.invoice.InvoiceBankAgreements;
 import no.digipost.android.gui.invoice.InvoiceOptionsActivity;
-import no.digipost.android.gui.metadata.AppointmentView;
-import no.digipost.android.gui.metadata.ExternalLinkView;
+import no.digipost.android.gui.datatype.AppointmentView;
+import no.digipost.android.gui.datatype.ExternalLinkView;
 import no.digipost.android.model.*;
+import no.digipost.android.model.datatypes.Appointment;
+import no.digipost.android.model.datatypes.DataType;
+import no.digipost.android.model.datatypes.Event;
+import no.digipost.android.model.datatypes.ExternalLink;
 import no.digipost.android.utilities.*;
 
 import java.util.ArrayList;
@@ -104,26 +108,26 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         }
     }
 
-    private ArrayList<Metadata> getMetadata() {
+    protected void showDataType() {
         Attachment attachment = DocumentContentStore.getDocumentAttachment();
-
-        if (attachment != null) {
-            return attachment.getMetadata();
+        if (attachment == null) {
+            return;
         }
 
-        return new ArrayList<>();
-    }
-
-    protected void showMetadata() {
-        ArrayList<Metadata> metadataList = getMetadata();
-        for (Metadata metadata : metadataList) {
-            if (metadata.type.equals(Metadata.APPOINTMENT)) {
-                addAppointmentView(metadata);
-            } else if (metadata.type.equals(Metadata.EXTERNAL_LINK)) {
-                addExternalLinkView(metadata);
+        int renderedDataTypes = 0;
+        for (DataType dataType : attachment.getMetadata()) {
+            if (dataType.type.equals(DataType.APPOINTMENT)) {
+                addAppointmentView(dataType.expandToType());
+                renderedDataTypes++;
+            } else if (dataType.type.equals(DataType.EXTERNAL_LINK)) {
+                addExternalLinkView(dataType.expandToType());
+                renderedDataTypes++;
+            } else if (dataType.type.equals(DataType.EVENT)) {
+                addEventView(dataType.expandToType());
+                renderedDataTypes++;
             }
         }
-        toggleContainerViews(metadataList.size());
+        toggleContainerViews(renderedDataTypes);
     }
 
     private void toggleContainerViews(final int metadataSize) {
@@ -153,16 +157,18 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
         }
     }
 
-    private void addExternalLinkView(Metadata metadata) {
-        ExternalLinkView externalLinkView = ExternalLinkView.newInstance();
-        externalLinkView.setExternallink(metadata);
+    private void addEventView(Event dataType) {
+        EventView eventView = EventView.Companion.newInstance(dataType, DocumentContentStore.getDocumentParent().getSubject());
+        addViewToContainerLayout(eventView);
+    }
+
+    private void addExternalLinkView(ExternalLink dataType) {
+        ExternalLinkView externalLinkView = ExternalLinkView.newInstance(dataType);
         addViewToContainerLayout(externalLinkView);
     }
 
-    private void addAppointmentView(Metadata metadata) {
-        metadata.title = "Du har fått en innkalling fra " + DocumentContentStore.getDocumentParent().getCreatorName();
-        AppointmentView appointmentView = AppointmentView.newInstance();
-        appointmentView.setAppointment(metadata);
+    private void addAppointmentView(Appointment dataType) {
+        AppointmentView appointmentView = AppointmentView.newInstance(dataType, getString(R.string.appointment_title_from, DocumentContentStore.getDocumentParent().getCreatorName()));
         addViewToContainerLayout(appointmentView);
     }
 
@@ -395,7 +401,7 @@ public abstract class DisplayContentActivity extends AppCompatActivity {
     }
 
     private void showPaidInvoiceDialog(Invoice invoice) {
-        String timePaid = FormatUtilities.getFormattedDate(invoice.getPayment().getTimePaid());
+        String timePaid = FormatUtilities.formatDateStringColloquial(invoice.getPayment().getTimePaid());
 
         String title = getString(R.string.dialog_send_to_bank_paid_title);
         String message = format(getString(R.string.dialog_send_to_bank_paid_message), timePaid);

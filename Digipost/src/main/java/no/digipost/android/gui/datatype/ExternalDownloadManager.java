@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package no.digipost.android.gui.metadata;
+package no.digipost.android.gui.datatype;
 
 import android.app.DownloadManager;
 import android.content.Context;
