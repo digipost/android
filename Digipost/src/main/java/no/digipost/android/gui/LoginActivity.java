@@ -131,7 +131,7 @@ public class LoginActivity extends Activity {
     }
 
     private void openExternalPrivacyUrl(final String apiConstants) {
-        new AlertDialog.Builder(this).setMessage(getString(R.string.dialog_prompt_open_help_new_window))
+        new AlertDialog.Builder(this).setMessage(getString(R.string.dialog_prompt_open_privacy_new_window))
                 .setPositiveButton(getString(R.string.open), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
