@@ -16,7 +16,9 @@
 package no.digipost.android.gui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -117,7 +119,7 @@ public class LoginActivity extends Activity {
                 openWebView(Login.NORMAL);
             } else if (v == privacyButton) {
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "personvern");
-                openExternalBrowserWithUrl(ApiConstants.URL_PRIVACY);
+                openExternalPrivacyUrl(ApiConstants.URL_PRIVACY);
             } else if (v == registrationButton) {
                 GAEventController.sendLoginClickEvent(LoginActivity.this, "registrering");
                 openExternalBrowserWithUrl(ApiConstants.URL_REGISTRATION);
@@ -126,5 +128,15 @@ public class LoginActivity extends Activity {
                 openWebView(Login.IDPORTEN);
             }
         }
+    }
+
+    private void openExternalPrivacyUrl(final String apiConstants) {
+        new AlertDialog.Builder(this).setMessage(getString(R.string.dialog_prompt_open_help_new_window))
+                .setPositiveButton(getString(R.string.open), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openExternalBrowserWithUrl(apiConstants);
+                    }
+                }).setNegativeButton(getString(R.string.abort), null).show();
     }
 }
