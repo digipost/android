@@ -73,8 +73,6 @@ object ApiConstants {
     const val URL_API = "${Secret.ENV_URL}api"
     const val URL_RELATIONS = "${Secret.ENV_URL}relations/"
     const val URL_RELATIONS_DOCUMENT_INBOX = "${URL_RELATIONS}document_inbox"
-    const val URL_RELATIONS_DOCUMENT_ARCHIVE = "${URL_RELATIONS}document_archive"
-    const val URL_RELATIONS_DOCUMENT_WORKAREA = "${URL_RELATIONS}document_workarea"
     const val URL_RELATIONS_DOCUMENT_RECEIPTS = "${URL_RELATIONS}receipts"
     const val URL_RELATIONS_DOCUMENT_UPLOAD = "${URL_RELATIONS}upload_document"
     const val URL_RELATIONS_DOCUMENT_UPLOAD_TO_INBOX = "${URL_RELATIONS}upload_document_to_inbox"

@@ -104,15 +104,7 @@ public class PrimaryAccount {
 	public String getInboxUri() {
 		return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_INBOX);
 	}
-
-	public String getArchiveUri() {
-		return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_ARCHIVE);
-	}
-
-	public String getWorkareaUri() {
-		return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_WORKAREA);
-	}
-
+    
 	public String getReceiptsUri() {
         return getLinkByRelation(ApiConstants.URL_RELATIONS_DOCUMENT_RECEIPTS);
 	}
