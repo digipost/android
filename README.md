@@ -1,7 +1,7 @@
 Digipost for Android
 =======
 
-⚠️ Denne repoet er arkivert, og det er ikke lenger denne koden som driver Android-appen til Digipost. ⚠️
+⚠️ Dette repoet er arkivert, og det er ikke lenger denne koden som driver Android-appen til Digipost. ⚠️
 
 Digipost for Android er en app for Android som gir tilgang til brukerens sikre digitale postkasse i Digipost. Bruker må opprette en konto på https://www.digipost.no/.
 
